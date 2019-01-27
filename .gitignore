@@ -1,0 +1,22 @@
+/uploads/
+/admin/
+/assets/
+/data/
+/includes/
+/install/
+/themes/admin_default - Copy/
+/themes/default - Copy/
+/themes/mobile_default - Copy/
+/vendor/
+/.htaccess
+/composer.json
+/config.php
+/COPYRIGHT.txt
+/error.php
+/favicon.ico
+/index.php
+/LICENSE.txt
+/robots.php
+/robots.txt
+/web.config
+
