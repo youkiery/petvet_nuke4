@@ -29,7 +29,7 @@ if ( ! ( empty($petid) || empty($doctorid) || empty($cometime) || strlen($status
 
 	if ($result->rowCount()) {
 		$cometime = totime($cometime);
-		$sql = "INSERT INTO `" . VAC_PREFIX . "_treat` (`petid`, `doctorid`, `cometime`, `insult`) VALUES ($petid, $doctorid, $cometime, 0)";
+		$sql = "INSERT INTO `" . VAC_PREFIX . "_treat` (`petid`, `doctorid`, `cometime`, `insult`, `ctime`) VALUES ($petid, $doctorid, $cometime, 0, " . time() . ")";
 		$query = $db->query($sql);
 		$insert_id = $db->lastInsertId();
 

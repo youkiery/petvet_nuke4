@@ -123,6 +123,16 @@
   <input class="btn btn-info" type="submit" class="vac_button" value="{lang.search}">
 </form> -->
 
+<ul style="list-style-type: circle; padding: 10px;">
+  <li>
+    <a href="/index.php?nv={nv}&op={op}"> {lang.treat_list} </a>
+  </li>
+  <li>
+    <a href="/index.php?nv={nv}&op={op}&page=today"> {lang.treat_today_list} </a>
+    <img src="/themes/default/images/dispatch/new.gif">
+  </li>
+</ul>
+
 <!-- BEGIN: filter -->
 <button class="filter btn {check}" id="chatter_{ipd}" onclick="change_data({ipd})">
   {vsname}

@@ -89,6 +89,8 @@ $lang_module["summary"] = "Tổng kết";
 $lang_module["eviden"] = "Triệu chứng";
 $lang_module["totaltreat"] = "Tổng số ngày điều trị: ";
 $lang_module["doctor2"] = "Người nhận";
+$lang_module["treat_list"] = "Danh sách lưu bệnh gần đây";
+$lang_module["treat_today_list"] = "Danh sách lưu bệnh thêm hôm nay";
 
 $lang_module["themsieuam"] = "Thêm siêu âm";
 

@@ -971,56 +971,13 @@ function user_treat() {
   // initial
   $xtpl = new XTemplate("sieuam-birth-list.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
   $xtpl->assign("lang", $lang_module);
-	// $vaccine_config = get_user_config();
+  
   $limit_option = array(10, 20, 30, 40, 50, 75, 100); 
-  $now = strtotime(date("y-m-d"));
+  $today = strtotime(date("y-m-d"));
   $index = 1;
-  // $index = ($page - 1) * $limit + 1;
-  // page
-  // $page = $nv_Request->get_int('page', 'get/post', 1);
-  // if ($page < 0) {
-  //   $page = 1;
-  // }
-  // limit 
-  // $limit = $nv_Request->get_int('limit', 'get/post', 0);
-  // if (empty($limit)) {
-  //   if (!empty($_SESSION["usg_limit"]) && $_SESSION["usg_limit"] > 0) {
-  //     $limit = $_SESSION["usg_limit"];
-  //   }
-  //   else {
-  //     $limit = $vaccine_config["usg_f"];
-  //     $_SESSION["usg_limit"] = $limit;
-  //   }
-  // }
-  // else {
-  //   $_SESSION["usg_limit"] = $limit;
-  // }
-	// $limit_page = "limit " . $limit . " offset " . (($page - 1) * $limit);
-  // keyword
-  $keyword = $nv_Request->get_string('keyword', 'get/post', '');
-  // filter type
+  $page = $nv_Request->get_string('page', 'get/post', '');
+
   $filter = $nv_Request->get_int('filter', 'get/post', 0);
-  // $filter = $nv_Request->get_string('filter', 'get/post', '');
-  // if ($filter == "") {
-  //   if (!empty($_SESSION["usg_filter"]) && (strpos($_SESSION["usg_filter"], "0") == false || strpos($_SESSION["usg_filter"], "1") == false || strpos($_SESSION["usg_filter"], "2") == false)) {
-  //     $filter = $_SESSION["usg_filter"];
-  //   }
-  //   else {
-  //     $filter = $vaccine_config["usg_s"];
-  //     $_SESSION["usg_filter"] = $filter;
-  //   }
-  // }
-  // else {
-  //   $_SESSION["usg_filter"] = $filter;
-  // }
-  // $filter = implode(",", str_split($filter));
-  // filter time
-  $time = $vacconfigv2["filter"];
-  if (empty($time)) {
-    $time = 60 * 60 * 24 * 14;
-  }
-	$from = $now - $time;
-	$end = $now + $time;
   // doctor
   $sql = "select * from " . VAC_PREFIX . "_doctor";
 	$query = $db->query($sql);
@@ -1029,9 +986,23 @@ function user_treat() {
 		$doctor[$doctor_row["id"]] = $doctor_row["name"];
   }
   // filter query
-  $where = "where (c.name like '%$keyword%' or c.phone like '%$keyword%' or b.name like '%$keyword%') and a.insult in ($filter) and (cometime between $from and $end)";
+  $where = "where (c.name like '%$keyword%' or c.phone like '%$keyword%' or b.name like '%$keyword%') and a.insult in ($filter) and ()";
   // list
-  $sql = "SELECT a.id, a.cometime, a.insult, b.id as petid, b.name as petname, c.name as customer, d.name as doctor from `" . VAC_PREFIX . "_treat` a inner join `" . VAC_PREFIX . "_pet` b on a.petid = b.id inner join `" . VAC_PREFIX .  "_customer` c on c.id = b.customerid  inner join `" . VAC_PREFIX . "_doctor` d on a.doctorid = d.id $where order by a.cometime desc, a.id";
+  switch ($page) {
+    case 'today':
+      $end = $today + 60 * 60 * 24;
+      $where = "ctime between $today and $end";
+    break;
+    default:
+      $time = $vacconfigv2["filter"];
+      if (empty($time)) {
+        $time = 60 * 60 * 24 * 14;
+      }
+      $from = $today - $time;
+      $end = $today + $time;
+      $where = "cometime between $from and $end";
+  }
+  $sql = "SELECT a.id, a.cometime, a.insult, b.id as petid, b.name as petname, c.name as customer, d.name as doctor from `" . VAC_PREFIX . "_treat` a inner join `" . VAC_PREFIX . "_pet` b on a.petid = b.id inner join `" . VAC_PREFIX .  "_customer` c on c.id = b.customerid  inner join `" . VAC_PREFIX . "_doctor` d on a.doctorid = d.id where $where order by a.cometime desc, a.id";
   $result = $db->query($sql);
 
   $list = array();
