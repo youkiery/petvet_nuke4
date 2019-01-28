@@ -107,7 +107,7 @@ $lang_module["saved"] = "Đã lưu";
 $lang_module["image"] = "Hình ảnh";
 $lang_module["usg_update"] = "Cập nhật siêu âm";
 $lang_module["treat_update"] = "Cập nhật lưu bệnh";
-$lang_module["treat_title"] = "QUản lý lưu bệnh";
+$lang_module["treat_title"] = "Quản lý lưu bệnh";
 $lang_module["pet_status"] = "Sức khỏe";
 $lang_module["insult"] = "Kết quả điều trị";
 
@@ -158,6 +158,12 @@ $lang_module["redrug_remove"] = "Bạn có chắc muốn xóa";
 $lang_module["redrugstatus"][0] = "Chưa Gọi";
 $lang_module["redrugstatus"][1] = "Đã Gọi";
 $lang_module["redrugstatus"][2] = "Đã Mua Tiếp";
+
+$lang_module["schedule_title"] = "Đặt lịch nghỉ";
+$lang_module["schedule_save"] = "Lưu lịch nghỉ";
+$lang_module["schedule_remove"] = "Sau khi xác nhận bản ghi này sẽ bị xóa";
+$lang_module["user"] = "Nhân viên";
+$lang_module["restday"] = "Ngày nghỉ";
 
 $lang_module["deadend"] = "Thú đã mất";
 $lang_module["miscustom"] = "Sai thông tin";

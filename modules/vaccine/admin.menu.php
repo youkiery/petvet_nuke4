@@ -22,6 +22,7 @@ $submenu['vaccine'] = $lang_module["vaccine_title"];
 $submenu['spa'] = $lang_module["spa_title"];
 $submenu['drug'] = $lang_module["drug_title"];
 $submenu['redrug'] = $lang_module["redrug_title"];
+$submenu['schedule'] = $lang_module["schedule_title"];
 $submenu['config'] = $lang_module["doctor_config"];
 
-$allow_func = array('main', "disease", "patient", "customer", "doctor", "vaccine", "sieuam", "treat", "spa", "drug", "redrug", "config"); 
+$allow_func = array('main', "disease", "patient", "customer", "doctor", "vaccine", "sieuam", "treat", "spa", "drug", "redrug", "schedule", "config"); 

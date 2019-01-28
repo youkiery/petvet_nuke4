@@ -16,16 +16,18 @@ define("VAC_PREFIX", $db_config['prefix'] . "_" . $module_name);
 $sql_drop_module = array();
 $sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_config`";
 $sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_configv2`";
-$sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_cfg`";
 $sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_customer`";
 $sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_disease`";
 $sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_doctor`";
+$sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_drug`";
+$sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_resdrug`";
 $sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_pet`";
 $sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_spa`";
 $sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_treat`";
 $sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_treating`";
 $sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_usg`";
 $sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_vaccine`";
+$sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_schedule`";
 $sql_create_module = $sql_drop_module;
 // $sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_cfg` (
 //   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -91,24 +93,24 @@ $sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_spa` (
   `customerid` int(11) NOT NULL,
   `weight` int(11) NOT NULL,
   `note` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `wash_dog` int(11) NOT NULL DEFAULT '0',
-  `wash_cat` int(11) NOT NULL DEFAULT '0',
-  `wash_white` int(11) NOT NULL DEFAULT '0',
-  `cut_fur` int(11) NOT NULL DEFAULT '0',
-  `shave_foot` int(11) NOT NULL DEFAULT '0',
-  `shave_fur` int(11) NOT NULL DEFAULT '0',
-  `cut_claw` int(11) NOT NULL DEFAULT '0',
-  `cut_curly` int(11) NOT NULL DEFAULT '0',
-  `wash_ear` int(11) NOT NULL DEFAULT '0',
-  `wash_mouth` int(11) NOT NULL DEFAULT '0',
-  `paint_footear` int(11) NOT NULL DEFAULT '0',
-  `paint_all` int(11) NOT NULL DEFAULT '0',
-  `pin_ear` int(11) NOT NULL DEFAULT '0',
-  `cut_ear` int(11) NOT NULL DEFAULT '0',
-  `dismell` int(11) NOT NULL DEFAULT '0',
-  `time` int(11) NOT NULL DEFAULT '0',
-  `done` int(11) NOT NULL DEFAULT '0',
-  `payment` int(11) NOT NULL DEFAULT '0',
+  `wash_dog` int(11) DEFAULT 0,
+  `wash_cat` int(11) DEFAULT 0,
+  `wash_white` int(11) DEFAULT 0,
+  `cut_fur` int(11) DEFAULT 0,
+  `shave_foot` int(11) DEFAULT 0,
+  `shave_fur` int(11) DEFAULT 0,
+  `cut_claw` int(11) DEFAULT 0,
+  `cut_curly` int(11) DEFAULT 0,
+  `wash_ear` int(11) DEFAULT 0,
+  `wash_mouth` int(11) DEFAULT 0,
+  `paint_footear` int(11) DEFAULT 0,
+  `paint_all` int(11) DEFAULT 0,
+  `pin_ear` int(11) DEFAULT 0,
+  `cut_ear` int(11) DEFAULT 0,
+  `dismell` int(11) DEFAULT 0,
+  `time` int(11) DEFAULT 0,
+  `done` int(11) DEFAULT 0,
+  `payment` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 $sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_treat` (
@@ -116,8 +118,9 @@ $sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_treat` (
   `petid` int(11) NOT NULL,
   `doctorid` int(11) NOT NULL,
   `cometime` int(11) NOT NULL,
-  `calltime` int(11) DEFAULT NULL,
-  `insult` int(11) NOT NULL DEFAULT '0',
+  `calltime` int(11) DEFAULT 0,
+  `insult` int(11) DEFAULT 0,
+  `ctime` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 $sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_treating` (
@@ -130,8 +133,8 @@ $sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_treating` (
   `image` varchar(200) NOT NULL,
   `time` int(11) NOT NULL,
   `treating` varchar(500) NOT NULL,
-  `status` int(11) NOT NULL DEFAULT '0',
-  `doctorx` int(11) NOT NULL DEFAULT '0',
+  `status` int(11) DEFAULT 0,
+  `doctorx` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 $sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_usg` (
@@ -166,5 +169,12 @@ $sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_vaccine` (
   `recall` int(11) NOT NULL,
   `doctorid` int(11) NOT NULL,
   `ctime` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+$sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_schedule` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` int(11) NOT NULL,
+  `time` int(11) NOT NULL,
+  `ctime` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
