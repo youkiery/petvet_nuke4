@@ -17,6 +17,72 @@ if (!empty($action)) {
   $result = array("status" => 0, "notify" => $lang_module["g_error"]);
 
   switch ($action) {
+    case 'edit':
+      $userid = $nv_Request->get_string("userid", "get/post", "");
+      $depart = $nv_Request->get_array("depart", "get/post", "");
+
+      if (!empty($depart) && !empty($userid)) {
+        $sql = "select * from `" . WORK_PREFIX . "_employ` where userid = $userid";
+        $query = $db->query($sql);
+        while ($employ = $query->fetch()) {
+          if (empty($depart[$employ["depart"]])) {
+            $depart[$employ["depart"]] = 2; // insert
+          }
+          else {
+            $depart[$employ["depart"]] = 3;  // do nothing
+          }
+        }
+
+        foreach ($depart as $key => $value) {
+          $sql = "";
+          switch ($value) {
+            case '1':
+              $sql = "insert into `" . WORK_PREFIX . "_employ` (userid, depart, role) values ($userid, $key, 0)";
+              break;
+            case '2':
+              $sql = "delete from `" . WORK_PREFIX . "_employ` where userid = $userid and depart = $key";
+              break;
+          }
+          if (!empty($sql)) {
+            $db->query($sql);
+          }
+        }
+        $result["status"] = 1;
+        $result["list"] = employ_list();
+        $result["notify"] = $lang_module["saved"];
+      }
+
+    break;
+    case 'get_employ':
+      $userid = $nv_Request->get_string("userid", "get/post", "");
+
+      if (!empty($userid)) {
+        $xtpl = new XTemplate('employ-suggest.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
+
+        $sql = "select * from `" . WORK_PREFIX . "_employ` where userid = $userid";
+        $query = $db->query($sql);
+        $employ_depart_list = array();
+        while ($employ = $query->fetch()) {
+          $employ_depart_list[] = $employ["depart"];
+        }
+
+        $sql = "select * from `" . WORK_PREFIX . "_depart` order by id";
+        $query = $db->query($sql);
+        while ($depart = $query->fetch()) {
+          $xtpl->assign("id", $depart["id"]);
+          $xtpl->assign("depart", $depart["name"]);
+          $check = "";
+          if (in_array($depart["id"], $employ_depart_list) !== false) {
+            $check = "checked";
+          }
+          $xtpl->assign("check", $check);
+          $xtpl->parse("main");
+        }
+        $result["status"] = 1;
+        $result["list"] = $xtpl->text();
+      }
+      break;
+
     case 'remove':
       $id = $nv_Request->get_string("id", "get/post", "");
 

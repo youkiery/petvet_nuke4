@@ -100,7 +100,7 @@ function get_depart_list() {
 }
 
 function employ_list() {
-    global $db, $lang_module, $global_config, $module_file;
+    global $db, $lang_module, $global_config, $module_file, $db_config;
     $xtpl = new XTemplate('employ-list.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
     $index = 1;
     $xtpl->assign("lang", $lang_module);
@@ -112,9 +112,13 @@ function employ_list() {
         $depart_list[$row["id"]] = $row["name"];
     }
 
-    $sql = "select * from `" .  WORK_PREFIX . "_employ` group by userid order by name, userid";
+    $sql = "select * from `" .  WORK_PREFIX . "_employ` group by userid order by userid";
     $query = $db->query($sql);
     while ($employ = $query->fetch()) {
+        $sql = "select * from `" . $db_config["prefix"] . "_users` where userid = $employ[userid]";
+        $user_query = $db->query($sql);
+        $user = $user_query->fetch();
+
         $sql = "select * from `" . WORK_PREFIX . "_employ` where userid = $employ[userid]";
         $employ_query = $db->query($sql);
         $depart = array();
@@ -123,7 +127,7 @@ function employ_list() {
         }
         $xtpl->assign("index", $index);
         $xtpl->assign("id", $employ["userid"]);
-        $xtpl->assign("name", $employ["name"]);
+        $xtpl->assign("name", $user["username"]);
         $xtpl->assign("roles", implode(", ", $depart));
         $xtpl->parse("main");
         $index ++;

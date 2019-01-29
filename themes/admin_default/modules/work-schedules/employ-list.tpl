@@ -10,7 +10,7 @@
     {roles}
   </th>
   <th>
-    <button class="btn btn-info" data-toggle="modal" data-target="#edit">
+    <button class="btn btn-info" onclick="get_employ({id})">
       {lang.g_edit}
     </button>
     <button class="btn btn-info" data-toggle="modal" data-target="#remove" onclick="select({id})">

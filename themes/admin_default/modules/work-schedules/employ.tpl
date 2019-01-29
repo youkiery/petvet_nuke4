@@ -8,16 +8,10 @@
       </div>
       <div class="modal-body">
         <form onsubmit="return edit()">
-          <div class="form-group">
-            <label> {lang.employ_name} </label>
-            <input class="form-control" type="text" id="name-edit">
+          <div class="form-group" id="edit-depart">
+            
           </div>
-          <div class="form-group suggest">
-            <label> {lang.employ_depart}: <span id="depart-list"></span> </label>
-            <input class="form-control suggest-input" type="text" id="depart-edit">
-            <div class="suggest-list"></div>
-          </div>
-          <button class="btn btn-info" data-dismiss="modal">
+          <button class="btn btn-info" onclick="edit_submit(event)">
             {lang.g_edit}
           </button>
         </form>
@@ -106,30 +100,68 @@
 </div>
 <script>
   var g_id = -1;
+  var g_depart = {}
+
+
   function select(id) {
     g_id = id;
   }
 
-  function remove() {
-    if (g_id > 0) {
-      $.post(
-        strHref,
-        {action: 'remove', id: g_id},
-        (response, status) => {
-          var data = JSON.parse(response)
-          if (data["status"]) {
-            alert_msg(data["notify"])
-            $("#content").html(data["list"]);
-          }
-          else {
-            // notify error
-          }
+  function edit_submit(e) {
+    e.preventDefault()
+    var depart = {};
+    $(".edit_depart").each((index, element) => {
+      var id = element.getAttribute("id");
+      var check = element.checked
+      if (check) {
+        depart[id] = 1;
+      }
+    })
+    
+    $.post(
+      strHref,
+      {action: "edit", userid: g_id, depart: depart},
+      (response, status) => {
+        var data = JSON.parse(response)
+        if (data["status"]) {
+          $("#content").html(data["list"])
+          $("#edit").modal("hide")
         }
-      )
-    }
-    else {
-      // error
-    }
+        alert_msg(data["notify"])
+      }
+    )
   }
+
+  function remove() {
+    $.post(
+      strHref,
+      {action: 'remove', id: g_id},
+      (response, status) => {
+        var data = JSON.parse(response)
+        if (data["status"]) {
+          alert_msg(data["notify"])
+          $("#content").html(data["list"]);
+        }
+        else {
+          // notify error
+        }
+      }
+    )
+  }
+
+  function get_employ(id) {
+    g_id = id;
+    $.post(
+      strHref,
+      {action: "get_employ", userid: id},
+      (response, status) => {
+        var data = JSON.parse(response)
+        if (data["status"]) {
+          $("#edit-depart").html(data["list"])
+          $("#edit").modal("show")
+        }
+      }
+    )
+  } 
 </script>
 <!-- END: main -->
