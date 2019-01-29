@@ -22,6 +22,10 @@ while ($item = $result->fetch()) {
     }
 }
 
+$sql_drop_module[] = "DROP TABLE IF EXISTS `" . WORK_PREFIX . "_row`";
+$sql_drop_module[] = "DROP TABLE IF EXISTS `" . WORK_PREFIX . "_employ`";
+$sql_drop_module[] = "DROP TABLE IF EXISTS `" . WORK_PREFIX . "_depart`";
+$sql_drop_module[] = "DROP TABLE IF EXISTS `" . WORK_PREFIX . "_customer`";
 $sql_create_module = $sql_drop_module;
 
 $sql_create_module[] = "CREATE TABLE IF NOT EXISTS " . $db_config['prefix'] . "_" . $lang . "_" . $module_data . "_rows (
@@ -100,3 +104,39 @@ $sql_create_module[] = "INSERT INTO " . $db_config['prefix'] . "_" . $lang . "_"
 $sql_create_module[] = "INSERT INTO " . $db_config['prefix'] . "_" . $lang . "_" . $module_data . "_field (fid, field, weight, field_type, field_choices, sql_choices, match_type, match_regex, func_callback, min_length, max_length, required, show_addedit, show_website, show_manager, class, language, default_value) VALUES (3, 'e_location', 3, 'textbox', '', '', 'none', '', '', 0, 255, 1, 1, 1, 0, '', 'a:1:{s:2:\"vi\";a:2:{i:0;s:14:\"Địa điểm\";i:1;s:0:\"\";}}', '');";
 $sql_create_module[] = "INSERT INTO " . $db_config['prefix'] . "_" . $lang . "_" . $module_data . "_field (fid, field, weight, field_type, field_choices, sql_choices, match_type, match_regex, func_callback, min_length, max_length, required, show_addedit, show_website, show_manager, class, language, default_value) VALUES (4, 'e_host', 4, 'textbox', '', '', 'none', '', '', 0, 255, 1, 1, 1, 0, '', 'a:1:{s:2:\"vi\";a:2:{i:0;s:10:\"Chủ trì\";i:1;s:0:\"\";}}', '');";
 $sql_create_module[] = "INSERT INTO " . $db_config['prefix'] . "_" . $lang . "_" . $module_data . "_field (fid, field, weight, field_type, field_choices, sql_choices, match_type, match_regex, func_callback, min_length, max_length, required, show_addedit, show_website, show_manager, class, language, default_value) VALUES (5, 'e_note', 5, 'textarea', '', '', 'none', '', '', 0, 65536, 0, 0, 0, 0, '', 'a:1:{s:2:\"vi\";a:2:{i:0;s:8:\"Ghi chú\";i:1;s:0:\"\";}}', '');";
+$sql_create_module[] = "CREATE TABLE `" . WORK_PREFIX . "_row` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cometime` int(11) NOT NULL,
+  `calltime` int(11) NOT NULL,
+  `last_time` int(11) NOT NULL,
+  `post_user` int(11) NOT NULL,
+  `edit_user` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `depart` int(11) NOT NULL,
+  `customer` int(11) NOT NULL,
+  `content` text NOT NULL,
+  `process` int(11) NOT NULL DEFAULT '0',
+  `confirm` int(11) NOT NULL DEFAULT '0',
+  `review` int(11) NOT NULL DEFAULT '0',
+  `note` text NOT NULL,
+  PRIMARY KEY `id`
+) ENGINE=MyISAM;";
+$sql_create_module[] = "CREATE TABLE `" . WORK_PREFIX . "_depart` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY `id`
+) ENGINE=MyISAM;";
+$sql_create_module[] = "CREATE TABLE `" . WORK_PREFIX . "_customer` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `address` varchar(200) NOT NULL,
+  PRIMARY KEY `id`
+) ENGINE=MyISAM;";
+$sql_create_module[] = "CREATE TABLE `" . WORK_PREFIX . "_employ` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` varchar(50) NOT NULL,
+  `depart` varchar(200) NOT NULL
+  `role` varchar(200) NOT NULL,
+  PRIMARY KEY `id`
+) ENGINE=MyISAM;";
+
