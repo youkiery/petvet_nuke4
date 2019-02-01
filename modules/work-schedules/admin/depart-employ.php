@@ -25,7 +25,7 @@ if ($action) {
                 $employ = $query->fetch();
 
                 if (empty($employ)) {
-                    $sql = "insert into `" . WORK_PREFIX . "_employ` (userid, name, role, depart) values ($userid, '$name', 1, $id)";
+                    $sql = "insert into `" . WORK_PREFIX . "_employ` (userid, role, depart) values ($userid, 1, $id)";
                     $query = $db->query($sql);
                     if ($query) {
                         $result["status"] = 1;

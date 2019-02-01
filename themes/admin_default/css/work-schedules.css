@@ -40,5 +40,9 @@
 #ui-datepicker-div {
   z-index: 10000 !important;
 }
-
+.modal-title {
+  font-weight: bold;
+  text-align: center;
+  font-size: 1.5em;
+}
 

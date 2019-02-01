@@ -1,34 +1,34 @@
 <!-- BEGIN: main -->
 <tr>
-  <td data-toggle="modal" data-target="#detail">
+  <td>
     {index}
   </td>
-  <td data-toggle="modal" data-target="#detail">
+  <td>
     {work_name}
   </td>
-  <td data-toggle="modal" data-target="#detail">
+  <td>
     {work_starttime}
   </td>
-  <td data-toggle="modal" data-target="#detail">
+  <td>
     {work_endtime}
   </td>
-  <td data-toggle="modal" data-target="#detail">
+  <td>
     {work_customer}
   </td>
-  <td data-toggle="modal" data-target="#detail">
+  <td>
     {work_depart}
   </td>
-  <td data-toggle="modal" data-target="#detail">
+  <td>
     {work_employ}
   </td>
-  <td data-toggle="modal" data-target="#detail">
-    {work_process}
+  <td>
+    {work_process} %
   </td>
   <td>
-    <button class="btn btn-info" data-toggle="modal" data-target="#edit">
+    <button class="btn btn-info" onclick="edit({id})">
       {lang.g_edit}
     </button>
-    <button class="btn btn-info" data-toggle="modal" data-target="#remove">
+    <button class="btn btn-danger" onclick="remove({id})">
       {lang.g_remove}
     </button>
   </td>

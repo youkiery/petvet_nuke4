@@ -7,13 +7,7 @@
     {employ_name}
   </th>
   <th>
-    {employ_phone}
-  </th>
-  <th>
-    {employ_address}
-  </th>
-  <th>
-    <button class="btn btn-info">
+    <button class="btn btn-info" onclick="add({id})">
       {lang.employ_add}
     </button>
   </th>

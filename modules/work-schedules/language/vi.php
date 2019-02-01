@@ -93,3 +93,45 @@ $lang_module['field_match_type_error'] = '%s không đúng quy tắc';
 $lang_module['field_min_max_value'] = '%1$s cần nhập từ %2$s đến %3$s';
 $lang_module['field_min_max_error'] = '%1$s cần nhập từ %2$s đến %3$s ký tự';
 $lang_module['field_match_type_required'] = '%s bắt buộc nhập';
+
+$lang_module['work_detail'] = 'Chi tiết công việc';
+$lang_module['work_insert'] = 'Thêm công việc';
+$lang_module["work_update"] = "Cập nhật";
+$lang_module['work_edit'] = 'Sửa thông tin công việc';
+$lang_module['work_remove'] = 'Xác nhận xóa công việc';
+$lang_module['work_name'] = 'Tên công việc';
+$lang_module['work_starttime'] = 'Bắt đầu';
+$lang_module['work_endtime'] = 'Kết thúc';
+$lang_module['work_customer'] = 'Khách hàng';
+$lang_module['work_depart'] = 'Phòng ban';
+$lang_module['work_employ'] = 'Người thực hiện';
+$lang_module['work_process'] = 'Tiến độ';
+$lang_module['work_submit'] = 'Thêm công việc';
+$lang_module['work_owner'] = 'Công việc của tôi';
+
+$lang_module['index'] = 'STT';
+$lang_module["change_process"] = "Cập nhật tiến độ";
+$lang_module["update"] = "Cập nhật";
+$lang_module["error"] = "Có lỗi xảy ra";
+$lang_module["saved"] = "Đã lưu";
+$lang_module["change_confirm"] = "Xác nhận";
+$lang_module["confirm"] = "Xác nhận";
+$lang_module["review"] = "Đánh giá";
+$lang_module["process"] = "Tiến độ";
+$lang_module["note"] = "Ghi chú";
+$lang_module["user"] = "Nhân viên";
+$lang_module["cometime"] = "Từ ngày";
+$lang_module["calltime"] = "Đến ngày";
+$lang_module["search"] = "Lọc danh sách";
+$lang_module["count"] = "Có tổng cộng";
+$lang_module["count_2"] = "công việc";
+
+$lang_module["confirm_option"][0] = "Chưa xác nhận";
+$lang_module["confirm_option"][1] = "Đã xác nhận";
+
+$lang_module["review_option"][-2] = "Cực";
+$lang_module["review_option"][-1] = "Tệ";
+$lang_module["review_option"][0] = "Chưa đánh giá";
+$lang_module["review_option"][1] = "Bình thường";
+$lang_module["review_option"][2] = "Khá";
+$lang_module["review_option"][3] = "Tốt";

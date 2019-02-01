@@ -147,6 +147,7 @@ $lang_module['work_manage'] = 'Quản lý công việc';
 $lang_module['config_manage'] = 'Cấu hình';
 
 $lang_module['depart_submit'] = 'Thêm phòng ban';
+$lang_module['depart_submit'] = 'Tìm kiếm nhân viên';
 $lang_module['depart_search'] = 'Tìm kiếm từ khóa nhân viên';
 $lang_module['depart_remove'] = 'Xóa phòng ban';
 $lang_module['depart_edit'] = 'Sửa phòng ban';
@@ -175,7 +176,9 @@ $lang_module['work_customer'] = 'Khách hàng';
 $lang_module['work_depart'] = 'Phòng ban';
 $lang_module['work_employ'] = 'Người thực hiện';
 $lang_module['work_process'] = 'Tiến độ';
+$lang_module['work_note'] = 'Ghi chú';
 $lang_module['work_submit'] = 'Thêm công việc';
+$lang_module['work_update'] = 'Cập nhật công việc';
 
 $lang_module['employ_edit'] = 'Sửa thông tin nhân viên';
 $lang_module['employ_add'] = 'Thêm vào danh sách nhân viên';
@@ -197,6 +200,13 @@ $lang_module['g_starttime'] = 'Từ ngày';
 $lang_module['g_endtime'] = 'Đến ngày';
 $lang_module['g_sort'] = 'Sắp xếp theo';
 $lang_module['g_error'] = 'Đã có lỗi xảy ra';
+$lang_module['user'] = 'Tài khoản nhân viên';
+$lang_module['g_insert'] = 'Thêm';
+$lang_module['user'] = 'Nhân viên';
+$lang_module['user_main'] = 'Quản lý';
+$lang_module['delete'] = 'Xóa';
+$lang_module['saved'] = 'Đã lưu';
 
+$lang_module['noselect'] = 'Chưa chọn mục nào';
 $lang_module['name_existed'] = 'Tên này đã tồn tại';
 $lang_module['keyword_blank'] = 'Không có từ khóa';
