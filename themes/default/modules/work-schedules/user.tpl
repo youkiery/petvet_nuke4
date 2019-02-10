@@ -13,14 +13,14 @@
             <label> {lang.work_name} </label>
             <input class="form-control" type="text" id="name">
           </div>
-          <div class="form-group">
-            <label> {lang.work_customer} </label>
-            <select class="form-control" id="customer">
+          <!-- <div class="form-group"> -->
+            <!-- <label> {lang.work_customer} </label> -->
+            <!-- <select class="form-control" id="customer"> -->
               <!-- BEGIN: customer_option -->
-              <option value="{customer_value}">{customer_name}</option>
+              <!-- <option value="{customer_value}">{customer_name}</option> -->
               <!-- END: customer_option -->
-            </select>
-          </div>
+            <!-- </select> -->
+          <!-- </div> -->
           <div class="form-group">
             <label> {lang.work_depart} </label>
             <select class="form-control" id="depart">
@@ -86,12 +86,12 @@
             <label> {lang.work_name} </label>
             <input class="form-control" type="text" id="edit_name">
           </div>
-          <div class="form-group">
-            <label> {lang.work_customer} </label>
-            <select class="form-control" id="edit_customer">
+          <!-- <div class="form-group"> -->
+            <!-- <label> {lang.work_customer} </label> -->
+            <!-- <select class="form-control" id="edit_customer"> -->
 
-            </select>
-          </div>
+            <!-- </select> -->
+          <!-- </div> -->
           <div class="form-group">
             <label> {lang.work_depart} </label>
             <select class="form-control" id="edit_depart">
@@ -253,9 +253,9 @@
       <th>
         {lang.work_endtime}
       </th>
-      <th>
+      <!-- <th>
         {lang.work_customer}
-      </th>
+      </th> -->
       <th>
         {lang.work_process}
       </th>
@@ -419,7 +419,7 @@
           $("#edit_name").val(data["content"])
           $("#edit_starttime").val(data["starttime"])
           $("#edit_endtime").val(data["endtime"])
-          $("#edit_customer").html(data["customer"])
+          // $("#edit_customer").html(data["customer"])
           $("#edit_depart").html(data["depart"])
           $("#edit_user").html(data["user"])
           $("#edit_note").html(data["note"])
@@ -457,7 +457,7 @@
     e.preventDefault()
     $.post(
       strHref,
-      {action: "insert", departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#name").val(), starttime: $("#starttime").val(), endtime: $("#endtime").val(), customer: $("#customer").val(), userid: $("#user").val(), depart: $("#depart").val(), process: $("#process").val()},
+      {action: "insert", departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#name").val(), starttime: $("#starttime").val(), endtime: $("#endtime").val(), /*customer: $("#customer").val(),*/ userid: $("#user").val(), depart: $("#depart").val(), process: $("#process").val()},
       (response, status) => {
         var data = JSON.parse(response)
         if (data["status"]) {
@@ -474,7 +474,7 @@
     e.preventDefault()
     $.post(
       strHref,
-      {action: "edit", departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#edit_name").val(), starttime: $("#edit_starttime").val(), endtime: $("#edit_endtime").val(), customer: $("#edit_customer").val(), userid: $("#edit_user").val(), depart: $("#edit_depart").val(), note: $("#edit_note").val(), process: $("#edit_process").val().replace("%", "")},
+      {action: "edit", departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#edit_name").val(), starttime: $("#edit_starttime").val(), endtime: $("#edit_endtime").val(), /*customer: $("#edit_customer").val(),*/ userid: $("#edit_user").val(), depart: $("#edit_depart").val(), note: $("#edit_note").val(), process: $("#edit_process").val().replace("%", "")},
       (response, status) => {
         var data = JSON.parse(response)
         if (data["status"]) {

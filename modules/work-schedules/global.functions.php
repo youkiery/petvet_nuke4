@@ -118,7 +118,7 @@ function user_manager_list() {
     $index = 1;
     $depart = depart_data();
 
-    $sql = "select a.*, c.name as customer from `" . WORK_PREFIX . "_row` a inner join `" . WORK_PREFIX . "_customer` c on a.customer = c.id where a.depart = $departid and " . filter_by_time();
+    $sql = "select * from `" . WORK_PREFIX . "_row` where depart = $departid and " . filter_by_time();
     $query = $db->query($sql);
     $count = 0;
     while ($work = $query->fetch()) {
@@ -168,7 +168,7 @@ function user_manager_list() {
 }
 
 function user_work_list() {
-  global $db, $global_config, $module_file, $module_name, $lang_module, $user_info, $db_config, $user_info, $result;
+  global $db, $global_config, $module_file, $module_name, $lang_module, $user_info, $db_config, $user_info, $result, $nv_Request;
   $xtpl = new XTemplate('user-list.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
   $index = 1;
   $count = 0;
@@ -187,7 +187,7 @@ function user_work_list() {
   }
 
   if (!empty($user_info)) {
-    $sql = "select a.*, b.name as customer from `" . WORK_PREFIX . "_row` a inner join `" . WORK_PREFIX . "_customer` b on a.customer = b.id where a.userid = $user_info[userid] and " . filter_by_time();
+    $sql = "select * from `" . WORK_PREFIX . "_row` where userid = $user_info[userid] and " . filter_by_time();
     $query = $db->query($sql);
     while($work = $query->fetch()) {
       $count ++;
@@ -410,7 +410,7 @@ function work_list() {
     $sort = "";
   }
 
-  $sql = "select a.*, b.username, c.name as customer, d.name as depart from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid inner join `" . WORK_PREFIX . "_customer` c on a.customer = c.id inner join `" . WORK_PREFIX . "_depart` d on a.depart = d.id $where $sort";
+  $sql = "select a.*, b.username, d.name as depart from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid inner join `" . WORK_PREFIX . "_depart` d on a.depart = d.id $where $sort";
 
   $query = $db->query($sql);
   while ($work = $query->fetch()) {

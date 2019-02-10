@@ -1,5 +1,5 @@
 <!-- BEGIN: main -->
-<div class="msg_show"></div>
+<div class="msg_show" id="msg_show"></div>
 <div id="detail" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -31,14 +31,14 @@
             <label> {lang.work_name} </label>
             <input class="form-control" type="text" id="name">
           </div>
-          <div class="form-group">
-            <label> {lang.work_customer} </label>
-            <select class="form-control" id="customer">
+          <!-- <div class="form-group"> -->
+            <!-- <label> {lang.work_customer} </label> -->
+            <!-- <select class="form-control" id="customer"> -->
               <!-- BEGIN: customer_option -->
-              <option value="{customer_value}">{customer_name}</option>
+              <!-- <option value="{customer_value}">{customer_name}</option> -->
               <!-- END: customer_option -->
-            </select>
-          </div>
+            <!-- </select> -->
+          <!-- </div> -->
           <div class="form-group">
             <label> {lang.work_depart} </label>
             <select class="form-control" id="depart">
@@ -103,12 +103,12 @@
             <label> {lang.work_name} </label>
             <input class="form-control" type="text" id="edit_name">
           </div>
-          <div class="form-group">
-            <label> {lang.work_customer} </label>
-            <select class="form-control" id="edit_customer">
+          <!-- <div class="form-group"> -->
+            <!-- <label> {lang.work_customer} </label> -->
+            <!-- <select class="form-control" id="edit_customer"> -->
 
-            </select>
-          </div>
+            <!-- </select> -->
+          <!-- </div> -->
           <div class="form-group">
             <label> {lang.work_depart} </label>
             <select class="form-control" id="edit_depart">
@@ -229,9 +229,9 @@
       <th>
         {lang.work_endtime}
       </th>
-      <th>
+      <!-- <th>
         {lang.work_customer}
-      </th>
+      </th> -->
       <th>
         {lang.work_employ}
       </th>
@@ -278,7 +278,7 @@
           $("#edit_name").val(data["content"])
           $("#edit_starttime").val(data["starttime"])
           $("#edit_endtime").val(data["endtime"])
-          $("#edit_customer").html(data["customer"])
+          // $("#edit_customer").html(data["customer"])
           $("#edit_depart").html(data["depart"])
           $("#edit_user").html(data["user"])
           $("#edit_note").html(data["note"])
@@ -287,6 +287,7 @@
           userid = data["userid"]
           $("#edit").modal("show")
         }
+        alert_msg(data["notify"])
       }
     )
   }
@@ -335,7 +336,7 @@
     e.preventDefault()
     $.post(
       strHref,
-      {action: "save", content: $("#name").val(), starttime: $("#starttime").val(), endtime: $("#endtime").val(), customer: $("#customer").val(), userid: $("#user").val(), depart: $("#depart").val(), process: $("#process").val()},
+      {action: "save", content: $("#name").val(), starttime: $("#starttime").val(), endtime: $("#endtime").val(), /*customer: $("#customer").val(),*/ userid: $("#user").val(), depart: $("#depart").val(), process: $("#process").val()},
       (response, status) => {
         var data = JSON.parse(response)
         if (data["status"]) {
@@ -351,7 +352,7 @@
     e.preventDefault()
     $.post(
       strHref,
-      {action: "edit", id: g_id, content: $("#edit_name").val(), starttime: $("#edit_starttime").val(), endtime: $("#edit_endtime").val(), customer: $("#edit_customer").val(), userid: $("#edit_user").val(), depart: $("#edit_depart").val(), note: $("#edit_note").val(), process: $("#edit_process").val()},
+      {action: "edit", id: g_id, content: $("#edit_name").val(), starttime: $("#edit_starttime").val(), endtime: $("#edit_endtime").val(), /*customer: $("#edit_customer").val(),*/ userid: $("#edit_user").val(), depart: $("#edit_depart").val(), note: $("#edit_note").val(), process: $("#edit_process").val()},
       (response, status) => {
         var data = JSON.parse(response)
         if (data["status"]) {

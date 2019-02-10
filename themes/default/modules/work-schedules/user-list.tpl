@@ -12,9 +12,9 @@
   <td data-toggle="modal" data-target="#detail">
     {work_endtime}
   </td>
-  <td data-toggle="modal" data-target="#detail">
+  <!-- <td data-toggle="modal" data-target="#detail">
     {work_customer}
-  </td>
+  </td> -->
   <td data-toggle="modal" data-target="#detail" id="process_{id}">
     {work_process}%
   </td>

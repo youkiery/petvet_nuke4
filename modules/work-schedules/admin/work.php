@@ -32,20 +32,21 @@ if (!empty($action)) {
       $content = $nv_Request->get_string("content", "get/post", "");
       $starttime = $nv_Request->get_string("starttime", "get/post", "");
       $endtime = $nv_Request->get_string("endtime", "get/post", "");
-      $customer = $nv_Request->get_string("customer", "get/post", "");
+      // $customer = $nv_Request->get_string("customer", "get/post", "");
       $userid = $nv_Request->get_string("userid", "get/post", "");
       $depart = $nv_Request->get_string("depart", "get/post", "");
       $process = $nv_Request->get_string("process", "get/post", "");
       $note = $nv_Request->get_string("note", "get/post", "");
 
-      if (!(empty($content) || empty($starttime) || empty($endtime) || empty($customer) || empty($userid) || empty($depart))) {
+      if (!(empty($content) || empty($starttime) || empty($endtime) /*|| empty($customer)*/ || empty($userid) || empty($depart))) {
         if (empty($process))  {
           $process = 0;
         }
         $starttime = totime($starttime);
         $endtime = totime($endtime);
 
-        $sql = "insert into `" . WORK_PREFIX . "_row` (cometime, calltime, last_time, post_user, edit_user, userid, depart, customer, content, process, confirm, review, note) values ($starttime, $endtime, " . time() . ", 0, 0, $userid, $depart, $customer, '$content', $process, 0, 0, '$note')";
+        // $sql = "insert into `" . WORK_PREFIX . "_row` (cometime, calltime, last_time, post_user, edit_user, userid, depart, customer, content, process, confirm, review, note) values ($starttime, $endtime, " . time() . ", 0, 0, $userid, $depart, $customer, '$content', $process, 0, 0, '$note')";
+        $sql = "insert into `" . WORK_PREFIX . "_row` (cometime, calltime, last_time, post_user, edit_user, userid, depart, customer, content, process, confirm, review, note) values ($starttime, $endtime, " . time() . ", 0, 0, $userid, $depart, 0, '$content', $process, 0, 0, '$note')";
         $query = $db->query($sql);
         if ($query) {
           $result["status"] = 1;
@@ -59,20 +60,21 @@ if (!empty($action)) {
       $content = $nv_Request->get_string("content", "get/post", "");
       $starttime = $nv_Request->get_string("starttime", "get/post", "");
       $endtime = $nv_Request->get_string("endtime", "get/post", "");
-      $customer = $nv_Request->get_string("customer", "get/post", "");
+      // $customer = $nv_Request->get_string("customer", "get/post", "");
       $userid = $nv_Request->get_string("userid", "get/post", "");
       $depart = $nv_Request->get_string("depart", "get/post", "");
       $process = $nv_Request->get_string("process", "get/post", "");
       $note = $nv_Request->get_string("note", "get/post", "");
 
-      if (!(empty($id) || empty($content) || empty($starttime) || empty($endtime) || empty($customer) || empty($userid) || empty($depart))) {
+      if (!(empty($id) || empty($content) || empty($starttime) || empty($endtime) /*|| empty($customer)*/ || empty($userid) || empty($depart))) {
         if (empty($process))  {
           $process = 0;
         }
         $starttime = totime($starttime);
         $endtime = totime($endtime);
 
-        $sql = "update `" . WORK_PREFIX . "_row` set cometime = $starttime, calltime = $endtime, last_time = " . time() . ", userid = $userid, customer = $customer, depart = $depart, content = '$content', process = $process, note = '$note' where id = $id";
+        // $sql = "update `" . WORK_PREFIX . "_row` set cometime = $starttime, calltime = $endtime, last_time = " . time() . ", userid = $userid, customer = $customer, depart = $depart, content = '$content', process = $process, note = '$note' where id = $id";
+        $sql = "update `" . WORK_PREFIX . "_row` set cometime = $starttime, calltime = $endtime, last_time = " . time() . ", userid = $userid, depart = $depart, content = '$content', process = $process, note = '$note' where id = $id";
         $query = $db->query($sql);
         if ($query) {
           $result["status"] = 1;
@@ -102,16 +104,16 @@ if (!empty($action)) {
         $query = $db->query($sql);
         $work = $query->fetch();
         if (!empty($work)) {
-          $sql = "select * from `" . WORK_PREFIX . "_customer`";
-          $query = $db->query($sql);
-          $customer_o = "";
-          while ($customer = $query->fetch()) {
-            $select = "";
-            if ($customer["id"] == $work["customer"]) {
-              $select = "selected";
-            }
-            $customer_o .= "<option value='" . $customer["id"] . "' " . $select . ">" . $customer["name"] . "</option>";
-          }
+          // $sql = "select * from `" . WORK_PREFIX . "_customer`";
+          // $query = $db->query($sql);
+          // $customer_o = "";
+          // while ($customer = $query->fetch()) {
+          //   $select = "";
+          //   if ($customer["id"] == $work["customer"]) {
+          //     $select = "selected";
+          //   }
+          //   $customer_o .= "<option value='" . $customer["id"] . "' " . $select . ">" . $customer["name"] . "</option>";
+          // }
 
           $sql = "select * from `" . WORK_PREFIX . "_depart`";
           $query = $db->query($sql);
@@ -139,7 +141,7 @@ if (!empty($action)) {
           $result["content"] = $work["content"];
           $result["starttime"] = date("d/m/Y", $work["cometime"]);
           $result["endtime"] = date("d/m/Y", $work["calltime"]);
-          $result["customer"] = $customer_o;
+          // $result["customer"] = $customer_o;
           $result["depart"] = $depart_o;
           $result["user"] = $user_o;
           $result["username"] = $work["username"];
@@ -173,14 +175,14 @@ foreach ($sort_option as $key => $row) {
   $xtpl->parse("main.sort_option");
 }
 
-$sql = "select * from `" . WORK_PREFIX . "_customer`";
-$query = $db->query($sql);
-while ($customer = $query->fetch()) {
-  $xtpl->assign("customer_value", $customer["id"]);
-  $xtpl->assign("customer_name", $customer["name"]);
-  $xtpl->parse("main.customer_option");
-  $xtpl->parse("main.customer_option2");
-}
+// $sql = "select * from `" . WORK_PREFIX . "_customer`";
+// $query = $db->query($sql);
+// while ($customer = $query->fetch()) {
+//   $xtpl->assign("customer_value", $customer["id"]);
+//   $xtpl->assign("customer_name", $customer["name"]);
+//   $xtpl->parse("main.customer_option");
+//   $xtpl->parse("main.customer_option2");
+// }
 
 $sql = "select * from `" . WORK_PREFIX . "_depart`";
 $query = $db->query($sql);
