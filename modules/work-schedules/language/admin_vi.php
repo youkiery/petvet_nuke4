@@ -147,7 +147,6 @@ $lang_module['work_manage'] = 'Quản lý công việc';
 $lang_module['config_manage'] = 'Cấu hình';
 
 $lang_module['depart_submit'] = 'Thêm phòng ban';
-$lang_module['depart_submit'] = 'Tìm kiếm nhân viên';
 $lang_module['depart_search'] = 'Tìm kiếm từ khóa nhân viên';
 $lang_module['depart_remove'] = 'Xóa phòng ban';
 $lang_module['depart_edit'] = 'Sửa phòng ban';

@@ -72,7 +72,7 @@
     <input class="form-control" type="text" id="keyword">
   </div>
   <button class="btn btn-info">
-    {lang.depart_submit}
+    {lang.employ_search}
   </button>
 </form>
 <div id="s_content" style="display: none;">
