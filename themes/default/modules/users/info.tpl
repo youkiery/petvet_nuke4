@@ -25,10 +25,6 @@
         <li class="{PASSWORD_ACTIVE}">
             <a data-toggle="tab" data-location="{EDITINFO_FORM}/password" href="#edit_password">{LANG.edit_password}</a>
         </li><!-- END: edit_password -->
-        <!-- BEGIN: edit_address-->
-        <li class="{ADDRESS_ACTIVE}">
-            <a data-toggle="tab" data-location="{EDITINFO_FORM}/address" href="#edit_address">{LANG.edit_address}</a>
-        </li><!-- END: edit_address -->
         <!-- BEGIN: 2step -->
         <li>
             <a href="{URL_2STEP}">{LANG.2step_status}</a>
@@ -341,15 +337,6 @@
                             </div>
                         </div>
                     </form>
-                </div>
-            </div>
-        </div>
-        <!-- END: tab_edit_password -->
-        <!-- BEGIN: tab_edit_address -->
-        <div id="edit_address" class="tab-pane fade {TAB_ADDRESS_ACTIVE}">
-            <div class="page panel panel-default">
-                <div class="panel-body bg-lavender">
-                    testing
                 </div>
             </div>
         </div>
