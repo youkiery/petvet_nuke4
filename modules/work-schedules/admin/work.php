@@ -90,7 +90,7 @@ if (!empty($action)) {
       $sql = "select * from `" . $db_config["prefix"] . "_users` where username like '%$user%'";
       $query = $db->query($sql);
       while($user = $query->fetch()) {
-        $xtpl->assign("name", $user["username"]);
+        $xtpl->assign("name", $user["last_name"] . " " . $user["first_name"]);
         $xtpl->assign("id", $user["userid"]);
         $xtpl->parse("main");
       }
@@ -197,7 +197,7 @@ $sql = "select * from `" . $db_config["prefix"] . "_users`";
 $query = $db->query($sql);
 while ($user = $query->fetch()) {
   $xtpl->assign("user_value", $user["userid"]);
-  $xtpl->assign("user_name", $user["username"]);
+  $xtpl->assign("user_name", $user["last_name"] . " " . $user["first_name"]);
   $xtpl->parse("main.user_option");
   $xtpl->parse("main.user_option2");
 }

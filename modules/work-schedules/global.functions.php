@@ -18,7 +18,7 @@ $this_week = strtotime('-'.$day.' days');
 $this_month = strtotime(date("Y-m-1"));
 $this_year = strtotime(date("Y-1-1"));
 
-$role = array("Chờ kích hoạt", "Thành viên", "Trưởng nhóm");
+$role = array("Chờ kích hoạt", "Nhân viên", "Trưởng nhóm");
 
 $sort_option = array(
   1 => array(
@@ -247,7 +247,7 @@ function depart_employ_list() {
   $depart = get_depart_list();
   $xtpl->assign('lang', $lang_module);
 
-  $sql = "select a.*, b.username from `" . WORK_PREFIX . "_employ` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid where a.depart = $id";
+  $sql = "select a.*, b.username, b.first_name, b.last_name from `" . WORK_PREFIX . "_employ` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid where a.depart = $id";
   $employ_query = $db->query($sql);
   $list = fetchall($employ_query);
 
@@ -255,7 +255,8 @@ function depart_employ_list() {
     // name, role
     $xtpl->assign("index", $index);
     $xtpl->assign("id", $employ["userid"]);
-    $xtpl->assign("name", $employ["username"]);
+    $xtpl->assign("username", $employ["username"]);
+    $xtpl->assign("name", $employ["last_name"] . " " . $employ["first_name"]);
     $xtpl->assign("role", $role[$employ["role"]]);
     $xtpl->parse('main');
     $index ++;
@@ -275,6 +276,7 @@ function search_depart($list) {
   foreach ($list as $depart) {
     $xtpl->assign("index", $index);
     $xtpl->assign("id", $depart["userid"]);
+    $xtpl->assign("username", $depart["username"]);
     $xtpl->assign("name", $depart["last_name"] . " " . $depart["first_name"]);
     $xtpl->parse("main");
     $index ++;
@@ -326,7 +328,8 @@ function employ_list() {
     }
     $xtpl->assign("index", $index);
     $xtpl->assign("id", $employ["userid"]);
-    $xtpl->assign("name", $user["username"]);
+    $xtpl->assign("username", $user["username"]);
+    $xtpl->assign("name", $user["last_name"] . " " . $user["first_name"]);
     $xtpl->assign("roles", implode(", ", $depart));
     $xtpl->parse("main");
     $index ++;
@@ -410,7 +413,7 @@ function work_list() {
     $sort = "";
   }
 
-  $sql = "select a.*, b.username, d.name as depart from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid inner join `" . WORK_PREFIX . "_depart` d on a.depart = d.id $where $sort";
+  $sql = "select a.*, b.first_name, b.last_name, d.name as depart from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid inner join `" . WORK_PREFIX . "_depart` d on a.depart = d.id $where $sort";
 
   $query = $db->query($sql);
   while ($work = $query->fetch()) {
@@ -421,7 +424,7 @@ function work_list() {
     $xtpl->assign("work_endtime", date("d/m/Y", $work["calltime"]));
     $xtpl->assign("work_customer", $work["customer"]);
     $xtpl->assign("work_depart", $work["depart"]);
-    $xtpl->assign("work_employ", $work["username"]);
+    $xtpl->assign("work_employ", $work["last_name"] . " " . $work["first_name"]);
     $xtpl->assign("work_process", $work["process"]);
 
     $xtpl->parse('main');

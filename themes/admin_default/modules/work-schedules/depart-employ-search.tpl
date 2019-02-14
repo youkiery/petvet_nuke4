@@ -4,6 +4,9 @@
     {index}
   </td>
   <td id="search_{id}">
+    {username}
+  </td>
+  <td id="search_{id}">
     {name}
   </td>
   <td>

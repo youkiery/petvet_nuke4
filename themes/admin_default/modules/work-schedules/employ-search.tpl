@@ -4,6 +4,9 @@
     {index}
   </th>
   <th>
+    {employ_username}
+  </th>
+  <th>
     {employ_name}
   </th>
   <th>

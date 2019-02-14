@@ -300,7 +300,7 @@ if (!empty($user_info)) {
   $query = $db->query($user_sql);
   while ($user = $query->fetch()) {
     $xtpl->assign("user_value", $user["userid"]);
-    $xtpl->assign("user_name", $user["username"]);
+    $xtpl->assign("user_name", $user["last_name"] . " " . $user["first_name"]);
     $xtpl->parse("main.user_option");
     $xtpl->parse("main.user_option2");
   }

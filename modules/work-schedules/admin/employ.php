@@ -86,7 +86,8 @@ if (!empty($action)) {
       while ($user = $query->fetch()) {
         $xtpl->assign("index", $index ++);
         $xtpl->assign("id", $user["userid"]);
-        $xtpl->assign("employ_name", $user["username"]);
+        $xtpl->assign("employ_username", $user["username"]);
+        $xtpl->assign("employ_name", $user["last_name"] . " " . $user["first_name"]);
         $xtpl->parse("main");
       }
       $result["status"] = 1;

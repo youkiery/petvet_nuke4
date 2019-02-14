@@ -1,6 +1,7 @@
 <!-- BEGIN: main -->
 <tr>
   <td>{index}</td>
+  <td>{username}</td>
   <td>{name}</td>
   <td>{role}</td>
   <td>

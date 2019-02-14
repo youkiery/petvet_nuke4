@@ -112,6 +112,9 @@
         {lang.index}
       </th>
       <th>
+        {lang.employ_username}
+      </th>
+      <th>
         {lang.employ_name}
       </th>
       <th>
@@ -142,13 +145,10 @@
           {lang.index}
         </th>
         <th>
+          {lang.employ_username}
+        </th>
+        <th>
           {lang.employ_name}
-        </th>
-        <th>
-          {lang.employ_phone}
-        </th>
-        <th>
-          {lang.employ_address}
         </th>
         <th>
         </th>

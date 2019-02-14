@@ -13,13 +13,10 @@
     {work_endtime}
   </td>
   <td>
-    {work_customer}
+    {work_employ}
   </td>
   <td>
     {work_depart}
-  </td>
-  <td>
-    {work_employ}
   </td>
   <td>
     {work_process} %
