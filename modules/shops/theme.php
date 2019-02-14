@@ -1776,7 +1776,7 @@ function cart_product($data_content, $coupons_code, $order_info, $array_error_nu
  */
 function uers_order($data_content, $data_order, $total_coupons, $order_info, $error)
 {
-    global $module_info, $lang_module, $lang_global, $module_config, $module_data, $module_file, $module_name, $pro_config, $money_config, $global_array_group, $shipping_data;
+    global $module_info, $lang_module, $lang_global, $module_config, $module_data, $module_file, $module_name, $pro_config, $money_config, $global_array_group, $shipping_data, $user_info;
 
     $xtpl = new XTemplate('order.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file);
     $xtpl->assign('LANG', $lang_module);
@@ -1850,11 +1850,24 @@ function uers_order($data_content, $data_order, $total_coupons, $order_info, $er
         }
     }
 
+    if (!empty($user_info)) {
+      $xtpl->assign("DATA", $data_content["address"][0]);
+      foreach ($data_content["address"] as $key => $address) {
+        $xtpl->assign("address_value", $key);
+        $xtpl->assign("address_name", $address["order_address"]);
+        $xtpl->parse("main.address.address_list");
+      }
+      $xtpl->assign("address", json_encode($data_content["address"]));
+      $xtpl->assign("userid", $user_info["userid"]);
+      $xtpl->parse("main.address");
+      $xtpl->parse("main.address2");
+    }
+
     $xtpl->assign('price_coupons', nv_number_format($total_coupons, nv_get_decimals($pro_config['money_unit'])));
     $xtpl->assign('price_total', nv_number_format($price_total - $total_coupons, nv_get_decimals($pro_config['money_unit'])));
     $xtpl->assign('unit_config', $money_config[$pro_config['money_unit']]['symbol']);
     $xtpl->assign('weight_unit', $pro_config['weight_unit']);
-    $xtpl->assign('DATA', $data_order);
+    // $xtpl->assign('DATA', $data_order);
     $xtpl->assign('ERROR', $error);
     $xtpl->assign('LINK_CART', NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=cart');
     if (isset($_SESSION[$module_data . '_coupons']['code'])) {

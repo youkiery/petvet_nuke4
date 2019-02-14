@@ -19,6 +19,46 @@ if (!defined('NV_IS_USER') and !$pro_config['active_guest_order']) {
 }
 $contents = '';
 
+$action = $nv_Request->get_string("action", "get/post", "");
+if (!empty($action)) {
+  $result = array("status" => 0, "notify" => $lang_module["error"]);
+  switch ($action) {
+    case 'add_address':
+      $name = $nv_Request->get_string("name", "get/post", "");
+      $phone = $nv_Request->get_string("phone", "get/post", "");
+      $address = $nv_Request->get_string("address", "get/post", "");
+      $email = $nv_Request->get_string("email", "get/post", "");
+
+      if (empty($user_info)) {
+        $result["status"] = 1;
+        $result["address_list"] = "";
+      }
+      else if (!(empty($name) || empty($phone))) {
+        $sql = "select * from `" . $db_config["prefix"] . "_" . $module_name . "_address` where (order_phone = '$phone' and user_id = $user_info[userid])";
+        if (!$data = $db->query($sql)->fetch()) {
+          $sql = "insert into `" . $db_config["prefix"] . "_" . $module_name . "_address` (user_id, order_name, order_phone, order_address, order_email, create_time) values ($user_info[userid], '$name', '$phone', '$address', '$email', " . time() . ")";
+          if ($query = $db->query($sql)) {
+            $result["status"] = 1;
+            $sql = "select * from `" . $db_config["prefix"] . "_" . $module_name . "_address` where user_id = $user_info[userid]";
+
+            $query = $db->query($sql);
+            $address_option = "";
+            $addresses = array();
+            while($address = $query->fetch()) {
+              $addresses[] = $address;
+              $address_option .= "<option value='$address[id]'>$address[address]</option>";
+            }
+            $result["address_list"] = $address_option;
+            $result["addresses"] = $addresses;
+          }
+        }
+      }
+    break;
+  }
+  echo json_encode($result);
+  die();
+}
+
 $link1 = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name;
 $link = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=';
 $action = 0;
@@ -628,6 +668,14 @@ if ($action == 0) {
         Header('Location: ' . nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=cart', true));
         exit();
     } else {
+        $data_content["address"] = array();
+        if (!empty($user_info)) {
+          $sql = "select * from `" . $db_config["prefix"] . "_" . $module_name . "_address` where user_id = " . $user_info["userid"] . " order by id";
+          $query = $db->query($sql);
+          while ($address = $query->fetch()) {
+            $data_content["address"][] = $address;
+          }
+        }
         $contents = call_user_func('uers_order', $data_content, $data_order, $array_counpons['discount'], $order_info, $error);
     }
 }

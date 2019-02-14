@@ -201,7 +201,7 @@ $lang_module['cart_update_pro'] = 'Cập nhật';
 $lang_module['cart_update'] = 'Cập nhật giỏ hàng';
 $lang_module['cart_edit'] = 'Chỉnh sửa đơn hàng';
 $lang_module['cart_edit_warning'] = '<strong>Chú ý:</strong> Bạn đang sửa đơn hàng <a href="%s" title="Xem đơn hàng"><strong>%s</strong></a>. Bạn không thể tạo đơn hàng mới cho đến khi hoàn tất thao tác này. Vui lòng thực hiện các bước tiếp theo kết thúc việc thay đổi thông tin cho đơn hàng này, hoặc nhấn vào <a href="%s" onclick="return confirm(\'Bạn có chắc chắn muốn hủy bỏ việc chỉnh sửa đơn hàng này?\')" title="Hủy thao tác sửa">đây</a> để hủy bỏ thao tác sửa đơn hàng.';
-$lang_module['order_info'] = 'Xin điền đầy đủ thông tin vào các mục đánh dấu (*). Bạn có thể hoàn thành tự động các mục này bằng cách sửa thông tin thành viên và điền đầy đủ thông tin liên hệ của mình.';
+$lang_module['order_info'] = 'Chọn liên hệ từ danh sách hoặc điền trực tiếp, những thông tin mới sẽ được lưu vào danh sách';
 $lang_module['order_contact'] = 'Thông tin liên hệ';
 $lang_module['order_product_cart'] = 'Sản phẩm trong giỏ';
 $lang_module['order_back_to_step'] = 'Bạn phải chọn sản phẩm ở bước 1 ';
@@ -492,3 +492,7 @@ $lang_module['select_content_download'] = 'Download tài liệu';
 $lang_module['select_content_comment'] = 'Bình luận';
 $lang_module['select_content_rate'] = 'Đánh giá sản phẩm';
 $lang_module['select_content_customdata'] = 'Dữ liệu tùy biến';
+
+$lang_module['add_address'] = 'Thêm một địa chỉ';
+$lang_module['add_address_title'] = 'Nhập thông tin liên hệ, đăng ký để lưu cho những lần sau';
+$lang_module['error'] = 'Có lỗi xảy ra';

@@ -2,15 +2,54 @@
 <script type="text/javascript" data-show="after" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/select2/select2.min.js"></script>
 <link href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/select2/select2.min.css" type="text/css" rel="stylesheet" />
 
+<div id="address" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"> {LANG.add_address_title} </h4>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="return add_address(event)">
+          <div class="form-group">
+            <label>{LANG.order_name} <span class="error">(*)</span></label>
+            <input class="form-control" id="order_name" />
+          </div>
+          <div class="form-group">
+            <label>{LANG.order_phone} <span class="error">(*)</span></label>
+            <input class="form-control" id="order_phone" />
+          </div>
+          <div class="form-group">
+            <label>{LANG.order_address} </label>
+            <input class="form-control" id="order_address" />
+          </div>
+          <div class="form-group">
+            <label>{LANG.order_email} </label>
+            <input class="form-control" id="order_email" />
+          </div>
+          <div class="form-group text-center">
+            <button class="btn btn-success text-center">
+              {LANG.add_address}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="block clearfix">
 	<div class="step_bar alert alert-success clearfix">
 		<a class="step step_disable" title="{LANG.cart_check_cart}" href="{LINK_CART}"><span>1</span>{LANG.cart_check_cart}</a>
 		<a class="step step_current" title="{LANG.cart_order}" href="#"><span>2</span>{LANG.cart_order}</a>
 	</div>
 
+	<!-- BEGIN: address2 -->
 	<p class="alert alert-info">
-		{LANG.order_info}
+    {LANG.order_info}
 	</p>
+  <!-- END: address2 -->
 
 	<!-- BEGIN: edit_order -->
 	<div class="alert alert-warning">
@@ -23,50 +62,81 @@
 
 		<div class="panel panel-default">
 		    <div class="panel-body">
+          <!-- BEGIN: address -->
+          <div class="input-group">
+            <select class="form-control" id="address_list" onchange="change_order_address()">
+              <!-- BEGIN: address_list -->
+              <option value="{address_value}"> {address_name} </option>
+              <!-- END: address_list -->
+            </select>
+            <span class="input-group-btn">
+              <button class="btn btn-success" data-toggle="modal" data-target="#address">
+                +
+              </button>
+            </span>
+          </div>
+          <!-- END: address -->
 
-                <div class="form-group">
-                    <label class="col-sm-6 control-label">{LANG.order_name} <span class="error">(*)</span></label>
-                    <div class="col-sm-18">
-                        <p class="form-control-static"><input name="order_name" class="form-control" value="{DATA.order_name}" /></p>
-                        <span class="error">{ERROR.order_name}</span>
-                    </div>
-                </div>
+          <div class="form-group">
+            <label>{LANG.order_name} <span class="error">(*)</span></label>
+            <input class="form-control" id="order_name_value" value="{DATA.order_name}" />
+          </div>
+          <div class="form-group">
+            <label>{LANG.order_phone} <span class="error">(*)</span></label>
+            <input class="form-control" id="order_phone_value" value="{DATA.order_phone}" />
+          </div>
+          <div class="form-group">
+            <label>{LANG.order_address} </label>
+            <input class="form-control" id="order_address_value" value="{DATA.order_address}" />
+          </div>
+          <div class="form-group">
+            <label>{LANG.order_email} </label>
+            <input class="form-control" id="order_email_value" value="{DATA.order_email}" />
+          </div>
 
-                <div class="form-group">
-                    <label class="col-sm-6 control-label">{LANG.order_email} <span class="error">(*)</span></label>
-                    <div class="col-sm-18">
-                        <p class="form-control-static"><input type="email" name="order_email" value="{DATA.order_email}" class="form-control" /></p>
-                        <span class="error">{ERROR.order_email}</span>
-                    </div>
-                </div>
+          <!-- <div class="form-group">
+              <label class="col-sm-6 control-label">{LANG.order_name} <span class="error">(*)</span></label>
+              <div class="col-sm-18">
+                  <p class="form-control-static"><input name="order_name" class="form-control" value="{DATA.order_name}" /></p>
+                  <span class="error">{ERROR.order_name}</span>
+              </div>
+          </div>
 
-                <div class="form-group">
-                    <label class="col-sm-6 control-label">{LANG.order_phone} <span class="error">(*)</span></label>
-                    <div class="col-sm-18">
-                        <p class="form-control-static"><input name="order_phone" class="form-control" value="{DATA.order_phone}" /></p>
-                        <span class="error">{ERROR.order_phone}</span>
-                    </div>
-                </div>
+          <div class="form-group">
+              <label class="col-sm-6 control-label">{LANG.order_email} <span class="error">(*)</span></label>
+              <div class="col-sm-18">
+                  <p class="form-control-static"><input type="email" name="order_email" value="{DATA.order_email}" class="form-control" /></p>
+                  <span class="error">{ERROR.order_email}</span>
+              </div>
+          </div>
 
+          <div class="form-group">
+              <label class="col-sm-6 control-label">{LANG.order_phone} <span class="error">(*)</span></label>
+              <div class="col-sm-18">
+                  <p class="form-control-static"><input name="order_phone" class="form-control" value="{DATA.order_phone}" /></p>
+                  <span class="error">{ERROR.order_phone}</span>
+              </div>
+          </div> -->
+          
 				<!-- BEGIN: order_address -->
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label class="col-sm-6 control-label">{LANG.order_address} </label>
                     <div class="col-sm-18">
                         <p class="form-control-static"><input name="order_address" class="form-control" value="{DATA.order_address}" /></p>
                         <span class="error">{ERROR.order_address}</span>
                     </div>
-                </div>
+                </div> -->
                 <!-- END: order_address -->
 
 				<!-- BEGIN: shipping_chose -->
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label class="col-sm-6 control-label">{LANG.shipping}</label>
-                    <div class="col-sm-18">
+                    <div class="col-sm-18"> -->
                     	<!-- BEGIN: shipping_loop -->
-                    	<p class="form-control-static"><label><input type="radio" name="order_shipping" value="{IS_SHIPPING.key}" {IS_SHIPPING.checked} />{IS_SHIPPING.value}</label></p>
+                    	<!-- <p class="form-control-static"><label><input type="radio" name="order_shipping" value="{IS_SHIPPING.key}" {IS_SHIPPING.checked} />{IS_SHIPPING.value}</label></p> -->
                     	<!-- END: shipping_loop -->
-                    </div>
-                </div>
+                    <!-- </div>
+                </div> -->
                 <!-- END: shipping_chose -->
             </div>
         </div>
@@ -239,6 +309,9 @@
 	var url_load = nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=shippingajax';
 	var urloadcart = nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=loadcart';
 	var order_shipping = '{DATA.order_shipping}';
+  var select_address = '{select_address}';
+  var address = JSON.parse('{address}');
+  var userid = '{userid}';
 
 	$(document).ready(function() {
 
@@ -259,6 +332,45 @@
 		}
 		return false;
 	});
+
+  function add_address(e) {
+    e.preventDefault()
+    if (!userid) {
+      $("#order_name_value").val($("#order_name").val())
+      $("#order_phone_value").val($("#order_phone").val())
+      $("#order_address_value").val($("#order_address").val())
+      $("#order_email_value").val($("#order_email").val())
+      $("#address").modal("hide")
+    }
+    else {
+      $.post(
+        strHref,
+        {action: "add_address", name: $("#order_name").val(), phone: $("#order_phone").val(), address: $ ("#order_address").val(), email: $("#order_email").val()},
+        (response, status) => {
+          if (status == 'success' && response && (data = JSON.parse(response))) {
+            $("#order_name_value").val($("#order_name").val())
+            $("#order_phone_value").val($("#order_phone").val())
+            $("#order_address_value").val($("#order_address").val())
+            $("#order_email_value").val($("#order_email").val())
+            $("#address_list").html(data["address_list"])
+            $address = data["address"]
+            $("#address").modal("hide")
+          }
+        } 
+      )
+    }
+  }
+
+  function change_order_address() {
+    var id = $("#address_list").val()
+    
+    if (address[id]) {
+      $("#order_name_value").val(address[id]["order_name"])
+      $("#order_phone_value").val(address[id]["order_phone"])
+      $("#order_address_value").val(address[id]["order_address"])
+      $("#order_email_value").val(address[id]["order_email"])
+    }
+  }
 </script>
 
 <!-- BEGIN: shipping_javascript -->

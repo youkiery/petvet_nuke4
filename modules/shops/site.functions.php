@@ -124,7 +124,8 @@ function nv_get_price($pro_id, $currency_convert, $number = 1, $per_pro = false,
     $discount = 0;
 
     $module_data = !empty($module) ? $site_mods[$module]['module_data'] : $module_data;
-    $product = $db->query('SELECT listcatid, product_price, money_unit, price_config, discount_id FROM ' . $db_config['prefix'] . '_' . $module_data . '_rows WHERE id = ' . $pro_id)->fetch();
+    $query = $db->query('select listcatid, product_price, money_unit, price_config, discount_id from ' . $db_config['prefix'] . '_' . $module_data . "_rows where id = '$pro_id'");
+    $product = $query->fetch();
     $price = $product['product_price'];
 
     if (!$per_pro) {
