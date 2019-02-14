@@ -1,4 +1,22 @@
-﻿.display-inline-block {
+﻿.user-suggest {
+  position: relative
+}
+.user-suggest-list {
+  position: absolute;
+  width: 90%;
+  z-index: 100;
+}
+.user-suggest-item {
+  background: white;
+  border-bottom: 1px groove gray;
+  height: 32px;
+  line-height: 32px;
+}
+.user-suggest-item:hover {
+  background: lightgreen
+}
+
+.display-inline-block {
     display: inline-block!important;
 }
 .fa-required{

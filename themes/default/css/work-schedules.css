@@ -162,6 +162,24 @@ h3.dayweek-head{
   text-align: center;
 }
 
+.user-suggest {
+  position: relative
+}
+.user-suggest-list {
+  position: absolute;
+  width: 90%;
+  z-index: 100;
+}
+.user-suggest-item {
+  background: white;
+  border-bottom: 1px groove gray;
+  height: 32px;
+  line-height: 32px;
+}
+.user-suggest-item:hover {
+  background: lightgreen
+}
+
 /* RESPONSIVE */
 @media only screen and (max-width: 767px) {
 .schedule-list-mobile{ display: block; }

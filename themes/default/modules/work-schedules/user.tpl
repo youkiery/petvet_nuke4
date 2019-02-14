@@ -31,11 +31,12 @@
           </div>
           <div class="form-group">
             <label> {lang.user} </label>
-            <select class="form-control" id="user">
-              <!-- BEGIN: user_option -->
-              <option value="{user_value}">{user_name}</option>
-              <!-- END: user_option -->
-            </select>
+            <div class="relative">
+              <input type="text" class="form-control user-suggest" id="user" autocomplete="off">
+              <div class="user-suggest-list">
+
+              </div>
+            </div>
           </div>
           <div class="form-group">
             <label> {lang.work_starttime} </label>
@@ -100,9 +101,12 @@
           </div>
           <div class="form-group">
             <label> {lang.user} </label>
-            <select class="form-control" id="edit_user">
+            <div class="relative">
+              <input type="text" class="form-control user-suggest" id="edit_user" autocomplete="off">
+              <div class="user-suggest-list">
 
-            </select>
+              </div>
+            </div>
           </div>
           <div class="form-group">
             <label> {lang.work_starttime} </label>
@@ -283,10 +287,49 @@
   var g_id = -1
   var g_departid = -1
   var current = 0
+  var typing
 
   $('#starttime, #endtime, #edit_starttime, #edit_endtime, #starttime-filter, #endtime-filter, #cometime, #calltime').datepicker({
     format: 'dd/mm/yyyy'
   });
+
+  $("#user, #edit_user").focus(() => {
+    $(".user-suggest-list").show()
+  });
+  $("#user, #edit_user").blur(() => {
+    setTimeout(() => {
+      $(".user-suggest-list").hide()
+    }, 200)
+  });
+
+  $("#user, #edit_user").keydown(e => {
+    clearTimeout(typing)
+    typing = setTimeout(() => {
+      $.post(
+        strHref,
+        {action: "search", keyword: e.target.value},
+        (response, status) => {
+          if (status === "success" && response) {
+            try {
+              var data = JSON.parse(response)
+              if (data["status"]) {
+                $(".user-suggest-list").html(data["list"])
+              }
+              alert_msg(data["notify"])
+            } catch (e) {
+              console.log(e);
+              alert_msg("{lang.g_error}")
+            }
+          }
+        }
+      )      
+    }, 200)
+  })
+
+  function set_user(id, name) {
+    userid = id
+    $("#user, #edit_user").val(name)
+  }
 
   function change_process_submit(e) {
     e.preventDefault()
@@ -416,12 +459,15 @@
       (response, status) => {
         var data = JSON.parse(response)
         if (data["status"]) {
+          console.log(data["user"]);
+          
           $("#edit_name").val(data["content"])
           $("#edit_starttime").val(data["starttime"])
           $("#edit_endtime").val(data["endtime"])
           // $("#edit_customer").html(data["customer"])
           $("#edit_depart").html(data["depart"])
-          $("#edit_user").html(data["user"])
+          $("#edit_user").val(data["user"])
+          userid = data["userid"]
           $("#edit_note").html(data["note"])
           $("#edit_save_user").val(data["username"])
           $("#edit_process").val(data["process"] + "%")
@@ -457,7 +503,7 @@
     e.preventDefault()
     $.post(
       strHref,
-      {action: "insert", departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#name").val(), starttime: $("#starttime").val(), endtime: $("#endtime").val(), /*customer: $("#customer").val(),*/ userid: $("#user").val(), depart: $("#depart").val(), process: $("#process").val()},
+      {action: "insert", departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#name").val(), starttime: $("#starttime").val(), endtime: $("#endtime").val(), /*customer: $("#customer").val(),*/ userid: userid, depart: $("#depart").val(), process: $("#process").val().replace("%", "")},
       (response, status) => {
         var data = JSON.parse(response)
         if (data["status"]) {
@@ -474,7 +520,7 @@
     e.preventDefault()
     $.post(
       strHref,
-      {action: "edit", departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#edit_name").val(), starttime: $("#edit_starttime").val(), endtime: $("#edit_endtime").val(), /*customer: $("#edit_customer").val(),*/ userid: $("#edit_user").val(), depart: $("#edit_depart").val(), note: $("#edit_note").val(), process: $("#edit_process").val().replace("%", "")},
+      {action: "edit", departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#edit_name").val(), starttime: $("#edit_starttime").val(), endtime: $("#edit_endtime").val(), /*customer: $("#edit_customer").val(),*/ userid: userid, depart: $("#edit_depart").val(), note: $("#edit_note").val(), process: $("#edit_process").val().replace("%", "")},
       (response, status) => {
         var data = JSON.parse(response)
         if (data["status"]) {

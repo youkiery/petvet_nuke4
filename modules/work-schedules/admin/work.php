@@ -97,10 +97,31 @@ if (!empty($action)) {
       $result["status"] = 1;
       $result["list"] = $xtpl->text();
     break;
+    case 'search':
+      $keyword = $nv_Request->get_string("keyword", "get/post", "");
+
+      $xtpl = new XTemplate('work-user-suggest.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
+      $sql = "select * from `" . $db_config["prefix"] . "_users` where username like '%$keyword%' or last_name like '%$keyword%' or first_name like '%$keyword%' order by last_name limit 10";
+      $query = $db->query($sql);
+      $count = 0;
+      while($user = $query->fetch()) {
+        $count ++;
+        $xtpl->assign("name", $user["last_name"] . " " . $user["first_name"]);
+        $xtpl->assign("id", $user["userid"]);
+        $xtpl->parse("main");
+      }
+      if (!$count) {
+        $xtpl->assign("name", "Không có nhân viên nào");
+        $xtpl->parse("main");
+      }
+      $result["status"] = 1;
+      $result["notify"] = "";
+      $result["list"] = $xtpl->text();
+    break;
     case 'get_work':
       $id = $nv_Request->get_string("id", "get/post", "");
       if (!empty($id)) {
-        $sql = "select a.*, b.username from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid inner join `" . WORK_PREFIX . "_depart` where a.id = $id";
+        $sql = "select a.*, b.username, b.first_name, b.last_name from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid inner join `" . WORK_PREFIX . "_depart` where a.id = $id";
         $query = $db->query($sql);
         $work = $query->fetch();
         if (!empty($work)) {
@@ -126,24 +147,14 @@ if (!empty($action)) {
             $depart_o .= "<option value='" . $depart["id"] . "' " . $select . ">" . $depart["name"] . "</option>";
           }
 
-          $sql = "select * from `" . $db_config["prefix"] . "_users`";
-          $query = $db->query($sql);
-          $user_o = "";
-          while ($user = $query->fetch()) {
-            $select = "";
-            if ($user["userid"] == $work["userid"]) {
-              $select = "selected";
-            }
-            $user_o .= "<option value='" . $user["userid"] . "' " . $select . ">" . $user["username"] . "</option>";
-          }
-
           $result["status"] = 1;
           $result["content"] = $work["content"];
           $result["starttime"] = date("d/m/Y", $work["cometime"]);
           $result["endtime"] = date("d/m/Y", $work["calltime"]);
           // $result["customer"] = $customer_o;
           $result["depart"] = $depart_o;
-          $result["user"] = $user_o;
+          $result["user"] = $work["last_name"] . " " . $work["first_name"];
+          $result["userid"] = $work["userid"];
           $result["username"] = $work["username"];
           $result["process"] = $work["process"];
           $result["note"] = $work["note"];
