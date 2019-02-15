@@ -24,6 +24,21 @@
 				</select></td>
 			</tr>
 			<tr>
+				<td> {LANG.dis_name} </td>
+				<td><input name="title" class="form-control" style="width: 200px" size="15" value="{s_title}"></td>
+			</tr>
+			<tr>
+			<tr>
+				<td> {LANG.dis_de} </td>
+				<td>
+          <select class="form-control" name="depart" id="depart">
+            <!-- BEGIN: depart -->
+            <option value="{depart_id}" {depart_check}>{depart_name}</option>
+            <!-- END: depart -->
+          </select>
+        </td>
+			</tr>
+			<tr>
 				<td> {LANG.dis_code} </td>
 				<td><input name="code" class="form-control" style="width: 200px" size="15" value="{code}"></td>
 			</tr>

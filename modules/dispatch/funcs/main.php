@@ -18,13 +18,21 @@ $code = $content = '';
 
 $array = array();
 $error = '';
-$sql = "FROM " . NV_PREFIXLANG . "_" . $module_data . "_document WHERE id!=0";
+$sql = "FROM " . NV_PREFIXLANG . "_" . $module_data . "_document a inner join " . NV_PREFIXLANG . "_" . $module_data . "_departments b on a.from_depid = b.id WHERE a.id!=0";
 $base_url = NV_BASE_SITEURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name;
 
 $listcats = nv_listcats(0);
 $listdes = nv_listdes(0);
 $listtypes = nv_listtypes($type);
 $page_title = $lang_module['table'];
+
+$sql2 = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_departments";
+$query = $db->query($sql2);
+$listdeparts = array();
+while ($depart_row = $query->fetch()) {
+  $listdeparts[$depart_row["id"]] = $depart_row;
+}
+
 
 if ($nv_Request->isset_request("se", "get")) {
     $page_title = $lang_module['list_se'];
@@ -46,9 +54,31 @@ if ($nv_Request->isset_request("type", "get")) {
             $a_t[] = $row['id'];
         }
 
-        $sql .= " AND type IN (" . implode(',', $a_t) . ")";
+        $sql .= " AND a.type IN (" . implode(',', $a_t) . ")";
 
         $base_url .= "&amp;type=" . $type;
+    }
+}
+
+if ($nv_Request->isset_request("depart", "get")) {
+    $depart = $nv_Request->get_int('depart', 'get', 0);
+    if ($depart != 0) {
+        $page_title = sprintf($lang_module['print_depart'], $listdeparts[$depart]['title']);
+        $a_t = array();
+        $query = "SELECT id FROM " . NV_PREFIXLANG . "_" . $module_data . "_departments WHERE id=" . $depart . " OR parentid= " . $depart;
+        $re = $db->query($query);
+        while ($row = $re->fetch()) {
+            $a_t[] = $row['id'];
+        }
+        $query = "SELECT id FROM " . NV_PREFIXLANG . "_" . $module_data . "_departments WHERE id IN (" . implode(',', $a_t) . ")";
+        $re = $db->query($query);
+        if ($row = $re->fetch()) {
+            $a_t[] = $row['id'];
+        }
+
+        $sql .= " AND b.id IN (" . implode(',', $a_t) . ")";
+
+        $base_url .= "&amp;depart=" . $depart;
     }
 }
 
@@ -64,7 +94,7 @@ if ($nv_Request->isset_request("from", "get")) {
     }
 
     if ($from != 0) {
-        $sql .= " AND from_time >= " . $from;
+        $sql .= " AND a.from_time >= " . $from;
         $base_url .= "&amp;from =" . $from;
     }
 }
@@ -79,7 +109,7 @@ if ($nv_Request->isset_request("to", "get")) {
     }
     if ($to != 0) {
 
-        $sql .= " AND from_time <= " . $to;
+        $sql .= " AND a.from_time <= " . $to;
         $base_url .= "&amp;to=" . $to;
     }
 }
@@ -88,7 +118,7 @@ if ($nv_Request->isset_request("from_signer", "get")) {
     $from_signer = $nv_Request->get_int('from_signer', 'get', 0);
 
     if ($from_signer != 0) {
-        $sql .= " AND from_signer=" . $from_signer;
+        $sql .= " AND a.from_signer=" . $from_signer;
         $base_url .= "&amp;from_signer=" . $from_signer;
     }
 }
@@ -98,7 +128,7 @@ if ($nv_Request->isset_request("title", "get")) {
     if ($title != '') {
         $page_title = sprintf($lang_module['print_title'], '...' . $title . '...');
     }
-    $sql .= " AND title LIKE '%" . $db->dblikeescape($title) . "%' ";
+    $sql .= " AND a.title LIKE '%" . $db->dblikeescape($title) . "%' ";
     $base_url .= "&amp;title=" . urlencode($title);
 }
 if ($nv_Request->isset_request("code", "get")) {
@@ -106,13 +136,13 @@ if ($nv_Request->isset_request("code", "get")) {
     if ($code != '') {
         $page_title = sprintf($lang_module['print_code'], '...' . $code . '...');
     }
-    $sql .= " AND code LIKE '%" . $db->dblikeescape($code) . "%' ";
+    $sql .= " AND a.code LIKE '%" . $db->dblikeescape($code) . "%' ";
     $base_url .= "&amp;code=" . urlencode($code);
 }
 
 if ($nv_Request->isset_request("content", "get")) {
     $content = $nv_Request->get_title('content', 'get', '');
-    $sql .= " AND content LIKE '%" . $db->dblikeescape($content) . "%' ";
+    $sql .= " AND a.content LIKE '%" . $db->dblikeescape($content) . "%' ";
     $base_url .= "&amp;content=" . urlencode($content);
 }
 
@@ -129,7 +159,7 @@ $sql .= " ORDER BY from_time DESC";
 
 $page = $nv_Request->get_int('page', 'get', 0);
 $per_page = 30;
-$sql2 = "SELECT * " . $sql . " LIMIT " . $page . ", " . $per_page;
+$sql2 = "SELECT a.*, b.id as departid, b.title as depart " . $sql . " LIMIT " . $page . ", " . $per_page;
 
 $query2 = $db->query($sql2);
 
@@ -170,6 +200,10 @@ while ($row = $query2->fetch()) {
             'status' => $arr_status[$row['status']]['name'],
             'link_code' => NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . "&amp;op=detail/" . $row['alias']
         );
+        if (!empty($depart)) {
+          $array[$row['id']]["departid"] = $row["departid"];
+          $array[$row['id']]["depart"] = $row["depart"];
+        }
     }
 }
 
@@ -177,7 +211,7 @@ if (empty($array)) {
     $error = $lang_module['error_rows'];
 }
 
-$contents = nv_theme_congvan_main($error, $array, $page_title, $base_url, $all_page, $per_page, $page, $type, $se, $to, $from, $from_signer, $content, $code);
+$contents = nv_theme_congvan_main($error, $array, $page_title, $base_url, $all_page, $per_page, $page, $type, $se, $to, $from, $from_signer, $content, $code, $title, $depart);
 
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_site_theme($contents);

@@ -16,7 +16,7 @@ if (!defined('NV_IS_MOD_CONGVAN')) die('Stop!!!');
  * @param mixed $array_data
  * @return
  */
-function nv_theme_congvan_main($error, $array, $page_title, $base_url, $all_page, $per_page, $page, $type, $se, $to, $from, $from_signer, $content, $code)
+function nv_theme_congvan_main($error, $array, $page_title, $base_url, $all_page, $per_page, $page, $type, $se, $to, $from, $from_signer, $content, $code, $title, $depart)
 {
     global $global_config, $module_name, $module_file, $module_data, $lang_module, $module_config, $module_info, $op, $arr_type, $db;
 
@@ -32,6 +32,32 @@ function nv_theme_congvan_main($error, $array, $page_title, $base_url, $all_page
 
     $xtpl->assign('MODULE_NAME', $module_name);
     $xtpl->assign('SE_LINK', NV_BASE_SITEURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&amp;" . NV_OP_VARIABLE . "=" . $op . "&amp;se=1");
+
+    
+    $listdeparts = array(
+      array(
+          'id' => 0,
+          'parentid' => '',
+          'title' => $lang_module['depart12'],
+      )
+    );
+
+    $sql2 = "SELECT id, parentid, title FROM " . NV_PREFIXLANG . "_" . $module_data . "_departments";
+    $query = $db->query($sql2);
+    while ($depart_row = $query->fetch()) {
+      $listdeparts[] = $depart_row;
+    }
+
+    foreach ($listdeparts as $list) {
+        $xtpl->assign('depart_id', $list['id']);
+        $xtpl->assign('depart_name', $list['title']);
+        $xtpl->assign('depart_check', '');
+        if ($depart == $list["id"]) {
+          $xtpl->assign('depart_check', 'selected');
+        }
+        $xtpl->parse('main.timkiem.depart');
+    }
+
 
     $listtypes = array(
         array(
@@ -102,6 +128,7 @@ function nv_theme_congvan_main($error, $array, $page_title, $base_url, $all_page
         }
 
         $xtpl->assign('code', $code);
+        $xtpl->assign('s_title', $title);
         $xtpl->assign('content', $content);
 
         $xtpl->parse('main.timkiem');

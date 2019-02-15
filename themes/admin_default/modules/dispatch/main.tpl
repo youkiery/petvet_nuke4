@@ -18,6 +18,12 @@
             <option value="{LISTTYPES.id}"{LISTTYPES.selected}>{LISTTYPES.name}</option>
             <!-- END: typeid -->
         </select>
+        {LANG.departments} &nbsp;&nbsp;
+        <select class="form-control" name="depart" id="depart">
+          <!-- BEGIN: depart -->
+          <option value="{depart_id}" {depart_check}>{depart_name}</option>
+          <!-- END: depart -->
+        </select>
         {LANG.from}
         <input class="form-control" value="{FROM}" type="text" id="from" name="from" readonly="readonly" />
         {LANG.to}

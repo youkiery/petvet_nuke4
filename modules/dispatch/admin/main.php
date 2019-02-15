@@ -37,7 +37,8 @@ if ($nv_Request->isset_request('del', 'post')) {
 $edit = $error = '';
 $from = $to = $type = 0;
 
-$sql = "FROM " . NV_PREFIXLANG . "_" . $module_data . "_document WHERE id!=0";
+$sql = "FROM " . NV_PREFIXLANG . "_" . $module_data . "_document a inner join " . NV_PREFIXLANG . "_" . $module_data . "_departments b on a.from_depid = b.id WHERE a.id!=0";
+// $sql = "FROM " . NV_PREFIXLANG . "_" . $module_data . "_document WHERE id!=0";
 $base_url = NV_BASE_ADMINURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&" . NV_NAME_VARIABLE . "=" . $module_name;
 
 $listcats = nv_listcats(0);
@@ -52,6 +53,17 @@ $listdes = nv_listdes(0);
 if (empty($listdes)) {
     nv_redirect_location(NV_BASE_ADMINURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=departments&add=1");
 
+}
+
+$sql2 = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_departments";
+$query = $db->query($sql2);
+$listdeparts = array();
+while ($depart_row = $query->fetch()) {
+  $listdeparts[$depart_row["id"]] = $depart_row;
+}
+
+if (empty($listdeparts)) {
+  nv_redirect_location(NV_BASE_ADMINURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=departments&add=1");
 }
 
 $listtypes = nv_listtypes($type, 0);
@@ -78,8 +90,19 @@ if ($nv_Request->isset_request("type", "get")) {
     }
 
     $page_title = sprintf($lang_module['cv_list_by_type'], $listtypes[$type]['title']);
-    $sql .= " AND type=" . $type;
+    $sql .= " AND a.type=" . $type;
     $base_url .= "&amp;type=" . $type;
+}
+
+if ($nv_Request->isset_request("depart", "get")) {
+    $depart = $nv_Request->get_int('depart', 'get', 0);
+    if (!$depart or !isset($listdeparts[$depart])) {
+        nv_redirect_location(NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name);
+    }
+
+    $page_title = sprintf($lang_module['cv_list_by_depart'], $listdeparts[$type]['title']);
+    $sql .= " AND b.id = " . $depart;
+    $base_url .= "&amp;depart=" . $depart;
 }
 
 if ($nv_Request->isset_request("catid", "get")) {
@@ -91,7 +114,7 @@ if ($nv_Request->isset_request("catid", "get")) {
     }
 
     $page_title = sprintf($lang_module['product_list_by_cat'], $listcats[$catid]['title']);
-    $sql .= " AND catid=" . $catid;
+    $sql .= " AND a.catid=" . $catid;
     $base_url .= "&amp;catid=" . $catid;
 }
 if ($nv_Request->isset_request("signer", "get")) {
@@ -103,7 +126,7 @@ if ($nv_Request->isset_request("signer", "get")) {
     }
 
     $page_title = sprintf($lang_module['product_list_by_signer'], $listsinger[$signer]['name']);
-    $sql .= " AND from_signer=" . $signer;
+    $sql .= " AND a.from_signer=" . $signer;
     $base_url .= "&amp;signer=" . $signer;
 }
 
@@ -121,7 +144,7 @@ if ($nv_Request->isset_request("from", "get")) {
         //die($year.'');
 
 
-        $sql .= " AND from_time >= " . $from;
+        $sql .= " AND a.from_time >= " . $from;
         $base_url .= "&amp;from =" . $from;
     }
 }
@@ -138,7 +161,7 @@ if ($nv_Request->isset_request("to", "get")) {
         //die($year.'');
 
 
-        $sql .= " AND from_time <= " . $to;
+        $sql .= " AND a.from_time <= " . $to;
         $base_url .= "&amp;to=" . $to;
     }
 }
@@ -152,12 +175,12 @@ if (!$all_page) {
     $error = 'Không có dữ liệu như bạn tìm';
 }
 
-$sql .= " ORDER BY from_time DESC";
+$sql .= " ORDER BY a.from_time DESC";
 
 $page = $nv_Request->get_int('page', 'get', 0);
 $per_page = 30;
 
-$sql2 = "SELECT * " . $sql . " LIMIT " . $page . ", " . $per_page;
+$sql2 = "SELECT a.*, b.id as departid, b.title as depart " . $sql . " LIMIT " . $page . ", " . $per_page;
 $query2 = $db->query($sql2);
 
 $array = array();
@@ -231,6 +254,16 @@ if (!empty($array)) {
 if ($error != '') {
     $xtpl->assign('ERROR', $error);
     $xtpl->parse('main.error');
+}
+
+foreach ($listdeparts as $list) {
+  $xtpl->assign('depart_id', $list['id']);
+  $xtpl->assign('depart_name', $list['title']);
+  $xtpl->assign('depart_check', '');
+  if (!empty($depart) && $depart == $list["id"]) {
+    $xtpl->assign('depart_check', 'selected');
+  }
+  $xtpl->parse('main.depart');
 }
 
 foreach ($listtypes as $types) {

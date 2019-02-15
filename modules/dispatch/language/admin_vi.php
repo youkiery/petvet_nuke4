@@ -92,6 +92,7 @@ $lang_module['dis_pe_re'] = 'Người nhận';
 $lang_module['dis_pe_si'] = 'Người ký nhận';
 $lang_module['product_list_by_cat'] = 'Các công văn thuộc chủ đề &ldquo;<strong>%s</strong>&rdquo;';
 $lang_module['cv_list_by_type'] = 'Các công văn thuộc loại &ldquo;<strong>%s</strong>&rdquo;';
+$lang_module['cv_list_by_depart'] = 'Các công văn thuộc phòng ban &ldquo;<strong>%s</strong>&rdquo;';
 $lang_module['product_list_by_signer'] = 'Các công văn thuộc người kí  &ldquo;<strong>%s</strong>&rdquo;';
 
 $lang_module['error_title'] = 'Lỗi : Tên công văn không được để trống';
