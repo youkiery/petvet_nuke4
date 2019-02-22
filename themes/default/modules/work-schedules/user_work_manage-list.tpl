@@ -8,6 +8,9 @@
       {lang.work_name}
     </th>
     <th>
+      {lang.user}
+    </th>
+    <th>
       {lang.work_depart}
     </th>
     <th>
@@ -32,7 +35,10 @@
     <td data-toggle="modal" data-target="#detail">
       {work_name}
     </td>
-    <td data-toggle="modal" data-target="#detail">
+    <td>
+      {work_employ}
+    </td>
+    <td>
       {work_depart}
     </td>
     <td data-toggle="modal" data-target="#detail">
@@ -53,11 +59,14 @@
         {lang.update}
       </button>
       <!-- END: manager -->
-      <button class="btn btn-info" onclick="change_process({id})">
-        {lang.change_process}
+      <button class="btn btn-info" onclick="change_confirm({id})" {disable}>
+        {lang.change_confirm}
       </button>
+      {confirm}
+      <span style="color: {color}">
+        {review}
+      </span>
     </td>
   </tr>
-  <!-- END: loop -->
-</tbody>  
-<!-- END: main -->
+</tbody>
+<!-- END: loop -->

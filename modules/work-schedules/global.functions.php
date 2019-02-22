@@ -118,7 +118,8 @@ function user_manager_list() {
     $index = 1;
     $depart = depart_data();
 
-    $sql = "select * from `" . WORK_PREFIX . "_row` where depart = $departid and " . filter_by_time();
+    $sql = "select a.*, b.last_name, b.first_name from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid where a.depart = $departid and " . filter_by_time();
+    // die($sql);
     $query = $db->query($sql);
     $count = 0;
     while ($work = $query->fetch()) {
@@ -129,7 +130,8 @@ function user_manager_list() {
       $xtpl->assign("work_name", $work["content"]);
       $xtpl->assign("work_starttime", date("d/m/Y", $work["cometime"]));
       $xtpl->assign("work_endtime", date("d/m/Y", $work["calltime"]));
-      $xtpl->assign("work_customer", $work["customer"]);
+      // $xtpl->assign("work_customer", $work["customer"]);
+      $xtpl->assign("work_employ", $work["last_name"] . " " . $work["first_name"]);
       $xtpl->assign("work_process", $work["process"]);
       $xtpl->assign("confirm", "");
       $xtpl->assign("review", "");
@@ -138,7 +140,7 @@ function user_manager_list() {
         $xtpl->assign("overtime", "danger");
       }
       if ($admin) {
-        $xtpl->parse("main.manager");
+        $xtpl->parse("main.loop.manager");
       }
       if ($work["confirm"]) {
         $operator = "";
@@ -153,7 +155,7 @@ function user_manager_list() {
         $xtpl->assign("color", $color);
         $xtpl->assign("review", $operator . $work["review"]);
       }
-      $xtpl->parse("main");
+      $xtpl->parse("main.loop");
       $index ++;
     }
     // die();
@@ -164,6 +166,8 @@ function user_manager_list() {
   else {
     $result["count"] = $count;
   }
+
+  $xtpl->parse("main");
   return $xtpl->text();
 }
 
@@ -186,6 +190,14 @@ function user_work_list() {
     }
   }
 
+  $sql = "select * from `" . WORK_PREFIX . "_depart`";
+  $query = $db->query($sql);
+  $depart = array();
+  while ($row = $query->fetch()) {
+    $depart[$row["id"]] = $row["name"];
+  }
+  // var_dump($depart);die();
+
   if (!empty($user_info)) {
     $sql = "select * from `" . WORK_PREFIX . "_row` where userid = $user_info[userid] and " . filter_by_time();
     $query = $db->query($sql);
@@ -196,20 +208,84 @@ function user_work_list() {
       $xtpl->assign("work_name", $work["content"]);
       $xtpl->assign("work_starttime", date("d/m/Y", $work["cometime"]));
       $xtpl->assign("work_endtime", date("d/m/Y", $work["calltime"]));
+      // var_dump($work);die();
+      $xtpl->assign("work_depart", $depart[$work["depart"]]);
       $xtpl->assign("work_customer", $work["customer"]);
       $xtpl->assign("work_process", $work["process"]);
       if ($today > $work["calltime"] && !$work["confirm"]) {
         $xtpl->assign("overtime", "danger");
       }
       if ($admin) {
-        $xtpl->parse("main.manager");
+        $xtpl->parse("main.loop.manager");
       }
-      $xtpl->parse("main");
+      $xtpl->parse("main.loop");
       $index ++;
     }
   }
 
   $result["count"] = $count;
+  $xtpl->parse("main");
+  return $xtpl->text();
+}
+  
+function work_manager_list() {
+  global $db, $global_config, $module_file, $module_name, $lang_module, $user_info, $db_config, $user_info, $result, $nv_Request;
+  $xtpl = new XTemplate('user_work_manage-list.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
+  $index = 1;
+  $count = 0;
+  $xtpl->assign("lang", $lang_module);
+  $admin = false;
+  $today = strtotime(date("Y-m-d"));
+
+  if (!empty($user_info)) {
+    $sql = "select * from `" . $db_config["prefix"] . "_users_groups_users` where userid = $user_info[userid]";
+    $query = $db->query($sql);
+    $user = $query->fetch();
+
+    $depart_sql = "select depart from `" . WORK_PREFIX . "_employ` where userid = $user_info[userid]";
+    
+    if (!empty($user) && ($user["is_leader"] || $user["group_id"] == 1)) {
+      $admin = true;
+      $depart_sql = "select id from `" . WORK_PREFIX . "_depart`";
+    }
+  }
+
+  $sql = "select * from `" . WORK_PREFIX . "_depart`";
+  $query = $db->query($sql);
+  $depart = array();
+  while ($row = $query->fetch()) {
+    $depart[$row["id"]] = $row["name"];
+  }
+  // var_dump($depart);die();
+
+  if (!empty($user_info)) {
+    $sql = "select a.*, b.last_name, b.first_name from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid where a.depart in ($depart_sql) and " . filter_by_time();
+    $query = $db->query($sql);
+    while($work = $query->fetch()) {
+      $count ++;
+      $xtpl->assign("index", $index);
+      $xtpl->assign("id", $work["id"]);
+      $xtpl->assign("work_name", $work["content"]);
+      $xtpl->assign("work_starttime", date("d/m/Y", $work["cometime"]));
+      $xtpl->assign("work_endtime", date("d/m/Y", $work["calltime"]));
+      // var_dump($work);die();
+      $xtpl->assign("work_depart", $depart[$work["depart"]]);
+      $xtpl->assign("work_employ", $work["last_name"] . " " . $work["first_name"]);
+      $xtpl->assign("work_customer", $work["customer"]);
+      $xtpl->assign("work_process", $work["process"]);
+      if ($today > $work["calltime"] && !$work["confirm"]) {
+        $xtpl->assign("overtime", "danger");
+      }
+      if ($admin) {
+        $xtpl->parse("main.loop.manager");
+      }
+      $xtpl->parse("main.loop");
+      $index ++;
+    }
+  }
+
+  $result["count"] = $count;
+  $xtpl->parse("main");
   return $xtpl->text();
 }
   
@@ -358,6 +434,11 @@ function user_main_list() {
       $xtpl->assign("id", $employ["id"]);
       $xtpl->assign("name", $employ["name"]);
       $xtpl->parse("main.row");
+    }
+    $sql = "select count(*) as count from `" . WORK_PREFIX . "_employ` where userid = $user_info[userid] and role = 2";
+    $query = $db->query($sql);
+    if ($row = $query->fetch()) {
+      $xtpl->parse("main.manager");
     }
   }
   $xtpl->parse("main");

@@ -108,6 +108,7 @@ $lang_module['work_employ'] = 'Người thực hiện';
 $lang_module['work_process'] = 'Tiến độ';
 $lang_module['work_submit'] = 'Thêm công việc';
 $lang_module['work_owner'] = 'Công việc của tôi';
+$lang_module['work_manager'] = 'Tất cả phòng ban';
 
 $lang_module['index'] = 'STT';
 $lang_module["change_process"] = "Cập nhật tiến độ";

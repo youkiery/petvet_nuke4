@@ -82,7 +82,7 @@ if (!empty($action)) {
     $where = "username like '%$keyword%' or last_name like '%$keyword%' or first_name like '%$keyword%' order by last_name limit 10";
   
     if (!empty($user) && ($user["is_leader"] || $user["group_id"] == 1)) {
-      $user_sql = "select * from `" . $db_config["prefix"] . "_users` where $where";
+      $user_sql = "select b.* from (select * from `" . WORK_PREFIX . "_employ` group by userid) a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid";
     }
     else {
       $user_sql = "select a.* from `" . $db_config["prefix"] . "_users` a inner join `" . WORK_PREFIX . "_employ` b on a.userid = b.userid where b.role = 1 and b.depart in (select depart from `" . WORK_PREFIX . "_employ` where userid = $user_info[userid] and role = 2 and ($where))";
@@ -245,6 +245,13 @@ if (!empty($action)) {
 
   case 'my_work':
     $list = user_work_list();
+    $result["list"] = $list;
+    $result["status"] = 1;
+    $result["notify"] = "";
+  break;
+
+  case 'manager_work':
+    $list = work_manager_list();
     $result["list"] = $list;
     $result["status"] = 1;
     $result["notify"] = "";

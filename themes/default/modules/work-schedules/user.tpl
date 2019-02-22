@@ -242,34 +242,8 @@
   {lang.count_2}
 </div>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th>
-        {lang.index}
-      </th>
-      <th>
-        {lang.work_name}
-      </th>
-      <th>
-        {lang.work_starttime}
-      </th>
-      <th>
-        {lang.work_endtime}
-      </th>
-      <!-- <th>
-        {lang.work_customer}
-      </th> -->
-      <th>
-        {lang.work_process}
-      </th>
-      <th>
-      </th>
-    </tr>
-  </thead>
-  <tbody id="content">
-    {content}
-  </tbody>
+<table class="table" id="content">
+  {content}
 </table>
 
 <!-- BEGIN: manager -->
@@ -432,6 +406,25 @@
           g_departid = 0
           $("#content").html(data["list"])
           change_tab(0)
+          reload_date(data)
+        }
+        else {
+          alert_msg(data["notify"])
+        }
+      }
+    )
+  }
+
+  function manager_work() {
+    $.post(
+      strHref,
+      {action: "manager_work", cometime: $("#cometime").val(), calltime: $("#calltime").val()},
+      (response, status) => {
+        var data = JSON.parse(response)
+        if (data["status"]) {
+          g_departid = "end"
+          $("#content").html(data["list"])
+          change_tab("end")
           reload_date(data)
         }
         else {
