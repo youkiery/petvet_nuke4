@@ -8,6 +8,9 @@
 					{customer}
 				</td>
 				<td class="sieuam" data-toggle="modal" data-target="#usgdetail">
+					{phone}
+				</td>    
+				<td class="sieuam" data-toggle="modal" data-target="#usgdetail">
 					{sieuam}
 				</td>    
 				<td class="dusinh" data-toggle="modal" data-target="#usgdetail">

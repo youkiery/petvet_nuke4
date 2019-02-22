@@ -193,6 +193,9 @@
         {lang.customer}
       </th>  
       <th>
+        {lang.phone}
+      </th>  
+      <th>
         {lang.usgcome}
       </th>  
       <th>

@@ -8,6 +8,9 @@
     {customer}
   </td>
   <td class="detail">
+    {phone}
+  </td>
+  <td class="detail">
     {exbirth}
   </td>
   <td class="detail">

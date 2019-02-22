@@ -115,6 +115,9 @@
         {lang.customer}
       </th>  
       <th>
+        {lang.phone}
+      </th>  
+      <th>
         {lang.usgexbirth}
       </th>  
       <th>
