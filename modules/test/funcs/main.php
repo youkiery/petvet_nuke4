@@ -13,7 +13,6 @@ if (!defined('NV_IS_MOD_QUANLY')) {
 $action = $nv_Request->get_string('action', 'post', '');
 $ret = array("status" => 0, "data" => array());
 
-quagio();
 if (!empty($action)) {
   switch ($action) {
     case 'change_data':

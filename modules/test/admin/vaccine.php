@@ -60,7 +60,7 @@ if ($action) {
 	die();
 }
 
-$xtpl = new XTemplate("vaccine.tpl", NV_ROOTDIR . "/themes/" . $global_config['admin_theme'] . "/modules/" . $module_file);
+$xtpl = new XTemplate("vaccine.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
 $xtpl->assign("lang", $lang_module);
 $sort_type = array("Ngày dự sinh giảm dần", "Ngày dự sinh tăng dần", "ngày siêu âm giảm dần", "Ngày siêu âm tăng dần");
 $order = array("order by calltime desc", "order by calltime asc", "order by cometime desc", "order by cometime asc");
@@ -218,13 +218,13 @@ $nav = nv_generate_page_shop($url, $num, $filter, $page);
 if ($action == "xoasieuam") {
 	if ($check) {
 		$ret["status"] = 1;
-		$ret["data"] = displayRed($display_list, NV_ROOTDIR . "/themes/" . $global_config['admin_theme'] . "/modules/" . $module_file, $lang_module, $from + 1, $nav);
+		$ret["data"] = displayRed($display_list, NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file, $lang_module, $from + 1, $nav);
 	}
 
 	echo json_encode($ret);
 	die();
 } else {
-	$xtpl->assign("content", displayRed($display_list, NV_ROOTDIR . "/themes/" . $global_config['admin_theme'] . "/modules/" . $module_file, $lang_module, $from + 1, $nav));
+	$xtpl->assign("content", displayRed($display_list, NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file, $lang_module, $from + 1, $nav));
 }
 
 $xtpl->parse("main");

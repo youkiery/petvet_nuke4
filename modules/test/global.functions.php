@@ -650,7 +650,6 @@ function user_usg() {
     $type = "calltime";
   }
   $sql = "select a.id, a.cometime, a.calltime, a.status, a.image, a.note, a.birthday, a.birth, a.expectbirth, a.doctorid, b.id as petid, b.name as petname, c.name as customer, c.phone from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on $time_sql and a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id $where order by a.$type";
-  // die($sql);
 	$query = $db->query($sql);
 	$list = array();
 	while ($usg_row = $query->fetch()) {

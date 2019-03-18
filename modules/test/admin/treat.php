@@ -11,7 +11,7 @@ $link = NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name 
 $status_option = array("Bình thường", "Hơi yếu", "Yếu", "Sắp chết", "Đã chết");
 $export = array("Lưu bệnh", "Đã điều trị", "Đã chết");
 
-$xtpl = new XTemplate("treat.tpl", NV_ROOTDIR . "/themes/" . $global_config['admin_theme'] . "/modules/" . $module_file);
+$xtpl = new XTemplate("treat.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
 $xtpl->assign("lang", $lang_module);
 
 $sql = "select * from " .  VAC_PREFIX . "_doctor";
@@ -206,13 +206,13 @@ $nav = nv_generate_page_shop($url, $num, $filter, $page);
 if ($action == "xoasieuam") {
 	if ($check) {
 		$ret["status"] = 1;
-		$ret["data"] = displayRed($display_list, NV_ROOTDIR . "/themes/" . $global_config['admin_theme'] . "/modules/" . $module_file, $lang_module, $from + 1, $nav);
+		$ret["data"] = displayRed($display_list, NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file, $lang_module, $from + 1, $nav);
 	}
 
 	echo json_encode($ret);
 	die();
 } else {
-	$xtpl->assign("content", displayRed($display_list, NV_ROOTDIR . "/themes/" . $global_config['admin_theme'] . "/modules/" . $module_file, $lang_module, $from + 1, $nav));
+	$xtpl->assign("content", displayRed($display_list, NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file, $lang_module, $from + 1, $nav));
 }
 
 $xtpl->parse("main");
