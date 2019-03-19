@@ -12,9 +12,11 @@ if (!defined('NV_SYSTEM')) {
     die('Stop!!!');
 }
 
-
 define('NV_IS_MOD_QUANLY', true); 
+define('NV_IS_PETMAN', true); 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
+require NV_ROOTDIR . '/modules/' . $module_file . '/2_global.functions.php';
+
 $permist = array("main" => "1, 16, 18", "list" => "1, 16, 18", "sieuam" => "1, 16, 19", "danhsachsieuam" => "1, 16, 19", "sieuam-birth" => "1, 16, 19", "luubenh" => "1, 16, 21", "danhsachluubenh" => "1, 16, 21", "spa" => "1, 16, 20", "drug" => "1, 16, 21", "process" => "1, 16, 18, 19, 20, 21, 22");
 // kiểm tra phân quyền
 function permist() {

@@ -179,3 +179,12 @@ $lang_module["hide_note"] = "Ẩn ghi chú";
 $lang_module["payment"] = "Thanh toán";
 $lang_module["spa_weight"] = "Cân nặng";
 
+// new grade
+$lang_module["index"] = "STT";
+$lang_module["petname"] = "Thú cưng";
+$lang_module["customer"] = "Khách hàng";
+$lang_module["phone"] = "SĐT";
+$lang_module["calltime"] = "Nhắc lại";
+$lang_module["confirm"] = "Xác nhận";
+
+$lang_module["vaccine_remind"] = "Nhắc tiêm phòng vaccine";
