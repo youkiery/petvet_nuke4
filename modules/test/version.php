@@ -11,10 +11,11 @@
 if (!defined('NV_ADMIN') or !defined('NV_MAINFILE')) {
     die('Stop!!!');
 }
+echo "2<br>";
 
 $module_version = array(
     'name' => 'Users',
-    'modfuncs' => '2_main, main, list, sieuam, danhsachsieuam, luubenh, danhsachluubenh, sieuam-birth, spa, redrug, process',
+    'modfuncs' => '2_main, overmind, main, list, sieuam, danhsachsieuam, luubenh, danhsachluubenh, sieuam-birth, spa, redrug, process',
     'submenu' => 'main, list, sieuam, danhsachsieuam, luubenh, danhsachluubenh, sieuam-birth, spa, redrug',
     'is_sysmod' => 1,
     'virtual' => 1,

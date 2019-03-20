@@ -80,6 +80,27 @@ while ($row = $query->fetch()) {
   $vacconfigv2[$row["name"]] = $row["value"];
 }
 
+function vaccineRemind($keyword, $fromtime, $totime) {
+  global $db, $nv_Request, $module_info, $module_file, $lang_module, $vacconfigv2; 
+  $xtpl = new XTemplate("overmind_vaccine.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
+
+  $sql = "select a.id, a.calltime, c.phone, c.name as customer from `" . VAC_PREFIX . "_vaccine` a inner join `" . VAC_PREFIX . "_pet` b on a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id where (b.name like '%:keyword%' or c.name like '%:keyword%' or c.phone like '%:keyword%') and a.calltime between :fromtime and :totime";
+  $stmt = $db->prepare($sql);
+  $stmt->execute(array("keyword" => $keyword, "fromtime" => $fromtime, "totime" => $totime));
+  
+  $index = 1;
+  while ($row = $stmt->fetch()) {
+    $calltime = date("d/m/Y", $row["calltime"]);
+    $xtpl->assign("index", $index ++);
+    $xtpl->assign("id", $row["id"]);
+    $xtpl->assign("customer", $row["customer"]);
+    $xtpl->assign("phone", $row["phone"]);
+    $xtpl->assign("calltime", $calltime);
+    $xtpl->parse("main.row");
+  }
+  return $xtpl->text();
+}
+
 function user_redrug() {
   global $db, $nv_Request, $module_info, $module_file, $lang_module, $vacconfigv2; 
   $xtpl = new XTemplate("redrug-list.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
@@ -1619,4 +1640,4 @@ function totime($time) {
   }
   return $time;
 }
-?>
+
