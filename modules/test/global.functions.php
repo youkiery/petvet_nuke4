@@ -80,6 +80,25 @@ while ($row = $query->fetch()) {
   $vacconfigv2[$row["name"]] = $row["value"];
 }
 
+function interpolateQuery($query, $params) {
+  $keys = array();
+
+  # build a regular expression for each parameter
+  foreach ($params as $key => $value) {
+      if (is_string($key)) {
+          $keys[] = '/:'.$key.'/';
+      } else {
+          $keys[] = '/[?]/';
+      }
+  }
+
+  $query = preg_replace($keys, $params, $query, 1, $count);
+
+  #trigger_error('replaced '.$count.' keys');
+
+  return $query;
+}
+
 function user_redrug() {
   global $db, $nv_Request, $module_info, $module_file, $lang_module, $vacconfigv2; 
   $xtpl = new XTemplate("redrug-list.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
