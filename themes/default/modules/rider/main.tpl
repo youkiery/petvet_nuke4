@@ -201,7 +201,7 @@
     }
     console.log(value);
     
-    value = formatter.format(value).replace(/ ₫/g, "").replace(".", ",");
+    value = formatter.format(value).replace(/ ₫/g, "").replace(/\./g, ",");
     payMoney.val(value)
   })
 
