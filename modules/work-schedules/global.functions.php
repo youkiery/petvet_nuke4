@@ -118,8 +118,14 @@ function user_manager_list() {
     $index = 1;
     $depart = depart_data();
 
-    $sql = "select a.*, b.last_name, b.first_name from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid where a.depart = $departid and " . filter_by_time();
-    // die($sql);
+    if ($departid == "end") {
+      $depart_sql = "";      
+    }
+    else {
+      $depart_sql = "a.depart = $departid and";      
+    }
+
+    $sql = "select a.*, b.last_name, b.first_name from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid where $depart_sql " . filter_by_time();
     $query = $db->query($sql);
     $count = 0;
     while ($work = $query->fetch()) {
