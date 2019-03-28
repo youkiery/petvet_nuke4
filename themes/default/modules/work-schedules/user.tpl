@@ -87,12 +87,6 @@
             <label> {lang.work_name} </label>
             <input class="form-control" type="text" id="edit_name">
           </div>
-          <!-- <div class="form-group"> -->
-            <!-- <label> {lang.work_customer} </label> -->
-            <!-- <select class="form-control" id="edit_customer"> -->
-
-            <!-- </select> -->
-          <!-- </div> -->
           <div class="form-group">
             <label> {lang.work_depart} </label>
             <select class="form-control" id="edit_depart">
@@ -236,6 +230,17 @@
   {depart_list}
 </div>
 
+<br>
+
+<div>
+  <button class="complete btn btn-warning active">
+    Chưa hoàn thành
+  </button>
+  <button class="complete btn">
+    Hoàn thành
+  </button>
+</div>
+
 <div>
   {lang.count}
   <span id="count">{count}</span> 
@@ -262,6 +267,38 @@
   var g_departid = -1
   var current = 0
   var typing
+  var complete = $(".complete")
+  var completeStatus = 0
+
+  complete.click((e) => {
+    var currentTarget = e.currentTarget
+    complete.removeClass("active")
+    complete.removeClass("btn-warning")
+    
+    currentTarget.classList.add("active")
+    currentTarget.classList.add("btn-warning")
+
+    if (trim(currentTarget.innerHTML).length > 12) {
+      completeStatus = 0
+    }
+    else {
+      completeStatus = 1
+    }
+
+    $.post(
+      strHref,
+      {action: "change_data", completeStatus: completeStatus, departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
+      (response, status) => {
+        var data = JSON.parse(response)
+        if (data["status"]) {
+          $("#content").html(data["list"])
+          change_tab(g_departid)
+          reload_date(data)
+        }
+        alert_msg(data["notify"])
+      }
+    )
+  })
 
   $('#starttime, #endtime, #edit_starttime, #edit_endtime, #starttime-filter, #endtime-filter, #cometime, #calltime').datepicker({
     format: 'dd/mm/yyyy'
@@ -346,7 +383,7 @@
     g_departid = id
     $.post(
       strHref,
-      {action: "change_data", departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
+      {action: "change_data", completeStatus: completeStatus, departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
       (response, status) => {
         var data = JSON.parse(response)
         if (data["status"]) {
@@ -383,7 +420,7 @@
     e.preventDefault()
     $.post(
       strHref,
-      {action: "confirm", departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), confirm: $("#confirm_value").val(), review: $("#confirm_review").val(), note: $("#confirm_note").val()},
+      {action: "confirm", completeStatus: completeStatus, departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), confirm: $("#confirm_value").val(), review: $("#confirm_review").val(), note: $("#confirm_note").val()},
       (response, status) => {
         var data = JSON.parse(response)
         if (data["status"]) {
@@ -399,13 +436,13 @@
   function my_work() {
     $.post(
       strHref,
-      {action: "my_work", cometime: $("#cometime").val(), calltime: $("#calltime").val()},
+      {action: "my_work", completeStatus: completeStatus, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
       (response, status) => {
         var data = JSON.parse(response)
         if (data["status"]) {
           g_departid = 0
           $("#content").html(data["list"])
-          change_tab(0)
+          change_tab(g_departid)
           reload_date(data)
         }
         else {
@@ -418,7 +455,7 @@
   function manager_work() {
     $.post(
       strHref,
-      {action: "manager_work", cometime: $("#cometime").val(), calltime: $("#calltime").val()},
+      {action: "manager_work", completeStatus: completeStatus, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
       (response, status) => {
         var data = JSON.parse(response)
         if (data["status"]) {
@@ -479,7 +516,7 @@
   function remove_submit() {
     $.post(
       strHref,
-      {action: "remove", id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
+      {action: "remove", completeStatus: completeStatus, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
       (response) => {
         var data = JSON.parse(response)
         if (data["status"]) {
@@ -496,7 +533,7 @@
     e.preventDefault()
     $.post(
       strHref,
-      {action: "insert", departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#name").val(), starttime: $("#starttime").val(), endtime: $("#endtime").val(), /*customer: $("#customer").val(),*/ userid: userid, depart: $("#depart").val(), process: $("#process").val().replace("%", "")},
+      {action: "insert", completeStatus: completeStatus, departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#name").val(), starttime: $("#starttime").val(), endtime: $("#endtime").val(), /*customer: $("#customer").val(),*/ userid: userid, depart: $("#depart").val(), process: $("#process").val().replace("%", "")},
       (response, status) => {
         var data = JSON.parse(response)
         if (data["status"]) {
@@ -513,7 +550,7 @@
     e.preventDefault()
     $.post(
       strHref,
-      {action: "edit", departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#edit_name").val(), starttime: $("#edit_starttime").val(), endtime: $("#edit_endtime").val(), /*customer: $("#edit_customer").val(),*/ userid: userid, depart: $("#edit_depart").val(), note: $("#edit_note").val(), process: $("#edit_process").val().replace("%", "")},
+      {action: "edit", completeStatus: completeStatus, departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#edit_name").val(), starttime: $("#edit_starttime").val(), endtime: $("#edit_endtime").val(), /*customer: $("#edit_customer").val(),*/ userid: userid, depart: $("#edit_depart").val(), note: $("#edit_note").val(), process: $("#edit_process").val().replace("%", "")},
       (response, status) => {
         var data = JSON.parse(response)
         if (data["status"]) {

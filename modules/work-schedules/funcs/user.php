@@ -237,7 +237,18 @@ if (!empty($action)) {
   break;
 
   case 'change_data':
-    $list = user_manager_list();
+    $departid = $nv_Request->get_string("departid", "get/post", "");
+    if (empty($departid)) {
+      $list = user_work_list();
+    }
+    else {
+      if ($departid == "end") {
+        $list = work_manager_list();
+      }
+      else {
+        $list = user_manager_list();
+      }
+    }
     $result["list"] = $list;
     $result["status"] = 1;
     $result["notify"] = "";

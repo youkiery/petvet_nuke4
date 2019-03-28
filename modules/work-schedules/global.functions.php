@@ -98,6 +98,7 @@ function depart_data() {
 function user_manager_list() {
   global $db, $global_config, $module_file, $module_name, $lang_module, $user_info, $db_config, $nv_Request, $user_info, $result;
   $departid = $nv_Request->get_string("departid", "post/get", "");
+  $completeStatus = $nv_Request->get_string("completeStatus", "post/get", "");
   $xtpl = new XTemplate('user_manage-list.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
   $image = "<img src='/themes/" . $global_config["module_theme"] . "/images/" . $module_file . "/xn.gif' />";
   $xtpl->assign("lang", $lang_module);
@@ -114,58 +115,68 @@ function user_manager_list() {
     }
   }
 
-  if (!empty($departid)) {
-    $index = 1;
-    $depart = depart_data();
+  $index = 1;
+  $depart = depart_data();
 
+  if (!$completeStatus) {
+    $complete_sql = "a.process < 100";
+  }
+  else {
+    $complete_sql = "a.process >= 100";
+  }
+
+  if (empty($departid)) {
+    $depart_sql = "a.userid = " . $user["userid"] . " and";
+  }
+  else {
     if ($departid == "end") {
       $depart_sql = "";      
     }
     else {
       $depart_sql = "a.depart = $departid and";      
     }
-
-    $sql = "select a.*, b.last_name, b.first_name from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid where $depart_sql " . filter_by_time();
-    $query = $db->query($sql);
-    $count = 0;
-    while ($work = $query->fetch()) {
-      $count ++;
-      // var_dump($work);
-      $xtpl->assign("index", $index);
-      $xtpl->assign("id", $work["id"]);
-      $xtpl->assign("work_name", $work["content"]);
-      $xtpl->assign("work_starttime", date("d/m/Y", $work["cometime"]));
-      $xtpl->assign("work_endtime", date("d/m/Y", $work["calltime"]));
-      // $xtpl->assign("work_customer", $work["customer"]);
-      $xtpl->assign("work_employ", $work["last_name"] . " " . $work["first_name"]);
-      $xtpl->assign("work_process", $work["process"]);
-      $xtpl->assign("confirm", "");
-      $xtpl->assign("review", "");
-      $xtpl->assign("overtime", "");
-      if ($today > $work["calltime"] && !$work["confirm"]) {
-        $xtpl->assign("overtime", "danger");
-      }
-      if ($admin) {
-        $xtpl->parse("main.loop.manager");
-      }
-      if ($work["confirm"]) {
-        $operator = "";
-        if ($work["review"] >= 0) {
-          $color = "green";
-          $operator = "+";
-        }
-        else {
-          $color = "red";
-        }
-        $xtpl->assign("confirm", $image);
-        $xtpl->assign("color", $color);
-        $xtpl->assign("review", $operator . $work["review"]);
-      }
-      $xtpl->parse("main.loop");
-      $index ++;
-    }
-    // die();
   }
+  $sql = "select a.*, b.last_name, b.first_name from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid and $depart_sql " . filter_by_time() . " and $complete_sql";
+  $query = $db->query($sql);
+  $count = 0;
+  while ($work = $query->fetch()) {
+    $count ++;
+    // var_dump($work);
+    $xtpl->assign("index", $index);
+    $xtpl->assign("id", $work["id"]);
+    $xtpl->assign("work_name", $work["content"]);
+    $xtpl->assign("work_starttime", date("d/m/Y", $work["cometime"]));
+    $xtpl->assign("work_endtime", date("d/m/Y", $work["calltime"]));
+    // $xtpl->assign("work_customer", $work["customer"]);
+    $xtpl->assign("work_employ", $work["last_name"] . " " . $work["first_name"]);
+    $xtpl->assign("work_process", $work["process"]);
+    $xtpl->assign("confirm", "");
+    $xtpl->assign("review", "");
+    $xtpl->assign("overtime", "");
+    if ($today > $work["calltime"] && !$work["confirm"]) {
+      $xtpl->assign("overtime", "danger");
+    }
+    if ($admin) {
+      $xtpl->parse("main.loop.manager");
+    }
+    if ($work["confirm"]) {
+      $operator = "";
+      if ($work["review"] >= 0) {
+        $color = "green";
+        $operator = "+";
+      }
+      else {
+        $color = "red";
+      }
+      $xtpl->assign("confirm", $image);
+      $xtpl->assign("color", $color);
+      $xtpl->assign("review", $operator . $work["review"]);
+    }
+    $xtpl->parse("main.loop");
+    $index ++;
+  }
+  // die();
+  
   if (empty($result)) {
     $result["count"] = 0;
   }
@@ -185,6 +196,7 @@ function user_work_list() {
   $xtpl->assign("lang", $lang_module);
   $admin = false;
   $today = strtotime(date("Y-m-d"));
+  $completeStatus = $nv_Request->get_string("completeStatus", "get/post", "");
 
   if (!empty($user_info)) {
     $sql = "select * from `" . $db_config["prefix"] . "_users_groups_users` where userid = $user_info[userid]";
@@ -204,8 +216,15 @@ function user_work_list() {
   }
   // var_dump($depart);die();
 
+  if (!$completeStatus) {
+    $complete_sql = "process < 100";
+  }
+  else {
+    $complete_sql = "process >= 100";
+  }
+
   if (!empty($user_info)) {
-    $sql = "select * from `" . WORK_PREFIX . "_row` where userid = $user_info[userid] and " . filter_by_time();
+    $sql = "select * from `" . WORK_PREFIX . "_row` where userid = $user_info[userid]  and " . filter_by_time() . " and $complete_sql";
     $query = $db->query($sql);
     while($work = $query->fetch()) {
       $count ++;
@@ -242,6 +261,7 @@ function work_manager_list() {
   $xtpl->assign("lang", $lang_module);
   $admin = false;
   $today = strtotime(date("Y-m-d"));
+  $completeStatus = $nv_Request->get_string("completeStatus", "get/post", "");
 
   if (!empty($user_info)) {
     $sql = "select * from `" . $db_config["prefix"] . "_users_groups_users` where userid = $user_info[userid]";
@@ -263,9 +283,15 @@ function work_manager_list() {
     $depart[$row["id"]] = $row["name"];
   }
   // var_dump($depart);die();
+  if (!$completeStatus) {
+    $complete_sql = "process < 100";
+  }
+  else {
+    $complete_sql = "process >= 100";
+  }
 
   if (!empty($user_info)) {
-    $sql = "select a.*, b.last_name, b.first_name from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid where a.depart in ($depart_sql) and " . filter_by_time();
+    $sql = "select a.*, b.last_name, b.first_name from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid where a.depart in ($depart_sql) and " . filter_by_time() . "and $complete_sql";
     $query = $db->query($sql);
     while($work = $query->fetch()) {
       $count ++;
