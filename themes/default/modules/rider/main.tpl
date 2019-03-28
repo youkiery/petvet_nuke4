@@ -111,10 +111,10 @@
     </select>
   </div>
   <div class="col-sm-4">
-    <input class="form-control" id="start-date" type="text" value="{today}">
+    <input class="form-control" id="start-date" type="text" value="{today}" autocomplete="off">
   </div>
   <div class="col-sm-4">
-    <input class="form-control" id="end-date" type="text" value="{tomorrow}">
+    <input class="form-control" id="end-date" type="text" value="{tomorrow}" autocomplete="off">
   </div>
   <div class="col-sm-4">
     <select class="form-control" id="date-type">
