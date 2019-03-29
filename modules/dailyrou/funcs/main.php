@@ -164,7 +164,7 @@ while ($row = $query->fetch()) {
   if ($row["user_id"] == $user_id) {
     $use = 1;
   }
-  $daily[] = array("date" => date("d/m/Y", $row["time"]), "type" => $row["type"], "use" => $use);
+  $daily[] = array("userid" => $row["user_id"], "date" => date("d/m/Y", $row["time"]), "type" => $row["type"], "use" => $use);
 }
 
 $sql = "select * from `" . $db_config["prefix"] . "_users` where userid in (select id from `" . $db_config["prefix"] . "_rider_user` where type = 1 and user_id <> $user_info[userid])";

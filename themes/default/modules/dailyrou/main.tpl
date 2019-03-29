@@ -26,7 +26,28 @@
   </div>
 </div>
 
-<div id="exchange_work" class="modal fade" role="dialog">
+<!-- <div id="confirm_work" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <h2> Xác nhận lịch tuần </h2>
+        <div id="confirm_work_content">
+
+        </div>
+        <div class="text-center">
+          <button class="btn btn-success" onclick="checkAdRegist()">
+            Đăng ký
+          </button>
+          <button class="btn btn-danger" data-dismiss="modal" onclick="registOff()">
+            Hủy
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<!-- <div id="exchange_work" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
@@ -36,9 +57,9 @@
 
           </div>
           <select id="exchange_work_doctor" class="form-control">
-            <!-- BEGIN: doctor -->
+            BEGIN: doctor
             <option value="{doctor_value}">{doctor_name}</option>
-            <!-- END: doctor -->
+            END: doctor
           </select>
           <div id="exchange_work_content">
           </div>
@@ -51,9 +72,9 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
-<div id="work_list" class="modal fade" role="dialog">
+<!-- <div id="work_list" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
@@ -69,7 +90,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
   
 <div class="row">
   <div class="col-sm-4">
@@ -95,7 +116,7 @@
     <button class="btn btn-info right" onclick="print()">
       In
     </button>
-    <button class="btn btn-info right" onclick="registOnAdmin()">
+    <button class="btn btn-info right" onclick="editSchedule()">
       Xác nhận
     </button>
     <!-- <button class="btn btn-info" id="list">
@@ -125,6 +146,8 @@
   var exchangeWork = $("#exchange_work")
   var exchangeWorkContent = $("#exchange_work_content")
   var exchangeWorkDoctor = $("#exchange_work_doctor")
+  var confirmWork = $("#confirm_work")
+  var confirmWorkContent = $("#confirm_work_content")
 
   var admin = false
   var regist = false
@@ -135,138 +158,129 @@
 
   setEvent()
 
-  function exchange(exchangeDate, exchangeType) {
-    exDate = exchangeDate
-    exType = exchangeType
+  // #exchange
+  // exchangeWorkDoctor.change(() => {
+  //   getWorkList()
+  // })
 
-    getWorkList().then(() => {
-      exchangeWork.modal("show")
-    })
-  }
+  // function exchange(exchangeDate, exchangeType) {
+  //   exDate = exchangeDate
+  //   exType = exchangeType
 
-  function getWorkList() {
-    return new Promise(resolve => {
-      $.post(
-        strHref,
-        {action: "getWorkList", doctorId: exchangeWorkDoctor.val(), exType: exType, startDate: startDate.val(), endDate: endDate.val()},
-        (response, status) => {
-          checkResult(response, status).then((data) => {
-            exchangeWorkContent.html(data["html"])
-            resolve()
-          }, () => {})
-        }    
-      )
-    })
-  }
+  //   getWorkList().then(() => {
+  //     exchangeWork.modal("show")
+  //   })
+  // }
 
-  function exchangeSubmit(exDate2, extype2) {
-    $.post(
-      strHref,
-      {action: "exchange", exDate: exDate, exType: exType, exDate2: exDate2, exType2: exType2},
-      (response, status) => {
-        checkResult(response, status).then((data) => {
+  // function getWorkList() {
+  //   return new Promise(resolve => {
+  //     $.post(
+  //       strHref,
+  //       {action: "getWorkList", doctorId: exchangeWorkDoctor.val(), exType: exType, startDate: startDate.val(), endDate: endDate.val()},
+  //       (response, status) => {
+  //         checkResult(response, status).then((data) => {
+  //           exchangeWorkContent.html(data["html"])
+  //           resolve()
+  //         }, () => {})
+  //       }    
+  //     )
+  //   })
+  // }
 
-        }, () => {})
-      }
-    )
-  }
+  // function exchangeSubmit(exDate2, extype2) {
+  //   $.post(
+  //     strHref,
+  //     {action: "exchange", exDate: exDate, exType: exType, exDate2: exDate2, exType2: exType2},
+  //     (response, status) => {
+  //       checkResult(response, status).then((data) => {
 
-  exchangeWorkDoctor.change(() => {
-    getWorkList()
-  })
+  //       }, () => {})
+  //     }
+  //   )
+  // }
 
-  list.click(() => {
-    var table = content[0].children[0].children[1].children
-    var i = 0
-    html = ""
-    for (const rowKey in table) {
-      if (table.hasOwnProperty(rowKey)) {
-        const row = table[rowKey];
-        var last_type = -1
-        var last_date = -1
+  // #confirm schedule
+  // function editSchedule() {
+  //   $.post(
+  //     strHref,
+  //     {action: "editSchedule", doctorId: exchangeWorkDoctor.val(), exType: exType, startDate: startDate.val(), endDate: endDate.val()},
+  //     (response, status) => {
+  //       checkResult(response, status).then((data) => {
+  //         confirmWorkContent.html(data["html"])
+  //         confirmWork.modal("show")
+          
+  //         setEvent2()
+  //       }, () => {})
+  //     }    
+  //   )
+  // }
 
-        while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
-          if (row.children[dbdata[i]["type"] + 1].innerText.search(username) >= 0) {
-            if (last_date != dbdata[i]["date"] || last_type != dbdata[i]["type"]) {
-              switch (dbdata[i]["type"]) {
-                case 0:
-                  type = "trực sáng"
-                  break;
-                case 1:
-                  type = "trực tối"
-                  break;
-                case 2:
-                  type = "nghỉ sáng"
-                  break;
-                case 3:
-                  type = "nghỉ chiều"
-                  break;
-              }
-              html += "<div class='item'>Ngày " + dbdata[i]["date"] + ": " + type + "<button class='btn btn-info right' onclick='exchange(\"" + dbdata[i]["date"] + "\", " + dbdata[i]["type"] +")'><span class='glyphicon glyphicon-retweet'></span></button></div>"
-            }
-          }
-          last_date = dbdata[i]["date"]
-          last_type = dbdata[i]["type"]
-          i ++
-        }
-      }
-    }
-    workContentList.html(html)
-    workList.modal("show")
-  })
+  // function registOnAdmin() {
+  //   if (admin) {
+  //     registOff()
+  //   }
+  //   else {
+  //     var table = content[0].children[0].children[1].children
+  //     var i = 0
+  //     var thisDateString = "", thisDate = 0
+  //     for (const rowKey in table) {
+  //       if (table.hasOwnProperty(rowKey)) {
+  //         const row = table[rowKey];
+  //         var moi = [0, 0, 0, 0, 0]
+          
+  //         while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
+  //           moi[dbdata[i]["type"] + 1] = 2
+  //           i ++
+  //         }
+  //         moi.forEach((cellColor, index) => {
+  //           row.children[index].setAttribute("class", color[cellColor])
+  //         });
+  //       }
+  //     }
+      
+  //   }
+  //   admin = !admin
+  // }
 
-  function print() {
-    var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
-    var html = content.html().toString()
-    html = "<style>table {border-collapse: collapse;} td, th {border: 1px solid black; padding: 4px;} .text-center{text-align: center;}</style>" + html
-    
-    WinPrint.document.write(html);
-    WinPrint.document.close();
-    WinPrint.focus();
-    WinPrint.print();
-    WinPrint.close();
-  }
+  // list.click(() => {
+  //   var table = content[0].children[0].children[1].children
+  //   var i = 0
+  //   html = ""
+  //   for (const rowKey in table) {
+  //     if (table.hasOwnProperty(rowKey)) {
+  //       const row = table[rowKey];
+  //       var last_type = -1
+  //       var last_date = -1
 
-  function setEvent(params) {
-    var td = $(".dailyrou")
-    td.click((e) => {
-      if (regist) {
-        var that = e.currentTarget
-
-        var thisDateVal = (trim(that.parentElement.children[0].innerText)).split("/")
-        var thisDate = new Date(thisDateVal[2], parseInt(thisDateVal[1]) - 1, thisDateVal[0])
-        
-        var thisColor = that.getAttribute("class")
-        var thisValue = trim(that.innerText)
-        if (thisDate >= today) {
-          switch (thisColor) {
-            case "red":
-              if (thisValue.search(",") < 0) {
-                that.setAttribute("class", "blue")
-              }
-            break;
-            case "blue":
-              that.setAttribute("class", "red")
-            break;
-            case "green":
-              that.setAttribute("class", "yellow")
-            break;
-            case "purple":
-              if (username && thisValue.search(username) >= 0) {
-                that.setAttribute("class", "orange")
-              }
-            break;
-            case "orange":
-              that.setAttribute("class", "purple")
-            break;
-            case "yellow":
-              that.setAttribute("class", "green")
-            break;
-          }
-        }
-      }
-    })
-  }
+  //       while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
+  //         if (row.children[dbdata[i]["type"] + 1].innerText.search(username) >= 0) {
+  //           if (last_date != dbdata[i]["date"] || last_type != dbdata[i]["type"]) {
+  //             switch (dbdata[i]["type"]) {
+  //               case 0:
+  //                 type = "trực sáng"
+  //                 break;
+  //               case 1:
+  //                 type = "trực tối"
+  //                 break;
+  //               case 2:
+  //                 type = "nghỉ sáng"
+  //                 break;
+  //               case 3:
+  //                 type = "nghỉ chiều"
+  //                 break;
+  //             }
+  //             html += "<div class='item'>Ngày " + dbdata[i]["date"] + ": " + type + "<button class='btn btn-info right' onclick='exchange(\"" + dbdata[i]["date"] + "\", " + dbdata[i]["type"] +")'><span class='glyphicon glyphicon-retweet'></span></button></div>"
+  //           }
+  //         }
+  //         last_date = dbdata[i]["date"]
+  //         last_type = dbdata[i]["type"]
+  //         i ++
+  //       }
+  //     }
+  //   }
+  //   workContentList.html(html)
+  //   workList.modal("show")
+  // })
 
   register.click(() => {
     if (regist) {
@@ -353,9 +367,7 @@
     changeYear: true
 	});
 
-  list.click(() => {
-
-  })
+  // event function
 
   function registOn() {
     var table = content[0].children[0].children[1].children
@@ -380,24 +392,13 @@
     }
   }
 
-  function registOnAdmin() {
-    if (admin) {
-      registOff
-    }
-    else {
-      
-    }
-    admin = !admin
+  function registOff() {
     var table = content[0].children[0].children[1].children
-    var i = 0
+    var moi = [0, 0, 0, 0, 0]
+
     for (const rowKey in table) {
       if (table.hasOwnProperty(rowKey)) {
         const row = table[rowKey];
-        var moi = [0, 0, 0, 0, 0]
-        while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
-          moi[dbdata[i]["type"] + 1] = 1
-          i ++
-        }
         moi.forEach((cellColor, index) => {
           row.children[index].setAttribute("class", color[cellColor])
         });
@@ -445,20 +446,6 @@
     )
   }
 
-  function registOff() {
-    var table = content[0].children[0].children[1].children
-    var moi = [0, 0, 0, 0, 0]
-
-    for (const rowKey in table) {
-      if (table.hasOwnProperty(rowKey)) {
-        const row = table[rowKey];
-        moi.forEach((cellColor, index) => {
-          row.children[index].setAttribute("class", color[cellColor])
-        });
-      }
-    }
-  }
-
   function filterData() {
     $.post(
       strHref,
@@ -472,6 +459,61 @@
         }, () => {})        
       }
     )
+  }
+
+  // button function
+
+  function print() {
+    var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+    var html = content.html().toString()
+    html = "<style>table {border-collapse: collapse;} td, th {border: 1px solid black; padding: 4px;} .text-center{text-align: center;}</style>" + html
+    
+    WinPrint.document.write(html);
+    WinPrint.document.close();
+    WinPrint.focus();
+    WinPrint.print();
+    WinPrint.close();
+  }
+
+  // initiaze
+
+  function setEvent() {
+    var td = $(".dailyrou")
+    td.click((e) => {
+      if (regist) {
+        var that = e.currentTarget
+        var thisDateVal = (trim(that.parentElement.children[0].innerText)).split("/")
+        var thisDate = new Date(thisDateVal[2], parseInt(thisDateVal[1]) - 1, thisDateVal[0])
+        var thisColor = that.getAttribute("class")
+        var thisValue = trim(that.innerText)
+        if (thisDate >= today) {
+          switch (thisColor) {
+            case "red":
+              if (thisValue.search(",") < 0) {
+                that.setAttribute("class", "blue")
+              }
+            break;
+            case "blue":
+              that.setAttribute("class", "red")
+            break;
+            case "green":
+              that.setAttribute("class", "yellow")
+            break;
+            case "purple":
+              if (username && thisValue.search(username) >= 0) {
+                that.setAttribute("class", "orange")
+              }
+            break;
+            case "orange":
+              that.setAttribute("class", "purple")
+            break;
+            case "yellow":
+              that.setAttribute("class", "green")
+            break;
+          }
+        }
+      }
+    })
   }
 </script>
 <!-- END: main -->
