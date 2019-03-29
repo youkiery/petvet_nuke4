@@ -173,6 +173,7 @@
   var customerId = 0
   var destinationId = 0
   var money = 0
+  var clock = [Number("{clock}"), Number("{clock}")]
   const formatter = new Intl.NumberFormat('vi-VI', {
     style: 'currency',
     currency: 'VND'
@@ -257,6 +258,31 @@
     dateTimeout = setTimeout(() => {
       filterData()
     }, 500);
+  })
+
+  $("#collect-start, #collect-end").keyup((e) => {
+    var current = e.currentTarget
+    var val = current.value.replace(/\,|\./g, "")
+    var id = current.getAttribute("id")
+    var type = 0
+    if (id == "collect-end") {
+      type = 1
+    }
+
+    if (Number.isFinite(Number(val))) {
+      clock[type] = val
+    }
+    else {
+      val = clock[type]
+    }
+    val = val.split("")
+    var x = val[val.length - 1]
+    
+    val[val.length - 1] = "."
+    val[val.length] = x
+    val = val.join("")
+    
+    current.value = val
   })
 
   collectCustomer.keyup(() => {

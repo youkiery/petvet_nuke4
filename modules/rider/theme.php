@@ -33,7 +33,7 @@ function collectList($startDate, $endDate) {
     $xtpl->assign("index", $index ++);
     // die(var_dump($user));
     $xtpl->assign("driver", $user[$row["driver_id"]]["last_name"] . " " . $user[$row["driver_id"]]["first_name"]);
-    $xtpl->assign("km", $row["clock_to"] - $row["clock_from"]);
+    $xtpl->assign("km", number_format($row["clock_to"] - $row["clock_from"], 1, ".", ","));
     $xtpl->assign("date", date("d/m H:i", $row["time"]));
     $xtpl->assign("start", $row["clock_from"]);
     $xtpl->assign("end", $row["clock_to"]);
