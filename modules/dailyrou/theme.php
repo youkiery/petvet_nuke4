@@ -12,6 +12,29 @@ if (!defined('PREFIX')) {
 }
 
 define("A_DAY", 60 * 60 * 24);
+$work = array("trực sáng", "trực tối", "nghỉ sáng", "nghỉ chiều");
+
+function userWorkList($doctorId) {
+  global $nv_Request, $db, $work;
+  $exType = $nv_Request->get_string("exType", "get/post", "");
+  $startDate = $nv_Request->get_string("startDate", "get/post", "");
+  $endDate = $nv_Request->get_string("endDate", "get/post", "");
+
+  $startDate = totime($startDate);
+  $endDate = totime($endDate);
+  $xtpl = new XTemplate("work_list.tpl", PATH);
+
+  $sql = "select * from `" . PREFIX . "_row` where user_id = $doctorId and time between $startDate and $endDate order by time, type asc";
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $xtpl->assign("date", date("d/m/Y", $row["time"]));
+    $xtpl->assign("type", $work[$row["type"]]);
+    $xtpl->assign("type2", $row["type"]);
+    $xtpl->parse("main");
+  }
+  return $xtpl->text();
+}
 
 function scheduleList($startDate, $endDate) {
   global $db;
@@ -24,7 +47,7 @@ function scheduleList($startDate, $endDate) {
 
   $userList = userList();
   $date = $startDate;
-  $rest_list = array("guard", "morning" => array(), "afternoon" => array());
+  $rest_list = array("morning_guard" => array(), "afternoon_guard" => array(), "morning_rest" => array(), "afternoon_rest" => array());
   $check = true;
 
   $sql = "select * from `" . PREFIX . "_row` where `time` between $startDate and $endDate order by time, type asc";
@@ -41,27 +64,33 @@ function scheduleList($startDate, $endDate) {
     if ($currentRow["time"] === $date) {
       switch ($currentRow["type"]) {
         case '0':
-          $rest_list["guard"][] = $userList[$currentRow["user_id"]]["last_name"] . " " . $userList[$currentRow["user_id"]]["first_name"];
-          $xtpl->assign("guard", implode(", ", $rest_list["guard"]));
+          $rest_list["morning_guard"][] = $userList[$currentRow["user_id"]]["first_name"];
+          $xtpl->assign("morning_guard", implode(", ", $rest_list["morning_guard"]));
           $currentRow = $query->fetch();
         break;
         case '1':
-          $rest_list["morning"][] = $userList[$currentRow["user_id"]]["last_name"] . " " . $userList[$currentRow["user_id"]]["first_name"];
-          $xtpl->assign("morning_rest", implode(", ", $rest_list["morning"]));
+          $rest_list["afternoon_guard"][] = $userList[$currentRow["user_id"]]["first_name"];
+          $xtpl->assign("afternoon_guard", implode(", ", $rest_list["afternoon_guard"]));
           $currentRow = $query->fetch();
         break;
         case '2':
-          $rest_list["afternoon"][] = $userList[$currentRow["user_id"]]["last_name"] . " " . $userList[$currentRow["user_id"]]["first_name"];
-          $xtpl->assign("afternoon_rest", implode(", ", $rest_list["afternoon"]));
+          $rest_list["morning_rest"][] = $userList[$currentRow["user_id"]]["first_name"];
+          $xtpl->assign("morning_rest", implode(", ", $rest_list["morning_rest"]));
+          $currentRow = $query->fetch();
+        break;
+        case '3':
+          $rest_list["afternoon_rest"][] = $userList[$currentRow["user_id"]]["first_name"];
+          $xtpl->assign("afternoon_rest", implode(", ", $rest_list["afternoon_rest"]));
           $currentRow = $query->fetch();
         break;
       }
     }
     else {
-      $rest_list = array("guard", "morning" => array(), "afternoon" => array());
+      $rest_list = array("morning_guard" => array(), "afternoon_guard" => array(), "morning_rest" => array(), "afternoon_rest" => array());
       $date += A_DAY;
       $xtpl->parse("main.row");
-      $xtpl->assign("guard", "");
+      $xtpl->assign("morning_guard", "");
+      $xtpl->assign("afternoon_guard", "");
       $xtpl->assign("morning_rest", "");
       $xtpl->assign("afternoon_rest", "");
     }
@@ -99,7 +128,7 @@ function adminScheduleList($date) {
   $date = totime($date);
   $startDate = date ('N', $date) == 1 ? strtotime(date('Y-m-d', $date)) : strtotime('last monday', $date);
   $endDate = strtotime('next monday', $date);
-  $xtpl = new XTemplate("schedule_list.tpl", PATH);
+  $xtpl = new XTemplate("ad_schedule_list.tpl", PATH);
   $user = array();
 
   $sql = "select * from `" . $db_config["prefix"] . "_users` where userid in (select user_id from `" . $db_config["prefix"] . "_rider_user` where type = 1)";

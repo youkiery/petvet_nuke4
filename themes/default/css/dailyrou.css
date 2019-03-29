@@ -102,3 +102,11 @@
 .red, .green, .white, .yellow, .orange, .purple, .blue {
   border: 1px solid #fff;
 }
+
+.right {
+  float: right;
+}
+
+.item {
+  overflow: overlay;
+}

@@ -18,6 +18,36 @@ $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
 	$result = array("status" => 0);
 	switch ($action) {
+    case 'editSchedule':
+      $startDate = $nv_Request->get_string("startDate", "get/post", "");
+
+      $result["status"] = 1;
+      $result["html"] = adminScheduleList($startDate);
+    break;
+    case 'getWorkList':
+      $doctorId = $nv_Request->get_string("doctorId", "get/post", "");
+
+      $sql = "select * from `" . $db_config["prefix"] . "_rider_user` where type = 1 and user_id = $doctorId";
+      $query = $db->query($sql);
+
+      if ($query->fetch()) {
+        $result["status"] = 1;
+        $result["html"] = userWorkList($doctorId);
+      }
+    break;
+    case 'exchange':
+      // need to change
+      $exDate = $nv_Request->get_string("exDate", "get/post", "");
+      $exType = $nv_Request->get_string("exType", "get/post", "");
+      $exDate2 = $nv_Request->get_string("exDate2", "get/post", "");
+      $exType2 = $nv_Request->get_string("exType2", "get/post", "");
+
+      $exDate = totime($exDate);
+      $exDate2 = totime($exDate2);
+
+      $sql = "insert into * from `" . PREFIX . "_exchange` (user_id, request_user_id, date, type, )";
+      $query = $db->query($sql);
+    break;
     case 'regist':
       $itemList = $nv_Request->get_array("itemList", "get/post", "");
       $startDate = $nv_Request->get_string("startDate", "get/post", "");
@@ -135,6 +165,15 @@ while ($row = $query->fetch()) {
     $use = 1;
   }
   $daily[] = array("date" => date("d/m/Y", $row["time"]), "type" => $row["type"], "use" => $use);
+}
+
+$sql = "select * from `" . $db_config["prefix"] . "_users` where userid in (select id from `" . $db_config["prefix"] . "_rider_user` where type = 1 and user_id <> $user_info[userid])";
+// die($sql);
+$query = $db->query($sql);
+while($row = $query->fetch()) {
+  $xtpl->assign("doctor_value", $row["userid"]);
+  $xtpl->assign("doctor_name", $row["last_name"] . " " . $row["first_name"]);
+  $xtpl->parse("main.doctor");
 }
 
 $xtpl->assign("data", json_encode($daily));

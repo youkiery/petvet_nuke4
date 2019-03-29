@@ -2,6 +2,7 @@
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <div class="msgshow" id="msgshow"></div>
 
 <div id="regist_confirm" class="modal fade" role="dialog">
@@ -18,6 +19,51 @@
           </button>
           <button class="btn btn-danger" data-dismiss="modal" onclick="registOff()">
             Hủy
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="exchange_work" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <h2> Chọn người bạn muốn đổi ca? </h2>
+        <div>
+          <div id="exchange_work_head">
+
+          </div>
+          <select id="exchange_work_doctor" class="form-control">
+            <!-- BEGIN: doctor -->
+            <option value="{doctor_value}">{doctor_name}</option>
+            <!-- END: doctor -->
+          </select>
+          <div id="exchange_work_content">
+          </div>
+        </div>
+        <div class="text-center">
+          <button class="btn btn-danger" data-dismiss="modal">
+            Trở về
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="work_list" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <h2> Danh sách ngày các ca đã đăng ký? </h2>
+        <div id="work_content_list">
+
+        </div>
+        <div class="text-center">
+          <button class="btn btn-danger" data-dismiss="modal" onclick="registOff()">
+            Trở về
           </button>
         </div>
       </div>
@@ -42,15 +88,19 @@
   <div class="col-sm-4">
 
   </div>
-  <div class="col-sm-4">
-    <button class="btn btn-info" id="register">
+  <div class="col-sm-8">
+    <button class="btn btn-info right" id="register">
       Đăng ký
     </button>
-  </div>
-  <div class="col-sm-4">
-    <button class="btn btn-info" id="list">
-      Danh sách
+    <button class="btn btn-info right" onclick="print()">
+      In
     </button>
+    <button class="btn btn-info right" onclick="registOnAdmin()">
+      Xác nhận
+    </button>
+    <!-- <button class="btn btn-info" id="list">
+      Danh sách
+    </button> -->
   </div>
 </div>
 <div id="content">
@@ -70,12 +120,112 @@
   var content = $("#content")
   var registConfirm = $("#regist_confirm")
   var registList = $("#regist_list")
+  var workList = $("#work_list")
+  var workContentList = $("#work_content_list")
+  var exchangeWork = $("#exchange_work")
+  var exchangeWorkContent = $("#exchange_work_content")
+  var exchangeWorkDoctor = $("#exchange_work_doctor")
 
+  var admin = false
   var regist = false
   var color = ["white", "green", "red", "orange"]
   var panis = []
+  var exDate = -1
+  var exType = -1
 
   setEvent()
+
+  function exchange(exchangeDate, exchangeType) {
+    exDate = exchangeDate
+    exType = exchangeType
+
+    getWorkList().then(() => {
+      exchangeWork.modal("show")
+    })
+  }
+
+  function getWorkList() {
+    return new Promise(resolve => {
+      $.post(
+        strHref,
+        {action: "getWorkList", doctorId: exchangeWorkDoctor.val(), exType: exType, startDate: startDate.val(), endDate: endDate.val()},
+        (response, status) => {
+          checkResult(response, status).then((data) => {
+            exchangeWorkContent.html(data["html"])
+            resolve()
+          }, () => {})
+        }    
+      )
+    })
+  }
+
+  function exchangeSubmit(exDate2, extype2) {
+    $.post(
+      strHref,
+      {action: "exchange", exDate: exDate, exType: exType, exDate2: exDate2, exType2: exType2},
+      (response, status) => {
+        checkResult(response, status).then((data) => {
+
+        }, () => {})
+      }
+    )
+  }
+
+  exchangeWorkDoctor.change(() => {
+    getWorkList()
+  })
+
+  list.click(() => {
+    var table = content[0].children[0].children[1].children
+    var i = 0
+    html = ""
+    for (const rowKey in table) {
+      if (table.hasOwnProperty(rowKey)) {
+        const row = table[rowKey];
+        var last_type = -1
+        var last_date = -1
+
+        while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
+          if (row.children[dbdata[i]["type"] + 1].innerText.search(username) >= 0) {
+            if (last_date != dbdata[i]["date"] || last_type != dbdata[i]["type"]) {
+              switch (dbdata[i]["type"]) {
+                case 0:
+                  type = "trực sáng"
+                  break;
+                case 1:
+                  type = "trực tối"
+                  break;
+                case 2:
+                  type = "nghỉ sáng"
+                  break;
+                case 3:
+                  type = "nghỉ chiều"
+                  break;
+              }
+              html += "<div class='item'>Ngày " + dbdata[i]["date"] + ": " + type + "<button class='btn btn-info right' onclick='exchange(\"" + dbdata[i]["date"] + "\", " + dbdata[i]["type"] +")'><span class='glyphicon glyphicon-retweet'></span></button></div>"
+            }
+          }
+          last_date = dbdata[i]["date"]
+          last_type = dbdata[i]["type"]
+          i ++
+        }
+      }
+    }
+    workContentList.html(html)
+    workList.modal("show")
+  })
+
+  function print() {
+    var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+    var html = content.html().toString()
+    html = "<style>table {border-collapse: collapse;} td, th {border: 1px solid black; padding: 4px;} .text-center{text-align: center;}</style>" + html
+    
+    WinPrint.document.write(html);
+    WinPrint.document.close();
+    WinPrint.focus();
+    WinPrint.print();
+    WinPrint.close();
+  }
 
   function setEvent(params) {
     var td = $(".dailyrou")
@@ -150,6 +300,7 @@
       registOn()
     }
     regist = !regist
+    admin = false
   })
 
   dateType.change(() => {
@@ -182,21 +333,6 @@
         date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 2, 1);
         date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 3, 1);
       break;
-      // case "6":
-      //   // this year
-      //   date["startDate"] = new Date(now.getFullYear(), 1, 1);
-      //   date["endDate"] = new Date(now.getFullYear() + 1, 1, 1);
-      // break;
-      // case "7":
-      //   // last year
-      //   date["startDate"] = new Date(now.getFullYear() - 1, 1, 1);
-      //   date["endDate"] = new Date(now.getFullYear(), 1, 1);
-      // break;
-      // case "8":
-      //   // all
-      //   date["startDate"] = new Date(1970, 1, 1);
-      //   date["endDate"] = new Date(2038, 1, 1);
-      // break;
     }
     if (date["startDate"]) {
       startDate.val(dateToString(date["startDate"]));
@@ -227,7 +363,7 @@
     for (const rowKey in table) {
       if (table.hasOwnProperty(rowKey)) {
         const row = table[rowKey];
-        var moi = [0, 1, 1, 1]
+        var moi = [0, 1, 1, 1, 1]
         while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
           if (row.children[dbdata[i]["type"] + 1].innerText.search(username) >= 0) {
             moi[dbdata[i]["type"] + 1] = 3
@@ -244,9 +380,34 @@
     }
   }
 
+  function registOnAdmin() {
+    if (admin) {
+      registOff
+    }
+    else {
+      
+    }
+    admin = !admin
+    var table = content[0].children[0].children[1].children
+    var i = 0
+    for (const rowKey in table) {
+      if (table.hasOwnProperty(rowKey)) {
+        const row = table[rowKey];
+        var moi = [0, 0, 0, 0, 0]
+        while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
+          moi[dbdata[i]["type"] + 1] = 1
+          i ++
+        }
+        moi.forEach((cellColor, index) => {
+          row.children[index].setAttribute("class", color[cellColor])
+        });
+      }
+    }
+  }
+
   function checkRegist() {
     var table = content[0].children[0].children[1].children
-    var moi = [0, 0, 0, 0]
+    var moi = [0, 0, 0, 0, 0]
     var pan = []
 
     for (const rowKey in table) {
@@ -286,7 +447,7 @@
 
   function registOff() {
     var table = content[0].children[0].children[1].children
-    var moi = [0, 0, 0, 0]
+    var moi = [0, 0, 0, 0, 0]
 
     for (const rowKey in table) {
       if (table.hasOwnProperty(rowKey)) {
