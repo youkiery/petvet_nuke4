@@ -18,35 +18,82 @@ $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
 	$result = array("status" => 0);
 	switch ($action) {
-    case 'editSchedule':
+    // case 'editSchedule':
+    //   $startDate = $nv_Request->get_string("startDate", "get/post", "");
+
+    //   $result["status"] = 1;
+    //   $result["html"] = adminScheduleList($startDate);
+    // break;
+    // case 'getWorkList':
+    //   $doctorId = $nv_Request->get_string("doctorId", "get/post", "");
+
+    //   $sql = "select * from `" . $db_config["prefix"] . "_rider_user` where type = 1 and user_id = $doctorId";
+    //   $query = $db->query($sql);
+
+    //   if ($query->fetch()) {
+    //     $result["status"] = 1;
+    //     $result["html"] = userWorkList($doctorId);
+    //   }
+    // break;
+    // case 'exchange':
+    //   // need to change
+    //   $exDate = $nv_Request->get_string("exDate", "get/post", "");
+    //   $exType = $nv_Request->get_string("exType", "get/post", "");
+    //   $exDate2 = $nv_Request->get_string("exDate2", "get/post", "");
+    //   $exType2 = $nv_Request->get_string("exType2", "get/post", "");
+
+    //   $exDate = totime($exDate);
+    //   $exDate2 = totime($exDate2);
+
+    //   $sql = "insert into * from `" . PREFIX . "_exchange` (user_id, request_user_id, date, type, )";
+    //   $query = $db->query($sql);
+    // break;
+    case 'wconfirm':
       $startDate = $nv_Request->get_string("startDate", "get/post", "");
 
-      $result["status"] = 1;
-      $result["html"] = adminScheduleList($startDate);
+      $startDate = totime($startDate);
+
+      if ($startDate) {
+        $userList = doctorList();
+        $result["status"] = 1;
+        $result["html"] = wconfirm($startDate, current($userList)["userid"], $userList);
+        $result["doctorId"] = current($userList)["userid"];
+      }
+
     break;
-    case 'getWorkList':
+    case 'wconfirmChange':
+      $startDate = $nv_Request->get_string("startDate", "get/post", "");
       $doctorId = $nv_Request->get_string("doctorId", "get/post", "");
 
-      $sql = "select * from `" . $db_config["prefix"] . "_rider_user` where type = 1 and user_id = $doctorId";
-      $query = $db->query($sql);
+      $startDate = totime($startDate);
 
-      if ($query->fetch()) {
+      if ($startDate) {
+        $userList = doctorList();
         $result["status"] = 1;
-        $result["html"] = userWorkList($doctorId);
+        $result["html"] = wconfirm($startDate, $doctorId, $userList);
       }
     break;
-    case 'exchange':
-      // need to change
-      $exDate = $nv_Request->get_string("exDate", "get/post", "");
-      $exType = $nv_Request->get_string("exType", "get/post", "");
-      $exDate2 = $nv_Request->get_string("exDate2", "get/post", "");
-      $exType2 = $nv_Request->get_string("exType2", "get/post", "");
 
-      $exDate = totime($exDate);
-      $exDate2 = totime($exDate2);
+    case 'removeWconfirm':
+      $startDate = $nv_Request->get_string("startDate", "get/post", "");
+      $doctorId = $nv_Request->get_string("doctorId", "get/post", "");
+      $date = $nv_Request->get_string("date", "get/post", "");
+      $type = $nv_Request->get_string("type", "get/post", "");
 
-      $sql = "insert into * from `" . PREFIX . "_exchange` (user_id, request_user_id, date, type, )";
-      $query = $db->query($sql);
+      if ($startDate) {
+        $sql = "select * from `" . PREFIX . "_row` where user_id = $doctorId and time = $date and type = $type";
+        $query = $db->query($sql);
+
+        if ($query->fetch()) {
+          $sql = "delete from `" . PREFIX . "_row` where user_id = $doctorId and time = $date and type = $type";
+          if ($db->query($sql)) {
+            $userList = doctorList();
+            $result["status"] = 1;
+            $result["html"] = wconfirm($startDate, $doctorId, $userList);
+          }
+        }
+      }
+
     break;
     case 'regist':
       $itemList = $nv_Request->get_array("itemList", "get/post", "");
@@ -127,14 +174,15 @@ if (!empty($action)) {
 	die();
 }
 
-$this_week = date("N") == 1 ? strtotime(date("Y-m-d", time())) : strtotime('last monday');
-$next_week = (date("N") == 1 ? strtotime(date("Y-m-d", time())) : strtotime('last monday')) + A_DAY * 7;
+$this_week = date("N") == 1 ? strtotime(date("Y-m-d", time())) : strtotime(date("Y-m-d", strtotime('last monday')));
+$next_week = $this_week + A_DAY * 7;
 $this_week_s = date("d/m/Y", $this_week);
 $next_week_s = date("d/m/Y", $next_week);
 // $date_option = array(1 => "Tuần này", "Tuần sau", "Tháng này", "Tháng trước", "Tháng sau", "Năm nay", "Năm trước");
 $date_option = array(1 => "Tuần này", "Tuần sau", "Tháng này", "Tháng trước", "Tháng sau");
 $user_id = 0;
 $user_name = "";
+$userList = array();
 if (!empty($user_info)) {
   $user_id = $user_info["userid"];
   $sql = "select * from `" . $db_config["prefix"] . "_users` where userid = $user_info[userid]";
@@ -143,11 +191,24 @@ if (!empty($user_info)) {
   $user_name = $user["last_name"] . " " . $user["first_name"];
 }
 
+$sql = "select a.*, b.permission from `" . $db_config["prefix"] . "_users` a inner join `" . $db_config["prefix"] . "_rider_user` b on user_id = $user_id and type = 1 and a.userid = b.user_id";
+$query = $db->query($sql);
+// die($sql);
+if ($userList = $query->fetch()) {
+  if ($userList["permission"]) {
+    $userList = doctorList();
+  }
+  else {
+    $userList = array($userList);
+  }
+}
+
 $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
 $xtpl->assign("data", "{}");
 $xtpl->assign("this_week", $this_week_s);
 $xtpl->assign("next_week", $next_week_s);
 $xtpl->assign("date", date("Y-m-d"));
+$xtpl->assign("doctor", blockSelectDoctor($user_id, $userList));
 
 foreach ($date_option as $date_value => $date_name) {
   $xtpl->assign("date_name", $date_name);

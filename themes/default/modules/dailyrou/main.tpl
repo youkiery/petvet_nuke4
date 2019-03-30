@@ -116,18 +116,28 @@
     <button class="btn btn-info right" onclick="print()">
       In
     </button>
-    <button class="btn btn-info right" onclick="editSchedule()">
+    <!-- <button class="btn btn-info right" onclick="toWconfirm()">
       Xác nhận
-    </button>
+    </button> -->
     <!-- <button class="btn btn-info" id="list">
       Danh sách
     </button> -->
   </div>
 </div>
+<div>
+  {doctor}
+</div>
 <div id="content">
   {content}
 </div>
-
+<div>
+  <div style="width: 20px; height: 20px; display: inline-block; background: green;"></div> Chưa đăng ký <br>
+  <div style="width: 20px; height: 20px; display: inline-block; background: red;"></div> Có người đăng ký <br>
+  <div style="width: 20px; height: 20px; display: inline-block; background: orange;"></div> Bản thân đăng ký <br>
+  <div style="width: 20px; height: 20px; display: inline-block; background: yellow;"></div> Đăng ký thêm <br>
+  <div style="width: 20px; height: 20px; display: inline-block; background: blue;"></div> Đăng ký thêm <br>
+  <div style="width: 20px; height: 20px; display: inline-block; background: purple;"></div> Bỏ đăng ký <br>
+</div>
 <script>
   var today = new Date('{date}').setHours(0)
   var dbdata = JSON.parse('{data}')
@@ -137,17 +147,20 @@
   var endDate = $("#end-date")
   var dateType = $("#date-type")
   var register = $("#register")
-  var list = $("#list")
+  var doctor = $("#doctor")
+  // var list = $("#list")
   var content = $("#content")
   var registConfirm = $("#regist_confirm")
   var registList = $("#regist_list")
-  var workList = $("#work_list")
-  var workContentList = $("#work_content_list")
-  var exchangeWork = $("#exchange_work")
-  var exchangeWorkContent = $("#exchange_work_content")
-  var exchangeWorkDoctor = $("#exchange_work_doctor")
-  var confirmWork = $("#confirm_work")
-  var confirmWorkContent = $("#confirm_work_content")
+  // var workList = $("#work_list")
+  // var workContentList = $("#work_content_list")
+  // var exchangeWork = $("#exchange_work")
+  // var exchangeWorkContent = $("#exchange_work_content")
+  // var exchangeWorkDoctor = $("#exchange_work_doctor")
+  // var confirmWork = $("#confirm_work")
+  // var confirmWorkContent = $("#confirm_work_content")
+
+  var doctorId = 0
 
   var admin = false
   var regist = false
@@ -281,6 +294,67 @@
   //   workContentList.html(html)
   //   workList.modal("show")
   // })
+
+  // general
+
+  doctor.change((e) => {
+    doctorId = doctor.val()
+    username = trim($("#doctor option:selected").text())
+    regist = false
+    filterData()
+  })
+
+  // wconfirm: confirm case of work each week
+
+  // function toWconfirm() {
+  //   $.post(
+  //     strHref,
+  //     {action: "wconfirm", startDate: startDate.val()},
+  //     (response, status) => {
+  //       checkResult(response, status).then(data => {
+  //         content.html(data["html"])
+  //         doctorId = data["doctorId"]
+  //         wconfirmInitiaze()
+  //       }, () => {})
+  //     }
+  //   )
+  // }
+
+  // function wconfirmChange() {
+  //   $.post(
+  //     strHref,
+  //     {action: "wconfirmChange", startDate: startDate.val(), doctorId: doctor.val()},
+  //     (response, status) => {
+  //       checkResult(response, status).then(data => {
+  //         content.html(data["html"])
+  //         doctorId = doctor.val()
+  //         wconfirmInitiaze()
+  //       }, () => {})
+  //     }
+  //   )
+  // }
+
+  // function wconfirmInitiaze() {
+  //   doctor = $("#doctor")
+  //   doctor.change(() => {
+  //     wconfirmChange()
+  //   })
+  // }
+
+  // function removeWconfirm(date, type) {
+  //   $.post(
+  //     strHref,
+  //     {action: "removeWconfirm", startDate: startDate.val(), doctorId: doctorId, date: date, type: type},
+  //     (response, status) => {
+  //       checkResult(response, status).then(data => {
+  //         content.html(data["html"])
+  //         wconfirmInitiaze()
+  //       }, () => {})
+  //     }
+  //   )
+  // }
+
+  // regist a case of work
 
   register.click(() => {
     if (regist) {

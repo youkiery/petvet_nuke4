@@ -40,8 +40,8 @@ function scheduleList($startDate, $endDate) {
   global $db;
   // $startDate = strtotime("2019/05/01");
   // $endDate = strtotime("2019/06/01");
-  $startDate = totime($startDate);
-  $endDate = totime($endDate) - A_DAY;
+  $startDate = strtotime(date("Y-m-d", totime($startDate)));
+  $endDate = strtotime(date("Y-m-d", totime($endDate)));
   // $endDate = totime($endDate) + A_DAY * 200;
   $xtpl = new XTemplate("schedule_list.tpl", PATH);
 
@@ -51,6 +51,7 @@ function scheduleList($startDate, $endDate) {
   $check = true;
 
   $sql = "select * from `" . PREFIX . "_row` where `time` between $startDate and $endDate order by time, type asc";
+  // die($sql);
   $query = $db->query($sql);
   $currentRow = $query->fetch();
 
@@ -61,7 +62,7 @@ function scheduleList($startDate, $endDate) {
 
     $xtpl->assign("date", date("d/m/Y", $date));
 
-    if ($currentRow["time"] === $date) {
+    if ($currentRow["time"] == $date) {
       switch ($currentRow["type"]) {
         case '0':
           $rest_list["morning_guard"][] = $userList[$currentRow["user_id"]]["first_name"];
@@ -99,7 +100,6 @@ function scheduleList($startDate, $endDate) {
   return $xtpl->text();
 }
 
-
 function preCheckUser() {
   global $db, $db_config, $user_info;
   $check = false;
@@ -120,6 +120,52 @@ function preCheckUser() {
     echo nv_site_theme($contents);
     include ( NV_ROOTDIR . "/includes/footer.php" );
   }
+}
+
+function wconfirm($date, $doctorId, $userList) {
+  global $db, $db_config, $work;
+
+  $index ++;
+  $startDate = date("N", $date) == 1 ? strtotime(date("Y-m-d", $date)) : strtotime("last monday");
+  $endDate = $startDate + A_DAY * 7;
+  $xtpl = new XTemplate("wconfirm.tpl", PATH);
+
+  $xtpl->assign("doctor", $userList[$doctorId]["first_name"]);
+  $xtpl->assign("from", date("d/m/Y", $startDate));
+  $xtpl->assign("to", date("d/m/Y", $endDate));
+
+  $sql = "select * from `" . PREFIX . "_row` where user_id = $doctorId and (time between $startDate and $endDate) order by time, type asc";
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $xtpl->assign("date", date("d/m/Y", $row["time"]));
+    $xtpl->assign("type", $work[$row["type"]]);
+    $xtpl->assign("date2", $row["time"]);
+    $xtpl->assign("type2", $row["type"]);
+    $xtpl->parse("main.row");
+  }
+  $xtpl->parse("main");
+  return $xtpl->text();
+}
+
+function blockSelectDoctor($doctorId, $userList) {
+  global $db, $db_config;
+
+  $xtpl = new XTemplate("block_select_doctor.tpl", PATH);
+  
+  foreach ($userList as $userData) {
+    if ($doctorId == $userData["userid"]) {
+      $xtpl->assign("select", "selected");
+    }
+    else {
+      $xtpl->assign("select", "");
+    }
+    $xtpl->assign("doctor_value", $userData["userid"]);
+    $xtpl->assign("doctor_name", $userData["first_name"]);
+    $xtpl->parse("main.doctor");
+  }
+  $xtpl->parse("main");
+  return $xtpl->text();
 }
 
 function adminScheduleList($date) {

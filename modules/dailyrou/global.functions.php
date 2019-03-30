@@ -27,6 +27,20 @@ function userList() {
   return $list;
 }
 
+function doctorList() {
+  global $db, $db_config;
+  $list = array();
+
+  $sql = "select userid, username, last_name, first_name from `" .  $db_config["prefix"] . "_users` where userid in (select user_id from `" . $db_config["prefix"] . "_rider_user` where type = 1)";
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $list[$row["userid"]] = $row;
+  }
+
+  return $list;
+}
+
 function totime($time) {
   if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
     $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);
