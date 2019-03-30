@@ -450,12 +450,15 @@
       if (table.hasOwnProperty(rowKey)) {
         const row = table[rowKey];
         var moi = [0, 1, 1, 1, 1]
+        // console.log(row.children[0].innerText);
         while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
-          if (row.children[dbdata[i]["type"] + 1].innerText.search(username) >= 0) {
-            moi[dbdata[i]["type"] + 1] = 3
+        // console.log(Number(dbdata[i]["type"]) + 1);
+          var thisIndex = Number(dbdata[i]["type"]) + 1
+          if (row.children[thisIndex].innerText.search(username) >= 0) {
+            moi[thisIndex] = 3
           }
           else {
-            moi[dbdata[i]["type"] + 1] = 2
+            moi[thisIndex] = 2
           }
           i ++
         }
