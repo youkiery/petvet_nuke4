@@ -100,11 +100,18 @@
     <input class="form-control" id="end-date" type="text" value="{next_week}" autocomplete="off">
   </div>
   <div class="col-sm-4">
-    <select class="form-control" id="date-type">
+    <button class="btn btn-warning" onclick="prevWeek()">
+      <span class="glyphicon glyphicon-chevron-left"></span>
+    </button>
+    <button class="btn btn-warning" onclick="nextWeek()">
+      <span class="glyphicon glyphicon-chevron-right"></span>
+    </button>
+
+    <!-- <select class="form-control" id="date-type"> -->
       <!-- BEGIN: date_option -->
-      <option value="{date_value}"> {date_name} </option>
+      <!-- <option value="{date_value}"> {date_name} </option> -->
       <!-- END: date_option -->
-    </select>
+    <!-- </select> -->
   </div>
   <div class="col-sm-4">
 
@@ -160,9 +167,9 @@
   // var confirmWork = $("#confirm_work")
   // var confirmWorkContent = $("#confirm_work_content")
 
-  var doctorId = 0
+  var doctorId = {doctorId}
 
-  var admin = false
+  var admin = {admin}
   var regist = false
   var color = ["white", "green", "red", "orange"]
   var panis = []
@@ -388,7 +395,6 @@
       registOn()
     }
     regist = !regist
-    admin = false
   })
 
   dateType.change(() => {
@@ -508,34 +514,43 @@
   }
 
   function registSubmit() {
+    $(".btn, .form-control").attr("disabled", true)
     $.post(
       strHref,
-      {action: "regist", itemList: panis, startDate: startDate.val(), endDate: endDate.val()},
+      {action: "regist", doctorId: doctorId, itemList: panis, startDate: startDate.val(), endDate: endDate.val()},
       (response, status) => {
         checkResult(response, status).then((data) => {
+          $(".btn").attr("disabled", false)
           content.html(data["html"])
           dbdata = JSON.parse(data["json"])
           schedule = dbdata.length
           registConfirm.modal("hide")
+          $(".btn, .form-control").attr("disabled", false)
           setEvent()
-        }, () => {})
+        }, () => {
+          $(".btn, .form-control").attr("disabled", false)
+        })
       }
     )
   }
 
   function filterData() {
-    $.post(
-      strHref,
-      {action: "filter_data", startDate: startDate.val(), endDate: endDate.val()},
-      (response, status) => {
-        checkResult(response, status).then((data) => {
-          content.html(data["html"])
-          dbdata = JSON.parse(data["json"])
-          schedule = dbdata.length
-          setEvent()
-        }, () => {})        
-      }
-    )
+    $(".btn, .form-control").attr("disabled", true)
+      $.post(
+        strHref,
+        {action: "filter_data", startDate: startDate.val(), endDate: endDate.val()},
+        (response, status) => {
+          checkResult(response, status).then((data) => {
+            content.html(data["html"])
+            dbdata = JSON.parse(data["json"])
+            schedule = dbdata.length
+            $(".btn, .form-control").attr("disabled", false)
+            setEvent()
+          }, () => {
+            $(".btn, .form-control").attr("disabled", false)
+          })        
+        }
+      )
   }
 
   // button function
@@ -552,6 +567,34 @@
     WinPrint.close();
   }
 
+  function nextWeek() {
+    var dateVal = startDate.val().split("/")
+    var date = new Date(dateVal[2], dateVal[1], dateVal[0])
+    date.setDate(date.getDate() + 7)
+    startDate.val(dateToString(date))
+
+    var dateVal = endDate.val().split("/")
+    var date = new Date(dateVal[2], dateVal[1], dateVal[0])
+    date.setDate(date.getDate() + 7)
+    endDate.val(dateToString(date))
+
+    filterData()
+  }
+
+  function prevWeek() {
+    var dateVal = startDate.val().split("/")
+    var date = new Date(dateVal[2], dateVal[1], dateVal[0])
+    date.setDate(date.getDate() - 7)
+    startDate.val(dateToString(date))
+
+    var dateVal = endDate.val().split("/")
+    var date = new Date(dateVal[2], dateVal[1], dateVal[0])
+    date.setDate(date.getDate() - 7)
+    endDate.val(dateToString(date))
+    
+    filterData()
+  }
+
   // initiaze
 
   function setEvent() {
@@ -563,7 +606,7 @@
         var thisDate = new Date(thisDateVal[2], parseInt(thisDateVal[1]) - 1, thisDateVal[0])
         var thisColor = that.getAttribute("class")
         var thisValue = trim(that.innerText)
-        if (thisDate >= today) {
+        if (admin || (thisDate >= today)) {
           switch (thisColor) {
             case "red":
               if (thisValue.search(",") < 0) {

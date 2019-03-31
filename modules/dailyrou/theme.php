@@ -264,3 +264,24 @@ function adminSummary($date) {
   $xtpl->parse("main");
   return $xtpl->text();
 }
+
+function doctorUserList() {
+  global $db, $db_config;
+  $xtpl = new XTemplate("manager_list.tpl", PATH);
+
+  $sql = "select a.first_name, a.userid, b.permission from `" . $db_config["prefix"] . "_users` a inner join `" . $db_config["prefix"] . "_rider_user` b on b.type = 1 and a.userid = b.user_id order by permission desc";
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $xtpl->assign("id", $row["userid"]);
+    $xtpl->assign("username", $row["first_name"]);
+    if ($row["permission"]) {
+      $xtpl->parse("main.manager");
+    }
+    else {
+      $xtpl->parse("main.user");
+    }
+    $xtpl->parse("main");
+  }
+  return $xtpl->text();
+}

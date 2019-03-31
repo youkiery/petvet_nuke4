@@ -60,8 +60,8 @@ function checkUser($userId) {
   $sql = "select * from `" .  $db_config["prefix"] . "_users` where userid = $userId";
   $query = $db->query($sql);
 
-  if (!empty($query->fetch())) {
-    return 1;
+  if ($user = $query->fetch()) {
+    return $user;
   }
   return 0;
 }

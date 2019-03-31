@@ -99,17 +99,21 @@ if (!empty($action)) {
       $itemList = $nv_Request->get_array("itemList", "get/post", "");
       $startDate = $nv_Request->get_string("startDate", "get/post", "");
       $endDate = $nv_Request->get_string("endDate", "get/post", "");
+      $doctorId = $nv_Request->get_string("doctorId", "get/post", "");
       $today = strtotime(date("Y-m-d"));
 
       if ($itemList) {
+        $sql = "select * from `" . $db_config["prefix"] . "_rider_user` where type = 1 and user_id = $user_info[userid]";
+        $query = $db->query($sql);
+        $user = $query->fetch();
         foreach ($itemList as $itemData) {
           $date = totime($itemData["date"]);
-          if ($date >= $today) {
+          if ($user["permission"] || $date >= $today) {
             if ($itemData["color"] == "purple") {
-              $sql = "delete from `". PREFIX ."_row` where user_id = $user_info[userid] and time = '$date' and type = " . ($itemData["type"] - 1);
+              $sql = "delete from `". PREFIX ."_row` where user_id = $doctorId and time = '$date' and type = " . ($itemData["type"] - 1);
             }
             else {
-              $sql = "insert into `". PREFIX ."_row` (type, user_id, time) values(" . ($itemData["type"] - 1) . ", $user_info[userid], $date)";
+              $sql = "insert into `". PREFIX ."_row` (type, user_id, time) values(" . ($itemData["type"] - 1) . ", $doctorId, $date)";
             }
             $db->query($sql);
           }
@@ -191,11 +195,19 @@ if (!empty($user_info)) {
   $user_name = $user["last_name"] . " " . $user["first_name"];
 }
 
+$xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
+$xtpl->assign("data", "{}");
+$xtpl->assign("this_week", $this_week_s);
+$xtpl->assign("next_week", $next_week_s);
+$xtpl->assign("date", date("Y-m-d"));
+
 $sql = "select a.*, b.permission from `" . $db_config["prefix"] . "_users` a inner join `" . $db_config["prefix"] . "_rider_user` b on user_id = $user_id and type = 1 and a.userid = b.user_id";
 $query = $db->query($sql);
 // die($sql);
+$xtpl->assign("admin", "false");
 if ($userList = $query->fetch()) {
   if ($userList["permission"]) {
+    $xtpl->assign("admin", "true");
     $userList = doctorList();
   }
   else {
@@ -203,11 +215,6 @@ if ($userList = $query->fetch()) {
   }
 }
 
-$xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
-$xtpl->assign("data", "{}");
-$xtpl->assign("this_week", $this_week_s);
-$xtpl->assign("next_week", $next_week_s);
-$xtpl->assign("date", date("Y-m-d"));
 $xtpl->assign("doctor", blockSelectDoctor($user_id, $userList));
 
 foreach ($date_option as $date_value => $date_name) {
@@ -240,6 +247,7 @@ while($row = $query->fetch()) {
 $xtpl->assign("data", json_encode($daily));
 // $xtpl->assign("user_name", $user_name);
 $xtpl->assign("username", $user_name);
+$xtpl->assign("doctorId", $user_id);
 $xtpl->assign("content", scheduleList($this_week_s, $next_week_s));
 
 $xtpl->parse("main");

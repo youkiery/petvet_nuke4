@@ -11,6 +11,6 @@ if (!defined('NV_ADMIN')) {
     die('Stop!!!');
 }
 
-// $submenu['list'] = "Danh sách nhân viên";
+$submenu['manager'] = "Người quản lý chấm công";
 
-$allow_func = array('main', 'list'); 
+$allow_func = array('main', 'manager'); 

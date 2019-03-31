@@ -81,6 +81,7 @@
   }
 
   function showSummary() {
+    $(".btn, .form-control").attr("disabled", true)
     $.post(
       strHref,
       {action: "summary", date: startDate.val()},
@@ -88,19 +89,26 @@
         checkResult(response, status).then((data) => {
           summary.modal("show")
           summaryContent.html(data["html"])
-        }, () => {})
+          $(".btn, .form-control").attr("disabled", false)
+        }, () => {
+          $(".btn, .form-control").attr("disabled", false)
+        })
       }
     )
   }
   
   function filterData() {
+    $(".btn, .form-control").attr("disabled", true)
     $.post(
       strHref,
       {action: "filter_data", date: startDate.val()},
       (response, status) => {
         checkResult(response, status).then((data) => {
           content.html(data["html"])
-        }, () => {})        
+          $(".btn, .form-control").attr("disabled", false)
+        }, () => {
+          $(".btn, .form-control").attr("disabled", false)
+        })        
       }
     )
   }
