@@ -18,6 +18,7 @@
   doctorList = $("#doctor-list")
 
   function remove(id) {
+    $(".btn").attr("disabled", true)
     $.post(
       strHref,
       {action: "doctor-remove", doctorId: id},
@@ -25,12 +26,16 @@
         checkResult(response, status).then((data) => {
           doctorSuggestList.html(data["doctorSuggestList"])
           doctorList.html(data["doctorList"])
-        }, () => {})
+          $(".btn").attr("disabled", false)
+        }, () => {
+          $(".btn").attr("disabled", false)
+        })
       }
     )
   }
 
   function insert(id) {
+    $(".btn").attr("disabled", true)
     $.post(
       strHref,
       {action: "doctor-insert", doctorId: id},
@@ -38,7 +43,10 @@
         checkResult(response, status).then((data) => {
           doctorSuggestList.html(data["doctorSuggestList"])
           doctorList.html(data["doctorList"])
-        }, () => {})
+          $(".btn").attr("disabled", false)
+        }, () => {
+          $(".btn").attr("disabled", false)
+        })
       }
     )
   }

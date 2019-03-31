@@ -18,6 +18,7 @@
   driverList = $("#driver-list")
 
   function remove(id) {
+    $(".btn").attr("disabled", true)
     $.post(
       strHref,
       {action: "driver-remove", driverId: id},
@@ -25,12 +26,16 @@
         checkResult(response, status).then((data) => {
           driverSuggestList.html(data["driverSuggestList"])
           driverList.html(data["driverList"])
-        }, () => {})
+          $(".btn").attr("disabled", false)
+        }, () => {
+          $(".btn").attr("disabled", false)
+        })
       }
     )
   }
 
   function insert(id) {
+    $(".btn").attr("disabled", true)
     $.post(
       strHref,
       {action: "driver-insert", driverId: id},
@@ -38,7 +43,10 @@
         checkResult(response, status).then((data) => {
           driverSuggestList.html(data["driverSuggestList"])
           driverList.html(data["driverList"])
-        }, () => {})
+          $(".btn").attr("disabled", false)
+        }, () => {
+          $(".btn").attr("disabled", false)
+        })
       }
     )
   }

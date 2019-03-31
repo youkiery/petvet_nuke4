@@ -383,6 +383,7 @@
       alert_msg("Số cuối phải lớn hơn số đầu")
     }
     else {
+      $(".btn, .form-control").attr("disabled", true)
       $.post(
         strHref,
         {action: "collect-insert", startDate: startDate.val(), endDate: endDate.val(), collectDriver: collectDriver.val(), collectDoctor: collectDoctor.val(), collectStart: collectStart.val(), collectEnd: collectEnd.val(), collectCustomer: customerId, collectDestination: collectDestination.val(), collectNote: collectNote.val()},
@@ -395,7 +396,10 @@
             collectDestination.val("")
             collectNote.val("")
             content.html(data["html"])
-          }, () => {})        
+            $(".btn, .form-control").attr("disabled", false)
+          }, () => {
+            $(".btn, .form-control").attr("disabled", false)
+          })        
         }
       )
     }
@@ -407,6 +411,7 @@
       alert_msg("Tiền chi phải là số")
     }
     else {
+      $(".btn, .form-control").attr("disabled", true)
       $.post(
         strHref,
         {action: "pay-insert", startDate: startDate.val(), endDate: endDate.val(), payDriver: payDriver.val(), payMoney: currentMoney, payNote: payNote.val()},
@@ -415,7 +420,10 @@
             payMoney.val("0")
             payNote.val("")
             content.html(data["html"])
-          }, () => {})        
+            $(".btn, .form-control").attr("disabled", false)
+          }, () => {
+            $(".btn, .form-control").attr("disabled", false)
+          })        
         }
       )
     }
@@ -435,13 +443,17 @@
   }
 
   function filterData() {
+    $(".btn, .form-control").attr("disabled", true)
     $.post(
       strHref,
       {action: "filter_data", type: type.val(), startDate: startDate.val(), endDate: endDate.val()},
       (response, status) => {
         checkResult(response, status).then((data) => {
           content.html(data["html"])
-        }, () => {})        
+          $(".btn, .form-control").attr("disabled", false)
+        }, () => {
+          $(".btn, .form-control").attr("disabled", false)
+        })        
       }
     )
   }
