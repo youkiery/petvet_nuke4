@@ -564,6 +564,7 @@
   }
 
   function filterData() {
+    tickOff()
     $(".btn, .form-control").attr("disabled", true)
       $.post(
         strHref,
@@ -637,7 +638,10 @@
         if (admin || (thisDate >= today)) {
           switch (thisColor) {
             case "red":
-              if (thisValue.search(",") < 0 && thisValue.search(username) < 0) {
+              if (thisValue.search(username) > 0) {
+                that.setAttribute("class", "purple")
+              }
+              else if (thisValue.search(",") < 0) {
                 that.setAttribute("class", "blue")
               }
             break;

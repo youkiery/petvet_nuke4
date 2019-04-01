@@ -13,6 +13,7 @@ if (!defined('PREFIX')) {
 
 define("A_DAY", 60 * 60 * 24);
 $work = array("trực sáng", "trực tối", "nghỉ sáng", "nghỉ chiều");
+$datetime = array(1 => "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật");
 
 function userWorkList($doctorId) {
   global $nv_Request, $db, $work;
@@ -37,7 +38,7 @@ function userWorkList($doctorId) {
 }
 
 function scheduleList($startDate, $endDate) {
-  global $db;
+  global $db, $datetime;
   // $startDate = strtotime("2019/05/01");
   // $endDate = strtotime("2019/06/01");
   $startDate = strtotime(date("Y-m-d", totime($startDate)));
@@ -60,7 +61,7 @@ function scheduleList($startDate, $endDate) {
       $check = false;
     }
 
-    $xtpl->assign("date", date("d/m/Y", $date));
+    $xtpl->assign("date", date("d/m", $date) . " (" . $datetime[date("N", $date)] . ")");
 
     if ($currentRow["time"] == $date) {
       switch ($currentRow["type"]) {
