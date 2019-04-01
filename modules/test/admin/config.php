@@ -15,6 +15,7 @@ if($action) {
 	switch ($action) {
 		case "save":
 			$filter = $nv_Request->get_int('filter', 'post/get', 0);
+			$usg_filter = $nv_Request->get_int('usg_filter', 'post/get', 0);
 			$expect = $nv_Request->get_int('expect', 'post/get', 0);
 			$exrecall = $nv_Request->get_int('exrecall', 'post/get', 0);
 			$recall = $nv_Request->get_int('recall', 'post/get', 0);
@@ -27,6 +28,9 @@ if($action) {
 			$updatev2 = array();
 			if (!empty($filter)) {
 				$updatev2["filter"] = $filter;
+			}
+			if (!empty($usg_filter)) {
+				$updatev2["usg_filter"] = $usg_filter;
 			}
 			if (!empty($expect)) {
 				$updatev2["expect"] = $expect;
@@ -126,6 +130,9 @@ foreach ($date_option as $name => $value) {
 	if(!empty($vacconfigv2["filter"]) && $value == $vacconfigv2["filter"]) $xtpl->assign("filter_select", "selected");
 	else $xtpl->assign("filter_select", "");
 	$xtpl->parse("main.filter");
+	if(!empty($vacconfigv2["usg_filter"]) && $value == $vacconfigv2["usg_filter"]) $xtpl->assign("filter_select", "selected");
+	else $xtpl->assign("filter_select", "");
+	$xtpl->parse("main.usg_filter");
 	if(!empty($vacconfigv2["recall"]) && $value == $vacconfigv2["recall"]) $xtpl->assign("recall_select", "selected");
 	else $xtpl->assign("recall_select", "");
 	$xtpl->parse("main.recall");

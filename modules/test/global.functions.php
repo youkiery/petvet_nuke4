@@ -637,9 +637,9 @@ function user_usg() {
   // $filter = implode(",", str_split($filter));
 
   // filter time
-  $time = $vacconfigv2["filter"];
+  $time = $vacconfigv2["usg_filter"];
   if (empty($time)) {
-    $time = 60 * 60 * 24 * 14;
+    $time = 60 * 60 * 24 * 30;
   }
 	$from = $now - $time;
 	$end = $now + $time;
@@ -797,9 +797,9 @@ function user_birth() {
   // }
   // $filter = implode(",", str_split($filter));
   // filter time
-  $time = $vacconfigv2["filter"];
+  $time = $vacconfigv2["usg_filter"];
   if (empty($time)) {
-    $time = 60 * 60 * 24 * 14;
+    $time = 60 * 60 * 24 * 30;
   }
 	$from = $now - $time;
 	$end = $now + $time;

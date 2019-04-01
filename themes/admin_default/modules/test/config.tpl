@@ -13,6 +13,16 @@
   </div>
   <div class="form-group">
     <label>
+      Thời gian hiển thị siêu âm
+    </label>
+    <select class="form-control" id="config_usg_filter">
+      <!-- BEGIN: usg_filter -->
+      <option value="{time_value}" {filter_select}>{time_name}</option>
+      <!-- END: usg_filter -->
+    </select>
+  </div>
+  <div class="form-group">
+    <label>
       {lang.config_recall}
     </label>
     <select class="form-control" id="config_recall">
@@ -88,7 +98,7 @@
   function filter() {
 		$.post(
 			link,
-			{action: "save", filter: $("#config_filter").val(), recall: $("#config_recall").val(), exrecall: $("#config_exrecall").val(), expect: $("#config_expect").val(), redrug: $("#config_redrug").val(), hour_from: $("#config_hour_from").val(), minute_from: $("#config_minute_from").val(), hour_end: $("#config_hour_end").val(), minute_end: $("#config_minute_end").val()},
+			{action: "save", usg_filter: $("#config_usg_filter").val(), filter: $("#config_filter").val(), recall: $("#config_recall").val(), exrecall: $("#config_exrecall").val(), expect: $("#config_expect").val(), redrug: $("#config_redrug").val(), hour_from: $("#config_hour_from").val(), minute_from: $("#config_minute_from").val(), hour_end: $("#config_hour_end").val(), minute_end: $("#config_minute_end").val()},
 			(data, status) => {
 			    data = JSON.parse(data);
           alert_msg(data["notify"])
