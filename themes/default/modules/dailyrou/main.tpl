@@ -17,7 +17,7 @@
           <button class="btn btn-success" onclick="registSubmit()">
             Đăng ký
           </button>
-          <button class="btn btn-danger" data-dismiss="modal" onclick="registOff()">
+          <button class="btn btn-danger" data-dismiss="modal">
             Hủy
           </button>
         </div>
@@ -120,6 +120,12 @@
     <button class="btn btn-info right" id="register">
       Đăng ký
     </button>
+    <button class="btn btn-success right" id="cconfirm" style="display: none;">
+      Xác nhận
+    </button>
+    <button class="btn btn-danger right" id="reset" style="display: none;">
+      Hủy
+    </button>
     <button class="btn btn-info right" onclick="print()">
       In
     </button>
@@ -154,6 +160,8 @@
   var endDate = $("#end-date")
   var dateType = $("#date-type")
   var register = $("#register")
+  var cconfirm = $("#cconfirm")
+  var reset = $("#reset")
   var doctor = $("#doctor")
   // var list = $("#list")
   var content = $("#content")
@@ -363,38 +371,57 @@
 
   // regist a case of work
 
+  function tickOn() {
+    cconfirm.show()
+    reset.show()
+    register.hide()
+    regist = true
+  }
+
+  function tickOff() {
+    cconfirm.hide()
+    reset.hide()
+    register.show()
+    regist = false
+  }
+
   register.click(() => {
-    if (regist) {
-      panis = checkRegist()
-      if (panis.length) {
-        var html = ""
-        panis.forEach(item => {
-          var type = "Đăng ký"
-          var retype = "lịch trực"
-          if (item["color"] == "purple") {
-            var type = "Bỏ đăng ký"
-          }
-          switch (item["type"]) {
-            case 2:
-              retype = "nghỉ sáng"
-              break;
-            case 3:
-              retype = "nghỉ chiều"
-              break;
-          }
-          html += "<div class='regist_item'>" + type + " " + retype + " ngày " + item["date"] + "</div>"
-        })
-        registConfirm.modal("show")
-        registList.html(html)
-      }
-      else {
-        registOff()
-      }
+    registOn()
+    tickOn()
+  })
+
+  reset.click(() => {
+    registOff()
+    tickOff()
+  })
+
+  cconfirm.click(() => {
+    panis = checkRegist()
+    if (panis.length) {
+      var html = ""
+      panis.forEach(item => {
+        var type = "Đăng ký"
+        var retype = "lịch trực"
+        if (item["color"] == "purple") {
+          var type = "Bỏ đăng ký"
+        }
+        switch (item["type"]) {
+          case 2:
+            retype = "nghỉ sáng"
+            break;
+          case 3:
+            retype = "nghỉ chiều"
+            break;
+        }
+        html += "<div class='regist_item'>" + type + " " + retype + " ngày " + item["date"] + "</div>"
+      })
+      registConfirm.modal("show")
+      registList.html(html)
     }
     else {
-      registOn()
+      registOff()
+      tickOff()
     }
-    regist = !regist
   })
 
   dateType.change(() => {
@@ -522,11 +549,13 @@
         checkResult(response, status).then((data) => {
           $(".btn").attr("disabled", false)
           content.html(data["html"])
+          setEvent()
           dbdata = JSON.parse(data["json"])
           schedule = dbdata.length
           registConfirm.modal("hide")
+          tickOff()
+          registOff()
           $(".btn, .form-control").attr("disabled", false)
-          setEvent()
         }, () => {
           $(".btn, .form-control").attr("disabled", false)
         })
@@ -542,10 +571,10 @@
         (response, status) => {
           checkResult(response, status).then((data) => {
             content.html(data["html"])
+            setEvent()
             dbdata = JSON.parse(data["json"])
             schedule = dbdata.length
             $(".btn, .form-control").attr("disabled", false)
-            setEvent()
           }, () => {
             $(".btn, .form-control").attr("disabled", false)
           })        
@@ -558,7 +587,7 @@
   function print() {
     var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
     var html = content.html().toString()
-    html = "<style>table {border-collapse: collapse;} td, th {border: 1px solid black; padding: 4px;} .text-center{text-align: center;}</style>" + html
+    html = "<style>table {border-collapse: collapse; width: 100%;} td, th {border: 1px solid black; padding: 4px;} .text-center{text-align: center;}</style>" + html
     
     WinPrint.document.write(html);
     WinPrint.document.close();
@@ -569,13 +598,12 @@
 
   function nextWeek() {
     var dateVal = startDate.val().split("/")
-    var date = new Date(dateVal[2], dateVal[1], dateVal[0])
-    date.setDate(date.getDate() + 7)
+    var date = new Date(dateVal[2], parseInt(dateVal[1]) - 1, dateVal[0])
+    var day = date.getDay()
+    var diff = date.getDate() - day + 1
+    date.setDate(diff + 7)
     startDate.val(dateToString(date))
-
-    var dateVal = endDate.val().split("/")
-    var date = new Date(dateVal[2], dateVal[1], dateVal[0])
-    date.setDate(date.getDate() + 7)
+    date.setDate(date.getDate() + 6)
     endDate.val(dateToString(date))
 
     filterData()
@@ -583,13 +611,12 @@
 
   function prevWeek() {
     var dateVal = startDate.val().split("/")
-    var date = new Date(dateVal[2], dateVal[1], dateVal[0])
-    date.setDate(date.getDate() - 7)
+    var date = new Date(dateVal[2], parseInt(dateVal[1]) - 1, dateVal[0])
+    var day = date.getDay()
+    var diff = date.getDate() - day + 1
+    date.setDate(diff - 7)
     startDate.val(dateToString(date))
-
-    var dateVal = endDate.val().split("/")
-    var date = new Date(dateVal[2], dateVal[1], dateVal[0])
-    date.setDate(date.getDate() - 7)
+    date.setDate(date.getDate() + 7)
     endDate.val(dateToString(date))
     
     filterData()
@@ -606,10 +633,11 @@
         var thisDate = new Date(thisDateVal[2], parseInt(thisDateVal[1]) - 1, thisDateVal[0])
         var thisColor = that.getAttribute("class")
         var thisValue = trim(that.innerText)
+        
         if (admin || (thisDate >= today)) {
           switch (thisColor) {
             case "red":
-              if (thisValue.search(",") < 0) {
+              if (thisValue.search(",") < 0 && thisValue.search(username) < 0) {
                 that.setAttribute("class", "blue")
               }
             break;
