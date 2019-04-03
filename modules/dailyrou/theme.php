@@ -61,31 +61,32 @@ function scheduleList($startDate, $endDate) {
       $check = false;
     }
 
-    $xtpl->assign("date", date("d/m", $date) . " (" . $datetime[date("N", $date)] . ")");
+    // $xtpl->assign("date", date("d/m", $date) . " (" . $datetime[date("N", $date)] . ")");
+    $xtpl->assign("date", date("d/m/Y", $date));
 
     if ($currentRow["time"] == $date) {
+      // var_dump($currentRow);
+      // echo "<br>";
       switch ($currentRow["type"]) {
         case '0':
           $rest_list["morning_guard"][] = $userList[$currentRow["user_id"]]["first_name"];
           $xtpl->assign("morning_guard", implode(", ", $rest_list["morning_guard"]));
-          $currentRow = $query->fetch();
         break;
         case '1':
           $rest_list["afternoon_guard"][] = $userList[$currentRow["user_id"]]["first_name"];
           $xtpl->assign("afternoon_guard", implode(", ", $rest_list["afternoon_guard"]));
-          $currentRow = $query->fetch();
         break;
         case '2':
           $rest_list["morning_rest"][] = $userList[$currentRow["user_id"]]["first_name"];
           $xtpl->assign("morning_rest", implode(", ", $rest_list["morning_rest"]));
-          $currentRow = $query->fetch();
         break;
         case '3':
           $rest_list["afternoon_rest"][] = $userList[$currentRow["user_id"]]["first_name"];
           $xtpl->assign("afternoon_rest", implode(", ", $rest_list["afternoon_rest"]));
-          $currentRow = $query->fetch();
         break;
       }
+      $currentRow = $query->fetch();
+      $currentRow["time"] = strtotime(date("Y-m-d", $currentRow["time"]));
     }
     else {
       $rest_list = array("morning_guard" => array(), "afternoon_guard" => array(), "morning_rest" => array(), "afternoon_rest" => array());

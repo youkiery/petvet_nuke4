@@ -483,9 +483,7 @@
       if (table.hasOwnProperty(rowKey)) {
         const row = table[rowKey];
         var moi = [0, 1, 1, 1, 1]
-        // console.log(row.children[0].innerText);
         while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
-        // console.log(Number(dbdata[i]["type"]) + 1);
           var thisIndex = Number(dbdata[i]["type"]) + 1
           if (row.children[thisIndex].innerText.search(username) >= 0) {
             moi[thisIndex] = 3
