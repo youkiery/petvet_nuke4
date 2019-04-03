@@ -211,18 +211,23 @@
   </div>
 </div>
 
-<form class="row">
-  <div class="form-group col-md-12">
+<form class="row form-inline" onsubmit="return change_data_2(event)">
+  <div class="form-group col-md-10">
     <label>
       {lang.cometime}
     </label>
     <input type="text" value="{cometime}" class="form-control" id="cometime" readonly>
   </div>
-  <div class="form-group col-md-12">
+  <div class="form-group col-md-10">
     <label>
       {lang.calltime}
     </label>
     <input type="text" value="{calltime}" class="form-control" id="calltime" readonly>
+  </div>
+  <div class="form-group col-md-2">
+    <button class="btn btn-info">
+      Lọc
+    </button>
   </div>
 </form>
 
@@ -264,7 +269,7 @@
   var today = '{today}'
   var userid = -1
   var g_id = -1
-  var g_departid = -1
+  var g_departid = 0
   var current = 0
   var typing
   var complete = $(".complete")
@@ -377,6 +382,11 @@
         }
       }
     )
+  }
+
+  function change_data_2(e) {
+    e.preventDefault()
+    change_data(g_departid)
   }
 
   function change_data(id) {

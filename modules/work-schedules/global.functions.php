@@ -136,7 +136,7 @@ function user_manager_list() {
       $depart_sql = "a.depart = $departid and";      
     }
   }
-  $sql = "select a.*, b.last_name, b.first_name from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid and $depart_sql " . filter_by_time() . " and $complete_sql";
+  $sql = "select a.*, b.last_name, b.first_name from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid and $depart_sql " . filter_by_time() . " and $complete_sql order by id desc";
   $query = $db->query($sql);
   $count = 0;
   while ($work = $query->fetch()) {
@@ -224,7 +224,7 @@ function user_work_list() {
   }
 
   if (!empty($user_info)) {
-    $sql = "select * from `" . WORK_PREFIX . "_row` where userid = $user_info[userid]  and " . filter_by_time() . " and $complete_sql";
+    $sql = "select * from `" . WORK_PREFIX . "_row` where userid = $user_info[userid]  and " . filter_by_time() . " and $complete_sql order by id desc";
     $query = $db->query($sql);
     while($work = $query->fetch()) {
       $count ++;
@@ -291,7 +291,7 @@ function work_manager_list() {
   }
 
   if (!empty($user_info)) {
-    $sql = "select a.*, b.last_name, b.first_name from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid where a.depart in ($depart_sql) and " . filter_by_time() . "and $complete_sql";
+    $sql = "select a.*, b.last_name, b.first_name from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid where a.depart in ($depart_sql) and " . filter_by_time() . "and $complete_sql order by id desc";
     $query = $db->query($sql);
     while($work = $query->fetch()) {
       $count ++;
