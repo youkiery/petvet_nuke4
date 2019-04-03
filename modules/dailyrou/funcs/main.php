@@ -61,16 +61,32 @@ if (!empty($action)) {
       }
 
     break;
-    case 'wconfirmChange':
+    case 'wconfirmSubmit':
       $startDate = $nv_Request->get_string("startDate", "get/post", "");
-      $doctorId = $nv_Request->get_string("doctorId", "get/post", "");
+      $data = $nv_Request->get_array("data", "get/post");
 
       $startDate = totime($startDate);
 
-      if ($startDate) {
-        $userList = doctorList();
-        $result["status"] = 1;
-        $result["html"] = wconfirm($startDate, $doctorId, $userList);
+      if ($data) {
+        foreach ($data as $row) {
+          $time = strtotime(date("Y-m-d", $row["date"]));
+          $sql = "select userid from `" . $db_config["prefix"] . "_users` where first_name = '$row[name]'";
+          $query = $db->query($sql);
+          if ($user = $query->fetch()) {
+            if ($row["color"] == "yellow") {
+              $sql = "insert into `" . PREFIX . "_row` (type, user_id, time) values ($row[type], $user[userid], $time)";
+            }
+            else {
+              $sql = "delete from `" . PREFIX . "_row` where type = $row[type] and user_id = $user[userid] and time = $time";
+            }
+            if ($db->query($sql)) {
+              $userList = doctorList();
+              $result["status"] = 1;
+              $result["notify"] = "Đã cập nhật lịch đăng ký";
+              $result["html"] = wconfirm($startDate, current($userList)["userid"], $userList);
+            }
+          }
+        }
       }
     break;
 

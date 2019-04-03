@@ -158,18 +158,18 @@ function wconfirm($date, $doctorId, $userList) {
       if ($indexRou > 7) {
         $indexRou = 0;
       }
-      $sql = "select * from `" . PREFIX . "_row` where time = $currentDate and user_id = $row[userid] and type > 0 order by time, type asc";
+      $sql = "select * from `" . PREFIX . "_row` where time = $currentDate and user_id = $row[userid] and type > 1 order by time, type asc";
       $query2 = $db->query($sql);
 
       $xtpl->assign("color_" . $indexRou . "1", "green");
       $xtpl->assign("color_" . $indexRou . "2", "green");
       $xtpl->assign("date_" . $indexRou . "1", $currentDate);
       $xtpl->assign("date_" . $indexRou . "2", $currentDate);
-      $xtpl->assign("type_" . $indexRou . "1", 0);
-      $xtpl->assign("type_" . $indexRou . "2", 1);
+      $xtpl->assign("type_" . $indexRou . "1", 2);
+      $xtpl->assign("type_" . $indexRou . "2", 3);
       while ($rou = $query2->fetch()) {
-        $xtpl->assign("color_" . $indexRou . $rou["type"], "red");
-        $t[$rou["type"]] ++;
+        $xtpl->assign("color_" . $indexRou . ($rou["type"] - 1), "red");
+        $t[$rou["type"] - 1] ++;
       }
       $indexRou += 1;
       $currentDate += A_DAY;

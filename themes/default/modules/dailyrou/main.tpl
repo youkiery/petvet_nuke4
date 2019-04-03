@@ -26,6 +26,27 @@
   </div>
 </div>
 
+<div id="wconfirm_alert" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <h2> Bạn có muốn Thay đổi những mục này không? </h2>
+        <div id="wconfirm_alert_content">
+
+        </div>
+        <div class="text-center">
+          <button class="btn btn-success" onclick="wconfirmSubmit()">
+            Xác nhận
+          </button>
+          <button class="btn btn-danger" data-dismiss="modal">
+            Hủy
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- <div id="confirm_work" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -131,10 +152,13 @@
     <button class="btn btn-success right" id="cconfirm" style="display: none;">
       Xác nhận
     </button>
+    <button class="btn btn-success right" id="dconfirm" style="display: none;">
+      Xác nhận
+    </button>
     <button class="btn btn-danger right" id="reset" style="display: none;">
       Hủy
     </button>
-    <button class="btn btn-info right" onclick="print()">
+    <button class="btn btn-info right" id="print" onclick="print()">
       In
     </button>
     <!-- <button class="btn btn-info right" onclick="toWconfirm()">
@@ -184,6 +208,10 @@
   // var exchangeWorkDoctor = $("#exchange_work_doctor")
   // var confirmWork = $("#confirm_work")
   // var confirmWorkContent = $("#confirm_work_content")
+  var dconfirm = $("#dconfirm")
+  var wconfirmAlert = $("#wconfirm_alert")
+  var wconfirmAlertContent = $("#wconfirm_alert_content")
+  var print = $("#print")
   var tab = $(".tab")
 
   var doctorId = {doctorId}
@@ -194,6 +222,8 @@
   var panis = []
   var exDate = -1
   var exType = -1
+  var wconfirmData = []
+  var manager = 0
 
   setEvent()
 
@@ -327,7 +357,6 @@
     doctorId = doctor.val()
     username = trim($("#doctor option:selected").text())
     regist = false
-    filterData()
   })
 
   tab.click((e) => {
@@ -339,14 +368,64 @@
     current.classList.add("btn-info")
 
     if (current.getAttribute("rel") == 1)  {
+      print.show()
+      register.show()
+      dconfirm.hide()
+      manager = false
       filterData()
     }
     else {
+      print.hide()
+      register.hide()
+      reset.hide()
+      cconfirm.hide()
+      dconfirm.show()
+      manager = true
       toWconfirm()
     }
   })
 
+  dconfirm.click(() => {
+    pan = []
+    html = ""
+    $(".cdailyrou").each((item, row) => {
+      var thisDate = row.getAttribute("date")
+      var thisColor = row.getAttribute("class").replace("cdailyrou ", "")
+      var thisType = row.getAttribute("dtype")
+      if (thisColor == "purple" || thisColor == "yellow") {
+        var name = trim(row.parentElement.children[1].innerText)
+        pan.push({
+          color: thisColor,
+          date: thisDate,
+          type: Number(thisType),
+          name: name
+        })
+        html += "<p>" + dateToString(new Date(Number(thisDate) * 1000)) + ": " + (thisColor == "yellow" ? "Thêm" : "Bỏ") + " ca " + ((thisType - 2) ? "chiều" : "sáng") + " cho " + name + "</p>"
+      }
+    })
+    wconfirmData = pan
+    if (wconfirmData.length) {
+      wconfirmAlertContent.html(html)
+      wconfirmAlert.modal("show")
+    }
+  })
+
   // wconfirm: confirm case of work each week
+
+  function wconfirmSubmit() {
+    $.post(
+      strHref,
+      {action: "wconfirmSubmit", startDate: startDate.val(), data: wconfirmData},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          wconfirmAlert.modal("hide")
+          content.html(data["html"])
+          doctorId = data["doctorId"]
+          wconfirmInitiaze()
+        }, () => {})
+      }
+    )
+  }
 
   function toWconfirm() {
     $.post(
@@ -363,26 +442,6 @@
   }
 
   function wconfirmInitiaze() {
-    // var date = 0
-    // var datetime = []
-    // $(".cdailyrou").each((index, row) => {
-    //   currentRow = row
-
-    //   var thisDate = currentRow.getAttribute("date")
-    //   var thisColor = currentRow.getAttribute("class").replace("cdailyrou ", "")
-    //   if (thisDate != date) {
-    //     if (!date) {
-    //       datetime[trim(currentRow.parentElement.children[0].innerText)].push(thisDatetime)
-    //     }
-    //     date = thisDate
-    //     thisDatetime = []
-    //   }
-
-
-
-    // })
-    // datetime[trim(currentRow.parentElement.children[0].innerText)].push(thisDatetime)
-
     $(".cdailyrou").click((e) => {
       var current = e.currentTarget
       var thisColor = current.getAttribute("class").replace("cdailyrou ", "")
@@ -403,6 +462,9 @@
       }
 
       var date = 0
+      $(".ddailyrou").each((index, row) => {
+        row.innerText = 0
+      })
       $(".cdailyrou").each((index, row) => {
         currentRow = row
         var thisDate = currentRow.getAttribute("date")
@@ -410,8 +472,9 @@
         var thisType = currentRow.getAttribute("dtype")
         if (thisColor == "red" || thisColor == "yellow") {
           var parentChild = currentRow.parentElement.children
-          var parentChildFor = parentChild[parentChild.length - 3 + Number(thisType)]
+          var parentChildFor = parentChild[parentChild.length - 5 + Number(thisType)]
           parentChildFor.innerText = Number(parentChildFor.innerText) + 1
+          parentChild[parentChild.length - 1].innerText = Number(parentChild[parentChild.length - 2].innerText) + Number(parentChild[parentChild.length - 3].innerText)
         }
       })
     })
@@ -653,7 +716,12 @@
     date.setDate(date.getDate() + 6)
     endDate.val(dateToString(date))
 
-    filterData()
+    if (manager) {
+      toWconfirm()
+    }
+    else {
+      filterData()
+    }
   }
 
   function prevWeek() {
@@ -666,7 +734,12 @@
     date.setDate(date.getDate() + 7)
     endDate.val(dateToString(date))
     
-    filterData()
+    if (manager) {
+      toWconfirm()
+    }
+    else {
+      filterData()
+    }
   }
 
   // initiaze

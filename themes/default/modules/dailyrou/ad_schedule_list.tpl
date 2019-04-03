@@ -53,9 +53,9 @@
       <td date="{date_72}" dtype="{type_72}" class="cdailyrou {color_72}"> </td>
       <td date="{date_01}" dtype="{type_01}" class="cdailyrou {color_01}"> </td>
       <td date="{date_01}" dtype="{type_01}" class="cdailyrou {color_02}"> </td>
-      <td> {t1} </td>
-      <td> {t2} </td>
-      <td> {t} </td>
+      <td class="ddailyrou"> {t1} </td>
+      <td class="ddailyrou"> {t2} </td>
+      <td class="ddailyrou"> {t} </td>
     </tr>
     <!-- END: row -->
   </tbody>
