@@ -113,3 +113,7 @@ function user_list($reversal, $type) {
   return $xtpl->text("main");
 }
 
+function riderList() {
+  
+}
+

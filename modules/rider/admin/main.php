@@ -28,7 +28,7 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/themes/" . $global_config['admin_theme'] . "/modules/" . $module_file);
 
-
+$xtpl->assign("content", riderList());
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
