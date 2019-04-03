@@ -39,20 +39,20 @@
     <tr>
       <td> {index} </td>
       <td> {username} </td>
-      <td class="cdailyrou {color_21}"> </td>
-      <td class="cdailyrou {color_22}"> </td>
-      <td class="cdailyrou {color_31}"> </td>
-      <td class="cdailyrou {color_32}"> </td>
-      <td class="cdailyrou {color_41}"> </td>
-      <td class="cdailyrou {color_42}"> </td>
-      <td class="cdailyrou {color_51}"> </td>
-      <td class="cdailyrou {color_52}"> </td>
-      <td class="cdailyrou {color_61}"> </td>
-      <td class="cdailyrou {color_62}"> </td>
-      <td class="cdailyrou {color_71}"> </td>
-      <td class="cdailyrou {color_72}"> </td>
-      <td class="cdailyrou {color_01}"> </td>
-      <td class="cdailyrou {color_02}"> </td>
+      <td date="{date_21}" dtype="{type_21}" class="cdailyrou {color_21}"> </td>
+      <td date="{date_22}" dtype="{type_22}" class="cdailyrou {color_22}"> </td>
+      <td date="{date_31}" dtype="{type_31}" class="cdailyrou {color_31}"> </td>
+      <td date="{date_32}" dtype="{type_32}" class="cdailyrou {color_32}"> </td>
+      <td date="{date_41}" dtype="{type_41}" class="cdailyrou {color_41}"> </td>
+      <td date="{date_42}" dtype="{type_42}" class="cdailyrou {color_42}"> </td>
+      <td date="{date_51}" dtype="{type_51}" class="cdailyrou {color_51}"> </td>
+      <td date="{date_52}" dtype="{type_52}" class="cdailyrou {color_52}"> </td>
+      <td date="{date_61}" dtype="{type_61}" class="cdailyrou {color_61}"> </td>
+      <td date="{date_62}" dtype="{type_62}" class="cdailyrou {color_62}"> </td>
+      <td date="{date_71}" dtype="{type_71}" class="cdailyrou {color_71}"> </td>
+      <td date="{date_72}" dtype="{type_72}" class="cdailyrou {color_72}"> </td>
+      <td date="{date_01}" dtype="{type_01}" class="cdailyrou {color_01}"> </td>
+      <td date="{date_01}" dtype="{type_01}" class="cdailyrou {color_02}"> </td>
       <td> {t1} </td>
       <td> {t2} </td>
       <td> {t} </td>

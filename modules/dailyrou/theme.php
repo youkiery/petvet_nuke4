@@ -13,7 +13,7 @@ if (!defined('PREFIX')) {
 
 define("A_DAY", 60 * 60 * 24);
 $work = array("trực sáng", "trực tối", "nghỉ sáng", "nghỉ chiều");
-$datetime = array(1 => "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật");
+$datetime = array(1 => "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "CN");
 
 function userWorkList($doctorId) {
   global $nv_Request, $db, $work;
@@ -127,25 +127,59 @@ function preCheckUser() {
 function wconfirm($date, $doctorId, $userList) {
   global $db, $db_config, $work;
 
-  $index ++;
-  $startDate = date("N", $date) == 1 ? strtotime(date("Y-m-d", $date)) : strtotime("last monday");
-  $endDate = $startDate + A_DAY * 7;
-  $xtpl = new XTemplate("wconfirm.tpl", PATH);
+  $date = totime($date);
+  $startDate = date ('N', $date) == 1 ? strtotime(date('Y-m-d', $date)) : strtotime('last monday', $date);
+  $endDate = strtotime('next monday', $date);
+  $xtpl = new XTemplate("ad_schedule_list.tpl", PATH);
+  $user = array();
 
-  $xtpl->assign("doctor", $userList[$doctorId]["first_name"]);
-  $xtpl->assign("from", date("d/m/Y", $startDate));
-  $xtpl->assign("to", date("d/m/Y", $endDate));
-
-  $sql = "select * from `" . PREFIX . "_row` where user_id = $doctorId and (time between $startDate and $endDate) order by time, type asc";
+  $sql = "select * from `" . $db_config["prefix"] . "_users` where userid in (select user_id from `" . $db_config["prefix"] . "_rider_user` where type = 1)";
   $query = $db->query($sql);
 
+  $xtpl->assign("from", date("d/m/Y", $startDate));
+  $xtpl->assign("to", date("d/m/Y", $endDate));
+  $xtpl->assign("c2", date("d/m", $startDate));
+  $xtpl->assign("c3", date("d/m", $startDate + A_DAY));
+  $xtpl->assign("c4", date("d/m", $startDate + A_DAY * 2));
+  $xtpl->assign("c5", date("d/m", $startDate + A_DAY * 3));
+  $xtpl->assign("c6", date("d/m", $startDate + A_DAY * 4));
+  $xtpl->assign("c7", date("d/m", $startDate + A_DAY * 5));
+  $xtpl->assign("c8", date("d/m", $startDate + A_DAY * 6));
+
+  $index = 1;
   while ($row = $query->fetch()) {
-    $xtpl->assign("date", date("d/m/Y", $row["time"]));
-    $xtpl->assign("type", $work[$row["type"]]);
-    $xtpl->assign("date2", $row["time"]);
-    $xtpl->assign("type2", $row["type"]);
+    $xtpl->assign("index", $index ++);
+    $xtpl->assign("username", $row["last_name"] . " " . $row["first_name"]);
+    $currentDate = $startDate;
+    $indexRou = 2;
+    $t = array(1 => 0, 0);
+
+    while ($indexRou > 1) {
+      if ($indexRou > 7) {
+        $indexRou = 0;
+      }
+      $sql = "select * from `" . PREFIX . "_row` where time = $currentDate and user_id = $row[userid] and type > 0 order by time, type asc";
+      $query2 = $db->query($sql);
+
+      $xtpl->assign("color_" . $indexRou . "1", "green");
+      $xtpl->assign("color_" . $indexRou . "2", "green");
+      $xtpl->assign("date_" . $indexRou . "1", $currentDate);
+      $xtpl->assign("date_" . $indexRou . "2", $currentDate);
+      $xtpl->assign("type_" . $indexRou . "1", 0);
+      $xtpl->assign("type_" . $indexRou . "2", 1);
+      while ($rou = $query2->fetch()) {
+        $xtpl->assign("color_" . $indexRou . $rou["type"], "red");
+        $t[$rou["type"]] ++;
+      }
+      $indexRou += 1;
+      $currentDate += A_DAY;
+    }
+    $xtpl->assign("t1", $t[1]);
+    $xtpl->assign("t2", $t[2]);
+    $xtpl->assign("t", $t[1] + $t[2]);
     $xtpl->parse("main.row");
   }
+  
   $xtpl->parse("main");
   return $xtpl->text();
 }

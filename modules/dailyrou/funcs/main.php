@@ -110,7 +110,7 @@ if (!empty($action)) {
           $date = totime($itemData["date"]);
           if ($user["permission"] || $date >= $today) {
             if ($itemData["color"] == "purple") {
-              $sql = "delete from `". PREFIX ."_row` where user_id = $doctorId and time = '$date' and type = " . ($itemData["type"] - 1);
+              $sql = "delete from `". PREFIX ."_row` where user_id = $doctorId and (time between $date and " . ($date + A_DAY - 1) . ") and type = " . ($itemData["type"] - 1);
             }
             else {
               $sql = "insert into `". PREFIX ."_row` (type, user_id, time) values(" . ($itemData["type"] - 1) . ", $doctorId, $date)";
@@ -209,13 +209,14 @@ if ($userList = $query->fetch()) {
   if ($userList["permission"]) {
     $xtpl->assign("admin", "true");
     $userList = doctorList();
+    $xtpl->assign("doctor", blockSelectDoctor($user_id, $userList));
+    $xtpl->parse("main.tab");
+    $xtpl->parse("main.doctor");
   }
   else {
     $userList = array($userList);
   }
 }
-
-$xtpl->assign("doctor", blockSelectDoctor($user_id, $userList));
 
 foreach ($date_option as $date_value => $date_name) {
   $xtpl->assign("date_name", $date_name);
@@ -241,7 +242,6 @@ $query = $db->query($sql);
 while($row = $query->fetch()) {
   $xtpl->assign("doctor_value", $row["userid"]);
   $xtpl->assign("doctor_name", $row["last_name"] . " " . $row["first_name"]);
-  $xtpl->parse("main.doctor");
 }
 
 $xtpl->assign("data", json_encode($daily));

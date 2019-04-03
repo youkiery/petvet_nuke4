@@ -92,6 +92,14 @@
   </div>
 </div> -->
   
+<!-- BEGIN: tab -->
+  <button rel="1" class="tab btn btn-info active">
+    Người dùng
+  </button>
+  <button rel="2" class="tab btn">
+    Quản lý
+  </button>
+<!-- END: tab -->
 <div class="row">
   <div class="col-sm-4">
     <input class="form-control" id="start-date" type="text" value="{this_week}" autocomplete="off">
@@ -137,9 +145,11 @@
     </button> -->
   </div>
 </div>
+<!-- BEGIN: doctor -->
 <div>
   {doctor}
 </div>
+<!-- END: doctor -->
 <div id="content">
   {content}
 </div>
@@ -174,6 +184,7 @@
   // var exchangeWorkDoctor = $("#exchange_work_doctor")
   // var confirmWork = $("#confirm_work")
   // var confirmWorkContent = $("#confirm_work_content")
+  var tab = $(".tab")
 
   var doctorId = {doctorId}
 
@@ -319,55 +330,92 @@
     filterData()
   })
 
+  tab.click((e) => {
+    current = e.currentTarget
+
+    tab.removeClass("active")
+    tab.removeClass("btn-info")
+    current.classList.add("active")
+    current.classList.add("btn-info")
+
+    if (current.getAttribute("rel") == 1)  {
+      filterData()
+    }
+    else {
+      toWconfirm()
+    }
+  })
+
   // wconfirm: confirm case of work each week
 
-  // function toWconfirm() {
-  //   $.post(
-  //     strHref,
-  //     {action: "wconfirm", startDate: startDate.val()},
-  //     (response, status) => {
-  //       checkResult(response, status).then(data => {
-  //         content.html(data["html"])
-  //         doctorId = data["doctorId"]
-  //         wconfirmInitiaze()
-  //       }, () => {})
-  //     }
-  //   )
-  // }
+  function toWconfirm() {
+    $.post(
+      strHref,
+      {action: "wconfirm", startDate: startDate.val()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          content.html(data["html"])
+          doctorId = data["doctorId"]
+          wconfirmInitiaze()
+        }, () => {})
+      }
+    )
+  }
 
-  // function wconfirmChange() {
-  //   $.post(
-  //     strHref,
-  //     {action: "wconfirmChange", startDate: startDate.val(), doctorId: doctor.val()},
-  //     (response, status) => {
-  //       checkResult(response, status).then(data => {
-  //         content.html(data["html"])
-  //         doctorId = doctor.val()
-  //         wconfirmInitiaze()
-  //       }, () => {})
-  //     }
-  //   )
-  // }
+  function wconfirmInitiaze() {
+    // var date = 0
+    // var datetime = []
+    // $(".cdailyrou").each((index, row) => {
+    //   currentRow = row
 
-  // function wconfirmInitiaze() {
-  //   doctor = $("#doctor")
-  //   doctor.change(() => {
-  //     wconfirmChange()
-  //   })
-  // }
+    //   var thisDate = currentRow.getAttribute("date")
+    //   var thisColor = currentRow.getAttribute("class").replace("cdailyrou ", "")
+    //   if (thisDate != date) {
+    //     if (!date) {
+    //       datetime[trim(currentRow.parentElement.children[0].innerText)].push(thisDatetime)
+    //     }
+    //     date = thisDate
+    //     thisDatetime = []
+    //   }
 
-  // function removeWconfirm(date, type) {
-  //   $.post(
-  //     strHref,
-  //     {action: "removeWconfirm", startDate: startDate.val(), doctorId: doctorId, date: date, type: type},
-  //     (response, status) => {
-  //       checkResult(response, status).then(data => {
-  //         content.html(data["html"])
-  //         wconfirmInitiaze()
-  //       }, () => {})
-  //     }
-  //   )
-  // }
+
+
+    // })
+    // datetime[trim(currentRow.parentElement.children[0].innerText)].push(thisDatetime)
+
+    $(".cdailyrou").click((e) => {
+      var current = e.currentTarget
+      var thisColor = current.getAttribute("class").replace("cdailyrou ", "")
+
+      switch (thisColor) {
+        case "red":
+          current.setAttribute("class", "cdailyrou purple")
+          break;
+        case "purple":
+          current.setAttribute("class", "cdailyrou red")
+          break;
+        case "green":
+          current.setAttribute("class", "cdailyrou yellow")
+          break;
+        case "yellow":
+          current.setAttribute("class", "cdailyrou green")
+          break;
+      }
+
+      var date = 0
+      $(".cdailyrou").each((index, row) => {
+        currentRow = row
+        var thisDate = currentRow.getAttribute("date")
+        var thisColor = currentRow.getAttribute("class").replace("cdailyrou ", "")
+        var thisType = currentRow.getAttribute("dtype")
+        if (thisColor == "red" || thisColor == "yellow") {
+          var parentChild = currentRow.parentElement.children
+          var parentChildFor = parentChild[parentChild.length - 3 + Number(thisType)]
+          parentChildFor.innerText = Number(parentChildFor.innerText) + 1
+        }
+      })
+    })
+  }
 
   // regist a case of work
 
