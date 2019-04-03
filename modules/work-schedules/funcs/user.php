@@ -79,13 +79,13 @@ if (!empty($action)) {
     $query = $db->query($sql);
     $user = $query->fetch();
 
-    $where = "username like '%$keyword%' or last_name like '%$keyword%' or first_name like '%$keyword%' order by last_name limit 10";
+    $where = "username like '%$keyword%' or last_name like '%$keyword%' or first_name like '%$keyword%'";
   
     if (!empty($user) && ($user["is_leader"] || $user["group_id"] == 1)) {
-      $user_sql = "select b.* from (select * from `" . WORK_PREFIX . "_employ` group by userid) a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid";
+      $user_sql = "select b.* from (select * from `" . WORK_PREFIX . "_employ` group by userid) a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid  order by last_name limit 10";
     }
     else {
-      $user_sql = "select a.* from `" . $db_config["prefix"] . "_users` a inner join `" . WORK_PREFIX . "_employ` b on a.userid = b.userid where b.role = 1 and b.depart in (select depart from `" . WORK_PREFIX . "_employ` where userid = $user_info[userid] and role = 2 and ($where))";
+      $user_sql = "select a.* from `" . $db_config["prefix"] . "_users` a inner join `" . WORK_PREFIX . "_employ` b on a.userid = b.userid where b.role = 1 and b.depart in (select depart from `" . WORK_PREFIX . "_employ` where userid = $user_info[userid] and role = 2 and ($where)) order by last_name limit 10";
     }
 
     $query = $db->query($user_sql);

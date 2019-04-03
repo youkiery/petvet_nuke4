@@ -1,5 +1,5 @@
 <!-- BEGIN: main -->
-<div class="msg_show"></div>
+<div class="alert_msg"></div>
 
 <div id="insert" class="modal fade" role="dialog">
   <div class="modal-dialog">
