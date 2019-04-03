@@ -113,7 +113,55 @@ function user_list($reversal, $type) {
   return $xtpl->text("main");
 }
 
-function riderList() {
-  
+function riderList($type, $startDate, $endDate) {
+  global $db, $db_config;
+
+  $file = "collect_list";
+  if ($type) {
+    $type = 1;
+    $file = "pay_list";
+  }
+  $endDate = totime($endDate);
+  $startDate = totime($startDate);
+  $xtpl = new XTemplate("$file.tpl", PATH);
+
+  $sql = "select userid, first_name, last_name from `" . $db_config["prefix"] . "_users`";
+  $query = $db->query($sql);
+
+  $user = array();
+  while ($row = $query->fetch()) {
+    $user[$row["userid"]] = $row;
+  }
+
+  $sql = "select * from `" . PREFIX . "_row` where (time between $startDate and $endDate) and type = $type order by time desc";
+  $query = $db->query($sql);
+
+  $index = 1;
+  if ($type) {
+    while ($row = $query->fetch()) {
+      $xtpl->assign("index", $index ++);
+      $xtpl->assign("id", $row["id"]);
+      $xtpl->assign("driver", $user[$row["driver_id"]]["last_name"] . " " . $user[$row["driver_id"]]["first_name"]);
+      $xtpl->assign("km", number_format($row["clock_to"] - $row["clock_from"], 1, ".", ","));
+      $xtpl->assign("date", date("d/m H:i", $row["time"]));
+      $xtpl->assign("start", $row["clock_from"]);
+      $xtpl->assign("end", $row["clock_to"]);
+      $xtpl->assign("destination", $row["destination"]);
+      $xtpl->parse("main.row");
+    }
+  }
+  else {
+    while ($row = $query->fetch()) {
+      $xtpl->assign("index", $index ++);
+      $xtpl->assign("id", $row["id"]);
+      $xtpl->assign("date", date("d/m H:i", $row["time"]));
+      $xtpl->assign("driver", $user[$row["driver_id"]]["last_name"] . " " . $user[$row["driver_id"]]["first_name"]);
+      $xtpl->assign("money", number_format($row["amount"]) . "đ");
+      $xtpl->parse("main.row");
+    }
+  }
+
+  $xtpl->parse("main");
+  return $xtpl->text();
 }
 
