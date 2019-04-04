@@ -127,7 +127,6 @@ function preCheckUser() {
 function wconfirm($date, $doctorId, $userList) {
   global $db, $db_config, $work;
 
-  $date = totime($date);
   $startDate = date ('N', $date) == 1 ? strtotime(date('Y-m-d', $date)) : strtotime('last monday', $date);
   $endDate = strtotime('next monday', $date);
   $xtpl = new XTemplate("ad_schedule_list.tpl", PATH);
@@ -149,7 +148,7 @@ function wconfirm($date, $doctorId, $userList) {
   $index = 1;
   while ($row = $query->fetch()) {
     $xtpl->assign("index", $index ++);
-    $xtpl->assign("username", $row["last_name"] . " " . $row["first_name"]);
+    $xtpl->assign("username", $row["first_name"]);
     $currentDate = $startDate;
     $indexRou = 2;
     $t = array(1 => 0, 0);

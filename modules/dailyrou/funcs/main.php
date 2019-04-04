@@ -66,8 +66,7 @@ if (!empty($action)) {
       $data = $nv_Request->get_array("data", "get/post");
 
       $startDate = totime($startDate);
-
-      if ($data) {
+      if ($data) {       
         foreach ($data as $row) {
           $time = strtotime(date("Y-m-d", $row["date"]));
           $sql = "select userid from `" . $db_config["prefix"] . "_users` where first_name = '$row[name]'";

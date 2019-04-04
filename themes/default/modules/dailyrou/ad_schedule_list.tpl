@@ -52,7 +52,7 @@
       <td date="{date_71}" dtype="{type_71}" class="cdailyrou {color_71}"> </td>
       <td date="{date_72}" dtype="{type_72}" class="cdailyrou {color_72}"> </td>
       <td date="{date_01}" dtype="{type_01}" class="cdailyrou {color_01}"> </td>
-      <td date="{date_01}" dtype="{type_01}" class="cdailyrou {color_02}"> </td>
+      <td date="{date_02}" dtype="{type_02}" class="cdailyrou {color_02}"> </td>
       <td class="ddailyrou"> {t1} </td>
       <td class="ddailyrou"> {t2} </td>
       <td class="ddailyrou"> {t} </td>
