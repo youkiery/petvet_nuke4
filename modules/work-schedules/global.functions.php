@@ -718,7 +718,7 @@ function filter_by_time() {
 function employDepart($userId, $departId) {
   global $db, $db_config;
 
-  $sql = 'select userid, first_name, last_name from `' . $db_config["prefix"] . '_users` where userid in (select userid from `' . WORK_PREFIX . '_employ` where depart = ' . $departId . ' and role = 1 or userid = '.$userId.' group by userid) order by last_name';
+  $sql = 'select userid, first_name, last_name from `' . $db_config["prefix"] . '_users` where userid in (select userid from `' . WORK_PREFIX . '_employ` where depart = ' . $departId . ' and userid in (select userid from `' . WORK_PREFIX . '_employ` where role = 1 and depart in (select depart from `' . WORK_PREFIX . '_employ` where userid = '.$userId.' and role = 2)) or userid = '.$userId.' group by userid) order by last_name';
   $query = $db->query($sql);
 
   $user = array();

@@ -270,7 +270,8 @@
   var today = '{today}'
   var userid = -1
   var g_id = -1
-  var g_departid = '{g_depart}'
+  var g_departid = 0
+  var x_depart = '{g_depart}'
   var current = 0
   var typing
   var complete = $(".complete")
@@ -278,7 +279,7 @@
 
   $("#depart, #edit_depart").change((e) => {
     var current = e.currentTarget
-    g_departid = current.value
+    x_depart = current.value
     $(".user-suggest-list").html("")
   })
 
@@ -328,7 +329,7 @@
   $("#user, #edit_user").keydown(e => {
     clearTimeout(typing)
     typing = setTimeout(() => {
-      var stora = dbdata[g_departid]
+      var stora = dbdata[x_depart]
       var keyword = e.currentTarget.value
       var html = "";
       var count = 0;

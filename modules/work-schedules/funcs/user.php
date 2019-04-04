@@ -353,6 +353,7 @@ while ($row = $query->fetch()) {
   }
   $data[$row['depart']] = employDepart($user_info['userid'], $row["depart"]) ;
 }
+// die("$x");
 
 $xtpl->assign("g_depart", $x);
 $xtpl->assign("data", json_encode($data));
