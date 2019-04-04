@@ -588,6 +588,8 @@
   // event function
 
   function registOn() {
+    console.log(1);
+    
     var table = content[0].children[0].children[1].children
     var i = 0
     for (const rowKey in table) {

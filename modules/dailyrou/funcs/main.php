@@ -170,9 +170,6 @@ if (!empty($action)) {
       $result["html"] = scheduleList($startDate, $endDate);
       $result["status"] = 1;
 
-      $startDate = totime($startDate);
-      $endDate = totime($endDate);
-
       $sql = "select * from `" . PREFIX . "_row` where time between $startDate and $endDate order by time, type asc";
       $query = $db->query($sql);
       $daily = array();
@@ -205,7 +202,7 @@ if (!empty($user_info)) {
   $sql = "select * from `" . $db_config["prefix"] . "_users` where userid = $user_info[userid]";
   $query = $db->query($sql);
   $user = $query->fetch();
-  $user_name = $user["last_name"] . " " . $user["first_name"];
+  $user_name = $user["first_name"];
 }
 
 $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
