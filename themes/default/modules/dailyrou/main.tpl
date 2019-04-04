@@ -126,23 +126,19 @@
     <input class="form-control" id="start-date" type="text" value="{this_week}" autocomplete="off">
   </div>
   <div class="col-sm-4">
-    <input class="form-control" id="end-date" type="text" value="{next_week}" autocomplete="off">
-  </div>
-  <div class="col-sm-4">
     <button class="btn btn-warning" onclick="prevWeek()">
       <span class="glyphicon glyphicon-chevron-left"></span>
     </button>
     <button class="btn btn-warning" onclick="nextWeek()">
       <span class="glyphicon glyphicon-chevron-right"></span>
     </button>
-
     <!-- <select class="form-control" id="date-type"> -->
       <!-- BEGIN: date_option -->
       <!-- <option value="{date_value}"> {date_name} </option> -->
       <!-- END: date_option -->
     <!-- </select> -->
   </div>
-  <div class="col-sm-4">
+  <div class="col-sm-8">
 
   </div>
   <div class="col-sm-8">
@@ -191,7 +187,6 @@
   var schedule = dbdata.length
   var username = trim('{username}');
   var startDate = $("#start-date")
-  var endDate = $("#end-date")
   var dateType = $("#date-type")
   var register = $("#register")
   var cconfirm = $("#cconfirm")
@@ -512,16 +507,21 @@
       var html = ""
       panis.forEach(item => {
         var type = "Đăng ký"
-        var retype = "lịch trực"
         if (item["color"] == "purple") {
           var type = "Bỏ đăng ký"
         }
         switch (item["type"]) {
+          case 1:
+            retype = "lịch trực sáng"
+            break;
           case 2:
-            retype = "nghỉ sáng"
+            retype = "lịch trực tối"
             break;
           case 3:
-            retype = "nghỉ chiều"
+            retype = "lịch nghỉ sáng"
+            break;
+          case 4:
+            retype = "lịch nghỉ chiều"
             break;
         }
         html += "<div class='regist_item'>" + type + " " + retype + " ngày " + item["date"] + "</div>"
@@ -535,51 +535,51 @@
     }
   })
 
-  dateType.change(() => {
-    var date = {}
-    var now = new Date();
+  // dateType.change(() => {
+  //   var date = {}
+  //   var now = new Date();
     
-    switch (dateType.val()) {
-      case "1":
-        // this week
-        date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 1);
-        date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 7);
-      break;
-      case "2":
-        // next week
-        date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 7);
-        date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 14);
-      break;
-      case "3":
-        // this month
-        date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-        date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 2, 1);
-      break;
-      case "4":
-        // last month
-        date["startDate"] = new Date(now.getFullYear(), now.getMonth(), 1);
-        date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-      break;
-      case "5":
-        // next month
-        date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 2, 1);
-        date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 3, 1);
-      break;
-    }
-    if (date["startDate"]) {
-      startDate.val(dateToString(date["startDate"]));
-      endDate.val(dateToString(date["endDate"]));
-      filterData(); 
-    }
-  })
+  //   switch (dateType.val()) {
+  //     case "1":
+  //       // this week
+  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 1);
+  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 7);
+  //     break;
+  //     case "2":
+  //       // next week
+  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 7);
+  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 14);
+  //     break;
+  //     case "3":
+  //       // this month
+  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 2, 1);
+  //     break;
+  //     case "4":
+  //       // last month
+  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth(), 1);
+  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  //     break;
+  //     case "5":
+  //       // next month
+  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 2, 1);
+  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 3, 1);
+  //     break;
+  //   }
+  //   if (date["startDate"]) {
+  //     startDate.val(dateToString(date["startDate"]));
+  //     endDate.val(dateToString(date["endDate"]));
+  //     filterData(); 
+  //   }
+  // })
 
-  $("#start-date, #end-date").change(() => {
+  $("#start-date").change(() => {
     dateTimeout = setTimeout(() => {
       filterData()
     }, 500);
   })
 
-  $("#start-date, #end-date").datepicker({
+  $("#start-date").datepicker({
 		format: 'dd/mm/yyyy',
     changeMonth: true,
     changeYear: true
@@ -653,7 +653,7 @@
     $(".btn, .form-control").attr("disabled", true)
     $.post(
       strHref,
-      {action: "regist", doctorId: doctorId, itemList: panis, startDate: startDate.val(), endDate: endDate.val()},
+      {action: "regist", doctorId: doctorId, itemList: panis, startDate: startDate.val()},
       (response, status) => {
         checkResult(response, status).then((data) => {
           $(".btn").attr("disabled", false)
@@ -677,7 +677,7 @@
     $(".btn, .form-control").attr("disabled", true)
       $.post(
         strHref,
-        {action: "filter_data", startDate: startDate.val(), endDate: endDate.val()},
+        {action: "filter_data", startDate: startDate.val()},
         (response, status) => {
           checkResult(response, status).then((data) => {
             content.html(data["html"])
@@ -713,8 +713,6 @@
     var diff = date.getDate() - day + 1
     date.setDate(diff + 7)
     startDate.val(dateToString(date))
-    date.setDate(date.getDate() + 6)
-    endDate.val(dateToString(date))
 
     if (manager) {
       toWconfirm()
@@ -731,8 +729,6 @@
     var diff = date.getDate() - day + 1
     date.setDate(diff - 7)
     startDate.val(dateToString(date))
-    date.setDate(date.getDate() + 7)
-    endDate.val(dateToString(date))
     
     if (manager) {
       toWconfirm()

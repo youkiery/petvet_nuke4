@@ -41,8 +41,6 @@ function scheduleList($startDate, $endDate) {
   global $db, $datetime;
   // $startDate = strtotime("2019/05/01");
   // $endDate = strtotime("2019/06/01");
-  $startDate = strtotime(date("Y-m-d", totime($startDate)));
-  $endDate = strtotime(date("Y-m-d", totime($endDate)));
   // $endDate = totime($endDate) + A_DAY * 200;
   $xtpl = new XTemplate("schedule_list.tpl", PATH);
 
@@ -52,15 +50,11 @@ function scheduleList($startDate, $endDate) {
   $check = true;
 
   $sql = "select * from `" . PREFIX . "_row` where `time` between $startDate and $endDate order by time, type asc";
-  // die($sql);
   $query = $db->query($sql);
   $currentRow = $query->fetch();
+  $count = 0;
 
-  while ($check) {
-    if ($date >= $endDate) {
-      $check = false;
-    }
-
+  while ($count < 7) {
     // $xtpl->assign("date", date("d/m", $date) . " (" . $datetime[date("N", $date)] . ")");
     $xtpl->assign("date", date("d/m/Y", $date));
 
@@ -91,6 +85,7 @@ function scheduleList($startDate, $endDate) {
     else {
       $rest_list = array("morning_guard" => array(), "afternoon_guard" => array(), "morning_rest" => array(), "afternoon_rest" => array());
       $date += A_DAY;
+      $count ++;
       $xtpl->parse("main.row");
       $xtpl->assign("morning_guard", "");
       $xtpl->assign("afternoon_guard", "");

@@ -113,7 +113,6 @@ if (!empty($action)) {
     case 'regist':
       $itemList = $nv_Request->get_array("itemList", "get/post", "");
       $startDate = $nv_Request->get_string("startDate", "get/post", "");
-      $endDate = $nv_Request->get_string("endDate", "get/post", "");
       $doctorId = $nv_Request->get_string("doctorId", "get/post", "");
       $today = strtotime(date("Y-m-d"));
 
@@ -142,12 +141,11 @@ if (!empty($action)) {
       else {
         $result["notify"] = "Có lỗi xảy ra trong quá trình xử lý dữ liệu";
       }
-
+      $startDate = strtotime(date("Y-m-d", totime($startDate)));
+      $endDate = $startDate + A_DAY * 7 - 1;
+    
       $result["html"] = scheduleList($startDate, $endDate);
       $result["status"] = 1;
-
-      $startDate = totime($startDate);
-      $endDate = totime($endDate);
 
       $sql = "select * from `" . PREFIX . "_row` where time between $startDate and $endDate order by time, type asc";
       $query = $db->query($sql);
@@ -165,7 +163,9 @@ if (!empty($action)) {
     break;
     case 'filter_data':
       $startDate = $nv_Request->get_string("startDate", "get/post", "");
-      $endDate = $nv_Request->get_string("endDate", "get/post", "");
+
+      $startDate = strtotime(date("Y-m-d", totime($startDate)));
+      $endDate = $startDate + A_DAY * 7 - 1;
 
       $result["html"] = scheduleList($startDate, $endDate);
       $result["status"] = 1;
@@ -194,9 +194,7 @@ if (!empty($action)) {
 }
 
 $this_week = date("N") == 1 ? strtotime(date("Y-m-d", time())) : strtotime(date("Y-m-d", strtotime('last monday')));
-$next_week = $this_week + A_DAY * 7;
-$this_week_s = date("d/m/Y", $this_week);
-$next_week_s = date("d/m/Y", $next_week);
+$next_week = $this_week + A_DAY * 7 - 1;
 // $date_option = array(1 => "Tuần này", "Tuần sau", "Tháng này", "Tháng trước", "Tháng sau", "Năm nay", "Năm trước");
 $date_option = array(1 => "Tuần này", "Tuần sau", "Tháng này", "Tháng trước", "Tháng sau");
 $user_id = 0;
@@ -212,8 +210,7 @@ if (!empty($user_info)) {
 
 $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
 $xtpl->assign("data", "{}");
-$xtpl->assign("this_week", $this_week_s);
-$xtpl->assign("next_week", $next_week_s);
+$xtpl->assign("this_week", date("d/m/Y", $this_week));
 $xtpl->assign("date", date("Y-m-d"));
 
 $sql = "select a.*, b.permission from `" . $db_config["prefix"] . "_users` a inner join `" . $db_config["prefix"] . "_rider_user` b on user_id = $user_id and type = 1 and a.userid = b.user_id";
@@ -263,7 +260,7 @@ $xtpl->assign("data", json_encode($daily));
 // $xtpl->assign("user_name", $user_name);
 $xtpl->assign("username", $user_name);
 $xtpl->assign("doctorId", $user_id);
-$xtpl->assign("content", scheduleList($this_week_s, $next_week_s));
+$xtpl->assign("content", scheduleList($this_week, $next_week));
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
