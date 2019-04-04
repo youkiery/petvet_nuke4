@@ -154,7 +154,7 @@
     <button class="btn btn-danger right" id="reset" style="display: none;">
       Hủy
     </button>
-    <button class="btn btn-info right" id="print" onclick="print()">
+    <button class="btn btn-info right" id="print" onclick="printer()">
       In
     </button>
     <!-- <button class="btn btn-info right" onclick="toWconfirm()">
@@ -511,16 +511,16 @@
           var type = "Bỏ đăng ký"
         }
         switch (item["type"]) {
-          case 1:
+          case 2:
             retype = "lịch trực sáng"
             break;
-          case 2:
+          case 3:
             retype = "lịch trực tối"
             break;
-          case 3:
+          case 4:
             retype = "lịch nghỉ sáng"
             break;
-          case 4:
+          case 5:
             retype = "lịch nghỉ chiều"
             break;
         }
@@ -593,9 +593,10 @@
     for (const rowKey in table) {
       if (table.hasOwnProperty(rowKey)) {
         const row = table[rowKey];
-        var moi = [0, 1, 1, 1, 1]
+        var moi = [0, 0, 1, 1, 1, 1]
         while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
-          var thisIndex = Number(dbdata[i]["type"]) + 1
+          var thisIndex = Number(dbdata[i]["type"]) + 2
+          
           if (row.children[thisIndex].innerText.search(username) >= 0) {
             moi[thisIndex] = 3
           }
@@ -613,7 +614,7 @@
 
   function registOff() {
     var table = content[0].children[0].children[1].children
-    var moi = [0, 0, 0, 0, 0]
+    var moi = [0, 0, 0, 0, 0, 0]
 
     for (const rowKey in table) {
       if (table.hasOwnProperty(rowKey)) {
@@ -627,7 +628,7 @@
 
   function checkRegist() {
     var table = content[0].children[0].children[1].children
-    var moi = [0, 0, 0, 0, 0]
+    var moi = [0, 0, 0, 0, 0, 0]
     var pan = []
 
     for (const rowKey in table) {
@@ -694,7 +695,7 @@
 
   // button function
 
-  function print() {
+  function printer() {
     var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
     var html = content.html().toString()
     html = "<style>table {border-collapse: collapse; width: 100%;} td, th {border: 1px solid black; padding: 4px;} .text-center{text-align: center;}</style>" + html

@@ -3,6 +3,7 @@
     <thead>
       <tr>
         <th class="text-center"> Ngày </th>
+        <th class="text-center"> Thứ </th>
         <th class="text-center"> Trực sáng </th>
         <th class="text-center"> Trực tối </th>
         <th class="text-center"> Nghỉ sáng </th>
@@ -13,6 +14,7 @@
       <!-- BEGIN: row -->
       <tr>
         <td> {date} </td>
+        <td> {day} </td>
         <td class="dailyrou"> {morning_guard} </td>
         <td class="dailyrou"> {afternoon_guard} </td>
         <td class="dailyrou">

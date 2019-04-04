@@ -124,10 +124,10 @@ if (!empty($action)) {
           $date = totime($itemData["date"]);
           if ($user["permission"] || $date >= $today) {
             if ($itemData["color"] == "purple") {
-              $sql = "delete from `". PREFIX ."_row` where user_id = $doctorId and (time between $date and " . ($date + A_DAY - 1) . ") and type = " . ($itemData["type"] - 1);
+              $sql = "delete from `". PREFIX ."_row` where user_id = $doctorId and (time between $date and " . ($date + A_DAY - 1) . ") and type = " . ($itemData["type"] - 2);
             }
             else {
-              $sql = "insert into `". PREFIX ."_row` (type, user_id, time) values(" . ($itemData["type"] - 1) . ", $doctorId, $date)";
+              $sql = "insert into `". PREFIX ."_row` (type, user_id, time) values(" . ($itemData["type"] - 2) . ", $doctorId, $date)";
             }
             $db->query($sql);
           }

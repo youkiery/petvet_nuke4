@@ -38,7 +38,7 @@ function userWorkList($doctorId) {
 }
 
 function scheduleList($startDate, $endDate) {
-  global $db, $datetime;
+  global $db, $datetime, $work;
   // $startDate = strtotime("2019/05/01");
   // $endDate = strtotime("2019/06/01");
   // $endDate = totime($endDate) + A_DAY * 200;
@@ -57,6 +57,7 @@ function scheduleList($startDate, $endDate) {
   while ($count < 7) {
     // $xtpl->assign("date", date("d/m", $date) . " (" . $datetime[date("N", $date)] . ")");
     $xtpl->assign("date", date("d/m/Y", $date));
+    $xtpl->assign("day", $datetime[date("N", $date)]);
 
     if ($currentRow["time"] == $date) {
       // var_dump($currentRow);
