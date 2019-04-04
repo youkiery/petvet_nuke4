@@ -346,13 +346,16 @@ $sql = 'select * from `'.WORK_PREFIX.'_employ` where userid = '.$user_info['user
 $query = $db->query($sql);
 
 $data = array();
+$x = 0;
 while ($row = $query->fetch()) {
+  if (!$x) {
+    $x = $row['depart'];
+  }
   $data[$row['depart']] = employDepart($user_info['userid'], $row["depart"]) ;
-  var_dump(employDepart($user_info['userid'], $row["depart"]));
-  echo '<br>';  
 }
-die();
 
+$xtpl->assign("g_depart", $x);
+$xtpl->assign("data", json_encode($data));
 $xtpl->assign("cometime", date("d/m/Y", strtotime(date("Y-m-d")) - 60 * 60 * 24 * 7));
 $xtpl->assign("calltime", date("d/m/Y", strtotime(date("Y-m-d")) + 60 * 60 * 24 * 7));
 $xtpl->assign("depart_list", user_main_list());

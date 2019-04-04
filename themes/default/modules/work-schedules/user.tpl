@@ -266,16 +266,19 @@
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <script>
+  var dbdata = JSON.parse('{data}')
   var today = '{today}'
   var userid = -1
   var g_id = -1
-  var g_departid = 0
+  var g_departid = '{g_depart}'
   var current = 0
   var typing
   var complete = $(".complete")
   var completeStatus = 0
 
-  $("#depart").change(() => {
+  $("#depart, #edit_depart").change((e) => {
+    var current = e.currentTarget
+    g_departid = current.value
     $(".user-suggest-list").html("")
   })
 
@@ -325,23 +328,38 @@
   $("#user, #edit_user").keydown(e => {
     clearTimeout(typing)
     typing = setTimeout(() => {
-      $.post(
-        strHref,
-        {action: "search", keyword: e.target.value},
-        (response, status) => {
-          if (status === "success" && response) {
-            try {
-              var data = JSON.parse(response)
-              if (data["status"]) {
-                $(".user-suggest-list").html(data["list"])
-              }
-              alert_msg(data["notify"])
-            } catch (e) {
-              alert_msg("{lang.g_error}")
-            }
-          }
+      var stora = dbdata[g_departid]
+      var keyword = e.currentTarget.value
+      var html = "";
+      var count = 0;
+      stora.forEach(user => {
+        if (count > 9) {
+          stora = []
         }
-      )      
+        if (user["name"].search(keyword) >= 0) {
+          html += '<div class="user-suggest-item" onclick="set_user('+user['userid']+', \''+user['name']+'\')"> '+user['name']+' </div>'
+          count ++
+        }
+      });
+      
+      $(".user-suggest-list").html(html)
+      // $.post(
+      //   strHref,
+      //   {action: "search", keyword: e.target.value},
+      //   (response, status) => {
+      //     if (status === "success" && response) {
+      //       try {
+      //         var data = JSON.parse(response)
+      //         if (data["status"]) {
+      //           $(".user-suggest-list").html(data["list"])
+      //         }
+      //         alert_msg(data["notify"])
+      //       } catch (e) {
+      //         alert_msg("{lang.g_error}")
+      //       }
+      //     }
+      //   }
+      // )      
     }, 200)
   })
 
