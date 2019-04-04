@@ -275,6 +275,10 @@
   var complete = $(".complete")
   var completeStatus = 0
 
+  $("#depart").change(() => {
+    $(".user-suggest-list").html("")
+  })
+
   complete.click((e) => {
     var currentTarget = e.currentTarget
     complete.removeClass("active")
@@ -289,7 +293,7 @@
     else {
       completeStatus = 1
     }
-
+    
     $.post(
       strHref,
       {action: "change_data", completeStatus: completeStatus, departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
@@ -333,7 +337,6 @@
               }
               alert_msg(data["notify"])
             } catch (e) {
-              console.log(e);
               alert_msg("{lang.g_error}")
             }
           }

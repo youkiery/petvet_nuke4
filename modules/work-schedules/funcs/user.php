@@ -70,40 +70,42 @@ if (!empty($action)) {
       }
     }
   break;
-  case 'search':
-    $keyword = $nv_Request->get_string("keyword", "get/post", "");
+  // case 'search':
+  //   $keyword = $nv_Request->get_string("keyword", "get/post", "");
 
-    $xtpl = new XTemplate('work-user-suggest.tpl', NV_ROOTDIR . '/themes/' . $global_config['admin_theme'] . '/modules/' . $module_file);
+    // $xtpl = new XTemplate('work-user-suggest.tpl', NV_ROOTDIR . '/themes/' . $global_config['admin_theme'] . '/modules/' . $module_file);
 
-    $sql = "select * from `" . $db_config["prefix"] . "_users_groups_users` where userid = $user_info[userid]";
-    $query = $db->query($sql);
-    $user = $query->fetch();
+    // $sql = "select * from `" . $db_config["prefix"] . "_users_groups_users` where userid = $user_info[userid]";
+    // $query = $db->query($sql);
+    // $user = $query->fetch();
 
-    $where = "username like '%$keyword%' or last_name like '%$keyword%' or first_name like '%$keyword%'";
+    // $where = "username like '%$keyword%' or last_name like '%$keyword%' or first_name like '%$keyword%'";
   
-    if (!empty($user) && ($user["is_leader"] || $user["group_id"] == 1)) {
-      $user_sql = "select b.* from (select * from `" . WORK_PREFIX . "_employ` group by userid) a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid  order by last_name limit 10";
-    }
-    else {
-      $user_sql = "select a.* from `" . $db_config["prefix"] . "_users` a inner join `" . WORK_PREFIX . "_employ` b on a.userid = b.userid where b.role = 1 and b.depart in (select depart from `" . WORK_PREFIX . "_employ` where userid = $user_info[userid] and role = 2 and ($where)) order by last_name limit 10";
-    }
+    // if (!empty($user) && ($user["is_leader"] || $user["group_id"] == 1)) {
+    //   $user_sql = "select b.* from (select * from `" . WORK_PREFIX . "_employ` group by userid) a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid  order by last_name limit 10";
+    // }
+    // else {
+    //   $user_sql = "select a.* from `" . $db_config["prefix"] . "_users` a inner join `" . WORK_PREFIX . "_employ` b on a.userid = b.userid where b.role = 1 and b.depart in ((select depart from `" . WORK_PREFIX . "_employ` where userid = $user_info[userid] and role = 2 and ($where)), $user_info[userid]) order by last_name limit 10";
+    // }
 
-    $query = $db->query($user_sql);
-    $count = 0;
-    while($user = $query->fetch()) {
-      $count ++;
-      $xtpl->assign("name", $user["last_name"] . " " . $user["first_name"]);
-      $xtpl->assign("id", $user["userid"]);
-      $xtpl->parse("main");
-    }
-    if (!$count) {
-      $xtpl->assign("name", "Không có nhân viên nào");
-      $xtpl->parse("main");
-    }
-    $result["status"] = 1;
-    $result["notify"] = "";
-    $result["list"] = $xtpl->text();
-  break;
+    // $query = $db->query($user_sql);
+    // $count = 0;
+    // while($user = $query->fetch()) {
+    //   $count ++;
+    //   $xtpl->assign("name", $user["last_name"] . " " . $user["first_name"]);
+    //   $xtpl->assign("id", $user["userid"]);
+    //   $xtpl->parse("main");
+    // }
+    // if (!$count) {
+    //   $xtpl->assign("name", "Không có nhân viên nào");
+    //   $xtpl->parse("main");
+    // }
+
+
+  //   $result["status"] = 1;
+  //   $result["notify"] = "";
+  //   $result["list"] = $xtpl->text();
+  // break;
   case 'edit':
     $id = $nv_Request->get_string("id", "get/post", "");
     $content = $nv_Request->get_string("content", "get/post", "");
@@ -327,7 +329,7 @@ if (!empty($user_info)) {
     $sql = "select * from `" . WORK_PREFIX . "_depart`";
   }
   else {
-    $sql = "select b.* from `" . WORK_PREFIX . "_employ` a inner join `" . WORK_PREFIX . "_depart` b on a.depart = b.id where a.userid = $user_info[userid] group by a.userid";
+    $sql = "select b.* from `" . WORK_PREFIX . "_employ` a inner join `" . WORK_PREFIX . "_depart` b on a.depart = b.id where a.userid = $user_info[userid] order by a.userid";
   }
 
   $query = $db->query($sql);
@@ -339,6 +341,17 @@ if (!empty($user_info)) {
   }
   $xtpl->parse("main.manager");
 }
+
+$sql = 'select * from `'.WORK_PREFIX.'_employ` where userid = '.$user_info['userid'];
+$query = $db->query($sql);
+
+$data = array();
+while ($row = $query->fetch()) {
+  $data[$row['depart']] = employDepart($user_info['userid'], $row["depart"]) ;
+  var_dump(employDepart($user_info['userid'], $row["depart"]));
+  echo '<br>';  
+}
+die();
 
 $xtpl->assign("cometime", date("d/m/Y", strtotime(date("Y-m-d")) - 60 * 60 * 24 * 7));
 $xtpl->assign("calltime", date("d/m/Y", strtotime(date("Y-m-d")) + 60 * 60 * 24 * 7));
