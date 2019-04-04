@@ -1,0 +1,90 @@
+#ui-datepicker-div {
+  z-index: 10000 !important;
+}
+
+#msgshow {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  background: white;
+  padding: 10px;
+  z-index: 100;
+  border: 1px solid gray;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  display: none;
+  z-index: 10000;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  opacity: 1;
+  z-index: 1;
+  font: inherit;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.relative {
+  position: relative;
+}
+
+.suggest {
+  position: absolute;
+  width: 100%;
+  background: #fff;
+  max-height: 400px;
+  overflow-y: scroll;
+  z-index: 1;
+  display: none;
+}
+
+.suggest-item {
+  border-bottom: 1px solid gray;
+  padding: 10px;
+}
+
+.suggest-item:hover {
+  background: #8f8;
+}
+
+.red {
+  background: rgb(247, 99, 99);
+  color: white;
+}
+
+.green {
+  background: rgb(40, 150, 40);
+  color: black;
+}
+
+.red, .green {
+  border: 1px solid #fff;
+}
+
+.right {
+  float: right;
+}
+
+.item {
+  overflow: overlay;
+  margin-bottom: 2px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #ccc;
+}
