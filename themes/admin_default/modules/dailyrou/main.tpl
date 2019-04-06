@@ -11,7 +11,7 @@
       <div class="modal-body">
         <h2> Bản thống kê ngày nghỉ tháng </h2>
         <br>
-        <form class="form-inline">
+        <div class="form-inline">
           <div class="form-group">
             <label>
               Từ ngày
@@ -27,7 +27,7 @@
           <button class="btn btn-info" onclick="summarySubmit()">
             Xem tổng kết
           </button>
-        </form>
+        </div>
         <div id="summary-content">
           {summary}
         </div>
