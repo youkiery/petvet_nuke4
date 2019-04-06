@@ -298,17 +298,19 @@
       completeStatus = 1
     }
     
+    freeze()
     $.post(
       strHref,
       {action: "change_data", completeStatus: completeStatus, departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
       (response, status) => {
-        var data = JSON.parse(response)
-        if (data["status"]) {
+        checkResult(response, status).then(data => {
           $("#content").html(data["list"])
           change_tab(g_departid)
           reload_date(data)
-        }
-        alert_msg(data["notify"])
+          defreeze()
+        }, () => {
+          defreeze()
+        })
       }
     )
   })
@@ -371,37 +373,39 @@
 
   function change_process_submit(e) {
     e.preventDefault()
+    freeze()
     $.post(
       strHref,
       {action: "change_process", id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), process: $("#edit_process2").val().replace("%", ""), note: $("#edit_note").val()},
       (response, status) => {
-        var data = JSON.parse(response)
-        if (data["status"]) {
+        checkResult(response, status).then(data => {
           $("#content").html(data["list"])
           $("#process_change").modal("hide")
           reload_date(data)
-        }
-        alert_msg(data["notify"])
+          defreeze()
+        }, () => {
+          defreeze()
+        })
       }
     )    
   }
 
   function change_process(id) {
     g_id = id
+    freeze()
     $.post(
       strHref,
       {action: "get_process", id: g_id},
       (response, status) => {
-        var data = JSON.parse(response)
-        if (data["status"]) {
+        checkResult(response, status).then(data => {
           current = data["process"]
           $("#edit_process2").val(data["process"] + "%")
           $("#edit_note").val(data["note"])
           $("#process_change").modal("show")
-        }
-        else {
-          alert_msg(data["notify"])
-        }
+          defreeze()
+        }, () => {
+          defreeze()
+        })
       }
     )
   }
@@ -413,92 +417,96 @@
 
   function change_data(id) {
     g_departid = id
+    freeze()
     $.post(
       strHref,
       {action: "change_data", completeStatus: completeStatus, departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
       (response, status) => {
-        var data = JSON.parse(response)
-        if (data["status"]) {
+        checkResult(response, status).then(data => {
           $("#content").html(data["list"])
           change_tab(id)
           reload_date(data)
-        }
-        alert_msg(data["notify"])
+          defreeze()
+        }, () => {
+          defreeze()
+        })
       }
     )
   }
 
   function change_confirm(id) {
     g_id = id
+    freeze()
     $.post(
       strHref,
       {action: "change_confirm", id: g_id},
       (response, status) => {
-        var data = JSON.parse(response)
-        if (data["status"]) {
+        checkResult(response, status).then(data => {
           $("#change_confirm").modal("show")
           $("#confirm_value").html(data["confirm"])
           $("#confirm_review").html(data["review"])
           $("#confirm_note").val(data["note"])
-        }
-        else {
-          alert_msg(data["notify"])
-        }
+          defreeze()
+        }, () => {
+          defreeze()
+        })
       }
     )
   }
 
   function change_confirm_submit(e) {
     e.preventDefault()
+    freeze()
     $.post(
       strHref,
       {action: "confirm", completeStatus: completeStatus, departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), confirm: $("#confirm_value").val(), review: $("#confirm_review").val(), note: $("#confirm_note").val()},
       (response, status) => {
-        var data = JSON.parse(response)
-        if (data["status"]) {
+        checkResult(response, status).then(data => {
           $("#change_confirm").modal("hide")
           $("#content").html(data["list"])
           reload_date(data)
-        }
-        alert_msg(data["notify"])
+          defreeze()
+        }, () => {
+          defreeze()
+        })
       }
     )
   }
 
   function my_work() {
+    freeze()
     $.post(
       strHref,
       {action: "my_work", completeStatus: completeStatus, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
       (response, status) => {
-        var data = JSON.parse(response)
-        if (data["status"]) {
+        checkResult(response, status).then(data => {
           g_departid = 0
           $("#content").html(data["list"])
           change_tab(g_departid)
           reload_date(data)
-        }
-        else {
-          alert_msg(data["notify"])
-        }
+          defreeze()
+        }, () => {
+          defreeze()
+        })  
       }
     )
   }
 
   function manager_work() {
+    freeze()
     $.post(
       strHref,
       {action: "manager_work", completeStatus: completeStatus, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
       (response, status) => {
-        var data = JSON.parse(response)
-        if (data["status"]) {
+        checkResult(response, status).then(data => {
           g_departid = "end"
           $("#content").html(data["list"])
           change_tab("end")
           reload_date(data)
-        }
-        else {
-          alert_msg(data["notify"])
-        }
+          defreeze()
+        }, () => {
+          defreeze()
+        })
       }
     )
   }
@@ -515,14 +523,12 @@
 
   function edit(id) {
     g_id = id
+    freeze()
     $.post(
       strHref,
       {action: "get_work", id: g_id},
       (response, status) => {
-        var data = JSON.parse(response)
-        if (data["status"]) {
-          console.log(data["user"]);
-          
+        checkResult(response, status).then(data => {
           $("#edit_name").val(data["content"])
           $("#edit_starttime").val(data["starttime"])
           $("#edit_endtime").val(data["endtime"])
@@ -535,7 +541,10 @@
           $("#edit_process").val(data["process"] + "%")
           userid = data["userid"]
           $("#edit").modal("show")
-        }
+          defreeze()
+        }, () => {
+          defreeze()
+        })
       }
     )
   }
@@ -546,51 +555,57 @@
   }
 
   function remove_submit() {
+    freeze()
     $.post(
       strHref,
       {action: "remove", completeStatus: completeStatus, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
       (response) => {
-        var data = JSON.parse(response)
-        if (data["status"]) {
+        checkResult(response, status).then(data => {
           $("#content").html(data["list"])
           $("#remove").modal("hide")
           reload_date(data)
-        }
-        alert_msg(data["notify"])
+          defreeze()
+        }, () => {
+          defreeze()
+        })
       }
     )
   }
 
   function insert(e) {
     e.preventDefault()
+    freeze()
     $.post(
       strHref,
       {action: "insert", completeStatus: completeStatus, departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#name").val(), starttime: $("#starttime").val(), endtime: $("#endtime").val(), /*customer: $("#customer").val(),*/ userid: userid, depart: $("#depart").val(), process: $("#process").val().replace("%", "")},
       (response, status) => {
-        var data = JSON.parse(response)
-        if (data["status"]) {
+        checkResult(response, status).then(data => {
           $("#content").html(data["list"])
           $("#insert").modal("hide")
           reload_date(data)
-        }
-        alert_msg(data["notify"])
+          defreeze()
+        }, () => {
+          defreeze()
+        })
       }
     )
   }
 
   function edit_submit(e) {
     e.preventDefault()
+    freeze()
     $.post(
       strHref,
       {action: "edit", completeStatus: completeStatus, departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#edit_name").val(), starttime: $("#edit_starttime").val(), endtime: $("#edit_endtime").val(), /*customer: $("#edit_customer").val(),*/ userid: userid, depart: $("#edit_depart").val(), note: $("#edit_note").val(), process: $("#edit_process").val().replace("%", "")},
       (response, status) => {
-        var data = JSON.parse(response)
-        if (data["status"]) {
+        checkResult(response, status).then(data => {
           $("#content").html(data["list"])
           $("#edit").modal("hide")
           reload_date(data)
-        }
-        alert_msg(data["notify"])
+          defreeze()
+        }, () => {
+          defreeze()
+        })
       }
     )
   }

@@ -130,8 +130,7 @@ $lang_module["count_2"] = "công việc";
 $lang_module["confirm_option"][0] = "Chưa xác nhận";
 $lang_module["confirm_option"][1] = "Đã xác nhận";
 
-$lang_module["review_option"][-2] = "Cực";
-$lang_module["review_option"][-1] = "Tệ";
+$lang_module["review_option"][-1] = "Chưa hoàn thành";
 $lang_module["review_option"][0] = "Chưa đánh giá";
 $lang_module["review_option"][1] = "Bình thường";
 $lang_module["review_option"][2] = "Khá";
