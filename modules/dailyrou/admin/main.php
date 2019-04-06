@@ -18,10 +18,14 @@ if (!empty($action)) {
 	$result = array("status" => 0);
 	switch ($action) {
 		case 'summary':
-			$date = $nv_Request->get_string("date", "get/post", "");
+			$startDate = $nv_Request->get_string("startDate", "get/post", "");
+			$endDate = $nv_Request->get_string("endDate", "get/post", "");
+
+			$startDate = totime($startDate);
+			$endDate = totime($endDate);
 
 			$result["status"] = 1;
-			$result["html"] = adminSummary($date);			
+			$result["html"] = adminSummary($startDate, $endDate);			
 		break;
 		case 'filter_data':
 			$date = $nv_Request->get_string("date", "get/post", "");
@@ -49,6 +53,17 @@ foreach ($date_option as $date_value => $date_name) {
   $xtpl->parse("main.date_option");
 }
 
+$time = time();
+if (date('N', $time) < 23) {
+	$time = time() - A_DAY * 23;
+}
+
+$startDate = strtotime(date("Y", $time) . "-" . date("m", $time) . "-23");
+$endDate = strtotime(date("Y", $time) . "-" . (intval(date("m", $time)) + 1) . "-23");
+
+$xtpl->assign("startDate", date('d/m/Y', $startDate));
+$xtpl->assign("endDate", date('d/m/Y', $endDate));
+$xtpl->assign("summary", adminSummary($startDate, $endDate));
 $xtpl->assign("content", adminScheduleList(date("d/m/Y")));
 $xtpl->parse("main");
 

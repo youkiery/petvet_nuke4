@@ -10,8 +10,26 @@
     <div class="modal-content">
       <div class="modal-body">
         <h2> Bản thống kê ngày nghỉ tháng </h2>
+        <br>
+        <form class="form-inline">
+          <div class="form-group">
+            <label>
+              Từ ngày
+            </label>
+            <input type="text" class="form-control" id="summary-date-from" value="{startDate}" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>
+              Đến ngày
+            </label>
+            <input type="text" class="form-control" id="summary-date-end" value="{endDate}" autocomplete="off">
+          </div>
+          <button class="btn btn-info" onclick="summarySubmit()">
+            Xem tổng kết
+          </button>
+        </form>
         <div id="summary-content">
-
+          {summary}
         </div>
         <div class="text-center">
           <button class="btn btn-danger" data-dismiss="modal">
@@ -35,7 +53,7 @@
       <span class="glyphicon glyphicon-chevron-right"></span>
     </button>
   </div>
-  <div class="col-sm-8">
+  <div class="col-sm-12">
 
   </div>
   <div class="col-sm-4">
@@ -55,8 +73,10 @@
   var summary = $("#summary")
   var content = $("#content")
   var summaryContent = $("#summary-content")
+  var summaryDateFrom = $("#summary-date-from")
+  var summaryDateEnd = $("#summary-date-end")
 
-  $("#start-date, #end-date").datepicker({
+  $("#start-date, #end-date, #summary-date-from, #summary-date-end").datepicker({
 		format: 'dd/mm/yyyy',
     changeMonth: true,
     changeYear: true
@@ -81,33 +101,51 @@
   }
 
   function showSummary() {
-    $(".btn, .form-control").attr("disabled", true)
+    summary.modal("show")
+    // freeze()
+    // $.post(
+    //   strHref,
+    //   {action: "summary", date: startDate.val()},
+    //   (response, status) => {
+    //     checkResult(response, status).then((data) => {
+    //       summary.modal("show")
+    //       summaryContent.html(data["html"])
+    //       defreeze()
+    //     }, () => {
+    //       defreeze()
+    //     })
+    //   }
+    // )
+  }
+
+  function summarySubmit() {
+    freeze()
     $.post(
       strHref,
-      {action: "summary", date: startDate.val()},
+      {action: "summary", startDate: summaryDateFrom.val(), endDate: summaryDateEnd.val()},
       (response, status) => {
         checkResult(response, status).then((data) => {
           summary.modal("show")
           summaryContent.html(data["html"])
-          $(".btn, .form-control").attr("disabled", false)
+          defreeze()
         }, () => {
-          $(".btn, .form-control").attr("disabled", false)
+          defreeze()
         })
       }
     )
   }
   
   function filterData() {
-    $(".btn, .form-control").attr("disabled", true)
+    freeze()
     $.post(
       strHref,
       {action: "filter_data", date: startDate.val()},
       (response, status) => {
         checkResult(response, status).then((data) => {
           content.html(data["html"])
-          $(".btn, .form-control").attr("disabled", false)
+          defreeze()
         }, () => {
-          $(".btn, .form-control").attr("disabled", false)
+          defreeze()
         })        
       }
     )

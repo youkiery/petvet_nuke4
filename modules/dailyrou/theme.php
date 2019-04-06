@@ -227,27 +227,27 @@ function adminScheduleList($date) {
     $xtpl->assign("username", $row["last_name"] . " " . $row["first_name"]);
     $currentDate = $startDate;
     $indexRou = 2;
-    $t = array(1 => 0, 0);
+    $t = array(2 => 0, 0);
 
     while ($indexRou > 1) {
       if ($indexRou > 7) {
         $indexRou = 0;
       }
-      $sql = "select * from `" . PREFIX . "_row` where time = $currentDate and user_id = $row[userid] and type > 0 order by time, type asc";
+      $sql = "select * from `" . PREFIX . "_row` where time = $currentDate and user_id = $row[userid] and type > 1 order by time, type asc";
       $query2 = $db->query($sql);
 
       $xtpl->assign("color_" . $indexRou . "1", "green");
       $xtpl->assign("color_" . $indexRou . "2", "green");
       while ($rou = $query2->fetch()) {
-        $xtpl->assign("color_" . $indexRou . $rou["type"], "red");
+        $xtpl->assign("color_" . $indexRou . ($rou["type"] - 1), "red");
         $t[$rou["type"]] ++;
       }
       $indexRou += 1;
       $currentDate += A_DAY;
     }
-    $xtpl->assign("t1", $t[1]);
-    $xtpl->assign("t2", $t[2]);
-    $xtpl->assign("t", $t[1] + $t[2]);
+    $xtpl->assign("t1", $t[2]);
+    $xtpl->assign("t2", $t[3]);
+    $xtpl->assign("t", $t[2] + $t[3]);
     $xtpl->parse("main.row");
   }
   
@@ -257,19 +257,18 @@ function adminScheduleList($date) {
   return $xtpl->text();
 }
 
-function adminSummary($date) {
+function adminSummary($startDate = 0, $endDate = 0) {
   global $db, $db_config;
 
-  $date = totime($date);
+  if (empty($startDate) || empty($endDate)) {
+    $time = time();
+    if (date('N', $time) < 23) {
+      $time = time() - A_DAY * 23;
+    }
+    $startDate = strtotime(date("Y", $time) . "-" . date("m", $time) . "-23");
+    $endDate = strtotime(date("Y", $time) . "-" . (intval(date("m", $time)) + 1) . "-23");
+  }
 
-  if (intval(date("d", $date)) > 23) {
-    $startDate = strtotime(date("Y", $date) . "-" . date("m", $date) . "-23");
-    $endDate = strtotime(date("Y", $date) . "-" . (intval(date("m", $date)) + 1) . "-23");
-  }
-  else {
-    $startDate = strtotime(date("Y", $date) . "-" . (intval(date("m", $date)) - 1) . "-23");
-    $endDate = strtotime(date("Y", $date) . "-" . date("m", $date) . "-23");
-  }
   $xtpl = new XTemplate("summary.tpl", PATH);
   $user = array();
 
