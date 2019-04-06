@@ -110,3 +110,8 @@
 .item {
   overflow: overlay;
 }
+
+.cell-center {
+  text-align: center;
+  vertical-align: inherit !important;
+}

@@ -41,6 +41,13 @@ function kaizenList($userid = 0) {
   $list = getRowList($userid);
   $user = getUserList();
 
+  $xtpl->assign('cell_1', 3);
+  $xtpl->assign('cell_2', 2);
+  if (empty($userid)) {
+    $xtpl->assign('cell_1', 2);
+    $xtpl->assign('cell_2', 1);
+  }
+
   if (count($list)) {
     foreach ($list as $row) {
       $xtpl->assign('index', $index++);
@@ -50,6 +57,9 @@ function kaizenList($userid = 0) {
       $xtpl->assign('problem', $row['problem']);
       $xtpl->assign('solution', $row['solution']);
       $xtpl->assign('result', $row['result']);
+      if (empty($userid)) {
+        $xtpl->parse('main.inbox.row.admin');
+      }
       $xtpl->parse('main.inbox.row');
     }
     $xtpl->parse('main.inbox');

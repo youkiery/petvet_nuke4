@@ -1,51 +1,22 @@
 <!-- BEGIN: main -->
   <!-- BEGIN: inbox -->
-  <table class="table">
-    <thead>
-      <tr>
-        <th>
-          STT
-        </th>
-        <th>
-          Người gửi
-        </th>
-        <th>
-          Vấn đề
-        </th>
-        <th>
-          Giải quyết
-        </th>
-        <th>
-          Hiệu quả
-        </th>
-        <th>
-          Thời gian
-        </th>
-        <th></th>
-      </tr>
-    </thead>
+  <table class="table table-bordered">
     <tbody>
       <!-- BEGIN: row -->
       <tr>
-        <td>
-          {index}
+        <td class="cell-center" rowspan="3">
+          {name}
+        </td>
+        <td class="cell-center" rowspan="3">
+          {time}
         </td>
         <td>
-          {user}
+          Vấn đề
         </td>
         <td>
           {problem}
         </td>
-        <td>
-          {solution}
-        </td>
-        <td>
-          {result}
-        </td>
-        <td>
-          {time}
-        </td>
-        <td>
+        <td class="cell-center" rowspan="3">
           <button class="edit btn btn-info" rel="{id}" onclick="editAlert(event, {id})">
             <span class="glyphicon glyphicon-edit"></span>
           </button>
@@ -54,13 +25,29 @@
           </button>
         </td>
       </tr>
+      <tr>
+        <td>
+          Giải quyết
+        </td>
+        <td>
+          {solution}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          kết quả
+        </td>
+        <td>
+          {result}
+        </td>
+      </tr>
       <!-- END: row -->
     </tbody>
   </table>
   <!-- END: inbox -->
   <!-- BEGIN: empty -->
   <div>
-    Bạn chưa gửi giải pháp nào cả
+    Chưa có giải pháp nào được gửi tới
   </div>
   <!-- END: empty -->
 <!-- END: main -->

@@ -79,7 +79,18 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate('main.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file);
 
-$xtpl->assign('content', kaizenList($user_info['userid']));
+$sql = 'select * from `'. $db_config['prefix'] .'_users` where userid = ' . $user_info['userid'];
+$query = $db->query($sql);
+$users = $query->fetch();
+$users = explode(',', $users['in_groups']);
+if (in_array('1', $users)) {
+	$userid = 0;
+}
+else {
+	$userid = $user_info['userid'];
+}
+
+$xtpl->assign('content', kaizenList($userid));
 $xtpl->parse('main');
 $contents = $xtpl->text('main');
 
