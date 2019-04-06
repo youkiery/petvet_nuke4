@@ -33,3 +33,31 @@ function preCheckUser() {
   }
 }
 
+function kaizenList($userid = 0) {
+  global $db, $db_config, $user_info;
+
+  $index = 1;
+  $xtpl = new XTemplate("kaizen_list.tpl", PATH);
+  $list = getRowList($userid);
+  $user = getUserList();
+
+  if (count($list)) {
+    foreach ($list as $row) {
+      $xtpl->assign('index', $index++);
+      $xtpl->assign('id', $row['id']);
+      $xtpl->assign('user', $user[$row['userid']]['first_name']);
+      $xtpl->assign('time', date('d/m/Y H:i', $row['edit_time']));
+      $xtpl->assign('problem', $row['problem']);
+      $xtpl->assign('solution', $row['solution']);
+      $xtpl->assign('result', $row['result']);
+      $xtpl->parse('main.inbox.row');
+    }
+    $xtpl->parse('main.inbox');
+  }
+  else {
+    $xtpl->parse('main.empty');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}

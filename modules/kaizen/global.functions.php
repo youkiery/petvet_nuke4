@@ -13,6 +13,61 @@ if (!defined('NV_MAINFILE')) {
 
 define("PREFIX", $db_config['prefix'] . "_" . $module_name);
 
+function getUser($userid) {
+  global $db, $db_config;
+
+  $sql = 'select userid, first_name, last_name from `'. $db_config['prefix'] .'_users` where userid = '. $userid;
+  $query = $db->query($sql);
+
+  if ($row = $query->fetch()) {
+    return $row;
+  }
+  return array('userid' => 0, 'first_name' => '', 'last_name' => '');
+}
+
+function getUserList() {
+  global $db, $db_config;
+
+  $sql = 'select userid, first_name, last_name from `'. $db_config['prefix'] .'_users`';
+  $query = $db->query($sql);
+  $list = array();
+
+  while ($row = $query->fetch()) {
+    $list[$row['userid']] = $row;
+  }
+  return $list;
+}
+
+function checkRow($id) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_row` where id = '. $id;
+  $query = $db->query($sql);
+
+  if ($row = $query->fetch()) {
+    return $row;
+  }
+  return 0;
+}
+
+function getRowList($userid = 0) {
+  global $db;
+
+  $list = array();
+  $extra_sql = '';
+  if (!empty($userid)) {
+    $extra_sql = ' where userid = ' . $userid;
+  }
+  
+  $sql = 'select * from `'. PREFIX .'_row`' . $extra_sql . ' order by edit_time desc';
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $list[] = $row;
+  }
+  return $list;
+}
+
 function deuft8($str) {
   $str = preg_replace("/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/", "a", $str);
   $str = preg_replace("/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/", "e", $str);
