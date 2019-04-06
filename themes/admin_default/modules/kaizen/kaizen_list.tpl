@@ -4,10 +4,7 @@
     <tbody>
       <!-- BEGIN: row -->
       <tr>
-        <td class="cell-center" rowspan="3">
-          {name}
-        </td>
-        <td class="cell-center" rowspan="3">
+        <td class="cell-center" rowspan="1">
           {time}
         </td>
         <td>
@@ -26,6 +23,9 @@
         </td>
       </tr>
       <tr>
+        <td class="cell-center" rowspan="2">
+          {user}
+        </td>
         <td>
           Giải quyết
         </td>
