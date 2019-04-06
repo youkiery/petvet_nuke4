@@ -27,7 +27,7 @@ if (!empty($action)) {
 				$sql = "select * from `" . PREFIX . "_user` where user_id = $driverId and type = 0";
 				$query = $db->query($sql);
 				if (!$query->fetch()) {
-					$sql = "insert into `" . PREFIX . "_user` (type, user_id) values(0, $driverId)";
+					$sql = "insert into `" . PREFIX . "_user` (type, user_id, permission, except) values(0, $driverId, 0, 0)";
 					if ($db->query($sql)) {
 						$sql = "select * from `" . $db_config["prefix"] . "_users` where userid = $driverId";
 						$query = $db->query($sql);

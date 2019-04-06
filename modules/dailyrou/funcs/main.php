@@ -253,6 +253,14 @@ while($row = $query->fetch()) {
   $xtpl->assign("doctor_name", $row["last_name"] . " " . $row["first_name"]);
 }
 
+$sql = "select first_name from `" . $db_config["prefix"] . "_users` where userid in (select user_id from `" . $db_config["prefix"] . "_rider_user` where type = 1 and except = 1 and user_id <> $user_info[userid])";
+$query = $db->query($sql);
+$except = array();
+while($row = $query->fetch()) {
+  $except[] = $row['first_name'];
+}
+
+$xtpl->assign("except", json_encode($except));
 $xtpl->assign("data", json_encode($daily));
 // $xtpl->assign("user_name", $user_name);
 $xtpl->assign("username", $user_name);

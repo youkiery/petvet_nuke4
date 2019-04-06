@@ -27,7 +27,7 @@ if (!empty($action)) {
 				$sql = "select * from `" . PREFIX . "_user` where user_id = $doctorId and type = 1";
 				$query = $db->query($sql);
 				if (!$query->fetch()) {
-					$sql = "insert into `" . PREFIX . "_user` (type, user_id) values(1, $doctorId)";
+					$sql = "insert into `" . PREFIX . "_user` (type, user_id, permission, except) values(1, $doctorId, 0, 0)";
 					if ($db->query($sql)) {
 						$sql = "select * from `" . $db_config["prefix"] . "_users` where userid = $doctorId";
 						$query = $db->query($sql);

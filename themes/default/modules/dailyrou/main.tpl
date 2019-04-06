@@ -184,6 +184,7 @@
 <script>
   var today = new Date('{date}').setHours(0)
   var dbdata = JSON.parse('{data}')
+  var except = JSON.parse('{except}')
   var schedule = dbdata.length
   var username = trim('{username}');
   var startDate = $("#start-date")
@@ -759,7 +760,7 @@
               if (thisValue.search(username) > 0) {
                 that.setAttribute("class", "purple")
               }
-              else if (thisValue.search(",") < 0) {
+              else if (checkExcept(thisValue)) {
                 that.setAttribute("class", "blue")
               }
             break;
@@ -784,6 +785,22 @@
         }
       }
     })
+  }
+
+  function checkExcept(listText) {
+    var count = (listText.match(/,/g) || []).length
+    except.forEach(exceptName => {
+      var x = listText.search(exceptName)
+      console.log(x);
+      
+      if (x >= 0) {
+        count --
+      }
+    })
+    if (count < 1) {
+      return 1
+    }
+    return 0
   }
 </script>
 <!-- END: main -->
