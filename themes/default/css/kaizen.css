@@ -108,7 +108,7 @@
 }
 
 .item {
-  overflow: overlay;
+  overflow: auto;
 }
 
 .cell-center {

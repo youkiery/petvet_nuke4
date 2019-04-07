@@ -108,5 +108,5 @@
 }
 
 .item {
-  overflow: overlay;
+  overflow: auto;
 }
