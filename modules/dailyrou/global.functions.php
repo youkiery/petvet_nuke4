@@ -66,6 +66,18 @@ function checkUser($userId) {
   return 0;
 }
 
+function checkLimit($userid, $time, $type) {
+  global $db, $db_config;
+
+  $sql = 'select count(*) as row from `'. PREFIX .'_row` where time = '. $time .' and type = '. $type .' and user_id not in (select user_id from `'. $db_config['prefix'] .'_rider_user` where type = 1 and except = 1)';
+  $query = $db->query($sql);
+  $row = $query->fetch();
+  if ($row['row'] > 2) {
+    return 0;
+  }
+  return 1;
+}
+
 function deuft8($str) {
   $str = preg_replace("/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/", "a", $str);
   $str = preg_replace("/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/", "e", $str);

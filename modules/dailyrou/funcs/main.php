@@ -117,12 +117,13 @@ if (!empty($action)) {
       $today = strtotime(date("Y-m-d"));
 
       if ($itemList) {
+        $unuse = array();
         $sql = "select * from `" . $db_config["prefix"] . "_rider_user` where type = 1 and user_id = $user_info[userid]";
         $query = $db->query($sql);
         $user = $query->fetch();
         foreach ($itemList as $itemData) {
           $date = totime($itemData["date"]);
-          if ($user["permission"] || $date >= $today) {
+          if (($user["permission"] || $date >= $today) && checkLimit($doctorId, $date, $itemData['type'] - 2)) {
             if ($itemData["color"] == "purple") {
               $sql = "delete from `". PREFIX ."_row` where user_id = $doctorId and (time between $date and " . ($date + A_DAY - 1) . ") and type = " . ($itemData["type"] - 2);
             }
@@ -133,10 +134,14 @@ if (!empty($action)) {
           }
           else {
             // push unuse and notify
+            $unuse[] = $itemData['date'] . ': ' . $work[$itemData['type'] - 2];
             $poi = 1;
           }
         }
         $result["notify"] = "Cập nhật thành công lịch đăng ký";
+        if (count($unuse)) {
+          $result['notify'] .= '<div style="color: red">' . implode('<br>', $unuse) . '</div>';
+        }
       }
       else {
         $result["notify"] = "Có lỗi xảy ra trong quá trình xử lý dữ liệu";
