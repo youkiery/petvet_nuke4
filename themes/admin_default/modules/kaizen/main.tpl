@@ -58,6 +58,13 @@
   </div>
 </div>
 
+<!-- <div class="row">
+  <div class="col-sm-8">
+    <select id="filter-number">
+      BEGIN: 
+    </select>
+  </div>
+</div> -->
 <button class="btn btn-success right" onclick="insertAlert()">
   <span class="glyphicon glyphicon-plus"> </span>
 </button>
