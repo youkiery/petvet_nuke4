@@ -1,9 +1,12 @@
 <!-- BEGIN: main -->
   <!-- BEGIN: inbox -->
   <table class="table table-bordered">
-    <tbody>
-      <!-- BEGIN: row -->
+    <!-- BEGIN: row -->
+    <tbody class="item-border">
       <tr>
+        <td class="cell-center" rowspan="3">
+          {index}
+        </td>
         <td class="cell-center" rowspan="{cell_1}">
           {time}
         </td>
@@ -43,8 +46,8 @@
           {result}
         </td>
       </tr>
-      <!-- END: row -->
     </tbody>
+    <!-- END: row -->
   </table>
   <!-- END: inbox -->
   <!-- BEGIN: empty -->
