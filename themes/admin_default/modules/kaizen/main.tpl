@@ -94,11 +94,10 @@
   function initiaze() {
     $(".edit").click((e) => {
       var id = e.currentTarget.getAttribute("rel");
-      var child = e.currentTarget.parentElement.parentElement.children
       g_id = id
-      problem.val(trim(child[2].innerText))
-      solution.val(trim(child[3].innerText))
-      result.val(trim(child[4].innerText))
+      problem.val(trim($("#p" + id).text()))
+      solution.val(trim($("#s" + id).text()))
+      result.val(trim($("#r" + id).text()))
       
       insert.hide()
       edit.show()

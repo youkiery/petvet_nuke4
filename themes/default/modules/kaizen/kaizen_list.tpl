@@ -13,7 +13,7 @@
         <td>
           Vấn đề
         </td>
-        <td>
+        <td id="p{id}">
           {problem}
         </td>
         <td class="cell-center" rowspan="3">
@@ -29,7 +29,7 @@
         <td>
           Giải quyết
         </td>
-        <td>
+        <td id="s{id}">
           {solution}
         </td>
       </tr>
@@ -42,7 +42,7 @@
         <td>
           kết quả
         </td>
-        <td>
+        <td id="r{id}">
           {result}
         </td>
       </tr>
