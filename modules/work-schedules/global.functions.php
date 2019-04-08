@@ -456,9 +456,17 @@ function user_main_list() {
     $user = $query->fetch();
   
     if (!empty($user) && ($user["is_leader"] || $user["group_id"] == 1)) {
+      $xtpl->parse("main.manager");
       $sql = "select * from `" . WORK_PREFIX . "_depart` order by name";
     }
     else {
+      $sql = "select count(*) as count from `" . WORK_PREFIX . "_employ` where userid = $user_info[userid] and role = 2";
+      $query = $db->query($sql);
+      if ($row = $query->fetch()) {
+        if ($row['count']) {
+          $xtpl->parse("main.manager");
+        }
+      }
       $sql = "select b.* from `" . WORK_PREFIX . "_employ` a inner join `" . WORK_PREFIX . "_depart` b on a.depart = b.id where userid = $user_info[userid] and role = 2 group by a.depart order by b.name";
     }
     $query = $db->query($sql);
@@ -466,11 +474,6 @@ function user_main_list() {
       $xtpl->assign("id", $employ["id"]);
       $xtpl->assign("name", $employ["name"]);
       $xtpl->parse("main.row");
-    }
-    $sql = "select count(*) as count from `" . WORK_PREFIX . "_employ` where userid = $user_info[userid] and role = 2";
-    $query = $db->query($sql);
-    if ($row = $query->fetch()) {
-      $xtpl->parse("main.manager");
     }
   }
   $xtpl->parse("main");

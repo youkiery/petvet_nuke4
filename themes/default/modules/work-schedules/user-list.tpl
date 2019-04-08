@@ -2,16 +2,10 @@
 <thead>
   <tr>
     <th>
-      {lang.index}
-    </th>
-    <th>
       {lang.work_name}
     </th>
     <th>
       {lang.work_depart}
-    </th>
-    <th>
-      {lang.work_starttime}
     </th>
     <th>
       {lang.work_endtime}
@@ -27,16 +21,10 @@
   <!-- BEGIN: loop -->
   <tr class="{overtime}">
     <td data-toggle="modal" data-target="#detail">
-      {index}
-    </td>
-    <td data-toggle="modal" data-target="#detail">
       {work_name}
     </td>
     <td data-toggle="modal" data-target="#detail">
       {work_depart}
-    </td>
-    <td data-toggle="modal" data-target="#detail">
-      {work_starttime}
     </td>
     <td data-toggle="modal" data-target="#detail">
       {work_endtime}
