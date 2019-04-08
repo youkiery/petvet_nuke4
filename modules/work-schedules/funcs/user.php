@@ -347,16 +347,24 @@ $query = $db->query($sql);
 
 $data = array();
 $x = 0;
+$suggest = '';
 while ($row = $query->fetch()) {
+  $data[$row['depart']] = employDepart($user_info['userid'], $row["depart"]);
   if (!$x) {
     $x = $row['depart'];
+    foreach ($data[$x] as $employData) {
+      $suggest .= '<div class="user-suggest-item" onclick="set_user('. $employData['userid'] .', \''. $employData['name']. '\')"> '. $employData['name'] .' </div>';
+    }
+    // die(var_dump($suggest));
   }
-  $data[$row['depart']] = employDepart($user_info['userid'], $row["depart"]) ;
 }
 // die("$x");
 
 $xtpl->assign("g_depart", $x);
 $xtpl->assign("data", json_encode($data));
+$xtpl->assign("suggest", $suggest);
+$xtpl->assign("startDate", date("d/m/Y", time()));
+$xtpl->assign("endDate", date("d/m/Y", time() + 60 * 60 * 24));
 $xtpl->assign("cometime", date("d/m/Y", strtotime(date("Y-m-d")) - 60 * 60 * 24 * 7));
 $xtpl->assign("calltime", date("d/m/Y", strtotime(date("Y-m-d")) + 60 * 60 * 24 * 7));
 $xtpl->assign("depart_list", user_main_list());

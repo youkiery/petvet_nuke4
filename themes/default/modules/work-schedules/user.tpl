@@ -33,32 +33,22 @@
             <label> {lang.user} </label>
             <div class="relative">
               <input type="text" class="form-control user-suggest" id="user" autocomplete="off">
-              <div class="user-suggest-list">
-
+              <div class="user-suggest-list" style="display: none;">
+                {suggest}
               </div>
             </div>
           </div>
           <div class="form-group">
             <label> {lang.work_starttime} </label>
-            <div class="input-group date" data-provide="datepicker">
-              <input type="text" class="form-control" id="starttime" readonly>
-              <div class="input-group-addon">
-                  <span class="glyphicon glyphicon-th"></span>
-              </div>
-            </div>
+              <input type="text" class="form-control" id="starttime" value="{startDate}" autocomplete="off">
           </div>
           <div class="form-group">
             <label> {lang.work_endtime} </label>
-            <div class="input-group date" data-provide="datepicker">
-              <input type="text" class="form-control" id="endtime" readonly>
-              <div class="input-group-addon">
-                  <span class="glyphicon glyphicon-th"></span>
-              </div>
-            </div>
+              <input type="text" class="form-control" id="endtime" value="{endDate}" autocomplete="off">
           </div>
           <div class="form-group">
             <label> {lang.work_process} </label>
-            <input class="form-control" type="text" id="process">
+            <input class="form-control" type="text" id="process" value="0%">
           </div>
           <div class="form-group">
             <label> {lang.note} </label>
@@ -97,32 +87,22 @@
             <label> {lang.user} </label>
             <div class="relative">
               <input type="text" class="form-control user-suggest" id="edit_user" autocomplete="off">
-              <div class="user-suggest-list">
-
+              <div class="user-suggest-list" style="display: none;">
+                {suggest}
               </div>
             </div>
           </div>
           <div class="form-group">
             <label> {lang.work_starttime} </label>
-            <div class="input-group date" data-provide="datepicker">
-              <input type="text" class="form-control" id="edit_starttime" readonly>
-              <div class="input-group-addon">
-                  <span class="glyphicon glyphicon-th"></span>
-              </div>
-            </div>
+            <input type="text" class="form-control" id="edit_starttime" value="{startDate}" autocomplete="off">
           </div>
           <div class="form-group">
             <label> {lang.work_endtime} </label>
-            <div class="input-group date" data-provide="datepicker">
-              <input type="text" class="form-control" id="edit_endtime" readonly>
-              <div class="input-group-addon">
-                  <span class="glyphicon glyphicon-th"></span>
-              </div>
-            </div>
+            <input type="text" class="form-control" id="edit_endtime" value="{endDate}" autocomplete="off">
           </div>
           <div class="form-group">
             <label> {lang.work_process} </label>
-            <input class="form-control" type="text" id="edit_process">
+            <input class="form-control" type="text" id="edit_process" value="0%">
           </div>
           <div class="form-group">
             <label> {lang.note} </label>
@@ -216,13 +196,13 @@
     <label>
       {lang.cometime}
     </label>
-    <input type="text" value="{cometime}" class="form-control" id="cometime" readonly>
+    <input type="text" value="{cometime}" class="form-control" id="cometime">
   </div>
   <div class="form-group col-md-10">
     <label>
       {lang.calltime}
     </label>
-    <input type="text" value="{calltime}" class="form-control" id="calltime" readonly>
+    <input type="text" value="{calltime}" class="form-control" id="calltime">
   </div>
   <div class="form-group col-md-2">
     <button class="btn btn-info">
