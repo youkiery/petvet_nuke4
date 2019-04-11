@@ -356,7 +356,7 @@
     freeze()
     $.post(
       strHref,
-      {action: "change_process", id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), process: $("#edit_process2").val().replace("%", ""), note: $("#edit_note").val()},
+      {action: "change_process", completeStatus: completeStatus, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), process: $("#edit_process2").val().replace("%", ""), note: $("#edit_note").val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#content").html(data["list"])
