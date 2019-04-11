@@ -214,7 +214,7 @@ if (!empty($action)) {
         }
         $result["confirm"] = $confirm;
         $result["review"] = $review;
-        $result["note"] = $work["note"];
+        $result["note"] = $work["content"];
         $result["notify"] = "";
       }
     }
@@ -293,7 +293,7 @@ if (!empty($action)) {
       $sql = "select * from `" . WORK_PREFIX . "_row` where id = $id";
       $query = $db->query($sql);
       $work = $query->fetch();
-      if (!empty($work) && $work["process"] <= $process) {
+      if (!empty($work)) {
         $sql = "update `" . WORK_PREFIX . "_row` set process = $process, note = '$note' where id = $id";
         if ($db->query($sql)) {
           $result["status"] = 1;
