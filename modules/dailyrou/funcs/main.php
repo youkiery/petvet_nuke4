@@ -123,7 +123,7 @@ if (!empty($action)) {
         $user = $query->fetch();
         foreach ($itemList as $itemData) {
           $date = totime($itemData["date"]);
-          if (($user["permission"] || $date >= $today) && checkLimit($doctorId, $date, $itemData['type'] - 2)) {
+          if (($user["permission"] || $date >= $today) && (checkLimit($doctorId, $date, $itemData['type'] - 2) || $itemData['color'] == 'purple')) {
             if ($itemData["color"] == "purple") {
               $sql = "delete from `". PREFIX ."_row` where user_id = $doctorId and (time between $date and " . ($date + A_DAY - 1) . ") and type = " . ($itemData["type"] - 2);
             }

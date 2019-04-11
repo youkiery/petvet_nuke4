@@ -49,7 +49,7 @@ function scheduleList($startDate, $endDate) {
   $rest_list = array("morning_guard" => array(), "afternoon_guard" => array(), "morning_rest" => array(), "afternoon_rest" => array());
   $check = true;
 
-  $sql = "select * from `" . PREFIX . "_row` where `time` between $startDate and $endDate order by time, type asc";
+  $sql = "select * from `" . PREFIX . "_row` where `time` between $startDate and $endDate order by time, type asc, user_id";
   $query = $db->query($sql);
   $currentRow = $query->fetch();
   $count = 0;
@@ -287,7 +287,7 @@ function adminSummary($startDate = 0, $endDate = 0) {
     $query2 = $db->query($sql);
     $count = $query2->fetch();
 
-    $xtpl->assign("total", $count["num"]);
+    $xtpl->assign("total", round(($count["num"] / 2), 1));
     $xtpl->parse("main.row");
   }
   
