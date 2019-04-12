@@ -50,8 +50,8 @@ function checkRow($id) {
   return 0;
 }
 
-function getRowList($userid = 0) {
-  global $db;
+function getRowList($userid = 0, $page = 1, $limit = 10) {
+  global $db, $nv_Request;
 
   $list = array();
   $extra_sql = '';
@@ -59,13 +59,16 @@ function getRowList($userid = 0) {
     $extra_sql = ' where userid = ' . $userid;
   }
   
-  $sql = 'select * from `'. PREFIX .'_row`' . $extra_sql . ' order by edit_time desc';
+  $sql = 'select count(id) as count from `'. PREFIX .'_row`' . $extra_sql;
+  $query = $db->query($sql);
+  $count = $query->fetch();
+  $sql = 'select * from `'. PREFIX .'_row`' . $extra_sql . ' order by edit_time desc limit ' . $limit . ' offset ' . ($limit * ($page - 1));
   $query = $db->query($sql);
 
   while ($row = $query->fetch()) {
     $list[] = $row;
   }
-  return $list;
+  return array('count' => $count['count'], 'data' => $list);
 }
 
 function deuft8($str) {

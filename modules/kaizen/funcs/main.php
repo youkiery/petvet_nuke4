@@ -71,6 +71,10 @@ if (!empty($action)) {
 				}
 			}
 		break;
+		case 'filter':
+			$result['status'] = 1;
+			$result['html'] = kaizenList($user_info['userid']);
+		break;
 	}
 
 	echo json_encode($result);
@@ -90,6 +94,8 @@ else {
 	$userid = $user_info['userid'];
 }
 
+$xtpl->assign('page', 1);
+$xtpl->assign('limit', 10);
 $xtpl->assign('content', kaizenList($userid));
 $xtpl->parse('main');
 $contents = $xtpl->text('main');

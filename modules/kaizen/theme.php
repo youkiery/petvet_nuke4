@@ -34,11 +34,18 @@ function preCheckUser() {
 }
 
 function kaizenList($userid = 0) {
-  global $db, $db_config, $user_info;
+  global $db, $db_config, $user_info, $nv_Request;
+
+  $page = $nv_Request->get_int('page', 'get/post', 0);
+  $limit = $nv_Request->get_int('limit', 'get/post', 0);
+
+  if (empty($page) || $page < 0) $page = 1;
+  if (empty($limit) || $limit < 0) $limit = 10;
 
   $index = 1;
+  $start = $limit * ($page - 1);
   $xtpl = new XTemplate("kaizen_list.tpl", PATH);
-  $list = getRowList($userid);
+  $list = getRowList($userid, $page, $limit);
   $user = getUserList();
 
   $xtpl->assign('cell_1', 3);
@@ -48,9 +55,9 @@ function kaizenList($userid = 0) {
     $xtpl->assign('cell_2', 1);
   }
 
-  if (count($list)) {
-    foreach ($list as $row) {
-      $xtpl->assign('index', $index++);
+  if (count($list['data'])) {
+    foreach ($list['data'] as $row) {
+      $xtpl->assign('index', ($start + $index++));
       $xtpl->assign('id', $row['id']);
       $xtpl->assign('user', $user[$row['userid']]['first_name']);
       $xtpl->assign('time', date('d/m/Y H:i', $row['edit_time']));
@@ -68,6 +75,50 @@ function kaizenList($userid = 0) {
     $xtpl->parse('main.empty');
   }
 
+  $xtpl->assign('count', $list['count']);
+  $xtpl->assign('nav', navList($list['count'], $page, $limit));
+
   $xtpl->parse('main');
   return $xtpl->text();
+}
+
+function navList ($number, $page, $limit) {
+  global $lang_global;
+  $total_pages = ceil($number / $limit);
+  $on_page = $page;
+  $page_string = "";
+  if ($total_pages > 10) {
+    $init_page_max = ($total_pages > 3) ? 3 : $total_pages;
+    for ($i = 1; $i <= $init_page_max; $i ++) {
+      $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="goPage('.$i.')">' . $i . '</button>';
+      if ($i < $init_page_max) $page_string .= " ";
+    }
+    if ($total_pages > 3) {
+      if ($on_page > 1 && $on_page < $total_pages) {
+        $page_string .= ($on_page > 5) ? " ... " : ", ";
+        $init_page_min = ($on_page > 4) ? $on_page : 5;
+        $init_page_max = ($on_page < $total_pages - 4) ? $on_page : $total_pages - 4;
+        for ($i = $init_page_min - 1; $i < $init_page_max + 2; $i ++) {
+          $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="goPage('.$i.')">' . $i . '</button>';
+          if ($i < $init_page_max + 1)  $page_string .= " ";
+        }
+        $page_string .= ($on_page < $total_pages - 4) ? " ... " : ", ";
+      }
+      else {
+        $page_string .= " ... ";
+      }
+      
+      for ($i = $total_pages - 2; $i < $total_pages + 1; $i ++) {
+        $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="goPage('.$i.')">' . $i . '</button>';
+        if ($i < $total_pages) $page_string .= " ";
+      }
+    }
+  }
+  else {
+    for ($i = 1; $i < $total_pages + 1; $i ++) {
+      $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="goPage('.$i.')">' . $i . '</button>';
+      if ($i < $total_pages) $page_string .= " ";
+    }
+  }
+  return $page_string;
 }
