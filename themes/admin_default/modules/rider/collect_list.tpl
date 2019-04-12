@@ -1,4 +1,5 @@
 <!-- BEGIN: main -->
+Tổng cộng {count} bản ghi
 <table class="table">
   <thead>
     <tr>
@@ -34,4 +35,8 @@
     <!-- END: row -->
   </tbody>
 </table>
+<div>
+  Trang
+  {nav}
+</div>
 <!-- END: main -->

@@ -203,6 +203,8 @@
   var removeStatus = false
   var rowId = 0
   var rowType = 0
+  var page = {page}
+  var limit = {limit}
 
   type.change(() => {    
     filterData()
@@ -411,7 +413,7 @@
       $(".btn, .form-control").attr("disabled", true)
       $.post(
         strHref,
-        {action: "collect-insert", startDate: startDate.val(), endDate: endDate.val(), collectDriver: collectDriver.val(), collectDoctor: collectDoctor.val(), collectStart: collectStart.val(), collectEnd: collectEnd.val(), collectCustomer: customerId, collectDestination: collectDestination.val(), collectNote: collectNote.val()},
+        {action: "collect-insert", page: page, limit: limit, startDate: startDate.val(), endDate: endDate.val(), collectDriver: collectDriver.val(), collectDoctor: collectDoctor.val(), collectStart: collectStart.val(), collectEnd: collectEnd.val(), collectCustomer: customerId, collectDestination: collectDestination.val(), collectNote: collectNote.val()},
         (response, status) => {
           checkResult(response, status).then((data) => {
             customerId = 0
@@ -439,7 +441,7 @@
       $(".btn, .form-control").attr("disabled", true)
       $.post(
         strHref,
-        {action: "pay-insert", startDate: startDate.val(), endDate: endDate.val(), payDriver: payDriver.val(), payMoney: currentMoney, payNote: payNote.val()},
+        {action: "pay-insert", page: page, limit: limit, startDate: startDate.val(), endDate: endDate.val(), payDriver: payDriver.val(), payMoney: currentMoney, payNote: payNote.val()},
         (response, status) => {
           checkResult(response, status).then((data) => {
             payMoney.val("0")
@@ -471,7 +473,7 @@
     $(".btn, .form-control").attr("disabled", true)
     $.post(
       strHref,
-      {action: "filter_data", type: type.val(), startDate: startDate.val(), endDate: endDate.val()},
+      {action: "filter_data", page: page, limit: limit, type: type.val(), startDate: startDate.val(), endDate: endDate.val()},
       (response, status) => {
         checkResult(response, status).then((data) => {
           content.html(data["html"])
@@ -500,7 +502,7 @@
     if (removeStatus) {
       $.post(
         strHref,
-        {action: "remove", id: rowId, type: type.val(), startDate: startDate.val(), endDate: endDate.val()},
+        {action: "remove", page: page, limit: limit, id: rowId, type: type.val(), startDate: startDate.val(), endDate: endDate.val()},
         (response, status) => {
           checkResult(response, status).then(data => {
             content.html(data["html"])
@@ -509,6 +511,23 @@
         }
       )
     }
+  }
+
+  function goPage(pPage) {
+    $(".btn, .form-control").attr("disabled", true)
+    $.post(
+      strHref,
+      {action: "filter_data", page: pPage, limit: limit, type: type.val(), startDate: startDate.val(), endDate: endDate.val()},
+      (response, status) => {
+        checkResult(response, status).then((data) => {
+          page = pPage
+          content.html(data["html"])
+          $(".btn, .form-control").attr("disabled", false)
+        }, () => {
+          $(".btn, .form-control").attr("disabled", false)
+        })        
+      }
+    )
   }
 </script>
 <!-- END: main -->

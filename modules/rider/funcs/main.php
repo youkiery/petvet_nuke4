@@ -163,6 +163,8 @@ foreach ($date_option as $date_value => $date_name) {
   $xtpl->parse("main.date_option");
 }
 
+$xtpl->assign("page", 1);
+$xtpl->assign("limit", 10);
 $xtpl->assign("content", collectList($today, $tomorrow));
 
 $xtpl->parse("main");
