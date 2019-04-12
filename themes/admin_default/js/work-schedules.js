@@ -159,3 +159,39 @@ function alert_msg(msg) {
 	$('#alert_msg').html(msg); 
 	$('#alert_msg').show('slide').delay(1000).hide('slow'); 
 }
+
+function freeze() {
+  $(".btn, .select, .input").attr("disabled", true)
+}
+
+function defreeze() {
+  $(".btn, .select, .input").attr("disabled", false)
+}
+
+function checkResult(response, status) {
+  return new Promise((resolve, reject) => {
+    if (status === 'success') {
+      try {
+        data = JSON.parse(response)
+        if (data["status"]) {
+          if (data["notify"]) {
+            alert_msg(data["notify"])
+          }
+          resolve(data)          
+        }
+        else {
+          if (data["notify"]) {
+            alert_msg(data["notify"])
+          }
+          else {
+            alert_msg("Có lỗi xảy ra")
+          }
+          throw "error"
+        }
+      }
+      catch (e) {
+        reject()
+      }
+    }
+  })
+}

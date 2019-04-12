@@ -15,3 +15,4 @@ define('NV_IS_FILE_ADMIN', true);
 define('NV_MOD_TABLE', NV_PREFIXLANG . '_' . $module_data);
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
+require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';

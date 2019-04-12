@@ -8,7 +8,7 @@
  * @Createdate Sat, 11 Jun 2016 23:45:51 GMT
  */
 
-if (!defined('NV_MOD_WORK_SCHEDULES'))
+if (!(defined('NV_MOD_WORK_SCHEDULES') || defined('NV_IS_FILE_ADMIN')))
     die('Stop!!!');
 
 /**

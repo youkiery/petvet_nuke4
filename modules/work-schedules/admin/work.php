@@ -162,6 +162,14 @@ if (!empty($action)) {
         }
       }
     break;
+    case 'filter':
+      $startTime = $nv_Request->get_string('startTime', 'get/post', '');
+      $endTime = $nv_Request->get_string('endTime', 'get/post', '');
+
+      $result['status'] = 1;
+      $result['list'] = work_list();
+      $result['notify'] = '';
+    break;
   }
   echo json_encode($result);
   die();
@@ -213,7 +221,10 @@ while ($user = $query->fetch()) {
   $xtpl->parse("main.user_option2");
 }
 
-$xtpl->assign('content', work_list());
+$list = work_list();
+$xtpl->assign('content', $list['html']);
+$xtpl->assign('count', $list['count']);
+$xtpl->assign('nav', navList($list['count'], 1, 10));
 $xtpl->parse('main');
 $contents = $xtpl->text();
 

@@ -534,7 +534,12 @@ function work_list() {
   $time = $nv_Request->get_string("time", "get/post", "");
   $work_from = $nv_Request->get_string("work-from", "get/post", "");
   $work_end = $nv_Request->get_string("work-end", "get/post", "");
+  $page = $nv_Request->get_int("page", "get/post", 0);
+  $limit = $nv_Request->get_int("limit", "get/post", 0);
   $where = array();
+
+  if (empty($page) || $page <= 0) $page = 1;
+  if (empty($limit) || $limit <= 0) $limit = 10;
 
   if (empty($sort)) {
     $sort = 1;
@@ -573,7 +578,10 @@ function work_list() {
     $sort = "";
   }
 
-  $sql = "select a.*, b.first_name, b.last_name, d.name as depart from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid inner join `" . WORK_PREFIX . "_depart` d on a.depart = d.id $where $sort";
+  $sql = "select count(a.id) as count from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid inner join `" . WORK_PREFIX . "_depart` d on a.depart = d.id $where";
+  $query = $db->query($sql);
+  $count = $query->fetch();
+  $sql = "select a.*, b.first_name, b.last_name, d.name as depart from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid inner join `" . WORK_PREFIX . "_depart` d on a.depart = d.id $where $sort limit " . $limit . ' offset ' . ($limit * ($page - 1));
 
   $query = $db->query($sql);
   while ($work = $query->fetch()) {
@@ -591,7 +599,7 @@ function work_list() {
     $index ++;
   }
 
-  return $xtpl->text();
+  return array('count' => $count['count'], 'nav' => navList($count['count'], $page, $limit), 'html' => $xtpl->text());
 }
 
 function customer_list() {

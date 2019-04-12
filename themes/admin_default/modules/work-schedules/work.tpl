@@ -175,48 +175,12 @@
     </div>
   </div>
 </div>
-
-<!-- <form onsubmit="return search(event)">
-  <div class="row">
-    <div class="form-group col-md-6">
-      <label>
-        {lang.gf_time}
-      </label>
-      <select id="time" class="form-control"> -->
-        <!-- BEGIN: time_option -->
-        <!-- <option value="{time_value}">{time_name}</option> -->
-        <!-- END: time_option -->
-      <!-- </select>
-    </div>
-    <div class="form-group col-md-6">
-      <label>
-        {lang.gf_starttime}
-      </label>
-      <input type="text" id="starttime-filter" class="form-control" value="{starttime}" readonly>
-    </div>
-    <div class="form-group col-md-6">
-      <label>
-        {lang.gf_endtime}
-      </label>
-      <input type="text" id="endtime-filter" class="form-control" value="{endtime}" readonly>
-    </div>
-    <div class="form-group col-md-6">
-      <label>
-        {lang.gf_sort}
-      </label>
-      <select id="sort" class="form-control"> -->
-        <!-- BEGIN: sort_option -->
-        <!-- <option value="{sort_value}">{sort_name}</option> -->
-        <!-- END: sort_option -->
-      <!-- </select>
-    </div>
-  </div>
-  <div class="form-group">
-    <button class="btn btn-info">
-      {lang.g_filter}
-    </button>
-  </div>
-</form> -->
+<button class="btn btn-info" data-toggle="modal" data-target="#insert">
+  {lang.g_insert}
+</button><br>
+<p>
+  Có tổng cộng <span id="count"> {count} </span> công việc
+</p>
 
 <table class="table">
   <thead>
@@ -253,9 +217,9 @@
     {content}
   </tbody>
 </table>
-<button class="btn btn-info" data-toggle="modal" data-target="#insert">
-  {lang.g_insert}
-</button>
+<div id="nav">
+  {nav}
+</div>
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
@@ -264,6 +228,11 @@
   var userid = -1
   var g_id = -1
   var typing
+  var limit = 10
+  var content = $("#content")
+  var count = $("#count")
+  var nav = $("#nav")
+
   $('#starttime, #endtime, #edit_starttime, #edit_endtime, #starttime-filter, #endtime-filter').datepicker({
     format: 'dd/mm/yyyy'
   });
@@ -284,18 +253,9 @@
         strHref,
         {action: "search", keyword: e.target.value},
         (response, status) => {
-          if (status === "success" && response) {
-            try {
-              var data = JSON.parse(response)
-              if (data["status"]) {
-                $(".user-suggest-list").html(data["list"])
-              }
-              alert_msg(data["notify"])
-            } catch (e) {
-              console.log(e);
-              alert_msg("{lang.g_error}")
-            }
-          }
+          checkResult(response, status).then(data => {
+            $(".user-suggest-list").html(data["list"])
+          }, () => {})
         }
       )      
     }, 200)
@@ -312,26 +272,27 @@
 
   function edit(id) {
     g_id = id
+    freeze()
     $.post(
       strHref,
       {action: "get_work", id: g_id},
       (response, status) => {
-        var data = JSON.parse(response)
-        if (data["status"]) {
+        checkResult(response, status).then(data => {
           $("#edit_name").val(data["content"])
           $("#edit_starttime").val(data["starttime"])
           $("#edit_endtime").val(data["endtime"])
           // $("#edit_customer").html(data["customer"])
           $("#edit_depart").html(data["depart"])
           $("#edit_user").val(data["user"])
-          userid = data["userid"]
           $("#edit_note").html(data["note"])
           $("#edit_save_user").val(data["username"])
           $("#edit_process").val(data["process"])
           userid = data["userid"]
           $("#edit").modal("show")
-        }
-        alert_msg(data["notify"])
+          defreeze()
+        }, () => {
+          defreeze()
+        })
       }
     )
   }
@@ -342,52 +303,40 @@
   }
 
   function remove_submit() {
+    freeze()
     $.post(
       strHref,
       {action: "remove", id: g_id},
-      (response) => {
-        var data = JSON.parse(response)
-        if (data["status"]) {
-          $("#content").html(data["list"])
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          content.html(data['list']["html"])
+          nav.html(data['list']["nav"])
+          count.text(data['list']["count"])
           $("#remove").modal("hide")
-        }
-        alert_msg(data["notify"])
+          defreeze()
+        }, () => {
+          defreeze()
+        })
       }
     )
   }
 
-  // function detail(id) {
-  //   $.post(
-  //     strHref,
-  //     {action: "detail_content", id: id},
-  //     (response, status) => {
-  //       var data = JSON.parse(response);
-  //       if (data["status"]) {
-  //         $detail
-  //       }
-  //       else if (data["error"]) {
-  //         alert_msg(data["error"])
-  //       }
-  //       else {
-  //         alert_msg("{lang.g_error}")
-  //       }
-  //     }
-  //   )
-  //   $("#detail_content").html()
-  // }
-
   function save(e) {
     e.preventDefault()
+    freeze()
     $.post(
       strHref,
       {action: "save", content: $("#name").val(), starttime: $("#starttime").val(), endtime: $("#endtime").val(), /*customer: $("#customer").val(),*/ userid: userid, depart: $("#depart").val(), process: $("#process").val()},
       (response, status) => {
-        var data = JSON.parse(response)
-        if (data["status"]) {
-          $("#content").html(data["list"])
+        checkResult(response, status).then((data) => {
+          content.html(data['list']["html"])
+          nav.html(data['list']["nav"])
+          count.text(data['list']["count"])
           $("#insert").modal("hide")
-        }
-        alert_msg(data["notify"])
+          defreeze()
+        }, () => {
+          defreeze()
+        })
       }
     )
   }
@@ -398,61 +347,35 @@
       strHref,
       {action: "edit", id: g_id, content: $("#edit_name").val(), starttime: $("#edit_starttime").val(), endtime: $("#edit_endtime").val(), /*customer: $("#edit_customer").val(),*/ userid: userid, depart: $("#edit_depart").val(), note: $("#edit_note").val(), process: $("#edit_process").val()},
       (response, status) => {
-        var data = JSON.parse(response)
-        if (data["status"]) {
-          $("#content").html(data["list"])
+        checkResult(response, status).then((data) => {
+          content.html(data['list']["html"])
+          nav.html(data['list']["nav"])
+          count.text(data['list']["count"])
           $("#edit").modal("hide")
-        }
-        alert_msg(data["notify"])
+          defreeze()
+        }, () => {
+          defreeze()
+        })
       }
     )
   }
 
-  // $("#save_user, #edit_save_user").blur(() => {
-  //   setTimeout(() => {
-  //     $(".suggest").hide()
-  //   }, 200)
-  // })
-
-  // $("#save_user, #edit_save_user").focus(() => {
-  //   $(".suggest").show()
-  // })
-
-  // $("#save_user").keyup(e => {
-  //   clearTimeout(timer);
-  //   timer = setTimeout(() => {
-  //     $.post(
-  //       strHref,
-  //       {action: "get_user", user: $("#save_user").val()},
-  //       (response, status) => {
-  //         var data = JSON.parse(response)
-  //         if (data["status"]) {
-  //           $(".suggest").html(data["list"])
-  //         }
-  //       }
-  //     )
-  //   }, 500);
-  // }) 
-
-  // $("#edit_save_user").keyup(e => {
-  //   clearTimeout(timer);
-  //   timer = setTimeout(() => {
-  //     $.post(
-  //       strHref,
-  //       {action: "get_user", user: $("#edit_save_user").val()},
-  //       (response, status) => {
-  //         var data = JSON.parse(response)
-  //         if (data["status"]) {
-  //           $(".suggest").html(data["list"])
-  //         }
-  //       }
-  //     )
-  //   }, 500);
-  // }) 
-
-  // function set_user(username, id) {
-  //   userid = id
-  //   $("#save_user, #edit_save_user").val(username)
-  // }
+  function goPage(page) {
+    freeze()
+    $.post(
+      strHref,
+      {action: "filter", page: page, limit: limit, starttime: $("#edit_starttime").val(), endtime: $("#edit_endtime").val()},
+      (response, status) => {
+        checkResult(response, status).then((data) => {
+          content.html(data['list']["html"])
+          nav.html(data['list']["nav"])
+          count.text(data['list']["count"])
+          defreeze()
+        }, () => {
+          defreeze()
+        })
+      }
+    )
+  }
 </script>
 <!-- END: main -->
