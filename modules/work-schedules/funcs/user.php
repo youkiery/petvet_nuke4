@@ -16,125 +16,54 @@ $action = $nv_Request->get_string("action", "get/post", "");
 if (!empty($action)) {
   $result = array("status" => 0, "notify" => $lang_module["error"]);
   switch ($action) {
-    case 'remove':
-    $id = $nv_Request->get_string("id", "get/post", "");
-
-    if (!empty($id)) {
-      $sql = "delete from `" . WORK_PREFIX . "_row` where id = $id";
-      $query = $db->query($sql);
-      if ($query) {
-        $departid = $nv_Request->get_string("departid", "get/post", "");
-        if ($departid > 0) {
-          $result["list"] = user_manager_list();
-        }
-        else {
-          $result["list"] = user_work_list();
-        }
-        $result["status"] = 1;
-        $result["notify"] = $lang_module["saved"];
-      }
-    }
-
-    break;
-
     case 'insert':
     $content = $nv_Request->get_string("content", "get/post", "");
     $starttime = $nv_Request->get_string("starttime", "get/post", "");
     $endtime = $nv_Request->get_string("endtime", "get/post", "");
-    // $customer = $nv_Request->get_string("customer", "get/post", "");
     $userid = $nv_Request->get_string("userid", "get/post", "");
     $depart = $nv_Request->get_string("depart", "get/post", "");
     $process = $nv_Request->get_string("process", "get/post", "");
     $note = $nv_Request->get_string("note", "get/post", "");
 
-    if (!(empty($content) || empty($starttime) || empty($endtime) || /*empty($customer) ||*/ empty($userid) || empty($depart))) {
+    if (!(empty($content) || empty($starttime) || empty($endtime) || empty($userid) || empty($depart))) {
       if (empty($process))  {
         $process = 0;
       }
       $starttime = totime($starttime);
       $endtime = totime($endtime);
 
-      // $sql = "insert into `" . WORK_PREFIX . "_row` (cometime, calltime, last_time, post_user, edit_user, userid, depart, customer, content, process, confirm, review, note) values ($starttime, $endtime, " . time() . ", 0, 0, $userid, $depart, $customer, '$content', $process, 0, 0, '$note')";
       $sql = "insert into `" . WORK_PREFIX . "_row` (cometime, calltime, last_time, post_user, edit_user, userid, depart, customer, content, process, confirm, review, note) values ($starttime, $endtime, " . time() . ", 0, 0, $userid, $depart, 0, '$content', $process, 0, 0, '$note')";
       $query = $db->query($sql);
       if ($query) {
         $departid = $nv_Request->get_string("departid", "get/post", "");
-        if ($departid > 0) {
-          $result["list"] = user_manager_list();
-        }
-        else {
-          $result["list"] = user_work_list();
-        }
+        $result["list"] = callList($departid);
         $result["status"] = 1;
         $result["notify"] = $lang_module["g_saved"];
       }
     }
   break;
-  // case 'search':
-  //   $keyword = $nv_Request->get_string("keyword", "get/post", "");
-
-    // $xtpl = new XTemplate('work-user-suggest.tpl', NV_ROOTDIR . '/themes/' . $global_config['admin_theme'] . '/modules/' . $module_file);
-
-    // $sql = "select * from `" . $db_config["prefix"] . "_users_groups_users` where userid = $user_info[userid]";
-    // $query = $db->query($sql);
-    // $user = $query->fetch();
-
-    // $where = "username like '%$keyword%' or last_name like '%$keyword%' or first_name like '%$keyword%'";
-  
-    // if (!empty($user) && ($user["is_leader"] || $user["group_id"] == 1)) {
-    //   $user_sql = "select b.* from (select * from `" . WORK_PREFIX . "_employ` group by userid) a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid  order by last_name limit 10";
-    // }
-    // else {
-    //   $user_sql = "select a.* from `" . $db_config["prefix"] . "_users` a inner join `" . WORK_PREFIX . "_employ` b on a.userid = b.userid where b.role = 1 and b.depart in ((select depart from `" . WORK_PREFIX . "_employ` where userid = $user_info[userid] and role = 2 and ($where)), $user_info[userid]) order by last_name limit 10";
-    // }
-
-    // $query = $db->query($user_sql);
-    // $count = 0;
-    // while($user = $query->fetch()) {
-    //   $count ++;
-    //   $xtpl->assign("name", $user["last_name"] . " " . $user["first_name"]);
-    //   $xtpl->assign("id", $user["userid"]);
-    //   $xtpl->parse("main");
-    // }
-    // if (!$count) {
-    //   $xtpl->assign("name", "Không có nhân viên nào");
-    //   $xtpl->parse("main");
-    // }
-
-
-  //   $result["status"] = 1;
-  //   $result["notify"] = "";
-  //   $result["list"] = $xtpl->text();
-  // break;
   case 'edit':
     $id = $nv_Request->get_string("id", "get/post", "");
     $content = $nv_Request->get_string("content", "get/post", "");
     $starttime = $nv_Request->get_string("starttime", "get/post", "");
     $endtime = $nv_Request->get_string("endtime", "get/post", "");
-    // $customer = $nv_Request->get_string("customer", "get/post", "");
     $userid = $nv_Request->get_string("userid", "get/post", "");
     $depart = $nv_Request->get_string("depart", "get/post", "");
     $process = $nv_Request->get_string("process", "get/post", "");
     $note = $nv_Request->get_string("note", "get/post", "");
 
-    if (!(empty($id) || empty($content) || empty($starttime) || empty($endtime) /*|| empty($customer)*/ || empty($userid) || empty($depart))) {
+    if (!(empty($id) || empty($content) || empty($starttime) || empty($endtime) || empty($userid) || empty($depart))) {
       if (empty($process))  {
         $process = 0;
       }
       $starttime = totime($starttime);
       $endtime = totime($endtime);
 
-      // $sql = "update `" . WORK_PREFIX . "_row` set cometime = $starttime, calltime = $endtime, last_time = " . time() . ", userid = $userid, customer = $customer, depart = $depart, content = '$content', process = $process, note = '$note' where id = $id";
       $sql = "update `" . WORK_PREFIX . "_row` set cometime = $starttime, calltime = $endtime, last_time = " . time() . ", userid = $userid, depart = $depart, content = '$content', process = $process, note = '$note' where id = $id";
       $query = $db->query($sql);
       if ($query) {
         $departid = $nv_Request->get_string("departid", "get/post", "");
-        if ($departid > 0) {
-          $result["list"] = user_manager_list();
-        }
-        else {
-          $result["list"] = user_work_list();
-        }
+        $result["list"] = callList($departid);
         $result["status"] = 1;
         $result["notify"] = $lang_module["g_saved"];
       }
@@ -148,17 +77,6 @@ if (!empty($action)) {
       $query = $db->query($sql);
       $work = $query->fetch();
       if (!empty($work)) {
-        // $sql = "select * from `" . WORK_PREFIX . "_customer`";
-        // $query = $db->query($sql);
-        // $customer_o = "";
-        // while ($customer = $query->fetch()) {
-        //   $select = "";
-        //   if ($customer["id"] == $work["customer"]) {
-        //     $select = "selected";
-        //   }
-        //   $customer_o .= "<option value='" . $customer["id"] . "' " . $select . ">" . $customer["name"] . "</option>";
-        // }
-
         $sql = "select * from `" . WORK_PREFIX . "_depart`";
         $query = $db->query($sql);
         $depart_o = "";
@@ -174,7 +92,6 @@ if (!empty($action)) {
         $result["content"] = $work["content"];
         $result["starttime"] = date("d/m/Y", $work["cometime"]);
         $result["endtime"] = date("d/m/Y", $work["calltime"]);
-        // $result["customer"] = $customer_o;
         $result["depart"] = $depart_o;
         $result["user"] = $work["last_name"] . " " . $work["first_name"];
         $result["userid"] = $work["userid"];
@@ -231,40 +148,17 @@ if (!empty($action)) {
       $query = $db->query($sql);
 
       if ($query) {
+        $departid = $nv_Request->get_int("departid", "get/post", 0);
         $result["status"] = 1;
         $result["notify"] = $lang_module["saved"];
-        $result["list"] = user_manager_list();
+        $result["list"] = callList($departid);
       }
     }
   break;
 
   case 'change_data':
     $departid = $nv_Request->get_string("departid", "get/post", "");
-    if (empty($departid)) {
-      $list = user_work_list();
-    }
-    else {
-      if ($departid == "end") {
-        $list = work_manager_list();
-      }
-      else {
-        $list = user_manager_list();
-      }
-    }
-    $result["list"] = $list;
-    $result["status"] = 1;
-    $result["notify"] = "";
-  break;
-
-  case 'my_work':
-    $list = user_work_list();
-    $result["list"] = $list;
-    $result["status"] = 1;
-    $result["notify"] = "";
-  break;
-
-  case 'manager_work':
-    $list = work_manager_list();
+    $list = callList($departid);
     $result["list"] = $list;
     $result["status"] = 1;
     $result["notify"] = "";
@@ -296,8 +190,9 @@ if (!empty($action)) {
       if (!empty($work)) {
         $sql = "update `" . WORK_PREFIX . "_row` set process = $process, note = '$note' where id = $id";
         if ($db->query($sql)) {
+          $departid = $nv_Request->get_string("departid", "get/post", "");
+          $result["list"] = user_work_list($departid);
           $result["status"] = 1;
-          $result["list"] = user_work_list();
           $result["notify"] = $lang_module["saved"];
         }
       }
@@ -310,15 +205,6 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate('user.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
 $xtpl->assign("lang", $lang_module);
-
-// $sql = "select * from `" . WORK_PREFIX . "_customer`";
-// $query = $db->query($sql);
-// while ($customer = $query->fetch()) {
-//   $xtpl->assign("customer_value", $customer["id"]);
-//   $xtpl->assign("customer_name", $customer["name"]);
-//   $xtpl->parse("main.customer_option");
-//   $xtpl->parse("main.customer_option2");
-// }
 
 if (!empty($user_info)) {
   $sql = "select * from `" . $db_config["prefix"] . "_users_groups_users` where userid = $user_info[userid]";
@@ -368,7 +254,7 @@ $xtpl->assign("endDate", date("d/m/Y", time() + 60 * 60 * 24));
 $xtpl->assign("cometime", date("d/m/Y", strtotime(date("Y-m-d")) - 60 * 60 * 24 * 7));
 $xtpl->assign("calltime", date("d/m/Y", strtotime(date("Y-m-d")) + 60 * 60 * 24 * 7));
 $xtpl->assign("depart_list", user_main_list());
-$xtpl->assign("content", user_work_list());
+$xtpl->assign("content", user_work_list($user_info['userid']));
 $xtpl->assign("count", $result["count"]);
 $xtpl->parse("main");
 $contents = $xtpl->text();

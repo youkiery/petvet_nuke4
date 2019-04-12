@@ -179,6 +179,15 @@ h3.dayweek-head{
 .user-suggest-item:hover {
   background: lightgreen
 }
+.item-border {
+  border: 2px solid black;
+}
+
+.cell-center {
+  text-align: center;
+  vertical-align: inherit !important;
+}
+
 
 /* RESPONSIVE */
 @media only screen and (max-width: 767px) {

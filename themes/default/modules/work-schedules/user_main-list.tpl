@@ -1,5 +1,5 @@
 <!-- BEGIN: main -->
-<button class="btn btn-info depart active" id="depart_0" onclick="my_work()">
+<button class="btn btn-info depart active" id="depart_0" onclick="change_data(0)">
   {lang.work_owner}
 </button>
 <!-- BEGIN: row -->
@@ -8,7 +8,7 @@
 </button>
 <!-- END: row -->
 <!-- BEGIN: manager -->
-<button class="btn depart" id="depart_end" onclick="manager_work()">
+<button class="btn depart" id="depart_end" onclick="change_data('end')">
   {lang.work_manager}
 </button>
 <!-- END: manager -->  

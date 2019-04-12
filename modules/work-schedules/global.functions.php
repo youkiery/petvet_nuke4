@@ -17,6 +17,7 @@ $day = date('w');
 $this_week = strtotime('-'.$day.' days');
 $this_month = strtotime(date("Y-m-1"));
 $this_year = strtotime(date("Y-1-1"));
+$image = "<img src='/themes/" . $global_config["module_theme"] . "/images/" . $module_file . "/xn.gif' />";
 
 $role = array("Chờ kích hoạt", "Nhân viên", "Trưởng nhóm");
 
@@ -188,8 +189,8 @@ function user_manager_list() {
   return $xtpl->text();
 }
 
-function user_work_list() {
-  global $db, $global_config, $module_file, $module_name, $lang_module, $user_info, $db_config, $user_info, $result, $nv_Request;
+function user_work_list($userid = 0, $depart = 0) {
+  global $db, $global_config, $module_file, $module_name, $lang_module, $user_info, $db_config, $user_info, $result, $nv_Request, $image;
   $xtpl = new XTemplate('user-list.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
   $index = 1;
   $count = 0;
@@ -198,14 +199,25 @@ function user_work_list() {
   $today = strtotime(date("Y-m-d"));
   $completeStatus = $nv_Request->get_string("completeStatus", "get/post", "");
 
-  if (!empty($user_info)) {
-    $sql = "select * from `" . $db_config["prefix"] . "_users_groups_users` where userid = $user_info[userid]";
+  $extra_sql = '';
+  if ($depart) {
+    $extra_sql = 'depart = ' . $depart;
+  }
+  if ($userid) {
+    $extra_sql = 'userid = ' . $userid;
+  }
+  if (!empty($user_info['userid'])) {
+    $sql = "select * from `" . $db_config["prefix"] . "_users_groups_users` where userid = " . $user_info['userid'];
     $query = $db->query($sql);
     $user = $query->fetch();
 
     if (!empty($user) && ($user["is_leader"] || $user["group_id"] == 1)) {
       $admin = true;
     }
+  }
+
+  if (empty($extra_sql)) {
+    $extra_sql = 'depart in (select depart from `'.WORK_PREFIX.'_employ` where userid = '.$user_info['userid'].' and role = 2)';
   }
 
   $sql = "select * from `" . WORK_PREFIX . "_depart`";
@@ -224,13 +236,18 @@ function user_work_list() {
   }
 
   if (!empty($user_info)) {
-    $sql = "select * from `" . WORK_PREFIX . "_row` where userid = $user_info[userid]  and " . filter_by_time() . " and $complete_sql order by id desc";
+    $sql = "select * from `" . WORK_PREFIX . "_row` where " . $extra_sql . " and " . filter_by_time() . " and $complete_sql order by id desc";
     $query = $db->query($sql);
     while($work = $query->fetch()) {
+      $sql = "select * from `" . $db_config['prefix'] . "_users` where userid = $work[userid]";
+      $user_query = $db->query($sql);
+      $user = $user_query->fetch();
+
       $count ++;
       $xtpl->assign("index", $index);
       $xtpl->assign("id", $work["id"]);
       $xtpl->assign("work_name", $work["content"]);
+      $xtpl->assign("username", $user["first_name"]);
       $xtpl->assign("work_starttime", date("d/m/Y", $work["cometime"]));
       $xtpl->assign("work_endtime", date("d/m/Y", $work["calltime"]));
       // var_dump($work);die();
@@ -240,6 +257,23 @@ function user_work_list() {
       if ($today > $work["calltime"] && !$work["confirm"]) {
         $xtpl->assign("overtime", "danger");
       }
+
+      $xtpl->assign("confirm", "");
+      $xtpl->assign("review", "");
+      if ($work["confirm"]) {
+        $operator = "";
+        if ($work["review"] >= 0) {
+          $color = "green";
+          $operator = "+";
+        }
+        else {
+          $color = "red";
+        }
+        $xtpl->assign("confirm", $image);
+        $xtpl->assign("color", $color);
+        $xtpl->assign("review", $operator . $work["review"]);
+      }
+
       if ($admin) {
         $xtpl->parse("main.loop.manager");
       }
@@ -730,4 +764,20 @@ function employDepart($userId, $departId) {
   }
 
   return $user;
+}
+
+function callList($departid) {
+  global $user_info;
+  if ($departid > 0) {
+    $list = user_work_list(0, $departid);
+  }
+  else {
+    if ($departid == "end") {
+      $list = user_work_list(0, 0);
+    }
+    else {
+      $list = user_work_list($user_info['userid'], 0);
+    }
+  }
+  return $list;
 }

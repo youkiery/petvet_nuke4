@@ -175,22 +175,6 @@
   </div>
 </div>
 
-<div id="remove" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">{lang.work_remove}</h4>
-      </div>
-      <div class="modal-body text-center">
-        <button class="btn btn-danger" onclick="remove_submit()" data-dismiss="modal">
-          {lang.g_remove}
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <form class="row form-inline" onsubmit="return change_data_2(event)">
   <div class="form-group col-md-10">
     <label>
@@ -232,7 +216,7 @@
   {lang.count_2}
 </div>
 
-<table class="table" id="content">
+<table class="table table-bordered" id="content">
   {content}
 </table>
 
@@ -356,7 +340,7 @@
     freeze()
     $.post(
       strHref,
-      {action: "change_process", completeStatus: completeStatus, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), process: $("#edit_process2").val().replace("%", ""), note: $("#edit_note").val()},
+      {action: "change_process", completeStatus: completeStatus, departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), process: $("#edit_process2").val().replace("%", ""), note: $("#edit_note").val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#content").html(data["list"])
@@ -453,44 +437,6 @@
     )
   }
 
-  function my_work() {
-    freeze()
-    $.post(
-      strHref,
-      {action: "my_work", completeStatus: completeStatus, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          g_departid = 0
-          $("#content").html(data["list"])
-          change_tab(g_departid)
-          reload_date(data)
-          defreeze()
-        }, () => {
-          defreeze()
-        })  
-      }
-    )
-  }
-
-  function manager_work() {
-    freeze()
-    $.post(
-      strHref,
-      {action: "manager_work", completeStatus: completeStatus, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          g_departid = "end"
-          $("#content").html(data["list"])
-          change_tab("end")
-          reload_date(data)
-          defreeze()
-        }, () => {
-          defreeze()
-        })
-      }
-    )
-  }
-
   $("#edit_process, #edit_process2, #process").keyup((e) => {
     var key = e.currentTarget.value.replace("%", "")
     var check = isFinite(key)
@@ -521,29 +467,6 @@
           $("#edit_process").val(data["process"] + "%")
           userid = data["userid"]
           $("#edit").modal("show")
-          defreeze()
-        }, () => {
-          defreeze()
-        })
-      }
-    )
-  }
-
-  function remove(id) {
-    g_id = id
-    $("#remove").modal("show")
-  }
-
-  function remove_submit() {
-    freeze()
-    $.post(
-      strHref,
-      {action: "remove", completeStatus: completeStatus, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
-      (response) => {
-        checkResult(response, status).then(data => {
-          $("#content").html(data["list"])
-          $("#remove").modal("hide")
-          reload_date(data)
           defreeze()
         }, () => {
           defreeze()

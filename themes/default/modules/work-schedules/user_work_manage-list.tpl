@@ -50,10 +50,6 @@
       <button class="btn btn-info" onclick="change_confirm({id})" {disable}>
         {lang.change_confirm}
       </button>
-      {confirm}
-      <span style="color: {color}">
-        {review}
-      </span>
     </td>
   </tr>
 </tbody>

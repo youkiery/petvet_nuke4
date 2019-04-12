@@ -1,51 +1,52 @@
 <!-- BEGIN: main -->
-<thead>
+<!-- BEGIN: loop -->
+  <tbody class="item-border">
   <tr>
-    <th>
-      {lang.work_name}
-    </th>
-    <th>
-      {lang.work_depart}
-    </th>
-    <th>
-      {lang.work_endtime}
-    </th>
-    <th>
-      {lang.work_process}
-    </th>
-    <th>
-    </th>
-  </tr>
-</thead>
-<tbody>
-  <!-- BEGIN: loop -->
-  <tr class="{overtime}">
-    <td data-toggle="modal" data-target="#detail">
-      {work_name}
-    </td>
-    <td data-toggle="modal" data-target="#detail">
-      {work_depart}
-    </td>
-    <td data-toggle="modal" data-target="#detail">
+    <td rowspan="2" class="cell-center">
       {work_endtime}
     </td>
-    <!-- <td data-toggle="modal" data-target="#detail">
-      {work_customer}
-    </td> -->
-    <td data-toggle="modal" data-target="#detail" id="process_{id}">
-      {work_process}%
+    <td>
+      Tên công việc
     </td>
     <td>
+      {work_name}
+    </td>
+    <td rowspan="3" class="cell-center">
+      <button class="btn btn-info" onclick="change_process({id})">
+        {lang.change_process}
+      </button>
       <!-- BEGIN: manager -->
       <button class="btn btn-info" onclick="edit({id})">
         {lang.update}
       </button>
-      <!-- END: manager -->
-      <button class="btn btn-info" onclick="change_process({id})">
-        {lang.change_process}
+      <button class="btn btn-info" onclick="change_confirm({id})" {disable}>
+        {lang.change_confirm}
       </button>
+      <br>
+      {confirm}
+      <span style="color: {color}">
+        {review}
+      </span>
+      <!-- END: manager -->
     </td>
   </tr>
-  <!-- END: loop -->
+  <tr>
+    <td>
+      Phòng ban
+    </td>
+    <td>
+      {work_depart}
+    </td>    
+  </tr>
+  <tr>
+    <td class="cell-center">
+      {username}
+    </td>
+    <td> Tiến độ </td>
+    <td>
+      {work_process}%
+    </td>
+  </tr>
 </tbody>  
+<!-- END: loop -->
 <!-- END: main -->
