@@ -34,8 +34,8 @@ function nv_main_theme($arrays, $year, $week, $links, $numqueues, $cfg, $fields)
     $xtpl->assign('LINK_EDIT', NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=edit');
     $xtpl->assign('LINK_MANAGER', NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=manager');
 
-    //$xtpl->assign( 'LINK_PRINT', empty( $arrays ) ? 'javascript:void(0)' : $links['print'] );
-    //$xtpl->assign( 'LINK_DOWNLOAD', empty( $arrays ) ? 'javascript:void(0)' : $links['download'] );
+    //$xtpl->assign('LINK_PRINT', empty($arrays) ? 'javascript:void(0)' : $links['print']);
+    //$xtpl->assign('LINK_DOWNLOAD', empty($arrays) ? 'javascript:void(0)' : $links['download']);
 
     $xtpl->assign('LINK_PRINT', "javascript:alert('" . $lang_module['nofeature'] . "');");
     $xtpl->assign('LINK_DOWNLOAD', "javascript:alert('" . $lang_module['nofeature'] . "');");
@@ -151,7 +151,7 @@ function nv_main_theme($arrays, $year, $week, $links, $numqueues, $cfg, $fields)
                 'from' => nv_date('d/m/Y', $time_first_week - $time_per_week),
                 'to' => nv_date('d/m/Y', $time_first_week - 1),
                 'link' => NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . change_alias($lang_module['week']) . '-' . $num_week_before . '-' . ($year - 1)
-            );
+          );
         
             $xtpl->assign('WEEK', $row);
             $xtpl->parse('main.show_tool.showweek.week');
@@ -164,7 +164,7 @@ function nv_main_theme($arrays, $year, $week, $links, $numqueues, $cfg, $fields)
                     'from' => nv_date('d/m/Y', $time_first_week + $i * $time_per_week),
                     'to' => nv_date('d/m/Y', $time_first_week + $i * $time_per_week + $time_per_week - 1),
                     'link' => NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . change_alias($lang_module['week']) . '-' . ($i + 1) . ($this_year == $year ? '' : '-' . $year)
-                );
+              );
         
                 $xtpl->assign('WEEK', $row);
                 
@@ -182,7 +182,7 @@ function nv_main_theme($arrays, $year, $week, $links, $numqueues, $cfg, $fields)
                 'from' => nv_date('d/m/Y', $time_first_week + $num_week * $time_per_week),
                 'to' => nv_date('d/m/Y', $time_first_week + $num_week * $time_per_week + $time_per_week - 1),
                 'link' => NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . change_alias($lang_module['week']) . '-1-' . ($year + 1)
-            );
+          );
         
             $xtpl->assign('WEEK', $row);
             $xtpl->parse('main.show_tool.showweek.week');
@@ -191,7 +191,7 @@ function nv_main_theme($arrays, $year, $week, $links, $numqueues, $cfg, $fields)
                 'stt' => $week,
                 'from' => nv_date('d/m/Y', $time_first_week + ($week - 1) * $time_per_week),
                 'to' => nv_date('d/m/Y', $time_first_week + ($week - 1) * $time_per_week + $time_per_week - 1),
-            );
+          );
             $xtpl->assign('CURRENT_WEEK', $current_week);
             $xtpl->parse('main.show_tool.showweek');
         }
@@ -294,7 +294,7 @@ function nv_add_theme($array, $form_action, $cfg, $fields, $custom_fields)
                 'key' => $i,
                 'title' => $lang_module['mana_status_' . $i],
                 'selected' => $i == $array['status'] ? ' selected="selected"' : '',
-                );
+              );
 
             $xtpl->assign('STATUS', $status);
             $xtpl->parse('main.status.loop');
@@ -307,7 +307,7 @@ function nv_add_theme($array, $form_action, $cfg, $fields, $custom_fields)
                 'key' => $i,
                 'title' => $lang_module['mana_highlights_' . $i],
                 'selected' => $i == $array['highlights'] ? ' selected="selected"' : '',
-                );
+              );
 
             $xtpl->assign('HIGHLIGHTS', $highlights);
             $xtpl->parse('main.highlights.loop');
@@ -344,7 +344,7 @@ function nv_add_theme($array, $form_action, $cfg, $fields, $custom_fields)
             'title' => $i == -1 ? '--' : str_pad($i, 2, '0', STR_PAD_LEFT),
             'selected_s' => $i == $array['e_shour'] ? ' selected="selected"' : '',
             'selected_e' => $i == $array['e_ehour'] ? ' selected="selected"' : '',
-        );
+      );
 
         $xtpl->assign('HOUR', $hour);
 
@@ -359,7 +359,7 @@ function nv_add_theme($array, $form_action, $cfg, $fields, $custom_fields)
             'title' => $i == -1 ? '--' : str_pad($i, 2, '0', STR_PAD_LEFT),
             'selected_s' => $i == $array['e_smin'] ? ' selected="selected"' : '',
             'selected_e' => $i == $array['e_emin'] ? ' selected="selected"' : '',
-        );
+      );
 
         $xtpl->assign('MIN', $min);
 
@@ -425,7 +425,7 @@ function nv_add_theme($array, $form_action, $cfg, $fields, $custom_fields)
                             'key' => $key,
                             'selected' => ($key == $row['value']) ? ' selected="selected"' : '',
                             'value' => $value
-                        ));
+                      ));
                         $xtpl->parse('main.field.loop.select.loop');
                     }
                     $loop_key = 'select';
@@ -437,7 +437,7 @@ function nv_add_theme($array, $form_action, $cfg, $fields, $custom_fields)
                             'key' => $key,
                             'checked' => ($key == $row['value']) ? ' checked="checked"' : '',
                             'value' => $value
-                        ));
+                      ));
                         $xtpl->parse('main.field.loop.radio.loop');
                     }
                     $is_group_rowf = false;
@@ -451,7 +451,7 @@ function nv_add_theme($array, $form_action, $cfg, $fields, $custom_fields)
                             'key' => $key,
                             'checked' => (in_array($key, $valuecheckbox)) ? ' checked="checked"' : '',
                             'value' => $value
-                        ));
+                      ));
                         $xtpl->parse('main.field.loop.checkbox.loop');
                     }
                     $is_group_rowf = false;
@@ -463,7 +463,7 @@ function nv_add_theme($array, $form_action, $cfg, $fields, $custom_fields)
                             'key' => $key,
                             'selected' => (in_array($key, $valueselect)) ? ' selected="selected"' : '',
                             'value' => $value
-                        ));
+                      ));
                         $xtpl->parse('main.field.loop.multiselect.loop');
                     }
                     $loop_key = 'multiselect';
@@ -568,4 +568,53 @@ function nv_manager_list_theme($array, $array_users, $generate_page, $array_list
 
     $xtpl->parse('main');
     return $xtpl->text('main');
+}
+
+function navList ($number, $page, $limit) {
+    global $lang_global;
+    $total_pages = ceil($number / $limit);
+    $on_page = $page;
+    $page_string = "";
+    if ($total_pages > 10) {
+        $init_page_max = ($total_pages > 3) ? 3 : $total_pages;
+        for ($i = 1; $i <= $init_page_max; $i ++) {
+            $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="goPage('.$i.')">' . $i . '</button>';
+            if ($i < $init_page_max) $page_string .= " ";
+        }
+        if ($total_pages > 3) {
+            if ($on_page > 1 && $on_page < $total_pages) {
+                $page_string .= ($on_page > 5) ? " ... " : ", ";
+                $init_page_min = ($on_page > 4) ? $on_page : 5;
+                $init_page_max = ($on_page < $total_pages - 4) ? $on_page : $total_pages - 4;
+                for ($i = $init_page_min - 1; $i < $init_page_max + 2; $i ++) {
+                    $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="goPage('.$i.')">' . $i . '</button>';
+                    if ($i < $init_page_max + 1)  $page_string .= " ";
+                }
+                $page_string .= ($on_page < $total_pages - 4) ? " ... " : ", ";
+            }
+            else {
+                $page_string .= " ... ";
+            }
+            
+            for ($i = $total_pages - 2; $i < $total_pages + 1; $i ++) {
+                $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="goPage('.$i.')">' . $i . '</button>';
+                if ($i < $total_pages) $page_string .= " ";
+            }
+        }
+    }
+    else {
+        for ($i = 1; $i < $total_pages + 1; $i ++) {
+            $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="goPage('.$i.')">' . $i . '</button>';
+            if ($i < $total_pages) $page_string .= " ";
+        }
+    }
+    // if ($add_prevnext_text) {
+    //     if ($on_page > 1) {
+    //         $page_string = "&nbsp;&nbsp;<span><a " . $href . ">" . $lang_global['pageprev'] . "</a></span>&nbsp;&nbsp;" . $page_string;
+    //     }
+    //     if ($on_page < $total_pages) {
+    //         $page_string .= "&nbsp;&nbsp;<span><a " . $href . ">" . $lang_global['pagenext'] . "</a></span>";
+    //     }
+    // }
+    return $page_string;
 }

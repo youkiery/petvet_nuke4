@@ -198,6 +198,14 @@ function user_work_list($userid = 0, $depart = 0) {
   $admin = false;
   $today = strtotime(date("Y-m-d"));
   $completeStatus = $nv_Request->get_string("completeStatus", "get/post", "");
+  $page = $nv_Request->get_int("page", "get/post", 0);
+  $limit = $nv_Request->get_int("limit", "get/post", 0);
+  if (empty($page) || $page < 0) {
+    $page = 1;    
+  }
+  if (empty($limit) || $limit < 0) {
+    $limit = 10;
+  }
 
   $extra_sql = '';
   if ($depart) {
@@ -236,7 +244,10 @@ function user_work_list($userid = 0, $depart = 0) {
   }
 
   if (!empty($user_info)) {
-    $sql = "select * from `" . WORK_PREFIX . "_row` where " . $extra_sql . " and " . filter_by_time() . " and $complete_sql order by id desc";
+    $sql = "select count(id) as count from `" . WORK_PREFIX . "_row` where " . $extra_sql . " and " . filter_by_time() . " and $complete_sql";
+    $count_query = $db->query($sql);
+    $count = $count_query->fetch();
+    $sql = "select * from `" . WORK_PREFIX . "_row` where " . $extra_sql . " and " . filter_by_time() . " and $complete_sql order by id desc limit " . $limit . ' offset ' . ($limit * ($page - 1));
     $query = $db->query($sql);
     while($work = $query->fetch()) {
       $sql = "select * from `" . $db_config['prefix'] . "_users` where userid = $work[userid]";
@@ -282,9 +293,8 @@ function user_work_list($userid = 0, $depart = 0) {
     }
   }
 
-  $result["count"] = $count;
   $xtpl->parse("main");
-  return $xtpl->text();
+  return array('count' => $count['count'], 'nav' => navList($count['count'], $page, $limit), 'html' => $xtpl->text());
 }
   
 function work_manager_list() {

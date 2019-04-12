@@ -245,6 +245,7 @@ while ($row = $query->fetch()) {
   }
 }
 // die("$x");
+$list = user_work_list($user_info['userid'], 0);
 
 $xtpl->assign("g_depart", $x);
 $xtpl->assign("data", json_encode($data));
@@ -254,8 +255,9 @@ $xtpl->assign("endDate", date("d/m/Y", time() + 60 * 60 * 24));
 $xtpl->assign("cometime", date("d/m/Y", strtotime(date("Y-m-d")) - 60 * 60 * 24 * 7));
 $xtpl->assign("calltime", date("d/m/Y", strtotime(date("Y-m-d")) + 60 * 60 * 24 * 7));
 $xtpl->assign("depart_list", user_main_list());
-$xtpl->assign("content", user_work_list($user_info['userid']));
-$xtpl->assign("count", $result["count"]);
+$xtpl->assign("content", $list['html']);
+$xtpl->assign("count", $list['count']);
+$xtpl->assign("nav", $list['nav']);
 $xtpl->parse("main");
 $contents = $xtpl->text();
 

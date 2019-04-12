@@ -176,23 +176,22 @@
 </div>
 
 <form class="row form-inline" onsubmit="return change_data_2(event)">
-  <div class="form-group col-md-10">
     <label>
       {lang.cometime}
     </label>
     <input type="text" value="{cometime}" class="form-control" id="cometime">
-  </div>
-  <div class="form-group col-md-10">
     <label>
       {lang.calltime}
     </label>
     <input type="text" value="{calltime}" class="form-control" id="calltime">
-  </div>
-  <div class="form-group col-md-2">
     <button class="btn btn-info">
       Lọc
     </button>
-  </div>
+    <!-- BEGIN: manager -->
+    <button class="btn btn-success" data-toggle="modal" data-target="#insert">
+      {lang.work_insert}
+    </button>
+    <!-- END: manager -->
 </form>
 
 <div id="depart_list">
@@ -220,11 +219,9 @@
   {content}
 </table>
 
-<!-- BEGIN: manager -->
-<button class="btn btn-info" data-toggle="modal" data-target="#insert">
-  {lang.work_insert}
-</button>
-<!-- END: manager -->
+<div id="nav">
+  {nav}
+</div>
 
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
@@ -239,7 +236,11 @@
   var current = 0
   var typing
   var complete = $(".complete")
+  var count = $("#count")
+  var content = $("#content")
+  var nav = $("#nav")
   var completeStatus = 0
+  var limit = 10
 
   $("#depart, #edit_depart").change((e) => {
     var current = e.currentTarget
@@ -268,7 +269,9 @@
       {action: "change_data", completeStatus: completeStatus, departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
       (response, status) => {
         checkResult(response, status).then(data => {
-          $("#content").html(data["list"])
+          content.html(data["list"]["html"])
+          count.text(data["list"]["count"])
+          nav.html(data["list"]["nav"])
           change_tab(g_departid)
           reload_date(data)
           defreeze()
@@ -343,7 +346,9 @@
       {action: "change_process", completeStatus: completeStatus, departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), process: $("#edit_process2").val().replace("%", ""), note: $("#edit_note").val()},
       (response, status) => {
         checkResult(response, status).then(data => {
-          $("#content").html(data["list"])
+          content.html(data["list"]["html"])
+          count.text(data["list"]["count"])
+          nav.html(data["list"]["nav"])
           $("#process_change").modal("hide")
           reload_date(data)
           defreeze()
@@ -387,7 +392,9 @@
       {action: "change_data", completeStatus: completeStatus, departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
       (response, status) => {
         checkResult(response, status).then(data => {
-          $("#content").html(data["list"])
+          content.html(data["list"]["html"])
+          count.text(data["list"]["count"])
+          nav.html(data["list"]["nav"])
           change_tab(id)
           reload_date(data)
           defreeze()
@@ -427,7 +434,9 @@
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#change_confirm").modal("hide")
-          $("#content").html(data["list"])
+          content.html(data["list"]["html"])
+          count.text(data["list"]["count"])
+          nav.html(data["list"]["nav"])
           reload_date(data)
           defreeze()
         }, () => {
@@ -483,7 +492,9 @@
       {action: "insert", completeStatus: completeStatus, departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#name").val(), starttime: $("#starttime").val(), endtime: $("#endtime").val(), /*customer: $("#customer").val(),*/ userid: userid, depart: $("#depart").val(), process: $("#process").val().replace("%", "")},
       (response, status) => {
         checkResult(response, status).then(data => {
-          $("#content").html(data["list"])
+          content.html(data["list"]["html"])
+          count.text(data["list"]["count"])
+          nav.html(data["list"]["nav"])
           $("#insert").modal("hide")
           reload_date(data)
           defreeze()
@@ -502,7 +513,9 @@
       {action: "edit", completeStatus: completeStatus, departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#edit_name").val(), starttime: $("#edit_starttime").val(), endtime: $("#edit_endtime").val(), /*customer: $("#edit_customer").val(),*/ userid: userid, depart: $("#edit_depart").val(), note: $("#edit_note").val(), process: $("#edit_process").val().replace("%", "")},
       (response, status) => {
         checkResult(response, status).then(data => {
-          $("#content").html(data["list"])
+          content.html(data["list"]["html"])
+          count.text(data["list"]["count"])
+          nav.html(data["list"]["nav"])
           $("#edit").modal("hide")
           reload_date(data)
           defreeze()
@@ -528,6 +541,26 @@
     $(".depart").removeClass("btn-info")
     $("#depart_" + id).addClass("active")
     $("#depart_" + id).addClass("btn-info")
+  }
+
+  function goPage(page) {
+    freeze()
+    $.post(
+      strHref,
+      {action: "change_data", page: page, limit: limit, completeStatus: completeStatus, departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), confirm: $("#confirm_value").val(), review: $("#confirm_review").val(), note: $("#confirm_note").val()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#change_confirm").modal("hide")
+          content.html(data["list"]["html"])
+          count.text(data["list"]["count"])
+          nav.html(data["list"]["nav"])
+          reload_date(data)
+          defreeze()
+        }, () => {
+          defreeze()
+        })
+      }
+    )
   }
 </script>
 <!-- END: main -->
