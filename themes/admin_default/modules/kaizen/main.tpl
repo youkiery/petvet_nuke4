@@ -204,15 +204,15 @@
   }
 
   function goPage(pPage) {
-    page = pPage
     freeze()
     $.post(
       strHref,
       {action: "filter", page: page, limit: limit},
       (response, status) => {
         checkResult(response, status).then((data) => {
-          content.html(data["html"])
           g_id = 0
+          page = pPage
+          content.html(data["html"])
           initiaze()
           defreeze()
           removeModal.modal("hide")
