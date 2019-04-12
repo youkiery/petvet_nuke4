@@ -225,6 +225,8 @@ $list = work_list();
 $xtpl->assign('content', $list['html']);
 $xtpl->assign('count', $list['count']);
 $xtpl->assign('nav', navList($list['count'], 1, 10));
+$xtpl->assign("page", 1);
+$xtpl->assign("limit", 10);
 $xtpl->parse('main');
 $contents = $xtpl->text();
 

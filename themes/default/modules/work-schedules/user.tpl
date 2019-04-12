@@ -240,7 +240,8 @@
   var content = $("#content")
   var nav = $("#nav")
   var completeStatus = 0
-  var limit = 10
+  var page = {page}
+  var limit = {limit}
 
   $("#depart, #edit_depart").change((e) => {
     var current = e.currentTarget
@@ -266,7 +267,7 @@
     freeze()
     $.post(
       strHref,
-      {action: "change_data", completeStatus: completeStatus, departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
+      {action: "change_data", page: page, limit: limit, completeStatus: completeStatus, departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data["list"]["html"])
@@ -343,7 +344,7 @@
     freeze()
     $.post(
       strHref,
-      {action: "change_process", completeStatus: completeStatus, departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), process: $("#edit_process2").val().replace("%", ""), note: $("#edit_note").val()},
+      {action: "change_process", page: page, limit: limit, completeStatus: completeStatus, departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), process: $("#edit_process2").val().replace("%", ""), note: $("#edit_note").val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data["list"]["html"])
@@ -389,7 +390,7 @@
     freeze()
     $.post(
       strHref,
-      {action: "change_data", completeStatus: completeStatus, departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
+      {action: "change_data", page: page, limit: limit, completeStatus: completeStatus, departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data["list"]["html"])
@@ -430,7 +431,7 @@
     freeze()
     $.post(
       strHref,
-      {action: "confirm", completeStatus: completeStatus, departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), confirm: $("#confirm_value").val(), review: $("#confirm_review").val(), note: $("#confirm_note").val()},
+      {action: "confirm", page: page, limit: limit, completeStatus: completeStatus, departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), confirm: $("#confirm_value").val(), review: $("#confirm_review").val(), note: $("#confirm_note").val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#change_confirm").modal("hide")
@@ -489,7 +490,7 @@
     freeze()
     $.post(
       strHref,
-      {action: "insert", completeStatus: completeStatus, departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#name").val(), starttime: $("#starttime").val(), endtime: $("#endtime").val(), /*customer: $("#customer").val(),*/ userid: userid, depart: $("#depart").val(), process: $("#process").val().replace("%", "")},
+      {action: "insert", page: page, limit: limit, completeStatus: completeStatus, departid: g_departid, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#name").val(), starttime: $("#starttime").val(), endtime: $("#endtime").val(), /*customer: $("#customer").val(),*/ userid: userid, depart: $("#depart").val(), process: $("#process").val().replace("%", "")},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data["list"]["html"])
@@ -510,7 +511,7 @@
     freeze()
     $.post(
       strHref,
-      {action: "edit", completeStatus: completeStatus, departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#edit_name").val(), starttime: $("#edit_starttime").val(), endtime: $("#edit_endtime").val(), /*customer: $("#edit_customer").val(),*/ userid: userid, depart: $("#edit_depart").val(), note: $("#edit_note").val(), process: $("#edit_process").val().replace("%", "")},
+      {action: "edit", page: page, limit: limit, completeStatus: completeStatus, departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), content: $("#edit_name").val(), starttime: $("#edit_starttime").val(), endtime: $("#edit_endtime").val(), /*customer: $("#edit_customer").val(),*/ userid: userid, depart: $("#edit_depart").val(), note: $("#edit_note").val(), process: $("#edit_process").val().replace("%", "")},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data["list"]["html"])
@@ -543,13 +544,14 @@
     $("#depart_" + id).addClass("btn-info")
   }
 
-  function goPage(page) {
+  function goPage(pPage) {
     freeze()
     $.post(
       strHref,
-      {action: "change_data", page: page, limit: limit, completeStatus: completeStatus, departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), confirm: $("#confirm_value").val(), review: $("#confirm_review").val(), note: $("#confirm_note").val()},
+      {action: "change_data", page: pPage, limit: limit, completeStatus: completeStatus, departid: g_departid, id: g_id, cometime: $("#cometime").val(), calltime: $("#calltime").val(), confirm: $("#confirm_value").val(), review: $("#confirm_review").val(), note: $("#confirm_note").val()},
       (response, status) => {
         checkResult(response, status).then(data => {
+          page = pPage
           $("#change_confirm").modal("hide")
           content.html(data["list"]["html"])
           count.text(data["list"]["count"])

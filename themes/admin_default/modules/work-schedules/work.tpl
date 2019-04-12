@@ -232,6 +232,8 @@
   var content = $("#content")
   var count = $("#count")
   var nav = $("#nav")
+  var page = {page}
+  var limit = {limit}
 
   $('#starttime, #endtime, #edit_starttime, #edit_endtime, #starttime-filter, #endtime-filter').datepicker({
     format: 'dd/mm/yyyy'
@@ -306,7 +308,7 @@
     freeze()
     $.post(
       strHref,
-      {action: "remove", id: g_id},
+      {action: "remove", page: page, limit: limit, id: g_id},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['list']["html"])
@@ -326,7 +328,7 @@
     freeze()
     $.post(
       strHref,
-      {action: "save", content: $("#name").val(), starttime: $("#starttime").val(), endtime: $("#endtime").val(), /*customer: $("#customer").val(),*/ userid: userid, depart: $("#depart").val(), process: $("#process").val()},
+      {action: "save", page: page, limit: limit, content: $("#name").val(), starttime: $("#starttime").val(), endtime: $("#endtime").val(), /*customer: $("#customer").val(),*/ userid: userid, depart: $("#depart").val(), process: $("#process").val()},
       (response, status) => {
         checkResult(response, status).then((data) => {
           content.html(data['list']["html"])
@@ -345,7 +347,7 @@
     e.preventDefault()
     $.post(
       strHref,
-      {action: "edit", id: g_id, content: $("#edit_name").val(), starttime: $("#edit_starttime").val(), endtime: $("#edit_endtime").val(), /*customer: $("#edit_customer").val(),*/ userid: userid, depart: $("#edit_depart").val(), note: $("#edit_note").val(), process: $("#edit_process").val()},
+      {action: "edit", page: page, limit: limit, id: g_id, content: $("#edit_name").val(), starttime: $("#edit_starttime").val(), endtime: $("#edit_endtime").val(), /*customer: $("#edit_customer").val(),*/ userid: userid, depart: $("#edit_depart").val(), note: $("#edit_note").val(), process: $("#edit_process").val()},
       (response, status) => {
         checkResult(response, status).then((data) => {
           content.html(data['list']["html"])
@@ -360,16 +362,17 @@
     )
   }
 
-  function goPage(page) {
+  function goPage(pPage) {
     freeze()
     $.post(
       strHref,
-      {action: "filter", page: page, limit: limit, starttime: $("#edit_starttime").val(), endtime: $("#edit_endtime").val()},
+      {action: "filter", page: pPage, limit: limit, starttime: $("#edit_starttime").val(), endtime: $("#edit_endtime").val()},
       (response, status) => {
         checkResult(response, status).then((data) => {
           content.html(data['list']["html"])
           nav.html(data['list']["nav"])
           count.text(data['list']["count"])
+          page = pPage
           defreeze()
         }, () => {
           defreeze()

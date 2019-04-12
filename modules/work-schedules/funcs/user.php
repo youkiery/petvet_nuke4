@@ -258,6 +258,8 @@ $xtpl->assign("depart_list", user_main_list());
 $xtpl->assign("content", $list['html']);
 $xtpl->assign("count", $list['count']);
 $xtpl->assign("nav", $list['nav']);
+$xtpl->assign("page", 1);
+$xtpl->assign("limit", 10);
 $xtpl->parse("main");
 $contents = $xtpl->text();
 
