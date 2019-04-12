@@ -70,6 +70,10 @@ if (!empty($action)) {
 				}
 			}
 		break;
+		case 'filter':
+			$result['status'] = 1;
+			$result['html'] = kaizenList($user_info['userid']);
+		break;
 	}
 
 	echo json_encode($result);
@@ -78,6 +82,8 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate('main.tpl', PATH);
 
+$xtpl->assign('page', 1);
+$xtpl->assign('limit', 10);
 $xtpl->assign('content', kaizenList());
 $xtpl->parse('main');
 $contents = $xtpl->text('main');

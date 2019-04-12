@@ -1,4 +1,5 @@
 <!-- BEGIN: main -->
+  Tổng cộng {count} giải pháp
   <!-- BEGIN: inbox -->
   <table class="table table-bordered">
     <!-- BEGIN: row -->
@@ -53,4 +54,7 @@
     Chưa có giải pháp nào được gửi tới
   </div>
   <!-- END: empty -->
+  <div id="nav">
+    {nav}
+  </div>
 <!-- END: main -->

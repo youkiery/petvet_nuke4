@@ -82,6 +82,8 @@
   var result = $("#result")
 
   var g_id = 0
+  var g_page = {page}
+  var limit = {limit}
 
   initiaze()
 
@@ -150,7 +152,7 @@
     freeze()
     $.post(
       strHref,
-      {action: "insert", problem: problem.val(), solution: solution.val(), result: result.val()},
+      {action: "insert", page: page, limit: limit, problem: problem.val(), solution: solution.val(), result: result.val()},
       (response, status) => {
         checkResult(response, status).then((data) => {
           content.html(data["html"])
@@ -168,7 +170,7 @@
       freeze()
       $.post(
         strHref,
-        {action: "edit", id: g_id, problem: problem.val(), solution: solution.val(), result: result.val()},
+        {action: "edit", page: page, limit: limit, id: g_id, problem: problem.val(), solution: solution.val(), result: result.val()},
         (response, status) => {
           checkResult(response, status).then((data) => {
             content.html(data["html"])
@@ -187,7 +189,7 @@
       freeze()
       $.post(
         strHref,
-        {action: "remove", id: g_id},
+        {action: "remove", page: page, limit: limit, id: g_id},
         (response, status) => {
           checkResult(response, status).then((data) => {
             content.html(data["html"])
@@ -201,6 +203,25 @@
     }
   }
 
+  function goPage(pPage) {
+    page = pPage
+    freeze()
+    $.post(
+      strHref,
+      {action: "filter", page: page, limit: limit},
+      (response, status) => {
+        checkResult(response, status).then((data) => {
+          content.html(data["html"])
+          g_id = 0
+          initiaze()
+          defreeze()
+          removeModal.modal("hide")
+        }, () => {
+          defreeze()
+        })
+      }
+    )
+  }
   
 </script>
 <!-- END: main -->
