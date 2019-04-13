@@ -1,11 +1,11 @@
 <!-- BEGIN: main -->
-<link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
+<!-- <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
+<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script> -->
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <div class="msgshow" id="msgshow"></div>
 
-<div id="regist_confirm" class="modal fade" role="dialog">
+<!-- <div id="regist_confirm" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
@@ -24,783 +24,84 @@
       </div>
     </div>
   </div>
-</div>
-
-<div id="wconfirm_alert" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <h2> Bạn có muốn Thay đổi những mục này không? </h2>
-        <div id="wconfirm_alert_content">
-
-        </div>
-        <div class="text-center">
-          <button class="btn btn-success" onclick="wconfirmSubmit()">
-            Xác nhận
-          </button>
-          <button class="btn btn-danger" data-dismiss="modal">
-            Hủy
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- <div id="confirm_work" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-body">
-        <h2> Xác nhận lịch tuần </h2>
-        <div id="confirm_work_content">
-
-        </div>
-        <div class="text-center">
-          <button class="btn btn-success" onclick="checkAdRegist()">
-            Đăng ký
-          </button>
-          <button class="btn btn-danger" data-dismiss="modal" onclick="registOff()">
-            Hủy
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
 </div> -->
+<style id="style">
+  * {font-family: "Times New Roman", Times, serif;font-size: 20px;}
+  table {width: 100%;border-collapse: collapse;}
+  td {padding: 4px; }
+  p {margin: 10px;}
+  br {display: block; content: ""; margin: 5px 0px;}
+  .container {padding: 40px 10px 40px 60px;}
+  .cell-center {text-align: center;vertical-align: inherit !important;}
+  .relative {position: relative;}
+  .bottom-left {position: absolute;bottom: 8px;left: 8px;}
+  .para td {line-height: 35px;}
+  .left {float: left;}
+  .w30 {width: 30%;}
+  .w40 {width: 40%;}
+  .small {font-size: 0.9em;}
+  .smaller {font-size: 0.8em;}
+  .tide {width: 100px;}
+  .tider {width: 50px;}
+</style>
 
-<!-- <div id="exchange_work" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <h2> Chọn người bạn muốn đổi ca? </h2>
-        <div>
-          <div id="exchange_work_head">
-
-          </div>
-          <select id="exchange_work_doctor" class="form-control">
-            BEGIN: doctor
-            <option value="{doctor_value}">{doctor_name}</option>
-            END: doctor
-          </select>
-          <div id="exchange_work_content">
-          </div>
-        </div>
-        <div class="text-center">
-          <button class="btn btn-danger" data-dismiss="modal">
-            Trở về
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-<!-- <div id="work_list" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <h2> Danh sách ngày các ca đã đăng ký? </h2>
-        <div id="work_content_list">
-
-        </div>
-        <div class="text-center">
-          <button class="btn btn-danger" data-dismiss="modal" onclick="registOff()">
-            Trở về
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-  
-<!-- BEGIN: tab -->
-  <button rel="1" class="tab btn btn-info active">
-    Người dùng
-  </button>
-  <button rel="2" class="tab btn">
-    Quản lý
-  </button>
-<!-- END: tab -->
-<div class="row">
-  <div class="col-sm-4">
-    <input class="form-control" id="start-date" type="text" value="{this_week}" autocomplete="off">
-  </div>
-  <div class="col-sm-4">
-    <button class="btn btn-warning" onclick="prevWeek()">
-      <span class="glyphicon glyphicon-chevron-left"></span>
-    </button>
-    <button class="btn btn-warning" onclick="nextWeek()">
-      <span class="glyphicon glyphicon-chevron-right"></span>
-    </button>
-    <!-- <select class="form-control" id="date-type"> -->
-      <!-- BEGIN: date_option -->
-      <!-- <option value="{date_value}"> {date_name} </option> -->
-      <!-- END: date_option -->
-    <!-- </select> -->
-  </div>
-  <div class="col-sm-8">
-
-  </div>
-  <div class="col-sm-8">
-    <button class="btn btn-info right" id="register">
-      Đăng ký
-    </button>
-    <button class="btn btn-success right" id="cconfirm" style="display: none;">
-      Xác nhận
-    </button>
-    <button class="btn btn-success right" id="dconfirm" style="display: none;">
-      Xác nhận
-    </button>
-    <button class="btn btn-danger right" id="reset" style="display: none;">
-      Hủy
-    </button>
-    <button class="btn btn-info right" id="print" onclick="printer()">
-      In
-    </button>
-    <!-- <button class="btn btn-info right" onclick="toWconfirm()">
-      Xác nhận
-    </button> -->
-    <!-- <button class="btn btn-info" id="list">
-      Danh sách
-    </button> -->
-  </div>
+<div id="tab" style="float: left;">
+  {tab}
 </div>
-<!-- BEGIN: doctor -->
-<div>
-  {doctor}
-</div>
-<!-- END: doctor -->
+<button class="btn btn-info right" onclick="printer()">
+  <span class="glyphicon glyphicon-print"></span>
+</button>
+<div style="clear: both;"></div>
 <div id="content">
   {content}
 </div>
-<div>
-  <div style="width: 20px; height: 20px; display: inline-block; background: green;"></div> Chưa đăng ký <br>
-  <div style="width: 20px; height: 20px; display: inline-block; background: red;"></div> Có người đăng ký <br>
-  <div style="width: 20px; height: 20px; display: inline-block; background: orange;"></div> Bản thân đăng ký <br>
-  <div style="width: 20px; height: 20px; display: inline-block; background: yellow;"></div> Đăng ký thêm <br>
-  <div style="width: 20px; height: 20px; display: inline-block; background: blue;"></div> Đăng ký thêm <br>
-  <div style="width: 20px; height: 20px; display: inline-block; background: purple;"></div> Bỏ đăng ký <br>
-</div>
+
 <script>
-  var today = new Date('{date}').setHours(0)
-  var dbdata = JSON.parse('{data}')
-  var except = JSON.parse('{except}')
-  var schedule = dbdata.length
-  var username = trim('{username}');
-  var startDate = $("#start-date")
-  var dateType = $("#date-type")
-  var register = $("#register")
-  var cconfirm = $("#cconfirm")
-  var reset = $("#reset")
-  var doctor = $("#doctor")
-  // var list = $("#list")
+  var data = ['<div id="content"><div class="container"><table border="1"><tr height="110px"><td width="25%" class="cell-center">CHI CỤC <br> THÚ Y <br> VÙNG V</td><td class="relative"><div class="cell-center" style="margin-bottom: 25px;">PHIẾU GIẢI QUYẾT HỒ SƠ</div><div class="bottom-left">SỐ <div class="cinput"></div>/TYV5-TH</div></td></tr></table><br><table class="para"><tr><td colspan="4">Tên đơn vị: <div class="cinput"></div></td></tr><tr><td>Ngày nhận: <div class="cinput"></div></td><td colspan="3">Ngày hẹn trả kết quả: <div class="cinput"></div></td></tr><tr><td width="350px">Hình thức nhận: </td><td width="300px"><input type="checkbox" class="5">Trực tiếp</td><td width="300px"><input type="checkbox" class="5">Bưu điện</td><td width="300px">Khác <input type="text" class="tide" id="6"></td></tr><tr><td>Người nhận hồ sơ: <input type="text" class="tide" id="7"></td></tr><tr><td>Phòng chuyên môn:</td><td>Ngày nhận <input type="text" class="tide" id="8"></td><td>Ngày trả <input type="text" class="tide" id="9"></td></tr></table><br><table border="1"><tr><td class="cell-center">Hồ sơ gồm</td></tr><tr><td><textarea rows="7" cols="65"></textarea></td></tr></table><br><table border="1"><tr><td class="small cell-center">Ý kiến của phòng, Bộ phận chịu trách nhiệm giải quyết</td><td class="small cell-center">Ý khiến của Ban Lãnh đạo</td></tr><tr><td><textarea rows="7" cols="40"></textarea></td><td><textarea rows="7" cols="20"></textarea></td></tr></table><div class="small">&nbsp;&nbsp;&nbsp;&nbsp; <b> <i> <u>Ghi chú:</u> </i> </b> Hồ sơ có ý kiến của thủ trưởng (hoặc người được ủy quyền) phải giao lại cho Bộ phận một cửa trước 01 ngày so với ngày hẹn trả kết quả</div><div></div><div></div><div style="height: 120px;"></div><div><div class="smaller left w40">Mã số: </div><div class="smaller left w30">Ngày ban hành</div><div class="smaller left w30">Lần sửa đổi</div></div></div></div>', '<div id="content"><div class="container"><table><tr><td class="cell-center">CỤC THÚ Y <br> CHI CỤC THÚ Y VÙNG V</td><td class="cell-center">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM <br><u>Độc lập - Tự do - Hạnh phúc</u></td></tr><tr><td></td><td style="text-align: right;"><i> Đăk Lăk, &nbsp;&nbsp;&nbsp;&nbsp; giờ &nbsp;&nbsp;&nbsp;&nbsp;p, ngày &nbsp;&nbsp;&nbsp;&nbsp; tháng  &nbsp;&nbsp;&nbsp;&nbsp;  năm &nbsp;&nbsp;&nbsp;&nbsp;</i></td></tr></table><br><h1 style="text-align: center">BIÊN BẢN GIAO NHẬN MẪU XÉT NGHIỆM</h1><P><b>&nbsp;&nbsp;&nbsp;&nbsp; 1/ Đại diện bên giao mẫu</b></P><p>&nbsp;&nbsp;&nbsp;&nbsp;  - Họ và tên: </p><p>&nbsp;&nbsp;&nbsp;&nbsp;Bộ phận một cửa - Phòng Tổng hợp - Chi cục Thú y Vùng V</p><p>&nbsp;&nbsp;&nbsp;&nbsp; <b>2/ Đại diện bên nhận mẫu:</b></p><p>&nbsp;&nbsp;&nbsp;&nbsp; - Họ và tên: </p><p>&nbsp;&nbsp;&nbsp;&nbsp; Bộ phận nhập mẫu - Trạm CĐXN bệnh động vật - Chi cục Thú y vùng V</p><p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i> *Điện thoại: </i> 02623.877.795</p><p> &nbsp;&nbsp;&nbsp;&nbsp;<b> 3/ Thông tin về mẫu</b></p><table><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Loại mẫu: </td><td>Loại vật được lấy mẫu</td></tr></table><table><tr><td> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Số lượng mẫu: </td><td> Tình trạng mẫu</td></tr><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Ký hiệu mẫu <br><br></td></tr></table><table><tr><td width="420px"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Ghi chú: (đính kèm danh sách nhận diện mẫu) </td><td> có</td><td> không</td></tr></table>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hình thức bảo quản, vận chuyển mẫu khi bàn giao (Đề nghị gạch chéo vào một trong các ô sau đây)<table><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Thùng đá</td><td>Xe lạnh</td><td>Phương tiện khác</td></tr></table>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Chất lượng chung của mẫu khi bàn giao (dựa vào cảm quan để nhận xét): <br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>4/ Yêu cầu xét nghiệm</b> <br><br><br><br><br><br><br><p>&nbsp;&nbsp;&nbsp;&nbsp; Biên bản kết thúc vào lúc h p, cùng ngày; biên bản này đã được lập thành bản; bên giao và bên nhận thống nhất ký vào biên bản (bên nhân giữ mẫu copy).</p><table><tr><td class="cell-center"><b>XÁC NHẬN CỦA BÊN NHẬN MẪU</b> <br>(Ký xác nhận, ghi rõ họ và tên)<br><br><br></td><td width="50px"></td><td class="cell-center"><b>XÁC NHẬN CỦA BÊN GIAO MẪU</b> <br>(Ký xác nhận, ghi rõ họ và tên)<br><br><br></td></tr></table></div></div>', '<div id="content"><div class="container"><table border="1"><tr><td class="cell-center" width="600px">CHI CỤC THÚ Y VÙNG V <br>TRẠM CHUẨN ĐOÁN XÉT NGHIỆM ĐỘNG VẬT</td><td class="cell-center">Biểu mẫu Số <br>Số soát xét</td></tr></table><div style="text-align: right;"><i> Ngày &nbsp;&nbsp;&nbsp;&nbsp; tháng  &nbsp;&nbsp;&nbsp;&nbsp;  năm &nbsp;&nbsp;&nbsp;&nbsp;</i></div><br><h1 style="text-align: center">PHIẾU YÊU CẦU XÉT NGHIỆM</h1><div style="float: right; border: 1px solid black; width: 300px; padding: 8px;">Số DKXN: <br>Số trang: <br>Liên: <br></div><div style="clear: both;"></div>Khách hàng: <br>Loại mẫu: &nbsp;&nbsp;  Nguyên con &#9744; &nbsp;&nbsp;  Huyết thanh &#9744; &nbsp;&nbsp;  Máu &#9744; &nbsp;&nbsp;  Phủ tạng &#9744; &nbsp;&nbsp;  Swab &#9744; <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Khác: <br>Số lượng mẫu &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Loài vật được lấy mẫu <br>Số nhận diện <br> <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* Ghi chú: (Đính kèm danh sách nhận diện mẫu) - Có &#9744; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - Không &#9744; <br>Chỉ tiêu xét nghiệm:  <br>1. <br>Phương pháp xét nghiệm  <br>Ký hiệu xét nghiệm <br>2.  <br>Phương pháp xét nghiệm  <br>Ký hiệu xét nghiệm  <br>3.  <br>Phương pháp xét nghiệm  <br>Ký hiệu xét nghiệm  <br>4.  <br>Phương pháp xét nghiệm  <br>Ký hiệu xét nghiệm  <br>5.  <br>Phương pháp xét nghiệm  <br>Ký hiệu xét nghiệm  <br>Các yêu cầu khác: <br>Ngày hẹn trả kết quả &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ngày nhận mẫu<table><tr><td class="cell-center"><b>Khách hàng</b></td><td class="cell-center"><b>Bộ phận nhận mẫu</b></td></tr></table></div></div>']
+  var tab = $("#tab")
   var content = $("#content")
-  var registConfirm = $("#regist_confirm")
-  var registList = $("#regist_list")
-  // var workList = $("#work_list")
-  // var workContentList = $("#work_content_list")
-  // var exchangeWork = $("#exchange_work")
-  // var exchangeWorkContent = $("#exchange_work_content")
-  // var exchangeWorkDoctor = $("#exchange_work_doctor")
-  // var confirmWork = $("#confirm_work")
-  // var confirmWorkContent = $("#confirm_work_content")
-  var dconfirm = $("#dconfirm")
-  var wconfirmAlert = $("#wconfirm_alert")
-  var wconfirmAlertContent = $("#wconfirm_alert_content")
-  var print = $("#print")
-  var tab = $(".tab")
+  var style = '<style>* {font-family: "Times New Roman", Times, serif;font-size: 20px;} table {width: 100%;border-collapse: collapse;} td {padding: 4px; } p {margin: 10px;} br {display: block; content: ""; margin: 5px 0px;} .container {padding: 40px 10px 40px 60px;} .cell-center {text-align: center;vertical-align: inherit !important;} .relative {position: relative;} .bottom-left {position: absolute;bottom: 8px;left: 8px;} .para td {line-height: 35px;} .left {float: left;} .w30 {width: 30%;} .w40 {width: 40%;} .small {font-size: 0.9em;} .smaller {font-size: 0.8em;} .tide {width: 100px;} .tider {width: 50px;}</style>'
+  var tabButton
 
-  var doctorId = {doctorId}
-
-  var admin = {admin}
-  var regist = false
-  var color = ["white", "green", "red", "orange"]
-  var panis = []
-  var exDate = -1
-  var exType = -1
-  var wconfirmData = []
-  var manager = 0
-
-  setEvent()
-
-  // #exchange
-  // exchangeWorkDoctor.change(() => {
-  //   getWorkList()
-  // })
-
-  // function exchange(exchangeDate, exchangeType) {
-  //   exDate = exchangeDate
-  //   exType = exchangeType
-
-  //   getWorkList().then(() => {
-  //     exchangeWork.modal("show")
-  //   })
-  // }
-
-  // function getWorkList() {
-  //   return new Promise(resolve => {
-  //     $.post(
-  //       strHref,
-  //       {action: "getWorkList", doctorId: exchangeWorkDoctor.val(), exType: exType, startDate: startDate.val(), endDate: endDate.val()},
-  //       (response, status) => {
-  //         checkResult(response, status).then((data) => {
-  //           exchangeWorkContent.html(data["html"])
-  //           resolve()
-  //         }, () => {})
-  //       }    
-  //     )
-  //   })
-  // }
-
-  // function exchangeSubmit(exDate2, extype2) {
-  //   $.post(
-  //     strHref,
-  //     {action: "exchange", exDate: exDate, exType: exType, exDate2: exDate2, exType2: exType2},
-  //     (response, status) => {
-  //       checkResult(response, status).then((data) => {
-
-  //       }, () => {})
-  //     }
-  //   )
-  // }
-
-  // #confirm schedule
-  // function editSchedule() {
-  //   $.post(
-  //     strHref,
-  //     {action: "editSchedule", doctorId: exchangeWorkDoctor.val(), exType: exType, startDate: startDate.val(), endDate: endDate.val()},
-  //     (response, status) => {
-  //       checkResult(response, status).then((data) => {
-  //         confirmWorkContent.html(data["html"])
-  //         confirmWork.modal("show")
-          
-  //         setEvent2()
-  //       }, () => {})
-  //     }    
-  //   )
-  // }
-
-  // function registOnAdmin() {
-  //   if (admin) {
-  //     registOff()
-  //   }
-  //   else {
-  //     var table = content[0].children[0].children[1].children
-  //     var i = 0
-  //     var thisDateString = "", thisDate = 0
-  //     for (const rowKey in table) {
-  //       if (table.hasOwnProperty(rowKey)) {
-  //         const row = table[rowKey];
-  //         var moi = [0, 0, 0, 0, 0]
-          
-  //         while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
-  //           moi[dbdata[i]["type"] + 1] = 2
-  //           i ++
-  //         }
-  //         moi.forEach((cellColor, index) => {
-  //           row.children[index].setAttribute("class", color[cellColor])
-  //         });
-  //       }
-  //     }
-      
-  //   }
-  //   admin = !admin
-  // }
-
-  // list.click(() => {
-  //   var table = content[0].children[0].children[1].children
-  //   var i = 0
-  //   html = ""
-  //   for (const rowKey in table) {
-  //     if (table.hasOwnProperty(rowKey)) {
-  //       const row = table[rowKey];
-  //       var last_type = -1
-  //       var last_date = -1
-
-  //       while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
-  //         if (row.children[dbdata[i]["type"] + 1].innerText.search(username) >= 0) {
-  //           if (last_date != dbdata[i]["date"] || last_type != dbdata[i]["type"]) {
-  //             switch (dbdata[i]["type"]) {
-  //               case 0:
-  //                 type = "trực sáng"
-  //                 break;
-  //               case 1:
-  //                 type = "trực tối"
-  //                 break;
-  //               case 2:
-  //                 type = "nghỉ sáng"
-  //                 break;
-  //               case 3:
-  //                 type = "nghỉ chiều"
-  //                 break;
-  //             }
-  //             html += "<div class='item'>Ngày " + dbdata[i]["date"] + ": " + type + "<button class='btn btn-info right' onclick='exchange(\"" + dbdata[i]["date"] + "\", " + dbdata[i]["type"] +")'><span class='glyphicon glyphicon-retweet'></span></button></div>"
-  //           }
-  //         }
-  //         last_date = dbdata[i]["date"]
-  //         last_type = dbdata[i]["type"]
-  //         i ++
-  //       }
-  //     }
-  //   }
-  //   workContentList.html(html)
-  //   workList.modal("show")
-  // })
-
-  // general
-
-  doctor.change((e) => {
-    doctorId = doctor.val()
-    username = trim($("#doctor option:selected").text())
-    regist = false
-  })
-
-  tab.click((e) => {
-    current = e.currentTarget
-
-    tab.removeClass("active")
-    tab.removeClass("btn-info")
-    current.classList.add("active")
-    current.classList.add("btn-info")
-
-    if (current.getAttribute("rel") == 1)  {
-      print.show()
-      register.show()
-      dconfirm.hide()
-      manager = false
-      filterData()
-    }
-    else {
-      print.hide()
-      register.hide()
-      reset.hide()
-      cconfirm.hide()
-      dconfirm.show()
-      manager = true
-      toWconfirm()
-    }
-  })
-
-  dconfirm.click(() => {
-    pan = []
-    html = ""
-    $(".cdailyrou").each((item, row) => {
-      var thisDate = row.getAttribute("date")
-      var thisColor = row.getAttribute("class").replace("cdailyrou ", "")
-      var thisType = row.getAttribute("dtype")
-      if (thisColor == "purple" || thisColor == "yellow") {
-        var name = trim(row.parentElement.children[1].innerText)
-        pan.push({
-          color: thisColor,
-          date: thisDate,
-          type: Number(thisType),
-          name: name
-        })
-        html += "<p>" + dateToString(new Date(Number(thisDate) * 1000)) + ": " + (thisColor == "yellow" ? "Thêm" : "Bỏ") + " ca " + ((thisType - 2) ? "chiều" : "sáng") + " cho " + name + "</p>"
-      }
-    })
-    wconfirmData = pan
-    if (wconfirmData.length) {
-      wconfirmAlertContent.html(html)
-      wconfirmAlert.modal("show")
-    }
-  })
-
-  // wconfirm: confirm case of work each week
-
-  function wconfirmSubmit() {
-    $.post(
-      strHref,
-      {action: "wconfirmSubmit", startDate: startDate.val(), data: wconfirmData},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          wconfirmAlert.modal("hide")
-          content.html(data["html"])
-          doctorId = data["doctorId"]
-          wconfirmInitiaze()
-        }, () => {})
-      }
-    )
-  }
-
-  function toWconfirm() {
-    $.post(
-      strHref,
-      {action: "wconfirm", startDate: startDate.val()},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          content.html(data["html"])
-          doctorId = data["doctorId"]
-          wconfirmInitiaze()
-        }, () => {})
-      }
-    )
-  }
-
-  function wconfirmInitiaze() {
-    $(".cdailyrou").click((e) => {
-      var current = e.currentTarget
-      var thisColor = current.getAttribute("class").replace("cdailyrou ", "")
-
-      switch (thisColor) {
-        case "red":
-          current.setAttribute("class", "cdailyrou purple")
-          break;
-        case "purple":
-          current.setAttribute("class", "cdailyrou red")
-          break;
-        case "green":
-          current.setAttribute("class", "cdailyrou yellow")
-          break;
-        case "yellow":
-          current.setAttribute("class", "cdailyrou green")
-          break;
-      }
-
-      var date = 0
-      $(".ddailyrou").each((index, row) => {
-        row.innerText = 0
-      })
-      $(".cdailyrou").each((index, row) => {
-        currentRow = row
-        var thisDate = currentRow.getAttribute("date")
-        var thisColor = currentRow.getAttribute("class").replace("cdailyrou ", "")
-        var thisType = currentRow.getAttribute("dtype")
-        if (thisColor == "red" || thisColor == "yellow") {
-          var parentChild = currentRow.parentElement.children
-          var parentChildFor = parentChild[parentChild.length - 5 + Number(thisType)]
-          parentChildFor.innerText = Number(parentChildFor.innerText) + 1
-          parentChild[parentChild.length - 1].innerText = Number(parentChild[parentChild.length - 2].innerText) + Number(parentChild[parentChild.length - 3].innerText)
-        }
-      })
-    })
-  }
-
-  // regist a case of work
-
-  function tickOn() {
-    cconfirm.show()
-    reset.show()
-    register.hide()
-    regist = true
-  }
-
-  function tickOff() {
-    cconfirm.hide()
-    reset.hide()
-    register.show()
-    regist = false
-  }
-
-  register.click(() => {
-    registOn()
-    tickOn()
-  })
-
-  reset.click(() => {
-    registOff()
-    tickOff()
-  })
-
-  cconfirm.click(() => {
-    panis = checkRegist()
-    if (panis.length) {
-      var html = ""
-      panis.forEach(item => {
-        var type = "Đăng ký"
-        if (item["color"] == "purple") {
-          var type = "Bỏ đăng ký"
-        }
-        switch (item["type"]) {
-          case 2:
-            retype = "lịch trực sáng"
-            break;
-          case 3:
-            retype = "lịch trực tối"
-            break;
-          case 4:
-            retype = "lịch nghỉ sáng"
-            break;
-          case 5:
-            retype = "lịch nghỉ chiều"
-            break;
-        }
-        html += "<div class='regist_item'>" + type + " " + retype + " ngày " + item["date"] + "</div>"
-      })
-      registConfirm.modal("show")
-      registList.html(html)
-    }
-    else {
-      registOff()
-      tickOff()
-    }
-  })
-
-  // dateType.change(() => {
-  //   var date = {}
-  //   var now = new Date();
-    
-  //   switch (dateType.val()) {
-  //     case "1":
-  //       // this week
-  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 1);
-  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 7);
-  //     break;
-  //     case "2":
-  //       // next week
-  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 7);
-  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 14);
-  //     break;
-  //     case "3":
-  //       // this month
-  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 2, 1);
-  //     break;
-  //     case "4":
-  //       // last month
-  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth(), 1);
-  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-  //     break;
-  //     case "5":
-  //       // next month
-  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 2, 1);
-  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 3, 1);
-  //     break;
-  //   }
-  //   if (date["startDate"]) {
-  //     startDate.val(dateToString(date["startDate"]));
-  //     endDate.val(dateToString(date["endDate"]));
-  //     filterData(); 
-  //   }
-  // })
-
-  $("#start-date").change(() => {
-    dateTimeout = setTimeout(() => {
-      filterData()
-    }, 500);
-  })
-
-  $("#start-date").datepicker({
-		format: 'dd/mm/yyyy',
-    changeMonth: true,
-    changeYear: true
-	});
-
-  // event function
-
-  function registOn() {
-    console.log(1);
-    
-    var table = content[0].children[0].children[1].children
+  $("document").ready(() => {
+    var html = ''
     var i = 0
-    for (const rowKey in table) {
-      if (table.hasOwnProperty(rowKey)) {
-        const row = table[rowKey];
-        var moi = [0, 0, 1, 1, 1, 1]
-        while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
-          var thisIndex = Number(dbdata[i]["type"]) + 2
-          
-          if (row.children[thisIndex].innerText.search(username) >= 0) {
-            moi[thisIndex] = 3
-          }
-          else {
-            moi[thisIndex] = 2
-          }
-          i ++
-        }
-        moi.forEach((cellColor, index) => {
-          row.children[index].setAttribute("class", color[cellColor])
-        });
+    data.forEach((item, index) => {
+      if (i == index) {
+        var cls = 'btn btn-info active'
       }
-    }
-  }
-
-  function registOff() {
-    var table = content[0].children[0].children[1].children
-    var moi = [0, 0, 0, 0, 0, 0]
-
-    for (const rowKey in table) {
-      if (table.hasOwnProperty(rowKey)) {
-        const row = table[rowKey];
-        moi.forEach((cellColor, index) => {
-          row.children[index].setAttribute("class", color[cellColor])
-        });
+      else {
+        cls = 'btn'
       }
-    }
+      html += '<button class="' + cls + ' tab-button" onclick="totab('+ index +')"> Mẫu '+ (index + 1) +' </button>';
+    })    
+    tab.html(html)
+    tabButton = $(".tab-button")
+    tabButton.click((e) => {
+      var current = e.currentTarget
+
+      tabButton.removeClass('active')
+      tabButton.removeClass('btn-info')
+      current.classList.add('active')
+      current.classList.add('btn-info')
+    })
+    totab(i)
+  })
+
+  function totab(index) {
+    content.html(data[index])
   }
-
-  function checkRegist() {
-    var table = content[0].children[0].children[1].children
-    var moi = [0, 0, 0, 0, 0, 0]
-    var pan = []
-
-    for (const rowKey in table) {
-      if (table.hasOwnProperty(rowKey)) {
-        const row = table[rowKey];
-        moi.forEach((cellColor, index) => {
-          var this_class = row.children[index].getAttribute("class")
-          if (this_class == "yellow" || this_class == "purple" || this_class == "blue") {
-            pan.push({
-              date: trim(row.children[0].innerText),
-              type: index,
-              color: this_class
-            })
-          }
-        });
-      }
-    }
-    
-    return pan
-  }
-
-  function registSubmit() {
-    $(".btn, .form-control").attr("disabled", true)
-    $.post(
-      strHref,
-      {action: "regist", doctorId: doctorId, itemList: panis, startDate: startDate.val()},
-      (response, status) => {
-        checkResult(response, status).then((data) => {
-          $(".btn").attr("disabled", false)
-          content.html(data["html"])
-          setEvent()
-          dbdata = JSON.parse(data["json"])
-          schedule = dbdata.length
-          registConfirm.modal("hide")
-          tickOff()
-          registOff()
-          $(".btn, .form-control").attr("disabled", false)
-        }, () => {
-          $(".btn, .form-control").attr("disabled", false)
-        })
-      }
-    )
-  }
-
-  function filterData() {
-    tickOff()
-    $(".btn, .form-control").attr("disabled", true)
-      $.post(
-        strHref,
-        {action: "filter_data", startDate: startDate.val()},
-        (response, status) => {
-          checkResult(response, status).then((data) => {
-            content.html(data["html"])
-            setEvent()
-            dbdata = JSON.parse(data["json"])
-            schedule = dbdata.length
-            $(".btn, .form-control").attr("disabled", false)
-          }, () => {
-            $(".btn, .form-control").attr("disabled", false)
-          })        
-        }
-      )
-  }
-
-  // button function
 
   function printer() {
-    var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
-    var html = content.html().toString()
-    html = "<style>table {border-collapse: collapse; width: 100%;} td, th {border: 1px solid black; padding: 4px;} .text-center{text-align: center;}</style>" + html
-    
-    WinPrint.document.write(html);
-    WinPrint.document.close();
-    WinPrint.focus();
-    WinPrint.print();
-    WinPrint.close();
-  }
+  var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+  var html = style + content.html().toString()
+  
+  WinPrint.document.write(html);
+  WinPrint.document.close();
+  WinPrint.focus();
+  WinPrint.print();
+  WinPrint.close();
+}
 
-  function nextWeek() {
-    var dateVal = startDate.val().split("/")
-    var date = new Date(dateVal[2], parseInt(dateVal[1]) - 1, dateVal[0])
-    var day = date.getDay()
-    var diff = date.getDate() - day + 1
-    date.setDate(diff + 7)
-    startDate.val(dateToString(date))
-
-    if (manager) {
-      toWconfirm()
-    }
-    else {
-      filterData()
-    }
-  }
-
-  function prevWeek() {
-    var dateVal = startDate.val().split("/")
-    var date = new Date(dateVal[2], parseInt(dateVal[1]) - 1, dateVal[0])
-    var day = date.getDay()
-    var diff = date.getDate() - day + 1
-    date.setDate(diff - 7)
-    startDate.val(dateToString(date))
-    
-    if (manager) {
-      toWconfirm()
-    }
-    else {
-      filterData()
-    }
-  }
-
-  // initiaze
-
-  function setEvent() {
-    var td = $(".dailyrou")
-    td.click((e) => {
-      if (regist) {
-        var that = e.currentTarget
-        var thisDateVal = (trim(that.parentElement.children[0].innerText)).split("/")
-        var thisDate = new Date(thisDateVal[2], parseInt(thisDateVal[1]) - 1, thisDateVal[0])
-        var thisColor = that.getAttribute("class")
-        var thisValue = trim(that.innerText)
-        
-        if (admin || (thisDate >= today)) {
-          switch (thisColor) {
-            case "red":
-              if (thisValue.search(username) > 0) {
-                that.setAttribute("class", "purple")
-              }
-              else if (checkExcept(thisValue)) {
-                that.setAttribute("class", "blue")
-              }
-            break;
-            case "blue":
-              that.setAttribute("class", "red")
-            break;
-            case "green":
-              that.setAttribute("class", "yellow")
-            break;
-            case "purple":
-              if (username && thisValue.search(username) >= 0) {
-                that.setAttribute("class", "orange")
-              }
-            break;
-            case "orange":
-              that.setAttribute("class", "purple")
-            break;
-            case "yellow":
-              that.setAttribute("class", "green")
-            break;
-          }
-        }
-      }
-    })
-  }
-
-  function checkExcept(listText) {
-    var count = (listText.match(/,/g) || []).length
-    except.forEach(exceptName => {
-      var x = listText.search(exceptName)
-      console.log(x);
-      
-      if (x >= 0) {
-        count --
-      }
-    })
-    if (count < 1) {
-      return 1
-    }
-    return 0
-  }
 </script>
 <!-- END: main -->
