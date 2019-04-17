@@ -222,6 +222,13 @@ function user_work_list($userid = 0, $depart = 0) {
     if (!empty($user) && ($user["is_leader"] || $user["group_id"] == 1)) {
       $admin = true;
     }
+    $sql = "select * from `" . WORK_PREFIX . "_employ` where userid = " . $user_info['userid'] . ' and role = 2';
+    $query = $db->query($sql);
+    $user = $query->fetch();
+
+    if (!empty($user)) {
+      $manager = true;
+    }
   }
 
   if (empty($extra_sql)) {
@@ -286,6 +293,9 @@ function user_work_list($userid = 0, $depart = 0) {
       }
 
       if ($admin) {
+        $xtpl->parse("main.loop.admin");
+      }
+      if ($manager) {
         $xtpl->parse("main.loop.manager");
       }
       $xtpl->parse("main.loop");
@@ -749,14 +759,14 @@ function filter_by_time() {
   $calltime = $nv_Request->get_string("calltime", "get/post", "");
 
   if (empty($cometime)) {
-    $cometime = strtotime(date("Y-m-d")) - 60 * 60 * 24 * 7;
+    $cometime = strtotime(date("Y-m-d")) - 60 * 60 * 24 * 15;
   }
   else {
     $cometime = totime($cometime);
   }
 
   if (empty($calltime)) {
-    $calltime = strtotime(date("Y-m-d")) + 60 * 60 * 24 * 7; 
+    $calltime = strtotime(date("Y-m-d")) + 60 * 60 * 24 * 15; 
   }
   else {
     $calltime = totime($calltime);

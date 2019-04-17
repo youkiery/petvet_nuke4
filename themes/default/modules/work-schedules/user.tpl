@@ -164,7 +164,7 @@
           </div>
           <div class="form-group">
             <label> {lang.note} </label>
-            <input class="form-control" type="text" id="edit_note">
+            <input class="form-control" type="text" id="edit_note2">
           </div>
           <button class="btn btn-info">
             {lang.update}
@@ -370,7 +370,7 @@
         checkResult(response, status).then(data => {
           current = data["process"]
           $("#edit_process2").val(data["process"] + "%")
-          $("#edit_note").val(data["note"])
+          $("#edit_note2").val(data["note"])
           $("#process_change").modal("show")
           defreeze()
         }, () => {
