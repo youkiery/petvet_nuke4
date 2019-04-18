@@ -51,12 +51,16 @@ function checkRow($id) {
 }
 
 function getRowList($userid = 0, $page = 1, $limit = 10) {
-  global $db, $nv_Request;
+  global $db, $nv_Request, $db_config;
 
   $list = array();
   $extra_sql = '';
   if (!empty($userid)) {
-    $extra_sql = ' where userid = ' . $userid;
+    $sql = 'select * from `'. $db_config['prefix'] .'_rider_user` where user_id = ' . $userid . ' and kaizen = 1';
+    $query = $db->query($sql);
+    if (empty($row = $query->fetch())) {
+      $extra_sql = ' where userid = ' . $userid;
+    }
   }
   
   $sql = 'select count(id) as count from `'. PREFIX .'_row`' . $extra_sql;

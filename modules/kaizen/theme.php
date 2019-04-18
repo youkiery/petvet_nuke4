@@ -35,7 +35,7 @@ function preCheckUser() {
 
 function kaizenList($userid = 0) {
   global $db, $db_config, $user_info, $nv_Request;
-
+  
   $page = $nv_Request->get_int('page', 'get/post', 0);
   $limit = $nv_Request->get_int('limit', 'get/post', 0);
 
@@ -54,7 +54,17 @@ function kaizenList($userid = 0) {
     $xtpl->assign('cell_1', 2);
     $xtpl->assign('cell_2', 1);
   }
-
+  
+  if (!empty($userid)) {
+    $sql = 'select * from `'. $db_config['prefix'] .'_rider_user` where user_id = ' . $userid . ' and kaizen = 1';
+    $query = $db->query($sql);
+    if ($row = $query->fetch()) {
+      $userid = 0;
+      $xtpl->assign('cell_1', 2);
+      $xtpl->assign('cell_2', 1);
+    }
+  }
+  
   if (count($list['data'])) {
     foreach ($list['data'] as $row) {
       $xtpl->assign('index', ($start + $index++));
