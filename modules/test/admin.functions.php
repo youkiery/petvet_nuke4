@@ -14,6 +14,7 @@ if (! defined('NV_ADMIN') or ! defined('NV_MAINFILE') or ! defined('NV_IS_MODADM
 
 define( 'NV_IS_QUANLY_ADMIN', true );
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
+require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';
 
 function admin_schedule() {
   global $db, $global_config, $module_file, $lang_module, $db_config;

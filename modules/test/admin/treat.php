@@ -121,6 +121,19 @@ foreach ($filter_type as $filter_value) {
 if ($action) {
 	$ret = array("status" => 0, "data" => array());
 	switch ($action) {
+		case 'summary-on':
+			$starttime = $nv_Request->get_string('starttime', 'post/get', '');
+			$endtime = $nv_Request->get_string('endtime', 'post/get', '');
+
+			if (!(empty($starttime) || empty($endtime))) {
+				$starttime_i = totime($starttime);
+				$endtime_i = totime($endtime);
+				
+				$ret['status'] = 1;
+				$ret['html'] = summaryOn($starttime_i, $endtime_i);
+				echo json_encode($ret);
+			}
+		break;
 		case 'treat_info':
 			$id = $nv_Request->get_string('id', 'post', "");
 			if (!empty($id)) {
@@ -215,6 +228,12 @@ if ($action == "xoasieuam") {
 	$xtpl->assign("content", displayRed($display_list, NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file, $lang_module, $from + 1, $nav));
 }
 
+$today = strtotime(date('Y-m-d'));
+$starttime = $today - 60 * 60 * 24 * 15;
+$endtime = $today + 60 * 60 * 24 * 15;
+$xtpl->assign('sumstart', date('d/m/Y', $starttime));
+$xtpl->assign('sumend', date('d/m/Y', $endtime));
+$xtpl->assign('summaryon', summaryOn($starttime, $endtime));
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 

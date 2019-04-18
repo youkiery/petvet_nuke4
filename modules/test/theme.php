@@ -37,6 +37,30 @@ function vaccineRemind($keyword, $fromtime, $totime) {
   return $xtpl->text();
 }
 
+function summaryOn($starttime, $endtime) {
+  global $db, $global_config, $module_file;
+  $xtpl = new XTemplate("treat-summary.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
+  $xtpl->assign('starttime', date('d/m/Y', $starttime));
+  $xtpl->assign('endtime', date('d/m/Y', $endtime));
+
+  $sql = 'select * from `'.VAC_PREFIX.'_treat` where cometime between '. $starttime .' and '. $endtime;
+  $query = $db->query($sql);
+  $data = array(0, 0, 0);
+  while ($treat = $query->fetch()) {
+    $data[$treat['insult']] ++;
+  }
+  $rate1 = round(($data[1] + $data[2]) > 0 ? $data[1] * 100 / ($data[1] + $data[2]) : 0, 1);
+  $rate2 = round(($data[0] + $data[1] + $data[2]) > 0 ? ($data[1] + $data[0]) * 100 / ($data[0] + $data[1] + $data[2]) : 0, 1);
+  $xtpl->assign('total', $data[0] + $data[1] + $data[2]);
+  $xtpl->assign('treating', $data[0]);
+  $xtpl->assign('safe', $data[1]);
+  $xtpl->assign('dead', $data[2]);
+  $xtpl->assign('rate1', $rate1);
+  $xtpl->assign('rate2', $rate2);
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 // include_once(NV_ROOTDIR . "/modules/" . $module_file . "/modal/spa.php");
 // $spa = new Spa();
 // include_once(NV_ROOTDIR . "/modules/" . $module_file . "/modal/doctor.php");

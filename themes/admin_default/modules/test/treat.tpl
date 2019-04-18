@@ -154,18 +154,30 @@
     </div>
   </div>
 </div>
+
+<div id="summary-on" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="form-inline">
+          <input class="form-control" id="summary-on-start" type="text" value="{sumstart}" autocomplete="off">
+          <input class="form-control" id="summary-on-end" type="text" value="{sumend}" autocomplete="off">
+          <button class="btn btn-info" onclick="summaryOnShow()">
+            Xem tổng kết
+          </button>
+        </div>
+        <div id="summary-content">
+          {summaryon}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
   
-<form method="GET">
+<form method="GET" class="form-inline">
 	<input type="hidden" name="nv" value="vaccine">
   <input type="hidden" name="op" value="treat">
-  <div class="row">
-    <div class="form-group col-md-8">
-      <label>
-        {lang.keyword}
-      </label>
       <input class="form-control" type="text" name="keyword" id="keyword" value="{keyword}" placeholder="{lang.keyword}">
-    </div>
-    <div class="form-group col-md-8">
       <label>
         {lang.startday}
       </label>
@@ -174,9 +186,7 @@
         <div class="input-group-addon">
             <span class="glyphicon glyphicon-th"></span>
         </div>
-      </div>
     </div>
-    <div class="form-group col-md-8">
       <label>
         {lang.endday}
       </label>
@@ -185,9 +195,7 @@
         <div class="input-group-addon">
             <span class="glyphicon glyphicon-th"></span>
         </div>
-      </div>
     </div>
-  </div>
   <div class="row">
     <div class="form-group col-md-12">
       <label>
@@ -216,6 +224,9 @@
     </button>
   </div>
 </form>
+<button class="btn btn-info" style="float: right" onclick="summaryOnclick()">
+  Tổng kết
+</button>
 
 <img class="anchor" src="/themes/default/images/vaccine/add.png" alt="{lang.themsieuam}" title="themsieuam" onclick="$('#add').toggle(500)">
 <div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/default/images/vaccine/contact_add_small.png')" class="vac_icon" onclick="addCustomer()">
@@ -312,6 +323,10 @@
 	var pet_note = document.getElementById("pet_note");
 	var suggest_name = document.getElementById("customer_name_suggest");
 	var suggest_phone = document.getElementById("customer_phone_suggest");
+  var summaryOn = $("#summary-on")
+  var summaryOnContent = $("#summary-content")
+  var summaryOnStart = $("#summary-on-start")
+  var summaryOnEnd = $("#summary-on-end")
 
   var lid = -1;
   var g_ltid = -1;
@@ -320,9 +335,25 @@
   var g_ketqua = -1;
   var vac_index = 0;
 
-  $('#ngaysieuam, #ngayluubenh, #ngaytreating, #from, #to').datepicker({
+  $('#ngaysieuam, #ngayluubenh, #ngaytreating, #from, #to, #summary-on-start, #summary-on-end').datepicker({
     format: 'dd/mm/yyyy'
   });
+
+  function summaryOnclick() {
+    summaryOn.modal('show')
+  }
+
+  function summaryOnShow() {
+		$.post(
+			strHref,
+			{action: "summary-on", starttime: summaryOnStart.val(), endtime: summaryOnEnd.val()},
+			(response, status) => {
+        checkResult(response, status).then(data => {
+          summaryOnContent.html(data['html'])
+        }, () => {})
+			}
+		)
+  }
 
 	function update_treat(e) {
 		e.preventDefault()
