@@ -1008,12 +1008,12 @@ function user_treat() {
 		$doctor[$doctor_row["id"]] = $doctor_row["name"];
   }
   // filter query
-  $where = "where (c.name like '%$keyword%' or c.phone like '%$keyword%' or b.name like '%$keyword%') and a.insult in ($filter) and ()";
+  $where = "where (c.name like '%$keyword%' or c.phone like '%$keyword%' or b.name like '%$keyword%') and a.insult in ($filter) ";
   // list
   switch ($page) {
     case 'today':
       $end = $today + 60 * 60 * 24;
-      $where = "ctime between $today and $end";
+      $where .= "and ctime between $today and $end";
     break;
     default:
       $time = $vacconfigv2["filter"];
@@ -1022,9 +1022,9 @@ function user_treat() {
       }
       $from = $today - $time;
       $end = $today + $time;
-      $where = "cometime between $from and $end";
+      $where .= "and cometime between $from and $end";
   }
-  $sql = "SELECT a.id, a.cometime, a.insult, b.id as petid, b.name as petname, c.name as customer, d.name as doctor from `" . VAC_PREFIX . "_treat` a inner join `" . VAC_PREFIX . "_pet` b on a.petid = b.id inner join `" . VAC_PREFIX .  "_customer` c on c.id = b.customerid  inner join `" . VAC_PREFIX . "_doctor` d on a.doctorid = d.id where $where order by a.cometime desc, a.id";
+  $sql = "SELECT a.id, a.cometime, a.insult, b.id as petid, b.name as petname, c.name as customer, d.name as doctor from `" . VAC_PREFIX . "_treat` a inner join `" . VAC_PREFIX . "_pet` b on a.petid = b.id inner join `" . VAC_PREFIX .  "_customer` c on c.id = b.customerid  inner join `" . VAC_PREFIX . "_doctor` d on a.doctorid = d.id $where order by a.cometime desc, a.id";
   $result = $db->query($sql);
 
   $list = array();
