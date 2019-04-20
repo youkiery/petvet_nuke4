@@ -8,6 +8,7 @@
       <th> STT </th>
       <th> Họ và tên</th>
       <th class="text-center"> Tổng số ngày nghỉ </th>
+      <th class="text-center"> Quá ngày </th>
     </tr>
   </thead>
   <tbody>
@@ -21,6 +22,9 @@
       </td>
       <td class="text-center">
         {total}
+      </td>
+      <td class="text-center">
+        {exceed}
       </td>
     </tr>
     <!-- END: row -->

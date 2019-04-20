@@ -265,8 +265,8 @@ function adminSummary($startDate = 0, $endDate = 0) {
     if (date('N', $time) < 23) {
       $time = time() - A_DAY * 23;
     }
-    $startDate = strtotime(date("Y", $time) . "-" . date("m", $time) . "-23");
-    $endDate = strtotime(date("Y", $time) . "-" . (intval(date("m", $time)) + 1) . "-23");
+    $startDate = strtotime(date("Y", $time) . "-" . date("m", $time) . "-24");
+    $endDate = strtotime(date("Y", $time) . "-" . (intval(date("m", $time)) + 1) . "-24");
   }
 
   $xtpl = new XTemplate("summary.tpl", PATH);
@@ -287,7 +287,9 @@ function adminSummary($startDate = 0, $endDate = 0) {
     $query2 = $db->query($sql);
     $count = $query2->fetch();
 
-    $xtpl->assign("total", round(($count["num"] / 2), 1));
+    $total = round(($count["num"] / 2), 1);
+    $xtpl->assign("total", $total);
+    $xtpl->assign("exceed", $total > 4 ? $total - 4 : 0);
     $xtpl->parse("main.row");
   }
   
