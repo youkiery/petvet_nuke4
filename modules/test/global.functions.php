@@ -80,6 +80,74 @@ while ($row = $query->fetch()) {
   $vacconfigv2[$row["name"]] = $row["value"];
 }
 
+function selectCustomerId($customerid) {
+  global $db;
+  $sql = 'select * from `'. VAC_PREFIX .'_customer` where id = '. $customerid;
+  $query = $db->query($sql);
+  $customer = $query->fetch();
+  return $customer;
+}
+
+function selectPetId($petid) {
+  global $db;
+  $sql = 'select * from `'. VAC_PREFIX .'_pet` where id = '. $petid;
+  $query = $db->query($sql);
+  $pet = $query->fetch();
+  return $pet;
+}
+
+function getHealId($id) {
+  global $db;
+  $sql = 'select * from `'. VAC_PREFIX .'_heal` where id = '. $id;
+  $query = $db->query($sql);
+  $heal = $query->fetch();
+  $heal['customer'] = selectCustomerId($heal['customerid']);
+  $heal['pet'] = selectPetId($heal['petid']);
+  return $heal;
+}
+
+function getCustomerData() {
+  global $db;
+
+  $customer = array();
+  $sql = 'select id as a, name as b, phone as c from `'. VAC_PREFIX .'_customer`';
+  $query = $db->query($sql);
+
+  while ($customerData = $query->fetch()) {
+    $sql = 'select id as a, name as b from `'. VAC_PREFIX .'_pet` where customerid = ' . $customerData['a'];
+    $petQuery = $db->query($sql);
+  
+    $customer[] = $customerData;
+    $count = count($customer) - 1;
+    $customer[$count]['pet'] = array();
+    while ($pet = $petQuery->fetch()) {
+      $customer[$count]['pet'][] = $pet;
+    }
+  }
+  return json_encode($customer);
+}
+
+function getCustomerSuggestList($keyword) {
+  global $db;
+
+  $customer = array();
+  $sql = 'select id, name, phone from `'. VAC_PREFIX .'_customer` where name like "%'. $keyword .'%" or phone like "%'. $keyword .'%" limit 20';
+  $query = $db->query($sql);
+
+  while ($customerData = $query->fetch()) {
+    $sql = 'select id, name as b from `'. VAC_PREFIX .'_pet` where customerid = ' . $customerData['id'];
+    $petQuery = $db->query($sql);
+  
+    $customer[] = $customerData;
+    $count = count($customer) - 1;
+    $customer[$count]['pet'] = array();
+    while ($pet = $petQuery->fetch()) {
+      $customer[$count]['pet'][] = $pet;
+    }
+  }
+  return json_encode($customer);
+}
+
 function interpolateQuery($query, $params) {
   $keys = array();
 

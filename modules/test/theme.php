@@ -61,6 +61,38 @@ function summaryOn($starttime, $endtime) {
   return $xtpl->text();
 }
 
+function healList($page, $limit, $cometime, $calltime) {
+  global $db;
+  $xtpl = new XTemplate("heal-list.tpl", PATH);
+
+  if (!($page > 0)) $page = 1;
+  // if (!($insult > 0)) $insult = 0;
+  if (!($limit > 0)) $limit = 10;
+
+  $sql = 'select count(id) as id from `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .')';
+  $query = $db->query($sql);
+  $count = $query->fetch();
+  $xtpl->assign('total', $count['id']);
+
+  $sql = 'select * from `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .') limit '. $limit .' offset '. (($page - 1) * $limit);
+  $query = $db->query($sql);
+  $index = 1;
+  while ($heal = $query->fetch()) {
+    $customer = selectCustomerId($heal['customerid']);
+    $pet = selectPetId($heal['petid']);
+    $xtpl->assign('id', $heal['id']);
+    $xtpl->assign('time', date('d/m', $heal['time']));
+    $xtpl->assign('customer', $customer['name']);
+    $xtpl->assign('phone', $customer['phone']);
+    $xtpl->assign('petname', $pet['name']);
+    $xtpl->assign('weight', $heal['weight']);
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 // include_once(NV_ROOTDIR . "/modules/" . $module_file . "/modal/spa.php");
 // $spa = new Spa();
 // include_once(NV_ROOTDIR . "/modules/" . $module_file . "/modal/doctor.php");

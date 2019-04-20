@@ -13,6 +13,7 @@ if (! defined('NV_ADMIN') or ! defined('NV_MAINFILE') or ! defined('NV_IS_MODADM
 }
 
 define( 'NV_IS_QUANLY_ADMIN', true );
+define('PATH', NV_ROOTDIR . "/themes/" . $global_config['admin_theme'] . "/modules/" . $module_file); 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';
 
