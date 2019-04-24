@@ -58,7 +58,7 @@ if (date('N', $time) < 23) {
 	$time = time() - A_DAY * 23;
 }
 
-$startDate = strtotime(date("Y", $time) . "-" . date("m", $time) . "-23");
+$startDate = strtotime(date("Y", $time) . "-" . date("m", $time) . "-24");
 $endDate = strtotime(date("Y", $time) . "-" . (intval(date("m", $time)) + 1) . "-23");
 
 $xtpl->assign("startDate", date('d/m/Y', $startDate));

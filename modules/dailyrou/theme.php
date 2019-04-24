@@ -132,7 +132,7 @@ function wconfirm($date, $doctorId, $userList) {
   $query = $db->query($sql);
 
   $xtpl->assign("from", date("d/m/Y", $startDate));
-  $xtpl->assign("to", date("d/m/Y", $endDate));
+  $xtpl->assign("to", date("d/m/Y", $endDate - 1));
   $xtpl->assign("c2", date("d/m", $startDate));
   $xtpl->assign("c3", date("d/m", $startDate + A_DAY));
   $xtpl->assign("c4", date("d/m", $startDate + A_DAY * 2));
@@ -266,7 +266,7 @@ function adminSummary($startDate = 0, $endDate = 0) {
       $time = time() - A_DAY * 23;
     }
     $startDate = strtotime(date("Y", $time) . "-" . date("m", $time) . "-24");
-    $endDate = strtotime(date("Y", $time) . "-" . (intval(date("m", $time)) + 1) . "-24");
+    $endDate = strtotime(date("Y", $time) . "-" . (intval(date("m", $time)) + 1) . "-23");
   }
 
   $xtpl = new XTemplate("summary.tpl", PATH);
@@ -283,7 +283,7 @@ function adminSummary($startDate = 0, $endDate = 0) {
     $xtpl->assign("index", $index++);
     $xtpl->assign("username", $row["last_name"] . " " . $row["first_name"]);
 
-    $sql = "select count(*) as num from `" . PREFIX . "_row` where time between $startDate and $endDate and user_id = $row[userid] and type > 1 order by time, type asc";
+    $sql = "select count(*) as num from `" . PREFIX . "_row` where time between $startDate and ".($endDate + A_DAY - 1)." and user_id = $row[userid] and type > 1 order by time, type asc";
     $query2 = $db->query($sql);
     $count = $query2->fetch();
 

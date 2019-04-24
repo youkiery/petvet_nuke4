@@ -48,6 +48,16 @@ if (!empty($action)) {
     //   $sql = "insert into * from `" . PREFIX . "_exchange` (user_id, request_user_id, date, type, )";
     //   $query = $db->query($sql);
     // break;
+ 		case 'summary':
+			$startDate = $nv_Request->get_string("startDate", "get/post", "");
+			$endDate = $nv_Request->get_string("endDate", "get/post", "");
+
+			$startDate = totime($startDate);
+			$endDate = totime($endDate);
+
+			$result["status"] = 1;
+			$result["html"] = adminSummary($startDate, $endDate);			
+		break;
     case 'wconfirm':
       $startDate = $nv_Request->get_string("startDate", "get/post", "");
 
@@ -225,6 +235,7 @@ if ($userList = $query->fetch()) {
     $userList = doctorList();
     $xtpl->assign("doctor", blockSelectDoctor($user_id, $userList));
     $xtpl->parse("main.tab");
+    $xtpl->parse("main.manager");
     $xtpl->parse("main.doctor");
   }
   else {
@@ -265,11 +276,21 @@ while($row = $query->fetch()) {
   $except[] = $row['first_name'];
 }
 
+if (date('N', $time) < 23) {
+	$time = time() - A_DAY * 23;
+}
+$startDate = strtotime(date("Y", $time) . "-" . date("m", $time) . "-24");
+$endDate = strtotime(date("Y", $time) . "-" . (intval(date("m", $time)) + 1) . "-23");
+$xtpl->assign("startDate", date('d/m/Y', $startDate));
+$xtpl->assign("endDate", date('d/m/Y', $endDate));
+
 $xtpl->assign("except", json_encode($except));
 $xtpl->assign("data", json_encode($daily));
 // $xtpl->assign("user_name", $user_name);
 $xtpl->assign("username", $user_name);
 $xtpl->assign("doctorId", $user_id);
+$time = time();
+$xtpl->assign("summary", adminSummary($startDate, $endDate));
 $xtpl->assign("content", scheduleList($this_week, $next_week));
 
 $xtpl->parse("main");

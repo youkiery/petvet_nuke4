@@ -51,3 +51,11 @@ function dateToString(date) {
   }
   return day + "/" + month + "/" + year
 }
+
+function freeze() {
+  $(".btn, .select, .input").attr("disabled", true)
+}
+
+function defreeze() {
+  $(".btn, .select, .input").attr("disabled", false)
+}

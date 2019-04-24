@@ -5,6 +5,42 @@
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <div class="msgshow" id="msgshow"></div>
 
+<div id="summary" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <h2> Bản thống kê ngày nghỉ tháng </h2>
+        <br>
+        <div class="form-inline">
+          <div class="form-group">
+            <label>
+              Từ ngày
+            </label>
+            <input type="text" class="form-control" id="summary-date-from" value="{startDate}" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>
+              Đến ngày
+            </label>
+            <input type="text" class="form-control" id="summary-date-end" value="{endDate}" autocomplete="off">
+          </div>
+          <button class="btn btn-info" onclick="summarySubmit()">
+            Xem tổng kết
+          </button>
+        </div>
+        <div id="summary-content">
+          {summary}
+        </div>
+        <div class="text-center">
+          <button class="btn btn-danger" data-dismiss="modal">
+            Trở về
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="regist_confirm" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -142,6 +178,11 @@
 
   </div>
   <div class="col-sm-8">
+    <!-- BEGIN: manager -->
+    <button class="btn btn-info right" onclick="showSummary()">
+      Tổng kết
+    </button>
+    <!-- END: manager -->
     <button class="btn btn-info right" id="register">
       Đăng ký
     </button>
@@ -208,6 +249,10 @@
   var wconfirmAlert = $("#wconfirm_alert")
   var wconfirmAlertContent = $("#wconfirm_alert_content")
   var print = $("#print")
+  var summary = $("#summary")
+  var summaryDateFrom = $("#summary-date-from")
+  var summaryDateEnd = $("#summary-date-end")
+  var summaryContent = $("#summary-content")
   var tab = $(".tab")
 
   var doctorId = {doctorId}
@@ -406,6 +451,28 @@
     }
   })
 
+
+  function showSummary() {
+    summary.modal("show")
+  }
+
+  function summarySubmit() {
+    freeze()
+    $.post(
+      strHref,
+      {action: "summary", startDate: summaryDateFrom.val(), endDate: summaryDateEnd.val()},
+      (response, status) => {
+        checkResult(response, status).then((data) => {
+          summary.modal("show")
+          summaryContent.html(data["html"])
+          defreeze()
+        }, () => {
+          defreeze()
+        })
+      }
+    )
+  }
+
   // wconfirm: confirm case of work each week
 
   function wconfirmSubmit() {
@@ -580,7 +647,7 @@
     }, 500);
   })
 
-  $("#start-date").datepicker({
+  $("#start-date, #summary-date-from, #summary-date-end").datepicker({
 		format: 'dd/mm/yyyy',
     changeMonth: true,
     changeYear: true
