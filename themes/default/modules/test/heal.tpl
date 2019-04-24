@@ -380,6 +380,20 @@
     parseButton()
   })
 
+  function goPage(pPage) {
+    freeze()
+    $.post(
+      strHref,
+      {action: "filter", page: pPage, limit: limit},
+      (response, status) => {
+        checkResult(response, status).then((data) => {
+          page = pPage
+          content.html(data["html"])
+        }, () => {})
+      }
+    )
+  }
+
   function parseButton() {
     stat.removeClass('active')
     stat.each((index, item) => {

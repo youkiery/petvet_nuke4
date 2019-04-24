@@ -71,21 +71,22 @@ function healList($page, $limit, $cometime, $calltime, $customer = 0, $pet = 0) 
   // if (!($insult > 0)) $insult = 0;
   if (!($limit > 0)) $limit = 10;
 
-  $sql = 'select count(id) as id from `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .')';
-  $query = $db->query($sql);
-  $count = $query->fetch();
-  $xtpl->assign('total', $count['id']);
-
   $sql = 'select * from `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .') order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
+  $sql2 = 'select count(id) as id from `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .')';
 
   if (!empty($customer)) {
     if (!empty($pet)) {
       $sql = 'select * from `'. VAC_PREFIX .'_heal` where petid = '.$pet.' and (time between '. $cometime .' and '. $calltime .') order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
+      $sql2 = 'select * from `'. VAC_PREFIX .'_heal` where petid = '.$pet.' and (time between '. $cometime .' and '. $calltime .')';
     }
     else {
       $sql = 'select * from `'. VAC_PREFIX .'_heal` where petid in (select id from `'.VAC_PREFIX.'_pet` where customerid = '.$customer.') and (time between '. $cometime .' and '. $calltime .') order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
+      $sql2 = 'select * from `'. VAC_PREFIX .'_heal` where petid in (select id from `'.VAC_PREFIX.'_pet` where customerid = '.$customer.') and (time between '. $cometime .' and '. $calltime .')';
     }
   }
+  $query = $db->query($sql2);
+  $count = $query->fetch();
+  $xtpl->assign('total', $count['id']);
 
   $query = $db->query($sql);
   $index = 1;
@@ -101,11 +102,53 @@ function healList($page, $limit, $cometime, $calltime, $customer = 0, $pet = 0) 
     $xtpl->assign('petname', $pet['name']);
     $xtpl->assign('oriental', $heal['oriental']);
     $xtpl->assign('drug', $drug);
+    $xtpl->assign('nav', navList($count['id'], $page, $limit));
     $xtpl->parse('main.row');
   }
 
   $xtpl->parse('main');
   return $xtpl->text();
+}
+
+function navList ($number, $page, $limit) {
+  global $lang_global;
+  $total_pages = ceil($number / $limit);
+  $on_page = $page;
+  $page_string = "";
+  if ($total_pages > 10) {
+    $init_page_max = ($total_pages > 3) ? 3 : $total_pages;
+    for ($i = 1; $i <= $init_page_max; $i ++) {
+      $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="goPage('.$i.')">' . $i . '</button>';
+      if ($i < $init_page_max) $page_string .= " ";
+    }
+    if ($total_pages > 3) {
+      if ($on_page > 1 && $on_page < $total_pages) {
+        $page_string .= ($on_page > 5) ? " ... " : ", ";
+        $init_page_min = ($on_page > 4) ? $on_page : 5;
+        $init_page_max = ($on_page < $total_pages - 4) ? $on_page : $total_pages - 4;
+        for ($i = $init_page_min - 1; $i < $init_page_max + 2; $i ++) {
+          $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="goPage('.$i.')">' . $i . '</button>';
+          if ($i < $init_page_max + 1)  $page_string .= " ";
+        }
+        $page_string .= ($on_page < $total_pages - 4) ? " ... " : ", ";
+      }
+      else {
+        $page_string .= " ... ";
+      }
+      
+      for ($i = $total_pages - 2; $i < $total_pages + 1; $i ++) {
+        $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="goPage('.$i.')">' . $i . '</button>';
+        if ($i < $total_pages) $page_string .= " ";
+      }
+    }
+  }
+  else {
+    for ($i = 1; $i < $total_pages + 1; $i ++) {
+      $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="goPage('.$i.')">' . $i . '</button>';
+      if ($i < $total_pages) $page_string .= " ";
+    }
+  }
+  return $page_string;
 }
 
 // include_once(NV_ROOTDIR . "/modules/" . $module_file . "/modal/spa.php");
