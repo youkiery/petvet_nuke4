@@ -11,7 +11,7 @@ if (!defined('NV_IS_MOD_QUANLY')) {
   die('Stop!!!');
 }
 
-quagio();
+
 define('INI_PAGE', 1);
 // define('INI_INSULT', 0);
 define('INI_LIMIT', 10);
