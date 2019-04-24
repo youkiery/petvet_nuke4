@@ -226,6 +226,13 @@ function suggest_init() {
 	})
 }
 
+function freeze() {
+  $(".btn, .select, .input").attr("disabled", true)
+}
+
+function defreeze() {
+  $(".btn, .select, .input").attr("disabled", false)
+}
 
 function checkResult(response, status) {
   return new Promise((resolve, reject) => {
@@ -250,6 +257,7 @@ function checkResult(response, status) {
         }
       }
       catch (e) {
+        console.log(e);
         defreeze()
         reject()
       }
@@ -257,10 +265,3 @@ function checkResult(response, status) {
   })
 }
 
-function freeze() {
-  $(".btn, .select, .input").attr("disabled", true)
-}
-
-function defreeze() {
-  $(".btn, .select, .input").attr("disabled", false)
-}

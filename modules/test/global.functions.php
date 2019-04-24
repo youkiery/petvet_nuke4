@@ -96,13 +96,73 @@ function selectPetId($petid) {
   return $pet;
 }
 
+function selectSpeciesId($id) {
+  global $db;
+  $sql = 'select * from `'. VAC_PREFIX .'_species`';
+  $query = $db->query($sql);
+  $html = '';
+  while ($species = $query->fetch()) {
+    $check = '';
+    if ($species['id'] == $id) {
+      $check = 'selected';
+    }
+    $html .= '<option value='. $species['id'] .' '. $check .'>' . $species['name'] . '</option>';
+  }
+  return $html;
+}
+
+function getSystemId($id) {
+  global $db;
+  $sql = 'select * from `'. VAC_PREFIX .'_system` where healid = ' . $id;
+  $query = $db->query($sql);
+  $list = array();
+  while ($system = $query->fetch()) {
+    $list[] = $system;
+  }
+  return $list;
+}
+
+function getDrugId($id) {
+  global $db;
+  $sql = 'select * from `'. VAC_PREFIX .'_medicine` where healid = ' . $id;
+  $query = $db->query($sql);
+  $list = array();
+  while ($drug = $query->fetch()) {
+    $list[] = $drug;
+  }
+  return $list;
+}
+
+function getDrugIdList($id) {
+  global $db;
+
+  $drugs = getDrugId($id);
+  $drug = array();
+  foreach ($drugs as $row) {
+    $drugData = getDrugDataId($row['id']);
+    $drug[] = $drugData['name'] . ': ' . $row['quanlity'] . '' . $drugData['unit'];
+  }
+  return $drug;
+}
+
+function getDrugDataId($id) {
+  global $db;
+
+  $sql = 'select * from `'. VAC_PREFIX .'_heal_medicine` where id = ' . $id;
+  $query = $db->query($sql);
+  return $query->fetch();
+}
+
 function getHealId($id) {
   global $db;
   $sql = 'select * from `'. VAC_PREFIX .'_heal` where id = '. $id;
   $query = $db->query($sql);
   $heal = $query->fetch();
-  $heal['customer'] = selectCustomerId($heal['customerid']);
   $heal['pet'] = selectPetId($heal['petid']);
+  $heal['pet']['species'] = selectSpeciesId($heal['pet']['species']);
+  $heal['customer'] = selectCustomerId($heal['pet']['customerid']);
+  $heal['system'] = getSystemId($heal['id']);
+  $heal['drug'] = getDrugId($heal['id']);
   return $heal;
 }
 
@@ -135,17 +195,46 @@ function getCustomerSuggestList($keyword) {
   $query = $db->query($sql);
 
   while ($customerData = $query->fetch()) {
-    $sql = 'select id, name as b from `'. VAC_PREFIX .'_pet` where customerid = ' . $customerData['id'];
+    $sql = 'select id, name, weight, age, species from `'. VAC_PREFIX .'_pet` where customerid = ' . $customerData['id'];
     $petQuery = $db->query($sql);
   
     $customer[] = $customerData;
     $count = count($customer) - 1;
     $customer[$count]['pet'] = array();
     while ($pet = $petQuery->fetch()) {
+      $pet['species'] = selectSpeciesId($pet['species']);
       $customer[$count]['pet'][] = $pet;
     }
   }
   return json_encode($customer);
+}
+
+function getSystemList() {
+  global $db;
+
+  $list = array();
+  $sql = 'select * from `'. VAC_PREFIX .'_heal_system`';
+  $query = $db->query($sql);
+
+  while ($system = $query->fetch()) {
+    $list[$system['id']] = $system;
+  }
+
+  return $list;
+}
+
+function getMedicineList() {
+  global $db;
+
+  $list = array();
+  $sql = 'select * from `'. VAC_PREFIX .'_heal_medicine`';
+  $query = $db->query($sql);
+
+  while ($medicine = $query->fetch()) {
+    $list[$medicine['id']] = $medicine;
+  }
+
+  return $list;
 }
 
 function interpolateQuery($query, $params) {

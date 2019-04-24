@@ -61,7 +61,7 @@ function summaryOn($starttime, $endtime) {
   return $xtpl->text();
 }
 
-function healList($page, $limit, $cometime, $calltime) {
+function healList($page, $limit, $cometime, $calltime, $customer = 0, $pet = 0) {
   global $db;
   $xtpl = new XTemplate("heal-list.tpl", PATH);
 
@@ -74,18 +74,29 @@ function healList($page, $limit, $cometime, $calltime) {
   $count = $query->fetch();
   $xtpl->assign('total', $count['id']);
 
-  $sql = 'select * from `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .') limit '. $limit .' offset '. (($page - 1) * $limit);
+  $sql = 'select * from `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .') order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
+
+  if (!empty($customer)) {
+    if (!empty($pet)) {
+      $sql = 'select * from `'. VAC_PREFIX .'_heal` where petid = '.$pet.' and (time between '. $cometime .' and '. $calltime .') order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
+    }
+    else {
+      $sql = 'select * from `'. VAC_PREFIX .'_heal` where petid in (select id from `'.VAC_PREFIX.'_pet` where customerid = '.$customer.') and (time between '. $cometime .' and '. $calltime .') order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
+    }
+  }
+
   $query = $db->query($sql);
   $index = 1;
   while ($heal = $query->fetch()) {
-    $customer = selectCustomerId($heal['customerid']);
+    $drug = implode(', ', getDrugIdList($heal['id']));
     $pet = selectPetId($heal['petid']);
+    $customer = selectCustomerId($pet['customerid']);
     $xtpl->assign('id', $heal['id']);
     $xtpl->assign('time', date('d/m', $heal['time']));
     $xtpl->assign('customer', $customer['name']);
-    $xtpl->assign('phone', $customer['phone']);
     $xtpl->assign('petname', $pet['name']);
-    $xtpl->assign('weight', $heal['weight']);
+    $xtpl->assign('oriental', $heal['oriental']);
+    $xtpl->assign('drug', $drug);
     $xtpl->parse('main.row');
   }
 

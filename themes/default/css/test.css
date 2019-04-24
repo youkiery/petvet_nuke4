@@ -216,3 +216,12 @@
 td, th {
   padding: 4px;
 }
+
+.cell-center {
+  text-align: center;
+  vertical-align: inherit !important;
+}
+
+.item-border {
+  border: 2px solid black;
+}
