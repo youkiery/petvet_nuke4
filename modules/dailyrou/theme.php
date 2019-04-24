@@ -283,7 +283,7 @@ function adminSummary($startDate = 0, $endDate = 0) {
     $xtpl->assign("index", $index++);
     $xtpl->assign("username", $row["last_name"] . " " . $row["first_name"]);
 
-    $sql = "select count(*) as num from `" . PREFIX . "_row` where time between $startDate and $endDate and user_id = $row[userid] and type > 0 order by time, type asc";
+    $sql = "select count(*) as num from `" . PREFIX . "_row` where time between $startDate and $endDate and user_id = $row[userid] and type > 1 order by time, type asc";
     $query2 = $db->query($sql);
     $count = $query2->fetch();
 
