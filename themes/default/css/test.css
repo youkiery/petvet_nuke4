@@ -225,3 +225,16 @@ td, th {
 .item-border {
   border: 2px solid black;
 }
+
+.red {
+  background: red;
+}
+.blue {
+  background: blue;
+}
+.green {
+  background: green;
+}
+.yellow {
+  background: yellow;
+}

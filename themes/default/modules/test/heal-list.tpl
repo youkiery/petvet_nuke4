@@ -6,7 +6,7 @@
     <tr id="{id}">
       <td> {customer} </td>
       <td> <b>Hướng điều trị:</b> {oriental} </td>
-      <td rowspan="3" class="cell-center"> <button class="btn btn-info" onclick="edit({id})"> <span class="glyphicon glyphicon-edit"></span> </button> <button class="btn btn-danger" onclick="remove({id})"> <span class="glyphicon glyphicon-remove"></span> </button> </td>
+      <td rowspan="3" class="cell-center {class}"> <button class="btn btn-info" onclick="edit({id})"> <span class="glyphicon glyphicon-edit"></span> </button> <button class="btn btn-danger" onclick="remove({id})"> <span class="glyphicon glyphicon-remove"></span> </button> </td>
     </tr>
     <tr>
       <td> {petname} </td>

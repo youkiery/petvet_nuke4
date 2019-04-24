@@ -30,7 +30,7 @@ if (!empty($action)) {
 			$keyword = $nv_Request->get_string('keyword', 'get/post', '');
 
 			$result['status'] = 1;
-			$result['customer'] = getCustomerSuggestList($keyword);
+			$result['customer'] = json_encode(getCustomerSuggestList($keyword));
 		break;
 		case 'filter':
 			$page = $nv_Request->get_string('page', 'get/post', '');
@@ -195,6 +195,19 @@ $xtpl = new XTemplate("heal.tpl", PATH);
 $system = getSystemList();
 $drug = getMedicineList();
 
+$html = '';
+foreach ($drug as $key => $row) {
+	$html .= '<div class="item-suggest" onclick="selectDrug('.$key.',\''.$row['unit'].'\')"> ' . $row['name'] . ' </div> ';
+}
+$xtpl->assign('drug_suggest', $html);
+
+$customer = getCustomerSuggestList('');
+$html = '';
+foreach ($customer as $key => $row) {
+	$html .= '<div class="item-suggest" onclick="parsePet('.$key.', 0)">' . $row['name'] . '<div class="right"> '. $row["phone"] .' </div> </div>';
+}
+$xtpl->assign('customer_suggest', $html);
+
 foreach ($system as $key => $row) {
 	$xtpl->assign('systemid', $key);
 	$xtpl->assign('system', $row['name']);
@@ -202,7 +215,8 @@ foreach ($system as $key => $row) {
 }
 
 $xtpl->assign('content', healList(INI_PAGE, INI_LIMIT, INI_COME, INI_CALL));
-$xtpl->assign('dbdata', getCustomerSuggestList(''));
+
+$xtpl->assign('dbdata', json_encode($customer));
 $xtpl->assign('system', json_encode($system));
 $xtpl->assign('drug', json_encode($drug));
 $xtpl->assign('cometime', date('d/m/Y', INI_COME));

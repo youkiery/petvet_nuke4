@@ -31,7 +31,7 @@
           <label class="col-sm-6">Khách hàng</label>
           <div class="col-sm-8 relative">
             <input type="text" class="form-control" id="heal-insert-customer" autocomplete="off">
-            <div class="suggest" id="customer-suggest"></div>
+            <div class="suggest" id="customer-suggest"> {customer_suggest} </div>
           </div>
           <label class="col-sm-4">Thú nuôi</label>
           <div class="col-sm-6"> <select class="form-control" id="heal-insert-pet"> </select> </div>
@@ -88,7 +88,7 @@
                 <button class="btn" onclick="clearDrug()"> <span class="glyphicon glyphicon-remove"></span> </button>
               </div>
             </div>
-            <div class="suggest" id="heal-drug-suggest"></div> 
+            <div class="suggest" id="heal-drug-suggest"> {drug_suggest} </div> 
           </div>
           <div class="col-sm-10">
             <div class="input-group">
@@ -154,7 +154,7 @@
           <button class="btn" onclick="clearCustomer()"> <span class="glyphicon glyphicon-remove"></span> </button>
         </div>
       </div>
-      <div class="suggest" id="customer-filter-suggest"></div>
+      <div class="suggest" id="customer-filter-suggest"> {customer_suggest} </div>
     </div>
     <div class="col-sm-8 relative">
       <div class="input-group">
@@ -535,7 +535,6 @@
     g_target = healInsertPet
     g_status = 0
 
-    dbdata = []
     healInsertPet.html('')
     
     parseButton()

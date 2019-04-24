@@ -206,7 +206,7 @@ function getCustomerSuggestList($keyword) {
       $customer[$count]['pet'][] = $pet;
     }
   }
-  return json_encode($customer);
+  return $customer;
 }
 
 function getSystemList() {

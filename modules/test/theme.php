@@ -12,6 +12,8 @@ if (!defined('VAC_PREFIX')) {
   die('Stop!!!');
 }
 
+$STATUS_COLOR = array('white', 'yellow', 'red');
+
 function vaccineRemind($keyword, $fromtime, $totime) {
   global $db, $nv_Request, $module_info, $module_file, $lang_module, $vacconfigv2; 
   $xtpl = new XTemplate("overmind_vaccine.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
@@ -62,7 +64,7 @@ function summaryOn($starttime, $endtime) {
 }
 
 function healList($page, $limit, $cometime, $calltime, $customer = 0, $pet = 0) {
-  global $db;
+  global $db, $STATUS_COLOR;
   $xtpl = new XTemplate("heal-list.tpl", PATH);
 
   if (!($page > 0)) $page = 1;
@@ -93,6 +95,8 @@ function healList($page, $limit, $cometime, $calltime, $customer = 0, $pet = 0) 
     $customer = selectCustomerId($pet['customerid']);
     $xtpl->assign('id', $heal['id']);
     $xtpl->assign('time', date('d/m', $heal['time']));
+    // die(var_dump($pet));
+    $xtpl->assign('class', $STATUS_COLOR[$pet['status']]);
     $xtpl->assign('customer', $customer['name']);
     $xtpl->assign('petname', $pet['name']);
     $xtpl->assign('oriental', $heal['oriental']);
