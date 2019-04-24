@@ -104,6 +104,9 @@
           </div>
         </div>
         <div class="text-center">
+          <button class="stat btn btn-info status0" id="heal-healed-button" status="0"> Đã điều trị </button>
+          <button class="stat btn btn-warning status1" id="heal-healing-button" status="1"> Đang điều trị </button>
+          <button class="stat btn btn-danger status2" id="heal-dead-button" status="2"> Đã tèo </button><br>
           <button class="btn btn-success" id="heal-insert-button" onclick="insertSubmit()"> Thêm</button>
           <button class="btn btn-success" id="heal-edit-button" onclick="editSubmit()"> Sửa</button>
         </div>
@@ -205,6 +208,9 @@
   var petFilterSuggest = $("#pet-filter-suggest")
   var healInsertButton = $("#heal-insert-button")
   var healEditButton = $("#heal-edit-button")
+  var healHealingButton = $("#heal-healing-button")
+  var healHealedButton = $("#heal-healed-button")
+  var healDeadButton = $("#heal-dead-button")
   var summaryCalltime = $("#summary-calltime")
   var cometime = $("#cometime")
   var calltime = $("#calltime")
@@ -216,9 +222,10 @@
   var type = $(".type")
   var insult = $(".insult")
   var sa = $(".sa")
+  var stat = $(".stat")
 
   var editData = {}
-  var dbdata = {}
+  var dbdata = JSON.parse('{dbdata}')
   var drugData = JSON.parse('{drug}')
   var systemData = JSON.parse('{system}')
   var addData = JSON.parse(localStorage.getItem('add-list'))
@@ -237,6 +244,9 @@
   var g_target 
   var g_filterCustomer = 0
   var g_filterPet = 0
+  var g_status = 0
+
+  const BUTTON_DATA = ['btn-info', 'btn-warning', 'btn-danger']
 
   $('#summary-cometime, #summary-calltime, #cometime, #calltime').datepicker({
 		format: 'dd/mm/yyyy',
@@ -362,6 +372,23 @@
     parsePet(g_customerid, target.selectedIndex)
   })
 
+  stat.click((e) => {
+    var target = e.target
+    var id = target.getAttribute('status')
+    g_status = id
+
+    parseButton()
+  })
+
+  function parseButton() {
+    stat.removeClass('active')
+    stat.each((index, item) => {
+      item.classList.remove(BUTTON_DATA[index])
+    })
+    $('.status' + g_status).addClass(BUTTON_DATA[g_status])
+    $('.status' + g_status).addClass('active')
+  }
+
   function clearCustomer() {
     g_filterCustomer = 0
     g_filterPet = 0
@@ -455,7 +482,6 @@
   function parsePet(index, index2) {
     var html = ''
     g_customerid = index
-    g_filterCustomer = index
     g_filterPet = 0
     healInsertCustomer.val(dbdata[index]['name'])
     
@@ -467,6 +493,10 @@
         healInsertSpecies.html(pet['species'])
         check = 'selected'
         g_petid = pet['id']
+
+        stat.removeClass('active')
+        g_status = dbdata[g_customerid]['pet'][petindex]['status']
+        $('.status' + g_status).addClass('active')
       }
       html += '<option value="'+pet['id']+'" ' + check + '>' + pet['name'] +' </option>';
     })
@@ -475,6 +505,7 @@
       healInsertPet.html(html)
     }
     else {
+      g_filterCustomer = index
       healCustomerFilter.val(dbdata[index]['name'])
     }
   }
@@ -483,7 +514,7 @@
     freeze()
     $.post(
       strHref,
-      {action: 'filter', page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: dbdata[g_filterCustomer]['id'], pet: dbdata[g_filterCustomer]['pet'][g_filterPet]['id']},
+      {action: 'filter', page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
@@ -502,10 +533,13 @@
     g_customerid = 0
     g_petid = 0
     g_target = healInsertPet
+    g_status = 0
 
     dbdata = []
     healInsertPet.html('')
     
+    parseButton()
+
     drugList = {}
     parseDrug()
     $(".s").each((index, item) => {
@@ -556,6 +590,9 @@
           g_petid = data['pet']['id']
           g_system = 0
           g_target = healInsertPet
+          g_status = data['pet']['status']
+
+          parseButton()
 
           var temp = data['customer']
           temp['pet'] = [data['pet']]
@@ -569,12 +606,12 @@
 
           var text = []
           $(".s").each((index, item) => {
-            item.check = false
+            item.checked = false
           })  
 
           data['system'].forEach(system => {
             text.push(systemData[system['systemid']]['name'])
-            $("#s" + system['systemid']).attr('checked', true)
+            $("#s" + system['systemid']).prop('checked', true)
           })
           healInsertSystem.val(text.join(', '))
 
@@ -601,7 +638,7 @@
     var system = gatherSystem()
     $.post(
       strHref,
-      {action: 'edit', id: g_id, petid: g_petid, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), drug: drugList, page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: dbdata[g_filterCustomer]['id'], pet: dbdata[g_filterCustomer]['pet'][g_filterPet]['id']},
+      {action: 'edit', id: g_id, petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), drug: drugList, page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
@@ -614,7 +651,7 @@
   function removeSubmit() {
     $.post(
       strHref,
-      {action: 'remove', id: g_id, page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: dbdata[g_filterCustomer]['id'], pet: dbdata[g_filterCustomer]['pet'][g_filterPet]['id']},
+      {action: 'remove', id: g_id, page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
@@ -629,7 +666,7 @@
 
     $.post(
       strHref,
-      {action: 'insert', petid: g_petid, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), drug: drugList, page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: dbdata[g_filterCustomer]['id'], pet: dbdata[g_filterCustomer]['pet'][g_filterPet]['id']},
+      {action: 'insert', petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), drug: drugList, page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])

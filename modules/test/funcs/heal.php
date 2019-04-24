@@ -61,6 +61,7 @@ if (!empty($action)) {
 		case 'edit':
 			$id = $nv_Request->get_int('id', 'get/post', 0);
 			$petid = $nv_Request->get_int('petid', 'get/post', 0);
+			$status = $nv_Request->get_int('status', 'get/post', 0);
 			$age = $nv_Request->get_int('age', 'get/post', 0);
 			$weight = $nv_Request->get_int('weight', 'get/post', 0);
 			$species = $nv_Request->get_int('species', 'get/post', 0);
@@ -83,7 +84,7 @@ if (!empty($action)) {
 			$calltime = totime($calltime);
 
 			if (!(empty($id))) {
-				$sql = 'update `'. VAC_PREFIX .'_pet` set age = '. $age .', weight = '. $weight .', species = '. $species .' where id = ' . $petid;
+				$sql = 'update `'. VAC_PREFIX .'_pet` set status = '. $status .', age = '. $age .', weight = '. $weight .', species = '. $species .' where id = ' . $petid;
 				$db->query($sql);
 
 				$sql = 'update `'. VAC_PREFIX .'_heal` set oriental = "'. $oriental .'", appear = "'. $appear .'", exam = "'. $exam .'", usg = "'. $usg .'", xray = "'. $xray .'" where id = ' . $id;
@@ -92,24 +93,29 @@ if (!empty($action)) {
 				$sql = 'delete from `'. VAC_PREFIX .'_system` where healid = ' . $id;
 				$db->query($sql);
 				foreach ($system as $key => $value) {
-					$sql = 'insert into `'. VAC_PREFIX .'_system` (healid, systemid) values('.$id.', '.$value.')';
-					$db->query($sql);
+					if (!empty($value)) {
+						$sql = 'insert into `'. VAC_PREFIX .'_system` (healid, systemid) values('.$id.', '.$value.')';
+						$db->query($sql);
+					}
 				}
 
 				$sql = 'delete from `'. VAC_PREFIX .'_medicine` where healid = ' . $id;
 				$db->query($sql);
 				foreach ($drug as $key => $value) {
-					$sql = 'insert into `'. VAC_PREFIX .'_medicine` (healid, medicineid, quanlity) values('.$id.', '.$key.', '.$value.')';
-					$db->query($sql);
+					if (!empty($value)) {
+						$sql = 'insert into `'. VAC_PREFIX .'_medicine` (healid, medicineid, quanlity) values('.$id.', '.$key.', '.$value.')';
+						$db->query($sql);
+					}
 				}
 
 				$result['status'] = 1;
-				$html = healList($page, $limit, $cometime, $calltime, $customer, $pet);
+				$result['html'] = healList($page, $limit, $cometime, $calltime, $customer, $pet);
 			}
 		break;
 		case 'insert':
 			$id = $nv_Request->get_int('id', 'get/post', 0);
 			$petid = $nv_Request->get_int('petid', 'get/post', 0);
+			$status = $nv_Request->get_int('status', 'get/post', 0);
 			$age = $nv_Request->get_int('age', 'get/post', 0);
 			$weight = $nv_Request->get_int('weight', 'get/post', 0);
 			$species = $nv_Request->get_int('species', 'get/post', 0);
@@ -131,7 +137,7 @@ if (!empty($action)) {
 			$cometime = totime($cometime);
 			$calltime = totime($calltime);
 
-			$sql = 'update `'. VAC_PREFIX .'_pet` set age = '. $age .', weight = '. $weight .', species = '. $species .' where id = ' . $petid;
+			$sql = 'update `'. VAC_PREFIX .'_pet` set status = '. $status .', age = '. $age .', weight = '. $weight .', species = '. $species .' where id = ' . $petid;
 			$db->query($sql);
 
 			$sql = 'insert into `'. VAC_PREFIX .'_heal` (petid, appear, oriental, exam, usg, xray, time) values ('.$petid.', "'.$appear.'", "'.$oriental.'", "'.$exam.'", "'.$usg.'", "'.$xray.'", '. time() .')';
@@ -141,18 +147,23 @@ if (!empty($action)) {
 			$sql = 'delete from `'. VAC_PREFIX .'_system` where healid = ' . $id;
 			$db->query($sql);
 			foreach ($system as $key => $value) {
-				$sql = 'insert into `'. VAC_PREFIX .'_system` (healid, systemid) values('.$id.', '.$value.')';
-				$db->query($sql);
+				if (!empty($value)) {
+					$sql = 'insert into `'. VAC_PREFIX .'_system` (healid, systemid) values('.$id.', '.$value.')';
+					$db->query($sql);
+				}
 			}
 
 			$sql = 'delete from `'. VAC_PREFIX .'_medicine` where healid = ' . $id;
 			$db->query($sql);
 			foreach ($drug as $key => $value) {
-				$sql = 'insert into `'. VAC_PREFIX .'_medicine` (healid, medicineid, quanlity) values('.$id.', '.$key.', '.$value.')';
-				$db->query($sql);
+				if ($value) {
+					$sql = 'insert into `'. VAC_PREFIX .'_medicine` (healid, medicineid, quanlity) values('.$id.', '.$key.', '.$value.')';
+				 $db->query($sql);
+				}
 			}
 			$result['status'] = 1;
 			$html = healList($page, $limit, $cometime, $calltime, $customer, $pet);
+			$result['html'] = healList($page, $limit, $cometime, $calltime, $customer, $pet);
 		break;
 		case 'remove':
 			$id = $nv_Request->get_int('id', 'get/post', 0);
@@ -162,11 +173,14 @@ if (!empty($action)) {
 			$cometime = $nv_Request->get_string('cometime', 'get/post', '');
 			$calltime = $nv_Request->get_string('calltime', 'get/post', '');
 
+			$cometime = totime($cometime);
+			$calltime = totime($calltime);
+
 			if (!empty($id)) {
 				$sql = 'delete from `'. VAC_PREFIX .'_heal` where id = ' . $id;
 				if ($db->query($sql)) {
 					$result['status'] = 1;
-					$html = healList($page, $limit, $cometime, $calltime, $customer, $pet);
+					$result['html'] = healList($page, $limit, $cometime, $calltime, $customer, $pet);
 				}
 			}
 		break;
@@ -188,6 +202,7 @@ foreach ($system as $key => $row) {
 }
 
 $xtpl->assign('content', healList(INI_PAGE, INI_LIMIT, INI_COME, INI_CALL));
+$xtpl->assign('dbdata', getCustomerSuggestList(''));
 $xtpl->assign('system', json_encode($system));
 $xtpl->assign('drug', json_encode($drug));
 $xtpl->assign('cometime', date('d/m/Y', INI_COME));
