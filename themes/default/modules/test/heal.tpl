@@ -24,7 +24,7 @@
 
 
 <div id="heal-insert" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body">
         <div class="row form-group">
@@ -380,20 +380,6 @@
     parseButton()
   })
 
-  function goPage(pPage) {
-    freeze()
-    $.post(
-      strHref,
-      {action: "filter", page: pPage, limit: limit},
-      (response, status) => {
-        checkResult(response, status).then((data) => {
-          page = pPage
-          content.html(data["html"])
-        }, () => {})
-      }
-    )
-  }
-
   function parseButton() {
     stat.removeClass('active')
     stat.each((index, item) => {
@@ -444,7 +430,7 @@
 
   function selectPet(index) {
     g_petid = index
-    g_filterPet = index
+    g_filterPet = dbdata[g_customerid]['pet'][g_filterPet]['id']
     healPetFilter.val(dbdata[g_customerid]['pet'][g_filterPet]['name'])
   }
 
@@ -496,7 +482,6 @@
   function parsePet(index, index2) {
     var html = ''
     g_customerid = index
-    g_filterPet = 0
     healInsertCustomer.val(dbdata[index]['name'])
     
     dbdata[index]['pet'].forEach((pet, petindex) => {
@@ -519,7 +504,7 @@
       healInsertPet.html(html)
     }
     else {
-      g_filterCustomer = index
+      g_filterCustomer = dbdata[g_customerid]['id']
       healCustomerFilter.val(dbdata[index]['name'])
     }
   }
@@ -589,6 +574,21 @@
     }
     return system;
   }
+  
+    function goPage(pPage) {
+    freeze()
+    $.post(
+      strHref,
+      {action: "filter", page: pPage, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet},
+      (response, status) => {
+        checkResult(response, status).then((data) => {
+          page = pPage
+          content.html(data["html"])
+        }, () => {})
+      }
+    )
+  }
+
 
   function edit(id) {
     freeze()
@@ -610,6 +610,9 @@
           var temp = data['customer']
           temp['pet'] = [data['pet']]
           dbdata = [temp]
+          
+          customerSuggest.html('')
+          customerFilterSuggest.html('')
           
           drugList = {}
           data['drug'].forEach(drug => {

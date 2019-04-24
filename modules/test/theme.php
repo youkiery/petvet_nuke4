@@ -77,17 +77,17 @@ function healList($page, $limit, $cometime, $calltime, $customer = 0, $pet = 0) 
   if (!empty($customer)) {
     if (!empty($pet)) {
       $sql = 'select * from `'. VAC_PREFIX .'_heal` where petid = '.$pet.' and (time between '. $cometime .' and '. $calltime .') order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
-      $sql2 = 'select * from `'. VAC_PREFIX .'_heal` where petid = '.$pet.' and (time between '. $cometime .' and '. $calltime .')';
+      $sql2 = 'select count(id) as id from `'. VAC_PREFIX .'_heal` where petid = '.$pet.' and (time between '. $cometime .' and '. $calltime .')';
     }
     else {
       $sql = 'select * from `'. VAC_PREFIX .'_heal` where petid in (select id from `'.VAC_PREFIX.'_pet` where customerid = '.$customer.') and (time between '. $cometime .' and '. $calltime .') order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
-      $sql2 = 'select * from `'. VAC_PREFIX .'_heal` where petid in (select id from `'.VAC_PREFIX.'_pet` where customerid = '.$customer.') and (time between '. $cometime .' and '. $calltime .')';
+      $sql2 = 'select count(id) as id from `'. VAC_PREFIX .'_heal` where petid in (select id from `'.VAC_PREFIX.'_pet` where customerid = '.$customer.') and (time between '. $cometime .' and '. $calltime .')';
     }
   }
   $query = $db->query($sql2);
   $count = $query->fetch();
-  $xtpl->assign('total', $count['id']);
-
+  $xtpl->assign('total', $count['id'] ? $count['id'] : 0);
+  
   $query = $db->query($sql);
   $index = 1;
   while ($heal = $query->fetch()) {
@@ -150,6 +150,8 @@ function navList ($number, $page, $limit) {
   }
   return $page_string;
 }
+
+
 
 // include_once(NV_ROOTDIR . "/modules/" . $module_file . "/modal/spa.php");
 // $spa = new Spa();
