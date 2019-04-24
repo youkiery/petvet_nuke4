@@ -1,5 +1,6 @@
 <?php
 $value = $nv_Request->get_string('value', 'get/post', '');
+$keyword = $nv_Request->get_string('keyword', 'get/post', '');
 $vacid = $nv_Request->get_string('vacid', 'get/post', '');
 $diseaseid = $nv_Request->get_string('diseaseid', 'get/post', '');
 $act = $nv_Request->get_string('act', 'get/post', '');
@@ -26,7 +27,7 @@ if(!(empty($act) || empty($value) || empty($vacid)) && $diseaseid >= 0) {
 				else $ret["data"]["recall"] = 1;
 				// $ret["data"]["recall"] = $row["recall"];
 				$ret["status"] = 1;
-				$ret["data"]["html"] = user_vaccine();
+				$ret["data"]["html"] = user_vaccine($keyword);
 			}
 		}
 	}

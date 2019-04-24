@@ -10,11 +10,26 @@ $action = $nv_Request->get_string("action", "get/post", "");
 if (!empty($action)) {
 	$result = array("status" => 0);
 	switch ($action) {
+		case 'change_data':
+			$page = $nv_Request->get_int('page', 'post/get', 0);
+			$keyword = $nv_Request->get_string('keyword', 'post/get', "");
+			$id = $nv_Request->get_int('id', 'post/get', 0);
+
+			$result['status'] = 1;
+			$result["html"] = user_vaccine($keyword);
+		break;
+		case 'search':
+			$keyword = $nv_Request->get_string('keyword', 'get/post', '');
+
+			$result['status'] = 1;
+			$result['html'] = user_vaccine($keyword);
+		break;
 		case 'change_custom':
 		$id = $nv_Request->get_string('cid', 'post/get', "");
 		$name = $nv_Request->get_string('name', 'post/get', "");
 		$phone = $nv_Request->get_string('phone', 'post/get', "");
 		$address = $nv_Request->get_string('address', 'post/get', "");
+		$keyword = $nv_Request->get_string('keyword', 'post/get', "");
 
 		if (!empty($name) && !empty($phone)) {
 				$sql = "update `" . VAC_PREFIX . "_customer` set name = '$name', phone = '$phone', address = '$address' where id = $id";

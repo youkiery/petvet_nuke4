@@ -3,6 +3,7 @@
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 
 <style>
   #ui-datepicker-div {
@@ -10,20 +11,6 @@
   }
 </style>
   
-<ul style="list-style-type: circle; padding: 10px;">
-  <li>
-    <a href="/index.php?nv={nv}&op={op}"> {lang.list} </a>
-  </li>
-  <li>
-    <a href="/index.php?nv={nv}&op={op}&page=today"> {lang.list2} </a>
-    <img src="/themes/default/images/dispatch/new.gif">
-  </li>
-  <li>
-    <a href="/index.php?nv={nv}&op={op}&page=retoday"> {lang.list3} </a>
-    <img src="/themes/default/images/dispatch/new.gif">
-  </li>
-</ul>
-
 <div id="miscustom" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -173,6 +160,30 @@
   </div>
 </div>
 
+<div class="row">
+  <div class="col-sm-16">
+    <ul style="list-style-type: circle; padding: 10px;">
+      <li>
+        <a href="/index.php?nv={nv}&op={op}"> {lang.list} </a>
+      </li>
+      <li>
+        <a href="/index.php?nv={nv}&op={op}&page=today"> {lang.list2} </a>
+        <img src="/themes/default/images/dispatch/new.gif">
+      </li>
+      <li>
+        <a href="/index.php?nv={nv}&op={op}&page=retoday"> {lang.list3} </a>
+        <img src="/themes/default/images/dispatch/new.gif">
+      </li>
+    </ul>
+  </div>
+  <div class="col-sm-8 input-group" style="float: right;">
+    <input type="text" class="form-control" id="vaccine-search" placeholder="Số điện thoại hoặc tên khách hàng" autocomplete="off"> 
+    <div class="input-group-btn">
+      <button class="btn" onclick="search()"> <span class="glyphicon glyphicon-search"></span> </button>
+    </div>
+  </div>
+</div>
+
 <!-- BEGIN: filter -->
 <button class="filter btn {check}" id="chatter_{ipd}" onclick="change_data({ipd})">
   {vsname}
@@ -233,9 +244,13 @@
   var g_customer  = -1;
   var page = '{page}';
   var refresh = 0
+  var vaccineSearch = $("#vaccine-search")
+  var content = $("#disease_display")
 
   var note = ["Hiện ghi chú", "Ẩn ghi chú"]
   var note_s = 0;
+  var searchInterval
+
   $("#exall").click(() => {
     if (note_s) {
       $(".note").hide()
@@ -288,6 +303,18 @@
   //   })
   // }
 
+  function search() {
+    $.post(
+      strHref,
+      {action: 'search', keyword: vaccineSearch.val()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          content.html(data['html'])
+        }, () => {})
+      } 
+    )
+  }
+
   function change_custom(e) {
     e.preventDefault()
     var name = $("#vaccustom").val()
@@ -323,7 +350,7 @@
   function change_data(id) {
     g_id = id;
     $.post(link + "main", 
-    {action: "change_data", keyword: $("#customer_key").val(), id: g_id, page: page, cnote: 0},
+    {action: "change_data", keyword: vaccineSearch.val(), id: g_id, page: page, cnote: 0},
     (response, status) => {
       var data = JSON.parse(response);
 
@@ -486,13 +513,13 @@
     )
   }
 
-  function search() {
-    var key = document.getElementById("customer_key").value;
-    fetch(link + "search&key=" + key, []).then(response => {
-      document.getElementById("disease_display").innerHTML = response;
-    })
-    return false;
-  }
+  // function search() {
+  //   var key = document.getElementById("customer_key").value;
+  //   fetch(link + "search&key=" + key, []).then(response => {
+  //     document.getElementById("disease_display").innerHTML = response;
+  //   })
+  //   return false;
+  // }
 
   function editNote(index, diseaseid) {
     var answer = prompt("Ghi chú: ", trim($("#note_v" + diseaseid + "_" + index).text()));
@@ -517,13 +544,15 @@
   setInterval(() => {
     if (!refresh) {
       refresh = 1
-      $.post(link + "main", 
-      {action: "change_data", keyword: $("#customer_key").val(), id: g_id, page: page, cnote: note_s},
-      (response, status) => {
-        var data = JSON.parse(response);
-        $("#disease_display").html(data["data"]["html"])
-        refresh = 0
-      })
+      $.post(
+        strHref,
+        {action: "change_data", keyword: vaccineSearch.val(), id: g_id, page: page, cnote: note_s},
+        (response, status) => {
+          var data = JSON.parse(response);
+          content.html(data["html"])
+          refresh = 0
+        }
+      )
     }
   }, 10000);
 

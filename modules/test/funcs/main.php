@@ -15,16 +15,14 @@ $ret = array("status" => 0, "data" => array());
 
 if (!empty($action)) {
   switch ($action) {
-    case 'change_data':
-      $page = $nv_Request->get_int('page', 'post/get', 0);
-      $keyword = $nv_Request->get_string('keyword', 'post/get', "");
-      $id = $nv_Request->get_int('id', 'post/get', 0);
-      if ($page < 1) {
-        $page = 1;
-      }
+		case 'change_data':
+			$page = $nv_Request->get_int('page', 'post/get', 0);
+			$keyword = $nv_Request->get_string('keyword', 'post/get', "");
+			$id = $nv_Request->get_int('id', 'post/get', 0);
 
-      $ret["data"]["html"] = user_vaccine();
-    break;
+			$ret['status'] = 1;
+			$ret['data']["html"] = user_vaccine($keyword);
+		break;
     case 'filter':
       $page = $nv_Request->get_int('page', 'post/get', 0);
       $keyword = $nv_Request->get_string('keyword', 'post/get', "");
