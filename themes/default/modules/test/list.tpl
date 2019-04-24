@@ -306,7 +306,7 @@
   function search() {
     $.post(
       strHref,
-      {action: 'search', keyword: vaccineSearch.val()},
+      {action: 'search', keyword: vaccineSearch.val(), id: g_id, page: page, cnote: 0},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
