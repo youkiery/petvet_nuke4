@@ -12,14 +12,6 @@
           Phiếu ghi lộ trình
         </p>
         <div class="form-group">
-          <label> Người lái xe </label>
-          <select class="form-control" id="collect-driver">
-            <!-- BEGIN: collect_driver -->
-            <option value="{driver_id}" {collect_driver_check}>{driver_name}</option>
-            <!-- END: collect_driver -->
-          </select>
-        </div>
-        <div class="form-group">
           <label> Bác sĩ đi cùng </label>
           <select class="form-control" id="collect-doctor">
             <!-- BEGIN: collect_doctor -->
@@ -74,14 +66,6 @@
         <p class="text-center">
           Phiếu chi lộ trình
         </p>
-        <div class="form-group">
-          <label> Người chi </label>
-          <select class="form-control" id="pay-driver">
-            <!-- BEGIN: pay_driver -->
-            <option value="{driver_id}" {collect_doctor_check}>{driver_name}</option>
-            <!-- END: pay_driver -->
-          </select>
-        </div>
         <div class="form-group">
           <label> Số tiền chi </label>
           <input class="form-control" id="pay-money" type="text" value="0">
@@ -148,7 +132,6 @@
   var content = $("#content")
 
   var insertCollect = $("#insert-collect")
-  var collectDriver = $("#collect-driver")
   var collectDoctor = $("#collect-doctor")
   var collectCustomerInfo = $("#collect-customer-info")
   var collectCustomerSuggest = $("#collect-customer-suggest")
@@ -161,7 +144,6 @@
   var collectInsert = $("#collect-insert")
 
   var insertPay = $("#insert-pay")
-  var payDriver = $("#pay-driver")
   var payMoney = $("#pay-money")
   var payNote = $("#pay-note")
   var payInsert = $("#pay-insert")
@@ -176,6 +158,7 @@
   var page = {page}
   var limit = {limit}
   var clock = [Number("{clock}"), Number("{clock}")]
+  var rider = {rider}
   const formatter = new Intl.NumberFormat('vi-VI', {
     style: 'currency',
     currency: 'VND'
@@ -386,7 +369,7 @@
       $(".btn, .form-control").attr("disabled", true)
       $.post(
         strHref,
-        {action: "collect-insert", page: page, limit: limit, startDate: startDate.val(), endDate: endDate.val(), collectDriver: collectDriver.val(), collectDoctor: collectDoctor.val(), collectStart: collectStart.val(), collectEnd: collectEnd.val(), collectCustomer: customerId, collectDestination: collectDestination.val(), collectNote: collectNote.val()},
+        {action: "collect-insert", page: page, limit: limit, startDate: startDate.val(), endDate: endDate.val(), collectDriver: rider, collectDoctor: collectDoctor.val(), collectStart: collectStart.val(), collectEnd: collectEnd.val(), collectCustomer: customerId, collectDestination: collectDestination.val(), collectNote: collectNote.val()},
         (response, status) => {
           checkResult(response, status).then((data) => {
             customerId = 0
@@ -414,7 +397,7 @@
       $(".btn, .form-control").attr("disabled", true)
       $.post(
         strHref,
-        {action: "pay-insert", page: page, limit: limit, startDate: startDate.val(), endDate: endDate.val(), payDriver: payDriver.val(), payMoney: currentMoney, payNote: payNote.val()},
+        {action: "pay-insert", page: page, limit: limit, startDate: startDate.val(), endDate: endDate.val(), payDriver: rider, payMoney: currentMoney, payNote: payNote.val()},
         (response, status) => {
           checkResult(response, status).then((data) => {
             payMoney.val("0")

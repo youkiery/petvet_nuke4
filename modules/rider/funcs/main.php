@@ -167,6 +167,8 @@ $xtpl->assign("page", 1);
 $xtpl->assign("limit", 10);
 $xtpl->assign("content", collectList($today, $tomorrow));
 
+$xtpl->assign('rider', $user_info['userid']);
+
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 include ( NV_ROOTDIR . "/includes/header.php" );
