@@ -18,7 +18,7 @@ if (!defined('NV_IS_MOD_CONGVAN')) die('Stop!!!');
  */
 function nv_theme_congvan_main($error, $array, $page_title, $base_url, $all_page, $per_page, $page, $type, $se, $to, $from, $from_signer, $content, $code, $title, $depart)
 {
-    global $global_config, $module_name, $module_file, $module_data, $lang_module, $module_config, $module_info, $op, $arr_type, $db;
+    global $global_config, $module_name, $module_file, $module_data, $lang_module, $module_config, $module_info, $op, $arr_type, $db, $db_config, $user_info;
 
     $xtpl = new XTemplate($op . ".tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_info['module_theme']);
     $xtpl->assign('MODULE_LINK', NV_BASE_SITEURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&" . NV_NAME_VARIABLE . "=" . $module_name);
@@ -33,6 +33,23 @@ function nv_theme_congvan_main($error, $array, $page_title, $base_url, $all_page
     $xtpl->assign('MODULE_NAME', $module_name);
     $xtpl->assign('SE_LINK', NV_BASE_SITEURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&amp;" . NV_OP_VARIABLE . "=" . $op . "&amp;se=1");
 
+    if (!empty($user_info)) {
+        $sql = 'select * from `'. $db_config['prefix'] .'_users` where userid = ' . $user_info['userid'];
+        $re = $db->query($sql);
+        $user = $re->fetch();
+    
+        if (!empty($user)) {
+            $groups = explode(',', $user['in_groups']);
+            if (in_array('1', $groups) || in_array('2', $groups)) {
+                $time = time();
+                $fromTime = date('N', $time) == 1 ? $time : strtotime('last monday', $time);
+                $endTime = date('N', $time) == 7 ? $time : strtotime('next sunday', $time);
+                $xtpl->assign('fromTime', date('d.m.Y', $fromTime));
+                $xtpl->assign('endTime', date('d.m.Y', $endTime));
+                $xtpl->parse('main.admin');
+            }
+        }
+    }
     
     $listdeparts = array(
       array(

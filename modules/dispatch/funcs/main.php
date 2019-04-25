@@ -33,7 +33,57 @@ while ($depart_row = $query->fetch()) {
   $listdeparts[$depart_row["id"]] = $depart_row;
 }
 
+if ($nv_Request->isset_request("excel", "get")) {
+    $fromTime = totime($nv_Request->get_string('fromTime', 'get/post', ''));
+    $endTime = totime($nv_Request->get_string('endTime', 'get/post', ''));
 
+    include 'PHPExcel/IOFactory.php';
+    $fileType = 'Excel2007'; 
+    $objPHPExcel = PHPExcel_IOFactory::load('excel.xlsx');
+    $objPHPExcel
+        ->setActiveSheetIndex(0)
+        ->setCellValue('A1', "Ngày đến")
+        ->setCellValue('B1', "Số đến")
+        ->setCellValue('C1', "Tác giả")
+        ->setCellValue('D1', "Số, ký hiệu văn bản")
+        ->setCellValue('E1', "Ngày tháng ban hành VB")
+        ->setCellValue('F1', "Tên loại và trích yếu nội dung")
+        ->setCellValue('G1', "Đơn vị hoặc người nhận VB")
+        ->setCellValue('H1', "")
+        ->setCellValue('I1', "")
+        ->setCellValue('J1', "");
+    $i = 2;
+    $query = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_document where from_time between $fromTime and $endTime";
+
+    $re = $db->query($query);
+    while ($row = $re->fetch()) {
+        $query = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_departments where id = $row[from_depid]";
+        $ru = $db->query($query);
+        $depart = $ru->fetch();
+
+        $query = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_signer where id = $row[from_signer]";
+        $ru = $db->query($query);
+        $signer = $ru->fetch();
+
+        $objPHPExcel
+        ->setActiveSheetIndex(0)
+        ->setCellValue('A' . $i, date('d/m/Y', $row['from_time']))
+        ->setCellValue('B' . $i, $row['id'])
+        ->setCellValue('C' . $i, $row['from_org'])
+        ->setCellValue('D' . $i, $row['code'])
+        ->setCellValue('E' . $i, date('d/m/Y', $row['date_iss']))
+        ->setCellValue('F' . $i, $row['content'])
+        ->setCellValue('G' . $i, $row['to_org'])
+        ->setCellValue('H' . $i, '')
+        ->setCellValue('I' . $i, '')
+        ->setCellValue('J' . $i, '');
+        // $objPHPExcel->setActiveSheetIndex(0) ->setCellValue("A$i", $i - 1) ->setCellValue("B$i", $row['code']) ->setCellValue("C$i", $row['title']) ->setCellValue("D$i", ) ->setCellValue("E$i", $row['from_org'])->setCellValue("F$i", $row['to_org'])->setCellValue("G$i", $depart['title'])->setCellValue("H$i", $signer['name']);
+        $i++;
+    }
+    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+    $objWriter->save('excel-output.xlsx');
+    header('location: /excel-output.xlsx');
+}
 if ($nv_Request->isset_request("se", "get")) {
     $page_title = $lang_module['list_se'];
     $se = $nv_Request->get_int('se', 'get', 0);

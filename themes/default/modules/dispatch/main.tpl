@@ -1,9 +1,20 @@
 <!-- BEGIN: main -->
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 
 <!-- BEGIN: btn_timkiem -->
 <a class="btn btn-primary" href="{SE_LINK}">{LANG.sereach}</a>
 <!-- END: btn_timkiem -->
+
+<!-- BEGIN: admin -->
+<div style="float: right" class="form-inline">
+	<input type="text" class="form-control" id="fromTime" value="{fromTime}" autocomplete="off">
+	<input type="text" class="form-control" id="endTime" value="{endTime}" autocomplete="off">
+	<button class="btn btn-info" onclick="download()">
+		<span class="glyphicon glyphicon-download"></span>
+	</button>
+</div>
+<!-- END: admin -->
 
 <script type="text/javascript">var pro_del_cofirm = "{LANG.product_del_cofirm}";</script>
 
@@ -124,7 +135,10 @@
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <script type="text/javascript">
-	$("#from, #to").datepicker({
+	var fromTime = $("#fromTime")
+	var endTime = $("#endTime")
+
+	$("#from, #to, #fromTime, #endTime").datepicker({
 		showOn : "both",
 		dateFormat : "dd.mm.yy",
 		changeMonth : true,
@@ -133,6 +147,11 @@
 		buttonImage : nv_base_siteurl + "assets/images/calendar.gif",
 		buttonImageOnly : true
 	});
+
+	function download() {
+		var link = '/index.php?' + nv_name_variable + '=' + nv_module_name + '&excel=1&fromTime=' + fromTime.val() + '&endTime=' + endTime.val()
+		window.open(link)
+	}
 </script>
 
 <!-- END: main -->

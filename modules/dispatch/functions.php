@@ -289,4 +289,16 @@ function nv_listtypes($parentid, $m = 0)
 
 define('NV_IS_MOD_CONGVAN', true);
 
+function totime($time) {
+    if (preg_match("/^([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{4})$/", $time, $m)) {
+      $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);
+      if (!$time) {
+        $time = time();
+      }
+    }
+    else {
+      $time = time();
+    }
+    return $time;
+}
 ?>
