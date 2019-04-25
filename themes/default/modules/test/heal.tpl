@@ -147,7 +147,7 @@
 </div>
 <div class="form-inline">
   <div class="row">
-    <div class="col-sm-8 relative">
+    <div class="col-sm-6 relative">
       <div class="input-group">
         <input type="text" class="form-control" id="heal-customer-filter" placeholder="Khách hàng" autocomplete="off">
         <div class="input-group-btn">
@@ -156,7 +156,7 @@
       </div>
       <div class="suggest" id="customer-filter-suggest"> {customer_suggest} </div>
     </div>
-    <div class="col-sm-8 relative">
+    <div class="col-sm-6 relative">
       <div class="input-group">
         <input type="text" class="form-control" id="heal-pet-filter" placeholder="Thú cưng" autocomplete="off">
         <div class="input-group-btn">
@@ -175,6 +175,10 @@
     </div>
   </div>
 </div>
+
+<button class="global-stat btn btn-info active status0" id="heal-healed-button" status="0"> Đã điều trị </button>
+<button class="global-stat btn status1" id="heal-healing-button" status="1"> Đang điều trị </button>
+<button class="global-stat btn status2" id="heal-dead-button" status="2"> Đã tèo </button><br>
 
 <div id="content">
   {content}
@@ -223,6 +227,7 @@
   var insult = $(".insult")
   var sa = $(".sa")
   var stat = $(".stat")
+  var globalStat = $(".global-stat")
 
   var editData = {}
   var dbdata = JSON.parse('{dbdata}')
@@ -245,6 +250,7 @@
   var g_filterCustomer = 0
   var g_filterPet = 0
   var g_status = 0
+  var global_status = 0
 
   const BUTTON_DATA = ['btn-info', 'btn-warning', 'btn-danger']
 
@@ -380,6 +386,14 @@
     parseButton()
   })
 
+  globalStat.click((e) => {
+    var target = e.target
+    var id = target.getAttribute('status')
+    global_status = id
+
+    filter()
+  })
+
   function parseButton() {
     stat.removeClass('active')
     stat.each((index, item) => {
@@ -387,6 +401,15 @@
     })
     $('.status' + g_status).addClass(BUTTON_DATA[g_status])
     $('.status' + g_status).addClass('active')
+  }
+
+  function parseGlobalButton() {
+    globalStat.removeClass('active')
+    globalStat.each((index, item) => {
+      item.classList.remove(BUTTON_DATA[index])
+    })
+    $('.status' + global_status).addClass(BUTTON_DATA[global_status])
+    $('.status' + global_status).addClass('active')
   }
 
   function clearCustomer() {
@@ -513,13 +536,21 @@
     freeze()
     $.post(
       strHref,
-      {action: 'filter', page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet},
+      {action: 'filter', page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet, status: global_status},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
+          parseGlobalButton()
         }, () => {})
       }
     )
+  }
+
+  function clearDrug() {
+    healInsertDrug.val('')
+    healDrugQuality.val('')
+    healDrugUnit.text('')
+    g_drug = -1
   }
 
   function remove(id) {
@@ -579,7 +610,7 @@
     freeze()
     $.post(
       strHref,
-      {action: "filter", page: pPage, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet},
+      {action: "filter", page: pPage, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet, status: global_status},
       (response, status) => {
         checkResult(response, status).then((data) => {
           page = pPage
@@ -654,7 +685,7 @@
     var system = gatherSystem()
     $.post(
       strHref,
-      {action: 'edit', id: g_id, petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), drug: drugList, page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet},
+      {action: 'edit', id: g_id, petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), drug: drugList, page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet, status: global_status},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
@@ -667,7 +698,7 @@
   function removeSubmit() {
     $.post(
       strHref,
-      {action: 'remove', id: g_id, page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet},
+      {action: 'remove', id: g_id, page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet, status: global_status},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
@@ -682,7 +713,7 @@
 
     $.post(
       strHref,
-      {action: 'insert', petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), drug: drugList, page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet},
+      {action: 'insert', petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), drug: drugList, page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet, status: global_status},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])

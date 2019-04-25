@@ -63,7 +63,7 @@ function summaryOn($starttime, $endtime) {
   return $xtpl->text();
 }
 
-function healList($page, $limit, $cometime, $calltime, $customer = 0, $pet = 0) {
+function healList($page, $limit, $cometime, $calltime, $customer = 0, $pet = 0, $status = 0) {
   global $db, $STATUS_COLOR;
   $xtpl = new XTemplate("heal-list.tpl", PATH);
 
@@ -71,17 +71,17 @@ function healList($page, $limit, $cometime, $calltime, $customer = 0, $pet = 0) 
   // if (!($insult > 0)) $insult = 0;
   if (!($limit > 0)) $limit = 10;
 
-  $sql = 'select * from `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .') order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
-  $sql2 = 'select count(id) as id from `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .')';
+  $sql = 'select * from `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ') order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
+  $sql2 = 'select count(id) as id from `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ')';
 
   if (!empty($customer)) {
     if (!empty($pet)) {
-      $sql = 'select * from `'. VAC_PREFIX .'_heal` where petid = '.$pet.' and (time between '. $cometime .' and '. $calltime .') order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
-      $sql2 = 'select count(id) as id from `'. VAC_PREFIX .'_heal` where petid = '.$pet.' and (time between '. $cometime .' and '. $calltime .')';
+      $sql = 'select * from `'. VAC_PREFIX .'_heal` where petid = '.$pet.' and (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ') order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
+      $sql2 = 'select count(id) as id from `'. VAC_PREFIX .'_heal` where petid = '.$pet.' and (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ')';
     }
     else {
-      $sql = 'select * from `'. VAC_PREFIX .'_heal` where petid in (select id from `'.VAC_PREFIX.'_pet` where customerid = '.$customer.') and (time between '. $cometime .' and '. $calltime .') order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
-      $sql2 = 'select count(id) as id from `'. VAC_PREFIX .'_heal` where petid in (select id from `'.VAC_PREFIX.'_pet` where customerid = '.$customer.') and (time between '. $cometime .' and '. $calltime .')';
+      $sql = 'select * from `'. VAC_PREFIX .'_heal` where petid in (select id from `'.VAC_PREFIX.'_pet` where customerid = '.$customer.') and (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ') order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
+      $sql2 = 'select count(id) as id from `'. VAC_PREFIX .'_heal` where petid in (select id from `'.VAC_PREFIX.'_pet` where customerid = '.$customer.') and (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ')';
     }
   }
   $query = $db->query($sql2);

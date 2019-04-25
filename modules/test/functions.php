@@ -16,7 +16,7 @@ if (!defined('NV_SYSTEM')) {
 define('NV_IS_MOD_QUANLY', true); 
 define('PATH', NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file); 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
-$permist = array("main" => "1, 16, 18", "list" => "1, 16, 18", "sieuam" => "1, 16, 19", "danhsachsieuam" => "1, 16, 19", "sieuam-birth" => "1, 16, 19", "luubenh" => "1, 16, 21", "danhsachluubenh" => "1, 16, 21", "spa" => "1, 16, 20", "drug" => "1, 16, 21", "heal" => "24", "process" => "1, 16, 18, 19, 20, 21, 22, 23, 24");
+$permist = array("main" => "1, 16, 18", "list" => "1, 16, 18", "sieuam" => "1, 16, 19", "danhsachsieuam" => "1, 16, 19", "sieuam-birth" => "1, 16, 19", "luubenh" => "1, 16, 21", "danhsachluubenh" => "1, 16, 21", "spa" => "1, 16, 20", "drug" => "1, 16, 21", "heal" => "1, 16, 18, 19, 20, 21, 22, 23, 24", "process" => "1, 16, 18, 19, 20, 21, 22, 23, 24");
 // kiểm tra phân quyền
 function permist() {
   global $db_config, $user_info, $db, $op, $permist;

@@ -61,6 +61,7 @@
   overflow-y:scroll;
   max-height: 300px;
   width: -webkit-fill-available;
+  width: 100%;
 }
 .suggest div:hover {
 	background: #afa;

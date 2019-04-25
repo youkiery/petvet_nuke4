@@ -39,11 +39,12 @@ if (!empty($action)) {
 			$calltime = $nv_Request->get_string('calltime', 'get/post', '');
 			$pet = $nv_Request->get_int('pet', 'get/post', 0);
 			$customer = $nv_Request->get_int('customer', 'get/post', 0);
+			$status = $nv_Request->get_int('status', 'get/post', 0);
 
 			$cometime = totime($cometime);
 			$calltime = totime($calltime);
 
-			$html = healList($page, $limit, $cometime, $calltime, $customer, $pet);
+			$html = healList($page, $limit, $cometime, $calltime, $customer, $pet, $status);
 			if (!empty($html)) {
 				$result['status'] = 1;
 				$result['html'] = $html;
@@ -79,6 +80,7 @@ if (!empty($action)) {
 			$calltime = $nv_Request->get_string('calltime', 'get/post', '');
 			$pet = $nv_Request->get_int('pet', 'get/post', 0);
 			$customer = $nv_Request->get_int('customer', 'get/post', 0);
+			$status = $nv_Request->get_int('status', 'get/post', 0);
 
 			$cometime = totime($cometime);
 			$calltime = totime($calltime);
@@ -109,7 +111,7 @@ if (!empty($action)) {
 				}
 
 				$result['status'] = 1;
-				$result['html'] = healList($page, $limit, $cometime, $calltime, $customer, $pet);
+				$result['html'] = healList($page, $limit, $cometime, $calltime, $customer, $pet, $status);
 			}
 		break;
 		case 'insert':
@@ -133,6 +135,7 @@ if (!empty($action)) {
 			$calltime = $nv_Request->get_string('calltime', 'get/post', '');
 			$pet = $nv_Request->get_int('pet', 'get/post', 0);
 			$customer = $nv_Request->get_int('customer', 'get/post', 0);
+			$status = $nv_Request->get_int('status', 'get/post', 0);
 
 			$cometime = totime($cometime);
 			$calltime = totime($calltime);
@@ -162,8 +165,8 @@ if (!empty($action)) {
 				}
 			}
 			$result['status'] = 1;
-			$html = healList($page, $limit, $cometime, $calltime, $customer, $pet);
-			$result['html'] = healList($page, $limit, $cometime, $calltime, $customer, $pet);
+			$html = healList($page, $limit, $cometime, $calltime, $customer, $pet, $status);
+			$result['html'] = healList($page, $limit, $cometime, $calltime, $customer, $pet, $status);
 		break;
 		case 'remove':
 			$id = $nv_Request->get_int('id', 'get/post', 0);
@@ -172,6 +175,7 @@ if (!empty($action)) {
 			$limit = $nv_Request->get_string('insult', 'get/post', '');
 			$cometime = $nv_Request->get_string('cometime', 'get/post', '');
 			$calltime = $nv_Request->get_string('calltime', 'get/post', '');
+			$status = $nv_Request->get_int('status', 'get/post', 0);
 
 			$cometime = totime($cometime);
 			$calltime = totime($calltime);
@@ -180,7 +184,7 @@ if (!empty($action)) {
 				$sql = 'delete from `'. VAC_PREFIX .'_heal` where id = ' . $id;
 				if ($db->query($sql)) {
 					$result['status'] = 1;
-					$result['html'] = healList($page, $limit, $cometime, $calltime, $customer, $pet);
+					$result['html'] = healList($page, $limit, $cometime, $calltime, $customer, $pet, $status);
 				}
 			}
 		break;
