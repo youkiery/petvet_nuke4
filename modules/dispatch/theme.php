@@ -38,17 +38,17 @@ function nv_theme_congvan_main($error, $array, $page_title, $base_url, $all_page
         $re = $db->query($sql);
         $user = $re->fetch();
     
-        if (!empty($user)) {
-            $groups = explode(',', $user['in_groups']);
-            if (in_array('1', $groups) || in_array('2', $groups)) {
-                $time = time();
-                $fromTime = date('N', $time) == 1 ? $time : strtotime('last monday', $time);
-                $endTime = date('N', $time) == 7 ? $time : strtotime('next sunday', $time);
-                $xtpl->assign('fromTime', date('d.m.Y', $fromTime));
-                $xtpl->assign('endTime', date('d.m.Y', $endTime));
-                $xtpl->parse('main.admin');
-            }
-        }
+        $xtpl->parse('main.admin');
+        // if (!empty($user)) {
+        //     $groups = explode(',', $user['in_groups']);
+        //     if (in_array('1', $groups) || in_array('2', $groups)) {
+        //         $time = time();
+        //         $fromTime = date('N', $time) == 1 ? $time : strtotime('last monday', $time);
+        //         $endTime = date('N', $time) == 7 ? $time : strtotime('next sunday', $time);
+        //         $xtpl->assign('fromTime', date('d.m.Y', $fromTime));
+        //         $xtpl->assign('endTime', date('d.m.Y', $endTime));
+        //     }
+        // }
     }
     
     $listdeparts = array(
