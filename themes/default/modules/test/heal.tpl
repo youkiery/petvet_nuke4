@@ -21,23 +21,33 @@
   </div>
 </div>
 
-
-
 <div id="heal-insert" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body">
         <div class="row form-group">
-          <label class="col-sm-6">Khách hàng</label>
+          <label class="col-sm-4">Khách hàng</label>
           <div class="col-sm-8 relative">
-            <input type="text" class="form-control" id="heal-insert-customer" autocomplete="off">
+            <div class="input-group">
+              <input type="text" class="form-control" id="heal-insert-customer" autocomplete="off">
+              <div class="input-group-btn">
+                <button class="btn btn-success" onclick="addCustomer()"> <span class="glyphicon glyphicon-plus"></span> </button>
+              </div>
+            </div>
             <div class="suggest" id="customer-suggest"> {customer_suggest} </div>
           </div>
-          <label class="col-sm-4">Thú nuôi</label>
-          <div class="col-sm-6"> <select class="form-control" id="heal-insert-pet"> </select> </div>
+          <label class="col-sm-4">Thú cưng</label>
+          <div class="col-sm-6">
+            <div class="input-group">
+              <select class="form-control" id="heal-insert-pet"></select>
+              <div class="input-group-btn">
+                <button class="btn btn-success" onclick="addPet()"> <span class="glyphicon glyphicon-plus"></span> </button>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="row form-group">
-          <label class="col-sm-6">Lứa tuổi</label>
+          <label class="col-sm-4">Lứa tuổi</label>
           <div class="col-sm-2"><input type="text" class="form-control" id="heal-insert-age" value="1" placeholder="Năm" autocomplete="off"> </div>
           <label class="col-sm-4"> Cân nặng </label>
           <div class="col-sm-2"><input type="text" class="form-control" id="heal-insert-weight" value="1" placeholder="kg" autocomplete="off"> </div>
@@ -47,7 +57,7 @@
           </div>
         </div>
         <div class="row form-group">
-          <label class="col-sm-6"> Hệ thống điều trị </label>
+          <label class="col-sm-4"> Hệ thống điều trị </label>
           <div class="col-sm-18 relative">
             <input type="text" class="form-control" id="heal-insert-system" autocomplete="off">
             <div class="suggest" id="heal-system-suggest">
@@ -58,29 +68,29 @@
           </div>
         </div>
         <div class="row form-group">
-          <label class="col-sm-6"> Hướng điều trị </label>
+          <label class="col-sm-4"> Hướng điều trị </label>
           <div class="col-sm-18">
             <input type="text" class="form-control" id="heal-insert-oriental" autocomplete="off">
           </div>
         </div>
         <div class="row form-group">
-          <label class="col-sm-6"> Triệu chứng </label>
+          <label class="col-sm-4"> Triệu chứng </label>
           <div class="col-sm-18"><input type="text" class="form-control" id="heal-insert-appear" autocomplete="off"> </div>
         </div>
         <div class="row form-group">
-          <label class="col-sm-6"> Xét nghiệm </label>
+          <label class="col-sm-4"> Xét nghiệm </label>
           <div class="col-sm-18"><input type="text" class="form-control" id="heal-insert-exam" autocomplete="off"> </div>
         </div>
         <div class="row form-group">
-          <label class="col-sm-6"> Siêu âm </label>
+          <label class="col-sm-4"> Siêu âm </label>
           <div class="col-sm-18"><input type="text" class="form-control" id="heal-insert-usg" autocomplete="off"> </div> 
         </div>
         <div class="row form-group">
-          <label class="col-sm-6"> X-quang </label>
+          <label class="col-sm-4"> X-quang </label>
           <div class="col-sm-18"><input type="text" class="form-control" id="heal-insert-xray" autocomplete="off"> </div> 
         </div>
         <div class="row">
-          <label class="col-sm-6"> Thuốc điều trị  </label>
+          <label class="col-sm-4"> Thuốc điều trị  </label>
           <div class="col-sm-8">
             <div class="input-group">
               <input type="text" class="form-control" id="heal-insert-drug" autocomplete="off"> 
@@ -106,7 +116,7 @@
         <div class="text-center">
           <button class="stat btn btn-info status0" id="heal-healed-button" status="0"> Đã điều trị </button>
           <button class="stat btn btn-warning status1" id="heal-healing-button" status="1"> Đang điều trị </button>
-          <button class="stat btn btn-danger status2" id="heal-dead-button" status="2"> Đã tèo </button><br>
+          <button class="stat btn btn-danger status2" id="heal-dead-button" status="2"> Đã chết </button><br>
           <button class="btn btn-success" id="heal-insert-button" onclick="insertSubmit()"> Thêm</button>
           <button class="btn btn-success" id="heal-edit-button" onclick="editSubmit()"> Sửa</button>
         </div>
@@ -147,7 +157,7 @@
 </div>
 <div class="form-inline">
   <div class="row">
-    <div class="col-sm-6 relative">
+    <div class="col-sm-8 relative">
       <div class="input-group">
         <input type="text" class="form-control" id="heal-customer-filter" placeholder="Khách hàng" autocomplete="off">
         <div class="input-group-btn">
@@ -156,7 +166,7 @@
       </div>
       <div class="suggest" id="customer-filter-suggest"> {customer_suggest} </div>
     </div>
-    <div class="col-sm-6 relative">
+    <div class="col-sm-8 relative">
       <div class="input-group">
         <input type="text" class="form-control" id="heal-pet-filter" placeholder="Thú cưng" autocomplete="off">
         <div class="input-group-btn">
@@ -178,12 +188,21 @@
 
 <button class="global-stat btn btn-info active status0" id="heal-healed-button" status="0"> Đã điều trị </button>
 <button class="global-stat btn status1" id="heal-healing-button" status="1"> Đang điều trị </button>
-<button class="global-stat btn status2" id="heal-dead-button" status="2"> Đã tèo </button><br>
+<button class="global-stat btn status2" id="heal-dead-button" status="2"> Đã chết </button><br>
 
 <div id="content">
   {content}
 </div>
 <script>
+  var healCustomer = $("#heal-customer")
+  var healCustomerName = $("#heal-customer-name")
+  var healCustomerPhone = $("#heal-customer-phone")
+  var healCustomerAddress = $("#heal-customer-address")
+  var healCustomerPetname = $("#heal-customer-petname")
+  var healCustomerWeight = $("#heal-customer-weight")
+  var healCustomerAge = $("#heal-customer-age")
+  var healCustomerSpecies = $("#heal-customer-species")
+
   var healInsert = $("#heal-insert")
   var healRemove = $("#heal-remove")
   var healSummaryContent = $("#heal-summary-content")
@@ -394,6 +413,43 @@
     filter()
   })
 
+  function addPet() {
+      answer = prompt('Nhập tên thú cưng của ' + dbdata[g_customerid]['name'], '');
+      if (answer) {
+        $.post(
+          strHref,
+          {action: 'add-pet', name: answer, customerid: dbdata[g_customerid]['id']},
+          (response, status) => {
+            checkResult(response, status).then(data => {
+              dbdata = data['customer']
+              g_petid = 0
+              g_customerid = 0
+              parsePet(g_customerid, g_petid)
+            }, () => {})
+          }
+        )
+      }
+  }
+
+  function addCustomer() {
+    var phone = healInsertCustomer.val()
+    if (Number.isFinite(Number(phone)) && phone.length > 9 && phone.length < 15) {
+      answer = prompt('Nhập số tên khách hàng cho số điện thoại ' + phone, '');
+      if (answer) {
+        $.post(
+          strHref,
+          {action: 'add-customer', name: answer, phone: phone},
+          (response, status) => {
+            checkResult(response, status).then(data => {
+              dbdata = data['customer']
+              g_customerid = 0
+            }, () => {})
+          }
+        )
+      }
+    }
+  }
+
   function parseButton() {
     stat.removeClass('active')
     stat.each((index, item) => {
@@ -447,14 +503,13 @@
         }
       }
     }
-    
     petFilterSuggest.html(html)
   }
 
   function selectPet(index) {
     g_petid = index
-    g_filterPet = dbdata[g_customerid]['pet'][g_filterPet]['id']
-    healPetFilter.val(dbdata[g_customerid]['pet'][g_filterPet]['name'])
+    g_filterPet = dbdata[g_customerid]['pet'][index]['id']
+    healPetFilter.val(dbdata[g_customerid]['pet'][index]['name'])
   }
 
   function addDrug() {

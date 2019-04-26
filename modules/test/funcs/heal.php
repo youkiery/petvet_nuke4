@@ -26,6 +26,48 @@ if (!empty($action)) {
 		// 	$result['status'] = 1;
 		// 	$result['customer'] = getCustomerData();
 		// break;
+		case 'add-customer':
+			$name = $nv_Request->get_string('name', 'post', '');
+			$phone = $nv_Request->get_string('phone', 'post', '');
+
+			if (!(empty($name) || empty($phone))) {
+				$sql = "insert into `" . VAC_PREFIX . "_customer` (name, phone, address) values ('$name', '$phone', '$address');";
+				$query = $db->query($sql);
+				$id = $db->lastInsertId();
+
+				$sql = 'select * from `'. VAC_PREFIX .'_customer` where id = ' . $id;
+				$query = $db->query($sql);
+				$user = $query->fetch();
+
+				$result['status'] = 1;
+				$result['id'] = $id;
+				$result['customer'] = array($user);
+			}
+		break;
+		case 'add-pet':
+			$name = $nv_Request->get_string('name', 'post', '');
+			$customerid = $nv_Request->get_string('customerid', 'post', '');
+
+			$sql = 'select * from `'. VAC_PREFIX .'_customer` where id = ' . $customerid;
+			$query = $db->query($sql);
+			$user = $query->fetch();
+
+			if (!(empty($user))) {
+				$sql = "insert into `" . VAC_PREFIX . "_pet` (name, customerid, weight, age, species) values ('$name', '$customerid', 0, 0, 0);";
+				$query = $db->query($sql);
+				$id = $db->lastInsertId();
+
+				$sql = 'select * from `'. VAC_PREFIX .'_pet` where customerid = ' . $customerid . ' order by id desc';
+				$query = $db->query($sql);
+				$pet = $query->fetch();
+				$pet['species'] = selectSpeciesId($pet['id']);
+				$user['pet'] = array($pet);
+
+				$result['status'] = 1;
+				$result['id'] = $id;
+				$result['customer'] = array($user);
+			}
+		break;
 		case 'customer-suggest':
 			$keyword = $nv_Request->get_string('keyword', 'get/post', '');
 
