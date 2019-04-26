@@ -24,6 +24,13 @@ if (!empty($action)) {
 			$result['status'] = 1;
 			$result['html'] = user_vaccine($keyword);
 		break;
+		case 'search-all':
+			$keyword = $nv_Request->get_string('keyword', 'get/post', '');
+			$_POST['page'] = 'search-all';
+
+			$result['status'] = 1;
+			$result['html'] = user_vaccine($keyword);
+		break;
 		case 'change_custom':
 		$id = $nv_Request->get_string('cid', 'post/get', "");
 		$name = $nv_Request->get_string('name', 'post/get', "");

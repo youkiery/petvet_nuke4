@@ -11,6 +11,53 @@
   }
 </style>
   
+<div id="search-all" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <table class="table table-striped table-border">
+          <thead>
+            <tr>
+              <th colspan="9" class="vng_vacbox_title" style="text-align: center">
+                {title}
+              </th>
+            </tr>
+            <tr>
+              <th>
+                {lang.index}
+              </th>  
+              <th>
+                {lang.petname}
+              </th>  
+              <th>
+                {lang.customer}
+              </th>  
+              <th>
+                {lang.phone}
+              </th>  
+              <th>
+                {lang.disease}
+              </th>  
+              <th>
+                {lang.vaccome}
+              </th>  
+              <th>
+                {lang.vaccall}
+              </th>  
+              <th>
+                {lang.vacconfirm}
+              </th>
+            </tr>
+          </thead>
+          <tbody id="search-all-content">
+            {content}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="miscustom" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -177,7 +224,7 @@
     </ul>
   </div>
   <div class="col-sm-8 input-group" style="float: right;">
-    <input type="text" class="form-control" id="vaccine-search" placeholder="Số điện thoại hoặc tên khách hàng" autocomplete="off"> 
+    <input type="text" class="form-control" id="vaccine-search-all" placeholder="Số điện thoại hoặc tên khách hàng" autocomplete="off"> 
     <div class="input-group-btn">
       <button class="btn" onclick="search()"> <span class="glyphicon glyphicon-search"></span> </button>
     </div>
@@ -245,6 +292,9 @@
   var page = '{page}';
   var refresh = 0
   var vaccineSearch = $("#vaccine-search")
+  var vaccineSearchAll = $("#vaccine-search-all")
+  var searchAll = $("#search-all")
+  var searchAllContent = $("#search-all-content")
   var content = $("#disease_display")
 
   var note = ["Hiện ghi chú", "Ẩn ghi chú"]
@@ -306,10 +356,12 @@
   function search() {
     $.post(
       strHref,
-      {action: 'search', keyword: vaccineSearch.val(), id: g_id, page: page, cnote: 0},
+      {action: 'search-all', keyword: vaccineSearchAll.val(), id: g_id, page: page, cnote: 0},
       (response, status) => {
         checkResult(response, status).then(data => {
-          content.html(data['html'])
+          searchAllContent.html(data['html'])
+          searchAll.modal('show')
+          // content.html(data['html'])
         }, () => {})
       } 
     )

@@ -1399,6 +1399,9 @@ function user_vaccine($keyword = '') {
       $end = $today + 60 * 60 * 24;
       $where = "where calltime between $today and $end";
     break;
+    case 'search-all':
+      $where = '';
+    break;
     default:
       // filter time
       $time = $vacconfigv2["filter"];
