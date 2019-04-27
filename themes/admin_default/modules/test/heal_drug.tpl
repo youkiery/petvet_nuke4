@@ -67,11 +67,26 @@
 
 <div class="tab-content">
   <div id="home" class="tab-pane active">
-    <div class="right">
-      <button class="btn btn-success" onclick="insert()">
-        <span class="glyphicon glyphicon-plus"></span>
-      </button>
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="input-group">
+          <input class="form-control"type="text" id="drug-search" placeholder="Từ khóa lọc tên thuốc">
+          <div class="input-group-btn">
+            <button class="btn btn-info" onclick="search()"> <span class="glyphicon glyphicon-search"></span> </button>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-16">
+        <div class="right">
+          <button class="btn btn-success" onclick="insertDrug()">
+            <span class="glyphicon glyphicon-plus"></span>
+          </button>
+        </div>
+      </div>
     </div>
+
+    <br>
+
     <div id="content1">
       {content1}
     </div>
@@ -99,6 +114,8 @@
   var drugInsertEffective = $("#drug-insert-effective")
   var drugInsertNote = $("#drug-insert-note")
 
+  var drugSearch = $("#drug-search")
+
   var content1 = $("#content1")
   var content2 = $("#content2")
 
@@ -106,10 +123,12 @@
   var g_system = 0
 
   var disease = {}
+  var drugData = JSON.parse('{drug}')
   var systemData = JSON.parse('{system}')
   var diseaseData = JSON.parse('{disease}')
 
   var diseaseTimeout
+  var searchTimeout
 
   sa.click((e) => {
     var target = e.currentTarget
@@ -148,6 +167,39 @@
       drugDiseaseSuggest.html(html)
     }, 200);
   })
+
+  drugSearch.keyup(() => {
+    clearTimeout(searchTimeout)
+    searchTimeout = setTimeout(() => {
+      search()
+    }, 200);
+  })
+
+  function search() {
+    var html = ''
+    var keyword = drugSearch.val().toLowerCase()
+    for (const key in drugData) {
+      if (drugData.hasOwnProperty(key)) {
+        const drug = drugData[key];
+        if (drug['name'].toLowerCase().search(keyword) >= 0) {
+          html += `
+            <tr>
+              <td>
+                ` + drug['name'] + `(` + drug['unit'] + `)
+              </td>
+              <td>
+                <button class="btn btn-info" onclick="edit(` + drug['id'] + `)"><span class="glyphicon glyphicon-edit"></span>
+                </button>
+              </td>
+            </tr>
+          `
+        }
+      }
+    }
+    html = `<table class="table">` + html + `</table>`
+    
+    content1.html(html)
+  }
 
   function gatherSystem() {
     var system = []

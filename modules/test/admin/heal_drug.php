@@ -27,6 +27,7 @@ if (!empty($action)) {
 }
 
 $system = getSystemList();
+$drug = getDrugList();
 
 $xtpl = new XTemplate("heal_drug.tpl", PATH);
 
@@ -36,8 +37,10 @@ foreach ($system as $key => $row) {
 	$xtpl->parse('main.system');
 }
 
+$xtpl->assign('content1', adminDrugList($drug));
 $xtpl->assign('system', json_encode($system));
 $xtpl->assign('disease', '{}');
+$xtpl->assign('drug', json_encode($drug));
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");

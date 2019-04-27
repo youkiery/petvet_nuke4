@@ -133,6 +133,17 @@ function getDrugId($id) {
   return $list;
 }
 
+function getDrugList() {
+  global $db;
+  $sql = 'select * from `'. VAC_PREFIX .'_heal_medicine`';
+  $query = $db->query($sql);
+  $list = array();
+  while ($drug = $query->fetch()) {
+    $list[] = $drug;
+  }
+  return $list;
+}
+
 function getDrugIdList($id) {
   global $db;
 
