@@ -208,7 +208,7 @@
 </div>
 
 <div class="row">
-  <div class="col-sm-16">
+  <div class="col-sm-14">
     <ul style="list-style-type: circle; padding: 10px;">
       <li>
         <a href="/index.php?nv={nv}&op={op}"> {lang.list} </a>
@@ -223,12 +223,15 @@
       </li>
     </ul>
   </div>
-  <div class="col-sm-8 input-group" style="float: right;">
-    <input type="text" class="form-control" id="vaccine-search-all" placeholder="Số điện thoại hoặc tên khách hàng" autocomplete="off"> 
-    <div class="input-group-btn">
-      <button class="btn" onclick="search()"> <span class="glyphicon glyphicon-search"></span> </button>
+  <form class="col-sm-10 input-group" onsubmit="search(event)">
+    <div class="relative">
+      <input type="text" class="form-control" id="vaccine-search-all" style="float:none;" placeholder="Số điện thoại hoặc tên khách hàng" autocomplete="off"> 
+      <div class="suggest" id="search-all-suggest"></div>
     </div>
-  </div>
+    <div class="input-group-btn">
+      <button class="btn"> <span class="glyphicon glyphicon-search"></span> </button>
+    </div>
+  </form>
 </div>
 
 <!-- BEGIN: filter -->
@@ -295,11 +298,13 @@
   var vaccineSearchAll = $("#vaccine-search-all")
   var searchAll = $("#search-all")
   var searchAllContent = $("#search-all-content")
+  var searchAllSuggest = $("#search-all-suggest")
   var content = $("#disease_display")
 
   var note = ["Hiện ghi chú", "Ẩn ghi chú"]
   var note_s = 0;
   var searchInterval
+  var searchAllTimeout
 
   $("#exall").click(() => {
     if (note_s) {
@@ -329,7 +334,42 @@
    	format: 'dd/mm/yyyy',
     changeMonth: true,
     changeYear: true
-	});
+  });
+
+  vaccineSearchAll.focus(() => {
+    searchAllSuggest.show()
+  })
+
+  vaccineSearchAll.blur(() => {
+    setTimeout(() => {
+      searchAllSuggest.hide()
+    }, 100);
+  })
+  
+  vaccineSearchAll.keyup(() => {
+    clearTimeout(searchAllTimeout)
+    searchAllTimeout = setTimeout(() => {
+      $.post(
+        strHref,
+        {action: 'customer-suggest', keyword: vaccineSearchAll.val()},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            searchAllSuggest.html(data['html'])
+          })
+        }
+      )
+    }, 200);
+  })
+
+  function parseKeyword(name, phone) {
+    var keyword = Number(vaccineSearchAll.val())
+    if (Number.isFinite(keyword)) {
+      vaccineSearchAll.val(phone)
+    }
+    else {
+      vaccineSearchAll.val(name)
+    }
+  }
 
   // function filter2(e) {
   //   e.preventDefault();
@@ -353,7 +393,8 @@
   //   })
   // }
 
-  function search() {
+  function search(e) {
+    e.preventDefault()
     $.post(
       strHref,
       {action: 'search-all', keyword: vaccineSearchAll.val(), id: g_id, page: page, cnote: 0},

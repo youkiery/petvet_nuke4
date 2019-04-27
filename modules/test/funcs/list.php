@@ -10,6 +10,19 @@ $action = $nv_Request->get_string("action", "get/post", "");
 if (!empty($action)) {
 	$result = array("status" => 0);
 	switch ($action) {
+		case 'customer-suggest':
+			$keyword = $nv_Request->get_string('keyword', 'get/post', '');
+
+			$sql = 'select * from `'. VAC_PREFIX .'_customer` where name like "%'.$keyword.'%" or phone like "%'.$keyword.'%" limit 20';
+			$query = $db->query($sql);
+			$html = '';
+			while ($customer = $query->fetch()) {
+				$html .= '<div class="item_suggest" onclick="parseKeyword(\''.$customer['name'].'\', \''.$customer['phone'].'\')">' . $customer['name'] . '<span class="right">' . $customer['phone'] . '</span></div>';
+			}
+			$result['status'] = 1;
+			$result['html'] = $html;
+
+		break;
 		case 'change_data':
 			$page = $nv_Request->get_int('page', 'post/get', 0);
 			$keyword = $nv_Request->get_string('keyword', 'post/get', "");
