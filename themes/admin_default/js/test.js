@@ -258,6 +258,7 @@ function checkResult(response, status) {
           if (data["notify"]) {
             alert_msg(data["notify"])
           }
+          defreeze()
           resolve(data)          
         }
         else {
@@ -271,9 +272,17 @@ function checkResult(response, status) {
         }
       }
       catch (e) {
+        defreeze()
         reject()
       }
     }
   })
 }
 
+function freeze() {
+  $(".btn, .select, .input").attr("disabled", true)
+}
+
+function defreeze() {
+  $(".btn, .select, .input").attr("disabled", false)
+}

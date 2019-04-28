@@ -66,7 +66,7 @@ function summaryOn($starttime, $endtime) {
 function adminDrugList($drugList) {
   global $db;
 
-  $index = 1;
+  $index = 0;
 
   $xtpl = new XTemplate("heal_drug_list.tpl", PATH);
   foreach ($drugList as $key => $row) {

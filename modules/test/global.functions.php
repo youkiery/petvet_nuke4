@@ -164,6 +164,31 @@ function getDrugDataId($id) {
   return $query->fetch();
 }
 
+function passbyParam($list) {
+  $temp = array();
+  
+  foreach ($list as $key => $value) {
+    if (!empty($value)) {
+      $temp[] = $key;
+    } 
+  }
+  return implode(',', $temp);
+}
+
+function diseaseList() {
+  global $db;
+
+  $list = array();
+  $sql = 'select * from `'. VAC_PREFIX .'_heal_disease`';
+  $query = $db->query($sql);
+
+  while ($disease = $query->fetch()) {
+    $list[$disease['id']] = $disease['name'];
+  }
+
+  return $list;
+}
+
 function getHealId($id) {
   global $db;
   $sql = 'select * from `'. VAC_PREFIX .'_heal` where id = '. $id;
@@ -1404,11 +1429,11 @@ function user_vaccine($keyword = '') {
   switch ($page) {
     case 'today':
       $end = $today + 60 * 60 * 24;
-      $where = "where ctime between $today and $end";
+      $where = "where ctime between $today and $end and a.status = $id";
     break;
     case 'retoday':
       $end = $today + 60 * 60 * 24;
-      $where = "where calltime between $today and $end";
+      $where = "where calltime between $today and $end and a.status = $id";
     break;
     case 'search-all':
       $where = '';
@@ -1421,11 +1446,10 @@ function user_vaccine($keyword = '') {
       }
       $from = $today - $time;
       $end = $today + $time;
-      $where = "where calltime between $from and $end";
+      $where = "where calltime between $from and $end and a.status = $id";
   }
   
-  $sql = "select a.id, a.note, a.recall, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, ctime, a.status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id $where and a.status = $id and (c.name like '%$keyword%' or c.phone like '%$keyword%') order by calltime";
-  // die($sql);
+  $sql = "select a.id, a.note, a.recall, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, ctime, a.status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id $where and (c.name like '%$keyword%' or c.phone like '%$keyword%') order by calltime";
   $query = $db->query($sql);
   $list = fetchall($db, $query);
   return vaccine_list($list);
