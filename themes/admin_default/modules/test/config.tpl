@@ -63,6 +63,16 @@
   </div>
   <div class="form-group">
     <label>
+      Thời gian hiển thị hồ sơ điều trị
+    </label>
+    <select class="form-control" id="config_heal">
+      <!-- BEGIN: heal -->
+      <option value="{time_value}" {heal_select}>{time_name}</option>
+      <!-- END: heal -->
+    </select>
+  </div>
+  <div class="form-group">
+    <label>
       {lang.config_overtime_from}
     </label>
     <select class="form-control" id="config_hour_from">
@@ -78,7 +88,7 @@
   </div>
   <div class="form-group">
     <label>
-      {lang.config_overtime_from}
+      {lang.config_overtime_to}
     </label>
     <select class="form-control" id="config_hour_end">
       <!-- BEGIN: hour_end -->
@@ -98,7 +108,7 @@
   function filter() {
 		$.post(
 			link,
-			{action: "save", usg_filter: $("#config_usg_filter").val(), filter: $("#config_filter").val(), recall: $("#config_recall").val(), exrecall: $("#config_exrecall").val(), expect: $("#config_expect").val(), redrug: $("#config_redrug").val(), hour_from: $("#config_hour_from").val(), minute_from: $("#config_minute_from").val(), hour_end: $("#config_hour_end").val(), minute_end: $("#config_minute_end").val()},
+			{action: "save", usg_filter: $("#config_usg_filter").val(), filter: $("#config_filter").val(), recall: $("#config_recall").val(), exrecall: $("#config_exrecall").val(), expect: $("#config_expect").val(), redrug: $("#config_redrug").val(), heal: $('#config_heal').val(), hour_from: $("#config_hour_from").val(), minute_from: $("#config_minute_from").val(), hour_end: $("#config_hour_end").val(), minute_end: $("#config_minute_end").val()},
 			(data, status) => {
 			    data = JSON.parse(data);
           alert_msg(data["notify"])

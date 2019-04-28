@@ -6,20 +6,14 @@
     <tr id="{id}">
       <td> {customer} </td>
       <td> <b>Hướng điều trị:</b> {oriental} </td>
-      <td rowspan="4" class="cell-center {class}"> <button class="btn btn-info" onclick="edit({id})"> <span class="glyphicon glyphicon-edit"></span> </button> <button class="btn btn-danger" onclick="remove({id})"> <span class="glyphicon glyphicon-remove"></span> </button> </td>
+      <td rowspan="3" class="cell-center {class}"> <button class="btn btn-info" onclick="edit({id})"> <span class="glyphicon glyphicon-edit"></span> </button> <button class="btn btn-danger" onclick="remove({id})"> <span class="glyphicon glyphicon-remove"></span> </button> </td>
     </tr>
     <tr>
       <td> {petname} </td>
-      <td> <b> Hệ tác động: </b> {system} </td>
-    </tr>
-    <tr>
-      <td> {time} </td>
       <td rowspan="2"> <b>Thuốc:</b> {drug} </td>
     </tr>
     <tr>
-      <td>
-        {doctor}
-      </td>
+      <td> {time} </td>
     </tr>
   </tbody>
   <!-- END: row -->

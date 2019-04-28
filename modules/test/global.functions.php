@@ -122,6 +122,17 @@ function getSystemId($id) {
   return $list;
 }
 
+function parseSystemId($id) {
+  global $db;
+  $sql = 'select * from `'. VAC_PREFIX .'_heal_system` where id in (select systemid from `'. VAC_PREFIX .'_system` where healid = ' . $id . ')';
+  $query = $db->query($sql);
+  $list = array();
+  while ($system = $query->fetch()) {
+    $list[] = $system['name'];
+  }
+  return implode(', ', $list);
+}
+
 function getDrugId($id) {
   global $db;
   $sql = 'select * from `'. VAC_PREFIX .'_medicine` where healid = ' . $id;
@@ -200,6 +211,15 @@ function getHealId($id) {
   $heal['system'] = getSystemId($heal['id']);
   $heal['drug'] = getDrugId($heal['id']);
   return $heal;
+}
+
+function selectDoctorId($id) {
+  global $db, $db_config;
+  
+  $sql = 'select * from `' . $db_config['prefix'] . '_users` where userid = ' . $id;
+  $query = $db->query($sql);
+
+  return $query->fetch();
 }
 
 function getCustomerData() {

@@ -24,6 +24,8 @@ if($action) {
 			$minute_from = $nv_Request->get_int('minute_from', 'post/get', 0);
 			$hour_end = $nv_Request->get_int('hour_end', 'post/get', 0);
 			$minute_end = $nv_Request->get_int('minute_end', 'post/get', 0);
+			$heal = $nv_Request->get_int('heal', 'post/get', 0);
+
 			$update = array();
 			$updatev2 = array();
 			if (!empty($filter)) {
@@ -43,6 +45,9 @@ if($action) {
 			}
 			if (!empty($redrug)) {
 				$updatev2["redrug"] = $redrug;
+			}
+			if (!empty($heal)) {
+				$updatev2["heal"] = $heal;
 			}
 			$updatev2["hour_from"] = $hour_from;
 			$updatev2["hour_end"] = $hour_end;
@@ -130,21 +135,30 @@ foreach ($date_option as $name => $value) {
 	if(!empty($vacconfigv2["filter"]) && $value == $vacconfigv2["filter"]) $xtpl->assign("filter_select", "selected");
 	else $xtpl->assign("filter_select", "");
 	$xtpl->parse("main.filter");
+
 	if(!empty($vacconfigv2["usg_filter"]) && $value == $vacconfigv2["usg_filter"]) $xtpl->assign("filter_select", "selected");
 	else $xtpl->assign("filter_select", "");
 	$xtpl->parse("main.usg_filter");
+
 	if(!empty($vacconfigv2["recall"]) && $value == $vacconfigv2["recall"]) $xtpl->assign("recall_select", "selected");
 	else $xtpl->assign("recall_select", "");
 	$xtpl->parse("main.recall");
+
 	if(!empty($vacconfigv2["exrecall"]) && $value == $vacconfigv2["exrecall"]) $xtpl->assign("exrecall_select", "selected");
 	else $xtpl->assign("exrecall_select", "");
 	$xtpl->parse("main.exrecall");
+
 	if(!empty($vacconfigv2["expect"]) && $value == $vacconfigv2["expect"]) $xtpl->assign("expect_select", "selected");
 	else $xtpl->assign("expect_select", "");
 	$xtpl->parse("main.expect");
+
 	if(!empty($vacconfigv2["redrug"]) && $value == $vacconfigv2["redrug"]) $xtpl->assign("redrug_select", "selected");
 	else $xtpl->assign("redrug_select", "");
 	$xtpl->parse("main.redrug");
+
+	if(!empty($vacconfigv2["heal"]) && $value == $vacconfigv2["heal"]) $xtpl->assign("heal_select", "selected");
+	else $xtpl->assign("heal_select", "");
+	$xtpl->parse("main.heal");
 }
 $xtpl->assign("fromtime", date("Y-m-d", NV_CURRENTTIME));
 $xtpl->assign("totime", date("Y-m-d", NV_CURRENTTIME + NV_NEXTMONTH));	

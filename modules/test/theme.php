@@ -80,25 +80,84 @@ function adminDrugList($drugList) {
   return $xtpl->text();
 }
 
-function healList($page, $limit, $cometime, $calltime, $customer = 0, $pet = 0, $status = 0) {
-  global $db, $STATUS_COLOR;
+function healFilter($cometime, $calltime, $customer, $pet) {
+  global $db;
+
+  $xtpl = new XTemplate("heal-list.tpl", PATH);
+
+  $cometime = totime($cometime);
+  $calltime = totime($calltime);
+
+  $sqlQuery = '';
+  $queryType = 0;
+  if (!empty($pet) && $pet > 0) {
+    $sqlQuery = 'where id = ' . $pet;
+  }
+  else if (!empty($customer) && $customer > 0) {
+    $sqlQuery = 'where customerid = ' . $customer;
+  }
+
+  $sql = 'select * from  `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` '. $sqlQuery .') order by time desc';
+
+  $query = $db->query($sql);
+  $count = 0;
+  $index = 1;
+  while ($heal = $query->fetch()) {
+    $count ++;
+    $drug = implode(', ', getDrugIdList($heal['id']));
+    $pet = selectPetId($heal['petid']);
+    $customer = selectCustomerId($pet['customerid']);
+    $xtpl->assign('id', $heal['id']);
+    $xtpl->assign('time', date('d/m', $heal['time']));
+    // die(var_dump($pet));
+    $xtpl->assign('system', implode(', ', $heal['system']));
+    $xtpl->assign('doctor', selectDoctorId($heal['doctorid'])['first_name']);
+    $xtpl->assign('class', $STATUS_COLOR[$pet['status']]);
+    $xtpl->assign('customer', $customer['name']);
+    $xtpl->assign('petname', $pet['name']);
+    $xtpl->assign('oriental', $heal['oriental']);
+    $xtpl->assign('drug', $drug);
+    $xtpl->assign('nav', navList($count['id'], $page, $limit));
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->assign('total', $count);
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function healList($page, $limit, $customer = 0, $pet = 0, $status = 0, $gdoctor) {
+  global $db, $STATUS_COLOR, $vacconfigv2;
   $xtpl = new XTemplate("heal-list.tpl", PATH);
 
   if (!($page > 0)) $page = 1;
   // if (!($insult > 0)) $insult = 0;
   if (!($limit > 0)) $limit = 10;
 
-  $sql = 'select * from `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ') order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
-  $sql2 = 'select count(id) as id from `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ')';
+  $today = strtotime(date('Y-m-d'));
+  if (empty($vacconfigv2['heal']) || $vacconfigv2['heal'] < 10000) {
+    $vacconfigv2['heal'] = 60 * 60 * 24 * 7;
+  }
+  $cometime = $today - $vacconfigv2['heal'];
+  $calltime = $today + $vacconfigv2['heal'];
+
+  $extraQuery = '';
+  if (!empty($gdoctor)) {
+    $extraQuery = 'and doctorid = ' . $gdoctor;
+  }
+
+  $sql = 'select * from `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ') '.$extraQuery.' order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
+  $sql2 = 'select count(id) as id from `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ') '.$extraQuery.'';
 
   if (!empty($customer)) {
     if (!empty($pet)) {
-      $sql = 'select * from `'. VAC_PREFIX .'_heal` where petid = '.$pet.' and (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ') order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
-      $sql2 = 'select count(id) as id from `'. VAC_PREFIX .'_heal` where petid = '.$pet.' and (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ')';
+      $sql = 'select * from `'. VAC_PREFIX .'_heal` where petid = '.$pet.' and (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ') '.$extraQuery.' order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
+      $sql2 = 'select count(id) as id from `'. VAC_PREFIX .'_heal` where petid = '.$pet.' and (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ') '.$extraQuery.'';
     }
     else {
-      $sql = 'select * from `'. VAC_PREFIX .'_heal` where petid in (select id from `'.VAC_PREFIX.'_pet` where customerid = '.$customer.') and (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ') order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
-      $sql2 = 'select count(id) as id from `'. VAC_PREFIX .'_heal` where petid in (select id from `'.VAC_PREFIX.'_pet` where customerid = '.$customer.') and (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ')';
+      $sql = 'select * from `'. VAC_PREFIX .'_heal` where petid in (select id from `'.VAC_PREFIX.'_pet` where customerid = '.$customer.') and (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ') '.$extraQuery.' order by time desc limit '. $limit .' offset '. (($page - 1) * $limit);
+      $sql2 = 'select count(id) as id from `'. VAC_PREFIX .'_heal` where petid in (select id from `'.VAC_PREFIX.'_pet` where customerid = '.$customer.') and (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ') '.$extraQuery.'';
     }
   }
   $query = $db->query($sql2);
@@ -113,7 +172,8 @@ function healList($page, $limit, $cometime, $calltime, $customer = 0, $pet = 0, 
     $customer = selectCustomerId($pet['customerid']);
     $xtpl->assign('id', $heal['id']);
     $xtpl->assign('time', date('d/m', $heal['time']));
-    // die(var_dump($pet));
+    $xtpl->assign('system', parseSystemId($heal['id']));
+    $xtpl->assign('doctor', selectDoctorId($heal['doctorid'])['first_name']);
     $xtpl->assign('class', $STATUS_COLOR[$pet['status']]);
     $xtpl->assign('customer', $customer['name']);
     $xtpl->assign('petname', $pet['name']);

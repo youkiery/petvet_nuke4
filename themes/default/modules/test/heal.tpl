@@ -6,6 +6,18 @@
 <div class="msgshow" id="msgshow"></div>
 
 
+<div id="heal-filter" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div id="heal-filter-content">
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="heal-remove" class="modal fade" role="dialog">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -31,7 +43,7 @@
             <div class="input-group">
               <input type="text" class="form-control" id="heal-insert-customer" autocomplete="off">
               <div class="input-group-btn">
-                <button class="btn btn-success" onclick="addCustomer()"> <span class="glyphicon glyphicon-plus"></span> </button>
+                <button class="btn btn-success" id="heal-insert-customer-button" onclick="addCustomer()"> <span class="glyphicon glyphicon-plus"></span> </button>
               </div>
             </div>
             <div class="suggest" id="customer-suggest"> {customer_suggest} </div>
@@ -41,7 +53,7 @@
             <div class="input-group">
               <select class="form-control" id="heal-insert-pet"></select>
               <div class="input-group-btn">
-                <button class="btn btn-success" onclick="addPet()"> <span class="glyphicon glyphicon-plus"></span> </button>
+                <button class="btn btn-success" id="heal-insert-pet-button" onclick="addPet()"> <span class="glyphicon glyphicon-plus"></span> </button>
               </div>
             </div>
           </div>
@@ -56,6 +68,18 @@
             <select class="form-control" id="heal-insert-species"></select>
           </div>
         </div>
+        <!-- BEGIN: manager -->
+        <div class="row form-group">
+          <label class="col-sm-4"> Bác sỹ điều trị </label>
+          <div class="col-sm-18">
+            <select class="form-control" id="heal-insert-doctor">
+              <!-- BEGIN: doctor -->
+              <option value="{value}">{name}</option>
+              <!-- END: doctor -->
+            </select>
+          </div>
+        </div>
+        <!-- END: manager -->
         <div class="row form-group">
           <label class="col-sm-4"> Hệ thống điều trị </label>
           <div class="col-sm-18 relative">
@@ -148,12 +172,6 @@
   <input type="text" class="form-control" id="cometime" value="{cometime}" autocomplete="off">
   <label> Đến ngày </label>
   <input type="text" class="form-control" id="calltime" value="{calltime}" autocomplete="off">
-  <select class="form-control" id="limit">
-    <option value="10">10</option>
-    <option value="20">20</option>
-    <option value="50">50</option>
-    <option value="100">100</option>
-  </select>
 </div>
 <div class="form-inline">
   <div class="row">
@@ -176,7 +194,7 @@
       <div class="suggest" id="pet-filter-suggest"></div>
     </div>
     <div class="col-sm-7 input-group">
-      <button class="btn btn-info" onclick="filter()">
+      <button class="btn btn-info" onclick="filterBy()">
         <span class="glyphicon glyphicon-filter"></span>
       </button>
       <button class="btn btn-success" onclick="insert()">
@@ -186,9 +204,17 @@
   </div>
 </div>
 
-<button class="global-stat btn btn-info active status0" id="heal-healed-button" status="0"> Đã điều trị </button>
-<button class="global-stat btn status1" id="heal-healing-button" status="1"> Đang điều trị </button>
-<button class="global-stat btn status2" id="heal-dead-button" status="2"> Đã chết </button><br>
+<div class="form-inline">
+  <button class="global-stat btn btn-info active status0" id="heal-healed-button" status="0"> Đã điều trị </button>
+  <button class="global-stat btn status1" id="heal-healing-button" status="1"> Đang điều trị </button>
+  <button class="global-stat btn status2" id="heal-dead-button" status="2"> Đã chết </button>
+  <select class="form-control" id="limit">
+    <option value="10">10</option>
+    <option value="20">20</option>
+    <option value="50">50</option>
+    <option value="100">100</option>
+  </select>
+</div>
 
 <div id="content">
   {content}
@@ -240,6 +266,12 @@
   var limit = $("#limit")
   var content = $('#content')
 
+  var healFilter = $("#heal-filter")
+  var healFilterContent = $("#heal-filter-content")
+  var healInsertDoctor = $("#heal-insert-doctor")
+  var healInsertCustomerButton = $("#heal-insert-customer-button")
+  var healInsertPetButton = $("#heal-insert-pet-button")
+
   var customerSuggest = $("#customer-suggest")
 
   var type = $(".type")
@@ -249,6 +281,7 @@
   var globalStat = $(".global-stat")
 
   var editData = {}
+  var g_doctorid = '{doctorid}'
   var dbdata = JSON.parse('{dbdata}')
   var drugData = JSON.parse('{drug}')
   var systemData = JSON.parse('{system}')
@@ -591,11 +624,25 @@
     freeze()
     $.post(
       strHref,
-      {action: 'filter', page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet, status: global_status},
+      {action: 'filter', page: page, limit: limit.val(), customer: g_filterCustomer, pet: g_filterPet, status: global_status, gdoctor: g_doctorid},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
           parseGlobalButton()
+        }, () => {})
+      }
+    )
+  }
+
+  function filterBy() {
+    freeze()
+    $.post(
+      strHref,
+      {action: 'filter-by', cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          healFilterContent.html(data['html'])
+          healFilter.modal('show')
         }, () => {})
       }
     )
@@ -620,6 +667,8 @@
     g_target = healInsertPet
     g_status = 0
 
+    healInsertCustomerButton.show()
+    healInsertPetButton.show()
     healInsertPet.html('')
     
     parseButton()
@@ -665,7 +714,7 @@
     freeze()
     $.post(
       strHref,
-      {action: "filter", page: pPage, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet, status: global_status},
+      {action: "filter", page: pPage, limit: limit.val(), customer: g_filterCustomer, pet: g_filterPet, status: global_status, gdoctor: g_doctorid},
       (response, status) => {
         checkResult(response, status).then((data) => {
           page = pPage
@@ -690,6 +739,8 @@
           g_system = 0
           g_target = healInsertPet
           g_status = data['pet']['status']
+          healInsertCustomerButton.hide()
+          healInsertPetButton.hide()
 
           parseButton()
 
@@ -738,12 +789,20 @@
 
   function editSubmit() {
     var system = gatherSystem()
+    if (g_doctorid) {
+      doctorid = g_doctorid
+    }
+    else {
+      doctorid = healInsertDoctor.val()
+    }
     $.post(
       strHref,
-      {action: 'edit', id: g_id, petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), drug: drugList, page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet, status: global_status},
+      {action: 'edit', id: g_id, petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), drug: drugList, page: page, limit: limit.val(), customer: g_filterCustomer, pet: g_filterPet, fstatus: global_status, doctorid: doctorid, gdoctor: g_doctorid},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
+          global_status = g_status
+          parseGlobalButton()
           healInsert.modal('hide')
         }, () => {})
       }
@@ -753,7 +812,7 @@
   function removeSubmit() {
     $.post(
       strHref,
-      {action: 'remove', id: g_id, page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet, status: global_status},
+      {action: 'remove', id: g_id, page: page, limit: limit.val(), customer: g_filterCustomer, pet: g_filterPet, status: global_status, gdoctor: g_doctorid},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
@@ -765,13 +824,21 @@
   
   function insertSubmit() {
     var system = gatherSystem()
-
+    if (g_doctorid) {
+      doctorid = g_doctorid
+    }
+    else {
+      doctorid = healInsertDoctor.val()
+    }
+    
     $.post(
       strHref,
-      {action: 'insert', petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), drug: drugList, page: page, limit: limit.val(), cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet, status: global_status},
+      {action: 'insert', petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), drug: drugList, page: page, limit: limit.val(), customer: g_filterCustomer, pet: g_filterPet, fstatus: global_status, doctorid: doctorid, gdoctor: g_doctorid},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
+          global_status = g_status
+          parseGlobalButton()
           healInsert.modal('hide')
         }, () => {})
       }

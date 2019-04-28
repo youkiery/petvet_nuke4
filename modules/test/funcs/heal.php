@@ -17,6 +17,9 @@ define('INI_PAGE', 1);
 define('INI_LIMIT', 10);
 define('INI_COME', strtotime(date('Y-m-d')) - 60 * 60 * 24 * 15);
 define('INI_CALL', strtotime(date('Y-m-d')) + 60 * 60 * 24 * 15);
+define('INI_CUSTOMER', 0);
+define('INI_PET', 0);
+define('INI_STATUS', 0);
 
 $action = $nv_Request->get_string('action', 'post/get', '');
 if (!empty($action)) {
@@ -26,6 +29,15 @@ if (!empty($action)) {
 		// 	$result['status'] = 1;
 		// 	$result['customer'] = getCustomerData();
 		// break;
+		case 'filter-by':
+			$cometime = $nv_Request->get_string('cometime', 'post', '');
+			$calltime = $nv_Request->get_string('calltime', 'post', '');
+			$customer = $nv_Request->get_int('customer', 'post', 0);
+			$pet = $nv_Request->get_int('pet', 'post', 0);
+
+			$result['status'] = 1;
+			$result['html'] = healFilter($cometime, $calltime, $customer, $pet);
+		break;
 		case 'add-customer':
 			$name = $nv_Request->get_string('name', 'post', '');
 			$phone = $nv_Request->get_string('phone', 'post', '');
@@ -41,6 +53,7 @@ if (!empty($action)) {
 
 				$result['status'] = 1;
 				$result['id'] = $id;
+				$result['notify'] = 'Đã thêm khách hàng';
 				$result['customer'] = array($user);
 			}
 		break;
@@ -65,6 +78,7 @@ if (!empty($action)) {
 
 				$result['status'] = 1;
 				$result['id'] = $id;
+				$result['notify'] = 'Đã thêm thú cưng';
 				$result['customer'] = array($user);
 			}
 		break;
@@ -82,11 +96,10 @@ if (!empty($action)) {
 			$pet = $nv_Request->get_int('pet', 'get/post', 0);
 			$customer = $nv_Request->get_int('customer', 'get/post', 0);
 			$status = $nv_Request->get_int('status', 'get/post', 0);
+			
+			$gdoctor = $nv_Request->get_int('gdoctor', 'get/post', 0);
 
-			$cometime = totime($cometime);
-			$calltime = totime($calltime);
-
-			$html = healList($page, $limit, $cometime, $calltime, $customer, $pet, $status);
+			$html = healList($page, $limit, $customer, $pet, $status, $gdoctor);
 			if (!empty($html)) {
 				$result['status'] = 1;
 				$result['html'] = $html;
@@ -122,16 +135,16 @@ if (!empty($action)) {
 			$calltime = $nv_Request->get_string('calltime', 'get/post', '');
 			$pet = $nv_Request->get_int('pet', 'get/post', 0);
 			$customer = $nv_Request->get_int('customer', 'get/post', 0);
-			$status = $nv_Request->get_int('status', 'get/post', 0);
+			$fstatus = $nv_Request->get_int('fstatus', 'get/post', 0);
 
-			$cometime = totime($cometime);
-			$calltime = totime($calltime);
+			$doctorid = $nv_Request->get_int('doctorid', 'get/post', 0);
+			$gdoctor = $nv_Request->get_int('gdoctor', 'get/post', 0);
 
 			if (!(empty($id))) {
 				$sql = 'update `'. VAC_PREFIX .'_pet` set status = '. $status .', age = '. $age .', weight = '. $weight .', species = '. $species .' where id = ' . $petid;
 				$db->query($sql);
 
-				$sql = 'update `'. VAC_PREFIX .'_heal` set oriental = "'. $oriental .'", appear = "'. $appear .'", exam = "'. $exam .'", usg = "'. $usg .'", xray = "'. $xray .'" where id = ' . $id;
+				$sql = 'update `'. VAC_PREFIX .'_heal` set doctorid = '. $doctorid .', oriental = "'. $oriental .'", appear = "'. $appear .'", exam = "'. $exam .'", usg = "'. $usg .'", xray = "'. $xray .'" where id = ' . $id;
 				$db->query($sql);
 
 				$sql = 'delete from `'. VAC_PREFIX .'_system` where healid = ' . $id;
@@ -153,7 +166,7 @@ if (!empty($action)) {
 				}
 
 				$result['status'] = 1;
-				$result['html'] = healList($page, $limit, $cometime, $calltime, $customer, $pet, $status);
+				$result['html'] = healList($page, $limit, $customer, $pet, $fstatus, $gdoctor);
 			}
 		break;
 		case 'insert':
@@ -177,15 +190,15 @@ if (!empty($action)) {
 			$calltime = $nv_Request->get_string('calltime', 'get/post', '');
 			$pet = $nv_Request->get_int('pet', 'get/post', 0);
 			$customer = $nv_Request->get_int('customer', 'get/post', 0);
-			$status = $nv_Request->get_int('status', 'get/post', 0);
+			$fstatus = $nv_Request->get_int('fstatus', 'get/post', 0);
 
-			$cometime = totime($cometime);
-			$calltime = totime($calltime);
+			$doctorid = $nv_Request->get_int('doctorid', 'get/post', 0);
+			$gdoctor = $nv_Request->get_int('gdoctor', 'get/post', 0);
 
 			$sql = 'update `'. VAC_PREFIX .'_pet` set status = '. $status .', age = '. $age .', weight = '. $weight .', species = '. $species .' where id = ' . $petid;
 			$db->query($sql);
 
-			$sql = 'insert into `'. VAC_PREFIX .'_heal` (petid, appear, oriental, exam, usg, xray, time) values ('.$petid.', "'.$appear.'", "'.$oriental.'", "'.$exam.'", "'.$usg.'", "'.$xray.'", '. time() .')';
+			$sql = 'insert into `'. VAC_PREFIX .'_heal` (petid, doctorid, appear, oriental, exam, usg, xray, time) values ('.$petid.', '. $doctorid .', "'.$appear.'", "'.$oriental.'", "'.$exam.'", "'.$usg.'", "'.$xray.'", '. time() .')';
 			$db->query($sql);
 			$id = $db->lastInsertId();
 
@@ -207,8 +220,7 @@ if (!empty($action)) {
 				}
 			}
 			$result['status'] = 1;
-			$html = healList($page, $limit, $cometime, $calltime, $customer, $pet, $status);
-			$result['html'] = healList($page, $limit, $cometime, $calltime, $customer, $pet, $status);
+			$result['html'] = healList($page, $limit, $customer, $pet, $fstatus, $gdoctor);
 		break;
 		case 'remove':
 			$id = $nv_Request->get_int('id', 'get/post', 0);
@@ -219,14 +231,14 @@ if (!empty($action)) {
 			$calltime = $nv_Request->get_string('calltime', 'get/post', '');
 			$status = $nv_Request->get_int('status', 'get/post', 0);
 
-			$cometime = totime($cometime);
-			$calltime = totime($calltime);
+			$doctorid = $nv_Request->get_int('doctorid', 'get/post', 0);
+			$gdoctor = $nv_Request->get_int('gdoctor', 'get/post', 0);
 
 			if (!empty($id)) {
 				$sql = 'delete from `'. VAC_PREFIX .'_heal` where id = ' . $id;
 				if ($db->query($sql)) {
 					$result['status'] = 1;
-					$result['html'] = healList($page, $limit, $cometime, $calltime, $customer, $pet, $status);
+					$result['html'] = healList($page, $limit, $customer, $pet, $status, $gdoctor);
 				}
 			}
 		break;
@@ -260,7 +272,30 @@ foreach ($system as $key => $row) {
 	$xtpl->parse('main.system');
 }
 
-$xtpl->assign('content', healList(INI_PAGE, INI_LIMIT, INI_COME, INI_CALL));
+if (!empty($user_info) && !empty($user_info['userid'])) {
+	$sql = 'select * from `' . VAC_PREFIX . '_heal_manager` where userid = '.$user_info['userid'].' and type = 1';
+	// die($sql);
+	$query = $db->query($sql);
+
+	if (!empty($query->fetch())) {
+		$sql = 'select * from `' . $db_config['prefix'] . '_users` where userid in (select user_id from `' . $db_config['prefix'] . '_rider_user` where type = 1)';
+		$query = $db->query($sql);
+		
+		while ($doctor = $query->fetch()) {
+			$xtpl->assign('name', $doctor['first_name']);
+			$xtpl->assign('value', $doctor['userid']);
+			$xtpl->parse('main.manager.doctor');
+		}
+		$gdoctor = 0;
+		$xtpl->parse('main.manager');
+	}
+	else {
+		$xtpl->assign('doctorid', $user_info['userid']);
+		$gdoctor = $user_info['userid'];
+	}
+}
+
+$xtpl->assign('content', healList(INI_PAGE, INI_LIMIT, INI_CUSTOMER, INI_PET, INI_STATUS, $gdoctor));
 
 $xtpl->assign('dbdata', json_encode($customer));
 $xtpl->assign('system', json_encode($system));
