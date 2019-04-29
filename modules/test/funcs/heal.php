@@ -273,8 +273,7 @@ foreach ($system as $key => $row) {
 }
 
 if (!empty($user_info) && !empty($user_info['userid'])) {
-	$sql = 'select * from `' . VAC_PREFIX . '_heal_manager` where userid = '.$user_info['userid'].' and type = 1';
-	// die($sql);
+	$sql = 'SELECT * FROM `pet_users` where userid in (select user_id from `pet_rider_user` where user_id = '.$user_info['userid'].' and type = 1 and permission = 1)';
 	$query = $db->query($sql);
 
 	if (!empty($query->fetch())) {
