@@ -187,6 +187,40 @@ function healList($page, $limit, $customer = 0, $pet = 0, $status = 0, $gdoctor)
   return $xtpl->text();
 }
 
+function permissionContent($module) {
+  global $db, $db_config;
+
+  $xtpl = new XTemplate("permission_list.tpl", PATH);
+  $sql = 'select * from `'. $db_config['prefix'] .'_users_groups`';
+  $query = $db->query($sql);
+
+  foreach ($module as $key => $value) {
+    $xtpl->assign('module', $value);
+    $xtpl->parse('main.module');
+  }
+
+  while ($group = $query->fetch()) {
+    $xtpl->assign('group', $group['title']);
+    $xtpl->assign('groupid', $group['group_id']);
+    foreach ($module as $key => $value) {
+      $sql = 'select * from `'.VAC_PREFIX.'_heal_manager` where groupid = ' . $group['group_id'] . ' and type = ' . $key;
+      $query2 = $db->query($sql);
+      if ($query2->fetch()) {
+        $xtpl->assign('check', 'checked');
+      }
+      else {
+        $xtpl->assign('check', '');
+      }
+      $xtpl->assign('moduleid', $key);
+      $xtpl->parse('main.row.module2');
+    }
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  
+  return $xtpl->text();
+}
+
 function navList ($number, $page, $limit) {
   global $lang_global;
   $total_pages = ceil($number / $limit);
