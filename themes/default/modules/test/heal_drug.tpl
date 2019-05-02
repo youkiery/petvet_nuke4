@@ -23,18 +23,18 @@
       <div class="modal-body">
         <div class="row form-group">
           <label class="col-sm-6"> Mã vạch </label>
-          <div class="col-sm-18"> <input class="form-control"type="text" id="drug-insert-code"> </div>
+          <div class="col-sm-18"> <input class="form-control"type="text" id="drug-edit-code"> </div>
         </div>
         <div class="row form-group">
           <label class="col-sm-6"> Tên thuốc</label>
-          <div class="col-sm-8"> <input class="form-control"type="text" id="drug-insert-name"> </div>
+          <div class="col-sm-8"> <input class="form-control"type="text" id="drug-edit-name"> </div>
           <label class="col-sm-6"> Đơn vị </label>
-          <div class="col-sm-4"> <input class="form-control"type="text" id="drug-insert-unit"> </div>
+          <div class="col-sm-4"> <input class="form-control"type="text" id="drug-edit-unit"> </div>
         </div>
         <div class="row form-group">
           <label class="col-sm-6"> Hệ thống tác động </label>
           <div class="col-sm-18 relative">
-            <input type="text" class="form-control" id="drug-insert-system" autocomplete="off">
+            <input type="text" class="form-control" id="drug-edit-system" autocomplete="off">
             <div class="suggest" id="drug-system-suggest">
               {system_list}
             </div>
@@ -42,24 +42,24 @@
         </div>
         <div class="row form-group">
           <label class="col-sm-6"> Liều dùng </label>
-          <div class="col-sm-18"> <textarea class="form-control"type="text" id="drug-insert-limit"></textarea> </div>
+          <div class="col-sm-18"> <textarea class="form-control"type="text" id="drug-edit-limit"></textarea> </div>
         </div>
         <div class="row form-group">
           <label class="col-sm-6"> Công dụng </label>
-          <div class="col-sm-18"> <textarea class="form-control"type="text" id="drug-insert-effect"></textarea> </div>
+          <div class="col-sm-18"> <textarea class="form-control"type="text" id="drug-edit-effect"></textarea> </div>
         </div>
         <div class="row form-group">
           <label class="col-sm-6"> Điều trị bệnh </label>
           <div class="col-sm-8">
             <div class="input-group">
               <div class="relative">
-                <input class="form-control" style="float: none;" type="text" id="drug-insert-disease">
+                <input class="form-control" style="float: none;" type="text" id="drug-edit-disease">
                 <div class="suggest" id="drug-disease-suggest">
                   {diseaseList}
                 </div>
               </div>
               <div class="input-group-btn">
-                <button class="btn btn-success" onclick="insertDisease(drugInsertDisease)"> <span class="glyphicon glyphicon-plus"></span> </button>
+                <button class="btn btn-success" onclick="insertDisease(drugEditDisease)"> <span class="glyphicon glyphicon-plus"></span> </button>
               </div>
             </div>
           </div>
@@ -70,20 +70,20 @@
           <div class="col-sm-8">
             <div class="input-group">
               <div class="relative">
-                <input class="form-control" style="float: none;" type="text" id="drug-insert-effective">
+                <input class="form-control" style="float: none;" type="text" id="drug-edit-effective">
                 <div class="suggest" id="drug-effective-suggest">
                     {diseaseList2}
                 </div>
               </div>
               <div class="input-group-btn">
-                <button class="btn btn-success" onclick="insertDisease(drugInsertEffective)"> <span class="glyphicon glyphicon-plus"></span> </button>
+                <button class="btn btn-success" onclick="insertDisease(drugEditEffective)"> <span class="glyphicon glyphicon-plus"></span> </button>
               </div>
             </div>
           </div>
           <div class="col-sm-10" id="drug-effective-suggest-list" style="height: 100px; overflow-y: scroll;"></div>
         </div>
         <div class="row form-group">
-          <label class="col-sm-6"> Ghi chú </label> <div class="col-sm-18"> <input class="form-control"type="text" id="drug-insert-note"> </div>
+          <label class="col-sm-6"> Ghi chú </label> <div class="col-sm-18"> <input class="form-control"type="text" id="drug-edit-note"> </div>
         </div>
         <div class="text-center">
           <button class="btn btn-success" onclick="editSubmit()">
@@ -177,7 +177,7 @@
   </div>
   <div id="menu1" class="tab-pane">
     <h2> Tra cứu </h2>
-    <div class="form-inline">
+    <form class="form-inline" onsubmit="filter(event)">
       <div class="input-group">
         <input type="text" class="form-control" id="drug-search-name" placeholder="Tên thuốc">
         <div class="input-group-btn">
@@ -214,7 +214,7 @@
         </div>
       </div>
 
-      <button class="btn btn-info" onclick="filter()"> <span class="glyphicon glyphicon-search"></span> </button>
+      <button class="btn btn-info"> <span class="glyphicon glyphicon-search"></span> </button>
     </div>
     <div id="content2">
       {content2}
@@ -227,18 +227,22 @@
   var drugEdit = $("#drug-edit")
   var drugInsertCode = $("#drug-insert-code")
   var drugInsertName = $("#drug-insert-name")
-  var drugInsertLimit = $("#drug-insert-limit")
   var drugInsertUnit = $("#drug-insert-unit")
-  var drugInsertSystem = $("#drug-insert-system")
+
+  var drugEditCode = $("#drug-edit-code")
+  var drugEditName = $("#drug-edit-name")
+  var drugEditUnit = $("#drug-edit-unit")
+  var drugEditLimit = $("#drug-edit-limit")
+  var drugEditSystem = $("#drug-edit-system")
+  var drugEditEffect = $("#drug-edit-effect")
+  var drugEditDisease = $("#drug-edit-disease")
+  var drugEditEffective = $("#drug-edit-effective")
+  var drugEditNote = $("#drug-edit-note")
   var drugSystemSuggest = $("#drug-system-suggest")
-  var drugInsertEffect = $("#drug-insert-effect")
-  var drugInsertDisease = $("#drug-insert-disease")
   var drugDiseaseSuggest = $("#drug-disease-suggest")
   var drugDiseaseSuggestList = $("#drug-disease-suggest-list")
   var drugEffectiveSuggest = $("#drug-effective-suggest")
   var drugEffectiveSuggestList = $("#drug-effective-suggest-list")
-  var drugInsertEffective = $("#drug-insert-effective")
-  var drugInsertNote = $("#drug-insert-note")
 
   var drugSearchName = $("#drug-search-name")
   var drugSearchEffect = $("#drug-search-effect")
@@ -334,10 +338,10 @@
         }
       }
     }
-    drugInsertSystem.val(system.join(', '))
+    drugEditSystem.val(system.join(', '))
   })
 
-  drugInsertSystem.click(() => {
+  drugEditSystem.click(() => {
     if (g_system = !g_system) {
       drugSystemSuggest.show()
     }
@@ -346,10 +350,10 @@
     }
   })
 
-  drugInsertDisease.keyup((e) => {
+  drugEditDisease.keyup((e) => {
     clearTimeout(diseaseTimeout)
     diseaseTimeout = setTimeout(() => {
-      var keyword = drugInsertDisease.val().toLowerCase()
+      var keyword = drugEditDisease.val().toLowerCase()
       html = ''
       for (const key in diseaseData) {
         if (diseaseData.hasOwnProperty(key)) {
@@ -363,20 +367,20 @@
     }, 200);
   })
 
-  drugInsertDisease.focus(() => {
+  drugEditDisease.focus(() => {
     drugDiseaseSuggest.show()
   })
 
-  drugInsertDisease.blur(() => {
+  drugEditDisease.blur(() => {
     setTimeout(() => {
       drugDiseaseSuggest.hide()
     }, 100);
   })
 
-  drugInsertEffective.keyup((e) => {
+  drugEditEffective.keyup((e) => {
     clearTimeout(effectiveTimeout)
     effectiveTimeout = setTimeout(() => {
-      var keyword = drugInsertEffective.val().toLowerCase()
+      var keyword = drugEditEffective.val().toLowerCase()
       html = ''
       for (const key in diseaseData) {
         if (diseaseData.hasOwnProperty(key)) {
@@ -390,11 +394,11 @@
     }, 200);
   })
 
-  drugInsertEffective.focus(() => {
+  drugEditEffective.focus(() => {
     drugEffectiveSuggest.show()
   })
 
-  drugInsertEffective.blur(() => {
+  drugEditEffective.blur(() => {
     setTimeout(() => {
       drugEffectiveSuggest.hide()
     }, 100);
@@ -486,11 +490,11 @@
   function edit(index) {
     g_id = drugData[index]['id']
     
-    drugInsertCode.val(drugData[index]['code'])
-    drugInsertName.val(drugData[index]['name'])
-    drugInsertUnit.val(drugData[index]['unit'])
-    drugInsertLimit.val(drugData[index]['limits'])
-    drugInsertEffect.val(drugData[index]['effect'])
+    drugEditCode.val(drugData[index]['code'])
+    drugEditName.val(drugData[index]['name'])
+    drugEditUnit.val(drugData[index]['unit'])
+    drugEditLimit.val(drugData[index]['limits'])
+    drugEditEffect.val(drugData[index]['effect'])
 
     system = drugData[index]['system']
     disease = {}
@@ -517,11 +521,11 @@
         $("#s" + systemItem).prop('checked', true)
       }
     })
-    drugInsertSystem.val(text.join(', '))
+    drugEditSystem.val(text.join(', '))
 
-    drugInsertEffective.val()
-    drugInsertDisease.val()
-    drugInsertNote.val(drugData[index]['note'])
+    drugEditEffective.val()
+    drugEditDisease.val()
+    drugEditNote.val(drugData[index]['note'])
     drugEdit.modal('show')
   }
 
@@ -549,7 +553,8 @@
     content1.html(html)
   }
 
-  function filter() {
+  function filter(e) {
+    e.preventDefault()
     freeze()
     var name = drugSearchName.val().toLowerCase()
     var effect = drugSearchEffect.val()
@@ -626,7 +631,7 @@
     drugDetailDisease.text(paintDisease(drugData[id]['disease']))
     drugDetailEffective.text(paintDisease(drugData[id]['effective']))
     drugDetailLimit.text(drugData[id]['limits'])
-    drugDetailNote.text(drugData[id]['effect'])
+    drugDetailNote.text(drugData[id]['note'])
     drugDetailSystem.text(paintSystem(drugData[id]['system']))
     drugDetail.modal('show')
   }
@@ -725,10 +730,10 @@
     freeze()
     var system = gatherSystem()
     var disease = checkDisease()
-        
+
     $.post(
       strHref,
-      {action: 'edit', id: g_id, code: drugInsertCode.val(), name: drugInsertName.val(), limit: drugInsertLimit.val(), unit: drugInsertUnit.val(), system: system, effect: drugInsertEffect.val(), disease: disease, effective: effective, note: drugInsertNote.val(), keyword: drugSearch.val()},
+      {action: 'edit', id: g_id, code: drugEditCode.val(), name: drugEditName.val(), limit: drugEditLimit.val(), unit: drugEditUnit.val(), system: system, effect: drugEditEffect.val(), disease: disease, effective: effective, note: drugEditNote.val(), keyword: drugSearch.val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           content1.html(data['html'])

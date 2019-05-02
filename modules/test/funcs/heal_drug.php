@@ -17,10 +17,8 @@ $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
 	$result = array("status" => 0);
 	switch ($action) {
-    case 'insert':
+		case 'insert-disease':
 			$name = $nv_Request->get_string('name', 'post/get', '');
-			$keyword = $nv_Request->get_string('keyword', 'post/get', '');
-			$result['notify'] = 'Chưa nhập tên bệnh hoặc tên bệnh trùng';
 
 			if (!empty($name)) {
 				$sql = 'select * from `'. VAC_PREFIX .'_heal_disease` where name ="'.$name.'"';
@@ -28,6 +26,33 @@ if (!empty($action)) {
 
 				if (empty($query->fetch())) {
 					$sql = 'insert into `'. VAC_PREFIX .'_heal_disease` (name) values("'.$name.'")';
+					$query = $db->query($sql);
+					$id = $db->lastInsertId();
+
+					if ($query) {
+						$result['status'] = 1;
+						$result['id'] = $id;
+						$drug = getDrugList();
+						$result['disease'] = diseaseList();
+						$result['html'] = adminDrugList($drug, $keyword);
+						$result['notify'] = 'Đã thêm bệnh vào danh sách';
+					}
+				}
+			}
+		break;
+    case 'insert':
+			$code = $nv_Request->get_string('code', 'post/get', '');
+			$name = $nv_Request->get_string('name', 'post/get', '');
+			$unit = $nv_Request->get_string('unit', 'post/get', '');
+			$keyword = $nv_Request->get_string('keyword', 'post/get', '');
+			$result['notify'] = 'Chưa nhập tên thuốc hoặc tên bệnh trùng';
+
+			if (!empty($name)) {
+				$sql = 'select * from `'. VAC_PREFIX .'_heal_medicine` where name ="'.$name.'"';
+				$query = $db->query($sql);
+
+				if (empty($query->fetch())) {
+					$sql = 'insert into `'. VAC_PREFIX .'_heal_medicine` (name, unit, code, effect, effective, system, limits, note) values("'.$name.'", "'.$unit.'", "'.$code.'", "", "", "", "", "")';
 					$query = $db->query($sql);
 					$id = $db->lastInsertId();
 
