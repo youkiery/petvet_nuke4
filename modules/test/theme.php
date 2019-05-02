@@ -207,11 +207,15 @@ function permissionContent($module) {
     foreach ($module as $key => $value) {
       $sql = 'select * from `'.VAC_PREFIX.'_heal_manager` where groupid = ' . $group['group_id'] . ' and type = ' . $key;
       $query2 = $db->query($sql);
-      if ($query2->fetch()) {
-        $xtpl->assign('check', 'checked');
-      }
-      else {
-        $xtpl->assign('check', '');
+      $xtpl->assign('check', '');
+      $xtpl->assign('check2', '');
+      if (!empty($row = $query2->fetch())) {
+        if ($row['allow']) {
+          $xtpl->assign('check2', 'checked');
+        }
+        else {
+          $xtpl->assign('check', 'checked');
+        }
       }
       $xtpl->assign('moduleid', $key);
       $xtpl->parse('main.row.module2');

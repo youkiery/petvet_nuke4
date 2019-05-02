@@ -152,6 +152,18 @@ $xtpl->assign('diseaseList3', $diseaseList3);
 $xtpl->assign('disease', json_encode($disease));
 $xtpl->assign('drug', json_encode($drug));
 
+$sql = 'select groupid from `'.VAC_PREFIX.'_heal_manager` where type = 6 and allow = 1 and groupid in (' . implode(',', $user_info['in_groups']) . ')';
+$query = $db->query($sql);
+
+if (!empty($query->fetch())) {
+	$xtpl->assign('active', 'active');
+	$xtpl->parse('main.manager');
+	$xtpl->parse('main.manager2');
+}
+else {
+	$xtpl->assign('active2', 'active');
+}
+
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 include ( NV_ROOTDIR . "/includes/header.php" );

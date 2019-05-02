@@ -144,13 +144,16 @@
   </div>
 </div>
   
+<!-- BEGIN: manager -->
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#home"> Thêm thuốc </a></li>
   <li><a data-toggle="tab" href="#menu1"> Tra cứu </a></li>
 </ul>
+<!-- END: manager -->
 
 <div class="tab-content">
-  <div id="home" class="tab-pane active">
+  <!-- BEGIN: manager2 -->
+  <div id="home" class="tab-pane {active}">
     <div class="row">
       <div class="col-sm-8">
         <div class="input-group">
@@ -175,7 +178,8 @@
       {content1}
     </div>
   </div>
-  <div id="menu1" class="tab-pane">
+  <!-- END: manager2 -->
+  <div id="menu1" class="tab-pane {active2}">
     <h2> Tra cứu </h2>
     <form class="form-inline" onsubmit="filter(event)">
       <div class="input-group">
@@ -215,7 +219,7 @@
       </div>
 
       <button class="btn btn-info"> <span class="glyphicon glyphicon-search"></span> </button>
-    </div>
+    </form>
     <div id="content2">
       {content2}
     </div>

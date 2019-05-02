@@ -21,10 +21,11 @@ if($action) {
       if (!empty($list)) {
         $sql = 'delete from `'.VAC_PREFIX.'_heal_manager`';
         $db->query($sql);
-        foreach ($list as $key => $row) {
-          $param = explode('_', $row);
-          $sql = 'insert into `'.VAC_PREFIX.'_heal_manager` (groupid, type) values('.$param[0].', '.$param[1].')';
-          $db->query($sql);
+        foreach ($list as $key => $group) {
+          foreach ($group as $modulekey => $allow) {
+            $sql = 'insert into `'.VAC_PREFIX.'_heal_manager` (groupid, type, allow) values('.$key.', '.$modulekey.', '.$allow.')';
+            $db->query($sql);
+          }
         }
         $result['status'] = 1;
         $result['notify'] = 'Đã cập nhật';

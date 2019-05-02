@@ -13,7 +13,8 @@
     <td> {group} </td>
     <!-- BEGIN: module2 -->
     <td>
-      <input type="checkbox" class="boxed" id="{groupid}_{moduleid}" {check}>
+      <input type="checkbox" class="boxed" id="{groupid}_{moduleid}_0" {check}>
+      <input type="checkbox" class="boxed" id="{groupid}_{moduleid}_1" {check2}>
     </td> 
     <!-- END: module2 -->
   </tr>

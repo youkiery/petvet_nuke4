@@ -215,7 +215,7 @@
       </div>
 
       <button class="btn btn-info"> <span class="glyphicon glyphicon-search"></span> </button>
-    </div>
+    </form>
     <div id="content2">
       {content2}
     </div>
