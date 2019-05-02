@@ -63,18 +63,20 @@ function summaryOn($starttime, $endtime) {
   return $xtpl->text();
 }
 
-function adminDrugList($drugList) {
+function adminDrugList($drugList, $keyword = '') {
   global $db;
 
   $index = 0;
 
   $xtpl = new XTemplate("heal_drug_list.tpl", PATH);
   foreach ($drugList as $key => $row) {
-    $xtpl->assign('index', $index++);
-    $xtpl->assign('name', $row['name']);
-    $xtpl->assign('unit', $row['unit']);
-    $xtpl->assign('id', $row['id']);
-    $xtpl->parse('main.row');
+    if (empty($keyword) || strpos($row['name'], $keyword) >= 0) {
+      $xtpl->assign('index', $index++);
+      $xtpl->assign('name', $row['name']);
+      $xtpl->assign('unit', $row['unit']);
+      $xtpl->assign('id', $row['id']);
+      $xtpl->parse('main.row');
+    }
   }
   $xtpl->parse('main');
   return $xtpl->text();

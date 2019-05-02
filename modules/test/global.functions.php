@@ -61,6 +61,7 @@
 //     }
 //   }
 // }
+
 // die();
 if (!defined('NV_MAINFILE')) {
 	die('Stop!!!');
@@ -150,6 +151,9 @@ function getDrugList() {
   $query = $db->query($sql);
   $list = array();
   while ($drug = $query->fetch()) {
+    $drug['system'] = explode(',', $drug['system']);
+    $drug['disease'] = explode(',', $drug['disease']);
+    $drug['effective'] = explode(',', $drug['effective']);
     $list[] = $drug;
   }
   return $list;
@@ -179,10 +183,12 @@ function passbyParam($list) {
   $temp = array();
   
   foreach ($list as $key => $value) {
-    if (!empty($value)) {
+    if (!empty($key) || !empty($value)) {
       $temp[] = $key;
     } 
   }
+  // var_dump($temp);
+  // die();
   return implode(',', $temp);
 }
 

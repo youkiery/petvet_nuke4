@@ -68,7 +68,7 @@
   position: absolute;
   overflow-y:scroll;
   max-height: 300px;
-  width: -webkit-fill-available;
+  width: 100%;
 }
 
 .msgshow {

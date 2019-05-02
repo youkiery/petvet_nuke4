@@ -124,7 +124,7 @@
 </div>
 
 <div id="drug-insert" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
         <div class="row form-group">

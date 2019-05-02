@@ -7,7 +7,7 @@
  * @Createdate 21-03-2019 13:15
  */
 
-if (!defined('NV_IS_QUANLY_ADMIN')) {
+if (!defined('NV_IS_MOD_QUANLY')) {
 	die('Stop!!!');
 }
 
@@ -130,6 +130,6 @@ $xtpl->assign('drug', json_encode($drug));
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 include ( NV_ROOTDIR . "/includes/header.php" );
-echo nv_admin_theme($contents);
+echo nv_site_theme($contents);
 include ( NV_ROOTDIR . "/includes/footer.php" );
 
