@@ -229,7 +229,9 @@ while($row = $query->fetch()) {
   $xtpl->parse("main.doctor");
 }
 
-$xtpl->assign("content", user_vaccine());
+$list = user_vaccine();
+
+$xtpl->assign("content", $list);
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");

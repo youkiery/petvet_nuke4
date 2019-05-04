@@ -14,6 +14,16 @@ if (!defined('VAC_PREFIX')) {
 
 $STATUS_COLOR = array('white', 'yellow', 'red');
 
+function overdayVaccine() {
+  global $db, $vacconfigv2, $lang_module;
+
+
+  $xtpl = new XTemplate("list-1.tpl", PATH);
+
+  var_dump($xtpl->text());die();
+  return $xtpl->text();
+}
+
 function vaccineRemind($keyword, $fromtime, $totime) {
   global $db, $nv_Request, $module_info, $module_file, $lang_module, $vacconfigv2; 
   $xtpl = new XTemplate("overmind_vaccine.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);

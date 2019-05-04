@@ -433,13 +433,24 @@ function admin_redrug() {
   return $text;
 }
 
-
-
 function getDiseaseList() {
   global $db, $db_config, $module_name;
   $sql = "select * from " . VAC_PREFIX . "_disease";
   $result = $db->query($sql);
   return fetchall($db, $result);
+}
+
+function getDiseaseData() {
+  global $db;
+
+  $list = array();
+  $sql = "select * from " . VAC_PREFIX . "_disease";
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $list[$row['id']] = $row['name'];
+  }
+  return $list;
 }
 
 function getCustomerList($key, $sort, $filter, $page) {
@@ -1579,7 +1590,7 @@ function admin_spa() {
 }
 
 function vaccine_list($vaclist, $order = 0) {
-  global $module_info, $module_file, $lang_module, $nv_Request;
+  global $db, $module_info, $module_file, $lang_module, $nv_Request, $vacconfigv2;
   // initial
   $hex = array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f");
   $xtpl = new XTemplate("list-1.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
@@ -1647,6 +1658,58 @@ function vaccine_list($vaclist, $order = 0) {
   }
 
   // display
+  $id = $nv_Request->get_int('id', 'post/get', 0);
+  if (!$id) {
+    $today = strtotime(date('Y/m/d'));
+    $fromtime = $today - $vacconfigv2['filter'];
+    $diseases = getDiseaseData();
+  
+    // $sql = 'select * from (select * from `'.VAC_PREFIX.'_vaccine` where (calltime < '.$fromtime.') and status = 0 order by calltime desc limit 20) a order by calltime asc';
+    $sql = 'select * from `'.VAC_PREFIX.'_vaccine` where (calltime < '.$fromtime.') and status = 0 order by calltime desc limit 20';
+    $query = $db->query($sql);
+    $index = 1;
+    $xtpl->assign("brickcolor", "orange");
+  
+    while ($row = $query->fetch()) {
+      $pet = selectPetId($row['petid']);
+      $customer = selectCustomerId($pet['customerid']);
+  
+      $xtpl->assign("index", $index);
+      $xtpl->assign("petname", $pet["name"]);
+      $xtpl->assign("petid", $row["petid"]);
+      $xtpl->assign("vacid", $row["id"]);
+      $xtpl->assign("customer", $customer["name"]);
+      $xtpl->assign("phone", $customer["phone"]);
+      $xtpl->assign("diseaseid", $row["diseaseid"]);
+      $xtpl->assign("disease", $diseases[$row["diseaseid"]]);
+      $xtpl->assign("note", $row["note"]);
+      $xtpl->assign("confirm", $lang_module["confirm_" . $row["status"]]);
+  
+      if ($row["status"] > 1) {
+        $xtpl->parse("disease.vac_body.recall_link");
+      }
+      switch ($row["status"]) {
+        case '1':
+          $xtpl->assign("color", "orange");
+          break;
+        case '2':
+          $xtpl->assign("color", "green");
+          break;
+        case '4':
+          $xtpl->assign("color", "gray");
+          break;
+        default:
+          $xtpl->assign("color", "red");
+          break;
+      }
+      $xtpl->assign("cometime", date("d/m/Y", $row["cometime"]));
+      $xtpl->assign("calltime", date("d/m/Y", $row["calltime"]));
+      $index++;
+      $xtpl->parse("disease.vac_body");
+    }
+  }
+  $xtpl->assign("brickcolor", "");
+  
   foreach ($t_list as $key => $value) {
     $xtpl->assign("index", $index);
     $xtpl->assign("petname", $vaclist[$value]["petname"]);

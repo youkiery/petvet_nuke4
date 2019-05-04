@@ -239,3 +239,6 @@ td, th {
 .yellow {
   background: yellow;
 }
+.orange {
+  background: orange !important;
+}

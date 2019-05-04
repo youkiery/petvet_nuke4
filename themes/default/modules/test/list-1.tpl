@@ -1,6 +1,6 @@
 <!-- BEGIN: disease -->
-    	<!-- BEGIN: vac_body -->  
-    	<tr style="text-transform: capitalize;">
+    	<!-- BEGIN: vac_body -->
+    	<tr style="text-transform: capitalize;" class="{brickcolor}">
       	<td>
         	{index}
       	</td>    
