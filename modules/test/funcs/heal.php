@@ -34,9 +34,10 @@ if (!empty($action)) {
 			$calltime = $nv_Request->get_string('calltime', 'post', '');
 			$customer = $nv_Request->get_int('customer', 'post', 0);
 			$pet = $nv_Request->get_int('pet', 'post', 0);
+			$gdoctor = $nv_Request->get_int('gdoctor', 'post', 0);
 
 			$result['status'] = 1;
-			$result['html'] = healFilter($cometime, $calltime, $customer, $pet);
+			$result['html'] = healFilter($cometime, $calltime, $customer, $pet, $gdoctor);
 		break;
 		case 'add-customer':
 			$name = $nv_Request->get_string('name', 'post', '');

@@ -92,7 +92,7 @@ function adminDrugList($drugList, $keyword = '') {
   return $xtpl->text();
 }
 
-function healFilter($cometime, $calltime, $customer, $pet) {
+function healFilter($cometime, $calltime, $customer, $pet, $gdoctor) {
   global $db;
 
   $xtpl = new XTemplate("heal-list.tpl", PATH);
@@ -103,14 +103,18 @@ function healFilter($cometime, $calltime, $customer, $pet) {
   $sqlQuery = '';
   $queryType = 0;
   if (!empty($pet) && $pet > 0) {
-    $sqlQuery = 'where id = ' . $pet;
+    $sqlQuery = 'and petid in (select id from `'. VAC_PREFIX .'_pet` where id = ' . $pet . ')';
   }
   else if (!empty($customer) && $customer > 0) {
-    $sqlQuery = 'where customerid = ' . $customer;
+    $sqlQuery = 'and petid in (select id from `'. VAC_PREFIX .'_pet` where customerid = ' . $customer . ')';
   }
 
-  $sql = 'select * from  `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` '. $sqlQuery .') order by time desc';
+  $sqlQuery2= '';
+  if (!empty($gdoctor)) {
+    $sqlQuery2 = 'and doctorid = ' . $gdoctor;
+  }
 
+  $sql = 'select * from  `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .') ' . $sqlQuery . ' ' . $sqlQuery2 . ' order by time desc';
   $query = $db->query($sql);
   $count = 0;
   $index = 1;
@@ -172,6 +176,7 @@ function healList($page, $limit, $customer = 0, $pet = 0, $status = 0, $gdoctor)
       $sql2 = 'select count(id) as id from `'. VAC_PREFIX .'_heal` where petid in (select id from `'.VAC_PREFIX.'_pet` where customerid = '.$customer.') and (time between '. $cometime .' and '. $calltime .') and petid in (select id from `'. VAC_PREFIX .'_pet` where status = ' . $status . ') '.$extraQuery.'';
     }
   }
+  // die($sql);
   $query = $db->query($sql2);
   $count = $query->fetch();
   $xtpl->assign('total', $count['id'] ? $count['id'] : 0);

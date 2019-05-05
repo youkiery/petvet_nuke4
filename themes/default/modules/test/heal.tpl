@@ -638,7 +638,7 @@
     freeze()
     $.post(
       strHref,
-      {action: 'filter-by', cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet},
+      {action: 'filter-by', cometime: cometime.val(), calltime: calltime.val(), customer: g_filterCustomer, pet: g_filterPet, gdoctor: g_doctorid},
       (response, status) => {
         checkResult(response, status).then(data => {
           healFilterContent.html(data['html'])
@@ -830,19 +830,23 @@
     else {
       doctorid = healInsertDoctor.val()
     }
-    
-    $.post(
-      strHref,
-      {action: 'insert', petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), drug: drugList, page: page, limit: limit.val(), customer: g_filterCustomer, pet: g_filterPet, fstatus: global_status, doctorid: doctorid, gdoctor: g_doctorid},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          content.html(data['html'])
-          global_status = g_status
-          parseGlobalButton()
-          healInsert.modal('hide')
-        }, () => {})
-      }
-    )
+    if (!g_petid) {
+      alert_msg('Chưa chọn thú cưng');
+    }
+    else {
+      $.post(
+        strHref,
+        {action: 'insert', petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), drug: drugList, page: page, limit: limit.val(), customer: g_filterCustomer, pet: g_filterPet, fstatus: global_status, doctorid: doctorid, gdoctor: g_doctorid},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            content.html(data['html'])
+            global_status = g_status
+            parseGlobalButton()
+            healInsert.modal('hide')
+          }, () => {})
+        }
+      )
+    }
   }
   
 </script>
