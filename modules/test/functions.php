@@ -28,14 +28,25 @@ if (!empty($user_info) && !empty($user_info['userid'])) {
   
       if (empty($query->fetch())) {
         $check = true;
-        $contents = 'Tài khoản chưa có quyền truy cập nội dung này';
+        $contents = '<p style="padding: 10px;">Tài khoản chưa có quyền truy cập nội dung này</p>';
+      }
+      else {
+        $today = strtotime(date('Y/m/d'));
+        $time = time();
+        $fromTime = $today + $vacconfigv2['hour_from'] * 60 * 60 + $vacconfigv2['minute_from'] * 60;
+        $endTime = $today + $vacconfigv2['hour_end'] * 60 * 60 + $vacconfigv2['minute_end'] * 60;
+
+        if ($time < $fromTime || $time > $endTime) {
+          $check = true;
+          $contents = '<p style="padding: 10px;">Đã quá thời gian làm việc, xin vui lòng quay lại sau</p>';
+        }
       }
     }
   } 
 } 
 else {
   $check = true;
-  $contents = 'Chỉ có thành viên được phân quyền mới có thể thấy được mục này';
+  $contents = '<p style="padding: 10px;">Chỉ có thành viên được phân quyền mới có thể thấy được mục này</p>';
 }
 
 if ($check) {
