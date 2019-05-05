@@ -5,7 +5,6 @@
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <div class="msgshow" id="msgshow"></div>
 
-
 <div id="heal-filter" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -22,6 +21,7 @@
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
         Bạn có muốn xóa trường này không?
         <div class="text-center">
           <button class="btn btn-danger" onclick="removeSubmit()">
@@ -37,6 +37,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
         <div class="row form-group">
           <label class="col-sm-4">Khách hàng</label>
           <div class="col-sm-8 relative">
@@ -133,14 +134,25 @@
               </div>
             </div>
           </div>
-          <div style="width: 100%; height: 150px; margin: 4px; padding: 4px; overflow-y: scroll;" id="heal-drug-list">
-
-          </div>
+          <div style="width: 100%; height: 150px; margin: 4px; padding: 4px; overflow-y: scroll;" id="heal-drug-list"></div>
+            
+        </div>
+        <div class="row form-group">
+          <label class="col-sm-4"> Ghi chú </label>
+          <div class="col-sm-18"><input type="text" class="form-control" id="heal-insert-note" autocomplete="off"> </div> 
         </div>
         <div class="text-center">
-          <button class="stat btn btn-info status0" id="heal-healed-button" status="0"> Đã điều trị </button>
-          <button class="stat btn btn-warning status1" id="heal-healing-button" status="1"> Đang điều trị </button>
-          <button class="stat btn btn-danger status2" id="heal-dead-button" status="2"> Đã chết </button><br>
+          <button class="stat btn btn-info stat0" id="heal-healed-button" status="0"> Đã điều trị </button>
+          <button class="stat btn btn-warning stat1" id="heal-healing-button" status="1"> Đang điều trị </button>
+          <button class="stat btn btn-danger stat2" id="heal-dead-button" status="2"> Đã chết </button><br>
+          <div class="form-group">
+            <select class="form-control" id="heal-insert-insult">
+              <option value="-1"> Tệ </option>
+              <option value="0"> Hơi tệ </option>
+              <option value="1"> Bình thường </option>
+              <option value="2"> Tốt </option>
+            </select>
+          </div>
           <button class="btn btn-success" id="heal-insert-button" onclick="insertSubmit()"> Thêm</button>
           <button class="btn btn-success" id="heal-edit-button" onclick="editSubmit()"> Sửa</button>
         </div>
@@ -246,6 +258,7 @@
   var healInsertExam = $("#heal-insert-exam")
   var healInsertUsg = $("#heal-insert-usg")
   var healInsertXray = $("#heal-insert-xray")
+  var healInsertNote = $("#heal-insert-note")
   var healInsertDrug = $("#heal-insert-drug")
   var healDrugSuggest = $("#heal-drug-suggest")
   var healDrugQuality = $("#heal-drug-quality")
@@ -261,6 +274,7 @@
   var healHealedButton = $("#heal-healed-button")
   var healDeadButton = $("#heal-dead-button")
   var summaryCalltime = $("#summary-calltime")
+  var healInsertInsult = $("#heal-insert-insult")
   var cometime = $("#cometime")
   var calltime = $("#calltime")
   var limit = $("#limit")
@@ -488,8 +502,17 @@
     stat.each((index, item) => {
       item.classList.remove(BUTTON_DATA[index])
     })
-    $('.status' + g_status).addClass(BUTTON_DATA[g_status])
-    $('.status' + g_status).addClass('active')
+    
+    if (!Number(g_status)) {
+      healInsertInsult.show()
+    }
+    else {
+      healInsertInsult.hide()
+    }
+    console.log(BUTTON_DATA[g_status]);
+    
+    $('.stat' + g_status).addClass(BUTTON_DATA[g_status])
+    $('.stat' + g_status).addClass('active')
   }
 
   function parseGlobalButton() {
@@ -688,6 +711,7 @@
     healInsertOriental.val('')
     healInsertUsg.val('')
     healInsertXray.val('')
+    healInsertNote.val('')
     healSystemSuggest.hide()
     healInsertButton.show()
     healEditButton.hide()
@@ -723,7 +747,6 @@
       }
     )
   }
-
 
   function edit(id) {
     freeze()
@@ -777,9 +800,73 @@
           healInsertOriental.val(data['oriental'])
           healInsertUsg.val(data['usg'])
           healInsertXray.val(data['xray'])
+          healInsertXray.val(data['note'])
           healSystemSuggest.hide()
           healInsertButton.hide()
           healEditButton.show()
+          healInsert.modal('show')
+          parsePet(0, 0)
+        }, () => {})
+      }
+    )
+  }
+
+  function copy(id) {
+    freeze()
+    $.post(
+      strHref,
+      {action: 'get_edit', id: id},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          editData = data
+          g_id = id
+          g_customerid = data['customer']['id']
+          g_petid = data['pet']['id']
+          g_system = 0
+          g_target = healInsertPet
+          g_status = data['pet']['status']
+          healInsertCustomerButton.hide()
+          healInsertPetButton.hide()
+
+          parseButton()
+
+          var temp = data['customer']
+          temp['pet'] = [data['pet']]
+          dbdata = [temp]
+          
+          customerSuggest.html('')
+          customerFilterSuggest.html('')
+          
+          drugList = {}
+          data['drug'].forEach(drug => {
+            drugList[drug['medicineid']] = drug['quanlity']
+          })
+          parseDrug()
+
+          var text = []
+          $(".s").each((index, item) => {
+            item.checked = false
+          })  
+
+          data['system'].forEach(system => {
+            text.push(systemData[system['systemid']]['name'])
+            $("#s" + system['systemid']).prop('checked', true)
+          })
+          healInsertSystem.val(text.join(', '))
+
+          healInsertCustomer.val(data['customer']['name'])
+          healInsertWeight.val(data['pet']['weight'])
+          healInsertAge.val(data['pet']['age'])
+          healInsertSpecies.html(data['pet']['species'])
+          healInsertAppear.val(data['appear'])
+          healInsertExam.val(data['exam'])
+          healInsertOriental.val(data['oriental'])
+          healInsertUsg.val(data['usg'])
+          healInsertXray.val(data['xray'])
+          healInsertNote.val(data['note'])
+          healSystemSuggest.hide()
+          healInsertButton.show()
+          healEditButton.hide()
           healInsert.modal('show')
           parsePet(0, 0)
         }, () => {})
@@ -797,12 +884,10 @@
     }
     $.post(
       strHref,
-      {action: 'edit', id: g_id, petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), drug: drugList, page: page, limit: limit.val(), customer: g_filterCustomer, pet: g_filterPet, fstatus: global_status, doctorid: doctorid, gdoctor: g_doctorid},
+      {action: 'edit', id: g_id, petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), note: healInsertNote.val(), insult: healInsertInsult.val(), drug: drugList, page: page, limit: limit.val(), customer: g_filterCustomer, pet: g_filterPet, fstatus: global_status, doctorid: doctorid, gdoctor: g_doctorid},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
-          global_status = g_status
-          parseGlobalButton()
           healInsert.modal('hide')
         }, () => {})
       }
@@ -836,12 +921,10 @@
     else {
       $.post(
         strHref,
-        {action: 'insert', petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), drug: drugList, page: page, limit: limit.val(), customer: g_filterCustomer, pet: g_filterPet, fstatus: global_status, doctorid: doctorid, gdoctor: g_doctorid},
+        {action: 'insert', petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), note: healInsertNote.val(), insult: healInsertInsult.val(), drug: drugList, page: page, limit: limit.val(), customer: g_filterCustomer, pet: g_filterPet, fstatus: global_status, doctorid: doctorid, gdoctor: g_doctorid},
         (response, status) => {
           checkResult(response, status).then(data => {
             content.html(data['html'])
-            global_status = g_status
-            parseGlobalButton()
             healInsert.modal('hide')
           }, () => {})
         }

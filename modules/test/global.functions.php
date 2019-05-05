@@ -165,7 +165,7 @@ function getDrugIdList($id) {
   $drugs = getDrugId($id);
   $drug = array();
   foreach ($drugs as $row) {
-    $drugData = getDrugDataId($row['id']);
+    $drugData = getDrugDataId($row['medicineid']);
     $drug[] = $drugData['name'] . ': ' . $row['quanlity'] . '' . $drugData['unit'];
   }
   return $drug;

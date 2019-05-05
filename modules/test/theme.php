@@ -184,7 +184,7 @@ function healList($page, $limit, $customer = 0, $pet = 0, $status = 0, $gdoctor)
   $query = $db->query($sql);
   $index = 1;
   while ($heal = $query->fetch()) {
-    $drug = implode(', ', getDrugIdList($heal['id']));
+    $drug = implode('<b style="color: red">;</b> ', getDrugIdList($heal['id']));
     $pet = selectPetId($heal['petid']);
     $customer = selectCustomerId($pet['customerid']);
     $xtpl->assign('id', $heal['id']);
@@ -197,6 +197,9 @@ function healList($page, $limit, $customer = 0, $pet = 0, $status = 0, $gdoctor)
     $xtpl->assign('oriental', $heal['oriental']);
     $xtpl->assign('drug', $drug);
     $xtpl->assign('nav', navList($count['id'], $page, $limit));
+    if (!$gdoctor) {
+      $xtpl->parse('main.row.manager');
+    }
     $xtpl->parse('main.row');
   }
 

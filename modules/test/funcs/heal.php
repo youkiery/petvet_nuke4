@@ -91,7 +91,7 @@ if (!empty($action)) {
 		break;
 		case 'filter':
 			$page = $nv_Request->get_string('page', 'get/post', '');
-			$limit = $nv_Request->get_string('insult', 'get/post', '');
+			$limit = $nv_Request->get_string('limit', 'get/post', '');
 			$cometime = $nv_Request->get_string('cometime', 'get/post', '');
 			$calltime = $nv_Request->get_string('calltime', 'get/post', '');
 			$pet = $nv_Request->get_int('pet', 'get/post', 0);
@@ -128,10 +128,12 @@ if (!empty($action)) {
 			$exam = $nv_Request->get_string('exam', 'get/post', '');
 			$usg = $nv_Request->get_string('usg', 'get/post', '');
 			$xray = $nv_Request->get_string('xray', 'get/post', '');
+			$note = $nv_Request->get_string('note', 'get/post', '');
+			$insult = $nv_Request->get_string('insult', 'get/post', '');
 			$drug = $nv_Request->get_array('drug', 'get/post', '');
 
 			$page = $nv_Request->get_string('page', 'get/post', '');
-			$limit = $nv_Request->get_string('insult', 'get/post', '');
+			$limit = $nv_Request->get_string('limit', 'get/post', '');
 			$cometime = $nv_Request->get_string('cometime', 'get/post', '');
 			$calltime = $nv_Request->get_string('calltime', 'get/post', '');
 			$pet = $nv_Request->get_int('pet', 'get/post', 0);
@@ -145,7 +147,20 @@ if (!empty($action)) {
 				$sql = 'update `'. VAC_PREFIX .'_pet` set status = '. $status .', age = '. $age .', weight = '. $weight .', species = '. $species .' where id = ' . $petid;
 				$db->query($sql);
 
-				$sql = 'update `'. VAC_PREFIX .'_heal` set doctorid = '. $doctorid .', oriental = "'. $oriental .'", appear = "'. $appear .'", exam = "'. $exam .'", usg = "'. $usg .'", xray = "'. $xray .'" where id = ' . $id;
+				if ($status == 0) {
+					$sql = 'select * from `'. VAC_PREFIX .'_heal_insult` where healid = ' . $id;
+					$query = $db->query($sql);
+					if ($row = $query->fetch) {
+						$sql = 'update `'. VAC_PREFIX .'_heal_insult` set insult = '. $insult .' where healid = ' . $id;
+						$db->query($sql);
+					}
+					else {
+						$sql = 'insert into `'. VAC_PREFIX .'_heal_insult` (healid, insult) values('.$id.', '.$insult.')';
+						$db->query($sql);
+					}
+				} 
+
+				$sql = 'update `'. VAC_PREFIX .'_heal` set doctorid = '. $doctorid .', oriental = "'. $oriental .'", appear = "'. $appear .'", exam = "'. $exam .'", usg = "'. $usg .'", xray = "'. $xray .'", note = "'.$note.'" where id = ' . $id;
 				$db->query($sql);
 
 				$sql = 'delete from `'. VAC_PREFIX .'_system` where healid = ' . $id;
@@ -183,10 +198,12 @@ if (!empty($action)) {
 			$exam = $nv_Request->get_string('exam', 'get/post', '');
 			$usg = $nv_Request->get_string('usg', 'get/post', '');
 			$xray = $nv_Request->get_string('xray', 'get/post', '');
+			$note = $nv_Request->get_string('note', 'get/post', '');
+			$insult = $nv_Request->get_string('insult', 'get/post', '');
 			$drug = $nv_Request->get_array('drug', 'get/post', '');
 
 			$page = $nv_Request->get_string('page', 'get/post', '');
-			$limit = $nv_Request->get_string('insult', 'get/post', '');
+			$limit = $nv_Request->get_string('limit', 'get/post', '');
 			$cometime = $nv_Request->get_string('cometime', 'get/post', '');
 			$calltime = $nv_Request->get_string('calltime', 'get/post', '');
 			$pet = $nv_Request->get_int('pet', 'get/post', 0);
@@ -199,9 +216,14 @@ if (!empty($action)) {
 			$sql = 'update `'. VAC_PREFIX .'_pet` set status = '. $status .', age = '. $age .', weight = '. $weight .', species = '. $species .' where id = ' . $petid;
 			$db->query($sql);
 
-			$sql = 'insert into `'. VAC_PREFIX .'_heal` (petid, doctorid, appear, oriental, exam, usg, xray, time) values ('.$petid.', '. $doctorid .', "'.$appear.'", "'.$oriental.'", "'.$exam.'", "'.$usg.'", "'.$xray.'", '. time() .')';
+			$sql = 'insert into `'. VAC_PREFIX .'_heal` (petid, doctorid, appear, oriental, exam, usg, xray, note, time) values ('.$petid.', '. $doctorid .', "'.$appear.'", "'.$oriental.'", "'.$exam.'", "'.$usg.'", "'.$xray.'", "'.$note.'", '. time() .')';
 			$db->query($sql);
 			$id = $db->lastInsertId();
+
+			if ($id && empty($status)) {
+				$sql = 'insert into `'. VAC_PREFIX .'_heal_insult` (healid, insult) values('.$id.', '.$insult.')';
+				$db->query($sql);
+			}
 
 			$sql = 'delete from `'. VAC_PREFIX .'_system` where healid = ' . $id;
 			$db->query($sql);
@@ -227,7 +249,7 @@ if (!empty($action)) {
 			$id = $nv_Request->get_int('id', 'get/post', 0);
 
 			$page = $nv_Request->get_string('page', 'get/post', '');
-			$limit = $nv_Request->get_string('insult', 'get/post', '');
+			$limit = $nv_Request->get_string('limit', 'get/post', '');
 			$cometime = $nv_Request->get_string('cometime', 'get/post', '');
 			$calltime = $nv_Request->get_string('calltime', 'get/post', '');
 			$status = $nv_Request->get_int('status', 'get/post', 0);
