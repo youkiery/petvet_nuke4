@@ -16,6 +16,7 @@
         <div class="form-group">
           <label>Đơn vị</label>
           <input type="text" class="form-control" id="form-insert-unit">
+          <!-- select from table -->
         </div>
         <div class="form-group">
           <label>Ngày nhận</label>
@@ -27,26 +28,27 @@
         </div>
         <div class="form-group">
           Hình thức nhận
-          <div class="checkbox">
+          <div class="checkbox" style="display: inline-block;">
             <label><input type="checkbox" id="form-insert-receive-state">Trực tiếp</label>
           </div>
-          <div class="checkbox">
+          <div class="checkbox" style="display: inline-block;">
             <label><input type="checkbox" id="form-insert-receive-state-2">Bưu điện</label>
           </div>
-          <input type="text" id="form-insert-receive-state-3">
+          <p>Khác</p>
+          <input type="text" class="form-control" id="form-insert-receive-state-3">
         </div>
         <div class="form-group">
           <label> Người nhận hồ sơ </label>
-          <input type="text" id="form-insert-receiver">
+          <input type="text" class="form-control" id="form-insert-receiver">
         </div>
         <p><b>Chuyên môn</b></p>
         <div class="form-group">
           <label> Ngày nhận </label>
-          <input type="text" id="form-insert-elite-receive">
+          <input type="text" class="form-control" id="form-insert-elite-receive">
         </div>
         <div class="form-group">
           <label> Người nhận hồ sơ </label>
-          <input type="text" id="form-insert-elite-sendback">
+          <input type="text" class="form-control" id="form-insert-elite-sendback">
         </div>
         <div>
           Hồ sơ gồm
@@ -54,19 +56,19 @@
         </div>
         <div class="form-group">
           <label> Người giao mẫu </label>
-          <input type="text" id="form-insert-elite-sendback">
+          <input type="text" class="form-control" id="form-insert-elite-sendback">
         </div>
         <div class="form-group">
           <label> Bộ phận giao mẫu </label>
-          <input type="text" id="form-insert-elite-sendback">
+          <input type="text" class="form-control" id="form-insert-elite-sendback">
         </div>
         <div class="form-group">
           <label> Người nhận mẫu </label>
-          <input type="text" id="form-insert-elite-sendback">
+          <input type="text" class="form-control" id="form-insert-elite-sendback">
         </div>
         <div class="form-group">
           <label> Bộ phận nhận mẫu </label>
-          <input type="text" id="form-insert-elite-sendback">
+          <input type="text" class="form-control" id="form-insert-elite-sendback">
           <!-- note: receive unit attach with phone number -->
         </div>
         <div class="form-group">
@@ -75,7 +77,7 @@
         </div>
         <div class="form-group">
           <label> Yêu cầu khác </label>
-          <input type="text" id="form-insert-elite-sendback">
+          <input type="text" class="form-control" id="form-insert-elite-sendback">
         </div>
       <!-- </div>
     </div>
