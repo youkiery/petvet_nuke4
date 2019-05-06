@@ -1,4 +1,13 @@
 <?php
+		// $db = new mysqli('localhost', 'root', '', 'petcoffee');
+		// $db->query('SET NAMES "utf8"');
+
+		// $sql = 'select * from pet_test_vaccine where status = 0 order by calltime desc';
+		// $query = $db->query($sql);
+		// while ($row = $query->fetch_assoc()) {
+		// 	echo date('d/m/Y', $row['calltime']) . '<br>';
+		// }
+		// die();
 	if (isset($_POST['data'])) {
 		$data = $_POST['data'];
 	}

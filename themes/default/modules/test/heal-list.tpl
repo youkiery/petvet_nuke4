@@ -11,6 +11,8 @@
         <button class="btn btn-warning" onclick="copy({id})"> <span class="glyphicon glyphicon-file"></span> </button>
         <!-- BEGIN: manager -->
         <button class="btn btn-danger" onclick="remove({id})"> <span class="glyphicon glyphicon-remove"></span> </button>
+        <br>
+        <div class="btn btn-xs {classx}">{insult}</div>
         <!-- END: manager -->
       </td>
     </tr>

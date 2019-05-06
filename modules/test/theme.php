@@ -13,6 +13,8 @@ if (!defined('VAC_PREFIX')) {
 }
 
 $STATUS_COLOR = array('white', 'yellow', 'red');
+$insultValue = array(-1 => 'Tệ', 0 => 'Hơi tệ', 1 => 'Bình thường', 2 => 'Tốt');
+$insultClass = array(-1 => 'btn-danger', 0 => 'btn-warning', 1 => 'btn-info', 2 => 'btn-success');
 
 function overdayVaccine() {
   global $db, $vacconfigv2, $lang_module;
@@ -144,7 +146,7 @@ function healFilter($cometime, $calltime, $customer, $pet, $gdoctor) {
 }
 
 function healList($page, $limit, $customer = 0, $pet = 0, $status = 0, $gdoctor) {
-  global $db, $STATUS_COLOR, $vacconfigv2;
+  global $db, $STATUS_COLOR, $vacconfigv2, $insultValue, $insultClass;
   $xtpl = new XTemplate("heal-list.tpl", PATH);
 
   if (!($page > 0)) $page = 1;
@@ -197,6 +199,13 @@ function healList($page, $limit, $customer = 0, $pet = 0, $status = 0, $gdoctor)
     $xtpl->assign('oriental', $heal['oriental']);
     $xtpl->assign('drug', $drug);
     $xtpl->assign('nav', navList($count['id'], $page, $limit));
+    if ($status == 0) {
+      $insultData = selectHealInsultId($heal['id']);
+      if (!empty($insultData)) {
+        $xtpl->assign('insult', $insultValue[$insultData['insult']]);
+        $xtpl->assign('classx', $insultClass[$insultData['insult']]);
+      }
+    }
     if (!$gdoctor) {
       $xtpl->parse('main.row.manager');
     }

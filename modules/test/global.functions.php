@@ -81,6 +81,14 @@ while ($row = $query->fetch()) {
   $vacconfigv2[$row["name"]] = $row["value"];
 }
 
+function selectHealInsultId($healid) {
+  global $db;
+  $sql = 'select * from `'. VAC_PREFIX .'_heal_insult` where healid = '. $healid;
+  $query = $db->query($sql);
+  $insult = $query->fetch();
+  return $insult;
+}
+
 function selectCustomerId($customerid) {
   global $db;
   $sql = 'select * from `'. VAC_PREFIX .'_customer` where id = '. $customerid;
