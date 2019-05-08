@@ -800,7 +800,7 @@
           healInsertOriental.val(data['oriental'])
           healInsertUsg.val(data['usg'])
           healInsertXray.val(data['xray'])
-          healInsertXray.val(data['note'])
+          healInsertNote.val(data['note'])
           healSystemSuggest.hide()
           healInsertButton.hide()
           healEditButton.show()
