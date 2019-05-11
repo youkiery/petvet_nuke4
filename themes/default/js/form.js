@@ -3,6 +3,7 @@ function alert_msg(msg) {
 	$('#msgshow').show('slide').delay(2000).hide('slow'); 
 }
 
+
 function checkResult(response, status) {
   return new Promise((resolve, reject) => {
     if (status === 'success') {
@@ -12,6 +13,7 @@ function checkResult(response, status) {
           if (data["notify"]) {
             alert_msg(data["notify"])
           }
+          defreeze()
           resolve(data)          
         }
         else {
@@ -25,6 +27,7 @@ function checkResult(response, status) {
         }
       }
       catch (e) {
+        defreeze()
         reject()
       }
     }
@@ -50,4 +53,27 @@ function dateToString(date) {
     month = "0" + month
   }
   return day + "/" + month + "/" + year
+}
+
+function paintext(string) {
+  var str = string.toLowerCase();
+  str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a"); 
+  str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e"); 
+  str = str.replace(/ì|í|ị|ỉ|ĩ/g,"i"); 
+  str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g,"o"); 
+  str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"u"); 
+  str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y"); 
+  str = str.replace(/đ/g,"d");
+  str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+  str = str.replace(/ + /g," ");
+  str = str.trim(); 
+  return str;
+}
+
+function freeze() {
+  $(".btn, .select, .input").attr("disabled", true)
+}
+
+function defreeze() {
+  $(".btn, .select, .input").attr("disabled", false)
 }
