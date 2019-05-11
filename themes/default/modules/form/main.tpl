@@ -96,33 +96,33 @@
 <div class="row form-group boxed box-2 box-3">
   <label class="col-sm-4">Số ĐKXN</label>
   <div class="col-sm-6">
-    <input type="text" class="form-control input-box xcode">
+    <input type="text" class="form-control input-box xcode" id="form-insert-xcode-1">
   </div>
   <div class="col-sm-6">
-    <input type="text" class="form-control input-box xcode">
+    <input type="text" class="form-control input-box xcode" id="form-insert-xcode-2">
   </div>
   <div class="col-sm-6">
-    <input type="text" class="form-control input-box xcode">
+    <input type="text" class="form-control input-box xcode" id="form-insert-xcode-3">
   </div>
 </div>
 
 <div class="row form-group boxed box-3">
   <label class="col-sm-4">Số trang</label>
   <div class="col-sm-6">
-    <input type="text" class="form-control input-box page">
+    <input type="text" class="form-control input-box page" id="form-insert-page-1">
   </div>
   <div class="col-sm-6">
-    <input type="text" class="form-control input-box page">
+    <input type="text" class="form-control input-box page" id="form-insert-page-2">
   </div>
 </div>
 
 <div class="row form-group boxed box-3">
   <label class="col-sm-4">Liên</label>
   <div class="col-sm-6">
-    <input type="text" class="form-control input-box no">
+    <input type="text" class="form-control input-box no" id="form-insert-no-1">
   </div>
   <div class="col-sm-6">
-    <input type="text" class="form-control input-box no">
+    <input type="text" class="form-control input-box no" id="form-insert-no-2">
   </div>
 </div>
 
@@ -374,7 +374,7 @@
   <span class="glyphicon glyphicon-print"></span>
 </button>
 
-<button class="btn btn-info saved saved-3" style="position: fixed; top: 125px; right: 10px;" onclick="printer(4)">
+<button class="btn btn-info saved saved-3" style="position: fixed; top: 115px; right: 10px;" onclick="printer(4)">
   <span class="glyphicon glyphicon-print"></span>
 </button>
 
@@ -387,6 +387,10 @@
 </button>
 
 <button class="btn btn-warning saved saved-2" style="position: fixed; top: 80px; right: 50px;" onclick="parseBox(3)">
+  <span class="glyphicon glyphicon-user"></span>
+</button>
+
+<button class="btn btn-warning saved saved-2" style="position: fixed; top: 115px; right: 50px;" onclick="parseBox(4)">
   <span class="glyphicon glyphicon-user"></span>
 </button>
 
@@ -460,6 +464,10 @@
   var formInsertXcode1 = $("#form-insert-xcode-1")
   var formInsertXcode2 = $("#form-insert-xcode-2")
   var formInsertXcode3 = $("#form-insert-xcode-3")
+  var formInsertNo1 = $("#form-insert-page-1")
+  var formInsertNo2 = $("#form-insert-page-2")
+  var formInsertPage1 = $("#form-insert-no-1")
+  var formInsertPage2 = $("#form-insert-no-2")
   var formInsertQuality = $("#form-insert-quality")
 
   var formInsertInfo = $("#form-insert-info")
@@ -470,6 +478,7 @@
   var global_saved = 0
   var global_id = 0
 
+  var dataPicker = {'form': 1, 'exam': 2}
   var infoData = {1: [], 2: []}
   var remindData = {}
   var globalTarget = {
@@ -573,47 +582,6 @@
     changeYear: true
   });
 
-  // docx2html(fileInput.files[0],{container:document.getElementById('a')}).then(function(html){
-  //   html.toString()
-  // })
-
-  // function readDoc() {
-  //   var docx = new DocxReader();  
-  //   docx.Load("/template-1.docx", function(){
-  //     docx.Replace("(header)", "HEADING");
-  //     docx.Replace("(xcode-0)", "Read your");
-  //     docx.Replace("(xcode-2)", "Mind");
-
-  //     // Change var inside document
-  //     var docxvar = {
-  //         Variable : "Change my var inside doc"
-  //     };
-
-  //     docx.docxtemplater.setData(docxvar);
-
-  //     try {
-  //         // render the document (replace all occurences of {first_name} by John, {last_name} by Doe, ...)
-  //         docx.docxtemplater.render();
-  //     }
-  //     catch (error) {
-  //         var e = {
-  //             message: error.message,
-  //             name: error.name,
-  //             stack: error.stack,
-  //             properties: error.properties,
-  //         }
-  //         console.log(JSON.stringify({error: e}));
-  //         // The error thrown here contains additional information when logged with JSON.stringify (it contains a property object).
-  //         throw error;
-  //     }
-
-  //     // Change file name
-  //     docx.SetName("Awesome changes by JS.docx")
-
-  //     docx.view();
-  //   })
-  // }
-
   function parseSample() {
     formInsertCode.val('TY-5')
     formInsertSenderEmploy.val('Phùng chí kiên')
@@ -708,6 +676,64 @@
     })
   }
 
+  function edit(id) {
+    $.post(
+      strHref,
+      {action: 'getForm', id: id},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          global_id = id
+          infoData = {1: [], 2: []}
+          parseInputs(data, exam)
+          parseInputs(data, form)
+          var xcode = data['form']['xcode'].split(',')
+          var page = data['form']['page'].split(',')
+          var no = data['form']['no'].split(',')
+
+          formInsertXcode1.val(xcode[0])
+          formInsertXcode2.val(xcode[1])
+          formInsertXcode3.val(xcode[2])
+          formInsertPage1.val(page[0])
+          formInsertPage2.val(page[1])
+          formInsertNo1.val(no[0])
+          formInsertNo2.val(no[1])
+          formInsertCode.val(data['form']['code'])
+          formInsertSenderEmploy.val(data['form']['SenderEmploy'])
+          formInsertReceiverEmploy.val(data['form']['ReceiverEmploy'])
+          formInsertReceive.val(data['form']['Receive'])
+          formInsertResend.val(data['form']['Resend'])
+          formInsertIreceive.val(data['form']['Ireceive'])
+          formInsertIresend.val(data['form']['Iresend'])
+
+          formInsertNumber.val()
+          formInsertSample.val(data['form'][Sample])
+          formInsertStatus.val(data['form'][Status])
+          formInsertSampleCode.val(data['form'][SampleCode])
+          formInsertSampleReceiveTime.val(data['form']['SampleReceiveTime'])
+          formInsertIsenderEmploy.val(data['form']['IsenderEmploy'])
+          formInsertIsenderUnit.val(data['form']['IsenderUnit'])
+          formInsertIreceiverEmploy.val(data['form']['IreceiverEmploy'])
+          formInsertIreceiverUnit.val(data['form']['IreceiverUnit'])
+          formInsertQuality.val(data['form']['Quality'])
+          formInsertExamDate.val(data['form']['ExamDate'])
+          formInsertCustomer.val(data['form']['Customer'])
+          formInsertOther.val(data['form']['Other'])
+          formInsertResult.val(data['form']['Result'])
+        })
+      }
+    )
+  }
+
+  function parseInputs(data, name) {
+    $("." + name + "ed").remove()
+    for (const key in data['form'][name]) {
+      if (data['form'][name].hasOwnProperty(key)) {
+        const element = data['form'][name][key]
+        addInfo(dataPicker[name])
+      }
+    }
+  }
+
   function insert() {
     formInsert.modal('show')
   }
@@ -717,7 +743,7 @@
     switch (id) {
       case 1:
         var html = `
-          <div id="form-` + length + `">
+          <div class="formed" id="form-` + length + `">
             <button type="button" class="close" data-dismiss="modal" onclick="removeInfo(1, ` + length + `)">&times;</button>
             <br>
             <div class="row">
@@ -732,7 +758,7 @@
         break;
       case 2:
       var html = `
-          <div id="exam-` + length + `">
+          <div class="examed" id="exam-` + length + `">
             <button type="button" class="close" data-dismiss="modal" onclick="removeInfo(2, ` + length + `)">&times;</button>
             <br>
             <div class="row">
