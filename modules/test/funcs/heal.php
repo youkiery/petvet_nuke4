@@ -29,6 +29,18 @@ if (!empty($action)) {
 		// 	$result['status'] = 1;
 		// 	$result['customer'] = getCustomerData();
 		// break;
+		case 'addSpecies':
+			$name = $nv_Request->get_string('name', 'post', '');
+			$result['notify'] = 'loại thú cưng, ' . $name . ', đã tồn tại';
+
+			if (!empty($name) && !checkSpecies($name)) {
+				if ($id = insertSpecies($name)) {
+					$result['html'] = selectSpeciesId($id);
+					$result['notify'] = 'Đã thêm loại thú cưng, ' . $name;
+					$result['status'] = 1;
+				}
+			}
+		break;
 		case 'filter-by':
 			$cometime = $nv_Request->get_string('cometime', 'post', '');
 			$calltime = $nv_Request->get_string('calltime', 'post', '');
@@ -322,6 +334,7 @@ $xtpl->assign('content', healList(INI_PAGE, INI_LIMIT, INI_CUSTOMER, INI_PET, IN
 $xtpl->assign('dbdata', json_encode($customer));
 $xtpl->assign('system', json_encode($system));
 $xtpl->assign('drug', json_encode($drug));
+$xtpl->assign('species', selectSpeciesId());
 $xtpl->assign('cometime', date('d/m/Y', INI_COME));
 $xtpl->assign('calltime', date('d/m/Y', INI_CALL));
 $xtpl->parse("main");

@@ -105,7 +105,31 @@ function selectPetId($petid) {
   return $pet;
 }
 
-function selectSpeciesId($id) {
+function checkSpecies($name) {
+  global $db;
+
+  $sql = 'select * from `'. VAC_PREFIX .'_species` where name = "'. $name .'"';
+  $query = $db->query($sql);
+
+  if (empty($query->fetch())) {
+    return 0;
+  }
+  return 1;
+}
+
+function insertSpecies($name) {
+  global $db;
+
+  $sql = 'insert into `'. VAC_PREFIX .'_species` (name) values("'.$name.'")';
+  $query = $db->query($sql);
+
+  if ($query) {
+    return $db->lastInsertId();
+  }
+  return 0;
+}
+
+function selectSpeciesId($id = 0) {
   global $db;
   $sql = 'select * from `'. VAC_PREFIX .'_species`';
   $query = $db->query($sql);

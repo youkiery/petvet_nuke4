@@ -65,8 +65,13 @@
           <label class="col-sm-4"> Cân nặng </label>
           <div class="col-sm-2"><input type="text" class="form-control" id="heal-insert-weight" value="1" placeholder="kg" autocomplete="off"> </div>
           <label class="col-sm-4"> Giống loài </label>
-          <div class="col-sm-6">
-            <select class="form-control" id="heal-insert-species"></select>
+          <div class="col-sm-6 input-group">
+            <select class="form-control" id="heal-insert-species">
+              {species}
+            </select>
+            <div class="input-group-btn">
+              <button class="btn btn-success" onclick="addSpecies()"> <span class="glyphicon glyphicon-plus"></span> </button>
+            </div>
           </div>
         </div>
         <!-- BEGIN: manager -->
@@ -595,6 +600,22 @@
     healDrugList.html(html)
   }
 
+  function addSpecies() {
+    var answer = prompt('Nhập chủng loại muốn thêm', '');
+    if (answer) {
+      freeze()
+      $.post(
+        strHref,
+        {action: 'addSpecies', name: answer},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            healInsertSpecies.html(data['html'])
+          })
+        }
+      )
+    }
+  }
+
   function selectDrug(index, unit) {
     g_drug = index
     healDrugUnit.text(unit)
@@ -705,7 +726,6 @@
     healInsertCustomer.val('')
     healInsertWeight.val('')
     healInsertAge.val('')
-    healInsertSpecies.html('')
     healInsertAppear.val('')
     healInsertExam.val('')
     healInsertOriental.val('')
