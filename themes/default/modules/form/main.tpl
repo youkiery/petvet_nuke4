@@ -8,394 +8,418 @@
 
 <div class="msgshow" id="msgshow"></div>
 
-<!-- <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/docx/jszip.min.js"></script>
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/docx/jszip-utils.min.js"></script>
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/docx/docxtemplater-latest.min.js"></script>
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/docx/fileSaver.min.js"></script>
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/docx/DocxReader.js"></script>
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/docx/index.min.js"></script> -->
-
-<!-- <div class="modal fade" id="form-insert" role="dialog">
-  <div class="modal-dialog modal-lg">
-  <div class="modal-content"> 
-  <div class="modal-body"> -->
-<div class="row form-group boxed box-1">
-  <label class="col-sm-4">Số phiếu</label>
-  <div class="col-sm-10">
-    <input type="text" class="form-control" id="form-insert-code">
-  </div>
-</div>
-
-<div class="row form-group boxed box-1">
-  <label class="col-sm-4">Ngày nhận mẫu</label>
-  <div class="col-sm-8">
-    <input type="text" class="form-control" id="form-insert-receive" autocomplete="off">
-  </div>
-  <label class="col-sm-4">Ngày hẹn trả</label>
-  <div class="col-sm-8">
-    <input type="text" class="form-control" id="form-insert-resend" autocomplete="off">
-  </div>
-</div>
-
-<div class="row form-group boxed box-1">
-  <label class="col-sm-4">
-    Người giao mẫu
-  </label>
-  <div class="relative col-sm-10">
-    <input type="text" class="form-control" id="form-insert-sender-employ">
-    <div class="suggest" id="form-insert-sender-employ-suggest"></div>
-  </div>
-</div>
-
-<div class="boxed box-1">
-  <label>Hình thức nhận</label>
-  <div>
-    <label><input type="radio" name="state" class="check-box state" checked>Trực tiếp</label>
-  </div>
-  <div>
-    <label><input type="radio" name="state" class="check-box state">Bưu điện</label>
-  </div>
-  <div class="row form-group">
-    <label class="col-sm-4"><input type="radio" name="state" class="check-box state">Khác</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="form-insert-receive-state-other">
+<div id="form-remove" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        Xác nhận xóa văn bản 
+        <div class="text-center">
+          <button class="btn btn-danger" onclick="removeSubmit()">
+            Xóa
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="row form-group boxed box-1">
-  <label class="col-sm-4">
-    Người nhận hồ sơ
-  </label>
-  <div class="relative col-sm-10">
-    <input type="text" class="form-control" id="form-insert-receiver-employ">
-    <div class="suggest" id="form-insert-receiver-employ-suggest"></div>
-  </div>
-</div>
+<ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#home"> Danh sách </a></li>
+  <li><a data-toggle="tab" href="#menu1"> Thêm văn bản </a></li>
+</ul>
 
-<div class="row boxed box-1">
-  <label class="col-sm-4">Ngày nhận mẫu</label>
-  <div class="col-sm-8">
-    <input type="text" class="form-control" id="form-insert-ireceive" autocomplete="off">
-  </div>
-  <label class="col-sm-4">Ngày hẹn trả</label>
-  <div class="col-sm-8">
-    <input type="text" class="form-control" id="form-insert-iresend" autocomplete="off">
-  </div>
-</div>
-
-<div class="boxed box-1">
-  <div class="panel" id="form-insert-form">
-
-  </div>
-  <button class="btn btn-success" onclick="addInfo(1)">
-    <span class="glyphicon glyphicon-plus"></span>
-  </button>
-</div>
-
-<div class="row form-group boxed box-2 box-3">
-  <label class="col-sm-4">Số ĐKXN</label>
-  <div class="col-sm-6">
-    <input type="text" class="form-control input-box xcode" id="form-insert-xcode-1">
-  </div>
-  <div class="col-sm-6">
-    <input type="text" class="form-control input-box xcode" id="form-insert-xcode-2">
-  </div>
-  <div class="col-sm-6">
-    <input type="text" class="form-control input-box xcode" id="form-insert-xcode-3">
-  </div>
-</div>
-
-<div class="row form-group boxed box-3">
-  <label class="col-sm-4">Số trang</label>
-  <div class="col-sm-6">
-    <input type="text" class="form-control input-box page" id="form-insert-page-1">
-  </div>
-  <div class="col-sm-6">
-    <input type="text" class="form-control input-box page" id="form-insert-page-2">
-  </div>
-</div>
-
-<div class="row form-group boxed box-3">
-  <label class="col-sm-4">Liên</label>
-  <div class="col-sm-6">
-    <input type="text" class="form-control input-box no" id="form-insert-no-1">
-  </div>
-  <div class="col-sm-6">
-    <input type="text" class="form-control input-box no" id="form-insert-no-2">
-  </div>
-</div>
-
-<div class="row form-group boxed box-2 box-3">
-  <label class="col-sm-4"> Thời gian nhận mẫu </label>
-  <div class="col-sm-6">
-    <input type="text" class="form-control" id="form-insert-sample-receive-time">
-  </div>
-  <label class="col-sm-3"> Giờ </label>
-  <div class="col-sm-4">
-    <select class="form-control" id="form-insert-sample-receive-hour">
-      <!-- BEGIN: hour -->
-      <option value="{value}">{value}</option>
-      <!-- END: hour -->
-    </select>
-  </div>
-  <label class="col-sm-3"> Phút </label>
-  <div class="col-sm-4">
-    <select class="form-control" id="form-insert-sample-receive-minute">
-      <!-- BEGIN: minute -->
-      <option value="{value}">{value}</option>
-      <!-- END: minute -->
-    </select>
-  </div>
-</div>
-
-<div class="row form-group boxed box-2">
-  <label class="col-sm-4">
-    Người giao mẫu
-  </label>
-  <div class="relative col-sm-8">
-    <input type="text" class="form-control" id="form-insert-isender-employ">
-    <div class="suggest" id="form-insert-isender-employ-suggest"></div>
-  </div>
-  <label class="col-sm-4">
-    Bộ phận giao mẫu
-  </label>
-  <div class="relative col-sm-8">
-    <input type="text" class="form-control" id="form-insert-isender-unit">
-    <div class="suggest" id="form-insert-isender-unit-suggest"></div>
-  </div>
-</div>
-
-<div class="row form-group boxed box-3">
-  <label class="col-sm-4">
-    Khách hàng
-  </label>
-  <div class="relative col-sm-10">
-    <input type="text" class="form-control" id="form-insert-customer">
-    <div class="suggest" id="form-insert-customer-suggest"></div>
-  </div>
-</div>
-
-<div class="row form-group boxed box-3">
-  <label class="col-sm-4">
-    Địa chỉ
-  </label>
-  <div class="relative col-sm-10">
-    <input type="text" class="form-control" id="form-insert-address">
-  </div>
-</div>
-
-<div class="row form-group boxed box-3">
-  <label class="col-sm-4">
-    Số điện thoại
-  </label>
-  <div class="relative col-sm-10">
-    <input type="text" class="form-control" id="form-insert-phone">
-  </div>
-</div>
-
-<div class="row form-group boxed box-3">
-  <label class="col-sm-4">
-    Ngày lấy mẫu
-  </label>
-  <div class="relative col-sm-10">
-    <input type="text" class="form-control" id="form-insert-sample-receive">
-  </div>
-</div>
-
-<div class="row form-group boxed box-3">
-  <label class="col-sm-4">
-    Người lấy mẫu
-  </label>
-  <div class="relative col-sm-10">
-    <input type="text" class="form-control" id="form-insert-sample-receiver">
-    <div class="suggest" id="form-insert-sample-receiver-suggest"></div>
-  </div>
-</div>
-  
-<div class="row form-group boxed box-3">
-  <label class="col-sm-4">
-    Ngày giờ nhận mẫu
-  </label>
-  <div class="relative col-sm-10">
-    <input type="text" class="form-control" id="form-insert-sample-time">
-  </div>
-</div>
-  
-<div class="row form-group boxed box-2">
-  <label class="col-sm-4">
-    Người nhận mẫu
-  </label>
-  <div class="relative col-sm-8">
-    <input type="text" class="form-control" id="form-insert-ireceiver-employ">
-    <div class="suggest" id="form-insert-ireceiver-employ-suggest"></div>
-  </div>
-  <label class="col-sm-4">
-    Bộ phận nhận mẫu
-  </label>
-  <div class="relative col-sm-8">
-    <input type="text" class="form-control" id="form-insert-ireceiver-unit">
-    <div class="suggest" id="form-insert-ireceiver-unit-suggest"></div>
-  </div>
-</div>
-
-<div class="row form-group boxed box-3">
-  <label class="col-sm-4">
-    Ngày giờ xét nghiệm
-  </label>
-  <div class="relative col-sm-10">
-    <input type="text" class="form-control" id="form-insert-exam-date">
-  </div>
-</div>
-
-<div class="boxed box-1 box-2 box-3">
-  <label> Loại mẫu </label>
-  <div id="type-0">
-    <input type="radio" name="type" class="check-box type" checked>
-    Nguyên con
-  </div>
-  <div id="type-1">
-    <input type="radio" name="type" class="check-box type">
-    Huyết thanh
-  </div>
-  <div id="type-2">
-    <input type="radio" name="type" class="check-box type">
-    Máu
-  </div>
-  <div id="type-3">
-    <input type="radio" name="type" class="check-box type">
-    Phủ tạng
-  </div>
-  <div id="type-4">
-    <input type="radio" name="type" class="check-box type">
-    Swab
-  </div>
-  <div class="form-group row">
-    <label class="col-sm-4">
-      <input type="radio" name="type" class="check-box type">
-      Khác
-    </label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="form-insert-type-other">
+<div class="tab-content">
+  <div id="home" class="tab-pane active">
+    <form onsubmit="filter(e)">
+      
+    </form>
+    <div id="content">
+      {content}
     </div>
   </div>
-  <div class="form-group row">
-    <label class="col-sm-4"> Số lượng mẫu </label>
-    <div class="col-sm-8">
-      <input type="text" class="form-control" id="form-insert-number">
+
+  <div id="menu1" class="tab-pane">
+    <div class="row form-group boxed box-1">
+      <label class="col-sm-4">Số phiếu</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="form-insert-code">
+      </div>
     </div>
-    <label class="col-sm-4"> Loài vật được lấy mẫu </label>
-    <div class="col-sm-8">
-      <input type="text" class="form-control sample" id="form-insert-sample">
+
+    <div class="row form-group boxed box-1">
+      <label class="col-sm-4">Ngày nhận mẫu</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="form-insert-receive" autocomplete="off">
+      </div>
+      <label class="col-sm-4">Ngày hẹn trả</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="form-insert-resend" autocomplete="off">
+      </div>
     </div>
-  </div>
-  <div class="form-group row">
-    <label class="col-sm-6"> Tình trạng </label>
-    <div class="col-sm-18">
-      <input type="text" class="form-control" id="form-insert-status">
+
+    <div class="row form-group boxed box-1">
+      <label class="col-sm-4">
+        Người giao mẫu
+      </label>
+      <div class="relative col-sm-10">
+        <input type="text" class="form-control" id="form-insert-sender-employ">
+        <div class="suggest" id="form-insert-sender-employ-suggest"></div>
+      </div>
     </div>
-  </div>
-  <div class="form-group row">
-    <label class="col-sm-6"> Ký hiệu mẫu </label>
-    <div class="col-sm-18" id="form-insert-sample-parent">
-      <input type="text" class="form-control" id="form-insert-sample-code">
+
+    <div class="boxed box-1">
+      <label>Hình thức nhận</label>
+      <div>
+        <label><input type="radio" name="state" class="check-box state" id="state-0" checked>Trực tiếp</label>
+      </div>
+      <div>
+        <label><input type="radio" name="state" class="check-box state" id="state-1">Bưu điện</label>
+      </div>
+      <div class="row form-group">
+        <label class="col-sm-4"><input type="radio" name="state" class="check-box state" id="state-2">Khác</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="form-insert-receive-state-other">
+        </div>
+      </div>
     </div>
+
+    <div class="row form-group boxed box-1">
+      <label class="col-sm-4">
+        Người nhận hồ sơ
+      </label>
+      <div class="relative col-sm-10">
+        <input type="text" class="form-control" id="form-insert-receiver-employ">
+        <div class="suggest" id="form-insert-receiver-employ-suggest"></div>
+      </div>
+    </div>
+
+    <div class="row boxed box-1">
+      <label class="col-sm-4">Ngày nhận mẫu</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="form-insert-ireceive" autocomplete="off">
+      </div>
+      <label class="col-sm-4">Ngày hẹn trả</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="form-insert-iresend" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="boxed box-1">
+      <div class="panel" id="form-insert-form">
+
+      </div>
+      <button class="btn btn-success" onclick="addInfo(1)">
+        <span class="glyphicon glyphicon-plus"></span>
+      </button>
+    </div>
+
+    <div class="row form-group boxed box-2 box-3">
+      <label class="col-sm-4">Số ĐKXN</label>
+      <div class="col-sm-6">
+        <input type="text" class="form-control input-box xcode" id="form-insert-xcode-1">
+      </div>
+      <div class="col-sm-6">
+        <input type="text" class="form-control input-box xcode" id="form-insert-xcode-2">
+      </div>
+      <div class="col-sm-6">
+        <input type="text" class="form-control input-box xcode" id="form-insert-xcode-3">
+      </div>
+    </div>
+
+    <div class="row form-group boxed box-3">
+      <label class="col-sm-4">Số trang</label>
+      <div class="col-sm-6">
+        <input type="text" class="form-control input-box page" id="form-insert-page-1">
+      </div>
+      <div class="col-sm-6">
+        <input type="text" class="form-control input-box page" id="form-insert-page-2">
+      </div>
+    </div>
+
+    <div class="row form-group boxed box-3">
+      <label class="col-sm-4">Liên</label>
+      <div class="col-sm-6">
+        <input type="text" class="form-control input-box no" id="form-insert-no-1">
+      </div>
+      <div class="col-sm-6">
+        <input type="text" class="form-control input-box no" id="form-insert-no-2">
+      </div>
+    </div>
+
+    <div class="row form-group boxed box-2 box-3">
+      <label class="col-sm-4"> Thời gian nhận mẫu </label>
+      <div class="col-sm-6">
+        <input type="text" class="form-control" id="form-insert-sample-receive-time">
+      </div>
+      <label class="col-sm-3"> Giờ </label>
+      <div class="col-sm-4">
+        <select class="form-control" id="form-insert-sample-receive-hour">
+          <!-- BEGIN: hour -->
+          <option value="{value}">{value}</option>
+          <!-- END: hour -->
+        </select>
+      </div>
+      <label class="col-sm-3"> Phút </label>
+      <div class="col-sm-4">
+        <select class="form-control" id="form-insert-sample-receive-minute">
+          <!-- BEGIN: minute -->
+          <option value="{value}">{value}</option>
+          <!-- END: minute -->
+        </select>
+      </div>
+    </div>
+
+    <div class="row form-group boxed box-2">
+      <label class="col-sm-4">
+        Người giao mẫu
+      </label>
+      <div class="relative col-sm-8">
+        <input type="text" class="form-control" id="form-insert-isender-employ">
+        <div class="suggest" id="form-insert-isender-employ-suggest"></div>
+      </div>
+      <label class="col-sm-4">
+        Bộ phận giao mẫu
+      </label>
+      <div class="relative col-sm-8">
+        <input type="text" class="form-control" id="form-insert-isender-unit">
+        <div class="suggest" id="form-insert-isender-unit-suggest"></div>
+      </div>
+    </div>
+
+    <div class="row form-group boxed box-3">
+      <label class="col-sm-4">
+        Khách hàng
+      </label>
+      <div class="relative col-sm-10">
+        <input type="text" class="form-control" id="form-insert-customer">
+        <div class="suggest" id="form-insert-customer-suggest"></div>
+      </div>
+    </div>
+
+    <div class="row form-group boxed box-3">
+      <label class="col-sm-4">
+        Địa chỉ
+      </label>
+      <div class="relative col-sm-10">
+        <input type="text" class="form-control" id="form-insert-address">
+      </div>
+    </div>
+
+    <div class="row form-group boxed box-3">
+      <label class="col-sm-4">
+        Số điện thoại
+      </label>
+      <div class="relative col-sm-10">
+        <input type="text" class="form-control" id="form-insert-phone">
+      </div>
+    </div>
+
+    <div class="row form-group boxed box-3">
+      <label class="col-sm-4">
+        Ngày lấy mẫu
+      </label>
+      <div class="relative col-sm-10">
+        <input type="text" class="form-control" id="form-insert-sample-receive">
+      </div>
+    </div>
+
+    <div class="row form-group boxed box-3">
+      <label class="col-sm-4">
+        Người lấy mẫu
+      </label>
+      <div class="relative col-sm-10">
+        <input type="text" class="form-control" id="form-insert-sample-receiver">
+        <div class="suggest" id="form-insert-sample-receiver-suggest"></div>
+      </div>
+    </div>
+      
+    <div class="row form-group boxed box-3">
+      <label class="col-sm-4">
+        Ngày giờ nhận mẫu
+      </label>
+      <div class="relative col-sm-10">
+        <input type="text" class="form-control" id="form-insert-sample-time">
+      </div>
+    </div>
+      
+    <div class="row form-group boxed box-2">
+      <label class="col-sm-4">
+        Người nhận mẫu
+      </label>
+      <div class="relative col-sm-8">
+        <input type="text" class="form-control" id="form-insert-ireceiver-employ">
+        <div class="suggest" id="form-insert-ireceiver-employ-suggest"></div>
+      </div>
+      <label class="col-sm-4">
+        Bộ phận nhận mẫu
+      </label>
+      <div class="relative col-sm-8">
+        <input type="text" class="form-control" id="form-insert-ireceiver-unit">
+        <div class="suggest" id="form-insert-ireceiver-unit-suggest"></div>
+      </div>
+    </div>
+
+    <div class="row form-group boxed box-3">
+      <label class="col-sm-4">
+        Ngày giờ xét nghiệm
+      </label>
+      <div class="relative col-sm-10">
+        <input type="text" class="form-control" id="form-insert-exam-date">
+      </div>
+    </div>
+
+    <div class="boxed box-1 box-2 box-3">
+      <label> Loại mẫu </label>
+      <div id="type-0">
+        <input type="radio" name="type" class="check-box type" id="typed-0" checked>
+        Nguyên con
+      </div>
+      <div id="type-1">
+        <input type="radio" name="type" class="check-box type" id="typed-1">
+        Huyết thanh
+      </div>
+      <div id="type-2">
+        <input type="radio" name="type" class="check-box type" id="typed-2">
+        Máu
+      </div>
+      <div id="type-3">
+        <input type="radio" name="type" class="check-box type" id="typed-3">
+        Phủ tạng
+      </div>
+      <div id="type-4">
+        <input type="radio" name="type" class="check-box type" id="typed-4">
+        Swab
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4">
+          <input type="radio" name="type" class="check-box type" id="typed-5">
+          Khác
+        </label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="form-insert-type-other">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-4"> Số lượng mẫu </label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="form-insert-number">
+        </div>
+        <label class="col-sm-4"> Loài vật được lấy mẫu </label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control sample" id="form-insert-sample">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-6"> Tình trạng </label>
+        <div class="col-sm-18">
+          <input type="text" class="form-control" id="form-insert-status">
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-6"> Ký hiệu mẫu </label>
+        <div class="col-sm-18" id="form-insert-sample-parent">
+          <input type="text" class="form-control" id="form-insert-sample-code">
+        </div>
+      </div>
+    </div>
+
+    <div class="boxed box-2">
+      <label> Hình thức bảo quản </label>
+      <div>
+        <input type="radio" name="status" class="check-box status" checked>
+        Thùng đá
+      </div>
+      <div>
+        <input type="radio" name="status" class="check-box status">
+        Xe lạnh
+      </div>
+      <div>
+        <input type="radio" name="status" class="check-box status">
+        Phương tiện khác
+      </div>
+    </div>
+
+    <div class="boxed box-2">
+      <label class="6"> Chất lượng chung của mẫu </label>
+      <div class="18">
+        <input type="text" class="form-control" id="form-insert-quality">
+      </div>
+    </div>
+
+    <div class="boxed box-1 box-2 box-3">
+      <label>
+        Yêu cầu xét nghiệm
+      </label>
+      <div id="form-insert-request"></div>
+      <button class="btn btn-success" onclick="addInfo(2)">
+        <span class="glyphicon glyphicon-plus"></span>
+      </button>
+    </div>
+
+    <div class="row form-group boxed box-3">
+      <label class="col-sm-4">
+        Yêu cầu khác
+      </label>
+      <div class="col-sm-20">
+        <input type="text" class="form-control" id="form-insert-other">
+      </div>
+    </div>
+
+    <div class="row form-group boxed box-3">
+      <label class="col-sm-4">
+        Kết quả
+      </label>
+      <div class="col-sm-20">
+        <input type="text" class="form-control" id="form-insert-result">
+      </div>
+    </div>
+
+    <div class="text-center">
+      <button class="btn btn-success" onclick="insertSubmit()"> Lưu biểu mẫu </button>
+    </div>
+
+    <button class="btn btn-info saved saved-1" style="position: fixed; top: 10px; right: 10px;" onclick="printer(1)">
+      <span class="glyphicon glyphicon-print"></span>
+    </button>
+
+    <button class="btn btn-info saved saved-2" style="position: fixed; top: 45px; right: 10px;" onclick="printer(2)">
+      <span class="glyphicon glyphicon-print"></span>
+    </button>
+
+    <button class="btn btn-info saved saved-3" style="position: fixed; top: 80px; right: 10px;" onclick="printer(3)">
+      <span class="glyphicon glyphicon-print"></span>
+    </button>
+
+    <button class="btn btn-info saved saved-3" style="position: fixed; top: 80px; right: 10px;" onclick="printer(4)">
+      <span class="glyphicon glyphicon-print"></span>
+    </button>
+
+    <button class="btn btn-info saved saved-3" style="position: fixed; top: 115px; right: 10px;" onclick="printer(4)">
+      <span class="glyphicon glyphicon-print"></span>
+    </button>
+
+    <button class="btn btn-warning saved saved-1" style="position: fixed; top: 10px; right: 50px;" onclick="parseBox(1)">
+      <span class="glyphicon glyphicon-user"></span>
+    </button>
+
+    <button class="btn btn-warning saved saved-1" style="position: fixed; top: 45px; right: 50px;" onclick="parseBox(2)">
+      <span class="glyphicon glyphicon-user"></span>
+    </button>
+
+    <button class="btn btn-warning saved saved-2" style="position: fixed; top: 80px; right: 50px;" onclick="parseBox(3)">
+      <span class="glyphicon glyphicon-user"></span>
+    </button>
+
+    <button class="btn btn-warning saved saved-2" style="position: fixed; top: 115px; right: 50px;" onclick="parseBox(4)">
+      <span class="glyphicon glyphicon-user"></span>
+    </button>
+
+    <button class="btn btn-success saved saved-0" style="position: fixed; top: 150px; right: 10px;" onclick="newForm()">
+      <span class="glyphicon glyphicon-user"></span>
+    </button>
+
   </div>
-</div>
-
-<div class="boxed box-2">
-  <label> Hình thức bảo quản </label>
-  <div>
-    <input type="radio" name="status" class="check-box status" checked>
-    Thùng đá
-  </div>
-  <div>
-    <input type="radio" name="status" class="check-box status">
-    Xe lạnh
-  </div>
-  <div>
-    <input type="radio" name="status" class="check-box status">
-    Phương tiện khác
-  </div>
-</div>
-
-<div class="boxed box-2">
-  <label class="6"> Chất lượng chung của mẫu </label>
-  <div class="18">
-    <input type="text" class="form-control" id="form-insert-quality">
-  </div>
-</div>
-
-<div class="boxed box-1 box-2 box-3">
-  <label>
-    Yêu cầu xét nghiệm
-  </label>
-  <div id="form-insert-request"></div>
-  <button class="btn btn-success" onclick="addInfo(2)">
-    <span class="glyphicon glyphicon-plus"></span>
-  </button>
-</div>
-
-<div class="row form-group boxed box-3">
-  <label class="col-sm-4">
-    Yêu cầu khác
-  </label>
-  <div class="col-sm-20">
-    <input type="text" class="form-control" id="form-insert-other">
-  </div>
-</div>
-
-<div class="row form-group boxed box-3">
-  <label class="col-sm-4">
-    Kết quả
-  </label>
-  <div class="col-sm-20">
-    <input type="text" class="form-control" id="form-insert-result">
-  </div>
-</div>
-
-<div class="text-center">
-  <button class="btn btn-success" onclick="insertSubmit()"> Lưu biểu mẫu </button>
-</div>
-
-<button class="btn btn-info saved saved-1" style="position: fixed; top: 10px; right: 10px;" onclick="printer(1)">
-  <span class="glyphicon glyphicon-print"></span>
-</button>
-
-<button class="btn btn-info saved saved-2" style="position: fixed; top: 45px; right: 10px;" onclick="printer(2)">
-  <span class="glyphicon glyphicon-print"></span>
-</button>
-
-<button class="btn btn-info saved saved-3" style="position: fixed; top: 80px; right: 10px;" onclick="printer(3)">
-  <span class="glyphicon glyphicon-print"></span>
-</button>
-
-<button class="btn btn-info saved saved-3" style="position: fixed; top: 80px; right: 10px;" onclick="printer(4)">
-  <span class="glyphicon glyphicon-print"></span>
-</button>
-
-<button class="btn btn-info saved saved-3" style="position: fixed; top: 115px; right: 10px;" onclick="printer(4)">
-  <span class="glyphicon glyphicon-print"></span>
-</button>
-
-<button class="btn btn-warning saved saved-1" style="position: fixed; top: 10px; right: 50px;" onclick="parseBox(1)">
-  <span class="glyphicon glyphicon-user"></span>
-</button>
-
-<button class="btn btn-warning saved saved-1" style="position: fixed; top: 45px; right: 50px;" onclick="parseBox(2)">
-  <span class="glyphicon glyphicon-user"></span>
-</button>
-
-<button class="btn btn-warning saved saved-2" style="position: fixed; top: 80px; right: 50px;" onclick="parseBox(3)">
-  <span class="glyphicon glyphicon-user"></span>
-</button>
-
-<button class="btn btn-warning saved saved-2" style="position: fixed; top: 115px; right: 50px;" onclick="parseBox(4)">
-  <span class="glyphicon glyphicon-user"></span>
-</button>
-
-<div id="content">
-  
 </div>
 
 <script>
@@ -405,6 +429,9 @@
   var method = JSON.parse('{method}')
   var remind = JSON.parse('{remind}')
   var relation = JSON.parse('{relation}')
+  var menu1 = $("#menu1")
+  var content = $("#content")
+  var formRemove = $("#form-remove")
   var formInsertCode = $("#form-insert-code")
   var formInsertReceiverState = $("#form-insert-receive-state")
   var formInsertReceiverState2 = $("#form-insert-receive-state2")
@@ -479,6 +506,7 @@
   var global_id = 0
 
   var dataPicker = {'form': 1, 'exam': 2}
+  var rdataPicker = {'1': 'form', '2': 'exam'}
   var infoData = {1: [], 2: []}
   var remindData = {}
   var globalTarget = {
@@ -676,6 +704,71 @@
     })
   }
 
+  function newForm() {
+    global_id = 0
+    global_form = 1
+    global_saved = 0
+    formInsertCode.val('')
+    formInsertSenderEmploy.val('')
+    formInsertReceiverEmploy.val('')
+    formInsertReceive.val('')
+    formInsertResend.val('')
+    formInsertIreceive.val('')
+    formInsertIresend.val('')
+    formInsertNumber.val('')
+    formInsertSample.val('')
+    formInsertStatus.val('')
+    formInsertSampleCode.val('')
+    // parseInputs(data, 'exam')
+    // parseInputs(data, 'form')
+    $(".formed").each((index, item) => {
+      removeInfo(1, index)
+    })
+    $(".examed").each((index, item) => {
+      removeInfo(2, index)
+    })
+    infoData = {1: [], 2: []}
+    addInfo(1)
+    addInfo(2)
+    $(".type").prop('checked', false)
+    $(".state").prop('checked', false)
+
+    $("#typed-0").prop('checked', true)
+    $("#state-0").prop('checked', true)
+    formInsertReceiverStateOther.val('')
+    formInsertTypeOther.val('')
+
+    // var xcode = data['form']['xcode'].split(',')
+    // formInsertXcode1.val(xcode[0])
+    // formInsertXcode2.val(xcode[1])
+    // formInsertXcode3.val(xcode[2])
+    // formInsertSample.val(data['form']['sample'])
+    // formInsertStatus.val(data['form']['status'])
+    // formInsertSampleCode.val(data['form']['sampleCode'])
+    // formInsertSampleReceiveTime.val(data['form']['receiveTime'])
+    // formInsertSampleReceiveHour.val(data['form']['receiveTime'])
+    // formInsertSampleReceiveMinute.val(data['form']['receiveTime'])
+    // formInsertIsenderEmploy.val(data['form']['IsenderEmploy'])
+    // formInsertIsenderUnit.val(data['form']['IsenderUnit'])
+    // formInsertIreceiverEmploy.val(data['form']['IreceiverEmploy'])
+    // formInsertIreceiverUnit.val(data['form']['IreceiverUnit'])
+    // formInsertQuality.val(data['form']['Quality'])
+
+    // var page = data['form']['page'].split(',')
+    // var no = data['form']['no'].split(',')
+    // formInsertPage1.val(page[0])
+    // formInsertPage2.val(page[1])
+    // formInsertNo1.val(no[0])
+    // formInsertNo2.val(no[1])
+    // formInsertReceiverEmploy.val(data['form']['ReceiverEmploy'])
+    // formInsertIreceive.val(data['form']['Ireceive'])
+    // formInsertIresend.val(data['form']['Iresend'])
+    // formInsertExamDate.val(data['form']['ExamDate'])
+    // formInsertCustomer.val(data['form']['Customer'])
+    // formInsertOther.val(data['form']['Other'])
+    // formInsertResult.val(data['form']['Result'])
+  }
+
   function edit(id) {
     $.post(
       strHref,
@@ -683,55 +776,104 @@
       (response, status) => {
         checkResult(response, status).then(data => {
           global_id = id
+          global_form = 1
+          global_saved = data['form']['printer']
+          parseSaved()
           infoData = {1: [], 2: []}
-          parseInputs(data, exam)
-          parseInputs(data, form)
-          var xcode = data['form']['xcode'].split(',')
-          var page = data['form']['page'].split(',')
-          var no = data['form']['no'].split(',')
 
-          formInsertXcode1.val(xcode[0])
-          formInsertXcode2.val(xcode[1])
-          formInsertXcode3.val(xcode[2])
-          formInsertPage1.val(page[0])
-          formInsertPage2.val(page[1])
-          formInsertNo1.val(no[0])
-          formInsertNo2.val(no[1])
-          formInsertCode.val(data['form']['code'])
-          formInsertSenderEmploy.val(data['form']['SenderEmploy'])
-          formInsertReceiverEmploy.val(data['form']['ReceiverEmploy'])
-          formInsertReceive.val(data['form']['Receive'])
-          formInsertResend.val(data['form']['Resend'])
-          formInsertIreceive.val(data['form']['Ireceive'])
-          formInsertIresend.val(data['form']['Iresend'])
+          if (data['form']['printer'] >= 1) {
+            formInsertCode.val(data['form']['code'])
+            formInsertSenderEmploy.val(data['form']['sender'])
+            console.log(formInsertReceiverEmploy, data['form']['receiver'], formInsertIreceive, data['form']['ireceive'], formInsertIresend, data['form']['iresend']);
+            
+            formInsertReceiverEmploy.val(data['form']['receiver'])
+            formInsertReceive.val(data['form']['receive'])
+            formInsertResend.val(data['form']['resend'])
+            formInsertIreceive.val(data['form']['ireceive'])
+            formInsertIresend.val(data['form']['iresend'])
+            formInsertNumber.val(data['form']['number'])
+            formInsertSample.val(data['form']['sample'])
+            formInsertStatus.val(data['form']['status'])
+            formInsertSampleCode.val(data['form']['samplecode'])
+            parseInputs(data, 'exam')
+            parseInputs(data, 'form')
+            $("#typed-" + data['form']['typeindex']).attr('checked', true)
+            $("#state-" + data['form']['stateindex']).attr('checked', true)
+            formInsertReceiverStateOther.val(data['form']['statevalue'])
+            formInsertTypeOther.val(data['form']['typevalue'])
+          }
 
-          formInsertNumber.val()
-          formInsertSample.val(data['form'][Sample])
-          formInsertStatus.val(data['form'][Status])
-          formInsertSampleCode.val(data['form'][SampleCode])
-          formInsertSampleReceiveTime.val(data['form']['SampleReceiveTime'])
-          formInsertIsenderEmploy.val(data['form']['IsenderEmploy'])
-          formInsertIsenderUnit.val(data['form']['IsenderUnit'])
-          formInsertIreceiverEmploy.val(data['form']['IreceiverEmploy'])
-          formInsertIreceiverUnit.val(data['form']['IreceiverUnit'])
-          formInsertQuality.val(data['form']['Quality'])
-          formInsertExamDate.val(data['form']['ExamDate'])
-          formInsertCustomer.val(data['form']['Customer'])
-          formInsertOther.val(data['form']['Other'])
-          formInsertResult.val(data['form']['Result'])
-        })
+            // type: getCheckbox('type', formInsertTypeOther),
+            // xstatus: getCheckbox('status'),
+          if (data['form']['printer'] >= 2) {
+            var xcode = data['form']['xcode'].split(',')
+            formInsertXcode1.val(xcode[0])
+            formInsertXcode2.val(xcode[1])
+            formInsertXcode3.val(xcode[2])
+            formInsertSampleReceiveTime.val(data['form']['receivetime'])
+            formInsertSampleReceiveHour.val(data['form']['receivehour'])
+            formInsertSampleReceiveMinute.val(data['form']['receiveminute'])
+            formInsertIsenderEmploy.val(data['form']['isenderemploy'])
+            formInsertIsenderUnit.val(data['form']['isenderunit'])
+            formInsertIreceiverEmploy.val(data['form']['ireceiveremploy'])
+            formInsertIreceiverUnit.val(data['form']['ireceiverunit'])
+            formInsertQuality.val(data['form']['quality'])
+          }
+
+          if (data['form']['printer'] >= 3) {
+            var page = data['form']['page'].split(',')
+            var no = data['form']['no'].split(',')
+
+            formInsertPage1.val(page[0])
+            formInsertPage2.val(page[1])
+            formInsertNo1.val(no[0])
+            formInsertNo2.val(no[1])
+
+            formInsertExamDate.val(data['form']['examDate'])
+            formInsertCustomer.val(data['form']['customer'])
+            formInsertOther.val(data['form']['other'])
+            formInsertResult.val(data['form']['result'])
+
+            formInsertAddress.val(data['form']['address'])
+            formInsertPhone.val(data['form']['phone'])
+            formInsertSampleReceive.val(data['form']['samplereceive'])
+            formInsertSampleReceiver.val(data['form']['samplereceiver'])
+            formInsertSampleTime.val(data['form']['sampletime'])
+            formInsertExamDate.val(data['form']['examdate'])
+          }
+          $('a[href="#menu1"]').tab('show')
+        }, () => {})
       }
     )
   }
 
   function parseInputs(data, name) {
     $("." + name + "ed").remove()
-    for (const key in data['form'][name]) {
-      if (data['form'][name].hasOwnProperty(key)) {
-        const element = data['form'][name][key]
-        addInfo(dataPicker[name])
-      }
+    var array = data['form'][name].split(', ')
+    if (data['form']['method']) {
+      method = data['form']['method'].split(', ')
     }
+    array.forEach((element, index) => {
+      addInfo(dataPicker[name])
+      if (dataPicker[name] == 1) {
+        $("#formed-" + index).val(element)
+      }
+      else {
+        $("#examed-" + index).val(element)
+        var method = data['form']['method'].split(', ')
+        var child = $("#method-" + index)[0].children
+        for (const key in child) {
+          if (child.hasOwnProperty(key)) {
+            const item = child[key];
+            var id = item.value
+
+            if (id == method[index]) {
+              item.setAttribute('selected', true)
+            }
+          }
+        }
+      }
+    });
   }
 
   function insert() {
@@ -749,7 +891,7 @@
             <div class="row">
               <label class="col-sm-4"> Tên hồ sơ </label>
               <div class="col-sm-10">
-                <input type="text" class="form-control input-box form">
+                <input type="text" class="form-control input-box form" id="formed-` + length + `">
               </div>
             </div>
           </div>`
@@ -764,7 +906,7 @@
             <div class="row">
               <label class="col-sm-4"> Yêu cầu </label>
               <div class="col-sm-10">
-                <input type="text" class="form-control input-box exam">
+                <input type="text" class="form-control input-box exam" id="examed-` + length + `">
               </div>
               <div class="input-group">
                 <select class="form-control input-box method" id="method-` + length + `">
@@ -813,12 +955,12 @@
     return {index: check, value: ''}
   }
 
-  function getInputs(name, tag = false) {
+  function getInputs(name, tag = '') {
     var list = []
     $(".input-box." + name).each((index, item) => {
       var row = item.value
       if (tag) {
-        row = (index + 1) + ') ' + row
+        row = (index + 1) + tag + row
       }
       list.push(row)
     })    
@@ -841,22 +983,51 @@
     return 1
   }
 
+  function remove(id) {
+    formRemove.modal('show')
+    global_id = id
+  }
+
+  function removeSubmit() {
+    freeze()
+    $.post(
+      strHref, 
+      {action: 'remove', id: global_id},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          content.html(data['html'])
+          formRemove.modal('hide')
+        }, () => {})
+      }
+    )
+  }
+
   function checkForm(id) {
     var data = {}
     switch (id) {
       case 1:
-        data = {
-          code: formInsertCode.val(),
-          sender: formInsertSenderEmploy.val(),
-          receive: formInsertReceive.val(),
-          resend: formInsertResend.val(),
-          state: getCheckbox('state', formInsertReceiverStateOther),
-          receiver: formInsertReceiverEmploy.val(),
-          ireceive: formInsertIreceive.val(),
-          iresend: formInsertIresend.val(),
-          form: getInputs('form', true),
-          number: formInsertNumber.val(),
-          exam: getInputs('exam', true)
+        var sampleCode = checkSampleCode(formInsertSampleCode, formInsertSampleParent, formInsertNumber.val())
+        if (sampleCode) {         
+          data = {
+            code: formInsertCode.val(),
+            sender: formInsertSenderEmploy.val(),
+            receive: formInsertReceive.val(),
+            resend: formInsertResend.val(),
+            state: getCheckbox('state', formInsertReceiverStateOther),
+            receiver: formInsertReceiverEmploy.val(),
+            ireceive: formInsertIreceive.val(),
+            iresend: formInsertIresend.val(),
+            type: getCheckbox('type', formInsertTypeOther),
+            sample: formInsertSample.val(),
+            status: formInsertStatus.val(),
+            number: formInsertNumber.val(),
+            form: getInputs('form', ') '),
+            exam: getInputs('exam', ') '),
+            forms: getInputs('form'),
+            exams: getInputs('exam'),
+            methods: getInputs('method'),
+            sampleCode: formInsertSampleCode.val()
+          }
         }
       break;
       case 2: 
@@ -864,9 +1035,6 @@
         if (sampleCode) {         
           data = {
             xcode: getInputs('xcode'),
-            receiveTime: formInsertSampleReceiveTime.val(),
-            receiveHour: formInsertSampleReceiveHour.val(),
-            receiveMinute: formInsertSampleReceiveMinute.val(),
             receiveTime: formInsertSampleReceiveTime.val(),
             receiveHour: formInsertSampleReceiveHour.val(),
             receiveMinute: formInsertSampleReceiveMinute.val(),
@@ -881,7 +1049,10 @@
             sampleCode: formInsertSampleCode.val(),
             xstatus: getCheckbox('status'),
             quality: formInsertQuality.val(),
-            exam: getInputs('exam', true)
+            exam: getInputs('exam', ') '),
+            method: getInputs('method'),
+            exams: getInputs('exam'),
+            methods: getInputs('method'),
           }
         }
       break;
@@ -891,6 +1062,12 @@
         if (sampleCode) {         
           data = {
             xcode: getInputs('xcode'),
+            page: getInputs('page'),
+            no: getInputs('no'),
+            sampleTime: formInsertSampleTime.val(),
+            examDate: formInsertExamDate.val(),
+            sample: formInsertSample.val(),
+            other: formInsertOther.val(),
             receiveTime: formInsertSampleReceiveTime.val(),
             receiveHour: formInsertSampleReceiveHour.val(),
             receiveMinute: formInsertSampleReceiveMinute.val(),
@@ -899,14 +1076,16 @@
             phone: formInsertPhone.val(),
             type: getCheckbox('type'),
             number: formInsertNumber.val(),
-            sampleCode: sampleCode,
+            sampleCode: formInsertSampleCode.val(),
             status: formInsertStatus.val(),
             sampleReceive: formInsertSampleReceive.val(),
             sampleReceiver: formInsertSampleReceiver.val(),
             ireceive: formInsertIreceive.val(),
-            ireceiver: formInsertReceiverEmploy.val(),
+            ireceiver: formInsertIreceiverEmploy.val(),
             exam: getInputs('exam'),
             method: getInputs('method'),
+            exams: getInputs('exam'),
+            methods: getInputs('method'),
             examDate: formInsertExamDate.val(),
             result: formInsertResult.val()
           }
@@ -932,6 +1111,34 @@
         }
       )
     }
+  }
+
+  function filter(e) {
+    e.preventDefault()
+    freeze()
+    $.post(
+      strHref,
+      {action: 'filter', page: global_page, limit: global_limit, keyword: filterKeyword.val()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          content.html(data['html'])
+        }, () => {})
+      }
+    )
+  }
+
+  function goPage(page) {
+    freeze()
+    $.post(
+      strHref,
+      {action: 'filter', page: global_page, limit: global_limit, keyword: filterKeyword.val()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          global_page = page
+          content.html(data['html'])
+        }, () => {})
+      }
+    )
   }
 
   function printer(id) {

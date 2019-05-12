@@ -65,3 +65,7 @@
 	background: #afa;
 	cursor: pointer;
 }
+
+.saved {
+  z-index: 10;
+}

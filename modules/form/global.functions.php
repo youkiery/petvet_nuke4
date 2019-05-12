@@ -65,6 +65,19 @@ function getMethod() {
 	return $list;
 }
 
+function getRemindId($id) {
+	global $db;
+
+	$sql = 'select * from `'.PREFIX.'_remind` where id = ' . $id;
+	$query = $db->query($sql);
+	$remind = $query->fetch();
+
+	if (empty($remind)) {
+		return '';
+	}
+	return $remind['value'];
+}
+
 function checkRemindRow($value, $type) {
 	global $db;
 
@@ -124,4 +137,14 @@ function checkExam($formData, $rowid, $examid = 0) {
 		}
 	}
 	return 0;
+}
+
+function checkPrinter($data) {
+	if (!empty($data['page'])) {
+		return 4;
+	}
+	else if (!empty($data['receivetime'])) {
+		return 2;
+	}
+	return 1;
 }
