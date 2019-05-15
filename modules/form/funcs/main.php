@@ -17,6 +17,14 @@ $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
 	$result = array("status" => 0);
 	switch ($action) {
+		case 'filter':
+			$page = $nv_Request->get_string('page', 'get/post', 1);
+			$limit = $nv_Request->get_string('limit', 'get/post', 1);
+			$keyword = $nv_Request->get_string('keyword', 'get/post', 1);
+
+			$result['status'] = 1;
+			$result['html'] = formList($keyword, $page, $limit);
+		break;
 		case 'getForm':
 			$id = $nv_Request->get_string('id', 'get/post', '');
 
@@ -51,6 +59,9 @@ if (!empty($action)) {
 		break;
 		case 'remove':
 			$id = $nv_Request->get_string('id', 'get/post', '');
+			$page = $nv_Request->get_string('page', 'get/post', 1);
+			$limit = $nv_Request->get_string('limit', 'get/post', 1);
+			$keyword = $nv_Request->get_string('keyword', 'get/post', 1);
 
 			if (!empty($id)) {
 				$sql = 'delete from `'. PREFIX .'_row` where id = ' . $id;
@@ -59,7 +70,7 @@ if (!empty($action)) {
 				if ($query) {
 					$result['status'] = 1;
 					$result['notify'] = 'Đã xóa mẫu đơn';
-					$result['html'] = formList();
+					$result['html'] = formList($keyword, $page, $limit);
 				}
 			}
 		break;
@@ -67,6 +78,11 @@ if (!empty($action)) {
 			$id = $nv_Request->get_string('id', 'get/post', '');
 			$form = $nv_Request->get_string('form', 'get/post', '');
 			$data = $nv_Request->get_array('data', 'get/post', '');
+
+			$page = $nv_Request->get_string('page', 'get/post', 1);
+			$limit = $nv_Request->get_string('limit', 'get/post', 1);
+			$keyword = $nv_Request->get_string('keyword', 'get/post', 1);
+
 			$result['notify'] = 'Nhập sai thông tin, hoặc thông tin lỗi';
 			switch ($form) {
 				case '1':
@@ -86,6 +102,7 @@ if (!empty($action)) {
 						if ($query) {
 							$result['status'] = 1;
 							$result['notify'] = 'Đã lưu mẫu';
+							$result['html'] = formList($keyword, $page, $limit);
 						}
 					}	
 				break;
@@ -103,6 +120,7 @@ if (!empty($action)) {
 						$result['notify'] = 'Đã cập nhật mẫu';
 						$result['status'] = 1;
 						$result['id'] = $id;
+						$result['html'] = formList($keyword, $page, $limit);
 					}
 				break;
 				case '3':
@@ -113,11 +131,13 @@ if (!empty($action)) {
 					$examDate = totime($data['examDate']);
 					$sampleTime = totime($data['sampleTime']);
 					$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", receiveTime = '.$receiveTime.', receiveHour = '.$data['receiveHour'].', receiveMinute = '.$data['receiveMinute'].', phone = "'.$data['phone'].'", sampleReceive = "'.$sampleReceive.'", sampleTime = "'.$sampleTime.'", address = "'.$data['address'].'", sampleReceiver = "'.$data['sampleReceiver'].'", ireceive = '.$ireceive.', ireceiver = "'.$data['ireceiver'].'", examDate = "'.$examDate.'", result = "'.$data['result'].'", page = "'. implode(', ', $data['page']) .'", no = "'. implode(', ', $data['no']) .'", customer = "'. $data['customer'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', sample = "'. $data['sample'] .'", status = "'. $data['status'] .'", sampleCode = "'. implode(', ', $data['sampleCode']) .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", other = "'. $data['other'] .'", result = "'. $data['result'] .'" where id = ' . $id;
+					die($sql);
 					$query = $db->query($sql);
 					if ($query) {
 						$result['notify'] = 'Đã cập nhật mẫu';
 						$result['status'] = 1;
 						$result['id'] = $id;
+						$result['html'] = formList($keyword, $page, $limit);
 					}
 				break;
 			}

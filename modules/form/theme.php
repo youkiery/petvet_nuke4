@@ -13,15 +13,9 @@ if (!defined('PREFIX')) {
 
 $sampleType = array('Nguyên con', 'Huyết thanh', 'Máu', 'Phủ tạng', 'Swab');
 
-function formList($keyword = '', $from = '', $end = '', $page = 1, $limit = 10) {
+function formList($keyword = '', $page = 1, $limit = 10) {
   global $db, $sampleType;
 
-  if (!(empty($from) || empty($end))) {
-    $from = totime($from);
-    $end = totime($end);
-    $extraSql = '(time between ' . $from . ' and ' . $end . ')';
-  }
-  
   $xtpl = new XTemplate("list.tpl", PATH);
 
   $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $keyword .'%" '. $extraSql;

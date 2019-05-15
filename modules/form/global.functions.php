@@ -67,10 +67,12 @@ function getMethod() {
 
 function getRemindId($id) {
 	global $db;
-
-	$sql = 'select * from `'.PREFIX.'_remind` where id = ' . $id;
-	$query = $db->query($sql);
-	$remind = $query->fetch();
+	$remind = '';
+	if ($id) {
+		$sql = 'select * from `'.PREFIX.'_remind` where id = ' . $id;
+		$query = $db->query($sql);
+		$remind = $query->fetch();
+	}
 
 	if (empty($remind)) {
 		return '';
@@ -143,7 +145,7 @@ function checkPrinter($data) {
 	if (!empty($data['page'])) {
 		return 4;
 	}
-	else if (!empty($data['receivetime'])) {
+	else if (!empty($data['xstatus'])) {
 		return 2;
 	}
 	return 1;

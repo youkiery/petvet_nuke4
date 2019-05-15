@@ -31,8 +31,22 @@
 
 <div class="tab-content">
   <div id="home" class="tab-pane active">
-    <form onsubmit="filter(e)">
-      
+    <form onsubmit="filter(event)">
+      <div class="row">
+        <div class="col-sm-6">
+          <input type="text" class="form-control" id="filter-keyword" placeholder="Mẫu phiếu">
+        </div>
+        <div class="col-sm-6">
+          <select class="form-control" id="filter-limit">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="75">75</option>
+            <option value="100">100</option>
+          </select>
+        </div>
+        <div class="col-sm-6"><button class="btn btn-info"><span class="glyphicon glyphicon-search"></span></button></div>
+      </div>      
     </form>
     <div id="content">
       {content}
@@ -501,9 +515,13 @@
   var formInsertForm = $("#form-insert-form")
   var formInsertRequest = $("#form-insert-request")
 
+  var filterLimit = $("#filter-limit")
+  var filterKeyword = $("#filter-keyword")
+
   var global_form = 1
   var global_saved = 0
   var global_id = 0
+  var global_page = 1
 
   var dataPicker = {'form': 1, 'exam': 2}
   var rdataPicker = {'1': 'form', '2': 'exam'}
@@ -784,8 +802,6 @@
           if (data['form']['printer'] >= 1) {
             formInsertCode.val(data['form']['code'])
             formInsertSenderEmploy.val(data['form']['sender'])
-            console.log(formInsertReceiverEmploy, data['form']['receiver'], formInsertIreceive, data['form']['ireceive'], formInsertIresend, data['form']['iresend']);
-            
             formInsertReceiverEmploy.val(data['form']['receiver'])
             formInsertReceive.val(data['form']['receive'])
             formInsertResend.val(data['form']['resend'])
@@ -803,16 +819,32 @@
             formInsertTypeOther.val(data['form']['typevalue'])
           }
 
-            // type: getCheckbox('type', formInsertTypeOther),
-            // xstatus: getCheckbox('status'),
           if (data['form']['printer'] >= 2) {
             var xcode = data['form']['xcode'].split(',')
             formInsertXcode1.val(xcode[0])
             formInsertXcode2.val(xcode[1])
             formInsertXcode3.val(xcode[2])
             formInsertSampleReceiveTime.val(data['form']['receivetime'])
-            formInsertSampleReceiveHour.val(data['form']['receivehour'])
-            formInsertSampleReceiveMinute.val(data['form']['receiveminute'])
+            for (const key in formInsertSampleReceiveHour[0].children) {
+              if (formInsertSampleReceiveHour[0].children.hasOwnProperty(key)) {
+                if (key == data['form']['receivehour']) { 
+                  formInsertSampleReceiveHour[0].children[key].setAttribute('selected', true)
+                }
+                else {
+                  formInsertSampleReceiveHour[0].children[key].removeAttribute('selected')
+                }
+              }
+            }
+            for (const key in formInsertSampleReceiveMinute[0].children) {
+              if (formInsertSampleReceiveMinute[0].children.hasOwnProperty(key)) {
+                if (key == data['form']['receiveminute']) {
+                  formInsertSampleReceiveMinute[0].children[key].setAttribute('selected', true)
+                }
+                else {
+                  formInsertSampleReceiveMinute[0].children[key].removeAttribute('selected')
+                }
+              }
+            }
             formInsertIsenderEmploy.val(data['form']['isenderemploy'])
             formInsertIsenderUnit.val(data['form']['isenderunit'])
             formInsertIreceiverEmploy.val(data['form']['ireceiveremploy'])
@@ -841,6 +873,7 @@
             formInsertSampleTime.val(data['form']['sampletime'])
             formInsertExamDate.val(data['form']['examdate'])
           }
+          
           $('a[href="#menu1"]').tab('show')
         }, () => {})
       }
@@ -849,6 +882,8 @@
 
   function parseInputs(data, name) {
     $("." + name + "ed").remove()
+    console.log(data['form'][name]);
+    
     var array = data['form'][name].split(', ')
     if (data['form']['method']) {
       method = data['form']['method'].split(', ')
@@ -992,7 +1027,7 @@
     freeze()
     $.post(
       strHref, 
-      {action: 'remove', id: global_id},
+      {action: 'remove', id: global_id, page: global_page, limit: filterLimit.val(), keyword: filterKeyword.val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
@@ -1101,7 +1136,7 @@
     if (Object.keys(data).length) {
       $.post(
         strHref,
-        {action: 'insert', form: global_form, id: global_id, data: data},
+        {action: 'insert', form: global_form, id: global_id, data: data, page: global_page, limit: filterLimit.val(), keyword: filterKeyword.val()},
         (response, status) => {
           checkResult(response, status).then(data => {
             global_saved = global_form
@@ -1118,7 +1153,7 @@
     freeze()
     $.post(
       strHref,
-      {action: 'filter', page: global_page, limit: global_limit, keyword: filterKeyword.val()},
+      {action: 'filter', page: global_page, limit: filterLimit.val(), keyword: filterKeyword.val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
@@ -1131,7 +1166,7 @@
     freeze()
     $.post(
       strHref,
-      {action: 'filter', page: global_page, limit: global_limit, keyword: filterKeyword.val()},
+      {action: 'filter', page: global_page, limit: filterLimit.val(), keyword: filterKeyword.val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           global_page = page
@@ -1270,5 +1305,7 @@
       }
     }
   }
+
+  
 </script>
 <!-- END: main -->
