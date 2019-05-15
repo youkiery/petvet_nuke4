@@ -43,6 +43,7 @@ function collectList($startDate, $endDate) {
   $index = 1;
   while ($row = $query->fetch()) {
     $xtpl->assign("index", $start + ($index ++));
+    $xtpl->assign("id", $row['id']);
     // die(var_dump($user));
     $xtpl->assign("driver", $user[$row["driver_id"]]["last_name"] . " " . $user[$row["driver_id"]]["first_name"]);
     $xtpl->assign("km", number_format($row["clock_to"] - $row["clock_from"], 1, ".", ","));

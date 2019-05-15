@@ -4,6 +4,19 @@
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <div class="msgshow" id="msgshow"></div>
 
+<div class="modal fade" id="rider-detail" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p> Thời gian nhập: <span id="rider-date"></span> </p>
+        <p> Điểm đến: <span id="rider-destination"></span> </p>
+        <p> Cây số đi: <span id="rider-from"></span> </p>
+        <p> Cây số về: <span id="rider-end"></span> </p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="insert-collect" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -147,6 +160,12 @@
   var payMoney = $("#pay-money")
   var payNote = $("#pay-note")
   var payInsert = $("#pay-insert")
+
+  var riderDetail = $("#rider-detail")
+  var riderDate = $("#rider-date")
+  var riderDestination = $("#rider-destination")
+  var riderFrom = $("#rider-from")
+  var riderEnd = $("#rider-end")
 
   var suggest = $(".suggest")
   var dateTimeout = null
@@ -411,6 +430,21 @@
       )
     }
   })
+
+  function goDetail(id) {
+    var from = $("#rider-detail-from-" + id).text()
+    var end = $("#rider-detail-end-" + id).text()
+    var date = $("#rider-detail-date-" + id).text()
+    var destination = $("#rider-detail-destination-" + id ).text()
+    console.log(from, end, date, destination);
+    console.log(riderFrom, riderEnd, riderDate, riderDestination);
+    
+    riderFrom.text(from)
+    riderEnd.text(end)
+    riderDate.text(date)
+    riderDestination.text(destination)
+    riderDetail.modal('show')
+  }
 
   function selectCustomer(id, type) {
     customerId = id

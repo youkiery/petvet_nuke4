@@ -12,16 +12,16 @@
     </thead>
     <tbody>
       <!-- BEGIN: row -->
-      <tr>
+      <tr onclick="goDetail({id})">
         <td> {index} </td>
-        <td> {date} </td>
-        <td> {driver} </td>
+        <td id="rider-detail-date-{id}"> {date} </td>
+        <td id="rider-detail-driver-{id}"> {driver} </td>
         <td> 
           <div class="tooltip"> {km} km
-            <span class="tooltiptext"> {start} km - {end} km </span>
+            <span class="tooltiptext"> <span id="rider-detail-from-{id}">{start}</span> km - <span id="rider-detail-end-{id}">{end}</span> km </span>
           </div>  
         </td>
-        <td> {destination} </td>
+        <td id="rider-detail-destination-{id}"> {destination} </td>
       </tr>
       <!-- END: row -->
     </tbody>
