@@ -25,7 +25,7 @@ if (!empty($user_info) && !empty($user_info['userid'])) {
   $query = $db->query($sql);
   $user = $query->fetch();
   $group = explode(',', $user['in_groups']);
-  if (!in_array('1', $group) || !in_array('2', $group)) {
+  if (!(in_array('1', $group) || in_array('2', $group))) {
     if ($op !== 'proces' && !empty($opType[$op])) {
       $sql = 'select * from `' . VAC_PREFIX . '_heal_manager` where groupid in (' . implode(',', $user_info['in_groups']) . ') and type = ' . $opType[$op];
       $query = $db->query($sql);

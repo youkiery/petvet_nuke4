@@ -25,7 +25,7 @@ while ($row = $query->fetch()) {
 
 $check = false;
 if (!empty($user_info) && !empty($user_info['userid'])) {
-  if (!in_array('1', $user_info['in_groups']) || !in_array('2', $user_info['in_groups'])) {
+  if (!(in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
     $today = strtotime(date('Y/m/d'));
     $time = time();
     $fromTime = $today + $vacconfigv2['hour_from'] * 60 * 60 + $vacconfigv2['minute_from'] * 60;

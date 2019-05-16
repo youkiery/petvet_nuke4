@@ -25,17 +25,17 @@ while ($row = $query->fetch()) {
 
 $check = false;
 if (!empty($user_info) && !empty($user_info['userid'])) {
-  if (!in_array('1', $user_info['in_groups']) || !in_array('2', $user_info['in_groups'])) {
-    $today = strtotime(date('Y/m/d'));
-    $time = time();
-    $fromTime = $today + $vacconfigv2['hour_from'] * 60 * 60 + $vacconfigv2['minute_from'] * 60;
-    $endTime = $today + $vacconfigv2['hour_end'] * 60 * 60 + $vacconfigv2['minute_end'] * 60;
+  // if (!(in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
+  //   $today = strtotime(date('Y/m/d'));
+  //   $time = time();
+  //   $fromTime = $today + $vacconfigv2['hour_from'] * 60 * 60 + $vacconfigv2['minute_from'] * 60;
+  //   $endTime = $today + $vacconfigv2['hour_end'] * 60 * 60 + $vacconfigv2['minute_end'] * 60;
   
-    if ($time < $fromTime || $time > $endTime) {
-      $check = true;
-      $contents = '<p style="padding: 10px;">Đã quá thời gian làm việc, xin vui lòng quay lại sau</p>';
-    }
-  } 
+  //   if ($time < $fromTime || $time > $endTime) {
+  //     $check = true;
+  //     $contents = '<p style="padding: 10px;">Đã quá thời gian làm việc, xin vui lòng quay lại sau</p>';
+  //   }
+  // } 
 } 
 else {
   $check = true;
