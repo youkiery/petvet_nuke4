@@ -102,7 +102,7 @@
         <h4 id="drug-detail-name"></h4>
         <hr>
         <span><b>Trị bệnh: </b></span>
-        <span id="drug-detail-effect"></span>
+        <span id="drug-detail-disease"></span>
         <hr>
         <span><b>Thường trị bệnh: </b></span>
         <span id="drug-detail-effective"></span>
@@ -111,9 +111,11 @@
         <span id="drug-detail-system"></span>
         <hr>
         <span><b>Cách dùng: </b></span>
+        <br>
         <span id="drug-detail-effect"></span>
         <hr>
         <span><b>Liều lượng: </b></span>
+        <br>
         <span id="drug-detail-limit"></span>
         <hr>
         <span><b>Ghi chú: </b></span>
@@ -497,8 +499,8 @@
     drugEditCode.val(drugData[index]['code'])
     drugEditName.val(drugData[index]['name'])
     drugEditUnit.val(drugData[index]['unit'])
-    drugEditLimit.val(drugData[index]['limits'])
-    drugEditEffect.val(drugData[index]['effect'])
+    drugEditLimit.val(drugData[index]['limits'].replace(/<br>/g, '\n'))
+    drugEditEffect.val(drugData[index]['effect'].replace(/<br>/g, '\n'))
 
     system = drugData[index]['system']
     disease = {}
@@ -631,10 +633,10 @@
 
   function showDrug(id) {
     drugDetailName.text(drugData[id]['name'])
-    drugDetailEffect.text(drugData[id]['effect'])
+    drugDetailEffect.html(drugData[id]['effect'])
     drugDetailDisease.text(paintDisease(drugData[id]['disease']))
     drugDetailEffective.text(paintDisease(drugData[id]['effective']))
-    drugDetailLimit.text(drugData[id]['limits'])
+    drugDetailLimit.html(drugData[id]['limits'])
     drugDetailNote.text(drugData[id]['note'])
     drugDetailSystem.text(paintSystem(drugData[id]['system']))
     drugDetail.modal('show')
