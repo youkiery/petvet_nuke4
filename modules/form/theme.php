@@ -32,17 +32,18 @@ function formList($keyword = '', $page = 1, $limit = 10) {
   $end = $from;
   while ($row = $query->fetch()) {
     $end ++;
-    if (!empty($sampleType[$row['typeIndex']])) {
-      $xtpl->assign('type', $sampleType[$row['typeIndex']]);
+    if (!empty($sampleType[$row['typeindex']])) {
+      $xtpl->assign('sample', $sampleType[$row['typeindex']]);
     }
     else {
-      $xtpl->assign('type', $row['typeValue']);
+      $xtpl->assign('sample', $row['typevalue']);
     }
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('code', $row['code']);
     $xtpl->assign('number', $row['number']);
-    $xtpl->assign('printer', checkPrinter($row));
+    $xtpl->assign('sample', $row['sample']);
+    $xtpl->assign('unit', getRemindId($row['sender']));
     $xtpl->parse('main.row');
   }
   $xtpl->assign('from', $from);

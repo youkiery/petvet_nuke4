@@ -52,6 +52,7 @@ if (!empty($action)) {
 				$result['form']['samplereceive'] = date('d/m/Y', $result['form']['samplereceive']);
 				$result['form']['sampletime'] = date('d/m/Y', $result['form']['sampletime']);
 				$result['form']['examdate'] = date('d/m/Y', $result['form']['examdate']);
+				// $result['form']['target'] = str_replace('<br />', '\r\n', $result['form']['target']);
 
 				$result['form']['printer'] = checkPrinter($result['form']);
 				$result['status'] = 1;
@@ -130,8 +131,9 @@ if (!empty($action)) {
 					$ireceive = totime($data['ireceive']);
 					$examDate = totime($data['examDate']);
 					$sampleTime = totime($data['sampleTime']);
-					$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", receiveTime = '.$receiveTime.', receiveHour = '.$data['receiveHour'].', receiveMinute = '.$data['receiveMinute'].', phone = "'.$data['phone'].'", sampleReceive = "'.$sampleReceive.'", sampleTime = "'.$sampleTime.'", address = "'.$data['address'].'", sampleReceiver = "'.$data['sampleReceiver'].'", ireceive = '.$ireceive.', ireceiver = "'.$data['ireceiver'].'", examDate = "'.$examDate.'", result = "'.$data['result'].'", page = "'. implode(', ', $data['page']) .'", no = "'. implode(', ', $data['no']) .'", customer = "'. $data['customer'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', sample = "'. $data['sample'] .'", status = "'. $data['status'] .'", sampleCode = "'. implode(', ', $data['sampleCode']) .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", other = "'. $data['other'] .'", result = "'. $data['result'] .'" where id = ' . $id;
-					die($sql);
+					$data['result'] = nl2br($data['result']);
+					$target = nl2br($data['target']);
+					$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", receiveTime = '.$receiveTime.', receiveHour = '.$data['receiveHour'].', receiveMinute = '.$data['receiveMinute'].', phone = "'.$data['phone'].'", sampleReceive = "'.$sampleReceive.'", sampleTime = "'.$sampleTime.'", address = "'.$data['address'].'", sampleReceiver = "'.$data['sampleReceiver'].'", ireceive = '.$ireceive.', ireceiver = "'.$data['ireceiver'].'", examDate = "'.$examDate.'", result = "'.$data['result'].'", page = "'. implode(', ', $data['page']) .'", no = "'. implode(', ', $data['no']) .'", customer = "'. $data['customer'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', sample = "'. $data['sample'] .'", status = "'. $data['status'] .'", sampleCode = "'. implode(', ', $data['sampleCode']) .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", other = "'. $data['other'] .'", result = "'. $data['result'] .'", target = "'.$target.'" where id = ' . $id;
 					$query = $db->query($sql);
 					if ($query) {
 						$result['notify'] = 'Đã cập nhật mẫu';

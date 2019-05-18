@@ -74,10 +74,10 @@
 
     <div class="row form-group boxed box-1">
       <label class="col-sm-4">
-        Người giao mẫu
+        Tên đơn vị
       </label>
       <div class="relative col-sm-10">
-        <input type="text" class="form-control" id="form-insert-sender-employ">
+        <input type="text" class="form-control" id="form-insert-sender-employ" autocomplete="off">
         <div class="suggest" id="form-insert-sender-employ-suggest"></div>
       </div>
     </div>
@@ -103,7 +103,7 @@
         Người nhận hồ sơ
       </label>
       <div class="relative col-sm-10">
-        <input type="text" class="form-control" id="form-insert-receiver-employ">
+        <input type="text" class="form-control" id="form-insert-receiver-employ" autocomplete="off">
         <div class="suggest" id="form-insert-receiver-employ-suggest"></div>
       </div>
     </div>
@@ -189,14 +189,14 @@
         Người giao mẫu
       </label>
       <div class="relative col-sm-8">
-        <input type="text" class="form-control" id="form-insert-isender-employ">
+        <input type="text" class="form-control" id="form-insert-isender-employ" autocomplete="off">
         <div class="suggest" id="form-insert-isender-employ-suggest"></div>
       </div>
       <label class="col-sm-4">
         Bộ phận giao mẫu
       </label>
       <div class="relative col-sm-8">
-        <input type="text" class="form-control" id="form-insert-isender-unit">
+        <input type="text" class="form-control" id="form-insert-isender-unit" autocomplete="off">
         <div class="suggest" id="form-insert-isender-unit-suggest"></div>
       </div>
     </div>
@@ -206,7 +206,7 @@
         Khách hàng
       </label>
       <div class="relative col-sm-10">
-        <input type="text" class="form-control" id="form-insert-customer">
+        <input type="text" class="form-control" id="form-insert-customer" autocomplete="off">
         <div class="suggest" id="form-insert-customer-suggest"></div>
       </div>
     </div>
@@ -243,7 +243,7 @@
         Người lấy mẫu
       </label>
       <div class="relative col-sm-10">
-        <input type="text" class="form-control" id="form-insert-sample-receiver">
+        <input type="text" class="form-control" id="form-insert-sample-receiver" autocomplete="off">
         <div class="suggest" id="form-insert-sample-receiver-suggest"></div>
       </div>
     </div>
@@ -262,14 +262,14 @@
         Người nhận mẫu
       </label>
       <div class="relative col-sm-8">
-        <input type="text" class="form-control" id="form-insert-ireceiver-employ">
+        <input type="text" class="form-control" id="form-insert-ireceiver-employ" autocomplete="off">
         <div class="suggest" id="form-insert-ireceiver-employ-suggest"></div>
       </div>
       <label class="col-sm-4">
         Bộ phận nhận mẫu
       </label>
       <div class="relative col-sm-8">
-        <input type="text" class="form-control" id="form-insert-ireceiver-unit">
+        <input type="text" class="form-control" id="form-insert-ireceiver-unit" autocomplete="off">
         <div class="suggest" id="form-insert-ireceiver-unit-suggest"></div>
       </div>
     </div>
@@ -389,47 +389,56 @@
       </div>
     </div>
 
+    <div class="row form-group boxed box-3">
+      <label class="col-sm-4">
+        Mục đích xét nghiệm
+      </label>
+      <div class="col-sm-20">
+        <textarea type="text" class="form-control" id="form-insert-target"></textarea>
+      </div>
+    </div>
+
     <div class="text-center">
       <button class="btn btn-success" onclick="insertSubmit()"> Lưu biểu mẫu </button>
     </div>
 
-    <button class="btn btn-info saved saved-1" style="position: fixed; top: 10px; right: 10px;" onclick="printer(1)">
+    <button class="btn btn-info saved" id="saved-2-1" style="position: fixed; top: 10px; right: 10px;" onclick="printer(1)">
       <span class="glyphicon glyphicon-print"></span>
     </button>
 
-    <button class="btn btn-info saved saved-2" style="position: fixed; top: 45px; right: 10px;" onclick="printer(2)">
+    <button class="btn btn-info saved" id="saved-2-2" style="position: fixed; top: 45px; right: 10px;" onclick="printer(2)">
       <span class="glyphicon glyphicon-print"></span>
     </button>
 
-    <button class="btn btn-info saved saved-3" style="position: fixed; top: 80px; right: 10px;" onclick="printer(3)">
+    <button class="btn btn-info saved" id="saved-2-3" style="position: fixed; top: 80px; right: 10px;" onclick="printer(3)">
       <span class="glyphicon glyphicon-print"></span>
     </button>
 
-    <button class="btn btn-info saved saved-3" style="position: fixed; top: 80px; right: 10px;" onclick="printer(4)">
+    <button class="btn btn-info saved" id="saved-2-4" style="position: fixed; top: 80px; right: 10px;" onclick="printer(4)">
       <span class="glyphicon glyphicon-print"></span>
     </button>
 
-    <button class="btn btn-info saved saved-3" style="position: fixed; top: 115px; right: 10px;" onclick="printer(4)">
+    <!-- <button class="btn btn-info saved saved-3" style="position: fixed; top: 115px; right: 10px;" onclick="printer(4)">
       <span class="glyphicon glyphicon-print"></span>
-    </button>
+    </button> -->
 
-    <button class="btn btn-warning saved saved-1" style="position: fixed; top: 10px; right: 50px;" onclick="parseBox(1)">
+    <button class="btn btn-warning saved" id="saved-1-1" style="position: fixed; top: 10px; right: 50px;" onclick="parseBox(1)">
       <span class="glyphicon glyphicon-user"></span>
     </button>
 
-    <button class="btn btn-warning saved saved-1" style="position: fixed; top: 45px; right: 50px;" onclick="parseBox(2)">
+    <button class="btn btn-warning saved" id="saved-1-2" style="position: fixed; top: 45px; right: 50px;" onclick="parseBox(2)">
       <span class="glyphicon glyphicon-user"></span>
     </button>
 
-    <button class="btn btn-warning saved saved-2" style="position: fixed; top: 80px; right: 50px;" onclick="parseBox(3)">
+    <button class="btn btn-warning saved" id="saved-1-3" style="position: fixed; top: 80px; right: 50px;" onclick="parseBox(3)">
       <span class="glyphicon glyphicon-user"></span>
     </button>
 
-    <button class="btn btn-warning saved saved-2" style="position: fixed; top: 115px; right: 50px;" onclick="parseBox(4)">
+    <button class="btn btn-warning saved" id="saved-1-4" style="position: fixed; top: 115px; right: 50px;" onclick="parseBox(4)">
       <span class="glyphicon glyphicon-user"></span>
     </button>
 
-    <button class="btn btn-success saved saved-0" style="position: fixed; top: 150px; right: 10px;" onclick="newForm()">
+    <button class="btn btn-success saved-0" style="position: fixed; top: 150px; right: 10px;" onclick="newForm()">
       <span class="glyphicon glyphicon-user"></span>
     </button>
 
@@ -501,6 +510,7 @@
   var formInsertSampleReceiveHour = $("#form-insert-sample-receive-hour")
   var formInsertSampleReceiveMinute = $("#form-insert-sample-receive-minute")
   var formInsertExamDate = $("#form-insert-exam-date")
+  var formInsertTarget = $("#form-insert-target")
 
   var formInsertXcode1 = $("#form-insert-xcode-1")
   var formInsertXcode2 = $("#form-insert-xcode-2")
@@ -523,6 +533,12 @@
   var global_id = 0
   var global_page = 1
 
+  var visible = {
+    0: {1: '1', 2: ''},
+    1: {1: '1, 2', 2: '1'},
+    2: {1: '1, 2, 3', 2: '1, 2'},
+    4: {1: '1, 2, 3, 4', 2: '1, 2, 3, 4, 5'}
+  }
   var dataPicker = {'form': 1, 'exam': 2}
   var rdataPicker = {'1': 'form', '2': 'exam'}
   var infoData = {1: [], 2: []}
@@ -543,55 +559,55 @@
     'receiver-unit': {
       input: formInsertReceiverUnit,
       suggest: formInsertReceiverUnitSuggest,
-      data: remind[1],
+      data: remind[2],
       name: 'value'
     },
     'receiver-employ': {
       input: formInsertReceiverEmploy,
       suggest: formInsertReceiverEmploySuggest,
-      data: remind[2],
+      data: remind[1],
       name: 'value'
     },
     'sampler-unit': {
       input: formInsertSamplerUnit,
       suggest: formInsertSamplerUnitSuggest,
-      data: remind[1],
+      data: remind[2],
       name: 'value'
     },
     'sampler-employ': {
       input: formInsertSamplerEmploy,
       suggest: formInsertSamplerEmploySuggest,
-      data: remind[2],
+      data: remind[1],
       name: 'value'
     },
     'ireceiver-unit': {
       input: formInsertIreceiverUnit,
       suggest: formInsertIreceiverUnitSuggest,
-      data: remind[1],
+      data: remind[2],
       name: 'value'
     },
     'ireceiver-employ': {
       input: formInsertIreceiverEmploy,
       suggest: formInsertIreceiverEmploySuggest,
-      data: remind[2],
+      data: remind[1],
       name: 'value'
     },
     'isender-unit': {
       input: formInsertIsenderUnit,
       suggest: formInsertIsenderUnitSuggest,
-      data: remind[1],
+      data: remind[2],
       name: 'value'
     },
     'isender-employ': {
       input: formInsertIsenderEmploy,
       suggest: formInsertIsenderEmploySuggest,
-      data: remind[2],
+      data: remind[1],
       name: 'value'
     },
     'customer': {
       input: formInsertCustomer,
       suggest: formInsertCustomerSuggest,
-      data: remind[2],
+      data: remind[3],
       name: 'value'
     },
     'sample-receiver': {
@@ -684,9 +700,14 @@
 
   function parseSaved() {
     $(".saved").addClass('disabled')
-    for (let i = 0; i <= global_saved; i++) {
-      $(".saved-" + i).removeClass('disabled')
-    }
+    visible[global_saved]
+    $(".saved").each((index, item) => {
+      var id = item.getAttribute('id').replace('saved-', '')
+      var pos = id.split('-')
+      // if ([id[0]].search(id[1]) >= 0) {
+      //   $(".saved-" + i).removeClass('disabled')
+      // }
+    })
   }
 
   function selectRemind(name, selectValue) {
@@ -698,7 +719,7 @@
     globalTarget[name]['input'].keyup(() => {
       clearTimeout(timeout)
       setTimeout(() => {
-        var key = globalTarget[name]['input'].val().toLowerCase()
+        var key = paintext(globalTarget[name]['input'].val())
         var html = ''
         for (const index in globalTarget[name]['data']) {
           if (globalTarget[name]['data'].hasOwnProperty(index)) {
@@ -737,6 +758,7 @@
     formInsertSample.val('')
     formInsertStatus.val('')
     formInsertSampleCode.val('')
+    formInsertTarget.val('')
     // parseInputs(data, 'exam')
     // parseInputs(data, 'form')
     $(".formed").each((index, item) => {
@@ -793,10 +815,14 @@
       {action: 'getForm', id: id},
       (response, status) => {
         checkResult(response, status).then(data => {
+          newForm()
           global_id = id
           global_form = 1
           global_saved = data['form']['printer']
           parseSaved()
+          console.log(data['form']['printer']);
+          
+          parseBox(data['form']['printer'])
           infoData = {1: [], 2: []}
 
           if (data['form']['printer'] >= 1) {
@@ -872,6 +898,7 @@
             formInsertSampleReceiver.val(data['form']['samplereceiver'])
             formInsertSampleTime.val(data['form']['sampletime'])
             formInsertExamDate.val(data['form']['examdate'])
+            formInsertTarget.html(data['form']['target'].replace(/<br\s*[\/]?>/gi, "\n"))
           }
           
           $('a[href="#menu1"]').tab('show')
@@ -882,7 +909,6 @@
 
   function parseInputs(data, name) {
     $("." + name + "ed").remove()
-    console.log(data['form'][name]);
     
     var array = data['form'][name].split(', ')
     if (data['form']['method']) {
@@ -1007,7 +1033,7 @@
     while (value.search('  ') >= 0) {
       value = value.replace(/  /g, ' ')
     }
-    value = value.split(/\s+, \s+/)
+    value = value.split(/,/g)
     target.val(value.join(', '))
     
     if (value.length != number) {
@@ -1122,7 +1148,8 @@
             exams: getInputs('exam'),
             methods: getInputs('method'),
             examDate: formInsertExamDate.val(),
-            result: formInsertResult.val()
+            result: formInsertResult.val(),
+            target: formInsertTarget.val()
           }
         }
       break;
@@ -1177,7 +1204,7 @@
   }
 
   function printer(id) {
-    if (id <= global_saved || id == 4) {
+    if (visible[global_saved][2].search(id) >= 0) {
       var data = checkForm(id)
       if (Object.keys(data).length) {
         var html = former[id]
@@ -1305,7 +1332,5 @@
       }
     }
   }
-
-  
 </script>
 <!-- END: main -->

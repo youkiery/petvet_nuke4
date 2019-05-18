@@ -5,45 +5,50 @@
 </style>
 
 <?php
-	$db = new mysqli('localhost', 'root', '', 'petcoffee');
-	$db->query('SET NAMES "utf8"');
+	// $db = new mysqli('localhost', 'root', '', 'petcoffee');
+	// $db->query('SET NAMES "utf8"');
 
-		// $sql = 'select * from pet_test_vaccine where status = 0 order by calltime desc';
-		// $query = $db->query($sql);
-		// while ($row = $query->fetch_assoc()) {
-		// 	echo date('d/m/Y', $row['calltime']) . '<br>';
-		// }
-		// die();
+	// 	// $sql = 'select * from pet_test_vaccine where status = 0 order by calltime desc';
+	// 	// $query = $db->query($sql);
+	// 	// while ($row = $query->fetch_assoc()) {
+	// 	// 	echo date('d/m/Y', $row['calltime']) . '<br>';
+	// 	// }
+	// 	// die();
 
 
-	$sql = 'select code, name, num1, num2, number from (select a.code, a.name, a.num as num1, b.num as num2, (a.num + b.num) as number from astora_1 a inner join astora_2 b on a.code = b.code) c where number <= 5';
-	$query = $db->query($sql);
+	// $sql = 'select code, name, num1, num2, number from (select a.code, a.name, a.num as num1, b.num as num2, (a.num + b.num) as number from astora_1 a inner join astora_2 b on a.code = b.code) c where number <= 5';
+	// $query = $db->query($sql);
 
-	echo '<table border="1" style="width: 100%; border-collapse: collapse;"><tr><th>Mã hàng</th><th>Tên hàng</th><th>Bệnh viện</th><th>Kho</th><th>Tổng</th><tbody>';
-	while ($row = $query->fetch_assoc()) {
-		echo "<tr> <td>$row[code]</td><td>$row[name]</td><td style='text-align: center;'> $row[num1] </td><td style='text-align: center;'> $row[num2] </td><td style='text-align: center;'> ". round($row["number"], 1) ."</td></tr>";
+	// echo '<table border="1" style="width: 100%; border-collapse: collapse;"><tr><th>Mã hàng</th><th>Tên hàng</th><th>Bệnh viện</th><th>Kho</th><th>Tổng</th><tbody>';
+	// while ($row = $query->fetch_assoc()) {
+	// 	echo "<tr> <td>$row[code]</td><td>$row[name]</td><td style='text-align: center;'> $row[num1] </td><td style='text-align: center;'> $row[num2] </td><td style='text-align: center;'> ". round($row["number"], 1) ."</td></tr>";
+	// }
+	// echo '</tbody></table>';
+
+	if (isset($_POST['data'])) {
+		$data = $_POST['data'];
 	}
-	echo '</tbody></table>';
-
-	// if (isset($_POST['data'])) {
-	// 	$data = $_POST['data'];
-	// }
 	
-	// if (!empty($data)) {
-	// 	$db = new mysqli('localhost', 'root', '', 'petcoffee');
-	// 	$db->query('SET NAMES "utf8"');
-	// 	$db->query('delete from astora_1');
-	// 	$db->query('delete from astora_2');
-	// 	foreach($data['bv'] as $row) {
-	// 		$sql = "insert into astora_1 (code, name, cate, price, num) values('$row[code]', '$row[name]', '$row[cate]', '$row[price]', $row[num])";			
-	// 		$db->query($sql);		
-	// 	}
+	if (!empty($data)) {
+		$db = new mysqli('localhost', 'root', '', 'petcoffee');
+		$db->query('SET NAMES "utf8"');
+		$index = 1;
+		foreach ($data as $row) {
+			$sql = "update `pet_test_heal_medicine` set `code` = '".$row["Mã thuốc"]."', `limits` = '".$row["Liều dùng"]."', `effect` = '".$row["Công Dụng"]."' where name = '" . $row["Tên thuốc"] . "'";		
+				$db->query($sql);		
+		}
+		// $db->query('delete from astora_1');
+		// $db->query('delete from astora_2');
+		// foreach($data['bv'] as $row) {
+		// 	$sql = "insert into astora_1 (code, name, cate, price, num) values('$row[code]', '$row[name]', '$row[cate]', '$row[price]', $row[num])";			
+		// 	$db->query($sql);		
+		// }
 
-	// 	foreach($data['kho'] as $row) {
-	// 		$sql = "insert into astora_2 (code, num) values('$row[code]', $row[num])";
-	// 		$db->query($sql);		
-	// 	}
-	// }
+		// foreach($data['kho'] as $row) {
+		// 	$sql = "insert into astora_2 (code, num) values('$row[code]', $row[num])";
+		// 	$db->query($sql);		
+		// }
+	}
 ?>
 
 <input type="file" id="bv" />
@@ -83,6 +88,8 @@ function filePicked(oEvent, tail, nid) {
             var sCSV = XLS.utils.make_csv(wb.Sheets[sheetName]);   
             var oJS = XLS.utils.sheet_to_row_object_array(wb.Sheets[sheetName]);   
 
+					console.log(oJS);
+					
 			xdata[nid] = oJS
         });
     };
