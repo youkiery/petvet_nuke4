@@ -13,7 +13,7 @@ if (!defined('PREFIX')) {
 
 $sampleType = array('Nguyên con', 'Huyết thanh', 'Máu', 'Phủ tạng', 'Swab');
 
-function formList($keyword = '', $page = 1, $limit = 10) {
+function formList($keyword = '', $page = 1, $limit = 10, $printer = array('1', '2', '3', '4', '5')) {
   global $db, $sampleType;
 
   $xtpl = new XTemplate("list.tpl", PATH);
@@ -31,20 +31,23 @@ function formList($keyword = '', $page = 1, $limit = 10) {
   $from = ($page - 1) * $limit;
   $end = $from;
   while ($row = $query->fetch()) {
-    $end ++;
-    if (!empty($sampleType[$row['typeindex']])) {
-      $xtpl->assign('sample', $sampleType[$row['typeindex']]);
+    // if (in_array(strval(checkPrinter($row)), $printer)) {
+    if (checkPrinter($row) <= $printer) {
+      $end ++;
+      if (!empty($sampleType[$row['typeindex']])) {
+        $xtpl->assign('sample', $sampleType[$row['typeindex']]);
+      }
+      else {
+        $xtpl->assign('sample', $row['typevalue']);
+      }
+      $xtpl->assign('index', $index++);
+      $xtpl->assign('id', $row['id']);
+      $xtpl->assign('code', $row['code']);
+      $xtpl->assign('number', $row['number']);
+      $xtpl->assign('sample', $row['sample']);
+      $xtpl->assign('unit', getRemindId($row['sender']));
+      $xtpl->parse('main.row');
     }
-    else {
-      $xtpl->assign('sample', $row['typevalue']);
-    }
-    $xtpl->assign('index', $index++);
-    $xtpl->assign('id', $row['id']);
-    $xtpl->assign('code', $row['code']);
-    $xtpl->assign('number', $row['number']);
-    $xtpl->assign('sample', $row['sample']);
-    $xtpl->assign('unit', getRemindId($row['sender']));
-    $xtpl->parse('main.row');
   }
   $xtpl->assign('from', $from);
   $xtpl->assign('end', $end);

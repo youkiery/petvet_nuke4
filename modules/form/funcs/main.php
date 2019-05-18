@@ -20,10 +20,12 @@ if (!empty($action)) {
 		case 'filter':
 			$page = $nv_Request->get_string('page', 'get/post', 1);
 			$limit = $nv_Request->get_string('limit', 'get/post', 1);
+			// $printer = explode(', ',$nv_Request->get_string('printer', 'get/post', ''));
+			$printer = $nv_Request->get_string('printer', 'get/post', '');
 			$keyword = $nv_Request->get_string('keyword', 'get/post', 1);
 
 			$result['status'] = 1;
-			$result['html'] = formList($keyword, $page, $limit);
+			$result['html'] = formList($keyword, $page, $limit, $printer);
 		break;
 		case 'getForm':
 			$id = $nv_Request->get_string('id', 'get/post', '');
@@ -62,6 +64,8 @@ if (!empty($action)) {
 			$id = $nv_Request->get_string('id', 'get/post', '');
 			$page = $nv_Request->get_string('page', 'get/post', 1);
 			$limit = $nv_Request->get_string('limit', 'get/post', 1);
+			// $printer = explode(', ',$nv_Request->get_string('printer', 'get/post', ''));
+			$printer = $nv_Request->get_string('printer', 'get/post', '');
 			$keyword = $nv_Request->get_string('keyword', 'get/post', 1);
 
 			if (!empty($id)) {
@@ -71,7 +75,7 @@ if (!empty($action)) {
 				if ($query) {
 					$result['status'] = 1;
 					$result['notify'] = 'Đã xóa mẫu đơn';
-					$result['html'] = formList($keyword, $page, $limit);
+					$result['html'] = formList($keyword, $page, $limit, $printer);
 				}
 			}
 		break;
@@ -82,6 +86,8 @@ if (!empty($action)) {
 
 			$page = $nv_Request->get_string('page', 'get/post', 1);
 			$limit = $nv_Request->get_string('limit', 'get/post', 1);
+			// $printer = explode(', ',$nv_Request->get_string('printer', 'get/post', ''));
+			$printer = $nv_Request->get_string('printer', 'get/post', '');
 			$keyword = $nv_Request->get_string('keyword', 'get/post', 1);
 
 			$result['notify'] = 'Nhập sai thông tin, hoặc thông tin lỗi';
@@ -103,7 +109,7 @@ if (!empty($action)) {
 						if ($query) {
 							$result['status'] = 1;
 							$result['notify'] = 'Đã lưu mẫu';
-							$result['html'] = formList($keyword, $page, $limit);
+							$result['html'] = formList($keyword, $page, $limit, $printer);
 						}
 					}	
 				break;
@@ -121,7 +127,7 @@ if (!empty($action)) {
 						$result['notify'] = 'Đã cập nhật mẫu';
 						$result['status'] = 1;
 						$result['id'] = $id;
-						$result['html'] = formList($keyword, $page, $limit);
+						$result['html'] = formList($keyword, $page, $limit, $printer);
 					}
 				break;
 				case '3':
@@ -139,7 +145,7 @@ if (!empty($action)) {
 						$result['notify'] = 'Đã cập nhật mẫu';
 						$result['status'] = 1;
 						$result['id'] = $id;
-						$result['html'] = formList($keyword, $page, $limit);
+						$result['html'] = formList($keyword, $page, $limit, $printer);
 					}
 				break;
 			}

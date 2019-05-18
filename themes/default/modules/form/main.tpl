@@ -37,6 +37,28 @@
           <input type="text" class="form-control" id="filter-keyword" placeholder="Mẫu phiếu">
         </div>
         <div class="col-sm-6">
+          <select class="form-control" id="filter-printer">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5" selected>5</option>
+          </select>
+          <!-- <div class="input-group dropdown">
+            <input class="form-control dropdown-toggle" id="filter-printer" type="button" data-toggle="dropdown" placeholder="Mẫu đơn số">
+            <div class="input-group-btn">
+              <button class="btn" onclick="clearFilterPrinter()"> <span class="glyphicon glyphicon-remove"></span> </button>
+            </div>
+            <ul class="dropdown-menu" id="drug-search-system-suggest">
+              <label class="printer-x"> <input type="checkbox" class="checkbox"> 1 </label><br>
+              <label class="printer-x"> <input type="checkbox" class="checkbox"> 2 </label><br>
+              <label class="printer-x"> <input type="checkbox" class="checkbox"> 3 </label><br>
+              <label class="printer-x"> <input type="checkbox" class="checkbox"> 4 </label><br>
+              <label class="printer-x"> <input type="checkbox" class="checkbox"> 5 </label>
+            </ul>
+          </div> -->
+        </div>
+        <div class="col-sm-6">
           <select class="form-control" id="filter-limit">
             <option value="10">10</option>
             <option value="20">20</option>
@@ -526,6 +548,7 @@
   var formInsertRequest = $("#form-insert-request")
 
   var filterLimit = $("#filter-limit")
+  var filterPrinter = $("#filter-printer")
   var filterKeyword = $("#filter-keyword")
 
   var global_form = 1
@@ -644,6 +667,23 @@
     changeYear: true
   });
 
+  $('.printer-x').change(() => {
+    var list = []
+    $('.printer-x').each((index, item) => {
+      if (item.children[0].checked) {
+        list.push(item.innerText)
+      }
+    })
+    filterPrinter.val(list.join(', '))
+  })
+
+  function clearFilterPrinter() {
+    $('.printer-x').each((index, item) => {
+      item.children[0].checked = false
+    })
+    filterPrinter.val('')
+  }
+
   function parseSample() {
     formInsertCode.val('TY-5')
     formInsertSenderEmploy.val('Phùng chí kiên')
@@ -700,13 +740,14 @@
 
   function parseSaved() {
     $(".saved").addClass('disabled')
-    visible[global_saved]
+    
     $(".saved").each((index, item) => {
       var id = item.getAttribute('id').replace('saved-', '')
       var pos = id.split('-')
-      // if ([id[0]].search(id[1]) >= 0) {
-      //   $(".saved-" + i).removeClass('disabled')
-      // }
+      
+      if (visible[global_saved][pos[0]].search(pos[1]) >= 0) {
+        $("#saved-" + id).removeClass('disabled')
+      }
     })
   }
 
@@ -1053,7 +1094,7 @@
     freeze()
     $.post(
       strHref, 
-      {action: 'remove', id: global_id, page: global_page, limit: filterLimit.val(), keyword: filterKeyword.val()},
+      {action: 'remove', id: global_id, page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
@@ -1163,7 +1204,7 @@
     if (Object.keys(data).length) {
       $.post(
         strHref,
-        {action: 'insert', form: global_form, id: global_id, data: data, page: global_page, limit: filterLimit.val(), keyword: filterKeyword.val()},
+        {action: 'insert', form: global_form, id: global_id, data: data, page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val()},
         (response, status) => {
           checkResult(response, status).then(data => {
             global_saved = global_form
@@ -1180,7 +1221,7 @@
     freeze()
     $.post(
       strHref,
-      {action: 'filter', page: global_page, limit: filterLimit.val(), keyword: filterKeyword.val()},
+      {action: 'filter', page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
@@ -1193,7 +1234,7 @@
     freeze()
     $.post(
       strHref,
-      {action: 'filter', page: global_page, limit: filterLimit.val(), keyword: filterKeyword.val()},
+      {action: 'filter', page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           global_page = page
