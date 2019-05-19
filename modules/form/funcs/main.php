@@ -180,6 +180,8 @@ if (!empty($action)) {
 					$sampleTime = totime($data['sampleTime']);
 					$data['result'] = nl2br($data['result']);
 					$target = nl2br($data['target']);
+					checkRemindRow($data['address'], 5);
+					checkRemindRow($data['customer'], 4);
 					foreach ($data['exams'] as $key => $value) {
 						checkRemindRow($value, 3);
 					}

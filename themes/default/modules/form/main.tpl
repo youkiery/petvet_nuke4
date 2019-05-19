@@ -278,6 +278,7 @@
       </label>
       <div class="relative col-sm-10">
         <input type="text" class="form-control" id="form-insert-address">
+        <div class="suggest" id="form-insert-address-suggest"></div>
       </div>
     </div>
 
@@ -568,6 +569,7 @@
   var formInsertCustomerSuggest = $("#form-insert-customer-suggest")
   var formInsertPhone = $("#form-insert-phone")
   var formInsertAddress = $("#form-insert-address")
+  var formInsertAddressSuggest = $("#form-insert-address-suggest")
 
   var formInsertSampleReceiveTime = $("#form-insert-sample-receive-time")
   var formInsertSampleReceiveHour = $("#form-insert-sample-receive-hour")
@@ -674,7 +676,13 @@
     'customer': {
       input: formInsertCustomer,
       suggest: formInsertCustomerSuggest,
-      data: 3,
+      data: 4,
+      name: 'value'
+    },
+    'address': {
+      input: formInsertAddress,
+      suggest: formInsertAddressSuggest,
+      data: 5,
       name: 'value'
     },
     'sample-receiver': {
@@ -701,6 +709,8 @@
     installRemind('isender-employ');
     installRemind('isender-unit');
     installRemind('sample-receiver');
+    installRemind('customer');
+    installRemind('address');
 
     installExamRemind()
         
