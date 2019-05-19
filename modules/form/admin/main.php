@@ -11,7 +11,7 @@ if (!defined('NV_IS_ADMIN_FORM')) {
 	die('Stop!!!');
 }
 
-$page_title = "Quản lý chấm công";
+$page_title = "Nhập hồ sơ một chiều";
 
 $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {

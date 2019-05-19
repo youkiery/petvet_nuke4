@@ -1,12 +1,51 @@
 <!-- BEGIN: main -->
 <!-- <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script> -->
-
+<style>
+  .right {
+    overflow: auto;
+  }
+  .right-click {
+    float: left;
+    width: 85%;
+    overflow: hidden;
+  }
+</style>
 
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 
 <div class="msgshow" id="msgshow"></div>
+
+<div id="method-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+        <form onsubmit="insertMethodSubmit(event)">
+          <div class="row">
+            <label class="col-sm-6">Tên phương pháp</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" id="insert-method-name">
+            </div>
+          </div>
+          <div class="row">
+            <label class="col-sm-6">Ký hiệu phương pháp</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" id="insert-method-symbol">
+            </div>
+          </div>
+          <div class="text-center">
+            <button class="btn btn-success">
+              Thêm
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div id="form-remove" class="modal fade" role="dialog">
   <div class="modal-dialog modal-sm">
@@ -386,6 +425,7 @@
     <div class="boxed box-1 box-2 box-3">
       <label>
         Yêu cầu xét nghiệm
+        <button class="btn btn-success" onclick="insertMethod()"> <span class="glyphicon glyphicon-plus"></span> </button>
       </label>
       <div id="form-insert-request"></div>
       <button class="btn btn-success" onclick="addInfo(2)">
@@ -436,7 +476,7 @@
       <span class="glyphicon glyphicon-print"></span>
     </button>
 
-    <button class="btn btn-info saved" id="saved-2-4" style="position: fixed; top: 80px; right: 10px;" onclick="printer(4)">
+    <button class="btn btn-info saved" id="saved-2-4" style="position: fixed; top: 115px; right: 10px;" onclick="printer(4)">
       <span class="glyphicon glyphicon-print"></span>
     </button>
 
@@ -470,6 +510,7 @@
 <script>
   var style = '<style> body { margin: 0px; } .document { width: 730px; height: 1200px; border: 1px solid black; padding: 60px 60px 0px 100px; } .document * { font-family: "Times New Roman", Times, serif; font-size: 20px; } .text-center { text-align: center; } .text, .multiline-input, .border, .group, .inline { position: absolute; box-sizing: border-box; font-size: 18px; } .text, .group { width: max-content; } .text { overflow: hidden; } .border { border: 1px solid black; } table.form td { padding: 10px; } .form { border-collapse: collapse; width: 100%; } </style>'
   var former = {1: '<div class="document"> <div class="border" style="width: 150px; height: 100"></div> <div class="border" style="width: 580px; height: 100; left: 249px;"></div> <div class="text" style="width: 88px; text-align: center; left: 128px; top: 82px;"> CHI CỤC THÚ Y VÙNG V </div> <div class="text" style="left: 430px; top: 82px;"> <b>PHIẾU GIẢI QUYẾT HỒ SƠ</b> </div> <div class="text" style="left: 256px; top: 135px;">  <b>Số</b> <span class="input" id="code">(code)</span>/TYV5-TH </div> <div class="text" style="left: 105px; top: 180; width: 720px;"> Tên đơn vị: <span class="input" id="sender"> (sender) </span> </div> <div class="group" style="left: 105px; top: 210;"> <div class="text" style="width: 300px;">  Ngày nhận: <span class="input" id="receive"> (receive) </span> </div> <div class="text" style="left: 400px; width: 300px;">  Ngày hẹn trả kết quả: <span class="input" id="resend"> (resend) </span> </div> </div> <div class="group" style="left: 105px; top: 240;"> <div class="text">  Hình thức nhận: </div> <div class="group" style="left: 144px; width: 300px;"> <input type="checkbox" class="input" (state-0)> Trực tiếp </div> <div class="group" style="left: 300px; width: 300px;"> <input type="checkbox" class="input" (state-1)> Bưu điện </div> <div class="group" style="left: 450px; width: 300px;"> Khác: <span class="input"> (other) </span> </div> </div> <div class="text" style="left: 105px; top: 270; width: 730px;"> Người nhận hồ sơ: <span class="input" id="receiver"> (receiver) </span> </div> <div class="group" style="left: 105px; top: 300;"> <div class="text"> Phòng chuyên môn: </div> <div class="text" style="left: 200px; width: 300px;"> Ngày nhận:  <span class="input" id="ireceive"> (ireceive) </span> </div> <div class="text" style="left:450px; width: 300px;"> Ngày trả:  <span class="input" id="iresend"> (iresend) </span> </div> </div> <div class="border" style="left: 100px; top: 340; width: 730px; height: 330px;"> </div> <div class="text" style="left: 450; top: 350px;"> <u>Hồ sơ gồm:</u> </div> <div class="multiline-input" row="7" style="left: 110px; top: 380px; width: 700px; height: 280;">(form)</div> <div class="border" style="left: 100; top: 689px; width: 500; height: 30;">  </div> <div class="border" style="left: 599px; top: 689px; width: 230px; height: 30;"></div> <div class="border" style="left: 100; top: 718px; width: 500; height: 300px;"></div> <div class="border" style="left: 599px; top: 718px; width: 230; height: 300px;"></div> <div class="text" style="top: 695px; left: 115px;"> <b>Ý kiến của phòng, bộ phận chịu trách nhiệm giải quyết</b> </div> <div class="text" style="top: 695px; left: 610px;"> <b>Ý kiến của ban lãnh đạo</b> </div> <div class="text" style="top: 1030px; left: 100px; width: 730px;"> <i> <b> <u>Ghi chú:</u></b></i> Hồ sơ có ý kiếm của thủ trưởng (hoặc người được ủy quyền) phải được giao lại cho bộ phận một cửa trước 01 ngày so với ngày hẹn trả kết quả </div> <div class="text" style=" top: 1175px; left: 100px;"> Mã số: BM-02/TYV5-06 </div> <div class="text" style="top: 1175px; left: 400px;"> Ngày ban hành: 02/11/2017, </div> <div class="text" style="top: 1175px; left: 650px;"> Lần sửa đổi: 02 </div> </div>', 2: '<div class="document"> <div class="border" style="top: 115px; left: 50px; width: 300px; height: 45px;"></div> <div class="border" style="top: 110px; left: 140px; width: 93px;"></div> <div class="border" style="top: 110px; left: 496px; width: 242px;"></div> <div class="text" style="left: 140px; top: 60px;"> CỤC THÚ Y </div> <div class="text" style="left: 85px; top: 85px;"> <b>CHI CỤC THÚ Y VÙNG V</b></div> <div class="text" style="left: 410px; top: 60px;"> <b>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</b> </div> <div class="text" style="left: 495px; top: 85px;"> <b>Độc lập - Tự do - Hạnh phúc</b> </div> <div class="text" style="left: 60; top: 130px;"> Số ĐKXN: <span class="input"> (xcode-0) </span>/<span class="input">(xcode-1)</span>/<span class="input">(xcode-2)</span> </div> <div class="text" style="left: 430px; top: 130px;"> <i>Đắk Lắk, <span class="input">(receiveHour)</span> giờ, <span class="input">(receiveMinute)</span> p, ngày <span class="input">(receiveTime-0)</span> tháng <span class="input">(receiveTime-1)</span> năm <span class="input">(receiveTime-2)</span></i> </div> <div class="text" style="left: 230px; top: 190;"><b>BIÊN BẢN GIAO NHẬN MẤU XÉT NGHIỆM</b></div> <div class="text" style="left: 100; top: 225;"> <b>1/ Đại diện bên giao mẫu</b> </div>  <div class="text" style="left: 100; top: 255;"> - Họ và tên: <span class="input"> (isenderEmploy) </span> </div> <div class="text" style="left: 100; top: 285;"> (isenderUnit) </div> <div class="text" style="left: 100; top: 315;"><b>2/ Đại diện bên nhận mẫu:</b></div> <div class="text" style="left: 100; top: 345;"> - Họ và tên: <span class="input"> (ireceiverEmploy) </span> </div> <div class="text" style="left: 100; top: 375;"> (ireceiverUnit) </div> <div class="text" style="left: 200; top: 405;">* Điện thoại: 0262 3.877.795</div> <div class="text" style="left: 100; top: 435;"><b>3/ Thông tin về mẫu</b></div> <div class="group" style="left: 100; top: 475px;"> <div class="text"> - Loại mẫu: <span class="input"> (type) </span> </div> <div class="text" style="left: 330px;"> Loài vật được lấy mẫu: <span class="input"> (sample) </span> </div> </div> <div class="group" style="left: 100; top: 505px;"> <div class="text"> - Số lượng mẫu: <span class="input"> (number) </span> </div> <div class="text" style="left: 350px;"> Tình trạng mẫu: <span class="input"> (status) </span> </div> </div> <div class="text" style="left: 100; top: 535px; width: 730; height: 50px;"> - Ký hiệu mẫu: <span class="input"> (sampleCode) </span> </div> <div class="group" style="left: 100; top: 595px; width: 730px;"> * Ghi chú: (đính kèm danh sách nhận diện mẫu)  <span class="text" style="width: 100px; margin-left: 10px;"> có <input type="checkbox" class="input"> </span> <span class="text" style="width: 100px; left: 550px;"> không <input type="checkbox" class="input"> </span> </div> <div class="text" style="left: 60; top: 625px; width: 730px;">&ensp;&ensp;&ensp;&ensp;- Hình thức bảo quản, vận chuyển mẫu khi bàn giao (đề nghị gạch chéo vào một trong các ô sau đây)</div> <div class="group" style="left: 100; top: 685px;"> <div class="text" style="left: 50px;"> <input type="checkbox" (xstatus-0)> Thùng đá </div> <div class="text" style="left: 250px;"> <input type="checkbox" (xstatus-1)> Xe lạnh </div> <div class="text" style="left: 450px;"> <input type="checkbox" (xstatus-2)> Phương tiện khác </div> </div> <div class="group" style="left: 100; top: 745px;"> <div class="text" style="width: 730; height: 45px;"> - Chất lượng chung của mẫu khi bàn giao (dựa vào cảm quan để nhận xét) <span> <!-- input --> </span> </div> </div> <div class="text" style="left: 100; top: 770px;"> <b>4/ Yêu cầu xét nghiệm</b> </div> <div class="group" style="left: 100; top: 800px; width: 730px; height: 250px;"> (exam) </div> <div class="text" style="left: 60; top: 1055; width: 730;"> &ensp;&ensp;&ensp;&ensp;Biên bản kết thúc vào lúc <span class="input"></span>h <span class="input"></span>p cùng ngày; biên bản được lập thành  <span class="input"></span> bản; bên giao và nhận thống nhất ký vào biên bản (bên nhận mẫu giữ bản copy). </div> <div class="text" style="left: 115px; top: 1110px;"><b>XÁC NHẬN CỦA BÊN NHẬN MẪU</b></div> <div class="text" style="left: 151px; top: 1140px;"><i>(Ký xác nhận, ghi rõ họ tên)</i></div> <div class="text" style="left: 500px; top: 1110px;"><b>XÁC NHẬN CỦA BÊN GIAO MẪU</b></div> <div class="text" style="left: 535px; top: 1140px;"><i>(Ký xác nhận, ghi rõ họ tên)</i></div>  </div>', 3: '<div class="document">  <div class="border" style="top: 60px; left: 100px; width: 470; height: 60px;"></div> <div class="border" style="top: 60px; left: 569px; width: 260px; height: 60px;"></div> <div class="text" style="top: 63px; left: 220px;"><b>CHI CỤC THÚ Y VÙNG V</b></div> <div class="text" style="top: 90; left: 105px;"><b>TRẠM CHUẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT</b></div> <div class="text" style="top: 65; left: 572px;"><b>BIỂU MẪU SỐ: BM.STTT.02.02</b></div> <div class="text" style="top: 95; left: 615px;"><b>Số Soát xét: 03.02718</b></div> <div class="text" style="top: 130; left: 580;"> <i> Ngày <span class="input" id="1"></span> tháng <span class="input" id="2"></span> năm <span class="input" id="3"></span> </i> </div> <div class="text" style="top: 160; left: 400;"><b>PHIẾU YÊU CẦU XÉT NGHIỆM</b></div> <div class="border" style="top: 190px; left: 485px; width: 340px; height: 100;"></div> <div class="text" style="top: 200; left: 500;"> <b>Số ĐKXN:</b> <span class="input" id="4">(xcode-0)</span> / <span class="input" id="5">(xcode-1)</span> / <span class="input" id="6">(xcode-2)</span> </div> <div class="text" style="top: 230; left: 500;"> <b>Số trang:</b> <span class="input" id="7">(page-0)</span> / <span class="input" id="8">(page-1)</span> </div> <div class="text" style="top: 260; left: 500;"> <b>Liên: </b> <span class="input" id="9">(no-0)</span> / <span class="input" id="10">(no-1)</span> </div>  <div class="text" style="top: 310; left: 100;"> <b>Khách hàng:</b> <span class="input" id="11">(customer)</span> </div> <div class="group" style="top: 340; left: 100;"> <b>Loại mẫu:</b> <div class="text" style="left: 150; top: 0px;"> Nguyên con <input type="checkbox" class="input" id="12" (type-0)> </div> <div class="text" style="left: 280; top: 0px;"> Huyết thanh <input type="checkbox" class="input" id="13" (type-1)> </div> <div class="text" style="left: 420; top: 0px;"> Máu <input type="checkbox" class="input" id="14" (type-2)> </div> <div class="text" style="left: 520; top: 0px;"> Phù tạng <input type="checkbox" class="input" id="15" (type-3)> </div> <div class="text" style="left: 620; top: 0px;"> Swab <input type="checkbox" class="input" id="16" (type-4)> </div> </div> <div class="text" style="top: 370; left: 100;"> Khác: <span class="input" id="17"> (type-5) </span> </div> <div class="group" style="top: 400; left: 100;"> <div class="text"> <b>Số lượng mẫu: </b> <span class="input" id="18">(number)</span> </div> <div class="text" style="left: 400"> <b>- Loài vật được lấy mẫu:</b> <span class="input" id="19">(sample)</span> </div> </div> <div class="text" style="top: 430; left: 100; width: 730;"> <b>Số nhận diện: </b> <span class="inline input" id="20">(sampleCode)</span> </div>  <div class="group" style="top: 480px; left: 150px;"> * Ghi chú: (Đính kèm danh sách nhận diện mẫu): <div class="text" style="left: 370px; top: 0;"> - Có <input type="checkbox" class="input" id="21"> </div> <div class="text" style="left: 500; top: 0;"> - Không <input type="checkbox" class="input" id="22"> </div> </div>  <div class="text" style="top: 510; left: 100;"><b>Chỉ tiêu xét nghiệm</b></div> (exam)  <div class="text" style="top: (position); left: 100;">(index). <span class="input" id="23"></span> (exam-content) </div> <div class="text" style="top: (position-2); left: 100;"> Phương pháp xét nghiệm: <span class="input" id="24"> (method) </span> </div> <div class="text" style="top: (position-3); left: 100;"> Ký hiệu phương pháp: <span class="input" id="25"> (symbol) </span> </div> (/exam) <div class="text" style="top: 1000px; left: 100;"> <b>Các yêu cầu khác:</b> <span class="input" id="38"></span> </div> <div class="text" style="top: 1030; left: 100;"> Ngày nhận mẫu <span class="input" id="39"></span>/ <span class="input" id="40"></span>/ <span class="input" id="41"></span> </div> <div class="text" style="top: 1030; left: 550;"> Ngày hẹn trả kết quả: <span class="input" id="42"></span>/ <span class="input" id="43"></span>/ <span class="input" id="44"></span> </div> <div class="text" style="top: 1060; left: 250;"><b>Khách hàng</b></div> <div class="text" style="top: 1060; left: 650;"><b>Bộ phận nhận mẫu</b></div>', 4: '<div class="document"> <table border="1" class="form"> <tr> <td class="text-center"> <b>Biểu mẫu số: BM.STTT.22.01</b> </td> <td class="text-center"> <b>Số soát xét: 03.02718</b> </td> </tr> <tr> <td colspan="2"> <div class="text-center"> <b>CHI CỤC THÚ Y VÙNG V</b> </div> <div class="text-center"> <b>TRẠM CHUẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT</b> </div> <div> Địa chỉ: Số 36 Phạm Hùng, Phường Tân An, Thành phố Buôn Ma Thuột, Tỉnh Đăklăk </div> <div> Điện thoại: 0262 3877793 </div> </td> </tr> </table> <div class="text-center" style="margin: 10px;"> <b>PHIẾU KẾT QUẢ XÉT NGHIỆM</b> </div> <div style="margin: 4px;"> <div style="float: left"> Số phiếu kết quả xét nghiệm: xcode-0/xcode-1/xcode-2.CĐXN </div> <div style="float: right">Trang: 1/4</div> </div> <table border="1" class="form"> <tr> <td colspan="2"> Tên khách hàng: (customer) </td> <td style="width: 30%"> Số ĐKXN: xcode-0/xcode-1/xcode-2</td> </tr> <tr> <td colspan="3"> <div> Địa chỉ khách hàng: (address) </div> <div> Số điện thoại: (phone) </div> </td> </tr> <tr> <td colspan="3"> Loại mẫu: (type) </td> </tr> <tr> <td colspan="3"> Số lượng mẫu: (number) </td> </tr> <tr> <td colspan="3"> Ký hiệu mẫu: (sampleCode) </td> </tr> <tr> <td colspan="3"> Tình trạng khi nhận mẫu: (status) </td> </tr> <tr> <td style="width: 50%"> Ngày lấy mẫu: (sampleReceive) </td> <td colspan="2"> người lấy mẫu: (sampleReceiver) </td> </tr> <tr> <td style="width: 50%"> Ngày, giờ nhận mẫu: (ireceive)</td> <td colspan="2"> Người nhận mẫu: (ireceiver) </td> </tr> <tr> <td colspan="3">  <b>Chỉ tiêu xét nghiệm</b> <br> (exam)  <div>(index). (exam-content) </div> <div> Phương pháp xét nghiệm: (method); Ký hiệu phương pháp: (symbol). </div> (/exam) </td> </tr> <tr> <td colspan="3"> Ngày phân tích: (examDate) </td> </tr> <tr> <td colspan="3"> <b> Kết quả: </b> <br> (result) </td> </tr> </table> <table style="width: 100%"> <tr> <td class="text-center"> Ngày tháng năm </td> <td class="text-center"> Ngày tháng năm </td> </tr> <tr> <td class="text-center"> <b>BỘ PHẬN XÉT NGHIỆM</b> </td> <td class="text-center"> <b>TRƯỞNG TRẠM</b> </td> </tr> <tr> <td class="text-center"> (Ký, ghi rõ họ tên) </td> </tr> </table> </div>'};
+  var methodModal = $("#method-modal")
   var formInsert = $('#form-insert')
   var method = JSON.parse('{method}')
   var remind = JSON.parse('{remind}')
@@ -551,6 +592,9 @@
   var filterPrinter = $("#filter-printer")
   var filterKeyword = $("#filter-keyword")
 
+  var insertMethodSymbol = $("#insert-method-symbol")
+  var insertMethodName = $("#insert-method-name")
+
   var global_form = 1
   var global_saved = 0
   var global_id = 0
@@ -570,73 +614,73 @@
     'sender-unit': {
       input: formInsertSenderUnit,
       suggest: formInsertSenderUnitSuggest,
-      data: remind[1],
+      data: 1,
       name: 'value'
     },
     'sender-employ': {
       input: formInsertSenderEmploy,
       suggest: formInsertSenderEmploySuggest,
-      data: remind[2],
+      data: 2,
       name: 'value'
     },
     'receiver-unit': {
       input: formInsertReceiverUnit,
       suggest: formInsertReceiverUnitSuggest,
-      data: remind[2],
+      data: 2,
       name: 'value'
     },
     'receiver-employ': {
       input: formInsertReceiverEmploy,
       suggest: formInsertReceiverEmploySuggest,
-      data: remind[1],
+      data: 1,
       name: 'value'
     },
     'sampler-unit': {
       input: formInsertSamplerUnit,
       suggest: formInsertSamplerUnitSuggest,
-      data: remind[2],
+      data: 2,
       name: 'value'
     },
     'sampler-employ': {
       input: formInsertSamplerEmploy,
       suggest: formInsertSamplerEmploySuggest,
-      data: remind[1],
+      data: 1,
       name: 'value'
     },
     'ireceiver-unit': {
       input: formInsertIreceiverUnit,
       suggest: formInsertIreceiverUnitSuggest,
-      data: remind[2],
+      data: 2,
       name: 'value'
     },
     'ireceiver-employ': {
       input: formInsertIreceiverEmploy,
       suggest: formInsertIreceiverEmploySuggest,
-      data: remind[1],
+      data: 1,
       name: 'value'
     },
     'isender-unit': {
       input: formInsertIsenderUnit,
       suggest: formInsertIsenderUnitSuggest,
-      data: remind[2],
+      data: 2,
       name: 'value'
     },
     'isender-employ': {
       input: formInsertIsenderEmploy,
-      suggest: formInsertIsenderEmploySuggest,
-      data: remind[1],
+      suggest: formInsertIsenderEmploySuggest,  
+      data: 1,
       name: 'value'
     },
     'customer': {
       input: formInsertCustomer,
       suggest: formInsertCustomerSuggest,
-      data: remind[3],
+      data: 3,
       name: 'value'
     },
     'sample-receiver': {
       input: formInsertSampleReceiver,
       suggest: formInsertSampleReceiverSuggest,
-      data: remind[1],
+      data: 1,
       name: 'value'
     }
   }
@@ -755,6 +799,71 @@
     globalTarget[name]['input'].val(selectValue)
   }
 
+  function insertMethod() {
+    methodModal.modal('show')
+  }
+
+  function insertMethodSubmit(e) {
+    e.preventDefault()
+    if (insertMethodName.val().length > 0 && insertMethodSymbol.val().length > 0) {
+      $.post(
+        strHref,
+        {action: 'insertMethod', name: insertMethodName.val(), symbol: insertMethodSymbol.val()},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            $('.method').each((index, item) => {
+              item.innerHTML = data['html']
+              
+              addInfo = (id) => {
+                var length = infoData[id].length
+                switch (id) {
+                  case 1:
+                    var html = `
+                      <div class="formed" id="form-` + length + `">
+                        <button type="button" class="close" data-dismiss="modal" onclick="removeInfo(1, ` + length + `)">&times;</button>
+                        <br>
+                        <div class="row">
+                          <label class="col-sm-4"> Tên hồ sơ </label>
+                          <div class="col-sm-10">
+                            <input type="text" class="form-control input-box form" id="formed-` + length + `">
+                          </div>
+                        </div>
+                      </div>`
+                          
+                      formInsertForm.append(html)
+                    break;
+                  case 2:
+                  var html = `
+                      <div class="examed" id="exam-` + length + `">
+                        <button type="button" class="close" data-dismiss="modal" onclick="removeInfo(2, ` + length + `)">&times;</button>
+                        <br>
+                        <div class="row">
+                          <label class="col-sm-4"> Yêu cầu </label>
+                          <div class="col-sm-10">
+                            <input type="text" class="form-control input-box exam" id="examed-` + length + `">
+                          </div>
+                          <div class="input-group">
+                            <select class="form-control input-box method" id="method-` + length + `">
+                              `+data['html']+`
+                            </select>
+                          </div>
+                        </div>
+                      </div>`
+                    formInsertRequest.append(html)
+                    break;
+                }
+                infoData[id].push(html)
+              }
+            })
+          })
+        }
+      )
+    }
+    else {
+      alert_msg('Chưa điền đủ thông tin')
+    }
+  }
+
   function installRemind(name) {
     var timeout
     globalTarget[name]['input'].keyup(() => {
@@ -762,12 +871,12 @@
       setTimeout(() => {
         var key = paintext(globalTarget[name]['input'].val())
         var html = ''
-        for (const index in globalTarget[name]['data']) {
-          if (globalTarget[name]['data'].hasOwnProperty(index)) {
-            const element = paintext(globalTarget[name]['data'][index][globalTarget[name]['name']]);
-
+        for (const index in remind[globalTarget[name]['data']]) {
+          if (remind[globalTarget[name]['data']].hasOwnProperty(index)) {
+            const element = paintext(remind[globalTarget[name]['data']][index]['value']);
+            
             if (element.search(key) >= 0) {
-              html += '<div class="item_suggest" onclick="selectRemind(\'' + name + '\', \'' + globalTarget[name]['data'][index][globalTarget[name]['name']] + '\')">' + globalTarget[name]['data'][index][globalTarget[name]['name']] + '</div>'
+              html += '<div class="item_suggest" onclick="selectRemind(\'' + name + '\', \'' + remind[globalTarget[name]['data']][index]['value'] + '\')"><span class="right-click">' + remind[globalTarget[name]['data']][index]['value'] + '</span><button class="close right" data-dismiss="modal" onclick="removeRemind('+remind[globalTarget[name]['data']][index]['id']+', \''+name+'\')">&times;</button></div>'
             }
           }
         }
@@ -782,6 +891,21 @@
         globalTarget[name]['suggest'].hide()
       }, 200);
     })
+  }
+
+  function removeRemind(id, name) {
+    if (id) {
+      $.post(
+        strHref,
+        {action: 'removeRemind', id: id},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            remind = JSON.parse(data['remind'])
+            globalTarget[name][input].val('')
+          }, () => {})
+        }
+      )
+    }
   }
 
   function newForm() {
@@ -1245,7 +1369,7 @@
   }
 
   function printer(id) {
-    if (visible[global_saved][2].search(id) >= 0) {
+    // if (visible[global_saved][2].search(id) >= 0) {
       var data = checkForm(id)
       if (Object.keys(data).length) {
         var html = former[id]
@@ -1371,7 +1495,7 @@
         winPrint.print()
         winPrint.close()
       }
-    }
+    // }
   }
 </script>
 <!-- END: main -->

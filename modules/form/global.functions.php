@@ -141,6 +141,17 @@ function checkExam($formData, $rowid, $examid = 0) {
 	return 0;
 }
 
+function checkMethod($name) {
+	global $db;
+
+	$sql = 'select * from `'. PREFIX .'_method` where name = "'.$name.'"';
+	$query = $db->query($sql);
+	if (!empty($query->fetch())) {
+		return true;
+	}
+	return false;
+}
+
 function checkPrinter($data) {
 	if (!empty($data['page'])) {
 		return 4;

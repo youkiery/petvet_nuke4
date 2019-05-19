@@ -17,6 +17,39 @@ $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
 	$result = array("status" => 0);
 	switch ($action) {
+		case 'removeRemind':
+			$id = $nv_Request->get_string('id', 'get/post', '');
+
+			if (!(empty($id) || empty(getRemindId($id)))) {
+				$sql = 'delete from `'.PREFIX.'_remind` where id = '. $id;
+				if ($db->query($sql)) {
+					$result['status'] = 1;
+					$result['notify'] = 'Đã xóa';
+					$result['remind'] = json_encode(getRemind());
+				}
+			}
+		break;
+		case 'insertMethod':
+			$name = $nv_Request->get_string('name', 'get/post', '');
+			$symbol = $nv_Request->get_string('symbol', 'get/post', '');
+
+			if (!(empty($name) || empty($symbol) || checkMethod($name))) {
+				$sql = 'insert into `'. PREFIX .'_method` (name, symbol) values("'.$name.'", "'.$symbol.'")';
+				if ($db->query($sql)) {
+					$method = getMethod();
+					$methodHtml = '';
+					foreach ($method as $index => $row) {
+						$methodHtml .= '<option value="'. $row['symbol'] .'" class="'.$index.'">'. $row['name'] .'</option>';
+					}
+					$result['html'] = $methodHtml;
+					$result['status'] = 1;
+					$result['notify'] = 'Đã thêm phương pháp';
+				}
+			}
+			else {
+				$result['notify'] = 'Phương pháp đã tồn tại';
+			}
+		break;
 		case 'filter':
 			$page = $nv_Request->get_string('page', 'get/post', 1);
 			$limit = $nv_Request->get_string('limit', 'get/post', 1);
