@@ -701,6 +701,9 @@
     installRemind('isender-employ');
     installRemind('isender-unit');
     installRemind('sample-receiver');
+
+    installExamRemind()
+        
     parseBox(1)
     parseSaved()
   })
@@ -797,6 +800,10 @@
 
   function selectRemind(name, selectValue) {
     globalTarget[name]['input'].val(selectValue)
+  }
+
+  function selectRemindv2(id, selectValue) {
+    $(id).val(selectValue)
   }
 
   function insertMethod() {
@@ -902,6 +909,21 @@
           checkResult(response, status).then(data => {
             remind = JSON.parse(data['remind'])
             globalTarget[name][input].val('')
+          }, () => {})
+        }
+      )
+    }
+  }
+
+  function removeRemindv2(id, input) {
+    if (id) {
+      $.post(
+        strHref,
+        {action: 'removeRemind', id: id},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            remind = JSON.parse(data['remind'])
+            $(input).val('')
           }, () => {})
         }
       )
@@ -1106,6 +1128,41 @@
     formInsert.modal('show')
   }
 
+  function installExamRemind() {
+    $(".examed").each((index, item) => {
+      var id = item.getAttribute('id').replace('examed-', '')
+      var timeout
+      console.log(id);
+      
+      $("#examed-" + id).keyup(() => {
+        clearTimeout(timeout)
+        setTimeout(() => {
+          var key = paintext(item.value)
+          var html = ''
+          for (const index in remind[3]) {
+            if (remind[3].hasOwnProperty(index)) {
+              const element = paintext(remind[3][index]['value']);
+              
+              if (element.search(key) >= 0) {
+                html += '<div class="item_suggest" onclick="selectRemindv2(\'' + '#examed-' + id + '\', \'' + remind[3][index]['value'] + '\')"><span class="right-click">' + remind[3][index]['value'] + '</span><button class="close right" data-dismiss="modal" onclick="removeRemind('+remind[3][index]['id']+', \''+'#examed-' + id+'\')">&times;</button></div>'
+              }
+            }
+          }
+          $("#exam-suggest-" + id).html(html)
+        }, 200);
+      })
+      $("#examed-" + id).focus(() => {
+        $("#exam-suggest-" + id).show()
+      })
+      $("#examed-" + id).blur(() => {
+        setTimeout(() => {
+          $("#exam-suggest-" + id).hide()
+        }, 200);
+      })
+    })
+  }
+
+
   function addInfo(id) {
     var length = infoData[id].length
     switch (id) {
@@ -1125,14 +1182,15 @@
           formInsertForm.append(html)
         break;
       case 2:
-      var html = `
+        var html = `
           <div class="examed" id="exam-` + length + `">
             <button type="button" class="close" data-dismiss="modal" onclick="removeInfo(2, ` + length + `)">&times;</button>
             <br>
             <div class="row">
               <label class="col-sm-4"> Yêu cầu </label>
-              <div class="col-sm-10">
-                <input type="text" class="form-control input-box exam" id="examed-` + length + `">
+              <div class="col-sm-10 relative">
+                <input type="text" class="form-control input-box exam examed" id="examed-` + length + `" style="float: none;" autocomplete="off">
+                <div class="suggest exam-suggest" id="exam-suggest-` + length + `"> </div>
               </div>
               <div class="input-group">
                 <select class="form-control input-box method" id="method-` + length + `">
@@ -1142,7 +1200,8 @@
             </div>
           </div>`
         formInsertRequest.append(html)
-        break;
+        installExamRemind()
+      break;
     }
     infoData[id].push(html)
   }
