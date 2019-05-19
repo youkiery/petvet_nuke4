@@ -1390,12 +1390,16 @@
         {action: 'insert', form: global_form, id: global_id, data: data, page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val()},
         (response, status) => {
           checkResult(response, status).then(data => {
-            global_saved = global_form
             parseSaved()
+            remind = JSON.parse(data['remind'])
+            global_saved = global_form
             global_id = data['id']
           }, () => {})
         }
       )
+    }
+    else {
+      defreeze()
     }
   }
 

@@ -129,6 +129,9 @@ if (!empty($action)) {
 					if (!(empty($data['code']) || empty($data['sender']) || empty($data['receive']) || empty($data['resend']) || empty($data['state']) || empty($data['receiver']) || empty($data['ireceive']) || empty($data['iresend']) || empty($data['forms']) || empty($data['number']) || empty($data['exams']))) {
 						$sender = checkRemindRow($data['sender'], 1);
 						$receiver = checkRemindRow($data['receiver'], 1);
+						foreach ($data['exams'] as $key => $value) {
+							checkRemindRow($value, 3);
+						}
 						if ($id) {
 							$sql = 'update `'. PREFIX .'_row` set code = "'. $data['code'] .'", sender = ' . $sender . ', receive = ' . totime($data['receive']) . ', resend = ' . totime($data['resend']) . ', stateIndex = '. $data['state']['index'] .', stateValue = "'. $data['state']['value'] .'", receiver = ' . $receiver . ', ireceive = '. totime($data['ireceive']) . ', iresend = '. totime($data['ireceive']) . ', form = "'. implode(', ', $data['forms']) .'", number = ' . $data['number'] .', exam = "' . implode(', ', $data['exams']) . '", sample = "'. $data['sample'] .'", status = "'. $data['status'] .'", sampleCode = "'. $data['sampleCode'] .'", method = "'. implode(', ', $data['methods']) .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'" where id = ' . $id;
 							$query = $db->query($sql);
@@ -143,6 +146,7 @@ if (!empty($action)) {
 							$result['status'] = 1;
 							$result['notify'] = 'Đã lưu mẫu';
 							$result['html'] = formList($keyword, $page, $limit, $printer);
+							$result['remind'] = json_encode(getRemind());
 						}
 					}	
 				break;
@@ -152,7 +156,10 @@ if (!empty($action)) {
 					$ireceiverEmploy = checkRemindRow($data['ireceiverEmploy'], 1);
 					$ireceiverUnit = checkRemindRow($data['ireceiverUnit'], 2);
 					$receiveTime = totime($receiveTime);
-// , receiveTime, receiveHour, receiveMinute
+					foreach ($data['exams'] as $key => $value) {
+						checkRemindRow($value, 3);
+					}
+	// , receiveTime, receiveHour, receiveMinute
 
 					$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", isenderEmploy = '. $isenderEmploy .' ,  isenderUnit = '. $isenderUnit .', ireceiverEmploy = '. $ireceiverEmploy .', ireceiverUnit = '. $ireceiverUnit .', receiveTime = '.$receiveTime.', receiveHour = '.$data['receiveHour'].', receiveMinute = '.$data['receiveMinute'].', typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", sample = "'. $data['sample'] .'", number = '. $data['number'] .', status = "'. $data['status'] .'", sampleCode = "'. implode(', ', $data['sampleCode']) .'", xstatus = '. $data['xstatus']['index'] .', quality = "'. $data['quality'] .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'" where id = ' . $id;
 					$query = $db->query($sql);
@@ -161,6 +168,7 @@ if (!empty($action)) {
 						$result['status'] = 1;
 						$result['id'] = $id;
 						$result['html'] = formList($keyword, $page, $limit, $printer);
+						$result['remind'] = json_encode(getRemind());
 					}
 				break;
 				case '3':
@@ -172,6 +180,9 @@ if (!empty($action)) {
 					$sampleTime = totime($data['sampleTime']);
 					$data['result'] = nl2br($data['result']);
 					$target = nl2br($data['target']);
+					foreach ($data['exams'] as $key => $value) {
+						checkRemindRow($value, 3);
+					}
 					$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", receiveTime = '.$receiveTime.', receiveHour = '.$data['receiveHour'].', receiveMinute = '.$data['receiveMinute'].', phone = "'.$data['phone'].'", sampleReceive = "'.$sampleReceive.'", sampleTime = "'.$sampleTime.'", address = "'.$data['address'].'", sampleReceiver = "'.$data['sampleReceiver'].'", ireceive = '.$ireceive.', ireceiver = "'.$data['ireceiver'].'", examDate = "'.$examDate.'", result = "'.$data['result'].'", page = "'. implode(', ', $data['page']) .'", no = "'. implode(', ', $data['no']) .'", customer = "'. $data['customer'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', sample = "'. $data['sample'] .'", status = "'. $data['status'] .'", sampleCode = "'. implode(', ', $data['sampleCode']) .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", other = "'. $data['other'] .'", result = "'. $data['result'] .'", target = "'.$target.'" where id = ' . $id;
 					$query = $db->query($sql);
 					if ($query) {
@@ -179,6 +190,7 @@ if (!empty($action)) {
 						$result['status'] = 1;
 						$result['id'] = $id;
 						$result['html'] = formList($keyword, $page, $limit, $printer);
+						$result['remind'] = json_encode(getRemind());
 					}
 				break;
 			}
