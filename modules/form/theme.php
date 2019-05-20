@@ -12,6 +12,42 @@ if (!defined('PREFIX')) {
 }
 
 $sampleType = array('Nguyên con', 'Huyết thanh', 'Máu', 'Phủ tạng', 'Swab');
+$permissionType = array('Bị cấm', 'Chỉ đọc', 'Chỉnh sửa');
+
+function employerList($key) {
+  global $db, $permissionType;
+
+  $xtpl = new XTemplate("allowed.tpl", PATH);
+  $list = getAllowUser($key);
+
+  foreach ($list as $row) {
+    $xtpl->assign('userid', $row['userid']);
+    $xtpl->assign('username', $row['username']);
+    $xtpl->assign('fullname', $row['first_name']);
+    $xtpl->assign('permission', $permissionType[$row['type']]);
+    if ($row['type'] == 1) {
+      $xtpl->parse('main.row.up');
+    }
+    else if ($row['type'] == 2) {
+      $xtpl->parse('main.row.down');
+    }
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function notAllowList($key) {
+  global $db;
+  $html = '';
+
+  $list = getNotAllow($key);
+
+  foreach ($list as $row) {
+    $html .= '<div class="suggest_item" onclick="addEmploy('.$row['userid'].')">'.$row['first_name'].'</div>';
+  }
+  return $html;
+}
 
 function formList($keyword = '', $page = 1, $limit = 10, $printer = array('1', '2', '3', '4', '5')) {
   global $db, $sampleType;
