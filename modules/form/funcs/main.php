@@ -159,9 +159,8 @@ if (!empty($action)) {
 					foreach ($data['exams'] as $key => $value) {
 						checkRemindRow($value, 3);
 					}
-	// , receiveTime, receiveHour, receiveMinute
 
-					$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", isenderEmploy = '. $isenderEmploy .' ,  isenderUnit = '. $isenderUnit .', ireceiverEmploy = '. $ireceiverEmploy .', ireceiverUnit = '. $ireceiverUnit .', receiveTime = '.$receiveTime.', receiveHour = '.$data['receiveHour'].', receiveMinute = '.$data['receiveMinute'].', typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", sample = "'. $data['sample'] .'", number = '. $data['number'] .', status = "'. $data['status'] .'", sampleCode = "'. implode(', ', $data['sampleCode']) .'", xstatus = '. $data['xstatus']['index'] .', quality = "'. $data['quality'] .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'" where id = ' . $id;
+					$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", isenderEmploy = '. $isenderEmploy .' ,  isenderUnit = '. $isenderUnit .', ireceiverEmploy = '. $ireceiverEmploy .', ireceiverUnit = '. $ireceiverUnit .', receiveTime = '.$receiveTime.', receiveHour = '.$data['receiveHour'].', receiveMinute = '.$data['receiveMinute'].', typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", sample = "'. $data['sample'] .'", number = '. $data['number'] .', status = "'. $data['status'] .'", sampleCode = "'. $data['sampleCode'] .'", xstatus = '. $data['xstatus']['index'] .', quality = "'. $data['quality'] .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'" where id = ' . $id;
 					$query = $db->query($sql);
 					if ($query) {
 						$result['notify'] = 'Đã cập nhật mẫu';
@@ -214,8 +213,10 @@ foreach ($method as $index => $row) {
 for ($i = 0; $i < 60; $i++) { 
 	$xtpl->assign('value', $i);
 	$xtpl->parse('main.minute');
+	$xtpl->parse('main.minute2');
 	if ($i < 24) {
 		$xtpl->parse('main.hour');
+		$xtpl->parse('main.hour2');
 	}
 }
 

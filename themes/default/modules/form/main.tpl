@@ -122,73 +122,7 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-1">
-      <label class="col-sm-4">Ngày nhận mẫu</label>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" id="form-insert-receive" autocomplete="off">
-      </div>
-      <label class="col-sm-4">Ngày hẹn trả</label>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" id="form-insert-resend" autocomplete="off">
-      </div>
-    </div>
-
-    <div class="row form-group boxed box-1">
-      <label class="col-sm-4">
-        Tên đơn vị
-      </label>
-      <div class="relative col-sm-10">
-        <input type="text" class="form-control" id="form-insert-sender-employ" autocomplete="off">
-        <div class="suggest" id="form-insert-sender-employ-suggest"></div>
-      </div>
-    </div>
-
-    <div class="boxed box-1">
-      <label>Hình thức nhận</label>
-      <div>
-        <label><input type="radio" name="state" class="check-box state" id="state-0" checked>Trực tiếp</label>
-      </div>
-      <div>
-        <label><input type="radio" name="state" class="check-box state" id="state-1">Bưu điện</label>
-      </div>
-      <div class="row form-group">
-        <label class="col-sm-4"><input type="radio" name="state" class="check-box state" id="state-2">Khác</label>
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="form-insert-receive-state-other">
-        </div>
-      </div>
-    </div>
-
-    <div class="row form-group boxed box-1">
-      <label class="col-sm-4">
-        Người nhận hồ sơ
-      </label>
-      <div class="relative col-sm-10">
-        <input type="text" class="form-control" id="form-insert-receiver-employ" autocomplete="off">
-        <div class="suggest" id="form-insert-receiver-employ-suggest"></div>
-      </div>
-    </div>
-
-    <div class="row boxed box-1">
-      <label class="col-sm-4">Ngày nhận mẫu</label>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" id="form-insert-ireceive" autocomplete="off">
-      </div>
-      <label class="col-sm-4">Ngày hẹn trả</label>
-      <div class="col-sm-8">
-        <input type="text" class="form-control" id="form-insert-iresend" autocomplete="off">
-      </div>
-    </div>
-
-    <div class="boxed box-1">
-      <div class="panel" id="form-insert-form">
-
-      </div>
-      <button class="btn btn-success" onclick="addInfo(1)">
-        <span class="glyphicon glyphicon-plus"></span>
-      </button>
-    </div>
-
+    
     <div class="row form-group boxed box-2 box-3">
       <label class="col-sm-4">Số ĐKXN</label>
       <div class="col-sm-6">
@@ -222,27 +156,121 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-2 box-3">
-      <label class="col-sm-4"> Thời gian nhận mẫu </label>
-      <div class="col-sm-6">
-        <input type="text" class="form-control" id="form-insert-sample-receive-time">
+    <div class="row form-group boxed box-1">
+      <label class="col-sm-4">
+        Tên đơn vị
+      </label>
+      <div class="relative col-sm-10">
+        <input type="text" class="form-control" id="form-insert-sender-employ" autocomplete="off">
+        <div class="suggest" id="form-insert-sender-employ-suggest"></div>
       </div>
-      <label class="col-sm-3"> Giờ </label>
-      <div class="col-sm-4">
+    </div>
+
+    <div class="row form-group boxed box-1 box-3">
+      <label class="col-sm-4">Ngày nhận mẫu</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="form-insert-receive" autocomplete="off">
+      </div>
+      <label class="col-sm-4">Ngày hẹn trả</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="form-insert-resend" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="row form-group boxed box-1 box-2 box-3">
+      <label class="col-sm-4"> Thời gian nhận mẫu </label>
+      <!-- <div class="col-sm-6">
+        <input type="text" class="form-control" id="form-insert-sample-receive-time">
+      </div> -->
+      <label class="col-sm-10">
+        Giờ 
         <select class="form-control" id="form-insert-sample-receive-hour">
           <!-- BEGIN: hour -->
           <option value="{value}">{value}</option>
           <!-- END: hour -->
         </select>
-      </div>
-      <label class="col-sm-3"> Phút </label>
-      <div class="col-sm-4">
+      </label>
+      <label class="col-sm-10">
+        Phút 
         <select class="form-control" id="form-insert-sample-receive-minute">
           <!-- BEGIN: minute -->
           <option value="{value}">{value}</option>
           <!-- END: minute -->
         </select>
+      </label>
+    </div>
+
+    <div class="row form-group boxed box-1 box-2 box-3">
+      <label class="col-sm-4"> Thời gian kết thúc</label>
+      <!-- <div class="col-sm-6">
+        <input type="text" class="form-control" id="form-insert-sample-receive-time">
+      </div> -->
+      <label class="col-sm-6">
+        Giờ 
+        <select class="form-control" id="form-insert-ended-hour">
+          <!-- BEGIN: hour2 -->
+          <option value="{value}">{value}</option>
+          <!-- END: hour2 -->
+        </select>
+      </label>
+      <label class="col-sm-6">
+        Phút 
+        <select class="form-control" id="form-insert-ended-minute">
+          <!-- BEGIN: minute2 -->
+          <option value="{value}">{value}</option>
+          <!-- END: minute2 -->
+        </select>
+      </label>
+      <label class="col-sm-6">
+        Số bản in
+        <input type="text" class="form-control" id="form-insert-ended-copy">
+      </label>
+    </div>
+
+    <div class="boxed box-1">
+      <label>Hình thức nhận</label>
+      <div>
+        <label><input type="radio" name="state" class="check-box state" id="state-0" checked>Trực tiếp</label>
       </div>
+      <div>
+        <label><input type="radio" name="state" class="check-box state" id="state-1">Bưu điện</label>
+      </div>
+      <div class="row form-group">
+        <label class="col-sm-4"><input type="radio" name="state" class="check-box state" id="state-2">Khác</label>
+        <div class="col-sm-10">
+          <input type="text" class="form-control" id="form-insert-receive-state-other">
+        </div>
+      </div>
+    </div>
+
+    <div class="row form-group boxed box-1">
+      <label class="col-sm-4">
+        Người nhận hồ sơ
+      </label>
+      <div class="relative col-sm-10">
+        <input type="text" class="form-control" id="form-insert-receiver-employ" autocomplete="off">
+        <div class="suggest" id="form-insert-receiver-employ-suggest"></div>
+      </div>
+    </div>
+
+    <div class="row boxed box-1">
+      <label class="col-sm-4">Ngày nhận hồ sơ</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="form-insert-ireceive" autocomplete="off">
+      </div>
+      <label class="col-sm-4">Ngày trả</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="form-insert-iresend" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="boxed box-1">
+      <div class="panel" id="form-insert-form">
+
+      </div>
+      <button class="btn btn-success" onclick="addInfo(1)">
+        <span class="glyphicon glyphicon-plus"></span>
+      </button>
     </div>
 
     <div class="row form-group boxed box-2">
@@ -309,16 +337,7 @@
         <div class="suggest" id="form-insert-sample-receiver-suggest"></div>
       </div>
     </div>
-      
-    <div class="row form-group boxed box-3">
-      <label class="col-sm-4">
-        Ngày giờ nhận mẫu
-      </label>
-      <div class="relative col-sm-10">
-        <input type="text" class="form-control" id="form-insert-sample-time">
-      </div>
-    </div>
-      
+
     <div class="row form-group boxed box-2">
       <label class="col-sm-4">
         Người nhận mẫu
@@ -509,8 +528,8 @@
 </div>
 
 <script>
-  var style = '<style> body { margin: 0px; } .document { width: 730px; height: 1200px; border: 1px solid black; padding: 60px 60px 0px 100px; } .document * { font-family: "Times New Roman", Times, serif; font-size: 20px; } .text-center { text-align: center; } .text, .multiline-input, .border, .group, .inline { position: absolute; box-sizing: border-box; font-size: 18px; } .text, .group { width: max-content; } .text { overflow: hidden; } .border { border: 1px solid black; } table.form td { padding: 10px; } .form { border-collapse: collapse; width: 100%; } </style>'
-  var former = {1: '<div class="document"> <div class="border" style="width: 150px; height: 100"></div> <div class="border" style="width: 580px; height: 100; left: 249px;"></div> <div class="text" style="width: 88px; text-align: center; left: 128px; top: 82px;"> CHI CỤC THÚ Y VÙNG V </div> <div class="text" style="left: 430px; top: 82px;"> <b>PHIẾU GIẢI QUYẾT HỒ SƠ</b> </div> <div class="text" style="left: 256px; top: 135px;">  <b>Số</b> <span class="input" id="code">(code)</span>/TYV5-TH </div> <div class="text" style="left: 105px; top: 180; width: 720px;"> Tên đơn vị: <span class="input" id="sender"> (sender) </span> </div> <div class="group" style="left: 105px; top: 210;"> <div class="text" style="width: 300px;">  Ngày nhận: <span class="input" id="receive"> (receive) </span> </div> <div class="text" style="left: 400px; width: 300px;">  Ngày hẹn trả kết quả: <span class="input" id="resend"> (resend) </span> </div> </div> <div class="group" style="left: 105px; top: 240;"> <div class="text">  Hình thức nhận: </div> <div class="group" style="left: 144px; width: 300px;"> <input type="checkbox" class="input" (state-0)> Trực tiếp </div> <div class="group" style="left: 300px; width: 300px;"> <input type="checkbox" class="input" (state-1)> Bưu điện </div> <div class="group" style="left: 450px; width: 300px;"> Khác: <span class="input"> (other) </span> </div> </div> <div class="text" style="left: 105px; top: 270; width: 730px;"> Người nhận hồ sơ: <span class="input" id="receiver"> (receiver) </span> </div> <div class="group" style="left: 105px; top: 300;"> <div class="text"> Phòng chuyên môn: </div> <div class="text" style="left: 200px; width: 300px;"> Ngày nhận:  <span class="input" id="ireceive"> (ireceive) </span> </div> <div class="text" style="left:450px; width: 300px;"> Ngày trả:  <span class="input" id="iresend"> (iresend) </span> </div> </div> <div class="border" style="left: 100px; top: 340; width: 730px; height: 330px;"> </div> <div class="text" style="left: 450; top: 350px;"> <u>Hồ sơ gồm:</u> </div> <div class="multiline-input" row="7" style="left: 110px; top: 380px; width: 700px; height: 280;">(form)</div> <div class="border" style="left: 100; top: 689px; width: 500; height: 30;">  </div> <div class="border" style="left: 599px; top: 689px; width: 230px; height: 30;"></div> <div class="border" style="left: 100; top: 718px; width: 500; height: 300px;"></div> <div class="border" style="left: 599px; top: 718px; width: 230; height: 300px;"></div> <div class="text" style="top: 695px; left: 115px;"> <b>Ý kiến của phòng, bộ phận chịu trách nhiệm giải quyết</b> </div> <div class="text" style="top: 695px; left: 610px;"> <b>Ý kiến của ban lãnh đạo</b> </div> <div class="text" style="top: 1030px; left: 100px; width: 730px;"> <i> <b> <u>Ghi chú:</u></b></i> Hồ sơ có ý kiếm của thủ trưởng (hoặc người được ủy quyền) phải được giao lại cho bộ phận một cửa trước 01 ngày so với ngày hẹn trả kết quả </div> <div class="text" style=" top: 1175px; left: 100px;"> Mã số: BM-02/TYV5-06 </div> <div class="text" style="top: 1175px; left: 400px;"> Ngày ban hành: 02/11/2017, </div> <div class="text" style="top: 1175px; left: 650px;"> Lần sửa đổi: 02 </div> </div>', 2: '<div class="document"> <div class="border" style="top: 115px; left: 50px; width: 300px; height: 45px;"></div> <div class="border" style="top: 110px; left: 140px; width: 93px;"></div> <div class="border" style="top: 110px; left: 496px; width: 242px;"></div> <div class="text" style="left: 140px; top: 60px;"> CỤC THÚ Y </div> <div class="text" style="left: 85px; top: 85px;"> <b>CHI CỤC THÚ Y VÙNG V</b></div> <div class="text" style="left: 410px; top: 60px;"> <b>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</b> </div> <div class="text" style="left: 495px; top: 85px;"> <b>Độc lập - Tự do - Hạnh phúc</b> </div> <div class="text" style="left: 60; top: 130px;"> Số ĐKXN: <span class="input"> (xcode-0) </span>/<span class="input">(xcode-1)</span>/<span class="input">(xcode-2)</span> </div> <div class="text" style="left: 430px; top: 130px;"> <i>Đắk Lắk, <span class="input">(receiveHour)</span> giờ, <span class="input">(receiveMinute)</span> p, ngày <span class="input">(receiveTime-0)</span> tháng <span class="input">(receiveTime-1)</span> năm <span class="input">(receiveTime-2)</span></i> </div> <div class="text" style="left: 230px; top: 190;"><b>BIÊN BẢN GIAO NHẬN MẤU XÉT NGHIỆM</b></div> <div class="text" style="left: 100; top: 225;"> <b>1/ Đại diện bên giao mẫu</b> </div>  <div class="text" style="left: 100; top: 255;"> - Họ và tên: <span class="input"> (isenderEmploy) </span> </div> <div class="text" style="left: 100; top: 285;"> (isenderUnit) </div> <div class="text" style="left: 100; top: 315;"><b>2/ Đại diện bên nhận mẫu:</b></div> <div class="text" style="left: 100; top: 345;"> - Họ và tên: <span class="input"> (ireceiverEmploy) </span> </div> <div class="text" style="left: 100; top: 375;"> (ireceiverUnit) </div> <div class="text" style="left: 200; top: 405;">* Điện thoại: 0262 3.877.795</div> <div class="text" style="left: 100; top: 435;"><b>3/ Thông tin về mẫu</b></div> <div class="group" style="left: 100; top: 475px;"> <div class="text"> - Loại mẫu: <span class="input"> (type) </span> </div> <div class="text" style="left: 330px;"> Loài vật được lấy mẫu: <span class="input"> (sample) </span> </div> </div> <div class="group" style="left: 100; top: 505px;"> <div class="text"> - Số lượng mẫu: <span class="input"> (number) </span> </div> <div class="text" style="left: 350px;"> Tình trạng mẫu: <span class="input"> (status) </span> </div> </div> <div class="text" style="left: 100; top: 535px; width: 730; height: 50px;"> - Ký hiệu mẫu: <span class="input"> (sampleCode) </span> </div> <div class="group" style="left: 100; top: 595px; width: 730px;"> * Ghi chú: (đính kèm danh sách nhận diện mẫu)  <span class="text" style="width: 100px; margin-left: 10px;"> có <input type="checkbox" class="input"> </span> <span class="text" style="width: 100px; left: 550px;"> không <input type="checkbox" class="input"> </span> </div> <div class="text" style="left: 60; top: 625px; width: 730px;">&ensp;&ensp;&ensp;&ensp;- Hình thức bảo quản, vận chuyển mẫu khi bàn giao (đề nghị gạch chéo vào một trong các ô sau đây)</div> <div class="group" style="left: 100; top: 685px;"> <div class="text" style="left: 50px;"> <input type="checkbox" (xstatus-0)> Thùng đá </div> <div class="text" style="left: 250px;"> <input type="checkbox" (xstatus-1)> Xe lạnh </div> <div class="text" style="left: 450px;"> <input type="checkbox" (xstatus-2)> Phương tiện khác </div> </div> <div class="group" style="left: 100; top: 745px;"> <div class="text" style="width: 730; height: 45px;"> - Chất lượng chung của mẫu khi bàn giao (dựa vào cảm quan để nhận xét) <span> <!-- input --> </span> </div> </div> <div class="text" style="left: 100; top: 770px;"> <b>4/ Yêu cầu xét nghiệm</b> </div> <div class="group" style="left: 100; top: 800px; width: 730px; height: 250px;"> (exam) </div> <div class="text" style="left: 60; top: 1055; width: 730;"> &ensp;&ensp;&ensp;&ensp;Biên bản kết thúc vào lúc <span class="input"></span>h <span class="input"></span>p cùng ngày; biên bản được lập thành  <span class="input"></span> bản; bên giao và nhận thống nhất ký vào biên bản (bên nhận mẫu giữ bản copy). </div> <div class="text" style="left: 115px; top: 1110px;"><b>XÁC NHẬN CỦA BÊN NHẬN MẪU</b></div> <div class="text" style="left: 151px; top: 1140px;"><i>(Ký xác nhận, ghi rõ họ tên)</i></div> <div class="text" style="left: 500px; top: 1110px;"><b>XÁC NHẬN CỦA BÊN GIAO MẪU</b></div> <div class="text" style="left: 535px; top: 1140px;"><i>(Ký xác nhận, ghi rõ họ tên)</i></div>  </div>', 3: '<div class="document">  <div class="border" style="top: 60px; left: 100px; width: 470; height: 60px;"></div> <div class="border" style="top: 60px; left: 569px; width: 260px; height: 60px;"></div> <div class="text" style="top: 63px; left: 220px;"><b>CHI CỤC THÚ Y VÙNG V</b></div> <div class="text" style="top: 90; left: 105px;"><b>TRẠM CHUẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT</b></div> <div class="text" style="top: 65; left: 572px;"><b>BIỂU MẪU SỐ: BM.STTT.02.02</b></div> <div class="text" style="top: 95; left: 615px;"><b>Số Soát xét: 03.02718</b></div> <div class="text" style="top: 130; left: 580;"> <i> Ngày <span class="input" id="1"></span> tháng <span class="input" id="2"></span> năm <span class="input" id="3"></span> </i> </div> <div class="text" style="top: 160; left: 400;"><b>PHIẾU YÊU CẦU XÉT NGHIỆM</b></div> <div class="border" style="top: 190px; left: 485px; width: 340px; height: 100;"></div> <div class="text" style="top: 200; left: 500;"> <b>Số ĐKXN:</b> <span class="input" id="4">(xcode-0)</span> / <span class="input" id="5">(xcode-1)</span> / <span class="input" id="6">(xcode-2)</span> </div> <div class="text" style="top: 230; left: 500;"> <b>Số trang:</b> <span class="input" id="7">(page-0)</span> / <span class="input" id="8">(page-1)</span> </div> <div class="text" style="top: 260; left: 500;"> <b>Liên: </b> <span class="input" id="9">(no-0)</span> / <span class="input" id="10">(no-1)</span> </div>  <div class="text" style="top: 310; left: 100;"> <b>Khách hàng:</b> <span class="input" id="11">(customer)</span> </div> <div class="group" style="top: 340; left: 100;"> <b>Loại mẫu:</b> <div class="text" style="left: 150; top: 0px;"> Nguyên con <input type="checkbox" class="input" id="12" (type-0)> </div> <div class="text" style="left: 280; top: 0px;"> Huyết thanh <input type="checkbox" class="input" id="13" (type-1)> </div> <div class="text" style="left: 420; top: 0px;"> Máu <input type="checkbox" class="input" id="14" (type-2)> </div> <div class="text" style="left: 520; top: 0px;"> Phù tạng <input type="checkbox" class="input" id="15" (type-3)> </div> <div class="text" style="left: 620; top: 0px;"> Swab <input type="checkbox" class="input" id="16" (type-4)> </div> </div> <div class="text" style="top: 370; left: 100;"> Khác: <span class="input" id="17"> (type-5) </span> </div> <div class="group" style="top: 400; left: 100;"> <div class="text"> <b>Số lượng mẫu: </b> <span class="input" id="18">(number)</span> </div> <div class="text" style="left: 400"> <b>- Loài vật được lấy mẫu:</b> <span class="input" id="19">(sample)</span> </div> </div> <div class="text" style="top: 430; left: 100; width: 730;"> <b>Số nhận diện: </b> <span class="inline input" id="20">(sampleCode)</span> </div>  <div class="group" style="top: 480px; left: 150px;"> * Ghi chú: (Đính kèm danh sách nhận diện mẫu): <div class="text" style="left: 370px; top: 0;"> - Có <input type="checkbox" class="input" id="21"> </div> <div class="text" style="left: 500; top: 0;"> - Không <input type="checkbox" class="input" id="22"> </div> </div>  <div class="text" style="top: 510; left: 100;"><b>Chỉ tiêu xét nghiệm</b></div> (exam)  <div class="text" style="top: (position); left: 100;">(index). <span class="input" id="23"></span> (exam-content) </div> <div class="text" style="top: (position-2); left: 100;"> Phương pháp xét nghiệm: <span class="input" id="24"> (method) </span> </div> <div class="text" style="top: (position-3); left: 100;"> Ký hiệu phương pháp: <span class="input" id="25"> (symbol) </span> </div> (/exam) <div class="text" style="top: 1000px; left: 100;"> <b>Các yêu cầu khác:</b> <span class="input" id="38"></span> </div> <div class="text" style="top: 1030; left: 100;"> Ngày nhận mẫu <span class="input" id="39"></span>/ <span class="input" id="40"></span>/ <span class="input" id="41"></span> </div> <div class="text" style="top: 1030; left: 550;"> Ngày hẹn trả kết quả: <span class="input" id="42"></span>/ <span class="input" id="43"></span>/ <span class="input" id="44"></span> </div> <div class="text" style="top: 1060; left: 250;"><b>Khách hàng</b></div> <div class="text" style="top: 1060; left: 650;"><b>Bộ phận nhận mẫu</b></div>', 4: '<div class="document"> <table border="1" class="form"> <tr> <td class="text-center"> <b>Biểu mẫu số: BM.STTT.22.01</b> </td> <td class="text-center"> <b>Số soát xét: 03.02718</b> </td> </tr> <tr> <td colspan="2"> <div class="text-center"> <b>CHI CỤC THÚ Y VÙNG V</b> </div> <div class="text-center"> <b>TRẠM CHUẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT</b> </div> <div> Địa chỉ: Số 36 Phạm Hùng, Phường Tân An, Thành phố Buôn Ma Thuột, Tỉnh Đăklăk </div> <div> Điện thoại: 0262 3877793 </div> </td> </tr> </table> <div class="text-center" style="margin: 10px;"> <b>PHIẾU KẾT QUẢ XÉT NGHIỆM</b> </div> <div style="margin: 4px;"> <div style="float: left"> Số phiếu kết quả xét nghiệm: xcode-0/xcode-1/xcode-2.CĐXN </div> <div style="float: right">Trang: 1/4</div> </div> <table border="1" class="form"> <tr> <td colspan="2"> Tên khách hàng: (customer) </td> <td style="width: 30%"> Số ĐKXN: xcode-0/xcode-1/xcode-2</td> </tr> <tr> <td colspan="3"> <div> Địa chỉ khách hàng: (address) </div> <div> Số điện thoại: (phone) </div> </td> </tr> <tr> <td colspan="3"> Loại mẫu: (type) </td> </tr> <tr> <td colspan="3"> Số lượng mẫu: (number) </td> </tr> <tr> <td colspan="3"> Ký hiệu mẫu: (sampleCode) </td> </tr> <tr> <td colspan="3"> Tình trạng khi nhận mẫu: (status) </td> </tr> <tr> <td style="width: 50%"> Ngày lấy mẫu: (sampleReceive) </td> <td colspan="2"> người lấy mẫu: (sampleReceiver) </td> </tr> <tr> <td style="width: 50%"> Ngày, giờ nhận mẫu: (ireceive)</td> <td colspan="2"> Người nhận mẫu: (ireceiver) </td> </tr> <tr> <td colspan="3">  <b>Chỉ tiêu xét nghiệm</b> <br> (exam)  <div>(index). (exam-content) </div> <div> Phương pháp xét nghiệm: (method); Ký hiệu phương pháp: (symbol). </div> (/exam) </td> </tr> <tr> <td colspan="3"> Ngày phân tích: (examDate) </td> </tr> <tr> <td colspan="3"> <b> Kết quả: </b> <br> (result) </td> </tr> </table> <table style="width: 100%"> <tr> <td class="text-center"> Ngày tháng năm </td> <td class="text-center"> Ngày tháng năm </td> </tr> <tr> <td class="text-center"> <b>BỘ PHẬN XÉT NGHIỆM</b> </td> <td class="text-center"> <b>TRƯỞNG TRẠM</b> </td> </tr> <tr> <td class="text-center"> (Ký, ghi rõ họ tên) </td> </tr> </table> </div>'};
+  var style = '<style> body { margin: 0px; } .document { width: 730px; height: 1200px; border: 1px solid black; padding: 60px 60px 0px 100px; } .document * { font-family: "Times New Roman", Times, serif; font-size: 18px; } .text-center { text-align: center; } .text, .multiline-input, .border, .group, .inline { position: absolute; box-sizing: border-box; font-size: 18px; } .text, .group { width: max-content; } .text { overflow: hidden; } .border { border: 1px solid black; } table.form td { padding: 10px; } .form { border-collapse: collapse; width: 100%; } </style>'
+  var former = {1: '<div class="document"> <div class="border" style="width: 150px; height: 100"></div> <div class="border" style="width: 580px; height: 100; left: 249px;"></div> <div class="text" style="width: 88px; text-align: center; left: 128px; top: 82px;"> CHI CỤC THÚ Y VÙNG V </div> <div class="text" style="left: 430px; top: 82px;"> <b>PHIẾU GIẢI QUYẾT HỒ SƠ</b> </div> <div class="text" style="left: 256px; top: 135px;">  <b>Số</b> (code)/TYV5-TH </div> <div class="text" style="left: 105px; top: 180; width: 720px;"> Tên đơn vị: (sender) </div> <div class="group" style="left: 105px; top: 210;"> <div class="text" style="width: 300px;">  Ngày nhận: (receive) </div> <div class="text" style="left: 400px; width: 300px;">  Ngày hẹn trả kết quả: (resend) </div> </div> <div class="group" style="left: 105px; top: 240;"> <div class="text">  Hình thức nhận: </div> <div class="group" style="left: 144px; width: 300px;"> <input type="checkbox" class="input" (state-0)> Trực tiếp </div> <div class="group" style="left: 300px; width: 300px;"> <input type="checkbox" class="input" (state-1)> Bưu điện </div> <div class="group" style="left: 450px; width: 300px;"> Khác: <span class="input"> (other) </span> </div> </div> <div class="text" style="left: 105px; top: 270; width: 730px;"> Người nhận hồ sơ: (receiver) </div> <div class="group" style="left: 105px; top: 300;"> <div class="text"> Phòng chuyên môn: </div> <div class="text" style="left: 200px; width: 300px;"> Ngày nhận: (iresend) </div> </div> <div class="border" style="left: 100px; top: 340; width: 730px; height: 330px;"> </div> <div class="text" style="left: 450; top: 350px;"> <u>Hồ sơ gồm:</u> </div> <div class="multiline-input" row="7" style="left: 110px; top: 380px; width: 700px; height: 280;">(form)</div> <div class="border" style="left: 100; top: 689px; width: 500; height: 30;">  </div> <div class="border" style="left: 599px; top: 689px; width: 230px; height: 30;"></div> <div class="border" style="left: 100; top: 718px; width: 500; height: 300px;"></div> <div class="border" style="left: 599px; top: 718px; width: 230; height: 300px;"></div> <div class="text" style="top: 695px; left: 115px;"> <b>Ý kiến của phòng, bộ phận chịu trách nhiệm giải quyết</b> </div> <div class="text" style="top: 695px; left: 610px;"> <b>Ý kiến của ban lãnh đạo</b> </div> <div class="text" style="top: 1030px; left: 100px; width: 730px;"> <i> <b> <u>Ghi chú:</u></b></i> Hồ sơ có ý kiếm của thủ trưởng (hoặc người được ủy quyền) phải được giao lại cho bộ phận một cửa trước 01 ngày so với ngày hẹn trả kết quả </div> <div class="text" style=" top: 1175px; left: 100px;"> Mã số: BM-02/TYV5-06 </div> <div class="text" style="top: 1175px; left: 400px;"> Ngày ban hành: 02/11/2017, </div> <div class="text" style="top: 1175px; left: 650px;"> Lần sửa đổi: 02 </div> </div>', 2: '<div class="document"> <div class="border" style="top: 115px; left: 50px; width: 300px; height: 45px;"></div> <div class="border" style="top: 110px; left: 140px; width: 93px;"></div> <div class="border" style="top: 110px; left: 496px; width: 242px;"></div> <div class="text" style="left: 140px; top: 60px;"> CỤC THÚ Y </div> <div class="text" style="left: 85px; top: 85px;"> <b>CHI CỤC THÚ Y VÙNG V</b></div> <div class="text" style="left: 410px; top: 60px;"> <b>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</b> </div> <div class="text" style="left: 495px; top: 85px;"> <b>Độc lập - Tự do - Hạnh phúc</b> </div> <div class="text" style="left: 60; top: 130px;"> Số ĐKXN: (xcode-0)/(xcode-1)/(xcode-2) </div> <div class="text" style="left: 430px; top: 130px;"> <i>Đắk Lắk, (receiveHour) giờ, (receiveMinute) p, ngày (receive-0) tháng (receive-1) năm (receive-2) </i> </div> <div class="text" style="left: 230px; top: 190;"><b>BIÊN BẢN GIAO NHẬN MẤU XÉT NGHIỆM</b></div> <div class="text" style="left: 100; top: 225;"> <b>1/ Đại diện bên giao mẫu</b> </div>  <div class="text" style="left: 100; top: 255;"> - Họ và tên: (isenderEmploy) </div> <div class="text" style="left: 100; top: 285;"> (isenderUnit) </div> <div class="text" style="left: 100; top: 315;"><b>2/ Đại diện bên nhận mẫu:</b></div> <div class="text" style="left: 100; top: 345;"> - Họ và tên: (ireceiverEmploy) </div> <div class="text" style="left: 100; top: 375;"> (ireceiverUnit) </div> <div class="text" style="left: 200; top: 405;">* Điện thoại: 0262 3.877.795</div> <div class="text" style="left: 100; top: 435;"><b>3/ Thông tin về mẫu</b></div> <div class="group" style="left: 100; top: 475px;"> <div class="text"> - Loại mẫu: (type) </div> <div class="text" style="left: 330px;"> Loài vật được lấy mẫu: (sample) </div> </div> <div class="group" style="left: 100; top: 505px;"> <div class="text"> - Số lượng mẫu: (number) </div> <div class="text" style="left: 350px;"> Tình trạng mẫu: (status) </div> </div> <div class="text" style="left: 100; top: 535px; width: 730; height: 50px;"> - Ký hiệu mẫu: (sampleCode) </div> <div class="group" style="left: 100; top: 595px; width: 730px;"> * Ghi chú: (đính kèm danh sách nhận diện mẫu)  <span class="text" style="width: 100px; margin-left: 10px;"> có <input type="checkbox" class="input"> </span> <span class="text" style="width: 100px; left: 550px;"> không <input type="checkbox" class="input"> </span> </div> <div class="text" style="left: 60; top: 625px; width: 730px;">&ensp;&ensp;&ensp;&ensp;- Hình thức bảo quản, vận chuyển mẫu khi bàn giao (đề nghị gạch chéo vào một trong các ô sau đây)</div> <div class="group" style="left: 100; top: 685px;"> <div class="text" style="left: 50px;"> <input type="checkbox" (xstatus-0)> Thùng đá </div> <div class="text" style="left: 250px;"> <input type="checkbox" (xstatus-1)> Xe lạnh </div> <div class="text" style="left: 450px;"> <input type="checkbox" (xstatus-2)> Phương tiện khác </div> </div> <div class="group" style="left: 100; top: 715px;"> <div class="text" style="width: 730; height: 45px;"> - Chất lượng chung của mẫu khi bàn giao (dựa vào cảm quan để nhận xét) <span> (quality) </span> </div> </div> <div class="text" style="left: 100; top: 770px;"> <b>4/ Yêu cầu xét nghiệm</b> </div> <div class="group" style="left: 100; top: 800px; width: 730px; height: 250px;"> (exam) </div> <div class="text" style="left: 60; top: 1055; width: 730;"> &ensp;&ensp;&ensp;&ensp;Biên bản kết thúc vào lúc (ended-hour)h (ended-minute)p cùng ngày; biên bản được lập thành (ended-copy) bản; bên giao và nhận thống nhất ký vào biên bản (bên nhận mẫu giữ bản copy). </div> <div class="text" style="left: 115px; top: 1110px;"><b>XÁC NHẬN CỦA BÊN NHẬN MẪU</b></div> <div class="text" style="left: 151px; top: 1140px;"><i>(Ký xác nhận, ghi rõ họ tên)</i></div> <div class="text" style="left: 500px; top: 1110px;"><b>XÁC NHẬN CỦA BÊN GIAO MẪU</b></div> <div class="text" style="left: 535px; top: 1140px;"><i>(Ký xác nhận, ghi rõ họ tên)</i></div>  </div>', 3: '<div class="document">  <div class="border" style="top: 60px; left: 100px; width: 470; height: 60px;"></div> <div class="border" style="top: 60px; left: 569px; width: 260px; height: 60px;"></div> <div class="text" style="top: 63px; left: 220px;"><b>CHI CỤC THÚ Y VÙNG V</b></div> <div class="text" style="top: 90; left: 105px;"><b>TRẠM CHUẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT</b></div> <div class="text" style="top: 65; left: 572px;"><b>BIỂU MẪU SỐ: BM.STTT.02.02</b></div> <div class="text" style="top: 95; left: 615px;"><b>Số Soát xét: 03.02718</b></div> <div class="text" style="top: 130; left: 580;"> <i> Ngày <span class="input" id="1"></span> tháng <span class="input" id="2"></span> năm <span class="input" id="3"></span> </i> </div> <div class="text" style="top: 160; left: 400;"><b>PHIẾU YÊU CẦU XÉT NGHIỆM</b></div> <div class="border" style="top: 190px; left: 485px; width: 340px; height: 100;"></div> <div class="text" style="top: 200; left: 500;"> <b>Số ĐKXN:</b> (xcode-0)/(xcode-1)/(xcode-2) </div> <div class="text" style="top: 230; left: 500;"> <b>Số trang:</b> (page-0)/(page-1) </div> <div class="text" style="top: 260; left: 500;"> <b>Liên: </b> (no-0)/(no-1) </div>  <div class="text" style="top: 310; left: 100;"> <b>Khách hàng:</b> (customer) </div> <div class="group" style="top: 340; left: 100;"> <b>Loại mẫu:</b> <div class="text" style="left: 150; top: 0px;"> Nguyên con <input type="checkbox" class="input" id="12" (type-0)> </div> <div class="text" style="left: 280; top: 0px;"> Huyết thanh <input type="checkbox" class="input" id="13" (type-1)> </div> <div class="text" style="left: 420; top: 0px;"> Máu <input type="checkbox" class="input" id="14" (type-2)> </div> <div class="text" style="left: 520; top: 0px;"> Phù tạng <input type="checkbox" class="input" id="15" (type-3)> </div> <div class="text" style="left: 620; top: 0px;"> Swab <input type="checkbox" class="input" id="16" (type-4)> </div> </div> <div class="text" style="top: 370; left: 100;"> Khác: (type-5) </div> <div class="group" style="top: 400; left: 100;"> <div class="text"> <b>Số lượng mẫu: </b> (number) </div> <div class="text" style="left: 400"> <b>- Loài vật được lấy mẫu:</b> (sample) </div> </div> <div class="text" style="top: 430; left: 100; width: 730;"> <b>Số nhận diện: </b> <span class="inline input" id="20">(sampleCode)</span> </div>  <div class="group" style="top: 480px; left: 150px;"> * Ghi chú: (Đính kèm danh sách nhận diện mẫu): <div class="text" style="left: 370px; top: 0;"> - Có <input type="checkbox" class="input" id="21"> </div> <div class="text" style="left: 500; top: 0;"> - Không <input type="checkbox" class="input" id="22"> </div> </div>  <div class="text" style="top: 510; left: 100;"><b>Chỉ tiêu xét nghiệm</b></div> (exam)  <div class="text" style="top: (position); left: 100;">(index). (exam-content) </div> <div class="text" style="top: (position-2); left: 100;"> Phương pháp xét nghiệm: (method) </div> <div class="text" style="top: (position-3); left: 100;"> Ký hiệu phương pháp: (symbol) </div> (/exam) <div class="text" style="top: pos-0px; left: 100;"> <b>Các yêu cầu khác:</b> </div> <div class="text" style="top: pos-1px; left: 100;"> Ngày nhận mẫu (receive-0)/(receive-1)/(receive-2)</div> <div class="text" style="top: pos-1px; left: 550;"> Ngày hẹn trả kết quả: (resend-0)/(resend-1)/(resend-2)</div> <div class="text" style="top: pos-2px; left: 250;"><b>Khách hàng</b></div> <div class="text" style="top: pos-2px; left: 650;"><b>Bộ phận nhận mẫu</b></div>', 4: '<div class="document"> <table border="1" class="form"> <tr> <td class="text-center"> <b>Biểu mẫu số: BM.STTT.22.01</b> </td> <td class="text-center"> <b>Số soát xét: 03.02718</b> </td> </tr> <tr> <td colspan="2"> <div class="text-center"> <b>CHI CỤC THÚ Y VÙNG V</b> </div> <div class="text-center"> <b>TRẠM CHUẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT</b> </div> <div> Địa chỉ: Số 36 Phạm Hùng, Phường Tân An, Thành phố Buôn Ma Thuột, Tỉnh Đăklăk </div> <div> Điện thoại: 0262 3877793 </div> </td> </tr> </table> <div class="text-center" style="margin: 10px;"> <b>PHIẾU KẾT QUẢ XÉT NGHIỆM</b> </div> <div style="margin: 4px;"> <div style="float: left"> Số phiếu kết quả xét nghiệm: xcode-0/xcode-1/xcode-2.CĐXN </div> <div style="float: right">Trang: 1/4</div> </div> <table border="1" class="form"> <tr> <td colspan="2"> Tên khách hàng: (customer) </td> <td style="width: 30%"> Số ĐKXN: xcode-0/xcode-1/xcode-2</td> </tr> <tr> <td colspan="3"> <div> Địa chỉ khách hàng: (address) </div> <div> Số điện thoại: (phone) </div> </td> </tr> <tr> <td colspan="3"> Loại mẫu: (type) </td> </tr> <tr> <td colspan="3"> Số lượng mẫu: (number) </td> </tr> <tr> <td colspan="3"> Ký hiệu mẫu: (sampleCode) </td> </tr> <tr> <td colspan="3"> Tình trạng khi nhận mẫu: (status) </td> </tr> <tr> <td style="width: 50%"> Ngày lấy mẫu: (sampleReceive) </td> <td colspan="2"> người lấy mẫu: (sampleReceiver) </td> </tr> <tr> <td style="width: 50%"> Ngày, giờ nhận mẫu: (receiveHour)<sup>h</sup>(receiveMinute)<sup>p</sup> (ireceive)</td> <td colspan="2"> Người nhận mẫu: (ireceiver) </td> </tr> <tr> <td colspan="3">  <b>Chỉ tiêu xét nghiệm</b> <br> (exam)  <div>(index). (exam-content) </div> <div> Phương pháp xét nghiệm: (method); Ký hiệu phương pháp: (symbol). </div> (/exam) </td> </tr> <tr> <td colspan="3"> Ngày phân tích: (examDate) </td> </tr> <tr> <td colspan="3"> <b> Kết quả: </b> <br> (result) </td> </tr> </table> <table style="width: 100%"> <tr> <td class="text-center"> Ngày tháng năm </td> <td class="text-center"> Ngày tháng năm </td> </tr> <tr> <td class="text-center"> <b>BỘ PHẬN XÉT NGHIỆM</b> </td> <td class="text-center"> <b>TRƯỞNG TRẠM</b> </td> </tr> <tr> <td class="text-center"> (Ký, ghi rõ họ tên) </td> </tr> </table> </div>'};
   var methodModal = $("#method-modal")
   var formInsert = $('#form-insert')
   var method = JSON.parse('{method}')
@@ -596,6 +615,10 @@
 
   var insertMethodSymbol = $("#insert-method-symbol")
   var insertMethodName = $("#insert-method-name")
+
+  var formInsertEndedMinute =  $("#form-insert-ended-minute")
+  var formInsertEndedHour =  $("#form-insert-ended-hour")
+  var formInsertEndedCopy =  $("#form-insert-ended-copy")
 
   var global_form = 1
   var global_saved = 0
@@ -1267,7 +1290,7 @@
     while (value.search('  ') >= 0) {
       value = value.replace(/  /g, ' ')
     }
-    value = value.split(/,/g)
+    value = value.split(/, /g)
     target.val(value.join(', '))
     
     if (value.length != number) {
@@ -1338,7 +1361,11 @@
             ireceiverEmploy: formInsertIreceiverEmploy.val(),
             ireceiverUnit: formInsertIreceiverUnit.val(),
             type: getCheckbox('type', formInsertTypeOther),
+            endedCopy: formInsertEndedCopy.val(),
+            endedHour: formInsertEndedHour.val(),
+            endedMinute: formInsertEndedMinute.val(),
             sample: formInsertSample.val(),
+            receive: formInsertReceive.val(),
             number: formInsertNumber.val(),
             status: formInsertStatus.val(),
             sampleCode: formInsertSampleCode.val(),
@@ -1363,7 +1390,6 @@
             examDate: formInsertExamDate.val(),
             sample: formInsertSample.val(),
             other: formInsertOther.val(),
-            receiveTime: formInsertSampleReceiveTime.val(),
             receiveHour: formInsertSampleReceiveHour.val(),
             receiveMinute: formInsertSampleReceiveMinute.val(),
             customer: formInsertCustomer.val(),
@@ -1375,6 +1401,8 @@
             status: formInsertStatus.val(),
             sampleReceive: formInsertSampleReceive.val(),
             sampleReceiver: formInsertSampleReceiver.val(),
+            receive: formInsertReceive.val(),
+            resend: formInsertResend.val(),
             ireceive: formInsertIreceive.val(),
             ireceiver: formInsertIreceiverEmploy.val(),
             exam: getInputs('exam'),
@@ -1458,16 +1486,19 @@
             html = html.replace('(state-0)', data['state']['index'] == 0 ? 'checked' : '')
             html = html.replace('(state-1)', data['state']['index'] == 1 ? 'checked' : '')
             html = html.replace('(other)', data['state']['value'])
-            html = html.replace('(form)', (data['form'].join('<br>') + '<br>Số lượng mẫu: ' + data['number'] + '<br>' + data['exam'].join('<br>')))
+            html = html.replace('(form)', (data['form'].join('<br>') + '<br>Số lượng mẫu: ' + data['number'] + ', loại mẫu: ' + (data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text())) + ', loài ' + data['sample'] + '<br> Ký hiệu mẫu: ' + data['sampleCode'] + '<br>' + data['exam'].join('<br>')))
           break;
           case 2:
-            var receiveTime = data['receiveTime'].split('/')
+            var receive = data['receive'].split('/')
             html = html.replace('(xcode-0)', data['xcode'][0])
             html = html.replace('(xcode-1)', data['xcode'][1])
             html = html.replace('(xcode-2)', data['xcode'][2])
-            html = html.replace('(receiveTime-0)', receiveTime[0])
-            html = html.replace('(receiveTime-1)', receiveTime[1])
-            html = html.replace('(receiveTime-2)', receiveTime[2])
+            html = html.replace('(receive-0)', receive[0])
+            html = html.replace('(receive-1)', receive[1])
+            html = html.replace('(receive-2)', receive[2])
+            html = html.replace('(ended-copy)', data['endedCopy'])
+            html = html.replace('(ended-hour)', data['endedHour'])
+            html = html.replace('(ended-minute)', data['endedMinute'])
             html = html.replace('(receiveHour)', data['receiveHour'])
             html = html.replace('(receiveMinute)', data['receiveMinute'])
             html = html.replace('(isenderEmploy)', data['isenderEmploy'])
@@ -1486,15 +1517,18 @@
             html = html.replace('(exam)', (data['exam'].join('<br>')))          
           break;
           case 3:
-            html = html.replace('(xcode-0)', data['xcode'][0])
-            html = html.replace('(xcode-1)', data['xcode'][1])
-            html = html.replace('(xcode-2)', data['xcode'][2])
-            html = html.replace('(page-0)', data['page'][0])
-            html = html.replace('(page-1)', data['page'][1])
-            html = html.replace('(no-0)', data['no'][0])
-            html = html.replace('(no-1)', data['no'][1])
+            var receive = data['receive'].split('/')
+            var resend = data['resend'].split('/')
+            html = html.replace('(xcode-0)', trim(data['xcode'][0]))
+            html = html.replace('(xcode-1)', trim(data['xcode'][1]))
+            html = html.replace('(xcode-2)', trim(data['xcode'][2]))
+            html = html.replace('(page-0)', trim(data['page'][0]))
+            html = html.replace('(page-1)', trim(data['page'][1]))
+            html = html.replace('(no-0)', trim(data['no'][0]))
+            html = html.replace('(no-1)', trim(data['no'][1]))
             html = html.replace('(customer)', data['customer'])
             html = html.replace('(number)', data['number'])
+            html = html.replace('(sample)', data['sample'])
             html = html.replace('(sampleCode)', data['sampleCode'])
             html = html.replace('(type-0)', data['type']['index'] == 0 ? 'checked' : '')
             html = html.replace('(type-1)', data['type']['index'] == 1 ? 'checked' : '')
@@ -1502,6 +1536,14 @@
             html = html.replace('(type-3)', data['type']['index'] == 3 ? 'checked' : '')
             html = html.replace('(type-4)', data['type']['index'] == 4 ? 'checked' : '')
             html = html.replace('(type-5)', data['type']['value'])
+            
+            html = html.replace('(receive-0)', receive[0])
+            html = html.replace('(receive-1)', receive[1])
+            html = html.replace('(receive-2)', receive[2])
+            html = html.replace('(resend-0)', resend[0])
+            html = html.replace('(resend-1)', resend[1])
+            html = html.replace('(resend-2)', resend[2])
+            
             html = html.replace('(other)', data['other'])
             var length = data['exam'].length
             var part = html.slice(html.search('(exam)') + '(exam)'.length, html.search('(/exam)') - 1)
@@ -1521,18 +1563,21 @@
               position += 90
             }
             html = html.replace('(parse)', parse)
+            html = html.replace(/pos-0/g, position)
+            html = html.replace(/pos-1/g, position + 30)
+            html = html.replace(/pos-2/g, position + 60)
             html = html.replace('(type-5)', data['type']['value'])
           break; 
           case 4:
-            var receiveTime = data['receiveTime'].split('/')
-            html = html.replace(/xcode-0/g, data['xcode'][0])
-            html = html.replace(/xcode-1/g, data['xcode'][1])
-            html = html.replace(/xcode-2/g, data['xcode'][2])
+            var receive = data['receive'].split('/')
+            html = html.replace(/xcode-0/g, trim(data['xcode'][0]))
+            html = html.replace(/xcode-1/g, trim(data['xcode'][1]))
+            html = html.replace(/xcode-2/g, trim(data['xcode'][2]))
             html = html.replace('(customer)', data['customer'])
             html = html.replace('(number)', data['number'])
             html = html.replace('(sampleCode)', data['sampleCode'])
 
-            html = html.replace('(receiveTime)', data['receiveTime'])
+            html = html.replace('(receiveTime)', data['receive'])
             html = html.replace('(receiveHour)', data['receiveHour'])
             html = html.replace('(receiveMinute)', data['receiveMinute'])
             html = html.replace('(address)', data['address'])
@@ -1561,12 +1606,14 @@
             html = html.replace('(parse)', parse)
           break;
         }
+        // console.log(html);
+        
         var html = style + html
         var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
         winPrint.focus()
         winPrint.document.write(html);
-        winPrint.print()
-        winPrint.close()
+        // winPrint.print()
+        // winPrint.close()
       }
     // }
   }
