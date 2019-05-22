@@ -70,9 +70,10 @@ if (!empty($action)) {
 			$result['status'] = 1;
 			$result['html'] = formList($keyword, $page, $limit, $printer);
 		break;
+		case 'preview':
 		case 'getForm':
 			$id = $nv_Request->get_string('id', 'get/post', '');
-
+		
 			$sql = 'select * from `'. PREFIX .'_row` where id = ' . $id;
 			$query = $db->query($sql);
 
@@ -100,7 +101,18 @@ if (!empty($action)) {
 				$result['form']['examdate'] = date('d/m/Y', $result['form']['examdate']);
 				$result['form']['note'] = str_replace('<br />', '', $result['form']['note']);
 
-				$result['form']['printer'] = checkPrinter($result['form']);
+				if ($action = 'preview') {
+					$result = $result['form'];
+					if (!empty($result['exam'])) {
+						$result['exam'] = explode(', ', $result['exam']);
+					}
+					if (!empty($result['method'])) {
+						$result['method'] = explode(', ', $result['method']);
+					}
+				}
+				else {
+					$result['form']['printer'] = checkPrinter($result['form']);
+				}
 				$result['status'] = 1;
 			}
 		break;

@@ -99,7 +99,7 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 5) {
   $end = $from;
   while ($row = $query->fetch()) {
     // if (in_array(strval(checkPrinter($row)), $printer)) {
-    if (checkPrinter($row) <= $printer) {
+    if (checkPrinter($row) >= $printer) {
       $end ++;
       if (!empty($sampleType[$row['typeindex']])) {
         $xtpl->assign('sample', $sampleType[$row['typeindex']]);

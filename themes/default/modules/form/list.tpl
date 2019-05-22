@@ -16,6 +16,9 @@
       <td> {number} </td>
       <td> {sample} </td>
       <td>
+        <button class="btn btn-info" onclick="preview({id})">
+          <span class="glyphicon glyphicon-eye-open"></span>
+        </button>  
         <button class="btn btn-info" onclick="edit({id})">
           <span class="glyphicon glyphicon-edit"></span>
         </button>  

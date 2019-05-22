@@ -101,11 +101,11 @@
         </div>
         <div class="col-sm-6">
           <select class="form-control" id="filter-printer">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5" selected>5</option>
+            <option value="1">Mẫu 1</option>
+            <option value="2">Mẫu 2</option>
+            <option value="3">Mẫu 3</option>
+            <option value="4">Mẫu 4</option>
+            <option value="5" selected>Mẫu 5</option>
           </select>
         </div>
         <div class="col-sm-6">
@@ -658,6 +658,7 @@
   var global_saved = 0
   var global_id = 0
   var global_page = 1
+  var global_printer = 5
 
   var visible = {
     0: {1: '1', 2: '1'},
@@ -1058,11 +1059,11 @@
         checkResult(response, status).then(data => {
           newForm()
           global_id = id
-          global_form = 1
+          global_form = global_printer
           global_saved = data['form']['printer']
           parseSaved()
           
-          parseBox(data['form']['printer'])
+          parseBox(global_form)
           infoData = {1: [], 2: []}
 
           if (data['form']['printer'] >= 1) {
@@ -1540,6 +1541,7 @@
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
+          global_printer = filterPrinter.val()
         }, () => {defreeze()})
       }
     )
@@ -1559,9 +1561,23 @@
     )
   }
 
-  function printer(id) {
-    if (visible[global_saved][2].search(id) >= 0) {
-      var data = checkForm(id)
+  function preview(id) {
+    $.post(
+      strHref,
+      {action: 'preview', id: id},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          printer(global_printer, data)
+        }, () => {})
+      }
+    )
+  }
+
+  function printer(id, data = {}) {
+    if (data || visible[global_saved][2].search(id) >= 0) {
+      if (!data) {
+        var data = checkForm(id)
+      }
       if (Object.keys(data).length) {
         var html = former[id]
         switch (id) {
