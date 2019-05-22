@@ -153,10 +153,16 @@ function checkMethod($name) {
 }
 
 function checkPrinter($data) {
-	if (!empty($data['page'])) {
+	if (!empty($data['target'])) {
+		return 5;
+	}
+	else if (!empty($data['note'])) {
 		return 4;
 	}
-	else if (!empty($data['xstatus'])) {
+	else if (!empty($data['page'])) {
+		return 3;
+	}
+	else if (!empty($data['xcode'])) {
 		return 2;
 	}
 	return 1;

@@ -49,7 +49,7 @@ function notAllowList($key) {
   return $html;
 }
 
-function formList($keyword = '', $page = 1, $limit = 10, $printer = array('1', '2', '3', '4', '5')) {
+function formList($keyword = '', $page = 1, $limit = 10, $printer = 5) {
   global $db, $sampleType;
 
   $xtpl = new XTemplate("list.tpl", PATH);
