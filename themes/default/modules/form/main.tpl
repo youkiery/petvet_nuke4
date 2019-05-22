@@ -861,6 +861,7 @@
     $(".saved").each((index, item) => {
       var id = item.getAttribute('id').replace('saved-', '')
       var pos = id.split('-')
+      console.log(id, pos, global_saved);
       
       if (visible[global_saved][pos[0]].search(pos[1]) >= 0) {
         $("#saved-" + id).removeClass('disabled')
@@ -1004,6 +1005,7 @@
     global_id = 0
     global_form = 1
     global_saved = 0
+    parseBox(global_form)
     formInsertCode.val('')
     formInsertSenderEmploy.val('')
     formInsertReceiverEmploy.val('')
@@ -1016,6 +1018,9 @@
     formInsertStatus.val('')
     formInsertSampleCode.val('')
     formInsertTarget.val('')
+    formInsertEndedHour.children.each((index, item) => {
+      item.removeAttribute
+    })
     $(".formed").each((index, item) => {
       removeInfo(1, index)
     })

@@ -101,7 +101,7 @@ if (!empty($action)) {
 				$result['form']['examdate'] = date('d/m/Y', $result['form']['examdate']);
 				$result['form']['note'] = str_replace('<br />', '', $result['form']['note']);
 
-				if ($action = 'preview') {
+				if ($action == 'preview') {
 					$result = $result['form'];
 					if (!empty($result['exam'])) {
 						$result['exam'] = explode(', ', $result['exam']);
