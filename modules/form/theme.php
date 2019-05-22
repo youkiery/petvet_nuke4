@@ -49,6 +49,37 @@ function notAllowList($key) {
   return $html;
 }
 
+function summaryContent($from, $end) {
+  global $db, $sampleType;
+
+  $xtpl = new XTemplate("summary.tpl", PATH);
+  $sql = 'select * from `'. PREFIX .'_row` where time between ' . $from . ' and ' . $end;
+  $query = $db->query($sql);
+  $data = array();
+
+  while ($row = $query->fetch()) {
+    if (!empty($sampleType[$row['typeindex']])) {
+      $type = $sampleType[$row['typeindex']];
+    }
+    else {
+      $type = $row['typevalue'];
+    }
+    if (empty($data[$type])) {
+      $data[$type] = array('count' => 0, 'total' => 0);
+    }
+    $data[$type]['count'] ++;
+    $data[$type]['total'] += $row['number'];
+  }
+  foreach ($data as $type => $row) {
+    $xtpl->assign('type', $type);
+    $xtpl->assign('count', $row['count']);
+    $xtpl->assign('total', $row['total']);
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function formList($keyword = '', $page = 1, $limit = 10, $printer = 5) {
   global $db, $sampleType;
 

@@ -17,6 +17,16 @@ $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
 	$result = array("status" => 0);
 	switch ($action) {
+		case 'summaryFilter':
+			$from = $nv_Request->get_string('from', 'get/post', '');
+			$end = $nv_Request->get_string('end', 'get/post', '');
+
+			$from = totime($from);
+			$end = totime($end);
+
+			$result = 1;
+			$result = summaryContent($from, $end);
+		break;
 		case 'removeRemind':
 			$id = $nv_Request->get_string('id', 'get/post', '');
 
@@ -230,7 +240,7 @@ if (!empty($action)) {
 					foreach ($data['exams'] as $key => $value) {
 						checkRemindRow($value, 3);
 					}
-					$sql = 'update `'. PREFIX .'_row` set address = "'.$data['address'].'", ireceive = '.$ireceive.',  customer = "'. $data['customer'] .'", number = '. $data['number'] .', sampleCode = "'. $data['sampleCode'] .'", note = "'. $note .'", iresend = '. $iresend .', code = '. $data['code'] .', sample = '. $data['sample'] .', target = '. $data['target'].', exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'" where id = ' . $id;
+					$sql = 'update `'. PREFIX .'_row` set address = "'.$data['address'].'", ireceive = '.$ireceive.',  customer = "'. $data['customer'] .'", number = '. $data['number'] .', sampleCode = "'. $data['sampleCode'] .'", note = "'. $note .'", iresend = '. $iresend .', code = "'. $data['code'] .'", sample = "'. $data['sample'] .'", target = "'. $data['target'].'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'" where id = ' . $id;
 					$query = $db->query($sql);
 					if ($query) {
 						$result['notify'] = 'Đã cập nhật mẫu';
@@ -266,7 +276,14 @@ for ($i = 0; $i < 60; $i++) {
 	}
 }
 
+$today = strtotime(date('Y-m-d'));
+$from = $today - 60*60*24*7;
+$end = $today + 60*60*24*7;
+
 $xtpl->assign("methodOption", $methodHtml);
+$xtpl->assign('summarycontent', summaryContent($from, $end));
+$xtpl->assign('summaryfrom', date('d/m/Y', $from));
+$xtpl->assign('summaryend', date('d/m/Y', $end));
 $xtpl->assign('content', formList());
 $xtpl->assign("method", json_encode($method));
 $xtpl->assign("remind", json_encode(getRemind()));
