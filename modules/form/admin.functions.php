@@ -12,7 +12,6 @@ if (! defined('NV_ADMIN') or ! defined('NV_MAINFILE') or ! defined('NV_IS_MODADM
 }
 
 define('NV_IS_ADMIN_FORM', true);
-define('PERMISSION_MODULE', 1);
 define("PATH", NV_ROOTDIR . "/themes/" . $global_config['admin_theme'] . "/modules/" . $module_file);
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
@@ -34,7 +33,7 @@ function getNotAllow($key = '') {
 function getAllowUser($key = '') {
   global $db, $db_config;
 
-  $sql = 'select a.*, b.type from `'. $db_config['prefix'] .'_users` a inner join `'. $db_config['prefix'] .'_user_allow` b on a.userid = b.userid where a.first_name like "%'. $key .'%" and module = ' . PERMISSION_MODULE;
+  $sql = 'select a.*, b.type from `'. $db_config['prefix'] .'_users` a inner join `'. $db_config['prefix'] .'_user_allow` b on a.userid = b.userid where a.first_name like "%'. $key .'%" and module = ' . PERMISSION_MODULE . ' order by type desc';
   $query = $db->query($sql);
 
   $list = array();

@@ -12,6 +12,7 @@ if (!defined('NV_MAINFILE')) {
 }
 
 define("PREFIX", $db_config['prefix'] . "_" . $module_name);
+define('PERMISSION_MODULE', 1);
 
 function totime($time) {
   if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
@@ -97,6 +98,26 @@ function checkRemindRow($value, $type) {
 	return $id;
 }
 
+function precheck($data) {
+	$check = '';
+	foreach ($data as $key => $row) {
+		// if ($key == 'page') {
+		// 	die("$row");
+		// }
+		if (gettype($row) == 'array') {
+			foreach ($row as $name => $value) {
+				if ($name != 'value' && $value == '') {
+					$check = $key;
+				}
+			}
+		}
+		else if ($row == '') {
+			$check = $key;
+		}
+	}
+	return $check;
+}
+
 function checkRemindRelation($unitid, $employid) {
 	global $db;
 
@@ -148,6 +169,33 @@ function checkMethod($name) {
 	$query = $db->query($sql);
 	if (!empty($query->fetch())) {
 		return true;
+	}
+	return false;
+}
+
+function checkIsMod($userid) {
+	global $db, $db_config;
+
+	if (!empty($userid)) {
+		$sql = 'select * from `'. $db_config['prefix'] .'_user_allow` where userid = ' . $userid . ' and type = 2 and module = ' . PERMISSION_MODULE;
+		$query = $db->query($sql);
+	
+		if (!empty($row = $query->fetch())) {
+			return true;
+		}
+	}
+	return false;
+}
+
+function checkIsViewer($userid) {
+	global $db, $db_config;
+	if (!empty($userid)) {
+		$sql = 'select * from `'. $db_config['prefix'] .'_user_allow` where userid = ' . $userid . ' and type > 0 and module = ' . PERMISSION_MODULE;
+		$query = $db->query($sql);
+	
+		if (!empty($row = $query->fetch())) {
+			return true;
+		}
 	}
 	return false;
 }

@@ -16,3 +16,8 @@ define("PATH", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" 
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 
+if (empty($user_info) || !checkIsViewer($user_info['userid'])) {
+  include ( NV_ROOTDIR . "/includes/header.php" );
+  echo nv_site_theme('Chưa đăng nhập hoặc tài khoản không có quyền truy cập');
+  include ( NV_ROOTDIR . "/includes/footer.php" );
+}

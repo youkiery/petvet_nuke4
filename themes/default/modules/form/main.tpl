@@ -89,7 +89,9 @@
 
 <ul class="nav nav-tabs">
   <li class="active"><a data-toggle="tab" href="#home"> Danh sách </a></li>
+  <!-- BEGIN: mod -->
   <li><a data-toggle="tab" href="#menu1"> Thêm văn bản </a></li>
+  <!-- END: mod -->
 </ul>
 
 <div class="tab-content">
@@ -126,6 +128,7 @@
     </div>
   </div>
 
+  <!-- BEGIN: mod2 -->
   <div id="menu1" class="tab-pane">
     <div class="row form-group boxed box-1 box-5">
       <label class="col-sm-4">Số phiếu</label>
@@ -373,7 +376,7 @@
       </div>
     </div>
 
-    <div class="boxed box-1">
+    <div class="boxed box-1 box-2">
       <label> Loại mẫu </label>
       <div id="type-0">
         <input type="radio" name="type" class="check-box type" id="typed-0" checked>
@@ -405,7 +408,7 @@
         </div>
       </div>
     </div>
-    <div class="form-group row boxed box-1">
+    <div class="form-group row boxed box-1 box-2">
       <label class="col-sm-4"> Số lượng mẫu </label>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="form-insert-number" autocomplete="off">
@@ -415,13 +418,13 @@
         <input type="text" class="form-control sample" id="form-insert-sample" autocomplete="off">
       </div>
     </div>
-    <div class="form-group row boxed">
-      <label class="col-sm-6"> Tình trạng </label>
+    <div class="form-group row boxed box-2">
+      <label class="col-sm-6"> Tình trạng mẫu </label>
       <div class="col-sm-18">
         <input type="text" class="form-control" id="form-insert-status" autocomplete="off">
       </div>
     </div>
-    <div class="form-group row boxed box-1">
+    <div class="form-group row boxed box-1 box-2">
       <label class="col-sm-6"> Ký hiệu mẫu </label>
       <div class="col-sm-18" id="form-insert-sample-parent">
         <input type="text" class="form-control" id="form-insert-sample-code" autocomplete="off">
@@ -563,8 +566,8 @@
     <button class="btn btn-success saved-0" style="position: fixed; top: 185px; right: 10px;" onclick="newForm()">
       <span class="glyphicon glyphicon-user"></span>
     </button>
-
   </div>
+  <!-- END: mod2 -->
 </div>
 
 <script>
@@ -1461,7 +1464,7 @@
             number: formInsertNumber.val(),
             sample: formInsertSample.val(),
             type: getCheckbox('type', formInsertTypeOther),
-            sampleCode: formInsertSampleCode.val(),
+            samplecode: formInsertSampleCode.val(),
             exam: getInputs('exam', ') '),
             exams: getInputs('exam'),
             methods: getInputs('method')
@@ -1473,21 +1476,21 @@
         if (sampleCode) {         
           data = {
             xcode: getInputs('xcode'),
-            receiveHour: formInsertSampleReceiveHour.val(),
-            receiveMinute: formInsertSampleReceiveMinute.val(),
-            isenderEmploy: formInsertIsenderEmploy.val(),
-            isenderUnit: formInsertIsenderUnit.val(),
-            ireceiverEmploy: formInsertIreceiverEmploy.val(),
-            ireceiverUnit: formInsertIreceiverUnit.val(),
+            receivehour: formInsertSampleReceiveHour.val(),
+            receiveminute: formInsertSampleReceiveMinute.val(),
+            isenderemploy: formInsertIsenderEmploy.val(),
+            isenderunit: formInsertIsenderUnit.val(),
+            ireceiveremploy: formInsertIreceiverEmploy.val(),
+            ireceiverunit: formInsertIreceiverUnit.val(),
             type: getCheckbox('type', formInsertTypeOther),
-            endedCopy: formInsertEndedCopy.val(),
-            endedHour: formInsertEndedHour.val(),
-            endedMinute: formInsertEndedMinute.val(),
+            endedcopy: formInsertEndedCopy.val(),
+            endedhour: formInsertEndedHour.val(),
+            endedminute: formInsertEndedMinute.val(),
+            status: formInsertStatus.val(),
             sample: formInsertSample.val(),
             receive: formInsertReceive.val(),
             number: formInsertNumber.val(),
-            status: formInsertStatus.val(),
-            sampleCode: formInsertSampleCode.val(),
+            samplecode: formInsertSampleCode.val(),
             xstatus: getCheckbox('status'),
             quality: formInsertQuality.val(),
             exam: getInputs('exam', ') '),
@@ -1503,11 +1506,10 @@
           data = {
             address: formInsertAddress.val(),
             phone: formInsertPhone.val(),
-            sampleReceive: formInsertSampleReceive.val(),
-            samplereceiver: formInsertSampleReceive.val(),
-            examDate: formInsertExamDate.val(),
+            samplereceive: formInsertSampleReceive.val(),
+            samplereceiver: formInsertSampleReceiver.val(),
+            examdate: formInsertExamDate.val(),
             result: formInsertResult.val(),
-            note: formInsertNote.val(),
             receive: formInsertReceive.val(),
             resend: formInsertResend.val(),
             xcode: getInputs('xcode'),
@@ -1516,7 +1518,7 @@
             customer: formInsertCustomer.val(),
             number: formInsertNumber.val(),
             sample: formInsertSample.val(),
-            sampleCode: formInsertSampleCode.val(),
+            samplecode: formInsertSampleCode.val(),
             type: getCheckbox('type', formInsertTypeOther),
             other: formInsertOther.val(), 
             exam: getInputs('exam', ') '),
@@ -1532,17 +1534,17 @@
           data = {
             receive: formInsertReceive.val(),
             xcode: getInputs('xcode'),
-            receiveHour: formInsertSampleReceiveHour.val(),
-            receiveMinute: formInsertSampleReceiveMinute.val(),
+            receivehour: formInsertSampleReceiveHour.val(),
+            receiveminute: formInsertSampleReceiveMinute.val(),
             type: getCheckbox('type', formInsertTypeOther),
             number: formInsertNumber.val(),
             status: formInsertStatus.val(),
-            sampleCode: formInsertSampleCode.val(),
+            samplecode: formInsertSampleCode.val(),
             customer: formInsertCustomer.val(),
             address: formInsertAddress.val(),
             phone: formInsertPhone.val(),
-            sampleReceive: formInsertSampleReceive.val(),
-            sampleReceiver: formInsertSampleReceiver.val(),
+            samplereceive: formInsertSampleReceive.val(),
+            samplereceiver: formInsertSampleReceiver.val(),
             ireceive: formInsertIreceive.val(),
             ireceiver: formInsertIreceiverEmploy.val(),
             examDate: formInsertExamDate.val(),
@@ -1636,6 +1638,7 @@
   }
 
   function preview(id) {
+    
     $.post(
       strHref,
       {action: 'preview', id: id},
@@ -1667,7 +1670,7 @@
             html = html.replace('(state-0)', data['state']['index'] == 0 ? 'checked' : '')
             html = html.replace('(state-1)', data['state']['index'] == 1 ? 'checked' : '')
             html = html.replace('(other)', data['state']['value'])
-            html = html.replace('(form)', (data['form'].join('<br>') + '<br>Số lượng mẫu: ' + data['number'] + ', loại mẫu: ' + (data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text())) + ', loài ' + data['sample'] + '<br> Ký hiệu mẫu: ' + data['sampleCode'] + '<br>' + data['exam'].join('<br>')))
+            html = html.replace('(form)', (data['form'].join('<br>') + '<br>Số lượng mẫu: ' + data['number'] + ', loại mẫu: ' + (data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text())) + ', loài ' + data['sample'] + '<br> Ký hiệu mẫu: ' + data['samplecode'] + '<br>' + data['exam'].join('<br>')))
           break;
           case 2:
             var receive = data['receive'].split('/')
@@ -1677,19 +1680,19 @@
             html = html.replace('(receive-0)', receive[0])
             html = html.replace('(receive-1)', receive[1])
             html = html.replace('(receive-2)', receive[2])
-            html = html.replace('(ended-copy)', data['endedCopy'])
-            html = html.replace('(ended-hour)', data['endedHour'])
-            html = html.replace('(ended-minute)', data['endedMinute'])
-            html = html.replace('(receiveHour)', data['receiveHour'])
-            html = html.replace('(receiveMinute)', data['receiveMinute'])
-            html = html.replace('(isenderEmploy)', data['isenderEmploy'])
-            html = html.replace('(isenderUnit)', data['isenderUnit'])
-            html = html.replace('(ireceiverEmploy)', data['ireceiverEmploy'])
-            html = html.replace('(ireceiverUnit)', data['ireceiverUnit'])
+            html = html.replace('(ended-copy)', data['endedcopy'])
+            html = html.replace('(ended-hour)', data['endedhour'])
+            html = html.replace('(ended-minute)', data['endedminute'])
+            html = html.replace('(receiveHour)', data['receivehour'])
+            html = html.replace('(receiveMinute)', data['receiveminute'])
+            html = html.replace('(isenderEmploy)', data['isenderemploy'])
+            html = html.replace('(isenderUnit)', data['isenderunit'])
+            html = html.replace('(ireceiverEmploy)', data['ireceiveremploy'])
+            html = html.replace('(ireceiverUnit)', data['ireceiverunit'])
             html = html.replace('(type)', data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text()))
             html = html.replace('(sample)', data['sample'])
             html = html.replace('(number)', data['number'])
-            html = html.replace('(sampleCode)', data['sampleCode'])
+            html = html.replace('(sampleCode)', data['samplecode'])
             html = html.replace('(status)', data['status'])
             html = html.replace('(quality)', data['quality'])
             html = html.replace('(xstatus-0)', data['xstatus']['index'] == 0 ? 'checked' : '')
@@ -1710,7 +1713,7 @@
             html = html.replace('(customer)', data['customer'])
             html = html.replace('(number)', data['number'])
             html = html.replace('(sample)', data['sample'])
-            html = html.replace('(sampleCode)', data['sampleCode'])
+            html = html.replace('(sampleCode)', data['samplecode'])
             html = html.replace('(type-0)', data['type']['index'] == 0 ? 'checked' : '')
             html = html.replace('(type-1)', data['type']['index'] == 1 ? 'checked' : '')
             html = html.replace('(type-2)', data['type']['index'] == 2 ? 'checked' : '')
@@ -1755,20 +1758,20 @@
             html = html.replace(/xcode-2/g, trim(data['xcode'][2]))
             html = html.replace('(customer)', data['customer'])
             html = html.replace('(number)', data['number'])
-            html = html.replace('(sampleCode)', data['sampleCode'])
+            html = html.replace('(sampleCode)', data['samplecode'])
 
             html = html.replace('(receiveTime)', data['receive'])
-            html = html.replace('(receiveHour)', data['receiveHour'])
-            html = html.replace('(receiveMinute)', data['receiveMinute'])
+            html = html.replace('(receiveHour)', data['receivehour'])
+            html = html.replace('(receiveMinute)', data['receiveminute'])
             html = html.replace('(address)', data['address'])
             html = html.replace('(phone)', data['phone'])
             html = html.replace('(type)', data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text()))
             html = html.replace('(status)', data['status'])
-            html = html.replace('(sampleReceive)', data['sampleReceive'])
-            html = html.replace('(sampleReceiver)', data['sampleReceiver'])
+            html = html.replace('(sampleReceive)', data['samplereceive'])
+            html = html.replace('(sampleReceiver)', data['samplereceiver'])
             html = html.replace('(ireceive)', data['ireceive'])
             html = html.replace('(ireceiver)', data['ireceiver'])
-            html = html.replace('(examDate)', data['examDate'])
+            html = html.replace('(examDate)', data['examdate'])
             html = html.replace('(result)', data['result'])
             html = html.replace('(note)', data['note'].replace(/\n/g, '<br>'))
 
@@ -1816,8 +1819,8 @@
             html = html.replace('(parse)', parse)
             html = html.replace('(result)', tabbed + data['target'].replace(/\n/g, '<br>' + tabbed))
             html = html.replace('(note)', data['note'].replace(/\n/g, '<br>'))
-            html = html.replace('(dis)', '- ' + data['receiveDis'].replace(/\n/g, '<br>'))
-            html = html.replace('(leader)', data['receiveLeader'].toUpperCase())
+            html = html.replace('(dis)', '- ' + data['receivedis'].replace(/\n/g, '<br>'))
+            html = html.replace('(leader)', data['receiveleader'].toUpperCase())
           break;
         }
         

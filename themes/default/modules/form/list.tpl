@@ -19,12 +19,14 @@
         <button class="btn btn-info" onclick="preview({id})">
           <span class="glyphicon glyphicon-eye-open"></span>
         </button>  
+        <!-- BEGIN: mod -->
         <button class="btn btn-info" onclick="edit({id})">
           <span class="glyphicon glyphicon-edit"></span>
         </button>  
         <button class="btn btn-danger" onclick="remove({id})">
           <span class="glyphicon glyphicon-remove"></span>
         </button>  
+        <!-- END: mod -->
       </td>
     </tr>
     <!-- END: row -->

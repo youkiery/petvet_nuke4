@@ -5,7 +5,7 @@
       <div class="input-group">
         <input type="text" class="form-control" id="form-keyword" placeholder="Từ khóa" autocomplete="off">
         <div class="input-group-btn">
-          <button class="btn btn-info"> <span class="glyphicon glyphicon-search"></span> </button>
+          <button class="btn btn-info" onclick="search()"> <span class="glyphicon glyphicon-search"></span> </button>
         </div>
       </div>
     </div>
@@ -35,7 +35,7 @@
         (response, status) => {
           checkResult(response, status).then(data => {
             formEmploySuggest.html(data['html'])
-          }, () => {})
+          }, () => { defreeze() })
         }
       )
     }, 200);
@@ -50,6 +50,19 @@
     }, 200);
   })
 
+  function search(userid) {
+    freeze()
+    $.post(
+      strHref,
+      {action: 'search', key: formKeyword.val()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          content.html(data['html'])
+        }, () => { defreeze() })
+      }
+    )
+  }
+
   function addEmploy(userid) {
     freeze()
     $.post(
@@ -58,7 +71,7 @@
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
-        }, () => {})
+        }, () => { defreeze() })
       }
     )
   }
@@ -71,7 +84,7 @@
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
-        }, () => {})
+        }, () => { defreeze() })
       }
     )
   }
@@ -84,7 +97,7 @@
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
-        }, () => {})
+        }, () => { defreeze() })
       }
     )
   }
@@ -97,7 +110,7 @@
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
-        }, () => {})
+        }, () => { defreeze() })
       }
     )
   }

@@ -20,6 +20,12 @@ $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
 	$result = array("status" => 0);
 	switch ($action) {
+		case 'search':
+			$key = $nv_Request->get_string('key', 'get/post', '');
+
+			$result['status'] = 1;
+			$result['html'] = employerList($key);
+		break;
 		case 'filterEmploy':
 			$key = $nv_Request->get_string('key', 'get/post', '');
 

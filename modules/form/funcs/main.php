@@ -101,6 +101,20 @@ if (!empty($action)) {
 				$result['form']['examdate'] = date('d/m/Y', $result['form']['examdate']);
 				$result['form']['note'] = str_replace('<br />', '', $result['form']['note']);
 
+				$result['form']['type']['index'] = 0;
+				$result['form']['type']['value'] = '';
+				if (!empty($result['form']['typeIndex'])) {
+					$result['form']['type']['index'] = $result['form']['typeIndex'];
+					$result['form']['type']['value'] = $result['form']['typeValue'];
+				}
+
+				$result['form']['state']['index'] = 0;
+				$result['form']['state']['value'] = '';
+				if (!empty($result['form']['typeIndex'])) {
+					$result['form']['state']['index'] = $result['form']['stateIndex'];
+					$result['form']['state']['value'] = $result['form']['stateValue'];
+				}
+
 				if ($action == 'preview') {
 					$result = $result['form'];
 					if (!empty($result['exam'])) {
@@ -147,120 +161,143 @@ if (!empty($action)) {
 			$keyword = $nv_Request->get_string('keyword', 'get/post', 1);
 
 			$result['notify'] = 'Nhập sai thông tin, hoặc thông tin lỗi';
-			switch ($form) {
-				case '1': 
-					if (!(empty($data['code']) || empty($data['sender']) || empty($data['receive']) || empty($data['resend']) || empty($data['state']) || empty($data['receiver']) || empty($data['ireceive']) || empty($data['iresend']) || empty($data['forms']) || empty($data['number']) || empty($data['exams']))) {
-						$sender = checkRemindRow($data['sender'], 2);
-						$receiver = checkRemindRow($data['receiver'], 1);
-						foreach ($data['exams'] as $key => $value) {
-							checkRemindRow($value, 3);
-						}
-						if ($id) {
-							$sql = 'update `'. PREFIX .'_row` set code = "'. $data['code'] .'", sender = ' . $sender . ', receive = ' . totime($data['receive']) . ', resend = ' . totime($data['resend']) . ', stateIndex = '. $data['state']['index'] .', stateValue = "'. $data['state']['value'] .'", receiver = ' . $receiver . ', ireceive = '. totime($data['ireceive']) . ', iresend = '. totime($data['ireceive']) . ', form = "'. implode(', ', $data['forms']) .'", number = ' . $data['number'] .', exam = "' . implode(', ', $data['exams']) . '", sample = "'. $data['sample'] .'", status = "'. $data['status'] .'", sampleCode = "'. $data['sampleCode'] .'", method = "'. implode(', ', $data['methods']) .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'" where id = ' . $id;
-							$query = $db->query($sql);
-							$result['id'] = $id;
+			if (!checkIsMod($user_info['userid'])) {
+				$result['notify'] = 'Tài khoản không có quyền truy cập';
+			}
+			else {
+				switch ($form) {
+					case '1': 
+						if (!(empty($data['code']) || empty($data['sender']) || empty($data['receive']) || empty($data['resend']) || empty($data['state']) || empty($data['receiver']) || empty($data['ireceive']) || empty($data['iresend']) || empty($data['forms']) || empty($data['number']) || empty($data['exams']))) {
+							$sender = checkRemindRow($data['sender'], 2);
+							$receiver = checkRemindRow($data['receiver'], 1);
+							foreach ($data['exams'] as $key => $value) {
+								checkRemindRow($value, 3);
+							}
+							if ($id) {
+								$sql = 'update `'. PREFIX .'_row` set code = "'. $data['code'] .'", sender = ' . $sender . ', receive = ' . totime($data['receive']) . ', resend = ' . totime($data['resend']) . ', stateIndex = '. $data['state']['index'] .', stateValue = "'. $data['state']['value'] .'", receiver = ' . $receiver . ', ireceive = '. totime($data['ireceive']) . ', iresend = '. totime($data['ireceive']) . ', form = "'. implode(', ', $data['forms']) .'", number = ' . $data['number'] .', exam = "' . implode(', ', $data['exams']) . '", sample = "'. $data['sample'] .'", status = "'. $data['status'] .'", sampleCode = "'. $data['samplecode'] .'", method = "'. implode(', ', $data['methods']) .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'" where id = ' . $id;
+								$query = $db->query($sql);
+								$result['id'] = $id;
+							}
+							else {
+								$sql = 'insert into `'. PREFIX .'_row` (code, sender, receive, resend, stateIndex, stateValue, receiver, ireceive, iresend, form, number, exam, sample, status, sampleCode, method, typeIndex, typeValue, time, endedCopy, endedHour, endedMinute) values("'. $data['code'] .'", '. $sender .', ' . totime($data['receive']) . ', ' . totime($data['resend']) . ', '. $data['state']['index'] .', "'. $data['state']['value'] . '", ' . $receiver . ', '. totime($data['ireceive']) . ',  '. totime($data['ireceive']) . ', "'. implode(', ', $data['forms']) .'", ' . $data['number'] .', "' . implode(', ', $data['exams']) . '", "'. $data['sample'] .'", "'. $data['status'] .'", "'. $data['samplecode'] .'", "'. implode(', ', $data['methods']) .'", '. $data['type']['index'] .', "'. $data['type']['value'] .'", '. time() .', '. $data['endedcopy'] .', '. $data['endedhour'] .', '. $data['endedminute'] .')';
+								$query = $db->query($sql);
+								$result['id'] = $db->lastInsertId();
+							}
+							if ($query) {
+								$result['status'] = 1;
+								$result['notify'] = 'Đã lưu mẫu';
+								$result['html'] = formList($keyword, $page, $limit, $printer);
+								$result['remind'] = json_encode(getRemind());
+							}
+						}	
+					break;
+					case '2':
+						if ($key = precheck($data)) {
+							$result['notify'] = 'Nhập thiếu thông tin: ' . $key;
 						}
 						else {
-							$sql = 'insert into `'. PREFIX .'_row` (code, sender, receive, resend, stateIndex, stateValue, receiver, ireceive, iresend, form, number, exam, sample, status, sampleCode, method, typeIndex, typeValue, time, endedCopy, endedHour, endedMinute) values("'. $data['code'] .'", '. $sender .', ' . totime($data['receive']) . ', ' . totime($data['resend']) . ', '. $data['state']['index'] .', "'. $data['state']['value'] . '", ' . $receiver . ', '. totime($data['ireceive']) . ',  '. totime($data['ireceive']) . ', "'. implode(', ', $data['forms']) .'", ' . $data['number'] .', "' . implode(', ', $data['exams']) . '", "'. $data['sample'] .'", "'. $data['status'] .'", "'. $data['sampleCode'] .'", "'. implode(', ', $data['methods']) .'", '. $data['type']['index'] .', "'. $data['type']['value'] .'", '. time() .', '. $data['endedCopy'] .', '. $data['endedHour'] .', '. $data['endedMinute'] .')';
+							$data['receive'] = totime($data['receive']);
+							$data['isenderemploy'] = checkRemindRow($data['isenderemploy'], 1);
+							$data['isenderunit'] = checkRemindRow($data['isenderunit'], 2);
+							$data['ireceiveremploy'] = checkRemindRow($data['ireceiveremploy'], 1);
+							$data['ireceiverunit'] = checkRemindRow($data['ireceiverunit'], 2);
+							foreach ($data['exams'] as $key => $value) {
+								checkRemindRow($value, 3);
+							}
+		
+							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", isenderEmploy = '. $data['isenderemploy'] .' ,  isenderUnit = '. $data['isenderunit'] .', ireceiverEmploy = '. $data['ireceiveremploy'] .', ireceiverUnit = '. $data['ireceiverunit'] .', receiveHour = '.$data['receivehour'].', receiveMinute = '.$data['receiveminute'].', typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", sample = "'. $data['sample'] .'", number = '. $data['number'] .', status = "'. $data['status'] .'", sampleCode = "'. $data['samplecode'] .'", xstatus = '. $data['xstatus']['index'] .', quality = "'. $data['quality'] .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", endedCopy = '. $data['endedcopy'] .', endedHour = '. $data['endedhour'] .', endedMinute = '. $data['endedminute'] .', receive = '. $data['receive'] .' where id = ' . $id;
+							die($sql);
 							$query = $db->query($sql);
-							$result['id'] = $db->lastInsertId();
+							if ($query) {
+								$result['notify'] = 'Đã cập nhật mẫu';
+								$result['status'] = 1;
+								$result['id'] = $id;
+								$result['html'] = formList($keyword, $page, $limit, $printer);
+								$result['remind'] = json_encode(getRemind());
+							}
 						}
-						if ($query) {
-							$result['status'] = 1;
-							$result['notify'] = 'Đã lưu mẫu';
-							$result['html'] = formList($keyword, $page, $limit, $printer);
-							$result['remind'] = json_encode(getRemind());
+					break;
+					case '3':
+						if ($key = precheck($data)) {
+							$result['notify'] = 'Nhập thiếu thông tin: ' . $key;
 						}
-					}	
-				break;
-				case '2':
-					$receive = totime($data['receive']);
-					$isenderEmploy = checkRemindRow($data['isenderEmploy'], 1);
-					$isenderUnit = checkRemindRow($data['isenderUnit'], 2);
-					$ireceiverEmploy = checkRemindRow($data['ireceiverEmploy'], 1);
-					$ireceiverUnit = checkRemindRow($data['ireceiverUnit'], 2);
-					foreach ($data['exams'] as $key => $value) {
-						checkRemindRow($value, 3);
-					}
-
-					$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", isenderEmploy = '. $isenderEmploy .' ,  isenderUnit = '. $isenderUnit .', ireceiverEmploy = '. $ireceiverEmploy .', ireceiverUnit = '. $ireceiverUnit .', receiveHour = '.$data['receiveHour'].', receiveMinute = '.$data['receiveMinute'].', typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", sample = "'. $data['sample'] .'", number = '. $data['number'] .', status = "'. $data['status'] .'", sampleCode = "'. $data['sampleCode'] .'", xstatus = '. $data['xstatus']['index'] .', quality = "'. $data['quality'] .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", endedCopy = '. $data['endedCopy'] .', endedHour = '. $data['endedHour'] .', endedMinute = '. $data['endedMinute'] .', receive = '. $receive .' where id = ' . $id;
-					$query = $db->query($sql);
-					if ($query) {
-						$result['notify'] = 'Đã cập nhật mẫu';
-						$result['status'] = 1;
-						$result['id'] = $id;
-						$result['html'] = formList($keyword, $page, $limit, $printer);
-						$result['remind'] = json_encode(getRemind());
-					}
-				break;
-				case '3':
-				// phone, sampleReceive, samplereceiver, examDate, result, note
-				
-					$receive = totime($data['receive']);
-					$resend = totime($data['resend']);
-					$sampleReceive = totime($data['sampleReceive']);
-					$examDate = totime($data['examDate']);
-					$data['result'] = nl2br($data['result']);
-					$data['note'] = nl2br($data['note']);
-					$sampleReceive = totime($data['sampleReceive']);
-					$sampleReceiver = checkRemindRow($data['sampleReceiver'], 5);
-					checkRemindRow($data['customer'], 4);
-					checkRemindRow($data['address'], 5);
-					foreach ($data['exams'] as $key => $value) {
-						checkRemindRow($value, 3);
-					}
-					$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", page = "'. implode(', ', $data['page']) .'", no = "'. implode(', ', $data['no']) .'", customer = "'. $data['customer'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', sample = "'. $data['sample'] .'", sampleCode = "'. $data['sampleCode'] .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", other = "'. $data['other'] .'", receive = '. $receive .', resend = '. $resend .', phone = "'.$data['phone'].'", sampleReceive = '.$sampleReceive.', sampleReceiver = '.$sampleReceiver.', address = "'. $data['address'] .'", examDate = '.$examDate.', result = "'.$data['result'].'", note = "'.$data['note'].'" where id = ' . $id;
-					$query = $db->query($sql);
-					if ($query) {
-						$result['notify'] = 'Đã cập nhật mẫu';
-						$result['status'] = 1;
-						$result['id'] = $id;
-						$result['html'] = formList($keyword, $page, $limit, $printer);
-						$result['remind'] = json_encode(getRemind());
-					}
-				break;
-				case '4':
-					$sampleReceive = totime($data['sampleReceive']);
-					$receive = totime($data['receive']);
-					$ireceive = totime($data['ireceive']);
-					$examDate = totime($data['examDate']);
-					$data['result'] = nl2br($data['result']);
-					$note = nl2br($data['note']);
-					checkRemindRow($data['address'], 5);
-					checkRemindRow($data['customer'], 4);
-					foreach ($data['exams'] as $key => $value) {
-						checkRemindRow($value, 3);
-					}
-					$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", receiveHour = '.$data['receiveHour'].', receiveMinute = '.$data['receiveMinute'].', phone = "'.$data['phone'].'", sampleReceive = "'.$sampleReceive.'", address = "'.$data['address'].'", sampleReceiver = "'.$data['sampleReceiver'].'", ireceive = '.$ireceive.', ireceiver = "'.$data['ireceiver'].'", examDate = "'.$examDate.'", result = "'.$data['result'].'", customer = "'. $data['customer'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', status = "'. $data['status'] .'", sampleCode = "'. $data['sampleCode'] .'", receive = '. $data['receive'] .', note = "'. $note .'" where id = ' . $id;
-					$query = $db->query($sql);
-					if ($query) {
-						$result['notify'] = 'Đã cập nhật mẫu';
-						$result['status'] = 1;
-						$result['id'] = $id;
-						$result['html'] = formList($keyword, $page, $limit, $printer);
-						$result['remind'] = json_encode(getRemind());
-					}
-				break;
-				case '5':
-					// iresend, code, sample, target, exam, method
-					$iresend = totime($data['iresend']);
-					$ireceive = totime($data['ireceive']);
-					$note = nl2br($data['note']);
-					checkRemindRow($data['address'], 5);
-					checkRemindRow($data['customer'], 4);
-					foreach ($data['exams'] as $key => $value) {
-						checkRemindRow($value, 3);
-					}
-					$sql = 'update `'. PREFIX .'_row` set address = "'.$data['address'].'", ireceive = '.$ireceive.',  customer = "'. $data['customer'] .'", number = '. $data['number'] .', sampleCode = "'. $data['sampleCode'] .'", note = "'. $note .'", iresend = '. $iresend .', code = "'. $data['code'] .'", sample = "'. $data['sample'] .'", target = "'. $data['target'].'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", receiveDis = "'. $data['receiveDis'] .'", receiveLeader = "'. $data['receiveLeader'] .'" where id = ' . $id;
-					$query = $db->query($sql);
-					if ($query) {
-						$result['notify'] = 'Đã cập nhật mẫu';
-						$result['status'] = 1;
-						$result['id'] = $id;
-						$result['html'] = formList($keyword, $page, $limit, $printer);
-						$result['remind'] = json_encode(getRemind());
-					}
-				break;
+						else {
+							$receive = totime($data['receive']);
+							$resend = totime($data['resend']);
+							$sampleReceive = totime($data['samplereceive']);
+							$examDate = totime($data['examdate']);
+							$data['result'] = nl2br($data['result']);
+							$data['note'] = nl2br($data['note']);
+							$sampleReceive = totime($data['samplereceive']);
+							$sampleReceiver = checkRemindRow($data['samplereceiver'], 5);
+							checkRemindRow($data['customer'], 4);
+							checkRemindRow($data['address'], 5);
+							foreach ($data['exams'] as $key => $value) {
+								checkRemindRow($value, 3);
+							}
+							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", page = "'. implode(', ', $data['page']) .'", no = "'. implode(', ', $data['no']) .'", customer = "'. $data['customer'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', sample = "'. $data['sample'] .'", sampleCode = "'. $data['samplecode'] .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", other = "'. $data['other'] .'", receive = '. $receive .', resend = '. $resend .', phone = "'.$data['phone'].'", sampleReceive = '.$sampleReceive.', sampleReceiver = '.$sampleReceiver.', address = "'. $data['address'] .'", examDate = '.$examDate.', result = "'.$data['result'].'", note = "'.$data['note'].'" where id = ' . $id;
+							$query = $db->query($sql);
+							if ($query) {
+								$result['notify'] = 'Đã cập nhật mẫu';
+								$result['status'] = 1;
+								$result['id'] = $id;
+								$result['html'] = formList($keyword, $page, $limit, $printer);
+								$result['remind'] = json_encode(getRemind());
+							}
+						}
+					break;
+					case '4':
+						if ($key = precheck($data)) {
+							$result['notify'] = 'Nhập thiếu thông tin: ' . $key;
+						}
+						else {
+							$sampleReceive = totime($data['samplereceive']);
+							$receive = totime($data['receive']);
+							$ireceive = totime($data['ireceive']);
+							$examDate = totime($data['examdate']);
+							$data['result'] = nl2br($data['result']);
+							$note = nl2br($data['note']);
+							checkRemindRow($data['address'], 5);
+							checkRemindRow($data['customer'], 4);
+							foreach ($data['exams'] as $key => $value) {
+								checkRemindRow($value, 3);
+							}
+							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", receiveHour = '.$data['receivehour'].', receiveMinute = '.$data['receiveminute'].', phone = "'.$data['phone'].'", sampleReceive = "'.$sampleReceive.'", address = "'.$data['address'].'", sampleReceiver = "'.$data['samplereceiver'].'", ireceive = '.$ireceive.', ireceiver = "'.$data['ireceiver'].'", examDate = "'.$examDate.'", result = "'.$data['result'].'", customer = "'. $data['customer'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', status = "'. $data['status'] .'", sampleCode = "'. $data['samplecode'] .'", receive = '. $data['receive'] .', note = "'. $note .'" where id = ' . $id;
+							$query = $db->query($sql);
+							if ($query) {
+								$result['notify'] = 'Đã cập nhật mẫu';
+								$result['status'] = 1;
+								$result['id'] = $id;
+								$result['html'] = formList($keyword, $page, $limit, $printer);
+								$result['remind'] = json_encode(getRemind());
+							}
+						}
+					break;
+					case '5':
+						if ($key = precheck($data)) {
+							$result['notify'] = 'Nhập thiếu thông tin: ' . $key;
+						}
+						else {
+							$iresend = totime($data['iresend']);
+							$ireceive = totime($data['ireceive']);
+							$note = nl2br($data['note']);
+							checkRemindRow($data['address'], 5);
+							checkRemindRow($data['customer'], 4);
+							foreach ($data['exams'] as $key => $value) {
+								checkRemindRow($value, 3);
+							}
+							$sql = 'update `'. PREFIX .'_row` set address = "'.$data['address'].'", ireceive = '.$ireceive.',  customer = "'. $data['customer'] .'", number = '. $data['number'] .', sampleCode = "'. $data['sampleCode'] .'", note = "'. $note .'", iresend = '. $iresend .', code = "'. $data['code'] .'", sample = "'. $data['sample'] .'", target = "'. $data['target'].'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", receiveDis = "'. $data['receiveDis'] .'", receiveLeader = "'. $data['receiveLeader'] .'" where id = ' . $id;
+							$query = $db->query($sql);
+							if ($query) {
+								$result['notify'] = 'Đã cập nhật mẫu';
+								$result['status'] = 1;
+								$result['id'] = $id;
+								$result['html'] = formList($keyword, $page, $limit, $printer);
+								$result['remind'] = json_encode(getRemind());
+							}
+						}
+					break;
+				}
 			}
 		break;
 	}
@@ -271,25 +308,30 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("main.tpl", PATH);
 
-$method = getMethod();
-$methodHtml = '';
-foreach ($method as $index => $row) {
-	$methodHtml .= '<option value="'. $row['symbol'] .'" class="'.$index.'">'. $row['name'] .'</option>';
-}
-
-for ($i = 0; $i < 60; $i++) { 
-	$xtpl->assign('value', $i);
-	$xtpl->parse('main.minute');
-	$xtpl->parse('main.minute2');
-	if ($i < 24) {
-		$xtpl->parse('main.hour');
-		$xtpl->parse('main.hour2');
+if (checkIsMod($user_info['userid'])) {
+	$method = getMethod();
+	$methodHtml = '';
+	foreach ($method as $index => $row) {
+		$methodHtml .= '<option value="'. $row['symbol'] .'" class="'.$index.'">'. $row['name'] .'</option>';
 	}
+	
+	for ($i = 0; $i < 60; $i++) { 
+		$xtpl->assign('value', $i);
+		$xtpl->parse('main.mod2.minute');
+		$xtpl->parse('main.mod2.minute2');
+		if ($i < 24) {
+			$xtpl->parse('main.mod2.hour');
+			$xtpl->parse('main.mod2.hour2');
+		}
+	}
+	$xtpl->parse('main.mod');
+	$xtpl->parse('main.mod2');
 }
 
 $today = strtotime(date('Y-m-d'));
 $from = $today - 60*60*24*7;
 $end = $today + 60*60*24*7;
+
 
 $xtpl->assign("methodOption", $methodHtml);
 $xtpl->assign('summarycontent', summaryContent($from, $end));

@@ -14,7 +14,7 @@ if (!defined('PREFIX')) {
 $sampleType = array('Nguyên con', 'Huyết thanh', 'Máu', 'Phủ tạng', 'Swab');
 $permissionType = array('Bị cấm', 'Chỉ đọc', 'Chỉnh sửa');
 
-function employerList($key) {
+function employerList($key = '') {
   global $db, $permissionType;
 
   $xtpl = new XTemplate("allowed.tpl", PATH);
@@ -81,7 +81,7 @@ function summaryContent($from, $end) {
 }
 
 function formList($keyword = '', $page = 1, $limit = 10, $printer = 5) {
-  global $db, $sampleType;
+  global $db, $sampleType, $user_info;
 
   $xtpl = new XTemplate("list.tpl", PATH);
 
@@ -98,7 +98,6 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 5) {
   $from = ($page - 1) * $limit;
   $end = $from;
   while ($row = $query->fetch()) {
-    // if (in_array(strval(checkPrinter($row)), $printer)) {
     if (checkPrinter($row) >= $printer) {
       $end ++;
       if (!empty($sampleType[$row['typeindex']])) {
@@ -113,6 +112,9 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 5) {
       $xtpl->assign('number', $row['number']);
       $xtpl->assign('sample', $row['sample']);
       $xtpl->assign('unit', getRemindId($row['sender']));
+      if (checkIsMod($user_info['userid'])) {
+        $xtpl->parse('main.row.mod');
+      }
       $xtpl->parse('main.row');
     }
   }
