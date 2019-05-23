@@ -24,8 +24,8 @@ if (!empty($action)) {
 			$from = totime($from);
 			$end = totime($end);
 
-			$result = 1;
-			$result = summaryContent($from, $end);
+			$result['status'] = 1;
+			$result['html'] = summaryContent($from, $end);
 		break;
 		case 'removeRemind':
 			$id = $nv_Request->get_string('id', 'get/post', '');
@@ -149,7 +149,6 @@ if (!empty($action)) {
 			$result['notify'] = 'Nhập sai thông tin, hoặc thông tin lỗi';
 			switch ($form) {
 				case '1': 
-				
 					if (!(empty($data['code']) || empty($data['sender']) || empty($data['receive']) || empty($data['resend']) || empty($data['state']) || empty($data['receiver']) || empty($data['ireceive']) || empty($data['iresend']) || empty($data['forms']) || empty($data['number']) || empty($data['exams']))) {
 						$sender = checkRemindRow($data['sender'], 2);
 						$receiver = checkRemindRow($data['receiver'], 1);
@@ -157,7 +156,7 @@ if (!empty($action)) {
 							checkRemindRow($value, 3);
 						}
 						if ($id) {
-							$sql = 'update `'. PREFIX .'_row` set code = "'. $data['code'] .'", sender = ' . $sender . ', receive = ' . totime($data['receive']) . ', resend = ' . totime($data['resend']) . ', stateIndex = '. $data['state']['index'] .', stateValue = "'. $data['state']['value'] .'", receiver = ' . $receiver . ', ireceive = '. totime($data['ireceive']) . ', iresend = '. totime($data['ireceive']) . ', form = "'. implode(', ', $data['forms']) .'", number = ' . $data['number'] .', exam = "' . implode(', ', $data['exams']) . '", sample = "'. $data['sample'] .'", status = "'. $data['status'] .'", sampleCode = "'. $data['sampleCode'] .'", method = "'. implode(', ', $data['methods']) .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", endedCopy = '. $data['endedCopy'] .', endedHour = '. $data['endedHour'] .', endedMinute = '. $data['endedMinute'] .' where id = ' . $id;
+							$sql = 'update `'. PREFIX .'_row` set code = "'. $data['code'] .'", sender = ' . $sender . ', receive = ' . totime($data['receive']) . ', resend = ' . totime($data['resend']) . ', stateIndex = '. $data['state']['index'] .', stateValue = "'. $data['state']['value'] .'", receiver = ' . $receiver . ', ireceive = '. totime($data['ireceive']) . ', iresend = '. totime($data['ireceive']) . ', form = "'. implode(', ', $data['forms']) .'", number = ' . $data['number'] .', exam = "' . implode(', ', $data['exams']) . '", sample = "'. $data['sample'] .'", status = "'. $data['status'] .'", sampleCode = "'. $data['sampleCode'] .'", method = "'. implode(', ', $data['methods']) .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'" where id = ' . $id;
 							$query = $db->query($sql);
 							$result['id'] = $id;
 						}
@@ -252,7 +251,7 @@ if (!empty($action)) {
 					foreach ($data['exams'] as $key => $value) {
 						checkRemindRow($value, 3);
 					}
-					$sql = 'update `'. PREFIX .'_row` set address = "'.$data['address'].'", ireceive = '.$ireceive.',  customer = "'. $data['customer'] .'", number = '. $data['number'] .', sampleCode = "'. $data['sampleCode'] .'", note = "'. $note .'", iresend = '. $iresend .', code = "'. $data['code'] .'", sample = "'. $data['sample'] .'", target = "'. $data['target'].'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'" where id = ' . $id;
+					$sql = 'update `'. PREFIX .'_row` set address = "'.$data['address'].'", ireceive = '.$ireceive.',  customer = "'. $data['customer'] .'", number = '. $data['number'] .', sampleCode = "'. $data['sampleCode'] .'", note = "'. $note .'", iresend = '. $iresend .', code = "'. $data['code'] .'", sample = "'. $data['sample'] .'", target = "'. $data['target'].'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", receiveDis = "'. $data['receiveDis'] .'", receiveLeader = "'. $data['receiveLeader'] .'" where id = ' . $id;
 					$query = $db->query($sql);
 					if ($query) {
 						$result['notify'] = 'Đã cập nhật mẫu';

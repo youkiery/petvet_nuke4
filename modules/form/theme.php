@@ -102,10 +102,10 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 5) {
     if (checkPrinter($row) >= $printer) {
       $end ++;
       if (!empty($sampleType[$row['typeindex']])) {
-        $xtpl->assign('sample', $sampleType[$row['typeindex']]);
+        $xtpl->assign('type', $sampleType[$row['typeindex']]);
       }
       else {
-        $xtpl->assign('sample', $row['typevalue']);
+        $xtpl->assign('type', $row['typevalue']);
       }
       $xtpl->assign('index', $index++);
       $xtpl->assign('id', $row['id']);

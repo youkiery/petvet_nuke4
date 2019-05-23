@@ -3,6 +3,12 @@
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 
+<style>
+  #ui-datepicker-div {
+    z-index: 10000 !important;
+  }
+</style>
+
 <div id="msgshow" class="msgshow"></div>
 <div id="vac_notify"></div>
 <div id="reman"></div>
