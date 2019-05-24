@@ -15,6 +15,8 @@ $page_title = "Nhập hồ sơ một chiều";
 
 $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
+	$teriorname = array('endedcopy' => 'Bản copy', 'endedhour' => 'Giờ kết thúc', 'endedminute' => 'Phút kết thúc', 'code' => 'Mã phiếu', 'sender' => 'Người gửi', 'receive' => 'Người nhận', 'resend' => 'Ngày hẹn trả', 'state' => 'Hình thức nhận', 'receiver' => 'Người nhận', 'ireceive' => 'Ngày nhận', 'iresend' => 'Ngày hẹn trả', 'form' => 'Tên hồ sơ', 'number' => 'Số lượng mẫu', 'sample' => 'Loài được lấy mẫu', 'type' => 'Loại mẫu', 'samplecode' => 'Ký hiệu mẫu', 'exam' => 'Yêu cầu xét nghiệm', 'method' => 'Phương pháp', 'address' => 'Địa chỉ', 'phone' => 'Số điện thoại', 'samplereceive' => 'Ngày lấy mẫu', 'samplereceiver' => 'Người lấy mẫu', 'examdate' => 'Ngày xét nghiệm', 'result' => 'Kết quả', 'xcode' => 'Số ĐKXN', 'page' => 'Số trang', 'no' => 'Liên', 'customer' => 'Khách hàng', 'other' => 'Yêu cầu khác', 'receivehour' => 'Giờ nhận', 'receiveminute' => 'Phút nhận', 'isenderemploy' => 'Người gửi', 'isenderunit' => 'Đơn vị gửi', 'ireceiveremploy' => 'Người nhận', 'ireceiverunit' => 'Đơn vị nhận', 'status' => 'Tình trạng mẫu', 'xstatus' => 'Hình thức bảo quản', 'quality' => 'Chất lượng mẫu', 'ireceiver' => 'Người nhận', 'note' => 'Ghi chú', 'target' => 'Mục tiêu', 'receiveDis' => 'Nơi nhận', 'receiveLeader' => 'Người phụ trách');
+	
 	$result = array("status" => 0);
 	switch ($action) {
 		case 'summaryFilter':
@@ -167,7 +169,11 @@ if (!empty($action)) {
 			else {
 				switch ($form) {
 					case '1': 
-						if (!(empty($data['code']) || empty($data['sender']) || empty($data['receive']) || empty($data['resend']) || empty($data['state']) || empty($data['receiver']) || empty($data['ireceive']) || empty($data['iresend']) || empty($data['forms']) || empty($data['number']) || empty($data['exams']))) {
+						if ($key = precheck($data)) {
+							$result['notify'] = 'Nhập thiếu thông tin: ' . $teriorname[$key];
+						}
+						else {
+						// if (!(empty($data['code']) || empty($data['sender']) || empty($data['receive']) || empty($data['resend']) || empty($data['state']) || empty($data['receiver']) || empty($data['ireceive']) || empty($data['iresend']) || empty($data['forms']) || empty($data['number']) || empty($data['exams']))) {
 							$sender = checkRemindRow($data['sender'], 2);
 							$receiver = checkRemindRow($data['receiver'], 1);
 							foreach ($data['exams'] as $key => $value) {
@@ -194,7 +200,7 @@ if (!empty($action)) {
 					break;
 					case '2':
 						if ($key = precheck($data)) {
-							$result['notify'] = 'Nhập thiếu thông tin: ' . $key;
+							$result['notify'] = 'Nhập thiếu thông tin: ' . $teriorname[$key];
 						}
 						else {
 							$data['receive'] = totime($data['receive']);
@@ -220,7 +226,7 @@ if (!empty($action)) {
 					break;
 					case '3':
 						if ($key = precheck($data)) {
-							$result['notify'] = 'Nhập thiếu thông tin: ' . $key;
+							$result['notify'] = 'Nhập thiếu thông tin: ' . $teriorname[$key];
 						}
 						else {
 							$receive = totime($data['receive']);
@@ -250,7 +256,7 @@ if (!empty($action)) {
 					break;
 					case '4':
 						if ($key = precheck($data)) {
-							$result['notify'] = 'Nhập thiếu thông tin: ' . $key;
+							$result['notify'] = 'Nhập thiếu thông tin: ' . $teriorname[$key];
 						}
 						else {
 							$sampleReceive = totime($data['samplereceive']);
@@ -278,7 +284,7 @@ if (!empty($action)) {
 					break;
 					case '5':
 						if ($key = precheck($data)) {
-							$result['notify'] = 'Nhập thiếu thông tin: ' . $key;
+							$result['notify'] = 'Nhập thiếu thông tin: ' . $teriorname[$key];
 						}
 						else {
 							$iresend = totime($data['iresend']);
