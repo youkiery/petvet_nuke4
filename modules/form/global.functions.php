@@ -98,6 +98,21 @@ function checkRemindRow($value, $type) {
 	return $id;
 }
 
+function checkPrinter($id, $form) {
+	global $db;
+
+	$sql = 'select * from `'. PREFIX .'_row` where id = ' . $id . ' and printer >= ' . $form;
+	$query = $db->query($sql);
+	
+	if (empty($row = $query->fetch())) {
+		$sql = 'update `'. PREFIX .'_row` set printer = '. $form .' where id = ' . $id;
+		if ($db->query($sql)) {
+			return true;	
+		}
+	}
+	return false;
+}
+
 function precheck($data) {
 	$check = '';
 	foreach ($data as $key => $row) {
@@ -200,18 +215,18 @@ function checkIsViewer($userid) {
 	return false;
 }
 
-function checkPrinter($data) {
-	if (!empty($data['target'])) {
-		return 5;
-	}
-	else if (!empty($data['note'])) {
-		return 4;
-	}
-	else if (!empty($data['page'])) {
-		return 3;
-	}
-	else if (!empty($data['xcode'])) {
-		return 2;
-	}
-	return 1;
-}
+// function checkPrinter($data) {
+// 	if (!empty($data['target'])) {
+// 		return 5;
+// 	}
+// 	else if (!empty($data['note'])) {
+// 		return 4;
+// 	}
+// 	else if (!empty($data['page'])) {
+// 		return 3;
+// 	}
+// 	else if (!empty($data['xcode'])) {
+// 		return 2;
+// 	}
+// 	return 1;
+// }

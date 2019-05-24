@@ -80,25 +80,24 @@ function summaryContent($from, $end) {
   return $xtpl->text();
 }
 
-function formList($keyword = '', $page = 1, $limit = 10, $printer = 5) {
+function formList($keyword = '', $page = 1, $limit = 10, $printer = 1) {
   global $db, $sampleType, $user_info;
 
   $xtpl = new XTemplate("list.tpl", PATH);
 
-  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $keyword .'%" '. $extraSql;
+  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and printer >= '. $printer .' '. $extraSql;
   $query = $db->query($sqlCount);
   $count = $query->fetch();
 
   $xtpl->assign('total', $count['count']);
 
-  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" '. $extraSql . ' limit ' . $limit . ' offset ' . ($page - 1) * $limit;
+  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and printer >= '. $printer .' '. $extraSql . ' limit ' . $limit . ' offset ' . ($page - 1) * $limit;
   $query = $db->query($sql);
 
   $index = 1;
-  $from = ($page - 1) * $limit;
-  $end = $from;
+  $from = ($page - 1) * $limit + 1;
+  $end = $from - 1;
   while ($row = $query->fetch()) {
-    if (checkPrinter($row) >= $printer) {
       $end ++;
       if (!empty($sampleType[$row['typeindex']])) {
         $xtpl->assign('type', $sampleType[$row['typeindex']]);
@@ -116,11 +115,10 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 5) {
         $xtpl->parse('main.row.mod');
       }
       $xtpl->parse('main.row');
-    }
   }
   $xtpl->assign('from', $from);
   $xtpl->assign('end', $end);
-  $xtpl->assign('nav', navList($number, $page, $limit));
+  $xtpl->assign('nav', navList($count['count'], $page, $limit));
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -128,6 +126,7 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 5) {
 function navList ($number, $page, $limit) {
   global $lang_global;
   $total_pages = ceil($number / $limit);
+
   $on_page = $page;
   $page_string = "";
   if ($total_pages > 10) {

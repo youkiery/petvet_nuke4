@@ -114,18 +114,18 @@ if (!empty($action)) {
 					$result['form']['state']['index'] = $result['form']['stateIndex'];
 					$result['form']['state']['value'] = $result['form']['stateValue'];
 				}
-
+				
 				if ($action == 'preview') {
 					$result = $result['form'];
+					if (!empty($result['form'])) {
+						$result['form'] = explode(', ', $result['form']);
+					}
 					if (!empty($result['exam'])) {
 						$result['exam'] = explode(', ', $result['exam']);
 					}
 					if (!empty($result['method'])) {
 						$result['method'] = explode(', ', $result['method']);
 					}
-				}
-				else {
-					$result['form']['printer'] = checkPrinter($result['form']);
 				}
 				$result['status'] = 1;
 			}
@@ -184,6 +184,7 @@ if (!empty($action)) {
 								$result['id'] = $db->lastInsertId();
 							}
 							if ($query) {
+								checkPrinter($result['id'], $form);
 								$result['status'] = 1;
 								$result['notify'] = 'Đã lưu mẫu';
 								$result['html'] = formList($keyword, $page, $limit, $printer);
@@ -206,9 +207,9 @@ if (!empty($action)) {
 							}
 		
 							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", isenderEmploy = '. $data['isenderemploy'] .' ,  isenderUnit = '. $data['isenderunit'] .', ireceiverEmploy = '. $data['ireceiveremploy'] .', ireceiverUnit = '. $data['ireceiverunit'] .', receiveHour = '.$data['receivehour'].', receiveMinute = '.$data['receiveminute'].', typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", sample = "'. $data['sample'] .'", number = '. $data['number'] .', status = "'. $data['status'] .'", sampleCode = "'. $data['samplecode'] .'", xstatus = '. $data['xstatus']['index'] .', quality = "'. $data['quality'] .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", endedCopy = '. $data['endedcopy'] .', endedHour = '. $data['endedhour'] .', endedMinute = '. $data['endedminute'] .', receive = '. $data['receive'] .' where id = ' . $id;
-							die($sql);
 							$query = $db->query($sql);
 							if ($query) {
+								checkPrinter($id, $form);
 								$result['notify'] = 'Đã cập nhật mẫu';
 								$result['status'] = 1;
 								$result['id'] = $id;
@@ -238,6 +239,7 @@ if (!empty($action)) {
 							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", page = "'. implode(', ', $data['page']) .'", no = "'. implode(', ', $data['no']) .'", customer = "'. $data['customer'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', sample = "'. $data['sample'] .'", sampleCode = "'. $data['samplecode'] .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", other = "'. $data['other'] .'", receive = '. $receive .', resend = '. $resend .', phone = "'.$data['phone'].'", sampleReceive = '.$sampleReceive.', sampleReceiver = '.$sampleReceiver.', address = "'. $data['address'] .'", examDate = '.$examDate.', result = "'.$data['result'].'", note = "'.$data['note'].'" where id = ' . $id;
 							$query = $db->query($sql);
 							if ($query) {
+								checkPrinter($id, $form);
 								$result['notify'] = 'Đã cập nhật mẫu';
 								$result['status'] = 1;
 								$result['id'] = $id;
@@ -265,6 +267,7 @@ if (!empty($action)) {
 							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", receiveHour = '.$data['receivehour'].', receiveMinute = '.$data['receiveminute'].', phone = "'.$data['phone'].'", sampleReceive = "'.$sampleReceive.'", address = "'.$data['address'].'", sampleReceiver = "'.$data['samplereceiver'].'", ireceive = '.$ireceive.', ireceiver = "'.$data['ireceiver'].'", examDate = "'.$examDate.'", result = "'.$data['result'].'", customer = "'. $data['customer'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', status = "'. $data['status'] .'", sampleCode = "'. $data['samplecode'] .'", receive = '. $data['receive'] .', note = "'. $note .'" where id = ' . $id;
 							$query = $db->query($sql);
 							if ($query) {
+								checkPrinter($id, $form);
 								$result['notify'] = 'Đã cập nhật mẫu';
 								$result['status'] = 1;
 								$result['id'] = $id;
@@ -289,6 +292,7 @@ if (!empty($action)) {
 							$sql = 'update `'. PREFIX .'_row` set address = "'.$data['address'].'", ireceive = '.$ireceive.',  customer = "'. $data['customer'] .'", number = '. $data['number'] .', sampleCode = "'. $data['sampleCode'] .'", note = "'. $note .'", iresend = '. $iresend .', code = "'. $data['code'] .'", sample = "'. $data['sample'] .'", target = "'. $data['target'].'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", receiveDis = "'. $data['receiveDis'] .'", receiveLeader = "'. $data['receiveLeader'] .'" where id = ' . $id;
 							$query = $db->query($sql);
 							if ($query) {
+								checkPrinter($id, $form);
 								$result['notify'] = 'Đã cập nhật mẫu';
 								$result['status'] = 1;
 								$result['id'] = $id;

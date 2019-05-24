@@ -103,11 +103,11 @@
         </div>
         <div class="col-sm-6">
           <select class="form-control" id="filter-printer">
-            <option value="1">Mẫu 1</option>
+            <option value="1" selected>Mẫu 1</option>
             <option value="2">Mẫu 2</option>
             <option value="3">Mẫu 3</option>
             <option value="4">Mẫu 4</option>
-            <option value="5" selected>Mẫu 5</option>
+            <option value="5">Mẫu 5</option>
           </select>
         </div>
         <div class="col-sm-6">
@@ -376,7 +376,7 @@
       </div>
     </div>
 
-    <div class="boxed box-1 box-2">
+    <div class="boxed box-1 box-2 box-4">
       <label> Loại mẫu </label>
       <div id="type-0">
         <input type="radio" name="type" class="check-box type" id="typed-0" checked>
@@ -408,7 +408,7 @@
         </div>
       </div>
     </div>
-    <div class="form-group row boxed box-1 box-2">
+    <div class="form-group row boxed box-1 box-2 box-3 box-4">
       <label class="col-sm-4"> Số lượng mẫu </label>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="form-insert-number" autocomplete="off">
@@ -418,13 +418,13 @@
         <input type="text" class="form-control sample" id="form-insert-sample" autocomplete="off">
       </div>
     </div>
-    <div class="form-group row boxed box-2">
+    <div class="form-group row boxed box-2 box-4">
       <label class="col-sm-6"> Tình trạng mẫu </label>
       <div class="col-sm-18">
         <input type="text" class="form-control" id="form-insert-status" autocomplete="off">
       </div>
     </div>
-    <div class="form-group row boxed box-1 box-2">
+    <div class="form-group row boxed box-1 box-2 box-3 box-4">
       <label class="col-sm-6"> Ký hiệu mẫu </label>
       <div class="col-sm-18" id="form-insert-sample-parent">
         <input type="text" class="form-control" id="form-insert-sample-code" autocomplete="off">
@@ -681,7 +681,7 @@
   var global_saved = 0
   var global_id = 0
   var global_page = 1
-  var global_printer = 5
+  var global_printer = 1
 
   var visible = {
     0: {1: '1', 2: '1'},
@@ -1175,8 +1175,8 @@
 
             parseInputs(data, 'exam')
             parseInputs(data, 'form')
-            $("#typed-" + data['form']['typeindex']).attr('checked', true)
-            $("#state-" + data['form']['stateindex']).attr('checked', true)
+            $("#typed-" + data['form']['typeindex']).prop('checked', true)
+            $("#state-" + data['form']['stateindex']).prop('checked', true)
             formInsertReceiverStateOther.val(data['form']['statevalue'])
             formInsertTypeOther.val(data['form']['typevalue'])
           }
@@ -1451,6 +1451,9 @@
         var sampleCode = checkSampleCode(formInsertSampleCode, formInsertSampleParent, formInsertNumber.val())
         if (sampleCode) {         
           data = {
+            endedcopy: formInsertEndedCopy.val(),
+            endedhour: formInsertEndedHour.val(),
+            endedminute: formInsertEndedMinute.val(),
             code: formInsertCode.val(),
             sender: formInsertSenderEmploy.val(),
             receive: formInsertReceive.val(),
@@ -1613,11 +1616,12 @@
     freeze()
     $.post(
       strHref,
-      {action: 'filter', page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val()},
+      {action: 'filter', page: 1, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val()},
       (response, status) => {
         checkResult(response, status).then(data => {
-          content.html(data['html'])
+          global_page = 1
           global_printer = filterPrinter.val()
+          content.html(data['html'])
         }, () => {defreeze()})
       }
     )
@@ -1627,7 +1631,7 @@
     freeze()
     $.post(
       strHref,
-      {action: 'filter', page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val()},
+      {action: 'filter', page: page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           global_page = page
@@ -1656,8 +1660,10 @@
         var data = checkForm(id)
       }
       
+      
       if (Object.keys(data).length) {
         var html = former[id]
+        id = Number(id)
         switch (id) {
           case 1:
             html = html.replace('(code)', data['code'])
