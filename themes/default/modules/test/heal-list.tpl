@@ -7,6 +7,7 @@
       <td> {customer} </td>
       <td> <b>Hướng điều trị:</b> {oriental} </td>
       <td rowspan="4" class="cell-center {class}">
+        <button class="btn btn-info" onclick="preview('{image}')"> <span class="glyphicon glyphicon-eye-open"></span> </button>
         <button class="btn btn-info" onclick="edit({id})"> <span class="glyphicon glyphicon-edit"></span> </button>
         <button class="btn btn-warning" onclick="copy({id})"> <span class="glyphicon glyphicon-file"></span> </button>
         <!-- BEGIN: manager -->

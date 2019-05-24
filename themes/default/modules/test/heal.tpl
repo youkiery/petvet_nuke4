@@ -5,6 +5,101 @@
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <div class="msgshow" id="msgshow"></div>
 
+<style>
+/* Style the Image Used to Trigger the Modal */
+#myImg {
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#myImg:hover {opacity: 0.7;}
+
+/* The Modal (background) */
+.rect.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 10000; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (Image) */
+.rect.modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+}
+
+/* Caption of Modal Image (Image Text) - Same Width as the Image */
+#caption.rect {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+  height: 150px;
+}
+
+/* Add Animation - Zoom in the Modal */
+.modal-content.rect, #caption.rect { 
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@keyframes zoom {
+  from {transform:scale(0)} 
+  to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close.rect {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close.rect:hover,
+.close.rect:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+  .modal-content.rect {
+    width: 100%;
+  }
+}
+</style>
+
+<!-- The Modal -->
+<div id="myModal" class="modal rect">
+
+  <!-- The Close Button -->
+  <span class="close rect">&times;</span>
+
+  <!-- Modal Content (The Image) -->
+  <img class="modal-content rect" id="img01">
+
+  <!-- Modal Caption (Image Text) -->
+  <div id="caption"></div>
+</div>
+
 <div id="heal-filter" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -118,6 +213,13 @@
         <div class="row form-group">
           <label class="col-sm-4"> X-quang </label>
           <div class="col-sm-18"><input type="text" class="form-control" id="heal-insert-xray" autocomplete="off"> </div> 
+        </div>
+        <div class="row form-group">
+          <label class="btn btn-info" for="file">
+              <input id="file" type="file" style="display: none" onchange="onselected(this)">
+              <span class="glyphicon glyphicon-upload"></span>
+            </label>
+            <img id="blah" width="64px" height="64px">
         </div>
         <div class="row">
           <label class="col-sm-4"> Thuốc điều trị  </label>
@@ -236,7 +338,34 @@
 <div id="content">
   {content}
 </div>
+<script src="https://www.gstatic.com/firebasejs/6.0.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-storage.js"></script>
 <script>
+  var firebaseConfig = {
+  apiKey: "AIzaSyDWt6y4laxeTBq2RYDY6Jg4_pOkdxwsjUE",
+  authDomain: "directed-sonar-241507.firebaseapp.com",
+  databaseURL: "https://directed-sonar-241507.firebaseio.com",
+  projectId: "directed-sonar-241507",
+  storageBucket: "directed-sonar-241507.appspot.com",
+  messagingSenderId: "816396321770",
+  appId: "1:816396321770:web:193e84ee21b16d41"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  var storage = firebase.storage();
+  var storageRef = firebase.storage().ref();
+  var fileInput = document.getElementById('file')
+  var blah = document.getElementById('blah')
+  var file 
+  var filename
+  var maxWidth = 640
+  var maxHeight = 640
+  var metadata = {
+    contentType: 'image/jpeg',
+  };
+  var imageType = ['jpg', 'png', 'gif']
+
   var healCustomer = $("#heal-customer")
   var healCustomerName = $("#heal-customer-name")
   var healCustomerPhone = $("#heal-customer-phone")
@@ -322,6 +451,11 @@
   var g_filterPet = 0
   var g_status = 0
   var global_status = 0
+  var modal = document.getElementById("myModal");
+  var img = document.getElementById("myImg");
+  var modalImg = document.getElementById("img01");
+  var captionText = document.getElementById("caption");
+  var span = document.getElementsByClassName("close")[0];
 
   const BUTTON_DATA = ['btn-info', 'btn-warning', 'btn-danger']
 
@@ -464,6 +598,100 @@
 
     filter()
   })
+
+  span.onclick = function() { 
+    modal.style.display = "none";
+  }
+
+  function preview(image) {
+    modal.style.display = "block";
+    modalImg.src = image;
+  }
+
+  function onselected(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      var fullname = input.files[0].name
+      var name = Math.round(new Date().getTime() / 1000) + '_' + fullname.substr(0, fullname.lastIndexOf('.'))
+      var extension = fullname.substr(fullname.lastIndexOf('.') + 1)
+      filename = name + '.' + extension
+      
+      reader.onload = function (e) {
+				var image = new Image();
+				image.src = e.target["result"];
+				image.onload = (e2) => {
+					var c = document.createElement("canvas")
+					var ctx = c.getContext("2d");
+					var ratio = 1;
+					if(image.width > maxWidth)
+						ratio = maxWidth / image.width;
+					else if(image.height > maxHeight)
+						ratio = maxHeight / image.height;
+					c.width = image["width"];
+					c.height = image["height"];
+					ctx.drawImage(image, 0, 0);
+					var cc = document.createElement("canvas")
+					var cctx = cc.getContext("2d");
+					cc.width = image.width * ratio;
+					cc.height = image.height * ratio;
+					cctx.fillStyle = "#fff";
+					cctx.fillRect(0, 0, cc.width, cc.height);
+					cctx.drawImage(c, 0, 0, c.width, c.height, 0, 0, cc.width, cc.height);
+					file = cc.toDataURL("image/jpeg")
+					blah.setAttribute('src', file)
+					file = file.substr(file.indexOf(',') + 1);
+        };
+      };
+
+      if (imageType.indexOf(extension) >= 0) {
+        
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+	}
+
+  function uploader() {
+    return new Promise(resolve => {
+      if (!(file || filename)) {
+        resolve('')
+      }
+      else {
+        var uploadTask = storageRef.child('images/' + filename).putString(file, 'base64', metadata);
+        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+          function(snapshot) {
+            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+              case firebase.storage.TaskState.PAUSED: // or 'paused'
+                console.log('Upload is paused');
+                break;
+              case firebase.storage.TaskState.RUNNING: // or 'running'
+                console.log('Upload is running');
+                break;
+            }
+          }, function(error) {
+            resolve('')
+            switch (error.code) {
+              case 'storage/unauthorized':
+                // User doesn't have permission to access the object
+              break;
+              case 'storage/canceled':
+                // User canceled the upload
+              break;
+              case 'storage/unknown':
+                // Unknown error occurred, inspect error.serverResponse
+              break;
+            }
+          }, function() {
+            // Upload completed successfully, now we can get the download URL
+            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+            resolve(downloadURL)
+            console.log('File available at', downloadURL);
+          });
+        });
+      }
+    })
+	}
 
   function addPet() {
       answer = prompt('Nhập tên thú cưng của ' + dbdata[g_customerid]['name'], '');
@@ -902,16 +1130,19 @@
     else {
       doctorid = healInsertDoctor.val()
     }
-    $.post(
-      strHref,
-      {action: 'edit', id: g_id, petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), note: healInsertNote.val(), insult: healInsertInsult.val(), drug: drugList, page: page, limit: limit.val(), customer: g_filterCustomer, pet: g_filterPet, fstatus: global_status, doctorid: doctorid, gdoctor: g_doctorid},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          content.html(data['html'])
-          healInsert.modal('hide')
-        }, () => {})
-      }
-    )
+    
+    uploader().then(imageUrl => {
+      $.post(
+        strHref,
+        {action: 'edit', id: g_id, petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), note: healInsertNote.val(), insult: healInsertInsult.val(), drug: drugList, page: page, limit: limit.val(), customer: g_filterCustomer, pet: g_filterPet, fstatus: global_status, doctorid: doctorid, gdoctor: g_doctorid, image: imageUrl},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            content.html(data['html'])
+            healInsert.modal('hide')
+          }, () => {})
+        }
+      )
+    })
   }
   
   function removeSubmit() {
@@ -939,16 +1170,18 @@
       alert_msg('Chưa chọn thú cưng');
     }
     else {
-      $.post(
-        strHref,
-        {action: 'insert', petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), note: healInsertNote.val(), insult: healInsertInsult.val(), drug: drugList, page: page, limit: limit.val(), customer: g_filterCustomer, pet: g_filterPet, fstatus: global_status, doctorid: doctorid, gdoctor: g_doctorid},
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            content.html(data['html'])
-            healInsert.modal('hide')
-          }, () => {})
-        }
-      )
+      uploader().then(imageUrl => {
+        $.post(
+          strHref,
+          {action: 'insert', petid: g_petid, status: g_status, age: healInsertAge.val(), weight: healInsertWeight.val(), species: healInsertSpecies.val(), system: system, oriental: healInsertOriental.val(), appear: healInsertAppear.val(), exam: healInsertExam.val(), usg: healInsertUsg.val(), xray: healInsertXray.val(), note: healInsertNote.val(), insult: healInsertInsult.val(), drug: drugList, page: page, limit: limit.val(), customer: g_filterCustomer, pet: g_filterPet, fstatus: global_status, doctorid: doctorid, gdoctor: g_doctorid, image: imageUrl},
+          (response, status) => {
+            checkResult(response, status).then(data => {
+              content.html(data['html'])
+              healInsert.modal('hide')
+            }, () => {})
+          }
+        )
+      })
     }
   }
   

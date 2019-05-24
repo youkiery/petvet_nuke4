@@ -143,6 +143,7 @@ if (!empty($action)) {
 			$note = $nv_Request->get_string('note', 'get/post', '');
 			$insult = $nv_Request->get_string('insult', 'get/post', '');
 			$drug = $nv_Request->get_array('drug', 'get/post', '');
+			$image = $nv_Request->get_string('image', 'get/post', '');
 
 			$page = $nv_Request->get_string('page', 'get/post', '');
 			$limit = $nv_Request->get_string('limit', 'get/post', '');
@@ -171,6 +172,7 @@ if (!empty($action)) {
 						$db->query($sql);
 					}
 				} 
+				updateImage($image, $id);
 
 				$sql = 'update `'. VAC_PREFIX .'_heal` set doctorid = '. $doctorid .', oriental = "'. $oriental .'", appear = "'. $appear .'", exam = "'. $exam .'", usg = "'. $usg .'", xray = "'. $xray .'", note = "'.$note.'" where id = ' . $id;
 				$db->query($sql);
@@ -213,6 +215,7 @@ if (!empty($action)) {
 			$note = $nv_Request->get_string('note', 'get/post', '');
 			$insult = $nv_Request->get_string('insult', 'get/post', '');
 			$drug = $nv_Request->get_array('drug', 'get/post', '');
+			$image = $nv_Request->get_string('image', 'get/post', '');
 
 			$page = $nv_Request->get_string('page', 'get/post', '');
 			$limit = $nv_Request->get_string('limit', 'get/post', '');
@@ -228,7 +231,7 @@ if (!empty($action)) {
 			$sql = 'update `'. VAC_PREFIX .'_pet` set status = '. $status .', age = '. $age .', weight = '. $weight .', species = '. $species .' where id = ' . $petid;
 			$db->query($sql);
 
-			$sql = 'insert into `'. VAC_PREFIX .'_heal` (petid, doctorid, appear, oriental, exam, usg, xray, note, time) values ('.$petid.', '. $doctorid .', "'.$appear.'", "'.$oriental.'", "'.$exam.'", "'.$usg.'", "'.$xray.'", "'.$note.'", '. time() .')';
+			$sql = 'insert into `'. VAC_PREFIX .'_heal` (petid, doctorid, appear, oriental, exam, usg, xray, note, time, image) values ('.$petid.', '. $doctorid .', "'.$appear.'", "'.$oriental.'", "'.$exam.'", "'.$usg.'", "'.$xray.'", "'.$note.'", '. time() .', "'.$image.'")';
 			$db->query($sql);
 			$id = $db->lastInsertId();
 

@@ -81,6 +81,22 @@ while ($row = $query->fetch()) {
   $vacconfigv2[$row["name"]] = $row["value"];
 }
 
+function updateImage($image, $id) {
+  global $db;
+
+  if (!empty($image)) {
+    $sql = 'select * from `'. VAC_PREFIX .'_heal` where id = ' . $id;
+    die($sql);
+    $query = $db->query($sql);
+  
+    if (empty($row = $query->fetch()) || $row['image'] != $image) {
+      $sql = 'update `'. VAC_PREFIX .'_heal` set image = "'. $image .'" where id = ' . $id;
+      $db->query($sql);
+    }
+  }
+
+}
+
 function selectHealInsultId($healid) {
   global $db;
   $sql = 'select * from `'. VAC_PREFIX .'_heal_insult` where healid = '. $healid;

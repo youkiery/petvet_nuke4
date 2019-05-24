@@ -133,6 +133,7 @@ function healFilter($cometime, $calltime, $customer, $pet, $gdoctor) {
     $xtpl->assign('class', $STATUS_COLOR[$pet['status']]);
     $xtpl->assign('customer', $customer['name']);
     $xtpl->assign('petname', $pet['name']);
+    $xtpl->assign('image', $heal['image']);
     $xtpl->assign('oriental', $heal['oriental']);
     $xtpl->assign('drug', $drug);
     $xtpl->assign('nav', navList($count['id'], $page, $limit));
@@ -195,6 +196,7 @@ function healList($page, $limit, $customer = 0, $pet = 0, $status = 0, $gdoctor)
     $xtpl->assign('doctor', selectDoctorId($heal['doctorid'])['first_name']);
     $xtpl->assign('class', $STATUS_COLOR[$pet['status']]);
     $xtpl->assign('customer', $customer['name']);
+    $xtpl->assign('image', $heal['image']);
     $xtpl->assign('petname', $pet['name']);
     $xtpl->assign('oriental', $heal['oriental']);
     $xtpl->assign('drug', $drug);
