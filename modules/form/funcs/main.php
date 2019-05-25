@@ -33,7 +33,7 @@ if (!empty($action)) {
 			$id = $nv_Request->get_string('id', 'get/post', '');
 
 			if (!(empty($id) || empty(getRemindId($id)))) {
-				$sql = 'delete from `'.PREFIX.'_remind` where id = '. $id;
+				$sql = 'update `'.PREFIX.'_remind` set visible = 0 where id = '. $id;
 				if ($db->query($sql)) {
 					$result['status'] = 1;
 					$result['notify'] = 'Đã xóa';
@@ -41,12 +41,29 @@ if (!empty($action)) {
 				}
 			}
 		break;
+		case 'removeMethod':
+			$id = $nv_Request->get_string('id', 'get/post', '');
+
+			if (!(empty($id) || empty(getMethodId($id)))) {
+				$sql = 'update `'.PREFIX.'_method` set visible = 0 where id = '. $id;
+				if ($db->query($sql)) {
+					$result['status'] = 1;
+					$result['notify'] = 'Đã xóa';
+					$result['method'] = json_encode(getMethod());
+				}
+			}
+		break;
 		case 'insertMethod':
 			$name = $nv_Request->get_string('name', 'get/post', '');
 			$symbol = $nv_Request->get_string('symbol', 'get/post', '');
 
-			if (!(empty($name) || empty($symbol) || checkMethod($name))) {
-				$sql = 'insert into `'. PREFIX .'_method` (name, symbol) values("'.$name.'", "'.$symbol.'")';
+			if (!(empty($name) || empty($symbol))) {
+				if ($id = checkMethod($name)) {
+					$sql = 'update `'. PREFIX .'_method` set symbol = "'. $symbol .'", visible = 1 where id = ' . $id;
+				}
+				else {
+					$sql = 'insert into `'. PREFIX .'_method` (name, symbol) values("'.$name.'", "'.$symbol.'")';
+				}
 				if ($db->query($sql)) {
 					$method = getMethod();
 					$methodHtml = '';
@@ -92,6 +109,7 @@ if (!empty($action)) {
 				$result['form']['ireceiverunit'] = getRemindId($result['form']['ireceiverunit']);
 				$result['form']['isenderemploy'] = getRemindId($result['form']['isenderemploy']);
 				$result['form']['isenderunit'] = getRemindId($result['form']['isenderunit']);
+				$result['form']['samplereceiver'] = getRemindId($result['form']['samplereceiver']);
 
 				$result['form']['receive'] = date('d/m/Y', $result['form']['receive']);
 				$result['form']['resend'] = date('d/m/Y', $result['form']['resend']);
@@ -100,6 +118,7 @@ if (!empty($action)) {
 				$result['form']['receivetime'] = date('d/m/Y', $result['form']['receivetime']);
 				$result['form']['samplereceive'] = date('d/m/Y', $result['form']['samplereceive']);
 				$result['form']['sampletime'] = date('d/m/Y', $result['form']['sampletime']);
+
 				$result['form']['examdate'] = date('d/m/Y', $result['form']['examdate']);
 				$result['form']['note'] = str_replace('<br />', '', $result['form']['note']);
 
@@ -326,7 +345,12 @@ if (checkIsMod($user_info['userid'])) {
 	}
 	
 	for ($i = 0; $i < 60; $i++) { 
-		$xtpl->assign('value', $i);
+		if ($i < 10) {
+			$xtpl->assign('value', '0' . $i);
+		}
+		else {
+			$xtpl->assign('value', $i);
+		}
 		$xtpl->parse('main.mod2.minute');
 		$xtpl->parse('main.mod2.minute2');
 		if ($i < 24) {
@@ -341,7 +365,6 @@ if (checkIsMod($user_info['userid'])) {
 $today = strtotime(date('Y-m-d'));
 $from = $today - 60*60*24*7;
 $end = $today + 60*60*24*7;
-
 
 $xtpl->assign("methodOption", $methodHtml);
 $xtpl->assign('summarycontent', summaryContent($from, $end));

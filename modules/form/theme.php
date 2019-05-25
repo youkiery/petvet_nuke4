@@ -91,7 +91,7 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1) {
 
   $xtpl->assign('total', $count['count']);
 
-  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and printer >= '. $printer .' '. $extraSql . ' limit ' . $limit . ' offset ' . ($page - 1) * $limit;
+  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and printer >= '. $printer .' '. $extraSql . ' order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
   $query = $db->query($sql);
 
   $index = 1;

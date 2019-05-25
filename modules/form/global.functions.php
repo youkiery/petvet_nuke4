@@ -31,7 +31,7 @@ function getRemind() {
 	global $db;
 	$list = array();
 
-	$sql = 'select * from `'.PREFIX.'_remind`';
+	$sql = 'select * from `'.PREFIX.'_remind` where visible = 1 and value <> ""';
 	$query = $db->query($sql);
 
 	while ($row = $query->fetch()) {
@@ -57,13 +57,24 @@ function getMethod() {
 	global $db;
 	$list = array();
 
-	$sql = 'select * from `'.PREFIX.'_method`';
+	$sql = 'select * from `'.PREFIX.'_method` where visible = 1';
 	$query = $db->query($sql);
 
 	while ($row = $query->fetch()) {
-		$list[$row['id']] = array('name' => $row['name'], 'symbol' => $row['symbol']);
+		$list[$row['id']] = array('id' => $row['id'], 'name' => $row['name'], 'symbol' => $row['symbol']);
 	} 
 	return $list;
+}
+
+function getMethodId($id) {
+	global $db;
+
+	$sql = 'select * from `'. PREFIX .'_method` where id = ' . $id;
+	$query = $db->query($sql);
+	if (!empty($row = $query->fetch())) {
+		return $row;
+	}
+	return '';
 }
 
 function getRemindId($id) {
@@ -94,6 +105,12 @@ function checkRemindRow($value, $type) {
 	}
 	else {
 		$id = $row['id'];
+		$sql = 'select * from `'.PREFIX.'_remind` where id = ' . $id . ' and visible = 0';
+		$query = $db->query($sql);
+		if (!empty($row = $query->fetch())) {
+			$sql = 'update `'.PREFIX.'_remind` set visible = 1 where id = ' . $id;
+			$db->query($sql);
+		}
 	}
 	return $id;
 }
@@ -126,7 +143,7 @@ function precheck($data) {
 				}
 			}
 		}
-		else if ($row == '') {
+		else if ($row == '' && $key !== 'note') {
 			$check = $key;
 		}
 	}
@@ -182,8 +199,8 @@ function checkMethod($name) {
 
 	$sql = 'select * from `'. PREFIX .'_method` where name = "'.$name.'"';
 	$query = $db->query($sql);
-	if (!empty($query->fetch())) {
-		return true;
+	if (!empty($row = $query->fetch())) {
+		return $row['id'];
 	}
 	return false;
 }
