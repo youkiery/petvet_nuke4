@@ -5,8 +5,9 @@
   }
   .right-click {
     float: left;
-    width: 80%;
     overflow: hidden;
+    height: 28px;
+    width: 80%;
   }
 </style>
 
@@ -1049,7 +1050,7 @@
             const element = paintext(remind[globalTarget[name]['data']][index]['value']);
             
             if (element.search(key) >= 0) {
-              html += '<div class="item_suggest" onclick="selectRemind(\'' + name + '\', \'' + remind[globalTarget[name]['data']][index]['value'] + '\')"><span class="right-click">' + remind[globalTarget[name]['data']][index]['value'] + '</span><button class="close right" data-dismiss="modal" onclick="removeRemind('+remind[globalTarget[name]['data']][index]['id']+', \''+name+'\')">&times;</button></div>'
+              html += '<div class="suggest_item" onclick="selectRemind(\'' + name + '\', \'' + remind[globalTarget[name]['data']][index]['value'] + '\')"><span class="right-click">' + remind[globalTarget[name]['data']][index]['value'] + '</span><button class="close right" data-dismiss="modal" onclick="removeRemind('+remind[globalTarget[name]['data']][index]['id']+', \''+name+'\')">&times;</button></div>'
             }
           }
         }
@@ -1080,7 +1081,7 @@
             const element = paintext(method[index]['name']);
             
             if (element.search(key) >= 0) {
-              html += '<div class="item_suggest" onclick="selectMethod(\'' + name + '\', \'' + method[index]['name'] + '\')"><span class="right-click">' + method[index]['name'] + '</span><button class="close right" data-dismiss="modal" onclick="removeMethod('+method[index]['id']+', \''+name+'\')">&times;</button></div>'
+              html += '<div class="suggest_item" onclick="selectMethod(\'' + name + '\', \'' + method[index]['name'] + '\')"><span class="right-click">' + method[index]['name'] + '</span><button class="close right" data-dismiss="modal" onclick="removeMethod('+method[index]['id']+', \''+name+'\')">&times;</button></div>'
             }
           }
         }
@@ -1154,6 +1155,7 @@
     global_id = 0
     global_form = 1
     global_saved = 0
+    parseSaved()
     parseBox(global_form)
     formInsertCode.val('')
     formInsertSenderEmploy.val('')
@@ -1194,6 +1196,9 @@
     formInsertNote.val('')
     formInsertReceiveDis.val('')
     formInsertReceiveLeader.val('')
+    formInsertXaddress.val('')
+    formInsertOwner.val('')
+    formInsertSamplePlace.val('')
 
     formInsertEndedHour.each((index, item) => {
       item.removeAttribute('selected')
@@ -1221,9 +1226,13 @@
     $(".examed").each((index, item) => {
       removeInfo(2, index)
     })
+    $(".resulted").each((index, item) => {
+      removeInfo(3, index)
+    })
     infoData = {1: [], 2: [], 3: []}
     addInfo(1)
     addInfo(2)
+    addInfo(3)
     $(".type").prop('checked', false)
     $(".state").prop('checked', false)
 
@@ -1424,7 +1433,7 @@
               const element = paintext(remind[3][index]['value']);
               
               if (element.search(key) >= 0) {
-                html += '<div class="item_suggest" onclick="selectRemindv2(\'' + '#examed-' + id + '\', \'' + remind[3][index]['value'] + '\')"><span class="right-click">' + remind[3][index]['value'] + '</span><button class="close right" data-dismiss="modal" onclick="removeRemind('+remind[3][index]['id']+', \''+'#examed-' + id+'\')">&times;</button></div>'
+                html += '<div class="suggest_item" onclick="selectRemindv2(\'' + '#examed-' + id + '\', \'' + remind[3][index]['value'] + '\')"><span class="right-click">' + remind[3][index]['value'] + '</span><button class="close right" data-dismiss="modal" onclick="removeRemind('+remind[3][index]['id']+', \''+'#examed-' + id+'\')">&times;</button></div>'
               }
             }
           }
@@ -1457,7 +1466,7 @@
               const element = paintext(remind[6][index]['value']);
               
               if (element.search(key) >= 0) {
-                html += '<div class="item_suggest" onclick="selectRemindv2(\'' + '#resulted-' + id + '\', \'' + remind[6][index]['value'] + '\')"><span class="right-click">' + remind[6][index]['value'] + '</span><button class="close right" data-dismiss="modal" onclick="removeRemind('+remind[6][index]['id']+', \''+'#resulted-' + id+'\')">&times;</button></div>'
+                html += '<div class="suggest_item" onclick="selectRemindv2(\'' + '#resulted-' + id + '\', \'' + remind[6][index]['value'] + '\')"><span class="right-click">' + remind[6][index]['value'] + '</span><button class="close right" data-dismiss="modal" onclick="removeRemind('+remind[6][index]['id']+', \''+'#resulted-' + id+'\')">&times;</button></div>'
               }
             }
           }
@@ -1846,7 +1855,7 @@
   }
 //
   function printer(id, data = {}) {
-    if (data || visible[global_saved][2].search(id) >= 0) {
+    if (Object.keys(data).length || visible[global_saved][2].search(id) >= 0) {
       if (!Object.keys(data).length) {
         var data = checkForm(id)
       }
