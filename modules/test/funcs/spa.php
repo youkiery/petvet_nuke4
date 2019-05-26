@@ -184,6 +184,7 @@ if (!empty($action)) {
       $check = $nv_Request->get_array("check", "get/post");
       $weight = $nv_Request->get_string("weight", "get/post", "");
       $note = $nv_Request->get_string("note", "get/post");
+      $image = $nv_Request->get_string("image", "get/post", '');
       
       if (!empty($customer) && !empty($check) && !empty($weight_option[$weight])) {
         $id = array();
@@ -197,7 +198,7 @@ if (!empty($action)) {
             $checking[] = 0;
           }
         }
-        $sql = "insert into `" . VAC_PREFIX . "_spa` (customerid, doctorid, doctor, weight, note, time, " . implode(", ", $id) . ") values($customer, $doctor, $doctor2, $weight, '$note', '" . time() . "', " . implode(", ", $checking) . ")";
+        $sql = "insert into `" . VAC_PREFIX . "_spa` (customerid, doctorid, doctor, weight, note, time, " . implode(", ", $id) . ", image) values($customer, $doctor, $doctor2, $weight, '$note', '" . time() . "', " . implode(", ", $checking) . ", '$image')";
         $query = $db->query($sql);
         if ($query) {
           $result["status"] = 1;
@@ -227,6 +228,7 @@ if (!empty($action)) {
         $sql = "update `" . VAC_PREFIX . "_spa` set note = '$note', doctor = " . $doctor . ", weight = " . $weight . ", " . implode(", ", $val_list) . " where id = $customer";
         $query = $db->query($sql);
         if ($query) {
+          updateImagev2($image, $customer, VAC_PREFIX . 'spa');
           $result["status"] = 1;
           $result["list"] = spa_list();
           $result["notify"] = $lang_module["saved"];

@@ -22,6 +22,7 @@
     <button class="btn btn-info" onclick="view_detail({id})">
       {lang.spa_edit}
     </button>
+    <img src="{image}" width="32px;" onclick="preview('{image}')">
     {payment}
   </td>
 </tr>

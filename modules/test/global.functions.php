@@ -94,7 +94,22 @@ function updateImage($image, $id) {
       $db->query($sql);
     }
   }
+}
 
+function updateImagev2($image, $id, $path) {
+  global $db;
+
+  if (!empty($image)) {
+    $sql = 'select * from `'. $path .'` where id = ' . $id;
+    die($sql);
+    $query = $db->query($sql);
+  
+    if (empty($row = $query->fetch()) || $row['image'] != $image) {
+      $sql = 'update `'. $path .'` set image = "'. $image .'" where id = ' . $id;
+      die($sql);
+      $db->query($sql);
+    }
+  }
 }
 
 function selectHealInsultId($healid) {
@@ -1585,6 +1600,7 @@ function spa_list() {
     $xtpl->assign("customer_number", $customer["phone"]);
     $xtpl->assign("spa_from", date("H:i:s", $row["time"]));
     $xtpl->assign("spa_end", $row["done"]);
+    $xtpl->assign("image", $row["image"]);
     $xtpl->parse("main");
     $index ++;
   }

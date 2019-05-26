@@ -1,5 +1,21 @@
 <!-- BEGIN: main -->
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <div class="msgshow" id="msgshow"></div>
+
+<!-- <div style="width: 100%; height: 100%; top: 0px; left: 0px; position: fixed; background: black; opacity: 0.5; z-index: 2;">
+</div> -->
+
+<div class="modal fade" id="img" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body text-center">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <img class="img-responsive" id="img-src">
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="customer_modal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -74,6 +90,14 @@
               <option value="{weight_value}">{weight_name}</option>
               <!-- END: weight -->
             </select>
+          </div>
+          <div class="row form-group">
+            Hình ảnh
+            <label class="btn btn-info" for="file">
+                <input id="file" type="file" style="display: none" onchange="onselected(this)">
+                <span class="glyphicon glyphicon-upload"></span>
+              </label>
+              <img id="blah" width="64px" height="64px">
           </div>
           <div class="form-group">
             <label>{lang.spa_doctor}</label>
@@ -238,12 +262,41 @@
     </tr>
   </tfoot>
 </table>
+<script src="https://www.gstatic.com/firebasejs/6.0.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-storage.js"></script>
 <script>
+  var firebaseConfig = {
+  apiKey: "AIzaSyDWt6y4laxeTBq2RYDY6Jg4_pOkdxwsjUE",
+  authDomain: "directed-sonar-241507.firebaseapp.com",
+  databaseURL: "https://directed-sonar-241507.firebaseio.com",
+  projectId: "directed-sonar-241507",
+  storageBucket: "directed-sonar-241507.appspot.com",
+  messagingSenderId: "816396321770",
+  appId: "1:816396321770:web:193e84ee21b16d41"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  var storage = firebase.storage();
+  var storageRef = firebase.storage().ref();
+  var fileInput = document.getElementById('file')
+  var blah = document.getElementById('blah')
+  var file 
+  var filename
+  var maxWidth = 480
+  var maxHeight = 480
+  var metadata = {
+    contentType: 'image/jpeg',
+  };
+  var imageType = ['jpg', 'png', 'gif']
   var list = [];
   var customer = 0;
   var g_id = 0;
   var timer;
   var refresh = 0
+  var img = $("#img")
+  var imgSrc = $("#img-src")
+
   $("#detail_content").click((e) => {
     var row = e.target;
     if (row.tagName !== "INPUT") {
@@ -330,26 +383,35 @@
           check.push({id: id, checking: checking})
         } 
       })
-      $.post(
-        strHref,
-        {action: "insert", note: $("#c_note").val(), customer: customer, doctor: $("#doctor").val(), doctor2: $("#doctor2").val(), weight: $("#weight").val(), check: check},
-        (response, status) => {
-          var data = JSON.parse(response);
-          if (data["status"]) {
-            $("#content").html(data["list"])
-            $("#insert").modal("toggle")
-            alert_msg(data["notify"])
+      
+      uploader().then(image => {
+        $.post(
+          strHref,
+          {action: "insert", note: $("#c_note").val(), customer: customer, doctor: $("#doctor").val(), doctor2: $("#doctor2").val(), weight: $("#weight").val(), check: check, image: image},
+          (response, status) => {
+            var data = JSON.parse(response);
+            if (data["status"]) {
+              $("#content").html(data["list"])
+              $("#insert").modal("toggle")
+              alert_msg(data["notify"])
+            }
+            else {
+              alert_msg(data["notify"])
+            }
           }
-          else {
-            alert_msg(data["notify"])
-          }
-        }
-      )
+        )
+      })
     }
     else {      
       alert_msg("{lang.no_customer}")
     }
   }
+
+  function preview(url) {
+    imgSrc.attr('src', url)
+    img.modal('show')
+  }
+
   function update() {
     if (g_id > 0) {
       var check = [];
@@ -364,22 +426,24 @@
           check.push({id: id, checking: checking})
         } 
       })
-      
-      $.post(
-        strHref,
-        {action: "update", note: $("#c_note2").val(), doctor: $("#detail_doctor2").val(), weight: $("#detail_weight").val(), customer: g_id, check: check},
-        (response, status) => {
-          var data = JSON.parse(response);
-          if (data["status"]) {
-            $("#content").html(data["list"])
-            $("#detail").modal("toggle")
-            alert_msg(data["notify"])
+
+      uploader().then(image => {
+        $.post(
+          strHref,
+          {action: "update", note: $("#c_note2").val(), doctor: $("#detail_doctor2").val(), weight: $("#detail_weight").val(), customer: g_id, check: check, image: image},
+          (response, status) => {
+            var data = JSON.parse(response);
+            if (data["status"]) {
+              $("#content").html(data["list"])
+              $("#detail").modal("toggle")
+              alert_msg(data["notify"])
+            }
+            else {
+              alert_msg(data["notify"])
+            }
           }
-          else {
-            alert_msg(data["notify"])
-          }
-        }
-      )
+        )
+      })
     }
     else {      
       alert_msg("{lang.no_customer}")
@@ -473,5 +537,91 @@
       )
     }
   }, 10000);
+
+  function onselected(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      var fullname = input.files[0].name
+      var name = Math.round(new Date().getTime() / 1000) + '_' + fullname.substr(0, fullname.lastIndexOf('.'))
+      var extension = fullname.substr(fullname.lastIndexOf('.') + 1)
+      filename = name + '.' + extension
+      
+      reader.onload = function (e) {
+				var image = new Image();
+				image.src = e.target["result"];
+				image.onload = (e2) => {
+					var c = document.createElement("canvas")
+					var ctx = c.getContext("2d");
+					var ratio = 1;
+					if(image.width > maxWidth)
+						ratio = maxWidth / image.width;
+					else if(image.height > maxHeight)
+						ratio = maxHeight / image.height;
+					c.width = image["width"];
+					c.height = image["height"];
+					ctx.drawImage(image, 0, 0);
+					var cc = document.createElement("canvas")
+					var cctx = cc.getContext("2d");
+					cc.width = image.width * ratio;
+					cc.height = image.height * ratio;
+					cctx.fillStyle = "#fff";
+					cctx.fillRect(0, 0, cc.width, cc.height);
+					cctx.drawImage(c, 0, 0, c.width, c.height, 0, 0, cc.width, cc.height);
+					file = cc.toDataURL("image/jpeg")
+					blah.setAttribute('src', file)
+					file = file.substr(file.indexOf(',') + 1);
+        };
+      };
+
+      if (imageType.indexOf(extension) >= 0) {
+        
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+	}
+
+  function uploader() {
+    return new Promise(resolve => {
+      if (!(file || filename)) {
+        resolve('')
+      }
+      else {
+        var uploadTask = storageRef.child('images/' + filename).putString(file, 'base64', metadata);
+        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+          function(snapshot) {
+            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+              case firebase.storage.TaskState.PAUSED: // or 'paused'
+                console.log('Upload is paused');
+                break;
+              case firebase.storage.TaskState.RUNNING: // or 'running'
+                console.log('Upload is running');
+                break;
+            }
+          }, function(error) {
+            resolve('')
+            switch (error.code) {
+              case 'storage/unauthorized':
+                // User doesn't have permission to access the object
+              break;
+              case 'storage/canceled':
+                // User canceled the upload
+              break;
+              case 'storage/unknown':
+                // Unknown error occurred, inspect error.serverResponse
+              break;
+            }
+          }, function() {
+            // Upload completed successfully, now we can get the download URL
+            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+            resolve(downloadURL)
+            console.log('File available at', downloadURL);
+          });
+        });
+      }
+    })
+	}
+
 </script>
 <!-- END: main -->
