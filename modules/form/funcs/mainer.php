@@ -103,10 +103,13 @@ if (!empty($action)) {
 			else {
 				$result['form']['receiver'] = getRemindId($result['form']['receiver']);
 				$result['form']['sender'] = getRemindId($result['form']['sender']);
+				// $result['form']['samplereceiver'] = getRemindId($result['form']['samplereceiver']);
+				// var_dump($result); die();
 				$result['form']['ireceiveremploy'] = getRemindId($result['form']['ireceiveremploy']);
 				$result['form']['ireceiverunit'] = getRemindId($result['form']['ireceiverunit']);
 				$result['form']['isenderemploy'] = getRemindId($result['form']['isenderemploy']);
 				$result['form']['isenderunit'] = getRemindId($result['form']['isenderunit']);
+				$result['form']['samplereceiver'] = getRemindId($result['form']['samplereceiver']);
 
 				$result['form']['receive'] = date('d/m/Y', $result['form']['receive']);
 				$result['form']['resend'] = date('d/m/Y', $result['form']['resend']);
@@ -306,12 +309,12 @@ if (!empty($action)) {
 							$iresend = totime($data['iresend']);
 							$ireceive = totime($data['ireceive']);
 							$note = nl2br($data['note']);
-							checkRemindRow($data['xaddress'], 8);
+							checkRemindRow($data['address'], 5);
 							checkRemindRow($data['customer'], 4);
 							foreach ($data['exams'] as $key => $value) {
 								checkRemindRow($value, 3);
 							}
-							$sql = 'update `'. PREFIX .'_row` set xaddress = "'.$data['xaddress'].'", ireceive = '.$ireceive.',  customer = "'. $data['customer'] .'", number = '. $data['number'] .', sampleCode = "'. $data['samplecode'] .'", note = "'. $note .'", iresend = '. $iresend .', code = "'. $data['code'] .'", sample = "'. $data['sample'] .'", target = "'. $data['target'].'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", receiveDis = "'. $data['receivedis'] .'", receiveLeader = "'. $data['receiveleader'] .'" where id = ' . $id;
+							$sql = 'update `'. PREFIX .'_row` set address = "'.$data['address'].'", ireceive = '.$ireceive.',  customer = "'. $data['customer'] .'", number = '. $data['number'] .', sampleCode = "'. $data['sampleCode'] .'", note = "'. $note .'", iresend = '. $iresend .', code = "'. $data['code'] .'", sample = "'. $data['sample'] .'", target = "'. $data['target'].'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", receiveDis = "'. $data['receiveDis'] .'", receiveLeader = "'. $data['receiveLeader'] .'" where id = ' . $id;
 							$query = $db->query($sql);
 							if ($query) {
 								checkPrinter($id, $form);
