@@ -115,6 +115,30 @@ function checkRemindRow($value, $type) {
 	return $id;
 }
 
+function checkRemindRows($list, $type) {
+	global $db;
+
+	foreach ($list as $row) {
+		$sql = 'select * from `'.PREFIX.'_remind` where value = "'.$row.'" and type = ' . $type;
+		$query = $db->query($sql);
+	
+		if (empty($row = $query->fetch())) {
+			$sql = 'insert into `'.PREFIX.'_remind` (value, type) values ("'.$row.'", '.$type.')';
+			$query = $db->query($sql);
+			$id = $db->lastInsertId();
+		}
+		else {
+			$id = $row['id'];
+			$sql = 'select * from `'.PREFIX.'_remind` where id = ' . $id . ' and visible = 0';
+			$query = $db->query($sql);
+			if (!empty($row = $query->fetch())) {
+				$sql = 'update `'.PREFIX.'_remind` set visible = 1 where id = ' . $id;
+				$db->query($sql);
+			}
+		}
+	}
+}
+
 function checkPrinter($id, $form) {
 	global $db;
 
