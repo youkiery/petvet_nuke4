@@ -11,11 +11,80 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
+// code: 1,
+// senderUnit: 1,
+// receiveTime: 1, 2,
+// receiveHour: 2, 4,
+// receiveMinute: 2, 4,
+// isenderemploy: 2,
+// isenderunit: 2, 3, 4,
+// ireceiverEmploy: 2,
+// ireceiverUnit: 2,
+// ireceiverPhone: 2,
+// resendTime: 1,
+// receiveway: 1,
+// receiveEmploy: 1,
+// ireceiveTime: 1, 3, 5,
+// iresendTime: 1, 3,
+// form: 1,
+// sampleNumber: 1, 2, 3, 4, 5,
+// sampleName: 1, 2, 3,
+// sampleType: 1, 2, 3, 4, 5,
+// sampleCode: 1, 2, 3, 4, 5,
+// sampleStatus: 2,
+// sampleQuality: 2, 4,
+// storage: 2,
+// endhour: 2,
+// endminute: 2,
+// endcopy: 2,
+// request: 1, 2, 3, 4, 5,
+// xcode: 2, 4,
+// page: 3,
+// no: 3,
+// attach: 2, 3,
+// method: 3, 4,
+// examaddress: 4,
+// examphone: 4,
+// sampletime: 4,
+// sampletimer: 4,
+// samplereceive: 4,
+// samplereceiver: 4,
+// note: 4, 5,
+// examdate: 4,
+// result: 4, 5,
+// address: 5,
+// target: 5,
+// receiveDis: 5,
+// receiveleader: '
+
+
 $page_title = "Nhập hồ sơ một chiều";
 
 $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
-	$teriorname = array('endedcopy' => 'Bản copy', 'endedhour' => 'Giờ kết thúc', 'endedminute' => 'Phút kết thúc', 'code' => 'Mã phiếu', 'sender' => 'Người gửi', 'receive' => 'Người nhận', 'resend' => 'Ngày hẹn trả', 'state' => 'Hình thức nhận', 'receiver' => 'Người nhận', 'ireceive' => 'Ngày nhận', 'iresend' => 'Ngày hẹn trả', 'form' => 'Tên hồ sơ', 'number' => 'Số lượng mẫu', 'sample' => 'Loài được lấy mẫu', 'type' => 'Loại mẫu', 'samplecode' => 'Ký hiệu mẫu', 'exam' => 'Yêu cầu xét nghiệm', 'method' => 'Phương pháp', 'address' => 'Địa chỉ', 'phone' => 'Số điện thoại', 'samplereceive' => 'Ngày lấy mẫu', 'samplereceiver' => 'Người lấy mẫu', 'examdate' => 'Ngày xét nghiệm', 'result' => 'Kết quả', 'xcode' => 'Số ĐKXN', 'page' => 'Số trang', 'no' => 'Liên', 'customer' => 'Khách hàng', 'other' => 'Yêu cầu khác', 'receivehour' => 'Giờ nhận', 'receiveminute' => 'Phút nhận', 'isenderemploy' => 'Người gửi', 'isenderunit' => 'Đơn vị gửi', 'ireceiveremploy' => 'Người nhận', 'ireceiverunit' => 'Đơn vị nhận', 'status' => 'Tình trạng mẫu', 'xstatus' => 'Hình thức bảo quản', 'quality' => 'Chất lượng mẫu', 'ireceiver' => 'Người nhận', 'note' => 'Ghi chú', 'target' => 'Mục tiêu', 'receiveDis' => 'Nơi nhận', 'receiveLeader' => 'Người phụ trách');
+	$teriorname = array(
+		'endedcopy' => array('name' => 'Bản copy'),
+		'endedhour' => 'Giờ kết thúc',
+		'endedminute' => 'Phút kết thúc',
+		'code' => 'Mã phiếu',
+		'sender' => 'Người gửi',
+		'receive' => 'Người nhận',
+		'resend' => 'Ngày hẹn trả',
+		'state' => 'Hình thức nhận',
+		'receiver' => 'Người nhận',
+		'ireceive' => 'Ngày nhận',
+		'iresend' => 'Ngày hẹn trả',
+		'form' => 'Tên hồ sơ',
+		'number' => 'Số lượng mẫu',
+		'sample' => 'Loài được lấy mẫu',
+		'type' => 'Loại mẫu',
+		'samplecode' => 'Ký hiệu mẫu',
+		'exam' => 'Yêu cầu xét nghiệm',
+		'method' => 'Phương pháp',
+		'address' => 'Địa chỉ',
+		'phone' => 'Số điện thoại',
+		'samplereceive' => 'Ngày lấy mẫu',
+		'samplereceiver' => 'Người lấy mẫu', 'examdate' => 'Ngày xét nghiệm', 'result' => 'Kết quả', 'xcode' => 'Số ĐKXN', 'page' => 'Số trang', 'no' => 'Liên', 'customer' => 'Khách hàng', 'other' => 'Yêu cầu khác', 'receivehour' => 'Giờ nhận', 'receiveminute' => 'Phút nhận', 'isenderemploy' => 'Người gửi', 'isenderunit' => 'Đơn vị gửi', 'ireceiveremploy' => 'Người nhận', 'ireceiverunit' => 'Đơn vị nhận', 'status' => 'Tình trạng mẫu', 'xstatus' => 'Hình thức bảo quản', 'quality' => 'Chất lượng mẫu', 'ireceiver' => 'Người nhận', 'note' => 'Ghi chú', 'target' => 'Mục tiêu', 'receiveDis' => 'Nơi nhận', 'receiveLeader' => 'Người phụ trách');
 	
 	$result = array("status" => 0);
 	switch ($action) {
