@@ -197,7 +197,7 @@ if (!empty($action)) {
 								$result['id'] = $id;
 							}
 							else {
-								$sql = 'insert into `'. PREFIX .'_row` (code, sender, receive, resend, stateIndex, stateValue, receiver, ireceive, iresend, form, number, exam, sample, status, sampleCode, method, typeIndex, typeValue, time, endedCopy, endedHour, endedMinute) values("'. $data['code'] .'", '. $sender .', ' . totime($data['receive']) . ', ' . totime($data['resend']) . ', '. $data['state']['index'] .', "'. $data['state']['value'] . '", ' . $receiver . ', '. totime($data['ireceive']) . ',  '. totime($data['ireceive']) . ', "'. implode(', ', $data['forms']) .'", ' . $data['number'] .', "' . implode(', ', $data['exams']) . '", "'. $data['sample'] .'", "'. $data['status'] .'", "'. $data['samplecode'] .'", "'. implode(', ', $data['methods']) .'", '. $data['type']['index'] .', "'. $data['type']['value'] .'", '. time() .', '. $data['endedcopy'] .', '. $data['endedhour'] .', '. $data['endedminute'] .')';
+								$sql = 'insert into `'. PREFIX .'_row` (code, sender, receive, resend, stateIndex, stateValue, receiver, ireceive, iresend, form, number, exam, sample, status, sampleCode, method, typeIndex, typeValue, time) values("'. $data['code'] .'", '. $sender .', ' . totime($data['receive']) . ', ' . totime($data['resend']) . ', '. $data['state']['index'] .', "'. $data['state']['value'] . '", ' . $receiver . ', '. totime($data['ireceive']) . ',  '. totime($data['ireceive']) . ', "'. implode(', ', $data['forms']) .'", ' . $data['number'] .', "' . implode(', ', $data['exams']) . '", "'. $data['sample'] .'", "'. $data['status'] .'", "'. $data['samplecode'] .'", "'. implode(', ', $data['methods']) .'", '. $data['type']['index'] .', "'. $data['type']['value'] .'", '. time() . ')';
 								$query = $db->query($sql);
 								$result['id'] = $db->lastInsertId();
 							}
@@ -246,7 +246,6 @@ if (!empty($action)) {
 							$sampleReceive = totime($data['samplereceive']);
 							$data['note'] = nl2br($data['note']);
 							$sampleReceive = totime($data['samplereceive']);
-							$examDate = totime($data['examdate']);
 							checkRemindRows($data['result'], 6);
 							$sampleReceiver = checkRemindRow($data['samplereceiver'], 5);
 							checkRemindRow($data['customer'], 4);
@@ -254,7 +253,7 @@ if (!empty($action)) {
 							foreach ($data['exams'] as $key => $value) {
 								checkRemindRow($value, 3);
 							}
-							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", page = "'. implode(', ', $data['page']) .'", no = "'. implode(', ', $data['no']) .'", customer = "'. $data['customer'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', sample = "'. $data['sample'] .'", sampleCode = "'. $data['samplecode'] .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", other = "'. $data['other'] .'", receive = '. $receive .', resend = '. $resend .', phone = "'.$data['phone'].'", sampleReceive = '.$sampleReceive.', sampleReceiver = '.$sampleReceiver.', address = "'. $data['address'] .'", examDate = '.$examDate.', result = "'.implode($data['result'], ', ').'", note = "'.$data['note'].'" where id = ' . $id;
+							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", page = "'. implode(', ', $data['page']) .'", no = "'. implode(', ', $data['no']) .'", customer = "'. $data['customer'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', sample = "'. $data['sample'] .'", sampleCode = "'. $data['samplecode'] .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", other = "'. $data['other'] .'", receive = '. $receive .', resend = '. $resend .', phone = "'.$data['phone'].'", address = "'. $data['address'] .'", result = "'.implode($data['result'], ', ').'", note = "'.$data['note'].'" where id = ' . $id;
 							$query = $db->query($sql);
 							if ($query) {
 								checkPrinter($id, $form);
