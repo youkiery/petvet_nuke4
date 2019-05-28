@@ -58,40 +58,70 @@ function summaryContent($from, $end) {
   $data = array();
 
   while ($row = $query->fetch()) {
-    if (!empty($sampleType[$row['typeindex']])) {
-      $type = $sampleType[$row['typeindex']];
+    $sample = deuft8($row['sample']);
+
+    if (empty($data[$sample])) {
+      $data[$sample] = array();
     }
-    else {
-      $type = $row['typevalue'];
+    
+    if (empty($data[$sample][$row['typeindex']])) {
+      $data[$sample][$row['typeindex']] = "0";
     }
-    if (empty($data[$type])) {
-      $data[$type] = array('count' => 0, 'total' => 0);
-    }
-    $data[$type]['count'] ++;
-    $data[$type]['total'] += $row['number'];
+
+    $data[$sample][$row['typeindex']] += $row['number'];
   }
-  foreach ($data as $type => $row) {
-    $xtpl->assign('type', $type);
-    $xtpl->assign('count', $row['count']);
-    $xtpl->assign('total', $row['total']);
+
+  foreach ($data as $sample => $types) {
+    $count = 0;
+    $xtpl->assign('sample', $sample);
+    foreach ($types as $type => $number) {
+      if ($count) {
+        $xtpl->assign('type_more', $sampleType[$type]);
+        $xtpl->assign('number_more', $number);
+        $xtpl->parse('main.row.more');
+      }
+      else {
+        $xtpl->assign('type', $sampleType[$type]);
+        $xtpl->assign('number', $number);
+      }
+      $count ++;
+    }
+    $xtpl->assign('row', $count);
     $xtpl->parse('main.row');
   }
   $xtpl->parse('main');
   return $xtpl->text();
 }
 
+// function checkSample() {
+//   global $db;
+//   $sql = 'select sample from `'. PREFIX .'_row`';
+//   $query = $db->query($sql);
+//   while (!empty($row = $query->fetch())) {
+//     $row = explode(', ', $row['sample']);
+//     foreach ($row as $value) {
+//       $sql = 'select * from `'. PREFIX .'_sample` where name like "%'. $value .'%"';
+//       $query2 = $db->query($sql);
+//       if (empty($query2->fetch())) {
+//         $sql = 'insert into `'. PREFIX .'_sample` (name) values ("'. $value .'")';
+//         $db->query($sql);
+//       }
+//     }
+//   }
+// }
+
 function formList($keyword = '', $page = 1, $limit = 10, $printer = 1) {
   global $db, $sampleType, $user_info;
 
   $xtpl = new XTemplate("list.tpl", PATH);
 
-  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and printer >= '. $printer .' '. $extraSql;
+  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and printer >= '. $printer;
   $query = $db->query($sqlCount);
   $count = $query->fetch();
 
   $xtpl->assign('total', $count['count']);
 
-  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and printer >= '. $printer .' '. $extraSql . ' order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
+  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and printer >= '. $printer .' order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
   $query = $db->query($sql);
 
   $index = 1;

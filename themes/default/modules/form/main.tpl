@@ -19,16 +19,16 @@
 <div class="msgshow" id="msgshow"></div>
 
 <div id="form-summary" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <div class="row">
-          <label class="col-sm-5">Ngày bắt đầu</label>
+          <label class="col-sm-4">Ngày bắt đầu</label>
           <div class="col-sm-5">
             <input type="text" class="form-control" id="form-summary-from" value="{summaryfrom}" autocomplete="off">
           </div>
-          <label class="col-sm-5">Ngày kết thúc</label>
+          <label class="col-sm-4">Ngày kết thúc</label>
           <div class="col-sm-5">
             <input type="text" class="form-control" id="form-summary-end" value="{summaryend}" autocomplete="off">
           </div>

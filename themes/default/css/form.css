@@ -69,3 +69,8 @@
 .saved {
   z-index: 10;
 }
+
+.cell-center {
+  text-align: center;
+  vertical-align: inherit;
+}
