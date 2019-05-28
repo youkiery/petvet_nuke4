@@ -1792,6 +1792,7 @@
               global_saved = global_form
             }
             parseSaved()
+            content.html(data['html'])
             global_id = data['id']
           }, () => {defreeze()})
         }
