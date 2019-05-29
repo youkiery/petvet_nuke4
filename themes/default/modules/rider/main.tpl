@@ -436,8 +436,6 @@
     var end = $("#rider-detail-end-" + id).text()
     var date = $("#rider-detail-date-" + id).text()
     var destination = $("#rider-detail-destination-" + id ).text()
-    console.log(from, end, date, destination);
-    console.log(riderFrom, riderEnd, riderDate, riderDestination);
     
     riderFrom.text(from)
     riderEnd.text(end)
