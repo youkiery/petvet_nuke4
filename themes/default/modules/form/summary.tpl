@@ -1,10 +1,10 @@
 <!-- BEGIN: main -->
   <table class="table">
     <tr>
-      <th>
+      <th class="text-center">
         Loài động vật
       </th>
-      <th>
+      <th class="text-center">
         Loại mẫu
       </th>
       <th class="text-center">
