@@ -91,6 +91,7 @@ function payList($startDate, $endDate, $dateType) {
   $index = 1;
   while ($row = $query->fetch()) {
     $xtpl->assign("index", $start + ($index ++));
+    $xtpl->assign("id", $row['id']);
     $xtpl->assign("date", date("d/m H:i", $row["time"]));
     $xtpl->assign("driver", $user[$row["driver_id"]]["last_name"] . " " . $user[$row["driver_id"]]["first_name"]);
     $xtpl->assign("money", number_format($row["amount"]) . "đ");

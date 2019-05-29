@@ -3,10 +3,10 @@
   <table class="table">
     <thead>
       <tr>
-        <th> STT </th>
         <th> Ngày </th>
         <th> Người chi </th>
         <th> Tiền chi </th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -16,6 +16,7 @@
         <td> {date} </td>
         <td> {driver} </td>
         <td> {money}  </td>
+        <td> <button class="btn btn-danger" onclick="removeRecord({id}, 2)"> <span class="glyphicon glyphicon-remove"></span> </button> </td>
       </tr>
       <!-- END: row -->
     </tbody>

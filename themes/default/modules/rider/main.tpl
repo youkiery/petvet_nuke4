@@ -2,7 +2,26 @@
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <div class="msgshow" id="msgshow"></div>
+
+<div class="modal fade" id="remove-modal" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <div class="text-center">
+          <p>
+            Xác nhận xóa bản ghi này
+          </p>
+          <button class="btn btn-danger" onclick="removeSubmit()">
+            Xóa
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="modal fade" id="rider-detail" role="dialog">
   <div class="modal-dialog">
@@ -23,6 +42,7 @@
       <div class="modal-body">
         <p class="text-center">
           Phiếu ghi lộ trình
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
         </p>
         <div class="form-group">
           <label> Bác sĩ đi cùng </label>
@@ -59,12 +79,9 @@
           <label> Ghi chú </label>
           <input class="form-control" id="collect-note" type="text">
         </div>
-        <div class="form-group">
+        <div class="form-group text-center">
           <button class="btn btn-success" id="collect-insert">
             Lưu lộ trình
-          </button>
-          <button class="btn close" data-dismiss="modal">
-            Trở về
           </button>
         </div>
       </div>
@@ -167,6 +184,8 @@
   var riderFrom = $("#rider-from")
   var riderEnd = $("#rider-end")
 
+  var removeModal = $("#remove-modal")
+
   var suggest = $(".suggest")
   var dateTimeout = null
   var customerTimeout = null
@@ -178,6 +197,8 @@
   var limit = {limit}
   var clock = [Number("{clock}"), Number("{clock}")]
   var rider = {rider}
+  var global_id = 0
+  var global_type = 0
   const formatter = new Intl.NumberFormat('vi-VI', {
     style: 'currency',
     currency: 'VND'
@@ -430,6 +451,25 @@
       )
     }
   })
+
+  function removeRecord(id, type) {
+    global_id = id
+    global_type = type
+    removeModal.modal('show')
+  }
+
+  function removeSubmit() {
+    $.post(
+      strHref,
+      {action: 'remove', id: global_id, type: global_type, page: page, limit: limit, startDate: startDate.val(), endDate: endDate.val()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          content.html(data['html'])
+          removeModal.modal('hide')
+        })
+      }
+    )
+  }
 
   function goDetail(id) {
     var from = $("#rider-detail-from-" + id).text()

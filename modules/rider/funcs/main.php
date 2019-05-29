@@ -17,6 +17,26 @@ $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
 	$result = array("status" => 0);
 	switch ($action) {
+    case 'remove':
+      $startDate = $nv_Request->get_string("startDate", "get/post", "");
+      $endDate = $nv_Request->get_string("endDate", "get/post", "");
+      $id = $nv_Request->get_string("id", "get/post", "");
+      $type = $nv_Request->get_string("type", "get/post", "");
+
+      if (!(empty($startDate) || empty($endDate) || empty($id) || empty($type))) {
+        $sql = 'delete from `'. PREFIX .'_row` where id = ' . $id;
+        if ($db->query($sql)) {
+          $result["status"] = 1;
+          $result["notify"] = "Đã xóa bản ghi";
+          if ($type) {
+            $result["html"] = payList($startDate, $endDate);
+          }
+          else {
+            $result["html"] = collectList($startDate, $endDate);
+          }
+        }
+      }
+
     case 'collect-insert':
       $startDate = $nv_Request->get_string("startDate", "get/post", "");
       $endDate = $nv_Request->get_string("endDate", "get/post", "");
@@ -45,7 +65,7 @@ if (!empty($action)) {
             checkinRemind($collectDestination);
             checkinClock($collectEnd);
             $result["status"] = 1;
-            $result["html"] = collectList($startDate, $dateType);
+            $result["html"] = collectList($startDate, $endDate);
             $result["notify"] = "Đã thêm lịch trình thành công";
           }
         }
@@ -53,7 +73,7 @@ if (!empty($action)) {
     break;
     case 'pay-insert':
       $startDate = $nv_Request->get_string("startDate", "get/post", "");
-      $dateType = $nv_Request->get_int("dateType", "get/post", 0);
+      $endDate = $nv_Request->get_int("endDate", "get/post", 0);
       $payDriver = $nv_Request->get_int("payDriver", "get/post", 0);
       $payMoney = $nv_Request->get_int("payMoney", "get/post", 0);
       $payNote = $nv_Request->get_string("payNote", "get/post", "");
@@ -66,7 +86,7 @@ if (!empty($action)) {
           $sql = "insert into `" . PREFIX . "_row` (type, driver_id, doctor_id, customer_id, amount, clock_from, clock_to, destination, note, time) values (1, $payDriver, 0, 0, $payMoney, 0, 0, '', '$payNote', " . time() . ")";
           if ($db->query($sql)) {
             $result["status"] = 1;
-            $result["html"] = payList($startDate, $dateType);
+            $result["html"] = payList($startDate, $endDate);
             $result["notify"] = "Đã thêm phiếu chi thành công";
           }
         }
