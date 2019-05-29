@@ -64,3 +64,11 @@
   background: #8f8;
 }
 
+.item-border {
+  border: 2px solid black;
+}
+
+.cell-center {
+  text-align: center;
+  vertical-align: inherit !important;
+}
