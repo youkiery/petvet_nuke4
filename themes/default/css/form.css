@@ -46,7 +46,12 @@
 }
 
 .suggest_item {
-  height: 46px;
+  height: 32px;
+  padding: 5px;
+  border-bottom: 1px solid #ddd;
+}
+.suggest_item2 {
+  height: 49px;
   padding: 5px;
   border-bottom: 1px solid #ddd;
 }

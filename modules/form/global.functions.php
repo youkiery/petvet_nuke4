@@ -167,7 +167,7 @@ function precheck($data) {
 				}
 			}
 		}
-		else if ($row == '' && $key !== 'note' && $key !== 'other') {
+		else if ($row == '' && $key !== 'note' && $key !== 'other' && $key !== 'xnote') {
 			$check = $key;
 		}
 	}
