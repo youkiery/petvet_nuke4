@@ -19,6 +19,14 @@ if (!empty($action)) {
 	
 	$result = array("status" => 0);
 	switch ($action) {
+		// case 'catch-form':
+		// 	$formid = $nv_Request->get_string('formid', 'get/post', '');
+		
+		// 	$xtpl = XTemplate('edit/form-1.tpl', PATH);
+		// 	$xtpl->parse('main');
+		// 	$result['status'] = 1;
+		// 	$result['html'] = $xtpl->text();
+		// break;
 		case 'summaryFilter':
 			$from = $nv_Request->get_string('from', 'get/post', '');
 			$end = $nv_Request->get_string('end', 'get/post', '');

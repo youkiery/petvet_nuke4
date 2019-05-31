@@ -1843,6 +1843,19 @@
     )
   }
 
+  // function gritForm(id) {
+  //   freeze()
+  //     $.post(
+  //       strHref,
+  //       {action: 'insert', formid: id},
+  //       (response, status) => {
+  //         checkResult(response, status).then(data => {
+
+  //         }, () => {defreeze()})
+  //       }
+  //     )
+  // }
+
   function insertSubmit() {
     freeze()
     var data = checkForm(global_form)
