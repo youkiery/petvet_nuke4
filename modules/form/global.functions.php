@@ -167,7 +167,7 @@ function precheck($data) {
 				}
 			}
 		}
-		else if ($row == '' && $key !== 'note') {
+		else if ($row == '' && $key !== 'note' && $key !== 'other') {
 			$check = $key;
 		}
 	}
@@ -218,13 +218,13 @@ function checkExam($formData, $rowid, $examid = 0) {
 	return 0;
 }
 
-function checkMethod($name) {
+function checkMethod($name, $symbol) {
 	global $db;
 
-	$sql = 'select * from `'. PREFIX .'_method` where name = "'.$name.'"';
+	$sql = 'select * from `'. PREFIX .'_method` where name = "'.$name.'" and symbol = "'. $symbol .'"';
 	$query = $db->query($sql);
 	if (!empty($row = $query->fetch())) {
-		return $row['id'];
+		return true;
 	}
 	return false;
 }

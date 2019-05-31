@@ -46,15 +46,14 @@
 }
 
 .suggest_item {
-  height: 30px;
-  line-height: 30px;
+  height: 46px;
   padding: 5px;
   border-bottom: 1px solid #ddd;
 }
 .suggest {
   z-index: 100;
   background: white;
-  display:none;
+  display: none;
   position: absolute;
   overflow-y:scroll;
   max-height: 300px;
