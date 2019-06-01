@@ -11,7 +11,7 @@ if (!defined('PREFIX')) {
   die('Stop!!!');
 }
 
-$sampleType = array('Nguyên con', 'Huyết thanh', 'Máu', 'Phủ tạng', 'Swab');
+$sampleType = array(0 => 'Nguyên con', 'Huyết thanh', 'Máu', 'Phủ tạng', 'Swab');
 $permissionType = array('Bị cấm', 'Chỉ đọc', 'Chỉnh sửa');
 
 function employerList($key = '') {
@@ -49,17 +49,16 @@ function notAllowList($key) {
   return $html;
 }
 
-function summaryContent($from, $end) {
+function summaryContent($from, $end, $exam = '', $unit = '', $sample = '') {
   global $db, $sampleType;
 
   $xtpl = new XTemplate("summary.tpl", PATH);
-  $sql = 'select * from `'. PREFIX .'_row` where time between ' . $from . ' and ' . $end;
+  $sql = 'select a.*, b.value from `'. PREFIX .'_row` a inner join `'. PREFIX .'_remind` b on a.sender = b.id where (time between ' . $from . ' and ' . $end . ') and exam like "%'. $exam .'%" and b.value like "%'. $unit .'%" and sample like "%'. $sample .'%"';
   $query = $db->query($sql);
   $data = array();
 
   while ($row = $query->fetch()) {
-    $sample = deuft8($row['sample']);
-
+    $sample = mb_strtolower($row['sample']);
     if (empty($data[$sample])) {
       $data[$sample] = array();
     }
@@ -70,18 +69,23 @@ function summaryContent($from, $end) {
 
     $data[$sample][$row['typeindex']] += $row['number'];
   }
+  // echo json_encode($data);die();
 
   foreach ($data as $sample => $types) {
     $count = 0;
     $xtpl->assign('sample', $sample);
     foreach ($types as $type => $number) {
+      $typeName = 'Khác';
+      if (!empty($sampleType[$type])) {
+        $typeName = $sampleType[$type];
+      }
       if ($count) {
-        $xtpl->assign('type_more', $sampleType[$type]);
+        $xtpl->assign('type_more', $typeName);
         $xtpl->assign('number_more', $number);
         $xtpl->parse('main.row.more');
       }
       else {
-        $xtpl->assign('type', $sampleType[$type]);
+        $xtpl->assign('type', $typeName);
         $xtpl->assign('number', $number);
       }
       $count ++;

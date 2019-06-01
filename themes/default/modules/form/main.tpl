@@ -38,10 +38,22 @@
           <div class="col-sm-5">
             <input type="text" class="form-control" id="form-summary-end" value="{summaryend}" autocomplete="off">
           </div>
-          <button class="btn btn-info col-sm-4" onclick="summaryFilter()">
-            Xem tổng kết
-          </button>
         </div>
+        <label class="row" style="width: 100%;">
+          <span class="col-sm-6"> Đơn vị </span>
+          <div class="col-sm-12"> <input type="text" class="form-control" id="form-summary-unit"> </div>
+        </label>
+        <label class="row" style="width: 100%;">
+          <span class="col-sm-6"> Yêu cầu xét nghiệm </span>
+          <div class="col-sm-12"> <input type="text" class="form-control" id="form-summary-exam"> </div>
+        </label>
+        <label class="row" style="width: 100%;">
+          <span class="col-sm-6"> Loại động vật </span>
+          <div class="col-sm-12"> <input type="text" class="form-control" id="form-summary-sample"> </div>
+        </label>
+        <button class="btn btn-info" onclick="summaryFilter()">
+          Xem tổng kết
+        </button>
         <div id="form-summary-content"> {summarycontent} </div>
       </div>
     </div>
@@ -769,6 +781,9 @@
   var formSummaryFrom = $("#form-summary-from")
   var formSummaryEnd = $("#form-summary-end")
   var formSummaryContent = $("#form-summary-content")
+  var formSummaryUnit = $("#form-summary-unit")
+  var formSummarySample = $("#form-summary-sample")
+  var formSummaryExam = $("#form-summary-exam")
 
   var global_form = 1
   var global_saved = 0
@@ -1291,7 +1306,7 @@
     freeze()
     $.post(
       strHref,
-      {action: 'summaryFilter', from: formSummaryFrom.val(), end: formSummaryEnd.val()},
+      {action: 'summaryFilter', from: formSummaryFrom.val(), end: formSummaryEnd.val(), unit: formSummaryUnit.val(), exam: formSummaryExam.val(), sample: formSummarySample.val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           formSummaryContent.html(data['html'])

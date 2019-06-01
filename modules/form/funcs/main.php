@@ -30,12 +30,15 @@ if (!empty($action)) {
 		case 'summaryFilter':
 			$from = $nv_Request->get_string('from', 'get/post', '');
 			$end = $nv_Request->get_string('end', 'get/post', '');
+			$exam = $nv_Request->get_string('exam', 'get/post', '');
+			$unit = $nv_Request->get_string('unit', 'get/post', '');
+			$sample = $nv_Request->get_string('sample', 'get/post', '');
 
 			$from = totime($from);
 			$end = totime($end);
 
 			$result['status'] = 1;
-			$result['html'] = summaryContent($from, $end);
+			$result['html'] = summaryContent($from, $end, $exam, $unit, $sample);
 		break;
 		case 'removeRemind':
 			$id = $nv_Request->get_string('id', 'get/post', '');
