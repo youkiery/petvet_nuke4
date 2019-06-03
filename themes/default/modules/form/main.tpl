@@ -227,10 +227,17 @@
       </div>
     </div>
     
-    <div class="row form-group boxed box-1 box-1-4 box-3 box-3-13 box-5 box-5-1">
+    <div class="row form-group boxed box-1 box-1-4 box-3 box-3-13">
       <label class="col-sm-6">Ngày hẹn trả kết quả</label>
       <div class="col-sm-12">
         <input type="text" class="form-control" id="form-insert-resend" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="row form-group boxed box-5 box-5-1">
+      <label class="col-sm-6"> Ngày thông báo kết quả </label>
+      <div class="col-sm-12">
+        <input type="text" class="form-control" id="form-insert-notice-time" autocomplete="off">
       </div>
     </div>
 
@@ -784,6 +791,7 @@
   var formSummaryUnit = $("#form-summary-unit")
   var formSummarySample = $("#form-summary-sample")
   var formSummaryExam = $("#form-summary-exam")
+  var formInsertNoticeTime = $("#form-insert-notice-time")
 
   var global_form = 1
   var global_saved = 0
@@ -803,6 +811,7 @@
   var rdataPicker = {'1': 'form', '2': 'exam', 3: 'result'}
   var infoData = {1: [], 2: [], 3: []}
   var remindData = {}
+  var today = '{today}'
   var globalTarget = {
     'sender-unit': {
       input: formInsertSenderUnit,
@@ -932,7 +941,7 @@
     parseSaved()
   })
 
-  $("#form-insert-receive, #form-insert-resend, #form-insert-ireceive, #form-insert-iresend, #form-insert-sample-receive, #form-insert-sample-time, #form-insert-exam-date, #form-summary-from, #form-summary-end").datepicker({
+  $("#form-insert-receive, #form-insert-resend, #form-insert-ireceive, #form-insert-iresend, #form-insert-sample-receive, #form-insert-sample-time, #form-insert-exam-date, #form-summary-from, #form-summary-end, #form-insert-notice-time").datepicker({
     format: 'dd/mm/yyyy',
     changeMonth: true,
     changeYear: true
@@ -1679,7 +1688,7 @@
             // resend, sender-employ, address, owner, sample-place, type, number, sample-code, , receive, target, exam, method, note, result, xcode, receive-dis, receive-leader
             xcode: getInputs('xcode'),
             sender: formInsertSenderEmploy.val(),
-            resend: formInsertResend.val(),
+            resend: formInsertNoticeTime.val(),
             xaddress: formInsertXaddress.val(),
             number: formInsertNumber.val(),
             samplecode: formInsertSampleCode.val(),
@@ -1829,9 +1838,14 @@
 
           if (data['form']['printer'] >= 5) {
             // resend, sender-employ, address, owner, sample-place, type, number, sample-code, , receive, target, exam, method, note, result, xcode, receive-dis, receive-leader
-            console.log(formInsertOwner, data['form']['owner']);
 
             formInsertOwner.val(data['form']['owner'])
+            if (data['form']['noticetime']) {
+              formInsertNoticeTime.val(data['form']['noticetime'])
+            }
+            else {
+              formInsertNoticeTime.val(today)
+            }
             formInsertSamplePlace.val(data['form']['sampleplace'])
             formInsertXaddress.val(data['form']['xaddress'])
             formInsertTarget.val(data['form']['target'])

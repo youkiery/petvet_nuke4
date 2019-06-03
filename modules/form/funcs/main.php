@@ -126,6 +126,7 @@ if (!empty($action)) {
 				$result['form']['receivetime'] = date('d/m/Y', $result['form']['receivetime']);
 				$result['form']['samplereceive'] = date('d/m/Y', $result['form']['samplereceive']);
 				$result['form']['sampletime'] = date('d/m/Y', $result['form']['sampletime']);
+				$result['form']['noticetime'] = date('d/m/Y', $result['form']['noticetime']);
 
 				$result['form']['examdate'] = date('d/m/Y', $result['form']['examdate']);
 				$result['form']['note'] = str_replace('<br />', '', $result['form']['note']);
@@ -320,7 +321,7 @@ if (!empty($action)) {
 							}
 							$sender = checkRemindRow($data['sender'], 2);
 
-							$sql = 'update `'. PREFIX .'_row` set xaddress = "'.$data['xaddress'].'", number = '. $data['number'] .', sampleCode = "'. $data['samplecode'] .'", note = "'. $note .'", resend = '. $resend .', target = "'. $data['target'].'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", receiveDis = "'. $data['receivedis'] .'", receiveLeader = "'. $data['receiveleader'] .'", sampleplace = "'. $data['sampleplace'] .'", owner = "'. $data['owner'] .'", xcode = "'. implode(', ', $data['xcode']) .'", receive = "'. $receive .'", result = "'. $data['result'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", sender = "'. $sender .'" where id = ' . $id;
+							$sql = 'update `'. PREFIX .'_row` set xaddress = "'.$data['xaddress'].'", number = '. $data['number'] .', sampleCode = "'. $data['samplecode'] .'", note = "'. $note .'", noticetime = '. $resend .', target = "'. $data['target'].'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", receiveDis = "'. $data['receivedis'] .'", receiveLeader = "'. $data['receiveleader'] .'", sampleplace = "'. $data['sampleplace'] .'", owner = "'. $data['owner'] .'", xcode = "'. implode(', ', $data['xcode']) .'", receive = "'. $receive .'", result = "'. $data['result'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", sender = "'. $sender .'" where id = ' . $id;
 							$query = $db->query($sql);
 							if ($query) {
 								checkPrinter($id, $form);
@@ -376,6 +377,7 @@ $xtpl->assign("methodOption", $methodHtml);
 $xtpl->assign('summarycontent', summaryContent($from, $end));
 $xtpl->assign('summaryfrom', date('d/m/Y', $from));
 $xtpl->assign('summaryend', date('d/m/Y', $end));
+$xtpl->assign('today', date('d/m/Y', time()));
 $xtpl->assign('content', formList());
 $xtpl->assign("method", json_encode($method));
 $xtpl->assign("remind", json_encode(getRemind()));
