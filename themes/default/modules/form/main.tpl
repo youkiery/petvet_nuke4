@@ -2155,7 +2155,7 @@
               note.forEach(item => {
                 notes.push('<i>' + item + '</i>')
               })
-              noteString += '<u style="display: inline-block"><b>Ghi chú:</b></u> <div style="display: inline-flex">' + notes.join('<br>') + '</div>'
+              noteString += '<u style="display: inline-block"><b>Ghi chú:</b></u> <div style="display: inline-table">' + notes.join('<br>') + '</div>'
             }
             html = html.replace('(note)', noteString)
 
@@ -2234,7 +2234,7 @@
               note.forEach(item => {
                 notes.push('<i>' + item + '</i>')
               })
-              noteString += '<u style="display: inline-block"><b>Ghi chú:</b></u> <div style="display: inline-flex">' + notes.join('<br>') + '</div>'
+              noteString += '<u style="display: inline-block"><b>Ghi chú:</b></u> <div style="display: inline-table">' + notes.join('<br>') + '</div>'
             }
             html = html.replace('(note)', noteString)
             
