@@ -53,6 +53,65 @@ function getRelation() {
 	return $list;
 }
 
+function getRemindv2($type = '') {
+	global $db;
+	$list = array();
+
+	if (!empty($type)) {
+		$sql = 'select * from `'. PREFIX .'_remindv2` where type = "'. $type .'"';
+	}
+	else {
+		$sql = 'select * from `'. PREFIX .'_remindv2`';
+	}
+	$query = $db->query($sql);
+
+	while ($row = $query->fetch()) {
+		if (empty($list[$row['type']])) {
+			$list[$row['type']] = array();
+		}
+		$list[$row['type']][] = $row;
+	}
+
+	return $list;
+}
+
+function getRemindIdv2($name, $type) {
+	global $db;
+
+	$sql = 'select * from `'. PREFIX .'_remindv2` where type = "'. $type .'" and name = "'. $name .'"';
+	$query = $db->query($sql);
+	$row = $query->fetch();
+
+	if (!empty($row)) {
+		return $row['id'];
+	}
+	return 0;
+}
+
+function checkRemindv2($name, $type) {
+	global $db;
+
+	if (!($id = getRemindIdv2($name, $type))) {
+		$sql = 'insert into `'. PREFIX .'_remindv2` (type, name, visible) values ("'. $type .'", "'. $name .'", 1)';
+		$query = $db->query($sql);
+
+		if (!empty($query->fetch())) {
+			return $db->lastInsertId();
+		}
+		return 0;
+	}
+	return $id;
+}
+
+function removeRemindv2($id) {
+	global $db;
+
+	if ($id) {
+		$sql = 'remove `'. PREFIX .'_remindv2` where id = ' . $id;
+		$db->query($sql);
+	}
+}
+
 function getMethod() {
 	global $db;
 	$list = array();
@@ -62,6 +121,19 @@ function getMethod() {
 
 	while ($row = $query->fetch()) {
 		$list[$row['id']] = array('id' => $row['id'], 'name' => $row['name'], 'symbol' => $row['symbol']);
+	} 
+	return $list;
+}
+
+function getSymbol() {
+	global $db;
+	$list = array();
+
+	$sql = 'select * from `'.PREFIX.'_symbol` where visible = 1';
+	$query = $db->query($sql);
+
+	while ($row = $query->fetch()) {
+		$list[$row['id']] = array('id' => $row['id'], 'name' => $row['name']);
 	} 
 	return $list;
 }

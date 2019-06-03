@@ -681,8 +681,8 @@
   var ticked = ['Đạt', 'Không đạt']
   var methodModal = $("#method-modal")
   var formInsert = $('#form-insert')
-  var method = JSON.parse('{method}')
   var remind = JSON.parse('{remind}')
+  var remindv2 = JSON.parse('{remindv2}')
   var relation = JSON.parse('{relation}')
   var credit = $("#credit")
   var menu1 = $("#menu1")
@@ -1133,21 +1133,22 @@
     })
   }
 
-  function installMethod(name) {
+  function installRemindv2(name, type) {
     var timeout
-    var input = $("#method-" + name)
-    var suggest = $("#method-suggest-" + name)
+    var input = $("#"+ type +"-" + name)
+    var suggest = $("#"+ type +"-suggest-" + name)
+    
     input.keyup(() => {
       clearTimeout(timeout)
       setTimeout(() => {
         var key = paintext(input.val())
         var html = ''
-        for (const index in method) {
-          if (method.hasOwnProperty(index)) {
-            const element = paintext(method[index]['name']);
+        for (const index in remindv2[type]) {
+          if (remindv2[type].hasOwnProperty(index)) {
+            const element = paintext(remindv2[type][index]['name']);
             
             if (element.search(key) >= 0) {
-              html += '<div class="suggest_item2" onclick="selectMethod(\'' + name + '\', \'' + method[index]['name'] + '\')"><p class="right-click">' + method[index]['name'] + '<br>' + method[index]['symbol'] + '</p><button class="close right" data-dismiss="modal" onclick="removeMethod('+method[index]['id']+', \''+name+'\')">&times;</button></div>'
+              html += '<div class="suggest_item" onclick="selectRemindv2(\'' + name + '\', \'' + type + '\', \'' + remindv2[type][index]['name'] + '\')"><p class="right-click">' + remindv2[type][index]['name'] + '</p><button class="close right" data-dismiss="modal" onclick="removeRemindv2(\'' + name + '\', \'' + type + '\', ' + remindv2[type][index]['id']+')">&times;</button></div>'
             }
           }
         }
@@ -1181,19 +1182,23 @@
     }
   }
 
-  function removeRemindv2(id, input) {
+  function removeRemindv2(name, type) {
     if (id) {
       $.post(
         strHref,
-        {action: 'removeRemind', id: id},
+        {action: 'removeRemindv2', id: id},
         (response, status) => {
           checkResult(response, status).then(data => {
-            remind = JSON.parse(data['remind'])
-            $(input).val('')
+            remindv2 = JSON.parse(data['remind'])
+            $("#"+ type +"-" + name).val('')
           }, () => {defreeze()})
         }
       )
     }
+  }
+
+  function selectRemindv2(name, type, value) {
+    $("#"+ type +"-" + name).val(value)
   }
 
   function selectMethod(name, value) {
@@ -1332,6 +1337,7 @@
     array = array.split(', ')
     if (data['form']['method']) {
       methodx = data['form']['method'].split(', ')
+      symbolx = data['form']['symbol'].split(', ')
     }
     
     array.forEach((element, index) => {
@@ -1342,6 +1348,7 @@
       else if (dataPicker[name] == 2) {
         $("#examed-" + index).val(element)
         $("#method-" + index).val(methodx[index])
+        $("#symbol-" + index).val(symbolx[index])
       }
       else {
         $("#resulted-" + index).val(element)
@@ -1454,12 +1461,20 @@
               <label class="col-sm-4"> Phương pháp </label>
               <div class="col-sm-10 relative">
                 <input type="text" class="form-control input-box method" id="method-` + length + `" style="float: none;" autocomplete="off">
-                <div class="suggest exam-suggest" id="method-suggest-` + length + `"> </div>
+                <div class="suggest" id="method-suggest-` + length + `"> </div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-4"> Ký hiệu </label>
+              <div class="col-sm-10 relative">
+                <input type="text" class="form-control input-box symbol" id="symbol-` + length + `" style="float: none;" autocomplete="off">
+                <div class="suggest" id="symbol-suggest-` + length + `"> </div>
               </div>
             </div>
           </div>`
         formInsertRequest.append(html)
-        installMethod(length)
+        installRemindv2(length, 'symbol')
+        installRemindv2(length, 'method')
         installExamRemind()
       break;
       case 3:
@@ -1591,6 +1606,7 @@
             samplecode: formInsertSampleCode.val(),
             exam: getInputs('exam', ') '),
             exams: getInputs('exam'),
+            symbol: getInputs('symbol'),
             xnote: formInsertXnote.val(),
             methods: getInputs('method')
           }
@@ -1625,6 +1641,7 @@
             method: getInputs('method'),
             exams: getInputs('exam'),
             methods: getInputs('method'),
+            symbol: getInputs('symbol'),
             xphone: formInsertXphone.val()
           }
         }
@@ -1649,6 +1666,7 @@
             exam: getInputs('exam', ') '),
             method: getInputs('method'),
             exams: getInputs('exam'),
+            symbol: getInputs('symbol'),
             methods: getInputs('method'),
           }
         }
@@ -1679,6 +1697,7 @@
             exam: getInputs('exam', ') '),
             method: getInputs('method'),
             exams: getInputs('exam'),
+            symbol: getInputs('symbol'),
             methods: getInputs('method'),
           }
         }
@@ -1705,6 +1724,7 @@
             method: getInputs('method'),
             exams: getInputs('exam'),
             methods: getInputs('method'),
+            symbol: getInputs('symbol'),
             result: formInsertResult.val(),
             receive: formInsertReceive.val(),
             type: getCheckbox('type', formInsertTypeOther),
@@ -2112,7 +2132,7 @@
               temp = temp.replace('(position-3)', position + 60 + "px")
               temp = temp.replace('(exam-content)', data['exams'][i])
               temp = temp.replace('(method)', data['method'][i])
-              temp = temp.replace('(symbol)', findMethod(data['methods'][i]))
+              temp = temp.replace('(symbol)', data['symbol'][i])
               parse += temp
               position += 90
             }
@@ -2173,7 +2193,7 @@
               }
               temp = temp.replace('(exam-content)', data['exams'][i])
               temp = temp.replace('(method)', data['method'][i])
-              temp = temp.replace('(symbol)', findMethod(data['method'][i]))
+              temp = temp.replace('(symbol)', data['symbol'][i])
               parse += temp
             }
             html = html.replace('(parse)', parse)
@@ -2221,7 +2241,7 @@
               }
               temp = temp.replace('(content)', data['exam'][i])
               temp = temp.replace('(method)', data['method'][i])
-              temp = temp.replace('(symbol)', findMethod(data['method'][i]))
+              temp = temp.replace('(symbol)', data['symbol'][i])
               parse += temp
             }
             html = html.replace('(parse)', parse)
@@ -2247,8 +2267,8 @@
         var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
         winPrint.focus()
         winPrint.document.write(html);
-        // winPrint.print()
-        // winPrint.close()
+        winPrint.print()
+        winPrint.close()
       }
     }
   }
