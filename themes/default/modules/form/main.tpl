@@ -523,7 +523,7 @@
       </button>
     </div>
 
-    <div class="row form-group boxed box-2 box-2-20">
+    <div class="row form-group boxed box-1 box-1-15 box-2 box-2-20">
       <label class="col-sm-6">
         Ghi chú
       </label>
@@ -1051,6 +1051,7 @@
         (response, status) => {
           checkResult(response, status).then(data => {
             $('.method').each((index, item) => {
+              method = JSON.parse(data['method'])
               item.innerHTML = data['html']
               
               addInfo = (id) => {

@@ -79,6 +79,7 @@ if (!empty($action)) {
 						}
 						$result['html'] = $methodHtml;
 						$result['status'] = 1;
+						$result['method'] = json_encode($method);
 						$result['notify'] = 'Đã thêm phương pháp';
 					}
 				}
