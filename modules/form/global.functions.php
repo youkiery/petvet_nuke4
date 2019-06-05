@@ -239,7 +239,7 @@ function precheck($data) {
 				}
 			}
 		}
-		else if ($row == '' && $key !== 'note' && $key !== 'other' && $key !== 'xnote') {
+		else if ($row == '' && $key !== 'note' && $key !== 'other' && $key !== 'xnote' && $key !== 'fax') {
 			$check = $key;
 		}
 	}

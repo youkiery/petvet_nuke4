@@ -144,6 +144,7 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1) {
       $xtpl->assign('code', $row['code']);
       $xtpl->assign('number', $row['number']);
       $xtpl->assign('sample', $row['sample']);
+      // $xtpl->assign('printer', $row['printer']);
       $xtpl->assign('unit', getRemindId($row['sender']));
       if (checkIsMod($user_info['userid'])) {
         $xtpl->parse('main.row.mod');

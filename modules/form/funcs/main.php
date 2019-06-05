@@ -15,7 +15,7 @@ $page_title = "Nhập hồ sơ một chiều";
 
 $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
-	$teriorname = array('endedcopy' => 'Bản copy', 'endedhour' => 'Giờ kết thúc', 'endedminute' => 'Phút kết thúc', 'code' => 'Mã phiếu', 'sender' => 'Người gửi', 'receive' => 'Người nhận', 'resend' => 'Ngày hẹn trả', 'state' => 'Hình thức nhận', 'receiver' => 'Người nhận', 'ireceive' => 'Ngày nhận', 'iresend' => 'Ngày hẹn trả', 'form' => 'Tên hồ sơ', 'number' => 'Số lượng mẫu', 'sample' => 'Loài được lấy mẫu', 'type' => 'Loại mẫu', 'samplecode' => 'Ký hiệu mẫu', 'exam' => 'Yêu cầu xét nghiệm', 'method' => 'Phương pháp', 'address' => 'Địa chỉ', 'phone' => 'Số điện thoại', 'samplereceive' => 'Ngày lấy mẫu', 'samplereceiver' => 'Người lấy mẫu', 'examdate' => 'Ngày xét nghiệm', 'result' => 'Kết quả', 'xcode' => 'Số ĐKXN', 'page' => 'Số trang', 'no' => 'Liên', 'customer' => 'Khách hàng', 'other' => 'Yêu cầu khác', 'receivehour' => 'Giờ nhận', 'receiveminute' => 'Phút nhận', 'isenderemploy' => 'Người gửi', 'isenderunit' => 'Đơn vị gửi', 'ireceiveremploy' => 'Người nhận', 'ireceiverunit' => 'Đơn vị nhận', 'status' => 'Tình trạng mẫu', 'xstatus' => 'Hình thức bảo quản', 'quality' => 'Chất lượng mẫu', 'ireceiver' => 'Người nhận', 'note' => 'Ghi chú', 'target' => 'Mục tiêu', 'receiveDis' => 'Nơi nhận', 'receiveLeader' => 'Người phụ trách', 'xaddress' => 'Địa chỉ khách hàng', 'sampleplace' => 'Nơi lấy mẫu', 'owner' => 'Chủ hộ', 'xphone' => 'Số điện thoại', 'xnote' => 'Ghi chú');
+	$teriorname = array('endedcopy' => 'Bản copy', 'endedhour' => 'Giờ kết thúc', 'endedminute' => 'Phút kết thúc', 'code' => 'Mã phiếu', 'sender' => 'Người gửi', 'receive' => 'Người nhận', 'resend' => 'Ngày hẹn trả', 'state' => 'Hình thức nhận', 'receiver' => 'Người nhận', 'ireceive' => 'Ngày nhận', 'iresend' => 'Ngày hẹn trả', 'form' => 'Tên hồ sơ', 'number' => 'Số lượng mẫu', 'sample' => 'Loài được lấy mẫu', 'type' => 'Loại mẫu', 'samplecode' => 'Ký hiệu mẫu', 'exam' => 'Yêu cầu xét nghiệm', 'method' => 'Phương pháp', 'address' => 'Địa chỉ', 'phone' => 'Số điện thoại', 'samplereceive' => 'Ngày lấy mẫu', 'samplereceiver' => 'Người lấy mẫu', 'examdate' => 'Ngày xét nghiệm', 'result' => 'Kết quả', 'xcode' => 'Số ĐKXN', 'page' => 'Số trang', 'no' => 'Liên', 'customer' => 'Khách hàng', 'other' => 'Yêu cầu khác', 'receivehour' => 'Giờ nhận', 'receiveminute' => 'Phút nhận', 'isenderemploy' => 'Người gửi', 'isenderunit' => 'Đơn vị gửi', 'ireceiveremploy' => 'Người nhận', 'ireceiverunit' => 'Đơn vị nhận', 'status' => 'Tình trạng mẫu', 'xstatus' => 'Hình thức bảo quản', 'quality' => 'Chất lượng mẫu', 'ireceiver' => 'Người nhận', 'note' => 'Ghi chú', 'target' => 'Mục tiêu', 'receiveDis' => 'Nơi nhận', 'receiveLeader' => 'Người phụ trách', 'xaddress' => 'Địa chỉ khách hàng', 'sampleplace' => 'Nơi lấy mẫu', 'owner' => 'Chủ hộ', 'xphone' => 'Số điện thoại', 'xnote' => 'Ghi chú', 'numberword' => 'Ghi chú (chữ)', 'fax' => 'Fax');
 	
 	$result = array("status" => 0);
 	switch ($action) {
@@ -182,14 +182,14 @@ if (!empty($action)) {
 				$result['form']['examdate'] = date('d/m/Y', $result['form']['examdate']);
 				$result['form']['note'] = str_replace('<br />', '', $result['form']['note']);
 
-				if (!empty($result['form']['typeIndex'])) {
-					$result['form']['type']['index'] = $result['form']['typeIndex'];
-					$result['form']['type']['value'] = $result['form']['typeValue'];
+				if ($result['form']['typeindex'] >= 0) {
+					$result['form']['type']['index'] = $result['form']['typeindex'];
+					$result['form']['type']['value'] = $result['form']['typevalue'];
 				}
 
-				if (!empty($result['form']['typeIndex'])) {
-					$result['form']['state']['index'] = $result['form']['stateIndex'];
-					$result['form']['state']['value'] = $result['form']['stateValue'];
+				if ($result['form']['stateindex'] >= 0) {
+					$result['form']['state']['index'] = $result['form']['stateindex'];
+					$result['form']['state']['value'] = $result['form']['statevalue'];
 				}
 				
 				if ($action == 'preview') {
@@ -264,12 +264,12 @@ if (!empty($action)) {
 									checkRemindv2($value, 'method');
 								}
 								if ($id) {
-									$sql = 'update `'. PREFIX .'_row` set code = "'. $data['code'] .'", sender = ' . $sender . ', receive = ' . totime($data['receive']) . ', resend = ' . totime($data['resend']) . ', stateIndex = '. $data['state']['index'] .', stateValue = "'. $data['state']['value'] .'", receiver = ' . $receiver . ', ireceive = '. totime($data['ireceive']) . ', iresend = '. totime($data['iresend']) . ', form = "'. implode(', ', $data['forms']) .'", number = ' . $data['number'] .', exam = "' . implode(', ', $data['exams']) . '", sample = "'. $data['sample'] .'", sampleCode = "'. $data['samplecode'] .'", method = "'. implode(', ', $data['methods']) .'", symbol = "'. implode(', ', $data['symbol']) .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", xnote = "'. $data['xnote'] .'" where id = ' . $id;
+									$sql = 'update `'. PREFIX .'_row` set code = "'. $data['code'] .'", sender = ' . $sender . ', receive = ' . totime($data['receive']) . ', resend = ' . totime($data['resend']) . ', stateIndex = '. $data['state']['index'] .', stateValue = "'. $data['state']['value'] .'", receiver = ' . $receiver . ', ireceive = '. totime($data['ireceive']) . ', iresend = '. totime($data['iresend']) . ', form = "'. implode(', ', $data['forms']) .'", number = ' . $data['number'] .', exam = "' . implode(', ', $data['exams']) . '", sample = "'. $data['sample'] .'", sampleCode = "'. $data['samplecode'] .'", method = "'. implode(', ', $data['methods']) .'", symbol = "'. implode(', ', $data['symbol']) .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", xnote = "'. $data['xnote'] .'", numberword = "'. $data['numberword'] .'" where id = ' . $id;
 									$query = $db->query($sql);
 									$result['id'] = $id;
 								}
 								else {
-									$sql = 'insert into `'. PREFIX .'_row` (code, sender, receive, resend, stateIndex, stateValue, receiver, ireceive, iresend, form, number, exam, sample, sampleCode, method, typeIndex, typeValue, time, xnote, symbol) values("'. $data['code'] .'", '. $sender .', ' . totime($data['receive']) . ', ' . totime($data['resend']) . ', '. $data['state']['index'] .', "'. $data['state']['value'] . '", ' . $receiver . ', '. totime($data['ireceive']) . ',  '. totime($data['ireceive']) . ', "'. implode(', ', $data['forms']) .'", ' . $data['number'] .', "' . implode(', ', $data['exams']) . '", "'. $data['sample'] .'", "'. $data['samplecode'] .'", "'. implode(', ', $data['methods']) .'", '. $data['type']['index'] .', "'. $data['type']['value'] .'", '. time() . ', "'. $data['xnote'] .'", "'. $data['symbol'] .'")';
+									$sql = 'insert into `'. PREFIX .'_row` (code, sender, receive, resend, stateIndex, stateValue, receiver, ireceive, iresend, form, number, exam, sample, sampleCode, method, typeIndex, typeValue, time, xnote, symbol, numberword) values("'. $data['code'] .'", '. $sender .', ' . totime($data['receive']) . ', ' . totime($data['resend']) . ', '. $data['state']['index'] .', "'. $data['state']['value'] . '", ' . $receiver . ', '. totime($data['ireceive']) . ',  '. totime($data['ireceive']) . ', "'. implode(', ', $data['forms']) .'", ' . $data['number'] .', "' . implode(', ', $data['exams']) . '", "'. $data['sample'] .'", "'. $data['samplecode'] .'", "'. implode(', ', $data['methods']) .'", '. $data['type']['index'] .', "'. $data['type']['value'] .'", '. time() . ', "'. $data['xnote'] .'", "'. $data['symbol'] .'", "'. $data['numberword'] .'")';
 									$query = $db->query($sql);
 									$result['id'] = $db->lastInsertId();
 								}
@@ -303,7 +303,7 @@ if (!empty($action)) {
 							foreach ($data['methods'] as $key => $value) {
 								checkRemindv2($value, 'method');
 							}
-							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", isenderEmploy = '. $data['isenderemploy'] .',  isenderUnit = '. $data['isenderunit'] .', ireceiverEmploy = '. $data['ireceiveremploy'] .', ireceiverUnit = '. $data['ireceiverunit'] .', receiveHour = '.$data['receivehour'].', receiveMinute = '.$data['receiveminute'].', typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", sample = "'. $data['sample'] .'", number = '. $data['number'] .', status = "'. $data['status']['index'] .'", sampleCode = "'. $data['samplecode'] .'", xstatus = '. $data['xstatus']['index'] .', quality = "'. $data['quality']['index'] .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", endedCopy = '. $data['endedcopy'] .', endedHour = '. $data['endedhour'] .', endedMinute = '. $data['endedminute'] .', receive = '. $data['receive'] .', attach = "'. $data['attach']['index'] .'", xphone = "' . $data['xphone'] . '", xnote = "'. $data['xnote'] .'" where id = ' . $id;
+							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", isenderEmploy = '. $data['isenderemploy'] .',  isenderUnit = '. $data['isenderunit'] .', ireceiverEmploy = '. $data['ireceiveremploy'] .', ireceiverUnit = '. $data['ireceiverunit'] .', receiveHour = '.$data['receivehour'].', receiveMinute = '.$data['receiveminute'].', typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", sample = "'. $data['sample'] .'", number = '. $data['number'] .', status = "'. $data['status']['index'] .'", sampleCode = "'. $data['samplecode'] .'", xstatus = '. $data['xstatus']['index'] .', quality = "'. $data['quality']['index'] .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", endedCopy = '. $data['endedcopy'] .', endedHour = '. $data['endedhour'] .', endedMinute = '. $data['endedminute'] .', receive = '. $data['receive'] .', attach = "'. $data['attach']['index'] .'", xphone = "' . $data['xphone'] . '", xnote = "'. $data['xnote'] .'", numberword = "'. $data['numberword'] .'" where id = ' . $id;
 							$query = $db->query($sql);
 							if ($query) {
 								checkPrinter($id, $form);
@@ -334,7 +334,7 @@ if (!empty($action)) {
 							foreach ($data['methods'] as $key => $value) {
 								checkRemindv2($value, 'method');
 							}
-							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", page = "'. implode(', ', $data['page']) .'", no = "'. implode(', ', $data['no']) .'",  isenderUnit = '. $data['isenderunit'] .', typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', sample = "'. $data['sample'] .'", sampleCode = "'. $data['samplecode'] .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", symbol = "'. implode(', ', $data['symbol']) .'", other = "'. $data['other'] .'", receive = '. $receive .', resend = '. $resend .', attach = "'.$data['attach'].'" where id = ' . $id;
+							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", page = "'. implode(', ', $data['page']) .'", no = "'. implode(', ', $data['no']) .'",  isenderUnit = '. $data['isenderunit'] .', typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', sample = "'. $data['sample'] .'", sampleCode = "'. $data['samplecode'] .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", symbol = "'. implode(', ', $data['symbol']) .'", other = "'. $data['other'] .'", receive = '. $receive .', resend = '. $resend .', attach = "'.$data['attach'].'", numberword = "'. $data['numberword'] .'" where id = ' . $id;
 							$query = $db->query($sql);
 							if ($query) {
 								checkPrinter($id, $form);
@@ -371,7 +371,7 @@ if (!empty($action)) {
 							}
 							// isenderunit            
 
-							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", receiveHour = '.$data['receivehour'].', receiveMinute = '.$data['receiveminute'].', sampleReceive = "'.$sampleReceive.'", address = "'.$data['address'].'", sampleReceiver = "'.$data['samplereceiver'].'", examDate = "'.$examDate.'", result = "'. $data['result'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', status = "'. $data['status']['index'] .'", sampleCode = "'. $data['samplecode'] .'", receive = '. $receive .', note = "'. $note .'", xphone = "'. $data['xphone'] .'", sample = "'. $data['sample'] .'", isenderUnit = "'. $data['isenderunit'] .'", ireceiverEmploy = '. $data['ireceiveremploy'] .', exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", symbol = "'. implode(', ', $data['symbol']) .'" where id = ' . $id;
+							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", receiveHour = '.$data['receivehour'].', receiveMinute = '.$data['receiveminute'].', sampleReceive = "'.$sampleReceive.'", address = "'.$data['address'].'", sampleReceiver = "'.$data['samplereceiver'].'", examDate = "'.$examDate.'", result = "'. $data['result'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', status = "'. $data['status']['index'] .'", sampleCode = "'. $data['samplecode'] .'", receive = '. $receive .', note = "'. $note .'", xphone = "'. $data['xphone'] .'", sample = "'. $data['sample'] .'", isenderUnit = "'. $data['isenderunit'] .'", ireceiverEmploy = '. $data['ireceiveremploy'] .', exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", symbol = "'. implode(', ', $data['symbol']) .'", numberword = "'. $data['numberword'] .'", fax = "'. $data['fax'] .'" where id = ' . $id;
 							$query = $db->query($sql);
 							if ($query) {
 								checkPrinter($id, $form);
@@ -406,7 +406,7 @@ if (!empty($action)) {
 							}
 							$sender = checkRemindRow($data['sender'], 2);
 
-							$sql = 'update `'. PREFIX .'_row` set xaddress = "'.$data['xaddress'].'", number = '. $data['number'] .', sampleCode = "'. $data['samplecode'] .'", note = "'. $note .'", noticetime = '. $resend .', target = "'. $data['target'].'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", symbol = "'. implode(', ', $data['symbol']) .'", receiveDis = "'. $data['receivedis'] .'", receiveLeader = "'. $data['receiveleader'] .'", sampleplace = "'. $data['sampleplace'] .'", owner = "'. $data['owner'] .'", xcode = "'. implode(', ', $data['xcode']) .'", receive = "'. $receive .'", result = "'. $data['result'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", sender = "'. $sender .'" where id = ' . $id;
+							$sql = 'update `'. PREFIX .'_row` set xaddress = "'.$data['xaddress'].'", number = '. $data['number'] .', sampleCode = "'. $data['samplecode'] .'", note = "'. $note .'", noticetime = '. $resend .', target = "'. $data['target'].'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", symbol = "'. implode(', ', $data['symbol']) .'", receiveDis = "'. $data['receivedis'] .'", receiveLeader = "'. $data['receiveleader'] .'", sampleplace = "'. $data['sampleplace'] .'", owner = "'. $data['owner'] .'", xcode = "'. implode(', ', $data['xcode']) .'", receive = "'. $receive .'", result = "'. $data['result'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", sender = "'. $sender .'", numberword = "'. $data['numberword'] .'" where id = ' . $id;
 							$query = $db->query($sql);
 							if ($query) {
 								checkPrinter($id, $form);
