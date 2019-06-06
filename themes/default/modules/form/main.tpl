@@ -1873,7 +1873,6 @@
 
           if (data['form']['printer'] >= 4) {
             // address. xphone, sample, type, number, samplecode, status, sample-receive, sample-receiver, receive-hour, receive-minute, receive, receiver-employ, exam, method, note, note, examdate, result
-            console.log(formInsertResult, data['form']['result']);
             
             formInsertResult.val(data['form']['result'])
             formInsertSampleReceiver.val(data['form']['samplereceiver'])
@@ -2049,7 +2048,7 @@
             html = html.replace('(state-1)', data['state']['index'] == 1 ? 'checked' : '')
             html = html.replace('(other)', data['state']['value'])
             html = html.replace('(numberword)', data['numberword'])
-            html = html.replace('(form)', (data['form'].join('<br>') + '<br>Số lượng mẫu: ' + data['number'] + ', loại mẫu: ' + (data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text())) + ', loài động vật: ' + data['sample'] + '<br> Ký hiệu mẫu: ' + data['samplecode'] + '<br>Yêu cầu xét nghiệm:<br>' + (data['exam'].length > 1 ? data['exam'].join('<br>') : data['exams'].join('<br>') + '<br>Ghi chú: <br>' + data['xnote'].replace(/\n/g, '<br>'))))
+            html = html.replace('(form)', (data['form'].join('<br>') + '<br>Số lượng mẫu: ' + data['number'] + ', loại mẫu: ' + (data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text())) + ', loài động vật: ' + data['sample'] + '<br> Ký hiệu mẫu: ' + data['samplecode'] + '<br>Yêu cầu xét nghiệm:<br>' + ((data['exam'].length > 1 ? data['exam'].join('<br>') : data['exams'].join('<br>')) + (trim(data['xnote']).length ? '<br>Ghi chú: <br>' + data['xnote'].replace(/\n/g, '<br>') : ''))))
           break;
           case 2:
             var receive = data['receive'].split('/')
@@ -2299,8 +2298,8 @@
         var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
         winPrint.focus()
         winPrint.document.write(html);
-        // winPrint.print()
-        // winPrint.close()
+        winPrint.print()
+        winPrint.close()
       }
     }
   }
