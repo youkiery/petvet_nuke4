@@ -4,8 +4,10 @@
 
 <div class="msgshow" id="msgshow"></div>
 
-<button class="btn">
+<button class="btn" onclick="newView()">
   add
 </button>
+
+
 
 <!-- END: main -->

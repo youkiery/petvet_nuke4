@@ -7,7 +7,7 @@
   <title>Document</title>
 </head>
 <body>
-
+  <iframe src = "/assets/js/ViewerJS/#../doc/form-1.odt" width='400' height='300' allowfullscreen webkitallowfullscreen></iframe>
 </body>
 </html>
 
