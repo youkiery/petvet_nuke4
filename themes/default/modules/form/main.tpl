@@ -1052,7 +1052,9 @@
     globalTarget[name]['input'].val(selectValue)
   }
 
-  function selectRemindv2(id, selectValue) {
+  function selectRemindv2a(id, selectValue) {
+    console.log(id, selectValue);
+    
     $(id).val(selectValue)
   }
 
@@ -1393,7 +1395,7 @@
               const element = paintext(remind[3][index]['value']);
               
               if (element.search(key) >= 0) {
-                html += '<div class="suggest_item" onclick="selectRemindv2(\'' + '#examed-' + id + '\', \'' + remind[3][index]['value'] + '\')"><span class="right2-click">' + remind[3][index]['value'] + '</span><button class="close right" data-dismiss="modal" onclick="removeRemind('+remind[3][index]['id']+', \''+'#examed-' + id+'\')">&times;</button></div>'
+                html += '<div class="suggest_item" onclick="selectRemindv2a(\'' + '#examed-' + id + '\', \'' + remind[3][index]['value'] + '\')"><span class="right2-click">' + remind[3][index]['value'] + '</span><button class="close right" data-dismiss="modal" onclick="removeRemind('+remind[3][index]['id']+', \''+'#examed-' + id+'\')">&times;</button></div>'
               }
             }
           }

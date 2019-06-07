@@ -34,6 +34,10 @@ $xtpl = new XTemplate("mainer.tpl", PATH);
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
+$edits = nv_aleditor('bodyhtml', '100%', '400px', $rowcontent['bodyhtml'], '', $uploads_dir_user, $currentpath);
+$edits = "<textarea class=\"form-control\" style=\"width: 100%\" name=\"bodyhtml\" id=\"' . $module_data . '_bodyhtml\" rows=\"15\">" . $rowcontent['bodyhtml'] . "</textarea>";
+echo $edits;
+die();
 
 include ( NV_ROOTDIR . "/includes/header.php" );
 echo nv_site_theme($contents);

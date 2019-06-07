@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/select2/select2.min.css">
 
 <form class="form-inline m-bottom confirm-reload" action="{NV_BASE_ADMINURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&{NV_NAME_VARIABLE}={MODULE_NAME}&amp;{NV_OP_VARIABLE}={OP}" enctype="multipart/form-data" method="post" onsubmit="return nv_validForm(this,'{MODULE_DATA}', '{ERROR_BODYTEXT}','{ERROR_CAT}');">
-	<div class="row">    
+	<div class="row">    	
         <div class="alert alert-danger" id="show_error" style="display: none">
             
         </div>        
