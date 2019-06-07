@@ -528,7 +528,7 @@
       </div>
     </div>
 
-    <div class="boxed box-1 box-1-15 box-2 box-2-20 box-3 box-3-12 box-4 box-4-12 box-5 box-5-12">
+    <div class="boxed box-1 box-1-15 box-2 box-2-20 box-3 box-3-12 box-4 box-4-17 box-5 box-5-12">
       <label>
         Yêu cầu xét nghiệm
         <button class="btn btn-success" onclick="insertMethod()"> <span class="glyphicon glyphicon-plus"></span> </button>
