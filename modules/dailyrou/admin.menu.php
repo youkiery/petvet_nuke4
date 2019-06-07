@@ -13,5 +13,6 @@ if (!defined('NV_ADMIN')) {
 
 $submenu['manager'] = "Người quản lý chấm công";
 $submenu['except'] = "Người ngoại lệ";
+$submenu['position'] = "Quản lý tầng";
 
-$allow_func = array('main', 'manager', 'except'); 
+$allow_func = array('main', 'manager', 'except', 'position'); 

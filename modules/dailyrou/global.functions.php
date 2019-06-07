@@ -13,6 +13,126 @@ if (!defined('NV_MAINFILE')) {
 
 define("PREFIX", $db_config['prefix'] . "_" . $module_name);
 
+function getPosition() {
+  global $db;
+
+  $list = array();
+  $sql = 'select * from `'. PREFIX .'_position`';
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $list[] = $row;
+  }
+  return $list;
+}
+
+function doctorPositionList() {
+  global $db, $db_config;
+  $list = array();
+
+  $sql = "select userid, username, last_name, first_name from `" .  $db_config["prefix"] . "_users` where userid in (select user_id from `" . $db_config["prefix"] . "_rider_user` where type = 1)";
+  $query = $db->query($sql);
+  
+  while ($row = $query->fetch()) {
+    $sql = 'select * from `'. PREFIX .'_user_position` where userid = ' . $row['userid'];
+    $userPositionQuery = $db->query($sql);
+    $userPositionData = $userPositionQuery->fetch();
+    $row['position'] = 0;
+    if (!empty($userPositionData) && !empty($userPositionData['position'])) {
+      $row['position'] = $userPositionData['position'];
+    }
+    $list[$row["userid"]] = $row;
+  }
+
+  return $list;
+}
+
+function checkPositionName($name) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_position` where name = "'. $name .'"';
+  $query = $db->query($sql);
+
+  if (!empty($query->fetch())) {
+    return true;
+  }
+  return false;
+}
+
+function insertPosition($name) {
+  global $db;
+
+  $sql = 'insert into `'. PREFIX .'_position` (name) values("'. $name .'")';
+
+  if ($db->query($sql)) {
+    return $db->lastInsertId();
+  }
+  return 0;
+}
+
+function removePosition($id) {
+  global $db;
+
+  $sql = 'delete from `'. PREFIX .'_position` where id = ' . $id;
+
+  if ($db->query($sql)) {
+    return true;
+  }
+  return false;
+}
+
+function setUserPosition($type, $userid, $id) {
+  global $db;
+
+  if ($positionid = checkUserPosition($userid)) {
+    if (!empty($type)) {
+      $id = 0;
+    }
+    $sql = 'update `'. PREFIX .'_user_position` set position = '. $id .' where userid = ' . $userid;
+  }
+  else {
+    $sql = 'insert into `'. PREFIX .'_user_position` (userid, position) values ('. $userid .', '. $id .')';
+  }
+  if ($db->query($sql)) {
+    return true;
+  }
+  return false;
+}
+
+// function insertUserPosition($user, $id) {
+//   global $db;
+
+//   $sql = 'insert into `'. PREFIX .'_user_position` (userid, position) values ('. $userid .', '. $position .')';
+
+//   if ($db->query($sql)) {
+//     return true;
+//   }
+//   return false;
+// }
+
+// function updateUserPosition($positionid, $id) {
+//   global $db;
+
+//   $sql = 'update `'. PREFIX .'_user_position` set  (userid, position) values ('. $userid .', '. $position .')';
+
+//   if ($db->query($sql)) {
+//     return true;
+//   }
+//   return false;
+// }
+
+function checkUserPosition($userid) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_user_position` where userid = ' . $userid;
+  $query = $db->query($sql);
+
+  if (!empty($row = $query->fetch())) {
+    return $row['id'];
+  }
+  return 0;
+}
+
 function userList() {
   global $db, $db_config;
   $list = array();

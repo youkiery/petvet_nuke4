@@ -15,6 +15,49 @@ define("A_DAY", 60 * 60 * 24);
 $work = array("trực sáng", "trực tối", "nghỉ sáng", "nghỉ chiều");
 $datetime = array(1 => "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "CN");
 
+function positionUserList() {
+  $xtpl = new XTemplate("position_user_list.tpl", PATH);
+  $index = 1;
+  $doctor = doctorPositionList();
+  $position = getPosition();
+  // echo json_encode($doctor);die();
+
+  foreach ($doctor as $doctorData) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('fullname', $doctorData['last_name'] . ' ' . $doctorData['first_name']);
+    $xtpl->assign('username', $doctorData['username']);
+    $xtpl->assign('userid', $doctorData['userid']);
+    foreach ($position as $positionData) {
+      $xtpl->assign('type', '');
+      $xtpl->assign('position', $positionData['name']);
+      $xtpl->assign('id', $positionData['id']);
+      if($doctorData['position'] == $positionData['id']) {
+        $xtpl->assign('type', 'info');
+      }
+      $xtpl->parse('main.row.position');
+    }    
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function positionList() {
+  $xtpl = new XTemplate("position_list.tpl", PATH);
+  $index = 1;
+  $position = getPosition();
+
+  foreach ($position as $positionData) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $positionData['id']);
+    $xtpl->assign('name', $positionData['name']);
+    $xtpl->parse('main.row');
+  }    
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function userWorkList($doctorId) {
   global $nv_Request, $db, $work;
   $exType = $nv_Request->get_string("exType", "get/post", "");
@@ -39,9 +82,6 @@ function userWorkList($doctorId) {
 
 function scheduleList($startDate, $endDate) {
   global $db, $datetime, $work;
-  // $startDate = strtotime("2019/05/01");
-  // $endDate = strtotime("2019/06/01");
-  // $endDate = totime($endDate) + A_DAY * 200;
   $xtpl = new XTemplate("schedule_list.tpl", PATH);
 
   $userList = userList();
@@ -55,13 +95,10 @@ function scheduleList($startDate, $endDate) {
   $count = 0;
 
   while ($count < 7) {
-    // $xtpl->assign("date", date("d/m", $date) . " (" . $datetime[date("N", $date)] . ")");
     $xtpl->assign("date", date("d/m/Y", $date));
     $xtpl->assign("day", $datetime[date("N", $date)]);
 
     if ($currentRow["time"] == $date) {
-      // var_dump($currentRow);
-      // echo "<br>";
       switch ($currentRow["type"]) {
         case '0':
           $rest_list["morning_guard"][] = $userList[$currentRow["user_id"]]["first_name"];
