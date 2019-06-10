@@ -99,7 +99,12 @@
   color: white;
 }
 
-.red, .green, .white, .yellow, .orange, .purple, .blue {
+.gray {
+  background: gray;
+  color: black;
+}
+
+.red, .green, .white, .yellow, .orange, .purple, .blue, .gray {
   border: 1px solid #fff;
 }
 

@@ -83,72 +83,6 @@
   </div>
 </div>
 
-<!-- <div id="confirm_work" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-body">
-        <h2> Xác nhận lịch tuần </h2>
-        <div id="confirm_work_content">
-
-        </div>
-        <div class="text-center">
-          <button class="btn btn-success" onclick="checkAdRegist()">
-            Đăng ký
-          </button>
-          <button class="btn btn-danger" data-dismiss="modal" onclick="registOff()">
-            Hủy
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-<!-- <div id="exchange_work" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <h2> Chọn người bạn muốn đổi ca? </h2>
-        <div>
-          <div id="exchange_work_head">
-
-          </div>
-          <select id="exchange_work_doctor" class="form-control">
-            BEGIN: doctor
-            <option value="{doctor_value}">{doctor_name}</option>
-            END: doctor
-          </select>
-          <div id="exchange_work_content">
-          </div>
-        </div>
-        <div class="text-center">
-          <button class="btn btn-danger" data-dismiss="modal">
-            Trở về
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-<!-- <div id="work_list" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <h2> Danh sách ngày các ca đã đăng ký? </h2>
-        <div id="work_content_list">
-
-        </div>
-        <div class="text-center">
-          <button class="btn btn-danger" data-dismiss="modal" onclick="registOff()">
-            Trở về
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-  
 <!-- BEGIN: tab -->
   <button rel="1" class="tab btn btn-info active">
     Người dùng
@@ -198,12 +132,6 @@
     <button class="btn btn-info right" id="print" onclick="printer()">
       In
     </button>
-    <!-- <button class="btn btn-info right" onclick="toWconfirm()">
-      Xác nhận
-    </button> -->
-    <!-- <button class="btn btn-info" id="list">
-      Danh sách
-    </button> -->
   </div>
 </div>
 <!-- BEGIN: doctor -->
@@ -215,17 +143,19 @@
   {content}
 </div>
 <div>
-  <div style="width: 20px; height: 20px; display: inline-block; background: green;"></div> Chưa đăng ký <br>
-  <div style="width: 20px; height: 20px; display: inline-block; background: red;"></div> Có người đăng ký <br>
-  <div style="width: 20px; height: 20px; display: inline-block; background: orange;"></div> Bản thân đăng ký <br>
-  <div style="width: 20px; height: 20px; display: inline-block; background: yellow;"></div> Đăng ký thêm <br>
-  <div style="width: 20px; height: 20px; display: inline-block; background: blue;"></div> Đăng ký thêm <br>
-  <div style="width: 20px; height: 20px; display: inline-block; background: purple;"></div> Bỏ đăng ký <br>
+  <div style="width: 20px; height: 20px; display: inline-block; background: green;"></div> Có thể đăng ký <br>
+  <div style="width: 20px; height: 20px; display: inline-block; background: red;"> </div> Không thể đăng ký <br>
+  <div style="width: 20px; height: 20px; display: inline-block; background: gray;"> </div> Không thể đăng ký <br>
+  <div style="width: 20px; height: 20px; display: inline-block; background: orange;"></div> Có thể bỏ đăng ký <br>
+  <div style="width: 20px; height: 20px; display: inline-block; background: purple;"></div> Đăng ký <br>
+  <div style="width: 20px; height: 20px; display: inline-block; background: blue;"></div> Bỏ đăng ký <br>
 </div>
 <script>
   var today = new Date('{date}').setHours(0)
   var dbdata = JSON.parse('{data}')
+  var userdb = JSON.parse('{position}')
   var except = JSON.parse('{except}')
+  var user_position = '{user_position}'
   var schedule = dbdata.length
   var username = trim('{username}');
   var startDate = $("#start-date")
@@ -238,13 +168,6 @@
   var content = $("#content")
   var registConfirm = $("#regist_confirm")
   var registList = $("#regist_list")
-  // var workList = $("#work_list")
-  // var workContentList = $("#work_content_list")
-  // var exchangeWork = $("#exchange_work")
-  // var exchangeWorkContent = $("#exchange_work_content")
-  // var exchangeWorkDoctor = $("#exchange_work_doctor")
-  // var confirmWork = $("#confirm_work")
-  // var confirmWorkContent = $("#confirm_work_content")
   var dconfirm = $("#dconfirm")
   var wconfirmAlert = $("#wconfirm_alert")
   var wconfirmAlertContent = $("#wconfirm_alert_content")
@@ -259,7 +182,7 @@
 
   var admin = {admin}
   var regist = false
-  var color = ["white", "green", "red", "orange"]
+  var color = ["white", "gray", "green", "red", "orange", "blue", "yellow"]
   var panis = []
   var exDate = -1
   var exType = -1
@@ -268,134 +191,11 @@
 
   setEvent()
 
-  // #exchange
-  // exchangeWorkDoctor.change(() => {
-  //   getWorkList()
-  // })
-
-  // function exchange(exchangeDate, exchangeType) {
-  //   exDate = exchangeDate
-  //   exType = exchangeType
-
-  //   getWorkList().then(() => {
-  //     exchangeWork.modal("show")
-  //   })
-  // }
-
-  // function getWorkList() {
-  //   return new Promise(resolve => {
-  //     $.post(
-  //       strHref,
-  //       {action: "getWorkList", doctorId: exchangeWorkDoctor.val(), exType: exType, startDate: startDate.val(), endDate: endDate.val()},
-  //       (response, status) => {
-  //         checkResult(response, status).then((data) => {
-  //           exchangeWorkContent.html(data["html"])
-  //           resolve()
-  //         }, () => {})
-  //       }    
-  //     )
-  //   })
-  // }
-
-  // function exchangeSubmit(exDate2, extype2) {
-  //   $.post(
-  //     strHref,
-  //     {action: "exchange", exDate: exDate, exType: exType, exDate2: exDate2, exType2: exType2},
-  //     (response, status) => {
-  //       checkResult(response, status).then((data) => {
-
-  //       }, () => {})
-  //     }
-  //   )
-  // }
-
-  // #confirm schedule
-  // function editSchedule() {
-  //   $.post(
-  //     strHref,
-  //     {action: "editSchedule", doctorId: exchangeWorkDoctor.val(), exType: exType, startDate: startDate.val(), endDate: endDate.val()},
-  //     (response, status) => {
-  //       checkResult(response, status).then((data) => {
-  //         confirmWorkContent.html(data["html"])
-  //         confirmWork.modal("show")
-          
-  //         setEvent2()
-  //       }, () => {})
-  //     }    
-  //   )
-  // }
-
-  // function registOnAdmin() {
-  //   if (admin) {
-  //     registOff()
-  //   }
-  //   else {
-  //     var table = content[0].children[0].children[1].children
-  //     var i = 0
-  //     var thisDateString = "", thisDate = 0
-  //     for (const rowKey in table) {
-  //       if (table.hasOwnProperty(rowKey)) {
-  //         const row = table[rowKey];
-  //         var moi = [0, 0, 0, 0, 0]
-          
-  //         while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
-  //           moi[dbdata[i]["type"] + 1] = 2
-  //           i ++
-  //         }
-  //         moi.forEach((cellColor, index) => {
-  //           row.children[index].setAttribute("class", color[cellColor])
-  //         });
-  //       }
-  //     }
-      
-  //   }
-  //   admin = !admin
-  // }
-
-  // list.click(() => {
-  //   var table = content[0].children[0].children[1].children
-  //   var i = 0
-  //   html = ""
-  //   for (const rowKey in table) {
-  //     if (table.hasOwnProperty(rowKey)) {
-  //       const row = table[rowKey];
-  //       var last_type = -1
-  //       var last_date = -1
-
-  //       while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
-  //         if (row.children[dbdata[i]["type"] + 1].innerText.search(username) >= 0) {
-  //           if (last_date != dbdata[i]["date"] || last_type != dbdata[i]["type"]) {
-  //             switch (dbdata[i]["type"]) {
-  //               case 0:
-  //                 type = "trực sáng"
-  //                 break;
-  //               case 1:
-  //                 type = "trực tối"
-  //                 break;
-  //               case 2:
-  //                 type = "nghỉ sáng"
-  //                 break;
-  //               case 3:
-  //                 type = "nghỉ chiều"
-  //                 break;
-  //             }
-  //             html += "<div class='item'>Ngày " + dbdata[i]["date"] + ": " + type + "<button class='btn btn-info right' onclick='exchange(\"" + dbdata[i]["date"] + "\", " + dbdata[i]["type"] +")'><span class='glyphicon glyphicon-retweet'></span></button></div>"
-  //           }
-  //         }
-  //         last_date = dbdata[i]["date"]
-  //         last_type = dbdata[i]["type"]
-  //         i ++
-  //       }
-  //     }
-  //   }
-  //   workContentList.html(html)
-  //   workList.modal("show")
-  // })
-
   // general
 
   doctor.change((e) => {
     doctorId = doctor.val()
+    user_position = doctor[0].children[doctor[0].selectedIndex].getAttribute('position')
     username = trim($("#doctor option:selected").text())
     regist = false
   })
@@ -603,43 +403,6 @@
     }
   })
 
-  // dateType.change(() => {
-  //   var date = {}
-  //   var now = new Date();
-    
-  //   switch (dateType.val()) {
-  //     case "1":
-  //       // this week
-  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 1);
-  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 7);
-  //     break;
-  //     case "2":
-  //       // next week
-  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 7);
-  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 14);
-  //     break;
-  //     case "3":
-  //       // this month
-  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 2, 1);
-  //     break;
-  //     case "4":
-  //       // last month
-  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth(), 1);
-  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-  //     break;
-  //     case "5":
-  //       // next month
-  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 2, 1);
-  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 3, 1);
-  //     break;
-  //   }
-  //   if (date["startDate"]) {
-  //     startDate.val(dateToString(date["startDate"]));
-  //     endDate.val(dateToString(date["endDate"]));
-  //     filterData(); 
-  //   }
-  // })
 
   $("#start-date").change(() => {
     dateTimeout = setTimeout(() => {
@@ -656,30 +419,87 @@
   // event function
 
   function registOn() {
-    console.log(1);
-    
     var table = content[0].children[0].children[1].children
     var i = 0
+    var tempToday = today / 1000
     for (const rowKey in table) {
       if (table.hasOwnProperty(rowKey)) {
+        // var color = ["white", "gray", "green", "red", "orange", "blue", "yellow"]
         const row = table[rowKey];
-        var moi = [0, 0, 1, 1, 1, 1]
+        var thisDate = new Date(row.children[0].innerText).getTime() / 1000
+        var check = true
+        
+        if (tempToday > thisDate) {
+          var moi = [0, 0, 1, 1, 1, 1]
+          check = false
+        }
+        else {
+          var moi = [0, 0, 2, 2, 2, 2]
+        }
+
         while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
           var thisIndex = Number(dbdata[i]["type"]) + 2
-          
-          if (row.children[thisIndex].innerText.search(username) >= 0) {
-            moi[thisIndex] = 3
-          }
-          else {
-            moi[thisIndex] = 2
+          if (check) {
+            if (dbdata[i]["userid"] == doctorId) {
+              moi[thisIndex] = 4
+            }
           }
           i ++
         }
+
+        if (check) {
+          if (checkSchedule(trim(row.children[2].innerText).split(', ')) || checkSchedule(trim(row.children[3].innerText).split(', ')) || checkSchedule(trim(row.children[4].innerText).split(', ')) || checkSchedule(trim(row.children[5].innerText).split(', '))) {
+            var check = true
+            if (row.children[2].innerText.search(username) >= 0) {
+              check = false
+              moi[2] = 4
+            }
+            if (row.children[3].innerText.search(username) >= 0) {
+              check = false
+              moi[3] = 4
+            }
+            if (row.children[4].innerText.search(username) >= 0) {
+              check = false
+              moi[4] = 4
+            }
+            if (row.children[5].innerText.search(username) >= 0) {
+              check = false
+              moi[5] = 4
+            }
+            if (check) {
+              moi[2] = 3
+              moi[3] = 3
+              moi[4] = 3
+              moi[5] = 3
+            }
+          }          
+        }
+
         moi.forEach((cellColor, index) => {
           row.children[index].setAttribute("class", color[cellColor])
         });
       }
     }
+  }
+
+  function checkSchedule(list) {
+    var tempUserdb = JSON.parse(JSON.stringify(userdb))
+
+    if (user_position > 0) {
+      if (list.length && list[0].length) {
+        list.forEach(item => {
+          tempUserdb[user_position] = tempUserdb[user_position].filter((user, userIndex) => {
+            return item != user['first_name']
+          })
+        })
+        
+        if (tempUserdb[user_position].length <= 1) {
+          return true
+        }
+      }
+    }
+    
+    return false
   }
 
   function registOff() {
@@ -706,7 +526,7 @@
         const row = table[rowKey];
         moi.forEach((cellColor, index) => {
           var this_class = row.children[index].getAttribute("class")
-          if (this_class == "yellow" || this_class == "purple" || this_class == "blue") {
+          if (this_class == "purple" || this_class == "blue") {
             pan.push({
               date: trim(row.children[0].innerText),
               type: index,
@@ -821,32 +641,37 @@
         var thisColor = that.getAttribute("class")
         var thisValue = trim(that.innerText)
         
-        if (admin || (thisDate >= today)) {
+        if (admin || (thisDate > today)) {
           switch (thisColor) {
             case "red":
-              if (thisValue.search(username) > 0) {
-                that.setAttribute("class", "purple")
-              }
-              else if (checkExcept(thisValue)) {
-                that.setAttribute("class", "blue")
-              }
+              // if (thisValue.search(username) > 0) {
+              //   that.setAttribute("class", "purple")
+              // }
+              // else if (checkExcept(thisValue)) {
+              //   that.setAttribute("class", "blue")
+              // }
             break;
             case "blue":
-              that.setAttribute("class", "red")
+              // blue turn green
+              that.setAttribute("class", "green")
             break;
             case "green":
-              that.setAttribute("class", "yellow")
+              // green turn blue
+              that.setAttribute("class", "blue")
             break;
             case "purple":
-              if (username && thisValue.search(username) >= 0) {
+              // not a thing
+              // if (username && thisValue.search(username) >= 0) {
                 that.setAttribute("class", "orange")
-              }
+              // }
             break;
             case "orange":
+              // not a thing
               that.setAttribute("class", "purple")
             break;
             case "yellow":
-              that.setAttribute("class", "green")
+              // yellow turn red
+              // that.setAttribute("class", "green")
             break;
           }
         }
@@ -858,7 +683,6 @@
     var count = (listText.match(/,/g) || []).length
     except.forEach(exceptName => {
       var x = listText.search(exceptName)
-      console.log(x);
       
       if (x >= 0) {
         count --

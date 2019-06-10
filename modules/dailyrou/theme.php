@@ -228,6 +228,10 @@ function blockSelectDoctor($doctorId, $userList) {
     else {
       $xtpl->assign("select", "");
     }
+    $sql = 'select * from `'. PREFIX .'_user_position` where userid = ' . $userData['userid'];
+    $query = $db->query($sql);
+    $user = $query->fetch();
+    $xtpl->assign("position", $user['position']);
     $xtpl->assign("doctor_value", $userData["userid"]);
     $xtpl->assign("doctor_name", $userData["first_name"]);
     $xtpl->parse("main.doctor");

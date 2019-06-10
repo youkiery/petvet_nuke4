@@ -47,6 +47,30 @@ function doctorPositionList() {
   return $list;
 }
 
+function doctorByPositionList() {
+  global $db, $db_config;
+  $position = getPosition();
+  $list = [];
+
+  $sql = "select userid, username, last_name, first_name from `" .  $db_config["prefix"] . "_users` where userid in (select user_id from `" . $db_config["prefix"] . "_rider_user` where type = 1)";
+  $query = $db->query($sql);
+  
+  while ($row = $query->fetch()) {
+    $sql = 'select * from `'. PREFIX .'_user_position` where userid = ' . $row['userid'];
+    $userPositionQuery = $db->query($sql);
+    $userPositionData = $userPositionQuery->fetch();
+    if (!empty($userPositionData) && !empty($userPositionData['position'])) {
+      $row['position'] = $userPositionData['position'];
+      if (empty($list[$row['position']])) {
+        $list[$row['position']] = array();
+      }
+      $list[$row['position']][] = $row;
+    }
+  }
+
+  return $list;
+}
+
 function checkPositionName($name) {
   global $db;
 
@@ -76,7 +100,11 @@ function removePosition($id) {
   $sql = 'delete from `'. PREFIX .'_position` where id = ' . $id;
 
   if ($db->query($sql)) {
-    return true;
+    $sql = 'delete from `'. PREFIX .'_user_position` where position = ' . $id;
+
+    if ($db->query($sql)) {
+      return true;
+    }
   }
   return false;
 }
