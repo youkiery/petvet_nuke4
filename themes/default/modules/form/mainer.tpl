@@ -7,7 +7,4 @@
 <button class="btn" onclick="newView()">
   add
 </button>
-
-
-
 <!-- END: main -->
