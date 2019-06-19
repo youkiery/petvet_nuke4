@@ -116,11 +116,11 @@
 <div class="tab-content">
   <div id="home" class="tab-pane active">
     <form onsubmit="filter(event)">
-      <div class="row">
-        <div class="col-sm-6">
+      <div class="row form-group">
+        <div class="col-sm-8">
           <input type="text" class="form-control" id="filter-keyword" placeholder="Mẫu phiếu" autocomplete="off">
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-8">
           <select class="form-control" id="filter-printer">
             <option value="1" selected>Mẫu 1</option>
             <option value="2">Mẫu 2</option>
@@ -129,7 +129,7 @@
             <option value="5">Mẫu 5</option>
           </select>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-8">
           <select class="form-control" id="filter-limit">
             <option value="10">10</option>
             <option value="20">20</option>
@@ -138,8 +138,21 @@
             <option value="100">100</option>
           </select>
         </div>
-        <div class="col-sm-6"><button class="btn btn-info"><span class="glyphicon glyphicon-search"></span></button></div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="filter-unit" placeholder="Đơn vị">
+        </div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="filter-exam" placeholder="Kết quả xét nghiệm">
+        </div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="filter-sample" placeholder="Loại động vật">
+        </div>
       </div>      
+      <div class="text-center">
+        <button class="btn btn-info"><span class="glyphicon glyphicon-search"></span></button>
+      </div>
     </form>
     <button class="btn btn-info" onclick="summary()"> Tổng kết </button>
     <div id="content">
@@ -294,7 +307,7 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-1 box-1-8 box-2 box-2-6 box-3 box-3-6">
+    <div class="row form-group boxed box-1 box-1-8 box-2 box-2-6">
       <label class="col-sm-6">Ngày trả</label>
       <div class="col-sm-12">
         <input type="text" class="form-control" id="form-insert-iresend" autocomplete="off">
@@ -320,7 +333,7 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-2 box-2-2 box-3 box-3-2 box-21 box-21-5 box-31 box-31-5 box-4 box-4-2">
+    <div class="row form-group boxed box-2 box-2-2 box-21 box-21-5 box-31 box-31-5 box-4 box-4-2">
       <label class="col-sm-6">
         Bộ phận giao mẫu - Khách hàng yêu cầu xét nghiệm
       </label>
@@ -380,7 +393,7 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-2 box-2-3 box-3 box-3-3 box-21 box-21-7">
+    <div class="row form-group boxed box-2 box-2-3 box-21 box-21-7">
       <label class="col-sm-6">
         Bộ phận nhận mẫu
       </label>
@@ -599,7 +612,16 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-2 box-2-5 box-3 box-3-5 box-4 box-4-20">
+    <div class="row form-group boxed box-2">
+      <label class="col-sm-6">
+        Ghi chú
+      </label>
+      <div class="col-sm-20">
+        <textarea type="text" class="form-control" id="form-insert-note"></textarea>
+      </div>
+    </div>
+
+    <div class="row form-group boxed box-2 box-2-5 box-4 box-4-20">
       <label class="col-sm-6">
         Ngày phân tích
       </label>
@@ -617,12 +639,12 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-5 box-5-17">
+    <div class="row form-group boxed box-3 box-3-7 box-5 box-5-17">
       <label class="col-sm-6">
         Người phụ trách
       </label>
       <div class="col-sm-20">
-        <textarea type="text" class="form-control" id="form-insert-receive-leader"></textarea>
+        <input type="text" class="form-control" id="form-insert-receive-leader">
       </div>
     </div>
 
@@ -639,45 +661,55 @@
 
     </div>
 
-    <div class="row form-group boxed box-2 box-2-7 box-3 box-3-7">
+    <div class="row form-group boxed box-3 box-3-5">
+      <label class="col-sm-6"> Bộ phận xét nghiệm </label>
+      <div class="col-sm-10">
+        <input type="text" id="form-insert-xexam" class="form-control">
+      </div>
+    </div>
+
+    <div class="row form-group boxed box-2 box-2-7">
       <label class="col-sm-6"> Ngày giao mẫu </label>
       <div class="col-sm-10">
         <input type="text" id="form-insert-xsend" class="form-control">
       </div>
     </div>
 
-    <div class="row form-group boxed box-2 box-2-8 box-3 box-3-8">
+    <div class="row form-group boxed box-2 box-2-8">
       <label class="col-sm-6"> Người giao mẫu </label>
-      <div class="col-sm-10">
-        <input type="text" id="form-insert-xsender" class="form-control">
+      <div class="col-sm-10 relative">
+        <input type="text" id="xsender-0" class="form-control">
+        <div class="suggest" id="xsender-suggest-0"></div>
       </div>
     </div>
 
-    <div class="row form-group boxed box-2 box-2-9 box-3 box-3-9">
+    <div class="row form-group boxed box-2 box-2-9">
       <label class="col-sm-6"> Ngày nhận mẫu </label>
       <div class="col-sm-10">
         <input type="text" id="form-insert-xreceive" class="form-control">
       </div>
     </div>
 
-    <div class="row form-group boxed box-2 box-2-10 box-3 box-3-10">
+    <div class="row form-group boxed box-2 box-2-10">
       <label class="col-sm-6"> Người nhận mẫu </label>
-      <div class="col-sm-10">
-        <input type="text" id="form-insert-xreceiver" class="form-control">
+      <div class="col-sm-10 relative">
+        <input type="text" id="xreceiver-0" class="form-control">
+        <div class="suggest" id="xreceiver-suggest-0"></div>
       </div>
     </div>
 
-    <div class="row form-group boxed box-2 box-2-11 box-3 box-3-11">
+    <div class="row form-group boxed box-2 box-2-11">
       <label class="col-sm-6"> Ngày giao kết quả </label>
       <div class="col-sm-10">
         <input type="text" id="form-insert-xresend" class="form-control">
       </div>
     </div>
 
-    <div class="row form-group boxed box-2 box-2-12 box-3 box-3-12">
+    <div class="row form-group boxed box-2 box-2-12">
       <label class="col-sm-6"> Người phụ trách bộ phận xét nghiệm </label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="form-insert-xresender">
+      <div class="col-sm-10 relative">
+        <input type="text" class="form-control" id="xresender-0">
+        <div class="suggest" id="xresender-suggest-0"></div>
       </div>
     </div>
 
@@ -733,11 +765,16 @@
 </div>
 
 <script>
-  var style = '.table-bordered {border-collapse: collapse;}.table-wider td, .table-wider th {padding: 10px;}table {width: 100%;}table td {padding: 5px;}.no-bordertop {border-top: 1px solid white; }.no-borderleft {border-left: 1px solid white; }.c20, .c25, .c30, .c35, .c40, .c45, .c50, .c80 {display: inline-block;}.c20 {width: 19%;}.c25 {width: 24%;}.c30 {width: 29%;}.c35 {width: 34%;}.c40 {width: 39%;}.c45 {width: 44%;}.c50 {width: 49%;}.c80 {width: 79%;}.p12 {font-size: 12px}.p13 {font-size: 13px}.p14 {font-size: 14px}.p15 {font-size: 15px}.p16 {font-size: 16px}.text-center, .cell-center {text-align: center;}.cell-center {vertical-align: inherit;}'
-  var profile = ['@page { size: A4 portrait; margin: 20mm 10mm 10mm 35mm; }', '@page { size: A4 landscape; margin: 20mm 10mm 10mm 35mm;}']
+  var style = '.table-bordered {border-collapse: collapse;}.table-wider td, .table-wider th {padding: 10px;}table {width: 100%;}table td {padding: 5px;}.no-bordertop {border-top: 1px solid white; }.no-borderleft {border-left: 1px solid white; }.c20, .c25, .c30, .c35, .c40, .c45, .c50, .c80 {display: inline-block;}.c20 {width: 19%;}.c25 {width: 24%;}.c30 {width: 29%;}.c35 {width: 34%;}.c40 {width: 39%;}.c45 {width: 44%;}.c50 {width: 49%;}.c80 {width: 79%;}.p11 {font-size: 11pt}.p12 {font-size: 12pt}.p13 {font-size: 13pt}.p14 {font-size: 14pt}.p15 {font-size: 15pt}.p16 {font-size: 16pt}.text-center, .cell-center {text-align: center;}.cell-center {vertical-align: inherit;}'
+  var profile = ['@page { size: A4 portrait; margin: 20mm 10mm 10mm 30mm; }', '@page { size: A4 landscape; margin: 20mm 10mm 10mm 30mm;}']
   var former = {
-    1: '<table class="table-bordered" border="1"><tr><td rowspan="2" class="cell-center" style="width: 20%; padding: 10pt 21pt;">CHI CỤC THÚ Y VÙNG V</td><td class="cell-center" style="height: 30pt;">PHIẾU GIẢI QUYẾT HỒ SƠ</td></tr><tr><td class="no-bordertop">Số: {code}/TYV5-TH</td></tr></table><p>&emsp; Tên đơn vị: {}</p><p><div class="inline c50">&emsp; Ngày nhận: {}</div><div class="inline c50">Ngày hẹn trả kết quả: {}</div></p><p><div class="inline c30">&emsp; Hình thức nhận: </div><div class="inline c20">{} Trực tiếp</div><div class="inline c20">{} Bưu điện</div><div class="inline c30">Khác: {}</div></p><p>&emsp; Người nhận hồ sơ: </p><p><div class="inline c30">&emsp; Phòng chuyên môn:</div><div class="inline c40">Ngày nhận: {}</div><div class="inline c30">Ngày trả: {}</div></p><table class="table-bordered" border="1"><tr><td class="text-center"> <u>Hồ sơ gồm:</u></td></tr><tr class="no-bordertop"><td><p>.</p><p>.</p><p>.</p><p>.</p><p>.</p><p>.</p><p>.</p></td></tr></table><br><table class="table-bordered" border="1"><tr><th class="p13"> <b>Ý kiến của phòng, Bộ phận chịu trách nhiệm giải quyết</b> </th><th class="p13"> <b>Ý kiến của ban lãnh đạo</b> </th></tr><tr><td colspan="2"><p>.</p><p>.</p><p>.</p><p>.</p><p>.</p><p>.</p><p>.</p></td></tr></table><p>&emsp;&emsp;Ghi chú: Hồ sơ có ý kiến của thủ trưởng (hoặc người được ủy quyền) phải giao lại cho Bộ phận một cửa trước 01 ngày so với ngày hẹn trả </p><br><br><br><p><div class="inline c40">Mã số: BM-02/TYV5-06</div><div class="inline c40">Mã số: Ngày ban hành: 02/11/2017</div><div class="inline c20">Lần sửa đổi: 02</div></p>', 2: '<table class="table-bordered" border="1" style="width: 95%; margin: auto;"><tr><td style="width: 60%;" class="cell-center">CHI CỤC THÚ Y VÙNG V <br> <b> TRẠM CHẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT </b></td><td><div class="c20"></div><div class="c80"><b>Biểu mẫu số: BM.STTT.20.10 <br>Số soát xét: 03.02718</b></div></td></tr></table><br><div class="text-center"> <b>PHIẾU GIAO NHẬN MẪU VÀ KẾT QUẢ XÉT NGHIỆM</b> </div><div style="float: right; width: 160pt; margin-right: 10pt; border: 1px solid black; padding: 5pt;">Số ĐKXN: {xcode-0}/{xcode-1}/{xcode-2} <br> Số trang: {page-0} <br> Liên: {no-0}/{no-1} </div><br><p><b>Bên giao mẫu: </b> {isenderunit}</p><p><b>Bên nhận mẫu: </b> {ireceiverunit}</p><div id="a">{table}</div><p><div style="display: inline-block"><b>Ghi chú:</b> </div><div style="margin-left: 1pt; display: inline-flex">- Bộ phận xét nghiệm trả kết quả trên chỉ tiêu xét nghiệm. <br>- Ngày xét nghiệm: {examdate} <br>- Ngày hẹn trả kết quả xét nghiệm: <i>ngày {resend-0} tháng {resend-1} năm {resend-2}</i></div></p><table><tr><td style="width: 5%"></td><td class="c30"><b>Người/Ngày giao mẫu <br></b><i>Ngày {xsend-0} tháng {xsend-1} năm {xsend-2} <br> <br> <br></i> {xsender}</td><td class="c30"><b>Người/Ngày nhận mẫu <br></b><i>Ngày {xreceive-0} tháng {xreceive-1} năm {xreceive-2} <br> <br> <br></i> {xreceiver}</td><td class="c30"><b>Phụ trácch bộ phận xét nghiệm <br></b><i>Ngày {xresend-0} tháng {xresend-1} năm {xresend-} <br> <br> <br></i> {xresender}</td></tr></table>', 3: '<table class="table-bordered" border="1"><tr><td class="cell-center"> <b>Biểu mẫu số: BM.STTT.22.01</b> </td><td class="cell-center"> <b>Số soát xét: 03.027148</b> </td></tr><tr><td colspan="2"><div class="cell-center">CHI CỤC THÚ Y VÙNG V <br> <b> TRẠM CHẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT </b></div>Địa chỉ: Số 36, Phạm Hùng, phường Tân An, thành phố Buôn Ma Thuột, tỉnh Đăk Lăk. <br>Điện thoại: 0262 3877793</td></tr></table><br><div class="text-center p16"> <b> PHIẾU KẾT QUẢ XÉT NGHIỆM </b> </div><br><p> <b> Số ĐKXN: {xcode-0}/{xcode-1}/{xcode-2} </b> </p><p class="text-center"> <b> Số phiếu kết quả thử nghiệm: {xcode-0}/{xcode-1}/{xcode-2}.CĐXN </b> </p><div id="a">{table}</div><p><div style="display: inline-block"><b> &emsp;&emsp; <u> Ghi chú: </u> </b> <i>(*)</i></div><div style="display: inline-flex"><i> - Các chỉ tiêu được công nhận TCVN ISO/IEC 17025:2007. <br> - Các chỉ tiêu được chứng nhận đăng ký hoạt động thử nghiệm </i></div></p><p> <i> &emsp;&emsp; Kết quả chỉ có giá trị trên mẫu thử nghiệm. Việc sao chép Kết quả này chỉ có giá trị khi được sao chép toàn bộ, và không có giá trị nếu chỉ sao chép một phần./. </i> </p><table><tr><td style="width: 5%"></td><td style="width: 30%" class="text-center"> <b>BỘ PHẬN XÉT NGHIỆM</b> <br> <i> (Ký, ghi rõ họ tên) </i> <br> <br> <br> {} </td><td style="width: 30%"></td><td style="width: 30%" class="text-center"> <b> TRƯỞNG TRẠM </b> <br> <br> <br> <br> {disLeader} </td><td style="width: 5%"></td></tr></table>'
+    1: '<table class="table-bordered" border="1"><tr><td rowspan="2" class="cell-center" style="width: 20%; padding: 10pt 21pt;">CHI CỤC THÚ Y VÙNG V</td><td class="cell-center" style="height: 30pt;">PHIẾU GIẢI QUYẾT HỒ SƠ</td></tr><tr><td class="no-bordertop">Số: code/TYV5-TH</td></tr></table><p>&emsp; Tên đơn vị: senderemploy</p><p><div class="inline c50">&emsp; Ngày nhận: receive </div><div class="inline c50">Ngày hẹn trả kết quả: resend </div></p><p><div class="inline c30">&emsp; Hình thức nhận: </div><div class="inline c20">status-0 Trực tiếp</div><div class="inline c20"> status-1 Bưu điện</div><div class="inline c30">Khác: status-2</div></p><p>&emsp; Người nhận hồ sơ: receiveremploy</p><p><div class="inline c30">&emsp; Phòng chuyên môn:</div><div class="inline c40">Ngày nhận: ireceive </div><div class="inline c30">Ngày trả: iresend </div></p><table class="table-bordered" border="1"><tr><td class="text-center" style="height: 240px; vertical-align: baseline;"> <p class="text-center"> <u>Hồ sơ gồm:</u> </p> <div style="text-align: left;"> formcontent </div></td></tr></table><br><table class="table-bordered" border="1"><tr><th class="p13"> <b>Ý kiến của phòng, Bộ phận chịu trách nhiệm giải quyết</b> </th><th class="p13"> <b>Ý kiến của ban lãnh đạo</b> </th></tr><tr><td colspan="2" style="height: 220px;"></td></tr></table><p>&emsp;&emsp;Ghi chú: Hồ sơ có ý kiến của thủ trưởng (hoặc người được ủy quyền) phải giao lại cho Bộ phận một cửa trước 01 ngày so với ngày hẹn trả </p><br><br><br><p><div class="inline c40">Mã số: BM-02/TYV5-06</div><div class="inline c40">Mã số: Ngày ban hành: 02/11/2017</div><div class="inline c20">Lần sửa đổi: 02</div></p>',
+    2: '<table class="table-bordered" border="1" style="width: 95%; margin: auto;"><tr><td style="width: 60%;" class="cell-center">CHI CỤC THÚ Y VÙNG V <br> <b> TRẠM CHẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT </b></td><td><div class="c20"></div><div class="c80"><b>Biểu mẫu số: BM.STTT.20.10 <br>Số soát xét: 03.02718</b></div></td></tr></table><br><div class="text-center"> <b>PHIẾU GIAO NHẬN MẪU VÀ KẾT QUẢ XÉT NGHIỆM</b> </div><div style="float: right; width: 160pt; margin-right: 10pt; border: 1px solid black; padding: 5pt;">Số ĐKXN: xcode-0/xcode-1/xcode-2 <br> Số trang: 01 <br> Liên: 01/02 </div><br><p><b>Bên giao mẫu: </b> isenderunit</p><p><b>Bên nhận mẫu: </b> ireceiverunit </p> <div> xtable </div> <div style="display: inline-block"><b>Ghi chú:</b> </div><div style="margin-left: 1pt; display: inline-flex">- Bộ phận xét nghiệm trả kết quả trên chỉ tiêu xét nghiệm. <br>- Ngày xét nghiệm: examdate <br>- Ngày hẹn trả kết quả xét nghiệm: <i>ngày resend-0 tháng resend-1 năm resend-2</i></div><table><tr><td style="width: 5%"></td><td class="c30"><b>Người/Ngày giao mẫu <br></b><i>Ngày xsend-0 tháng xsend-1 năm xsend-2 <br> <br> <br></i> <div class="text-center">xsender</div></td><td class="c30"><b>Người/Ngày nhận mẫu <br></b><i>Ngày xreceive-0 tháng xreceive-1 năm xreceive-2 <br> <br> <br></i> <div class="text-center">xreceiver</div> </td><td class="c30"><b>Phụ trácch bộ phận xét nghiệm <br></b><i>Ngày xresend-0 tháng xresend-1 năm xresend-2 <br> <br> <br></i> <div class="text-center">xresender</div></td></tr></table>',
+    3: '<table class="table-bordered" border="1"><tr><td class="cell-center"> <b>Biểu mẫu số: BM.STTT.22.01</b> </td><td class="cell-center"> <b>Số soát xét: 03.027148</b> </td></tr><tr><td colspan="2"><div class="cell-center">CHI CỤC THÚ Y VÙNG V <br> <b> TRẠM CHẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT </b></div>Địa chỉ: Số 36, Phạm Hùng, phường Tân An, thành phố Buôn Ma Thuột, tỉnh Đăk Lăk. <br>Điện thoại: 0262 3877793</td></tr></table><br><div class="text-center p16"> <b> PHIẾU KẾT QUẢ XÉT NGHIỆM </b> </div><br><p> <b> Số ĐKXN: xcode-0/xcode-1/xcode-2 </b> </p><p class="text-center"> <b> Số phiếu kết quả thử nghiệm: xcode-0/xcode-1/xcode-2.CĐXN </b> </p><div id="a">xtable</div><p><div style="display: inline-block"><b> &emsp;&emsp; <u> Ghi chú: </u> </b> <i>(*)</i></div><div style="display: inline-flex"><i> - Các chỉ tiêu được công nhận TCVN ISO/IEC 17025:2007. <br> - Các chỉ tiêu được chứng nhận đăng ký hoạt động thử nghiệm </i></div></p><p> <i> &emsp;&emsp; Kết quả chỉ có giá trị trên mẫu thử nghiệm. Việc sao chép Kết quả này chỉ có giá trị khi được sao chép toàn bộ, và không có giá trị nếu chỉ sao chép một phần./. </i> </p><table><tr><td style="width: 5%"></td><td style="width: 30%" class="text-center"> <b>BỘ PHẬN XÉT NGHIỆM</b> <br> <i> (Ký, ghi rõ họ tên) </i> <br> <br> <br> xexam </td><td style="width: 30%"></td><td style="width: 30%" class="text-center"> <b> TRƯỞNG TRẠM </b> <br> <br> <br> <br> receiveleader </td><td style="width: 5%"></td></tr></table>',
+    4: '<table border="1" class="table-bordered"> <tr> <td class="text-center"> <b>Biểu mẫu số: BM.STTT.22.01</b> </td> <td class="text-center"> <b>Số soát xét: 03.02718</b> </td> </tr> <tr> <td colspan="2"> <div class="text-center"> <b>CHI CỤC THÚ Y VÙNG V</b> </div> <div class="text-center"> <b>TRẠM CHUẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT</b> </div> <div> Địa chỉ: Số 36 Phạm Hùng, Phường Tân An, Thành phố Buôn Ma Thuột, Tỉnh Đăklăk </div> <div> Điện thoại: 0262 3877793 </div> </td> </tr> </table> <div class="text-center" style="margin: 10px;"> <b>PHIẾU KẾT QUẢ XÉT NGHIỆM</b> </div> <div style="margin: 4px;"> <div style="float: left"> Số phiếu kết quả xét nghiệm: xcode-0/xcode-1/xcode-2.CĐXN </div> <div style="float: right">Trang: 1/2</div> </div> <table border="1" class="table-bordered"> <tr> <td colspan="2"> Tên khách hàng: (customer) </td> <td style="width: 30%"> Số ĐKXN: xcode-0/xcode-1/xcode-2</td> </tr> <tr> <td colspan="3"> <div> Địa chỉ khách hàng: (address) </div> <div style="float: left; width: 400px;"> Số điện thoại: (phone) </div> <div style="float: left; "> Fax: (fax) </div> </td> </tr> <tr> <td colspan="3"> Loài động vật lấy mẫu: (sample) </td> </tr> <td colspan="3"> Loại mẫu: (type) </td> </tr> <tr> <td colspan="3"> Số lượng mẫu: (number) (numberword) </td> </tr> <tr> <td colspan="3"> Ký hiệu mẫu: (sampleCode) </td> </tr> <tr> <td colspan="3"> Tình trạng khi nhận mẫu: (status) </td> </tr> <tr> <td style="width: 50%"> Ngày lấy mẫu: (sampleReceive) </td> <td colspan="2"> Người lấy mẫu: (sampleReceiver) </td> </tr> <tr> <td style="width: 50%"> Ngày, giờ nhận mẫu: (receiveHour)<sup>h</sup>(receiveMinute)<sup>p</sup> (ireceive)</td> <td colspan="2"> Người nhận mẫu: (ireceiver) </td> </tr> <tr> <td colspan="3">  <b><u>Chỉ tiêu xét nghiệm</u></b> <br> (exam)  <div>(index) (exam-content) </div> <div> Phương pháp xét nghiệm: (method); Ký hiệu phương pháp: (symbol). </div> (/exam) (note) </td> </tr> <tr> <td colspan="3"> Ngày phân tích: (examDate) </td> </tr> <tr> <td colspan="3"> <b> Kết quả: </b> <br> (result) </td> </tr> </table> <table style="width: 100%"> <tr> <td class="text-center"> Ngày examdate-0 tháng examdate-1 năm examdate-2 </td> <td class="text-center"> Ngày examdate-0 tháng examdate-1 năm examdate-2 </td> </tr> <tr> <td class="text-center"> <b>BỘ PHẬN XÉT NGHIỆM</b> </td> <td class="text-center"> <b>TRƯỞNG TRẠM</b> </td> </tr> <tr> <td class="text-center"> (Ký, ghi rõ họ tên) </td> </tr> </table> </div>',
+    5: '<table><tr><td class="cell-center p12"> CỤC THÚ Y <br> <b> CHI CŨ THÚ Y VÙNG V </b> <br> <span class="p14"> Số &emsp;/TYV5-TH </span> </td><td class="cell-center p13"> CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM <br> <b> Độc lập - Tự do - Hạnh phúc </b> <br> Đăk Lăk, ngày noticetime-0, tháng noticetime-1, năm noticetime-2 </td></tr></table><p class="text-center p15"> <b> Thông báo </b> </p><p class="text-center p14"> <b> <i> Kết quả xét nghiệm </i> </b> </p> <p class="p14">&emsp;&emsp; Chi cụ thú y vùng V thông báo kết quả xét nghiệm được thực hiện tại Trạm Chẩn đoán xét nghiệm bệnh động vật (trực thuộc Chi cục Thú y vùng V) như sau: </p> <p class="p14"> &emsp;&emsp; Tên khách hàng: senderemploy  </p> <p class="p14"> &emsp;&emsp; Địa chỉ: xaddress  </p> owner <p class="p14"> &emsp;&emsp; Số lượng mẫu: number </p> <p class="p14"> &emsp;&emsp; Ký hiệu mẫu: samplecode </p> <p class="p14"> &emsp;&emsp; Ngày nhận mẫu: sampletime </p> <p class="p14"> &emsp;&emsp; Mục đích xét nghiệm: target </p> <p class="p14"> &emsp;&emsp; <b> <i> Chỉ tiêu xét nghiệm: </i> </b> </p><div class="p14">exam</div>note<p class="p14"> &emsp;&emsp; <i> <b> Kết quả: </b> </i> </p><div class="p14">result</div><p class="p14">&emsp;&emsp;Chi tiết xem phiếu kết quả xét nghiệm số: xcode-0/xcode-1/xcode-2.CĐXN của trạm chuẩn đoán xét nghiệm bệnh động vật)./.</p><table><tr><td style="width: 60%"><b class="p12"> <i> Nơi nhận: </i> </b> <p class="p11"> </p> </td><td style="width: 40%;" class="text-center p14"><br><b> Chi cục trưởng </b><br><br><br><b> receiveleader </b></td></tr></table>'
   }
+  
   var ticked = ['Đạt', 'Không đạt']
   var methodModal = $("#method-modal")
   var formInsert = $('#form-insert')
@@ -847,11 +884,12 @@
   var formInsertFax = $("#form-insert-fax")
 
   var formInsertXresend = $("#form-insert-xresend")
-  var formInsertXresender = $("#form-insert-xresender")
+  var formInsertXresender = $("#xresender-0")
   var formInsertXsend = $("#form-insert-xsend")
-  var formInsertXsender = $("#form-insert-xsender")
+  var formInsertXsender = $("#xsender-0")
   var formInsertXreceive = $("#form-insert-xreceive")
-  var formInsertXreceiver = $("#form-insert-xreceiver")
+  var formInsertXreceiver = $("#xreceiver-0")
+  var formInsertXexam = $("#form-insert-xexam")
 
   var formSummary = $("#form-summary")
   var formSummaryFrom = $("#form-summary-from")
@@ -863,6 +901,10 @@
   var formInsertNoticeTime = $("#form-insert-notice-time")
   var sample = $("#sample")
 
+  var filterUnit = $("#filter-unit")
+  var filterExam = $("#filter-exam")
+  var filterSample = $("#filter-sample")
+
   var global_html = {}
   var global_form = 1
   var global_saved = 0
@@ -872,7 +914,7 @@
 
   var visible = {
     0: {1: '1', 2: '1'},
-    1: {1: '1, 2, 3', 2: '1, 2, 3'},
+    1: {1: '1, 2', 2: '1, 2'},
     2: {1: '1, 2, 3', 2: '1, 2, 3'},
     3: {1: '1, 2, 3, 4', 2: '1, 2, 3, 4'},
     4: {1: '1, 2, 3, 4, 5', 2: '1, 2, 3, 4, 5'},
@@ -887,21 +929,10 @@
   {
     code: '',
     type: '',
+    number: 1,
     status: true,
     mainer: [
       {
-        main: '',
-        method: '',
-        note: [
-          {
-            result: '',
-            note: ''
-          },{
-            result: '',
-            note: ''
-          }
-        ]
-      },{
         main: '',
         method: '',
         note: [
@@ -1035,6 +1066,10 @@
     installRemind('owner');
     installRemind('sample-place');
 
+    installRemindv2('0', 'xsender');
+    installRemindv2('0', 'xreceiver');
+    installRemindv2('0', 'xsender');
+
     installExamRemind()
     parseField(global_field)
         
@@ -1042,7 +1077,7 @@
     parseSaved()
   })
 
-  $("#form-insert-receive, #form-insert-resend, #form-insert-ireceive, #form-insert-iresend, #form-insert-sample-receive, #form-insert-sample-time, #form-insert-exam-date, #form-summary-from, #form-summary-end, #form-insert-notice-time").datepicker({
+  $("#form-insert-receive, #form-insert-resend, #form-insert-ireceive, #form-insert-iresend, #form-insert-sample-receive, #form-insert-sample-time, #form-insert-exam-date, #form-summary-from, #form-summary-end, #form-insert-notice-time, #form-insert-xresend, #form-insert-xreceive, #form-insert-xsend").datepicker({
     format: 'dd/mm/yyyy',
     changeMonth: true,
     changeYear: true
@@ -1118,6 +1153,15 @@
     }
   }
 
+  function getFilter() {
+    var data = {
+      unit: filterUnit.val(),
+      exam: filterExam.val(),
+      sample: filterSample.val()
+    }
+    return data
+  }
+
   function parseSaved() {
     $(".saved").addClass('disabled')
     
@@ -1190,17 +1234,23 @@
   function parseField(data) {
     var html = ''
     var installer = []
+    var sampleX = -1
     global_field = data
 
     sample.html('')
 
     data.forEach((sample, sampleIndex) => {
       var html2 = ''
+      var resultX = -1
+      sampleX ++
 
       sample['mainer'].forEach((result, resultIndex) => {
         var html3 = ''
+        var noteX = -1
+        resultX ++
             
         result['note'].forEach((note, noteIndex) => {
+          noteX ++
           html3 += `
           <fieldset class="html-result">
             <button class="close right" data-dismiss="modal" onclick="removeField('`+ sampleIndex +`,`+ resultIndex +`,`+ noteIndex +`')">&times;</button>
@@ -1248,6 +1298,7 @@
             </div>
           </div>
           `+ html3 +`
+          <button class="btn btn-info" onclick="addField('`+ sampleX +`,`+ resultX +`,`+ noteX +`')"> <span class="glyphicon glyphicon-plus"></span> </button>
         </fieldset>`
         installer.push({
           name: "s" + sampleIndex,
@@ -1279,20 +1330,29 @@
         </div>
         
         <div class="row form-group">
+          <label class="col-sm-6"> Số lượng mẫu </label>
+          <div class="col-sm-10">
+            <input type="text" name="number[]" value="`+ sample['number'] +`" class="form-control ig ig-number-`+ sampleIndex +`">
+          </div>
+        </div>
+        
+        <div class="row form-group">
           <label class="col-sm-6"> Tình trạng mẫu </label>
             <input type="radio" name="samplestatus" `+ (sample['status'] ? 'checked' : '' ) +` class="form-control ig ig-status0-`+ sampleIndex +`"> Đạt<br>
             <input type="radio" name="samplestatus" `+ (sample['status'] ? '' : 'checked' ) +` class="form-control ig ig-status1-`+ sampleIndex +`"> Không đạt
         </div>
         `+ html2 +`
+        <button class="btn btn-info" onclick="addField('`+ sampleX +`,`+ resultX +`')"><span class="glyphicon glyphicon-plus"></span></button>
       </fieldset>`
     })
+    html += `<button class="btn btn-info" onclick="addField('`+ sampleX +`')"><span class="glyphicon glyphicon-plus"></span></button>`
     sample.html(html)
     installer.forEach(item => {
       installRemindv2(item['name'], item['type'])
     })
   }
 
-  function parseFieldTable() {
+  function parseFieldTable(data) {
     var html = `  <table class="table-bordered table-wider" border="1">
     <tr>
       <th rowspan="2"> TT </th>
@@ -1310,13 +1370,11 @@
     </tr>`
     var html2 = ''
     var index = 1
-    data = global_field
-    a.innerHTML = ''
 
     data.forEach((sample, sampleIndex) => {
       var html3 = ''
       var noteCount = 0 
-
+      var xcode = getInputs('xcode')
       sample['mainer'].forEach((result, resultIndex) => {
         var html4 = ''
         var mainerNoteCount = 0;
@@ -1336,12 +1394,59 @@
         html3 += html4
       })
 
-      html2 += '<tr><td rowspan="'+ noteCount +'">'+ (index++) +'</td><td rowspan="'+ noteCount +'">'+ sample['code'] +'</td><td rowspan="'+ noteCount +'"> '+ sample['type'] +'</td><td rowspan="'+ noteCount +'"> 01 </td><td rowspan="'+ noteCount +'"> '+ (sample['status'] ? 'Đạt' : 'Không đạt') +' YCXN </td>' + html3;
+      html2 += '<tr><td rowspan="'+ noteCount +'">'+ (index++) +'</td><td rowspan="'+ noteCount +'">'+ (sample['code'] + '-' + xcode[2] + '-' + parseIntNum(index)) +'</td><td rowspan="'+ noteCount +'"> '+ sample['type'] +'</td><td rowspan="'+ noteCount +'"> '+ sample['number'] +' </td><td rowspan="'+ noteCount +'"> '+ (sample['status'] ? 'Đạt' : 'Không đạt') +' YCXN </td>' + html3;
     })
 
-    html += html2 + '</html>'
-    a.innerHTML = html
+    html += html2 + '</table>'
+    return html
   }
+
+  function parseIntNum(number) {
+    return ((number < 10 ? '0' : '') + number)
+  }
+
+  function parseFieldTable2(data) {
+    var html = `  <table class="table-bordered table-wider" border="1">
+    <tr>
+      <th> KHM </th>
+      <th> Số nhận diện </th>
+      <th> Phương pháp XN </th> 
+      <th> Kết quả </th>
+      <th> Ghi chú </th>
+    </tr>`
+    var html2 = ''
+    var index = 1
+
+    data.forEach((sample, sampleIndex) => {
+      var html3 = ''
+      var noteCount = 0 
+
+      sample['mainer'].forEach((result, resultIndex) => {
+        var html4 = ''
+        var mainerNoteCount = 0;
+            
+        if (result['note'].length > 1) {
+          result['note'].forEach((note, noteIndex) => {
+            noteCount ++
+            mainerNoteCount ++
+            html4 += `<td>`+ note['result'] +`</td> <td>`+ note['note'] +`</td></tr>`
+          })
+          html4 = `<td rowspan="`+ mainerNoteCount +`">`+ result['method'] + `</td>` + html4
+        }
+        else {
+          noteCount ++
+          html4 += `<td>`+ result['method'] + `</td><td>`+ result['note'][0]['result'] +`</td> <td>`+ result['note'][0]['note'] +`</td></tr>`
+        }
+        html3 += html4
+      })
+
+      html2 += '<tr><td rowspan="'+ noteCount +'">'+ sample['code'] +'</td><td rowspan="'+ noteCount +'">'+ (index++) +'</td>' + html3;
+    })
+
+    html += html2 + '</table>'
+    return html
+  }
+
 
   function getIgField() {
     var list = []
@@ -1412,7 +1517,51 @@
   }
 
   function addField(indexString) {
-    
+    var indexType = indexString.split(',')
+    var indexCount = indexType.length
+
+    switch (indexCount) {
+      case 1:
+        global_field.splice(Number(indexType[0]) + 1, 0, {
+          code: '',
+          type: '',
+          number: 1,
+          status: true,
+          mainer: [
+            {
+              main: '',
+              method: '',
+              note: [
+                {
+                  result: '',
+                  note: ''
+                }
+              ]
+            }
+          ]
+        })
+      break;
+      case 2:
+        global_field[indexType[0]]['mainer'].splice(Number(indexType[1]) + 1, 0, {
+          main: '',
+          method: '',
+          number: 1,
+          note: [
+            {
+              result: '',
+              note: ''
+            }
+          ]
+        })
+      break;
+      case 3:
+        global_field[indexType[0]]['mainer'][indexType[1]]['note'].splice(Number(indexType[2]) + 1, 0, {
+          result: '',
+          note: ''
+        })     
+      break;
+    }
+    parseField(global_field)
   }
 
   function removeField(indexString) {
@@ -1663,6 +1812,7 @@
     formInsertIreceiverUnit.val('')
     formInsertQuality.val('')
     formInsertCustomer.val('')
+    formInsertNumberWord.val('')
     formInsertAddress.val('')
     formInsertPhone.val('')
     formInsertSampleReceive.val('')
@@ -1680,6 +1830,35 @@
     formInsertXaddress.val('')
     formInsertOwner.val('')
     formInsertSamplePlace.val('')
+    formInsertXreceive.val('')
+    formInsertXreceiver.val('')
+    formInsertXresend.val('')
+    formInsertXresender.val('')
+    formInsertXsend.val('')
+    formInsertXsender.val('')
+    formInsertXexam.val('')
+    formInsertXphone.val('')
+    formInsertFax.val('')
+    global_field = [{
+      code: '',
+      type: '',
+      number: 1,
+      status: true,
+      mainer: [
+        {
+          main: '',
+          method: '',
+          note: [
+            {
+              result: '',
+              note: ''
+            }
+          ]
+        }
+      ]
+    }]
+    parseField(global_field)
+
 
     formInsertEndedHour.each((index, item) => {
       item.removeAttribute('selected')
@@ -1957,7 +2136,7 @@
     
     $.post(
       strHref, 
-      {action: 'remove', id: global_id, page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val()},
+      {action: 'remove', id: global_id, page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val(), other: getFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
@@ -1998,7 +2177,6 @@
         }
       break;
       case 2: 
-      case 3:
         data = {
           xcode: getInputs('xcode'),
           isenderunit: formInsertIsenderUnit.val(),
@@ -2011,6 +2189,14 @@
           xreceive: formInsertXreceive.val(),
           xsend: formInsertXsend.val(),
           xresend: formInsertXresend.val(),
+          ig: getIgField()
+        }
+      break;            
+      case 3:
+        data = {
+          xcode: getInputs('xcode'),
+          xexam: formInsertXexam.val(),
+          receiveleader: formInsertReceiveLeader.val(),
           ig: getIgField()
         }
       break;            
@@ -2124,21 +2310,27 @@
             formInsertXcode1.val(xcode[0])
             formInsertXcode2.val(xcode[1])
             formInsertXcode3.val(xcode[2])
-            formInsertIsenderUnit.val(data['isenderunit'])
-            formInsertIreceiverUnit.val(data['ireceiverunit'])
-            parseField(data['ig'])
-            formInsertExamDate.val(data['examdate'])
-            formInsertIresend.val(data['iresend'])
-            formInsertXreceive.val(data['xreceive'])
-            formInsertXreceiver.val(data['xreceiver'])
-            formInsertXresend.val(data['xresend'])
-            formInsertXresender.val(data['xresender'])
-            formInsertXsend.val(data['xsend'])
-            formInsertXsender.val(data['xsender'])
+            formInsertIsenderUnit.val(data['form']['isenderunit'])
+            formInsertIreceiverUnit.val(data['form']['ireceiverunit'])
+            parseField(JSON.parse(data['form']['ig']))
+            formInsertExamDate.val(data['form']['examdate'])
+            formInsertIresend.val(data['form']['iresend'])
+            formInsertXreceive.val(data['form']['xreceive'])
+            formInsertXreceiver.val(data['form']['xreceiver'])
+            formInsertXresend.val(data['form']['xresend'])
+            formInsertXresender.val(data['form']['xresender'])
+            formInsertXsend.val(data['form']['xsend'])
+            formInsertXsender.val(data['form']['xsender'])
+          }
 
+          if (data['form']['printer'] >= 3) {
+            formInsertReceiveLeader.val(data['form']['receiveleader'])
+            formInsertXexam.val(data['form']['xexam'])
           }
 
           if (data['form']['printer'] >= 4) {
+            formInsertIreceiverEmploy.val(data['form']['ireceiveremploy'])
+            formInsertXphone.val(data['form']['xphone'])
             formInsertResult.val(data['form']['result'])
             formInsertSampleReceiver.val(data['form']['samplereceiver'])
             formInsertSampleReceive.val(data['form']['samplereceive'])
@@ -2159,7 +2351,6 @@
             formInsertXaddress.val(data['form']['xaddress'])
             formInsertTarget.val(data['form']['target'])
             formInsertReceiveDis.val(data['form']['receivedis'])
-            formInsertReceiveLeader.val(data['form']['receiveleader'])
           }
           
           $('a[href="#menu1"]').tab('show')
@@ -2173,17 +2364,12 @@
     if (Object.keys(data).length) {
       $.post(
         strHref,
-        {action: 'insert', form: global_form, id: global_id, data: data, page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val()},
+        {action: 'insert', form: global_form, id: global_id, data: data, page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val(), other: getFilter()},
         (response, status) => {
           checkResult(response, status).then(data => {
             remind = JSON.parse(data['remind'])
             if (global_form > global_saved) {
-              if (global_form == 2) {
-                global_saved = 3
-              }
-              else {
-                global_saved = global_form
-              }
+              global_saved = global_form
             }
             parseSaved()
             content.html(data['html'])
@@ -2199,10 +2385,9 @@
 
   function filter(e) {
     e.preventDefault()
-    
     $.post(
       strHref,
-      {action: 'filter', page: 1, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val()},
+      {action: 'filter', page: 1, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val(), other: getFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
           global_page = 1
@@ -2258,140 +2443,61 @@
       if (Object.keys(data).length) {
         var html = former[id]
         id = Number(id)
+        var prop = 0
         switch (id) {
           case 1:
-            html = html.replace('(code)', data['code'])
-            html = html.replace('(sender)', data['sender'])
-            html = html.replace('(receiver)', data['receiver'])
-            html = html.replace('(receive)', data['receive'])
-            html = html.replace('(resend)', data['resend'])
-            html = html.replace('(ireceive)', data['ireceive'])
-            html = html.replace('(iresend)', data['iresend'])
-            html = html.replace('(state-0)', data['state']['index'] == 0 ? 'checked' : '')
-            html = html.replace('(state-1)', data['state']['index'] == 1 ? 'checked' : '')
-            html = html.replace('(other)', data['state']['value'])
-            html = html.replace('(numberword)', data['numberword'])
-            html = html.replace('(form)', (data['form'].join('<br>') + '<br>Số lượng mẫu: ' + data['number'] + ', loại mẫu: ' + (data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text())) + ', loài động vật: ' + data['sample'] + '<br> Ký hiệu mẫu: ' + data['samplecode'] + '<br>Yêu cầu xét nghiệm:<br>' + ((data['exam'].length > 1 ? data['exam'].join('<br>') : data['exams'].join('<br>')) + (trim(data['xnote']).length ? '<br>Ghi chú: <br>' + data['xnote'].replace(/\n/g, '<br>') : ''))))
+            html = html.replace('code', data['code'])
+            html = html.replace('sender', data['sender'])
+            html = html.replace('receiver', data['receiver'])
+            html = html.replace('receive', data['receive'])
+            html = html.replace('resend', data['resend'])
+            html = html.replace('ireceive', data['ireceive'])
+            html = html.replace('iresend', data['iresend'])
+            html = html.replace('status-0', data['state']['index'] == 0 ? '&#9745;' : '$#9744;')
+            html = html.replace('status-1', data['state']['index'] == 1 ? '&#9745;' : '&#9744;')
+            html = html.replace('status-2', data['state']['index'] == 2 ? data['state']['value'] : '')
+            html = html.replace('numberword', data['numberword'])
+            html = html.replace('formcontent', (data['form'].join('<br>') + '<br>Số lượng mẫu: ' + data['number'] + ', loại mẫu: ' + (data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text())) + ', loài động vật: ' + data['sample'] + '<br> Ký hiệu mẫu: ' + data['samplecode'] + '<br>Yêu cầu xét nghiệm:<br>' + ((data['exam'].length > 1 ? data['exam'].join('<br>') : data['exams'].join('<br>')) + (trim(data['xnote']).length ? '<br>Ghi chú: <br>' + data['xnote'].replace(/\n/g, '<br>') : ''))))
           break;
           case 2:
-            var receive = data['receive'].split('/')
-            var xnote = data['xnote'].split('\n')
-            html = html.replace('(xcode-0)', trim(data['xcode'][0]))
-            html = html.replace('(xcode-1)', trim(data['xcode'][1]))
-            html = html.replace('(xcode-2)', trim(data['xcode'][2]))
-            html = html.replace('(attach-0)', data['attach']['index'] == 0 ? 'checked' : '')
-            html = html.replace('(attach-1)', data['attach']['index'] == 1 ? 'checked' : '')
-            html = html.replace('(receive-0)', receive[0])
-            html = html.replace('(receive-1)', receive[1])
-            html = html.replace('(receive-2)', receive[2])
-            html = html.replace('(phone)', data['xphone'])
-            html = html.replace('(ended-copy)', data['endedcopy'])
-            html = html.replace('(ended-hour)', data['endedhour'])
-            html = html.replace('(ended-minute)', data['endedminute'])
-            html = html.replace('(receiveHour)', data['receivehour'])
-            html = html.replace('(receiveMinute)', data['receiveminute'])
-            html = html.replace('(isenderEmploy)', data['isenderemploy'])
-            html = html.replace('(isenderUnit)', data['isenderunit'])
-            html = html.replace('(ireceiverEmploy)', data['ireceiveremploy'])
-            html = html.replace('(ireceiverUnit)', data['ireceiverunit'])
-            html = html.replace('(type)', data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text()))
-            html = html.replace('(sample)', data['sample'])
-            html = html.replace('(number)', data['number'])
-            html = html.replace('(sampleCode)', data['samplecode'])
-            html = html.replace('(status)', ticked[data['status']['index']])
-            html = html.replace('(quality)', ticked[data['quality']['index']])
-            html = html.replace('(numberword)', data['numberword'])
-            html = html.replace('(xstatus-0)', data['xstatus']['index'] == 0 ? 'checked' : '')
-            html = html.replace('(xstatus-1)', data['xstatus']['index'] == 1 ? 'checked' : '')
-            html = html.replace('(xstatus-2)', data['xstatus']['index'] == 2 ? 'checked' : '')
-            var exam = ''
-            var pos = 770;
-            var top = 0
+            prop = 1
+            resend = data['iresend'].split('/')
+            xresend = data['xresend'].split('/')
+            xreceive = data['xreceive'].split('/')
+            xsend = data['xsend'].split('/')
             
-            if (!(data['exam'].length > 1)) {
-              data['exam'] = data['exams']
-            }
-            for (const key in data['exam']) {
-              item = data['exam'][key]
-              exam += '<div class="text" style="top: '+top+'px">' + item + '</div>'
-              top += 30
-            }
-            
-            if (xnote.length && trim(xnote) != "") {
-              exam += '<div class="text" style="top: '+top+'px">Ghi chú: </div>'
-              top += 30
-              for (const key in xnote) {
-                item = xnote[key]
-                exam += '<div class="text" style="top: '+top+'px">' + item + '</div>'
-                top += 30
-              }
-            }
-
-            html = html.replace('(exam)', exam)
-            html = html.replace(/pos-1/g, (pos + top + 30) + 'px') 
-            html = html.replace(/pos-2/g, (pos + top + 90) + 'px') 
-            html = html.replace(/pos-3/g, (pos + top + 120) + 'px') 
+            html = html.replace('isenderunit', data['isenderunit'])
+            html = html.replace('ireceiverunit', data['ireceiverunit'])
+            html = html.replace('xcode-0', data['xcode'][0])
+            html = html.replace('xcode-1', data['xcode'][1])
+            html = html.replace('xcode-2', data['xcode'][2])
+            html = html.replace('resend-0', resend[0])
+            html = html.replace('resend-1', resend[1])
+            html = html.replace('resend-2', resend[2])
+            html = html.replace('xresend-0', xresend[0])
+            html = html.replace('xresend-1', xresend[1])
+            html = html.replace('xresend-2', xresend[2])
+            html = html.replace('xreceive-0', xreceive[0])
+            html = html.replace('xreceive-1', xreceive[1])
+            html = html.replace('xreceive-2', xreceive[2])
+            html = html.replace('xsend-0', xsend[0])
+            html = html.replace('xsend-1', xsend[1])
+            html = html.replace('xsend-2', xsend[2])
+            html = html.replace('examdate', data['examdate'])
+            html = html.replace('iresend', data['iresend'])
+            html = html.replace('xsender', data['xsender'])
+            html = html.replace('xreceiver', data['xreceiver'])
+            html = html.replace('xresender', data['xresender'])
+            html = html.replace('xtable', parseFieldTable(data['ig']))
           break;
           case 3:
-            var receive = data['receive'].split('/')
-            var resend = data['resend'].split('/')
-            html = html.replace('(attach-0)', data['attach']['index'] == 0 ? 'checked' : '')
-            html = html.replace('(attach-1)', data['attach']['index'] == 1 ? 'checked' : '')
-            html = html.replace('(xcode-0)', trim(data['xcode'][0]))
-            html = html.replace('(xcode-1)', trim(data['xcode'][1]))
-            html = html.replace('(xcode-2)', trim(data['xcode'][2]))
-            html = html.replace('(page-0)', trim(data['page'][0]))
-            html = html.replace('(page-1)', trim(data['page'][1]))
-            html = html.replace('(no-0)', trim(data['no'][0]))
-            html = html.replace('(no-1)', trim(data['no'][1]))
-            html = html.replace('(customer)', data['isenderunit'])
-            html = html.replace('(number)', data['number'])
-            html = html.replace('(sample)', data['sample'])
-            html = html.replace('(numberword)', data['numberword'])
-            html = html.replace('(sampleCode)', data['samplecode'])
-            html = html.replace('(type-0)', data['type']['index'] == 0 ? 'checked' : '')
-            html = html.replace('(type-1)', data['type']['index'] == 1 ? 'checked' : '')
-            html = html.replace('(type-2)', data['type']['index'] == 2 ? 'checked' : '')
-            html = html.replace('(type-3)', data['type']['index'] == 3 ? 'checked' : '')
-            html = html.replace('(type-4)', data['type']['index'] == 4 ? 'checked' : '')
-            html = html.replace('(type-5)', data['type']['value'])
-            html = html.replace('(result)', data['result'])
-            
-            html = html.replace(/(receive-0)/g, receive[0])
-            html = html.replace(/(receive-1)/g, receive[1])
-            html = html.replace(/(receive-2)/g, receive[2])
-            html = html.replace('(resend-0)', resend[0])
-            html = html.replace('(resend-1)', resend[1])
-            html = html.replace('(resend-2)', resend[2])
-            
-            html = html.replace('(other)', data['other'])
-            var length = data['exam'].length
-            var part = html.slice(html.search('(exam)') + '(exam)'.length, html.search('(/exam)') - 1)
-            html = html.replace(part, '(parse)').replace('(exam)', '').replace('(/exam)', '')
-            var position = 540
-            var parse = ''
-            for (let i = 0; i < length; i++) {
-              var temp = part 
-              if (data['exams'].length > 1) {
-                temp = temp.replace('(index)', i + 1)
-              }
-              else {
-                temp = temp.replace('(index)', '')
-              }
-              temp = temp.replace('(position)', position + "px")
-              temp = temp.replace('(position-2)', position + 30 + "px")
-              temp = temp.replace('(position-3)', position + 60 + "px")
-              temp = temp.replace('(exam-content)', data['exams'][i])
-              temp = temp.replace('(method)', data['method'][i])
-              temp = temp.replace('(symbol)', data['symbol'][i])
-              parse += temp
-              position += 90
-            }
-            html = html.replace('(parse)', parse)
-            html = html.replace(/pos-0/g, position)
-            html = html.replace(/pos-1/g, position + 30)
-            html = html.replace(/pos-2/g, position + 60)
-          break; 
+            html = html.replace(/xcode-0/g, data['xcode'][0])
+            html = html.replace(/xcode-1/g, data['xcode'][1])
+            html = html.replace(/xcode-2/g, data['xcode'][2])
+            html = html.replace(/xexam/g, data['xexam'])
+            html = html.replace(/receiveleader/g, data['receiveleader'])
+            html = html.replace('xtable', parseFieldTable2(data['ig']))
+          break;
           case 4:
             var receive = data['receive'].split('/')
             var examdate = data['examdate'].split('/')
@@ -2453,37 +2559,38 @@
           break;
           case 5:
             var iresend = data['resend'].split('/')
-            var tabbed = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+            var tabbed = '&emsp;&emsp;'
             
-            html = html.replace('(xcode-0)', trim(data['xcode'][0]))
-            html = html.replace('(xcode-1)', trim(data['xcode'][1]))
-            html = html.replace('(xcode-2)', trim(data['xcode'][2]))
+            html = html.replace('xcode-0', trim(data['xcode'][0]))
+            html = html.replace('xcode-1', trim(data['xcode'][1]))
+            html = html.replace('xcode-2', trim(data['xcode'][2]))
+            
             html = html.replace('(code)', data['code'])
-            html = html.replace('(iresend-0)', iresend[0])
-            html = html.replace('(iresend-1)', iresend[1])
-            html = html.replace('(iresend-2)', iresend[2])
-            html = html.replace('(customer)', data['sender'])
-            html = html.replace('(numberword)', data['numberword'])
-            html = html.replace('(address)', data['xaddress'])
-            html = html.replace('(sample)', data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text()))
-            html = html.replace('(number)', data['number'])
-            html = html.replace('(sampleCode)', data['samplecode'])
-            html = html.replace('(ireceive)', data['receive'])
-            html = html.replace('(target)', data['target'])
+            html = html.replace('noticetime-0', iresend[0])
+            html = html.replace('noticetime-1', iresend[1])
+            html = html.replace('noticetime-2', iresend[2])
+            html = html.replace('senderemploy', data['sender'])
+            html = html.replace('numberword', data['numberword'])
+            html = html.replace('address', data['xaddress'])
+            html = html.replace('samplecode', data['samplecode'])
+            html = html.replace('sampletime', data['receive'])
+            html = html.replace('sample', data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text()))
+            html = html.replace('number', data['number'])
+            
+            html = html.replace('target', data['target'])
 
             if (data['owner']) {
-              var x = '<div class="p14"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Thông tin mẫu: </div> <div class="p14"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Chủ hộ: (owner)</div>  <div class="p14"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Nơi lấy mẫu: (sampleplace)</div>'
+              var x = '<p class="p14"> &emsp;&emsp; Thông tin mẫu:</p> <p class="p14"> &emsp;&emsp;&emsp; Chủ hộ: (owner)</p> <p class="p14"> &emsp;&emsp;&emsp; Nơi lấy mẫu: (sampleplace)</p>'
               x = x.replace('(sampleplace)', data['sampleplace'])
               x = x.replace('(owner)', data['owner'])
-              html = html.replace('(owner)', x)
+              html = html.replace('owner', x)
             }
             else {
-              html = html.replace('(owner)', '')
+              html = html.replace('owner', '')
             }
 
             var length = data['exam'].length
-            var part = html.slice(html.search('(exam)') + '(exam)'.length, html.search('(/exam)') - 1)
-            html = html.replace(part, '(parse)').replace('(exam)', '').replace('(/exam)', '')
+            var part = '&emsp;&emsp; (index)(content), Phương pháp xét nghiệm: (method); Ký hiệu phương pháp: (symbol)<br>'
             var parse = ''
             for (let i = 0; i < length; i++) {
               var temp = part 
@@ -2498,8 +2605,8 @@
               temp = temp.replace('(symbol)', data['symbol'][i])
               parse += temp
             }
-            html = html.replace('(parse)', parse)
-            html = html.replace('(result)', tabbed + data['result'].replace(/\n/g, '<br>' + tabbed))
+            html = html.replace('exam', parse)
+            html = html.replace('result', tabbed + data['result'].replace(/\n/g, '<br>' + tabbed))
             var noteString = ''
             if (trim(data['note'])) {
               // (note)
@@ -2508,21 +2615,23 @@
               note.forEach(item => {
                 notes.push('<i>' + item + '</i>')
               })
-              noteString += '<u style="display: inline-block"><b>Ghi chú:</b></u> <div style="display: inline-table">' + notes.join('<br>') + '</div>'
+              noteString += '<p class="p14">&emsp;<u style="display: inline-block"><b>Ghi chú:</b></u> <div style="display: inline-table">' + notes.join('<br>') + '</div></p>'
             }
-            html = html.replace('(note)', noteString)
+            html = html.replace('note', noteString)
             
-            html = html.replace('(receivedis)', data['receivedis'].replace(/\n/g, '<br>'))
-            html = html.replace('(receiveleader)', data['receiveleader'].toUpperCase())
+            html = html.replace('receivedis', data['receivedis'].replace(/\n/g, '<br>'))
+            html = html.replace('receiveleader', data['receiveleader'].toUpperCase())
           break;
         }
         
-        var html = style + html
+        // console.log(html);
+        
+        var html = '<style>' + style + profile[prop] + '</style>' + html
         var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
         winPrint.focus()
         winPrint.document.write(html);
-        winPrint.print()
-        winPrint.close()
+        // winPrint.print()
+        // winPrint.close()
       }
     }
   }

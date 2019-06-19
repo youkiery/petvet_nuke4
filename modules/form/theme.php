@@ -53,7 +53,8 @@ function summaryContent($from, $end, $exam = '', $unit = '', $sample = '') {
   global $db, $sampleType;
 
   $xtpl = new XTemplate("summary.tpl", PATH);
-  $sql = 'select a.*, b.value from `'. PREFIX .'_row` a inner join `'. PREFIX .'_remind` b on a.sender = b.id where (time between ' . $from . ' and ' . $end . ') and exam like "%'. $exam .'%" and b.value like "%'. $unit .'%" and sample like "%'. $sample .'%"';
+  $sql = 'select * from `'. PREFIX .'_row` where (time between ' . $from . ' and ' . $end . ') and exam like "%'. $exam .'%" and sender like "%'. $unit .'%" and sample like "%'. $sample .'%"';
+  // die($sql);
   $query = $db->query($sql);
   $data = array();
 
@@ -114,18 +115,18 @@ function summaryContent($from, $end, $exam = '', $unit = '', $sample = '') {
 //   }
 // }
 
-function formList($keyword = '', $page = 1, $limit = 10, $printer = 1) {
+function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = array('exam' => '', 'unit' => '', 'sample' => '')) {
   global $db, $sampleType, $user_info;
 
   $xtpl = new XTemplate("list.tpl", PATH);
 
-  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and printer >= '. $printer;
+  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and printer >= '. $printer . ' and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%"';
   $query = $db->query($sqlCount);
   $count = $query->fetch();
 
   $xtpl->assign('total', $count['count']);
 
-  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and printer >= '. $printer .' order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
+  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and printer >= '. $printer .' and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
   $query = $db->query($sql);
 
   $index = 1;
@@ -145,7 +146,7 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1) {
       $xtpl->assign('number', $row['number']);
       $xtpl->assign('sample', $row['sample']);
       // $xtpl->assign('printer', $row['printer']);
-      $xtpl->assign('unit', getRemindId($row['sender']));
+      $xtpl->assign('unit', $row['sender']);
       if (checkIsMod($user_info['userid'])) {
         $xtpl->parse('main.row.mod');
       }

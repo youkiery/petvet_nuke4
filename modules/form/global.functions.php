@@ -213,7 +213,6 @@ function checkRemindRows($list, $type) {
 
 function checkPrinter($id, $form) {
 	global $db;
-
 	$sql = 'select * from `'. PREFIX .'_row` where id = ' . $id . ' and printer >= ' . $form;
 	$query = $db->query($sql);
 	
