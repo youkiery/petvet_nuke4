@@ -17,13 +17,7 @@ $xtpl = new XTemplate("main.tpl", PATH);
 
 $step = $nv_Request->get_int('s', 'get', 1);
 
-if ($step <= 1) {
-	$customer = $nv_Request->get_string('customer', 'get', '');
-	$xtpl->assign('customer', $customer);
-	$xtpl->parse('main.customer');
-}
-
-$xtpl->assign('customer', $customer);
+$xtpl->assign('remind', json_encode(getRemind()));
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 

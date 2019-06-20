@@ -2700,8 +2700,8 @@
         var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
         winPrint.focus()
         winPrint.document.write(html);
-        // winPrint.print()
-        // winPrint.close()
+        winPrint.print()
+        winPrint.close()
       }
     }
   }

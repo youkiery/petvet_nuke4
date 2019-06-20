@@ -14,6 +14,28 @@ if (!defined('NV_MAINFILE')) {
 define("PREFIX", $db_config['prefix'] . "_" . $module_name);
 define('PERMISSION_MODULE', 1);
 
+function getRemind($type = '') {
+	global $db;
+	$list = array();
+
+	if (!empty($type)) {
+		$sql = 'select * from `'. PREFIX .'_remind` where type = "'. $type .'"';
+	}
+	else {
+		$sql = 'select * from `'. PREFIX .'_remind`';
+	}
+	$query = $db->query($sql);
+
+	while ($row = $query->fetch()) {
+		if (empty($list[$row['type']])) {
+			$list[$row['type']] = array();
+		}
+		$list[$row['type']][] = $row;
+	}
+
+	return $list;
+}
+
 function totime($time) {
   if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
     $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);

@@ -7,7 +7,7 @@
   <label>
     Tên khách hàng
     <div class="input-group">
-      <input type="text" name="customer" id="bio-custom" class="form-control">
+      <input type="text" name="customer" id="bio-custom" class="form-control" autocomplete="off">
       <div class="suggest" id="bio-custom-suggest"></div>
     </div>
   </label>
@@ -25,8 +25,10 @@
       }
     }
   }
+  var insert = {}
+  var remind = JSON.parse('{remind}')
 
-  $(ready).then(() => {
+  $(this).ready(() => {
     installRemindv2(data['prefix'], data['inputList']['name'], data['inputList']['remind'])
   })
 
