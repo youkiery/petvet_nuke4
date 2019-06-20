@@ -661,7 +661,7 @@
     </div>
 
     <div class="boxed box-2 box-2-4 box-3 box-3-4 html-sample" id="sample">
-
+      
     </div>
 
     <div class="row form-group boxed box-3 box-3-5">
@@ -771,10 +771,10 @@
   var style = '.table-bordered {border-collapse: collapse;}.table-wider td, .table-wider th {padding: 10px;}table {width: 100%;}table td {padding: 5px;}.no-bordertop {border-top: 1px solid white; }.no-borderleft {border-left: 1px solid white; }.c20, .c25, .c30, .c35, .c40, .c45, .c50, .c80 {display: inline-block;}.c20 {width: 19%;}.c25 {width: 24%;}.c30 {width: 29%;}.c35 {width: 34%;}.c40 {width: 39%;}.c45 {width: 44%;}.c50 {width: 49%;}.c80 {width: 79%;}.p11 {font-size: 11pt}.p12 {font-size: 12pt}.p13 {font-size: 13pt}.p14 {font-size: 14pt}.p15 {font-size: 15pt}.p16 {font-size: 16pt}.text-center, .cell-center {text-align: center;}.cell-center {vertical-align: inherit;}'
   var profile = ['@page { size: A4 portrait; margin: 20mm 10mm 10mm 30mm; }', '@page { size: A4 landscape; margin: 20mm 10mm 10mm 30mm;}']
   var former = {
-    1: '<table class="table-bordered" border="1"><tr><td rowspan="2" class="cell-center" style="width: 20%; padding: 10pt 21pt;">CHI CỤC THÚ Y VÙNG V</td><td class="cell-center" style="height: 30pt;">PHIẾU GIẢI QUYẾT HỒ SƠ</td></tr><tr><td class="no-bordertop">Số: code/TYV5-TH</td></tr></table><p>&emsp; Tên đơn vị: senderemploy</p><p><div class="inline c50">&emsp; Ngày nhận: receive </div><div class="inline c50">Ngày hẹn trả kết quả: resend </div></p><p><div class="inline c30">&emsp; Hình thức nhận: </div><div class="inline c20">status-0 Trực tiếp</div><div class="inline c20"> status-1 Bưu điện</div><div class="inline c30">Khác: status-2</div></p><p>&emsp; Người nhận hồ sơ: receiveremploy</p><p><div class="inline c30">&emsp; Phòng chuyên môn:</div><div class="inline c40">Ngày nhận: ireceive </div><div class="inline c30">Ngày trả: iresend </div></p><table class="table-bordered" border="1"><tr><td class="text-center" style="height: 240px; vertical-align: baseline;"> <p class="text-center"> <u>Hồ sơ gồm:</u> </p> <div style="text-align: left;"> formcontent </div></td></tr></table><br><table class="table-bordered" border="1"><tr><th class="p13"> <b>Ý kiến của phòng, Bộ phận chịu trách nhiệm giải quyết</b> </th><th class="p13"> <b>Ý kiến của ban lãnh đạo</b> </th></tr><tr><td colspan="2" style="height: 220px;"></td></tr></table><p>&emsp;&emsp;Ghi chú: Hồ sơ có ý kiến của thủ trưởng (hoặc người được ủy quyền) phải giao lại cho Bộ phận một cửa trước 01 ngày so với ngày hẹn trả </p><br><br><br><p><div class="inline c40">Mã số: BM-02/TYV5-06</div><div class="inline c40">Mã số: Ngày ban hành: 02/11/2017</div><div class="inline c20">Lần sửa đổi: 02</div></p>',
+    1: '<table class="table-bordered" border="1"><tr><td rowspan="2" class="cell-center" style="width: 20%; padding: 10pt 21pt;">CHI CỤC THÚ Y VÙNG V</td><td class="cell-center" style="height: 30pt;">PHIẾU GIẢI QUYẾT HỒ SƠ</td></tr><tr><td class="no-bordertop">Số: code/TYV5-TH</td></tr></table><p>&emsp; Tên đơn vị: senderemploy</p><p><div class="inline c50">&emsp; Ngày nhận: receive </div><div class="inline c50">Ngày hẹn trả kết quả: resend </div></p><p><div class="inline c30">&emsp; Hình thức nhận: </div><div class="inline c20">status-0 Trực tiếp</div><div class="inline c20"> status-1 Bưu điện</div><div class="inline c30">Khác: status-2</div></p><p>&emsp; Người nhận hồ sơ: receiveremploy</p><p><div class="inline c30">&emsp; Phòng chuyên môn:</div><div class="inline c40">Ngày nhận: ireceive </div><div class="inline c30">Ngày trả: iresend </div></p><table class="table-bordered" border="1"><tr><td class="text-center" style="height: 240px; vertical-align: baseline;"> <p class="text-center"> <u>Hồ sơ gồm:</u> </p> <div style="text-align: left;"> formcontent </div></td></tr></table><br><table class="table-bordered" border="1"><tr><th class="p13"> <b>Ý kiến của phòng, Bộ phận chịu trách nhiệm giải quyết</b> </th><th class="p13"> <b>Ý kiến của ban lãnh đạo</b> </th></tr><tr><td style="height: 220px;"></td><td></td></tr></table><p>&emsp;&emsp;Ghi chú: Hồ sơ có ý kiến của thủ trưởng (hoặc người được ủy quyền) phải giao lại cho Bộ phận một cửa trước 01 ngày so với ngày hẹn trả </p><br><br><br><p><div class="inline c40">Mã số: BM-02/TYV5-06</div><div class="inline c40">Mã số: Ngày ban hành: 02/11/2017</div><div class="inline c20">Lần sửa đổi: 02</div></p>',
     2: '<table class="table-bordered" border="1" style="width: 95%; margin: auto;"><tr><td style="width: 60%;" class="cell-center">CHI CỤC THÚ Y VÙNG V <br> <b> TRẠM CHẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT </b></td><td><div class="c20"></div><div class="c80"><b>Biểu mẫu số: BM.STTT.20.10 <br>Số soát xét: 03.02718</b></div></td></tr></table><br><div class="text-center"> <b>PHIẾU GIAO NHẬN MẪU VÀ KẾT QUẢ XÉT NGHIỆM</b> </div><div style="float: right; width: 160pt; margin-right: 10pt; border: 1px solid black; padding: 5pt;">Số ĐKXN: xcode-0/xcode-1/xcode-2 <br> Số trang: 01 <br> Liên: 01/02 </div><br><p><b>Bên giao mẫu: </b> isenderunit</p><p><b>Bên nhận mẫu: </b> ireceiverunit </p> <div> xtable </div> <div style="display: inline-block"><b>Ghi chú:</b> </div><div style="margin-left: 1pt; display: inline-flex">- Bộ phận xét nghiệm trả kết quả trên chỉ tiêu xét nghiệm. <br>- Ngày xét nghiệm: examdate <br>- Ngày hẹn trả kết quả xét nghiệm: <i>ngày resend-0 tháng resend-1 năm resend-2</i></div><table><tr><td style="width: 5%"></td><td class="c30"><b>Người/Ngày giao mẫu <br></b><i>Ngày xsend-0 tháng xsend-1 năm xsend-2 <br> <br> <br></i> <div class="text-center">xsender</div></td><td class="c30"><b>Người/Ngày nhận mẫu <br></b><i>Ngày xreceive-0 tháng xreceive-1 năm xreceive-2 <br> <br> <br></i> <div class="text-center">xreceiver</div> </td><td class="c30"><b>Phụ trácch bộ phận xét nghiệm <br></b><i>Ngày xresend-0 tháng xresend-1 năm xresend-2 <br> <br> <br></i> <div class="text-center">xresender</div></td></tr></table>',
     3: '<table class="table-bordered" border="1"><tr><td class="cell-center"> <b>Biểu mẫu số: BM.STTT.22.01</b> </td><td class="cell-center"> <b>Số soát xét: 03.027148</b> </td></tr><tr><td colspan="2"><div class="cell-center">CHI CỤC THÚ Y VÙNG V <br> <b> TRẠM CHẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT </b></div>Địa chỉ: Số 36, Phạm Hùng, phường Tân An, thành phố Buôn Ma Thuột, tỉnh Đăk Lăk. <br>Điện thoại: 0262 3877793</td></tr></table><br><div class="text-center p16"> <b> PHIẾU KẾT QUẢ XÉT NGHIỆM </b> </div><br><p> <b> Số ĐKXN: xcode-0/xcode-1/xcode-2 </b> </p><p class="text-center"> <b> Số phiếu kết quả thử nghiệm: xcode-0/xcode-1/xcode-2.CĐXN </b> </p><div id="a">xtable</div><p><div style="display: inline-block"><b> &emsp;&emsp; <u> Ghi chú: </u> </b> <i>(*)</i></div><div style="display: inline-flex"><i> - Các chỉ tiêu được công nhận TCVN ISO/IEC 17025:2007. <br> - Các chỉ tiêu được chứng nhận đăng ký hoạt động thử nghiệm </i></div></p><p> <i> &emsp;&emsp; Kết quả chỉ có giá trị trên mẫu thử nghiệm. Việc sao chép Kết quả này chỉ có giá trị khi được sao chép toàn bộ, và không có giá trị nếu chỉ sao chép một phần./. </i> </p><table><tr><td style="width: 5%"></td><td style="width: 30%" class="text-center"> <b>BỘ PHẬN XÉT NGHIỆM</b> <br> <i> (Ký, ghi rõ họ tên) </i> <br> <br> <br> xexam </td><td style="width: 30%"></td><td style="width: 30%" class="text-center"> <b> TRƯỞNG TRẠM </b> <br> <br> <br> <br> receiveleader </td><td style="width: 5%"></td></tr></table>',
-    4: '<table border="1" class="table-bordered"> <tr> <td class="text-center"> <b>Biểu mẫu số: BM.STTT.22.01</b> </td> <td class="text-center"> <b>Số soát xét: 03.02718</b> </td> </tr> <tr> <td colspan="2"> <div class="text-center"> <b>CHI CỤC THÚ Y VÙNG V</b> </div> <div class="text-center"> <b>TRẠM CHUẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT</b> </div> <div> Địa chỉ: Số 36 Phạm Hùng, Phường Tân An, Thành phố Buôn Ma Thuột, Tỉnh Đăklăk </div> <div> Điện thoại: 0262 3877793 </div> </td> </tr> </table> <div class="text-center" style="margin: 10px;"> <b>PHIẾU KẾT QUẢ XÉT NGHIỆM</b> </div> <div style="margin: 4px;"> <div style="float: left"> Số phiếu kết quả xét nghiệm: xcode-0/xcode-1/xcode-2.CĐXN </div> <div style="float: right">Trang: 1/2</div> </div> <table border="1" class="table-bordered"> <tr> <td colspan="2"> Tên khách hàng: (customer) </td> <td style="width: 30%"> Số ĐKXN: xcode-0/xcode-1/xcode-2</td> </tr> <tr> <td colspan="3"> <div> Địa chỉ khách hàng: (address) </div> <div style="float: left; width: 400px;"> Số điện thoại: (phone) </div> <div style="float: left; "> Fax: (fax) </div> </td> </tr> <tr> <td colspan="3"> Loài động vật lấy mẫu: (sample) </td> </tr> <td colspan="3"> Loại mẫu: (type) </td> </tr> <tr> <td colspan="3"> Số lượng mẫu: (number) (numberword) </td> </tr> <tr> <td colspan="3"> Ký hiệu mẫu: (sampleCode) </td> </tr> <tr> <td colspan="3"> Tình trạng khi nhận mẫu: (status) </td> </tr> <tr> <td style="width: 50%"> Ngày lấy mẫu: (sampleReceive) </td> <td colspan="2"> Người lấy mẫu: (sampleReceiver) </td> </tr> <tr> <td style="width: 50%"> Ngày, giờ nhận mẫu: (receiveHour)<sup>h</sup>(receiveMinute)<sup>p</sup> (ireceive)</td> <td colspan="2"> Người nhận mẫu: (ireceiver) </td> </tr> <tr> <td colspan="3">  <b><u>Chỉ tiêu xét nghiệm</u></b> <br> (exam)  <div>(index) (exam-content) </div> <div> Phương pháp xét nghiệm: (method); Ký hiệu phương pháp: (symbol). </div> (/exam) (note) </td> </tr> <tr> <td colspan="3"> Ngày phân tích: (examDate) </td> </tr> <tr> <td colspan="3"> <b> Kết quả: </b> <br> (result) </td> </tr> </table> <table style="width: 100%"> <tr> <td class="text-center"> Ngày examdate-0 tháng examdate-1 năm examdate-2 </td> <td class="text-center"> Ngày examdate-0 tháng examdate-1 năm examdate-2 </td> </tr> <tr> <td class="text-center"> <b>BỘ PHẬN XÉT NGHIỆM</b> </td> <td class="text-center"> <b>TRƯỞNG TRẠM</b> </td> </tr> <tr> <td class="text-center"> (Ký, ghi rõ họ tên) </td> </tr> </table> </div>',
+    4: '<table border="1" class="table-bordered"> <tr> <td class="text-center"> <b>Biểu mẫu số: BM.STTT.22.01</b> </td> <td class="text-center"> <b>Số soát xét: 03.02718</b> </td> </tr> <tr> <td colspan="2"> <div class="text-center"> <b>CHI CỤC THÚ Y VÙNG V</b> </div> <div class="text-center"> <b>TRẠM CHUẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT</b> </div> <div> Địa chỉ: Số 36 Phạm Hùng, Phường Tân An, Thành phố Buôn Ma Thuột, Tỉnh Đăklăk </div> <div> Điện thoại: 0262 3877793 </div> </td> </tr> </table> <div class="text-center" style="margin: 10px;"> <b>PHIẾU KẾT QUẢ XÉT NGHIỆM</b> </div> <div style="margin: 4px;"> <div style="float: left"> Số phiếu kết quả xét nghiệm: xcode-0/xcode-1/xcode-2.CĐXN </div> <div style="float: right">Trang: 1/2</div> </div> <table border="1" class="table-bordered"> <tr> <td colspan="2"> Tên khách hàng: (customer) </td> <td style="width: 30%"> Số ĐKXN: xcode-0/xcode-1/xcode-2</td> </tr> <tr> <td colspan="3"> <div> Địa chỉ khách hàng: (address) </div> <div style="float: left; width: 400px;"> Số điện thoại: (phone) </div> <div style="float: left; "> Fax: (fax) </div> </td> </tr> <tr> <td colspan="3"> Loài động vật lấy mẫu: (sample) </td> </tr> <td colspan="3"> Loại mẫu: (type) </td> </tr> <tr> <td colspan="3"> Số lượng mẫu: (number) (numberword) </td> </tr> <tr> <td colspan="3"> Ký hiệu mẫu: (sampleCode) </td> </tr> <tr> <td colspan="3"> Tình trạng khi nhận mẫu: (status) </td> </tr> <tr> <td style="width: 50%"> Ngày lấy mẫu: (sampleReceive) </td> <td colspan="2"> Người lấy mẫu: (sampleReceiver) </td> </tr> <tr> <td style="width: 50%"> Ngày, giờ nhận mẫu: (receiveHour)<sup>h</sup>(receiveMinute)<sup>p</sup> (ireceive)</td> <td colspan="2"> Người nhận mẫu: (ireceiver) </td> </tr> <tr> <td colspan="3">  <b><u>Chỉ tiêu xét nghiệm</u></b> <br> (exam) (index) (exam-content) </div> <div> &nbsp;&nbsp; Phương pháp xét nghiệm: (method); Ký hiệu phương pháp: (symbol). </div> (/exam) (note) </td> </tr> <tr> <td colspan="3"> Ngày phân tích: (examDate) </td> </tr> <tr> <td colspan="3"> <b> Kết quả: </b> <br> (result) </td> </tr> </table> <table style="width: 100%"> <tr> <td class="text-center"> Ngày examdate-0 tháng examdate-1 năm examdate-2 </td> <td class="text-center"> Ngày examdate-0 tháng examdate-1 năm examdate-2 </td> </tr> <tr> <td class="text-center"> <b>BỘ PHẬN XÉT NGHIỆM</b> </td> <td class="text-center"> <b>TRƯỞNG TRẠM</b> </td> </tr> <tr> <td class="text-center"> (Ký, ghi rõ họ tên) </td> </tr> </table> </div>',
     5: '<table><tr><td class="cell-center p12"> CỤC THÚ Y <br> <b> CHI CŨ THÚ Y VÙNG V </b> <br> <span class="p14"> Số &emsp;/TYV5-TH </span> </td><td class="cell-center p13"> CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM <br> <b> Độc lập - Tự do - Hạnh phúc </b> <br> Đăk Lăk, ngày noticetime-0, tháng noticetime-1, năm noticetime-2 </td></tr></table><p class="text-center p15"> <b> Thông báo </b> </p><p class="text-center p14"> <b> <i> Kết quả xét nghiệm </i> </b> </p> <p class="p14">&emsp;&emsp; Chi cụ thú y vùng V thông báo kết quả xét nghiệm được thực hiện tại Trạm Chẩn đoán xét nghiệm bệnh động vật (trực thuộc Chi cục Thú y vùng V) như sau: </p> <p class="p14"> &emsp;&emsp; Tên khách hàng: senderemploy  </p> <p class="p14"> &emsp;&emsp; Địa chỉ: xaddress  </p> owner <p class="p14"> &emsp;&emsp; Số lượng mẫu: number </p> <p class="p14"> &emsp;&emsp; Ký hiệu mẫu: samplecode </p> <p class="p14"> &emsp;&emsp; Ngày nhận mẫu: sampletime </p> <p class="p14"> &emsp;&emsp; Mục đích xét nghiệm: target </p> <p class="p14"> &emsp;&emsp; <b> <i> Chỉ tiêu xét nghiệm: </i> </b> </p><div class="p14">exam</div>note<p class="p14"> &emsp;&emsp; <i> <b> Kết quả: </b> </i> </p><div class="p14">result</div><p class="p14">&emsp;&emsp;Chi tiết xem phiếu kết quả xét nghiệm số: xcode-0/xcode-1/xcode-2.CĐXN của trạm chuẩn đoán xét nghiệm bệnh động vật)./.</p><table><tr><td style="width: 60%"><b class="p12"> <i> Nơi nhận: </i> </b> <p class="p11"> </p> </td><td style="width: 40%;" class="text-center p14"><br><b> Chi cục trưởng </b><br><br><br><b> receiveleader </b></td></tr></table>'
   }
   
@@ -932,7 +932,7 @@
     code: '',
     type: '',
     number: 1,
-    status: true,
+    status: 1,
     mainer: [{
       main: '',
       method: '',
@@ -1261,23 +1261,47 @@
   }
 
   function synchField() {
-    // var currentData = {
-    //   type: getInputs('type'),
-    //   sample: formInsertSample.val(),
-    //   samplecode: formInsertSampleCode.val(),
-    //   exam: getInputs('exam'),
-    //   method: getInputs('method'),
-    //   symbol: getInputs('symbol')
-    // }
-    // var sampleCount = currentData['sample'].split(', ')
-    // var mainCount = currentData['exam'].length
-    // global_field = []
-    // for (let i = 0; i < sampleCount; i++) {
-    //   var temp = []
-    //   for (let j = 0; j < mainCount; j++) {
-    //     temp.push(1)        
-    //   }
-    // }
+    var data = {
+      type: getCheckbox('type', formInsertTypeOther),
+      sample: formInsertSample.val(),
+      samplecode: formInsertSampleCode.val().split(', '),
+      exam: getExam()
+    }
+    var type = (data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text()))
+    var sampleCount = data['samplecode'].length
+    var maintemp = []
+    global_field = []
+    for (let i = 0; i < sampleCount; i++) {
+      var temp = []
+      global_field.push({
+        main: ''
+      })
+
+      data['exam'].forEach(main => {
+        var temp2 = []
+        main['exam'].forEach(exam => {
+          temp2.push({
+            result: '',
+            note: exam
+          })
+        })
+        temp.push({
+          main: main['symbol'],
+          method: main['method'],
+          note: temp2
+        })
+      })
+
+      maintemp.push({
+        code: data['samplecode'][i],
+        number: 1,
+        status: 1,
+        type: type,
+        mainer: temp
+      })
+    }
+    global_field = maintemp
+    parseField(global_field)
   }
 
   function parseForm(id) {
@@ -1331,11 +1355,8 @@
         result['note'].forEach((note, noteIndex) => {
           noteX ++
           html3 += `
-          <fieldset class="html-result">
+          <div class="html-result bordered">
             <button class="close right" data-dismiss="modal" onclick="removeField('`+ sampleIndex +`,`+ resultIndex +`,`+ noteIndex +`')">&times;</button>
-            <legend>
-              Kết quả
-            </legend>
             <div class="row form-group">
               <label class="col-sm-6"> Kết quả </label>
               <div class="col-sm-10">
@@ -1348,15 +1369,12 @@
                 <input type="text" value="`+ note['note'] +`" class="form-control ig ig-note-`+ sampleIndex +`-`+ resultIndex +`-`+ noteIndex +`">
               </div>
             </div>
-          </fieldset>`
+          </div>`
         })
 
         html2 += `
-        <fieldset class="html-main">
+        <div class="html-main bordered">
           <button class="close right" data-dismiss="modal" onclick="removeField('`+ sampleIndex +`,`+ resultIndex +`')">&times;</button>
-          <legend>
-            Chỉ tiêu
-          </legend>
           <div class="row form-group">
             <label class="col-sm-6"> Chỉ tiêu </label>
             <div class="col-sm-10">
@@ -1378,7 +1396,7 @@
           </div>
           `+ html3 +`
           <button class="btn btn-info" onclick="addField('`+ sampleX +`,`+ resultX +`,`+ noteX +`')"> <span class="glyphicon glyphicon-plus"></span> </button>
-        </fieldset>`
+        </div>`
         installer.push({
           name: "s" + sampleIndex,
           type: 'main'
@@ -1390,11 +1408,9 @@
       })
 
       html += `    
-      <fieldset>
+      <button class="btn btn-info" onclick="synchField()"><span class="glyphicon glyphicon-refresh"></span></button>
+      <div class="bordered">
         <button class="close right" data-dismiss="modal" onclick="removeField('`+ sampleIndex +`')">&times;</button>
-        <legend>
-          Mẫu
-        </legend>
         <div class="row form-group">
           <label class="col-sm-6"> Kí hiệu mẫu </label>
           <div class="col-sm-10">
@@ -1417,12 +1433,12 @@
         
         <div class="row form-group">
           <label class="col-sm-6"> Tình trạng mẫu </label>
-            <input type="radio" name="samplestatus" `+ (sample['status'] ? 'checked' : '' ) +` class="form-control ig ig-status0-`+ sampleIndex +`"> Đạt<br>
-            <input type="radio" name="samplestatus" `+ (sample['status'] ? '' : 'checked' ) +` class="form-control ig ig-status1-`+ sampleIndex +`"> Không đạt
+            <input type="radio" name="samplestatus-`+ sampleIndex +`" `+ (Number(sample['status']) ? 'checked' : '' ) +` class="form-control ig ig-status0-`+ sampleIndex +`"> Đạt<br>
+            <input type="radio" name="samplestatus" `+ (Number(sample['status']) ? '' : 'checked' ) +` class="form-control ig ig-status1-`+ sampleIndex +`"> Không đạt
         </div>
         `+ html2 +`
         <button class="btn btn-info" onclick="addField('`+ sampleX +`,`+ resultX +`')"><span class="glyphicon glyphicon-plus"></span></button>
-      </fieldset>`
+      </div>`
     })
     html += `<button class="btn btn-info" onclick="addField('`+ sampleX +`')"><span class="glyphicon glyphicon-plus"></span></button>`
     sample.html(html)
@@ -1605,7 +1621,7 @@
           code: '',
           type: '',
           number: 1,
-          status: true,
+          status: 1,
           mainer: [
             {
               main: '',
@@ -2290,6 +2306,19 @@
           infoData = {1: [], 2: [], 3: []}
 
           if (data['form']['printer'] >= 1) {
+            try {
+              temp = JSON.parse(data['form']['exam'])
+              global_exam = temp
+            }
+            catch (e) {
+              global_exam = [{
+                method: '',
+                symbol: '',
+                exam: ['']
+              }]
+            }
+            parseExam(global_exam)
+            
             formInsertCode.val(data['form']['code'])
             formInsertSenderEmploy.val(data['form']['sender'])
             formInsertReceiverEmploy.val(data['form']['receiver'])
@@ -2408,7 +2437,6 @@
   }
 
   function goPage(page) {
-    
     $.post(
       strHref,
       {action: 'filter', page: page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val()},
@@ -2443,6 +2471,30 @@
     )
   }
 
+  function extractExam(data, tag) {
+    var list = []
+    var result = []
+    var index = 0
+
+    data.forEach(main => {
+      main['exam'].forEach(item => {
+        list.push(item)
+      })
+    })
+    var length = list.length
+    list.forEach(item => {
+      
+      if (length > 1 && tag) {
+        index ++
+        result.push(index + tag + ' ' + item)
+      }
+      else {
+        result.push(item)
+      }
+    })
+    return result
+  }
+
   function printer(id, data = {}) {
     if (Object.keys(data).length || visible[global_saved][2].search(id) >= 0) {
       if (!Object.keys(data).length) {
@@ -2456,17 +2508,19 @@
         switch (id) {
           case 1:
             html = html.replace('code', data['code'])
-            html = html.replace('sender', data['sender'])
-            html = html.replace('receiver', data['receiver'])
+            html = html.replace('senderemploy', data['sender'])
+            html = html.replace('receiveremploy', data['receiver'])
             html = html.replace('receive', data['receive'])
             html = html.replace('resend', data['resend'])
             html = html.replace('ireceive', data['ireceive'])
             html = html.replace('iresend', data['iresend'])
-            html = html.replace('status-0', data['state']['index'] == 0 ? '&#9745;' : '$#9744;')
+            html = html.replace('status-0', data['state']['index'] == 0 ? '&#9745;' : '&#9744;')
             html = html.replace('status-1', data['state']['index'] == 1 ? '&#9745;' : '&#9744;')
             html = html.replace('status-2', data['state']['index'] == 2 ? data['state']['value'] : '')
             html = html.replace('numberword', data['numberword'])
-            html = html.replace('formcontent', (data['form'].join('<br>') + '<br>Số lượng mẫu: ' + data['number'] + ', loại mẫu: ' + (data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text())) + ', loài động vật: ' + data['sample'] + '<br> Ký hiệu mẫu: ' + data['samplecode'] + '<br>Yêu cầu xét nghiệm:<br>' + ((data['exam'].length > 1 ? data['exam'].join('<br>') : data['exams'].join('<br>')) + (trim(data['xnote']).length ? '<br>Ghi chú: <br>' + data['xnote'].replace(/\n/g, '<br>') : ''))))
+            var exam = extractExam(data['exam'], ')')
+
+            html = html.replace('formcontent', (data['form'].join('<br>') + '<br>Số lượng mẫu: ' + data['number'] + ', loại mẫu: ' + (data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text())) + ', loài động vật: ' + data['sample'] + '<br> Ký hiệu mẫu: ' + data['samplecode'] + '<br>Yêu cầu xét nghiệm:<br>' + (exam.join('<br>') + (trim(data['xnote']).length ? '<br>' + data['xnote'].replace(/\n/g, '<br>') : ''))))
           break;
           case 2:
             prop = 1
@@ -2547,23 +2601,26 @@
             }
             html = html.replace('(note)', noteString)
 
-            var length = data['exam'].length
             var part = html.slice(html.search('(exam)') + '(exam)'.length, html.search('(/exam)') - 1)
             html = html.replace(part, '(parse)').replace('(exam)', '').replace('(/exam)', '')
             var parse = ''
-            for (let i = 0; i < length; i++) {
+            var examS = extractExam(data['exam']).length
+            var index = 1
+            data['exam'].forEach(main => {
               var temp = part 
-              if (data['exams'].length > 1) {
-                temp = temp.replace('(index)', i + 1 + '. ')
-              }
-              else {
-                temp = temp.replace('(index)', '')
-              }
-              temp = temp.replace('(exam-content)', data['exams'][i])
-              temp = temp.replace('(method)', data['method'][i])
-              temp = temp.replace('(symbol)', data['symbol'][i])
-              parse += temp
-            }
+              main['exam'].forEach(exam => {
+                if (examS > 1) {
+                  temp = temp.replace('(index)', (index ++) + '. ')
+                }
+                else {
+                  temp = temp.replace('(index)', '')
+                }
+                temp = temp.replace('(exam-content)', exam)
+                temp = temp.replace('(method)', main['method'])
+                temp = temp.replace('(symbol)', main['symbol'])
+                parse += temp
+              })
+            })
             html = html.replace('(parse)', parse)
           break;
           case 5:
@@ -2601,19 +2658,24 @@
             var length = data['exam'].length
             var part = '&emsp;&emsp; (index)(content), Phương pháp xét nghiệm: (method); Ký hiệu phương pháp: (symbol)<br>'
             var parse = ''
-            for (let i = 0; i < length; i++) {
+            var examS = extractExam(data['exam'])
+            var index = 1
+            data['exam'].forEach(main => {
               var temp = part 
-              if (data['exams'].length > 1) {
-                temp = temp.replace('(index)', i + 1 + '. ')
-              }
-              else {
-                temp = temp.replace('(index)', '')
-              }
-              temp = temp.replace('(content)', data['exam'][i])
-              temp = temp.replace('(method)', data['method'][i])
-              temp = temp.replace('(symbol)', data['symbol'][i])
-              parse += temp
-            }
+              main['exam'].forEach(exam => {
+                if (examS > 1) {
+                  temp = temp.replace('(index)', (index ++) + '. ')
+                }
+                else {
+                  temp = temp.replace('(index)', '')
+                }
+                temp = temp.replace('(content)', exam)
+                temp = temp.replace('(method)', main['method'])
+                temp = temp.replace('(symbol)', main['symbol'])
+                parse += temp
+              })
+            })
+            
             html = html.replace('exam', parse)
             html = html.replace('result', tabbed + data['result'].replace(/\n/g, '<br>' + tabbed))
             var noteString = ''
@@ -2624,10 +2686,9 @@
               note.forEach(item => {
                 notes.push('<i>' + item + '</i>')
               })
-              noteString += '<p class="p14">&emsp;<u style="display: inline-block"><b>Ghi chú:</b></u> <div style="display: inline-table">' + notes.join('<br>') + '</div></p>'
+              noteString += '<div class="p14">&emsp;&emsp; <u style="display: inline-block"><b>Ghi chú:</b></u> <div style="display: inline-table">' + notes.join('<br>') + '</div></divs>'
             }
-            html = html.replace('note', noteString)
-            
+            html = html.replace('note', '<p></p>'+ noteString)
             html = html.replace('receivedis', data['receivedis'].replace(/\n/g, '<br>'))
             html = html.replace('receiveleader', data['receiveleader'].toUpperCase())
           break;

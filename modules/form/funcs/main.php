@@ -175,23 +175,32 @@ if (!empty($action)) {
 								checkRemindRow($data['sender'], 2);
 								checkRemindRow($data['receiver'], 1);
 
-								foreach ($data['exams'] as $key => $value) {
-									checkRemindRow($value, 3);
+								// reminded exam
+								foreach ($exam as $examMain) {
+									checkRemindv2($examMain['symbol'], 'symbol');
+									checkRemindv2($examMain['method'], 'method');
+									foreach ($examMain as $examNote) {
+										checkRemindv2($examNote, 'exam');
+									}
 								}
-								foreach ($data['symbol'] as $key => $value) {
-									checkRemindv2($value, 'symbol');
-								}
-								foreach ($data['methods'] as $key => $value) {
-									checkRemindv2($value, 'method');
-								}
+								$exam = json_encode($data['exam'], JSON_UNESCAPED_UNICODE);
+
+								// foreach ($data['exams'] as $key => $value) {
+								// 	checkRemindRow($value, 3);
+								// }
+								// foreach ($data['symbol'] as $key => $value) {
+								// 	checkRemindv2($value, 'symbol');
+								// }
+								// foreach ($data['methods'] as $key => $value) {
+								// 	checkRemindv2($value, 'method');
+								// }
 								if ($id) {
-									$sql = 'update `'. PREFIX .'_row` set code = "'. $data['code'] .'", sender = "' . $data['sender'] . '", receive = ' . totime($data['receive']) . ', resend = ' . totime($data['resend']) . ', stateIndex = '. $data['state']['index'] .', stateValue = "'. $data['state']['value'] .'", receiver = "' . $data['receiver'] . '", ireceive = '. totime($data['ireceive']) . ', iresend = '. totime($data['iresend']) . ', form = "'. implode(', ', $data['forms']) .'", number = ' . $data['number'] .', exam = "' . implode(', ', $data['exams']) . '", sample = "'. $data['sample'] .'", sampleCode = "'. $data['samplecode'] .'", method = "'. implode(', ', $data['methods']) .'", symbol = "'. implode(', ', $data['symbol']) .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", xnote = "'. $data['xnote'] .'", numberword = "'. $data['numberword'] .'" where id = ' . $id;
-									// die($sql);
+									$sql = 'update `'. PREFIX .'_row` set code = "'. $data['code'] .'", sender = "' . $data['sender'] . '", receive = ' . totime($data['receive']) . ', resend = ' . totime($data['resend']) . ', stateIndex = '. $data['state']['index'] .', stateValue = "'. $data['state']['value'] .'", receiver = "' . $data['receiver'] . '", ireceive = '. totime($data['ireceive']) . ', iresend = '. totime($data['iresend']) . ', form = "'. implode(', ', $data['forms']) .'", number = ' . $data['number'] .', exam = \'' . $exam . '\', sample = "'. $data['sample'] .'", sampleCode = "'. $data['samplecode'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", xnote = "'. $data['xnote'] .'", numberword = "'. $data['numberword'] .'" where id = ' . $id;
 									$query = $db->query($sql);
 									$result['id'] = $id;
 								}
 								else {
-									$sql = 'insert into `'. PREFIX .'_row` (code, sender, receive, resend, stateIndex, stateValue, receiver, ireceive, iresend, form, number, exam, sample, sampleCode, method, typeIndex, typeValue, time, xnote, symbol, numberword) values("'. $data['code'] .'", "'. $data['sender'] .'", ' . totime($data['receive']) . ', ' . totime($data['resend']) . ', '. $data['state']['index'] .', "'. $data['state']['value'] . '", "' . $data['receiver'] . '", '. totime($data['ireceive']) . ',  '. totime($data['ireceive']) . ', "'. implode(', ', $data['forms']) .'", ' . $data['number'] .', "' . implode(', ', $data['exams']) . '", "'. $data['sample'] .'", "'. $data['samplecode'] .'", "'. implode(', ', $data['methods']) .'", '. $data['type']['index'] .', "'. $data['type']['value'] .'", '. time() . ', "'. $data['xnote'] .'", "'. $data['symbol'] .'", "'. $data['numberword'] .'")';
+									$sql = 'insert into `'. PREFIX .'_row` (code, sender, receive, resend, stateIndex, stateValue, receiver, ireceive, iresend, form, number, exam, sample, sampleCode, typeIndex, typeValue, time, xnote, numberword) values("'. $data['code'] .'", "'. $data['sender'] .'", ' . totime($data['receive']) . ', ' . totime($data['resend']) . ', '. $data['state']['index'] .', "'. $data['state']['value'] . '", "' . $data['receiver'] . '", '. totime($data['ireceive']) . ',  '. totime($data['ireceive']) . ', "'. implode(', ', $data['forms']) .'", ' . $data['number'] .', "' . implode(', ', $data['exams']) . '", "'. $data['sample'] .'", "'. $data['samplecode'] .'", '. $data['type']['index'] .', "'. $data['type']['value'] .'", '. time() . ', "'. $data['xnote'] .'", "'. $data['numberword'] .'")';
 									$query = $db->query($sql);
 									$result['id'] = $db->lastInsertId();
 								}
@@ -223,15 +232,15 @@ if (!empty($action)) {
 							$xsend = totime($data['xsend']);
 							$examdate = totime($data['examdate']);
 							// check inform ig
-							foreach ($data['ig'] as $sample) {
-								foreach ($sample['mainer'] as $result) {
-									foreach ($result['note'] as $note) {
-										checkRemindv2($note['result'], 'method');
-									}
-								}
-							}
+							// foreach ($data['ig'] as $sample) {
+							// 	foreach ($sample['mainer'] as $result) {
+							// 		foreach ($result['note'] as $note) {
+							// 			checkRemindv2($note['result'], 'method');
+							// 		}
+							// 	}
+							// }
 
-							$ig = json_encode($data['ig']);
+							$ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
 
 							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode($data['xcode'], ',') .'", isenderunit = "'. $data['isenderunit'] .'", ireceiverunit = "'. $data['ireceiverunit'] .'", xreceiver = "'. $data['xreceiver'] .'", xresender = "'. $data['xresender'] .'", xsender = "'. $data['xsender'] .'", iresend = '. $iresend .', xreceive = '. $xreceive .', xresend = "'. $xresend .'", xsend = '. $xsend .', ig = \''. $ig .'\', examdate = '. $examdate .' where id = ' . $id;
 							if ($db->query($sql)) {
@@ -250,15 +259,15 @@ if (!empty($action)) {
 							$result['notify'] = 'Nhập thiếu thông tin: ' . $teriorname[$key];
 						}
 						else {
-							foreach ($data['ig'] as $sample) {
-								foreach ($sample['mainer'] as $result) {
-									foreach ($result['note'] as $note) {
-										checkRemindv2($note['result'], 'method');
-									}
-								}
-							}
+							// foreach ($data['ig'] as $sample) {
+							// 	foreach ($sample['mainer'] as $result) {
+							// 		foreach ($result['note'] as $note) {
+							// 			checkRemindv2($note['result'], 'method');
+							// 		}
+							// 	}
+							// }
 
-							$ig = json_encode($data['ig']);
+							$ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
 
 							$sql = 'update `'. PREFIX .'_row` set ig = \''. $ig .'\', receiveleader = "'. $data['receiveleader'] .'", xexam = "'. $data['xexam'] .'" where id = ' . $id;
 							if ($db->query($sql)) {
@@ -285,18 +294,17 @@ if (!empty($action)) {
 							$note = nl2br($data['note']);
 							checkRemindRow($data['address'], 5);
 							checkRemindRows($data['result'], 5);
-							foreach ($data['exams'] as $key => $value) {
-								checkRemindRow($value, 3);
+							// check reminded
+							foreach ($exam as $examMain) {
+								checkRemindv2($examMain['symbol'], 'symbol');
+								checkRemindv2($examMain['method'], 'method');
+								foreach ($examMain as $examNote) {
+									checkRemindv2($examNote, 'exam');
+								}
 							}
-							foreach ($data['symbol'] as $key => $value) {
-								checkRemindv2($value, 'symbol');
-							}
-							foreach ($data['methods'] as $key => $value) {
-								checkRemindv2($value, 'method');
-							}
-							// isenderunit
+							$exam = json_encode($data['exam'],JSON_UNESCAPED_UNICODE);
 
-							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", receiveHour = '.$data['receivehour'].', receiveMinute = '.$data['receiveminute'].', sampleReceive = "'.$sampleReceive.'", address = "'.$data['address'].'", sampleReceiver = "'.$data['samplereceiver'].'", examDate = "'.$examDate.'", result = "'. $data['result'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', status = "'. $data['status']['index'] .'", sampleCode = "'. $data['samplecode'] .'", receive = '. $receive .', note = "'. $note .'", xphone = "'. $data['xphone'] .'", sample = "'. $data['sample'] .'", isenderUnit = "'. $data['isenderunit'] .'", ireceiverEmploy = "'. $data['ireceiveremploy'] .'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", symbol = "'. implode(', ', $data['symbol']) .'", numberword = "'. $data['numberword'] .'", fax = "'. $data['fax'] .'" where id = ' . $id;
+							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(', ', $data['xcode']) .'", receiveHour = '.$data['receivehour'].', receiveMinute = '.$data['receiveminute'].', sampleReceive = "'.$sampleReceive.'", address = "'.$data['address'].'", sampleReceiver = "'.$data['samplereceiver'].'", examDate = "'.$examDate.'", result = "'. $data['result'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', status = "'. $data['status']['index'] .'", sampleCode = "'. $data['samplecode'] .'", receive = '. $receive .', note = "'. $note .'", xphone = "'. $data['xphone'] .'", sample = "'. $data['sample'] .'", isenderUnit = "'. $data['isenderunit'] .'", ireceiverEmploy = "'. $data['ireceiveremploy'] .'", exam = \''. $exam .'\', numberword = "'. $data['numberword'] .'", fax = "'. $data['fax'] .'" where id = ' . $id;
 							$query = $db->query($sql);
 							if ($query) {
 								checkPrinter($id, $form);
@@ -320,18 +328,18 @@ if (!empty($action)) {
 							checkRemindRow($data['xaddress'], 8);
 							checkRemindRow($data['onwer'], 9);
 							checkRemindRow($data['sampleplace'], 10);
-							foreach ($data['exams'] as $key => $value) {
-								checkRemindRow($value, 3);
-							}
-							foreach ($data['symbol'] as $key => $value) {
-								checkRemindv2($value, 'symbol');
-							}
-							foreach ($data['methods'] as $key => $value) {
-								checkRemindv2($value, 'method');
-							}
 							checkRemindRow($data['sender'], 2);
 
-							$sql = 'update `'. PREFIX .'_row` set xaddress = "'.$data['xaddress'].'", number = '. $data['number'] .', sampleCode = "'. $data['samplecode'] .'", note = "'. $note .'", noticetime = '. $resend .', target = "'. $data['target'].'", exam = "'. implode(', ', $data['exams']) .'", method = "'. implode(', ', $data['methods']) .'", symbol = "'. implode(', ', $data['symbol']) .'", receiveDis = "'. $data['receivedis'] .'", receiveLeader = "'. $data['receiveleader'] .'", sampleplace = "'. $data['sampleplace'] .'", owner = "'. $data['owner'] .'", xcode = "'. implode(', ', $data['xcode']) .'", receive = "'. $receive .'", result = "'. $data['result'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", sender = "'. $data["sender"] .'", numberword = "'. $data['numberword'] .'" where id = ' . $id;
+							foreach ($exam as $examMain) {
+								checkRemindv2($examMain['symbol'], 'symbol');
+								checkRemindv2($examMain['method'], 'method');
+								foreach ($examMain as $examNote) {
+									checkRemindv2($examNote, 'exam');
+								}
+							}
+							$exam = json_encode($data['exam'], JSON_UNESCAPED_UNICODE);
+		
+							$sql = 'update `'. PREFIX .'_row` set xaddress = "'.$data['xaddress'].'", number = '. $data['number'] .', sampleCode = "'. $data['samplecode'] .'", note = "'. $note .'", noticetime = '. $resend .', target = "'. $data['target'].'", exam = \''. $exam .'\', receiveDis = "'. $data['receivedis'] .'", receiveLeader = "'. $data['receiveleader'] .'", sampleplace = "'. $data['sampleplace'] .'", owner = "'. $data['owner'] .'", xcode = "'. implode(', ', $data['xcode']) .'", receive = "'. $receive .'", result = "'. $data['result'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", sender = "'. $data["sender"] .'", numberword = "'. $data['numberword'] .'" where id = ' . $id;
 							$query = $db->query($sql);
 							if ($query) {
 								checkPrinter($id, $form);
