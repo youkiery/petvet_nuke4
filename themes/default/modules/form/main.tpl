@@ -15,6 +15,12 @@
     height: 38px;
     width: 80%;
   }
+  .bordered {
+    border: 1px solid gray;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 5px;
+  }
 </style>
 
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
@@ -541,15 +547,12 @@
       </div>
     </div>
 
-    <div class="boxed box-1 box-1-15 box-21 box-21-20 box-31 box-31-12 box-4 box-4-17 box-5 box-5-12">
+    <div class="boxed box-1 box-1-15 box-21 box-21-20 box-31 box-31-12 box-4 box-4-17 box-5 box-5-12 bordered">
       <label>
         Yêu cầu xét nghiệm
         <button class="btn btn-success" onclick="insertMethod()"> <span class="glyphicon glyphicon-plus"></span> </button>
       </label>
       <div id="form-insert-request"></div>
-      <button class="btn btn-success" onclick="addInfo(2)">
-        <span class="glyphicon glyphicon-plus"></span>
-      </button>
     </div>
 
     <div class="row form-group boxed box-1 box-1-16 box-21 box-21-21">
@@ -920,29 +923,29 @@
     4: {1: '1, 2, 3, 4, 5', 2: '1, 2, 3, 4, 5'},
     5: {1: '1, 2, 3, 4, 5', 2: '1, 2, 3, 4, 5'}
   }
-  var dataPicker = {'form': 1, 'exam': 2, 'result': 3}
-  var rdataPicker = {'1': 'form', '2': 'exam', 3: 'result'}
+  var dataPicker = {'form': 1, 'result': 3}
+  var rdataPicker = {'1': 'form', 3: 'result'}
   var infoData = {1: [], 2: [], 3: []}
   var remindData = {}
   var today = '{today}'
-  var global_field = [
-  {
+  var global_field = [{
     code: '',
     type: '',
     number: 1,
     status: true,
-    mainer: [
-      {
-        main: '',
-        method: '',
-        note: [
-          {
-            result: '',
-            note: ''
-          }
-        ]
-      }
-    ]
+    mainer: [{
+      main: '',
+      method: '',
+      note: [{
+        result: '',
+        note: ''
+      }]
+    }]
+  }]
+  var global_exam = [{
+    method: '',
+    symbol: '',
+    exam: ['']
   }]
   var globalTarget = {
     'sender-unit': {
@@ -1046,7 +1049,6 @@
   $(document).ready(() => {
     htmlInfo = formInsertInfo.html()
     addInfo(1)
-    addInfo(2)
     addInfo(3)
     installRemind('sender-unit');
     installRemind('sender-employ');
@@ -1072,7 +1074,7 @@
 
     installExamRemind()
     parseField(global_field)
-        
+    parseExam(global_exam)        
     parseBox(1)
     parseSaved()
   })
@@ -1083,74 +1085,140 @@
     changeYear: true
   });
 
-  $('.printer-x').change(() => {
-    var list = []
-    $('.printer-x').each((index, item) => {
-      if (item.children[0].checked) {
-        list.push(item.innerText)
-      }
-    })
-    filterPrinter.val(list.join(', '))
-  })
-
-  function clearFilterPrinter() {
-    $('.printer-x').each((index, item) => {
-      item.children[0].checked = false
-    })
-    filterPrinter.val('')
-  }
-
-  function parseSample() {
-    formInsertCode.val('TY-5')
-    formInsertSenderEmploy.val('Phùng chí kiên')
-    formInsertReceiverEmploy.val('Mai thị lựu')
-    formInsertReceive.val('25/11/2018')
-    formInsertResend.val('28/11/2018')
-    formInsertIreceive.val('25/11/2018')
-    formInsertIresend.val('29/11/2018')
-    addInfo(1)
-    $(".form")[0].value = 'Mẫu'
-    $(".form")[1].value = 'Phiếu'
-    formInsertNumber.val(1)
-    formInsertSample.val("Chó")
-    formInsertStatus.val("Tốt")
-    formInsertSampleCode.val("GD-05")
-    addInfo(2)
-    $(".exam")[0].value = 'Phát hiện virus H5N1'
-    $(".exam")[1].value = 'Phát hiện virus H1N1'
-  }
-
-  function parseSample2() {
-    parseSample()
-    $(".xcode")[0].value = '25'
-    $(".xcode")[1].value = '19'
-    $(".xcode")[2].value = '013'
-    formInsertSampleReceiveTime.val('25/11/1996')
-    formInsertIsenderEmploy.val('Mai Thị Lựu')
-    formInsertIsenderUnit.val('Phòng tổng hợp')
-    formInsertIreceiverEmploy.val('Lưu Trọng Khoan')
-    formInsertIreceiverUnit.val('Phòng xét nghiệm')
-    formInsertQuality.val('Đạt')
-  }
-
-  function parseSample3() {
-    parseSample()
-    parseSample2()
-    $(".page")[0].value = '01'
-    $(".page")[1].value = '01'
-    $(".no")[0].value = '01'
-    $(".no")[1].value = '02'
-    formInsertExamDate.val('11/05/2019')
-    formInsertCustomer.val('Bộ thông tin và truyền thông')
-    formInsertOther.val('Không')
-    formInsertResult.val('Toàn bộ đều nhiễm bệnh sắp chết cmnr')
-  }
-
   function parseBox(index) {
     if (visible[global_saved][1].search(index) >= 0) {
       global_form = index
       parseForm(index)
     }
+  }
+
+  function parseExam(data) {
+    var installer = []
+    var html = ''
+    var mainIndex = -1
+    data.forEach(main => {
+      var temp = ''
+      var examIndex = -1
+      mainIndex ++
+      main['exam'].forEach(exam => {
+        examIndex ++
+        temp += 
+        `<div class="row">
+          <button type="button" class="close" data-dismiss="modal" onclick="splitExam(\'0-`+ mainIndex +`-`+ examIndex +`\')">&times;</button>
+          <label class="col-sm-4"> Yêu cầu </label>
+          <div class="col-sm-10 relative">
+            <input type="text" value="`+ exam +`" class="form-control input-box exam examed iex iex-exam-` + mainIndex + `-`+ examIndex +`" id="exam-`+ mainIndex +`-`+ examIndex +`" style="float: none;" autocomplete="off">
+            <div class="suggest exam-suggest" id="exam-suggest-`+ mainIndex +`-`+ examIndex +`"> </div>
+          </div>
+        </div>`
+        installer.push({
+          name: mainIndex +`-`+ examIndex,
+          type: 'exam'
+        })
+      })
+      if (examIndex == -1) examIndex = 0
+      if (mainIndex == -1) mainIndex = 0
+      temp += '<button class="btn btn-success" onclick="splitExam(\'1-'+ mainIndex +'-'+ examIndex +'\')"><span class="glyphicon glyphicon-plus"></span></button>'
+      
+      html += `
+      <div class="examed bordered">
+        <button type="button" class="close" data-dismiss="modal" onclick="splitExam(\'0-`+ mainIndex +`\')">&times;</button>
+        <div class="row">
+          <label class="col-sm-4"> Phương pháp </label>
+          <div class="col-sm-10 relative">
+            <input type="text" value="`+ main['method'] +`" class="form-control input-box method iex iex-method-` + mainIndex + `" id="method-` + mainIndex + `" style="float: none;" autocomplete="off">
+            <div class="suggest" id="method-suggest-` + mainIndex + `"> </div>
+          </div>
+        </div>
+        <div class="row">
+          <label class="col-sm-4"> Ký hiệu </label>
+          <div class="col-sm-10 relative">
+            <input type="text" value="`+ main['symbol'] +`" class="form-control input-box symbol iex iex-symbol-` + mainIndex + `" id="symbol-` + mainIndex + `" style="float: none;" autocomplete="off">
+            <div class="suggest" id="symbol-suggest-` + mainIndex + `"> </div>
+          </div>
+        </div>
+        `+ temp +`
+      </div>
+      <button class="btn btn-success" onclick="splitExam(\'1-`+ mainIndex +`\')"><span class="glyphicon glyphicon-plus"></span></button>`
+      installer.push({
+        name: mainIndex,
+        type: 'method'
+      })
+      installer.push({
+        name: mainIndex,
+        type: 'symbol'
+      })
+    })
+    formInsertRequest.html(html)
+    installer.forEach(item => {
+      installRemindv2(item['name'], item['type'])
+    })
+  }
+
+  function getExam() {
+    list = []
+    data = []
+    $(".iex").each((index, item) => {
+      list.push()
+      className = item.getAttribute('class')
+      var start = className.indexOf('iex-')
+      var end = className.indexOf(' ', start)
+      if (end < 0) {
+        var pos = className.slice(start + 4) 
+      }
+      else {
+        var pos = className.slice(start + 4, end) 
+      }
+
+      if (pos) {
+        var poses = pos.split('-')
+        var posesCount = poses.length
+        switch (posesCount) {
+          case 2:
+            if (!data[poses[1]]) {
+              data[poses[1]] = {}
+            }
+            data[poses[1]][poses[0]] = $(".iex-" + pos).val()
+          break;
+          case 3:
+            if (!data[poses[1]]) {
+              data[poses[1]] = {}
+            }
+            if (!data[poses[1]]['exam']) {
+              data[poses[1]]['exam'] = []
+            }
+            data[poses[1]]['exam'][poses[2]] = $(".iex-" + pos).val()
+          break;
+        }
+      }
+    })
+    return data
+  }
+
+  function splitExam(indexString) {
+    var indexes = indexString.split('-')
+    var indexCount = indexes.length
+    indexes[0] = Number(indexes[0])
+    global_exam = getExam()
+    if (indexes[0]) {
+      // insert
+      if (indexes[2]) {
+        global_exam[indexes[1]]['exam'].splice(indexes[2] + 1, 0, '')
+      }
+      else {
+        global_exam.splice(indexes[1] + 1, 0, {method: '', symbol: '', exam: ['']})
+      }
+    }
+    else {
+      // remove
+      if (indexes[2]) {
+        global_exam[indexes[1]]['exam'].splice(indexes[2], 1)
+      }
+      else {
+        global_exam.splice(indexes[2], 1)
+      }
+    }
+    parseExam(global_exam)
   }
 
   function getFilter() {
@@ -1180,25 +1248,36 @@
     
     var array = data['form'][name]
     array = array.split(', ')
-    if (data['form']['method']) {
-      methodx = data['form']['method'].split(', ')
-      symbolx = data['form']['symbol'].split(', ')
-    }
-    
+
     array.forEach((element, index) => {
       addInfo(dataPicker[name])
       if (dataPicker[name] == 1) {
         $("#formed-" + index).val(element)
       }
-      else if (dataPicker[name] == 2) {
-        $("#examed-" + index).val(element)
-        $("#method-" + index).val(methodx[index])
-        $("#symbol-" + index).val(symbolx[index])
-      }
       else {
         $("#resulted-" + index).val(element)
       }
     });
+  }
+
+  function synchField() {
+    // var currentData = {
+    //   type: getInputs('type'),
+    //   sample: formInsertSample.val(),
+    //   samplecode: formInsertSampleCode.val(),
+    //   exam: getInputs('exam'),
+    //   method: getInputs('method'),
+    //   symbol: getInputs('symbol')
+    // }
+    // var sampleCount = currentData['sample'].split(', ')
+    // var mainCount = currentData['exam'].length
+    // global_field = []
+    // for (let i = 0; i < sampleCount; i++) {
+    //   var temp = []
+    //   for (let j = 0; j < mainCount; j++) {
+    //     temp.push(1)        
+    //   }
+    // }
   }
 
   function parseForm(id) {
@@ -1601,68 +1680,6 @@
     methodModal.modal('show')
   }
 
-  function insertMethodSubmit(e) {
-    e.preventDefault()
-    if (insertMethodName.val().length > 0 && insertMethodSymbol.val().length > 0) {
-      $.post(
-        strHref,
-        {action: 'insertMethod', name: insertMethodName.val(), symbol: insertMethodSymbol.val()},
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            $('.method').each((index, item) => {
-              method = JSON.parse(data['method'])
-              item.innerHTML = data['html']
-              
-              addInfo = (id) => {
-                var length = infoData[id].length
-                switch (id) {
-                  case 1:
-                    var html = `
-                      <div class="formed" id="form-` + length + `">
-                        <button type="button" class="close" data-dismiss="modal" onclick="removeInfo(1, ` + length + `)">&times;</button>
-                        <br>
-                        <div class="row">
-                          <label class="col-sm-6"> Tên hồ sơ </label>
-                          <div class="col-sm-10">
-                            <input type="text" class="form-control input-box form" id="formed-` + length + `">
-                          </div>
-                        </div>
-                      </div>`
-                          
-                      formInsertForm.append(html)
-                    break;
-                  case 2:
-                  var html = `
-                      <div class="examed" id="exam-` + length + `">
-                        <button type="button" class="close" data-dismiss="modal" onclick="removeInfo(2, ` + length + `)">&times;</button>
-                        <br>
-                        <div class="row">
-                          <label class="col-sm-4"> Yêu cầu </label>
-                          <div class="col-sm-10">
-                            <input type="text" class="form-control input-box exam" id="examed-` + length + `">
-                          </div>
-                          <div class="input-group">
-                            <select class="form-control input-box method" id="method-` + length + `">
-                              `+data['html']+`
-                            </select>
-                          </div>
-                        </div>
-                      </div>`
-                    formInsertRequest.append(html)
-                    break;
-                }
-                infoData[id].push(html)
-              }
-            })
-          })
-        }
-      )
-    }
-    else {
-      alert_msg('Chưa điền đủ thông tin')
-    }
-  }
-
   function installRemind(name) {
     var timeout
     globalTarget[name]['input'].keyup(() => {
@@ -1858,7 +1875,12 @@
       ]
     }]
     parseField(global_field)
-
+    global_exam = [{
+      method: '',
+      symbol: '',
+      exam: ['']
+    }]
+    parseExam(global_exam)
 
     formInsertEndedHour.each((index, item) => {
       item.removeAttribute('selected')
@@ -1891,7 +1913,6 @@
     })
     infoData = {1: [], 2: [], 3: []}
     addInfo(1)
-    addInfo(2)
     addInfo(3)
     $(".type").prop('checked', false)
     $(".state").prop('checked', false)
@@ -2010,16 +2031,9 @@
         break;
       case 2:
         var html = `
-          <div class="examed" id="exam-` + length + `">
+          <div class="examed bordered" id="exam-` + length + `">
             <button type="button" class="close" data-dismiss="modal" onclick="removeInfo(2, ` + length + `)">&times;</button>
             <br>
-            <div class="row">
-              <label class="col-sm-4"> Yêu cầu </label>
-              <div class="col-sm-10 relative">
-                <input type="text" class="form-control input-box exam examed" id="examed-` + length + `" style="float: none;" autocomplete="off">
-                <div class="suggest exam-suggest" id="exam-suggest-` + length + `"> </div>
-              </div>
-            </div>
             <div class="row">
               <label class="col-sm-4"> Phương pháp </label>
               <div class="col-sm-10 relative">
@@ -2032,6 +2046,13 @@
               <div class="col-sm-10 relative">
                 <input type="text" class="form-control input-box symbol" id="symbol-` + length + `" style="float: none;" autocomplete="off">
                 <div class="suggest" id="symbol-suggest-` + length + `"> </div>
+              </div>
+            </div>
+            <div class="row">
+              <label class="col-sm-4"> Yêu cầu </label>
+              <div class="col-sm-10 relative">
+                <input type="text" class="form-control input-box exam examed" id="examed-` + length + `" style="float: none;" autocomplete="off">
+                <div class="suggest exam-suggest" id="exam-suggest-` + length + `"> </div>
               </div>
             </div>
           </div>`
@@ -2167,12 +2188,9 @@
             sample: formInsertSample.val(),
             type: getCheckbox('type', formInsertTypeOther),
             samplecode: formInsertSampleCode.val(),
-            exam: getInputs('exam', ') '),
-            exams: getInputs('exam'),
-            symbol: getInputs('symbol'),
+            exam: getExam(),
             xnote: formInsertXnote.val(),
             numberword: formInsertNumberWord.val(),
-            methods: getInputs('method')
           }
         }
       break;
@@ -2223,12 +2241,8 @@
             sample: formInsertSample.val(),
             note: formInsertNote.val(),
             ireceiveremploy: formInsertIreceiverEmploy.val(),
-            exam: getInputs('exam', ') '),
-            method: getInputs('method'),
-            exams: getInputs('exam'),
             numberword: formInsertNumberWord.val(),
-            symbol: getInputs('symbol'),
-            methods: getInputs('method'),
+            exam: getExam()
           }
         }
       break;
@@ -2248,11 +2262,7 @@
             receiveleader: formInsertReceiveLeader.val(),
             sampleplace: formInsertSamplePlace.val(),
             owner: formInsertOwner.val(),
-            exam: getInputs('exam'),
-            method: getInputs('method'),
-            exams: getInputs('exam'),
-            methods: getInputs('method'),
-            symbol: getInputs('symbol'),
+            exam: getExam(),
             result: formInsertResult.val(),
             receive: formInsertReceive.val(),
             numberword: formInsertNumberWord.val(),
@@ -2293,7 +2303,6 @@
             formInsertXnote.val(data['form']['xnote'])
             formInsertNumberWord.val(data['form']['numberword']),
 
-            parseInputs(data, 'exam')
             parseInputs(data, 'form')
             $("#typed-" + data['form']['typeindex']).prop('checked', true)
             if (data['form']['typeindex'] == 5) {
