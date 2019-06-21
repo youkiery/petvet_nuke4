@@ -1933,6 +1933,7 @@
     formInsertXexam.val('')
     formInsertXphone.val('')
     formInsertFax.val('')
+    formInsertVnote.val('')
     global_field = [{
       code: '',
       type: '',
@@ -2589,7 +2590,7 @@
             html = html.replace('numberword', data['numberword'])
             var exam = extractExam(data['exam'], ')')
 
-            html = html.replace('formcontent', (data['form'].join('<br>') + '<br>Số lượng mẫu: ' + data['number'] + ', loại mẫu: ' + (data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text())) + ', loài động vật: ' + data['sample'] + '<br> Ký hiệu mẫu: ' + data['samplecode'] + '<br>Yêu cầu xét nghiệm:<br>' + (exam.join('<br>') + (trim(data['xnote']).length ? '<br>' + data['xnote'].replace(/\n/g, '<br>') : ''))))
+            html = html.replace('formcontent', (data['form'].join('<br>') + '<br>Số lượng mẫu: ' + data['number'] + ', loại mẫu: ' + (data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text())) + ', loài động vật: ' + data['sample'] + '<br> Ký hiệu mẫu: ' + data['samplecode'].replace('-', ' đến ') + '<br>Yêu cầu xét nghiệm:<br>' + (exam.join('<br>') + (trim(data['xnote']).length ? '<br>' + data['xnote'].replace(/\n/g, '<br>') : ''))))
           break;
           case 2:
             prop = 1
@@ -2639,7 +2640,7 @@
             html = html.replace(/xcode-2/g, trim(data['xcode'][2]))
             html = html.replace('(customer)', data['isenderunit'])
             html = html.replace('(number)', data['number'])
-            html = html.replace('(sampleCode)', data['samplecode'])
+            html = html.replace('(sampleCode)', data['samplecode'].replace('-', ' đến '))
 
             html = html.replace('(numberword)', data['numberword'])
             html = html.replace('(sample)', data['sample'])
@@ -2707,8 +2708,8 @@
             html = html.replace('noticetime-2', iresend[2])
             html = html.replace('senderemploy', data['sender'])
             html = html.replace('(numberword)', data['numberword'])
-            html = html.replace('address', data['xaddress'])
-            html = html.replace('samplecode', data['samplecode'])
+            html = html.replace('xaddress', data['xaddress'])
+            html = html.replace('samplecode', data['samplecode'].replace('-', ' đến '))
             html = html.replace('(sample)', data['sample'])
             html = html.replace('sampletime', data['receive'])
             html = html.replace('(sampletype)', data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text()))

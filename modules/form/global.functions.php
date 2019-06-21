@@ -239,7 +239,7 @@ function precheck($data) {
 				}
 			}
 		}
-		else if ($row == '' && !in_array($row, $except)) {
+		else if ($row == '' && !in_array($key, $except)) {
 			$check = $key;
 		}
 	}
