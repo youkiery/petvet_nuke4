@@ -14,6 +14,37 @@ if (!defined('NV_MAINFILE')) {
 define("PREFIX", $db_config['prefix'] . "_" . $module_name);
 define('PERMISSION_MODULE', 1);
 
+function dogByKey($keyword = '') {
+  global $db;
+  $list = array();
+
+  $sql = 'select * from `'. PREFIX .'_pet` where name like '.$keyword.' or mircrochip like '.$keyword.'';
+  $query = $db->query($sql);
+  die("b");
+
+  while ($row = $query->fetch()) {
+    $list[] = $row;
+  }
+  return $list;
+}
+
+function cdate($time) {
+  return date('d/m/Y', $time);
+}
+
+function ctime($time) {
+  if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
+    $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);
+    if (!$time) {
+      $time = time();
+    }
+  }
+  else {
+    $time = time();
+  }
+  return $time;
+}
+
 function getRemind($type = '') {
 	global $db;
 	$list = array();
@@ -34,19 +65,6 @@ function getRemind($type = '') {
 	}
 
 	return $list;
-}
-
-function totime($time) {
-  if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
-    $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);
-    if (!$time) {
-      $time = time();
-    }
-  }
-  else {
-    $time = time();
-  }
-  return $time;
 }
 
 function deuft8($str) {

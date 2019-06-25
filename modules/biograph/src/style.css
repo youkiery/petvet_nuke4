@@ -1,0 +1,16 @@
+.start-content {
+  padding-top: 3cm;
+}
+
+.start-content img {
+  width: 500px;
+}
+
+@media screen and (max-width: 640px) {
+  .start-content {
+    padding: 0px;
+  }
+  .start-content img {
+    width: 50%;
+  }
+}
