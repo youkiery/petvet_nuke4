@@ -232,15 +232,14 @@ if (!empty($action)) {
 							$xresend = totime($data['xresend']);
 							$xsend = totime($data['xsend']);
 							$examdate = totime($data['examdate']);
-							// check inform ig
-							// foreach ($data['ig'] as $sample) {
-							// 	foreach ($sample['mainer'] as $result) {
-							// 		foreach ($result['note'] as $note) {
-							// 			checkRemindv2($note['result'], 'method');
-							// 		}
-							// 	}
-							// }
 
+							foreach ($exam as $examMain) {
+								checkRemindv2($examMain['symbol'], 'symbol');
+								checkRemindv2($examMain['method'], 'method');
+								foreach ($examMain as $examNote) {
+									checkRemindv2($examNote, 'exam');
+								}
+							}
 							$ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
 
 							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode($data['xcode'], ',') .'", isenderunit = "'. $data['isenderunit'] .'", ireceiverunit = "'. $data['ireceiverunit'] .'", xreceiver = "'. $data['xreceiver'] .'", xresender = "'. $data['xresender'] .'", xsender = "'. $data['xsender'] .'", iresend = '. $iresend .', xreceive = '. $xreceive .', xresend = "'. $xresend .'", xsend = '. $xsend .', ig = \''. $ig .'\', examdate = '. $examdate .', result = "'. $data['result'] .'" where id = ' . $id;
@@ -261,6 +260,8 @@ if (!empty($action)) {
 						}
 						else {
 							$ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
+							checkRemindv2($data['xresender'], 'xresender');
+							checkRemindv2($data['xexam'] , 'xexam');
 
 							$sql = 'update `'. PREFIX .'_row` set ig = \''. $ig .'\', xresender = "'. $data['xresender'] .'", xexam = "'. $data['xexam'] .'", vnote = "'. $data['vnote'] .'" where id = ' . $id;
 							if ($db->query($sql)) {
@@ -288,6 +289,8 @@ if (!empty($action)) {
 							checkRemindRow($data['address'], 5);
 							checkRemindRows($data['result'], 5);
 							// check reminded
+							checkRemindv2($data['xphone'], 'xphone');
+							checkRemindv2($data['fax'], 'fax');
 							foreach ($exam as $examMain) {
 								checkRemindv2($examMain['symbol'], 'symbol');
 								checkRemindv2($examMain['method'], 'method');

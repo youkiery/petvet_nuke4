@@ -402,6 +402,26 @@
       </div>
     </div>
 
+    <div class="row form-group boxed box-5 box-5-0">
+      <label class="col-sm-6">
+        Điện thoại
+      </label>
+      <div class="relative col-sm-12">
+        <input type="text" class="form-control" id="ownerphone-0" autocomplete="off">
+        <div class="suggest" id="ownerphone-suggest-0"></div>
+      </div>
+    </div>
+
+    <div class="row form-group boxed box-5 box-5-0">
+      <label class="col-sm-6">
+        email
+      </label>
+      <div class="relative col-sm-12">
+        <input type="text" class="form-control" id="ownermail-0" autocomplete="off">
+        <div class="suggest" id="ownermail-suggest-0"></div>
+      </div>
+    </div>
+
     <div class="row form-group boxed box-21 box-21-6 box-4 box-4-16">
       <label class="col-sm-6">
         Người nhận mẫu
@@ -427,7 +447,8 @@
         Số điện thoại
       </label>
       <div class="relative col-sm-12">
-        <input type="text" class="form-control" id="form-insert-xphone" autocomplete="off">
+        <input type="text" class="form-control" id="xphone-0" autocomplete="off">
+        <div class="suggest" id="xphone-suggest-0"></div>
       </div>
     </div>
 
@@ -436,7 +457,8 @@
         fax
       </label>
       <div class="relative col-sm-12">
-        <input type="text" class="form-control" id="form-insert-fax" autocomplete="off">
+        <input type="text" class="form-control" id="fax-0" autocomplete="off">
+        <div class="suggest" id="fax-suggest-0"></div>
       </div>
     </div>
 
@@ -700,8 +722,9 @@
 
     <div class="row form-group boxed box-3 box-3-7">
       <label class="col-sm-6"> Bộ phận xét nghiệm </label>
-      <div class="col-sm-10">
-        <input type="text" id="form-insert-xexam" class="form-control">
+      <div class="col-sm-10 relative">
+        <input type="text" id="xexam-0" class="form-control">
+        <div class="suggest" id="xexam-suggest-0"></div>
       </div>
     </div>
 
@@ -914,9 +937,9 @@
   var formInsertOwnerSuggest = $("#form-insert-owner-suggest")
   var formInsertSamplePlace = $("#form-insert-sample-place")
   var formInsertSamplePlaceSuggest = $("#form-insert-sample-place-suggest")
-  var formInsertXphone = $("#form-insert-xphone")
+  var formInsertXphone = $("#xphone-0")
   var formInsertXnote = $("#form-insert-xnote")
-  var formInsertFax = $("#form-insert-fax")
+  var formInsertFax = $("#fax-0")
 
   var formInsertXresend = $("#form-insert-xresend")
   var formInsertXresender = $("#xresender-0")
@@ -924,10 +947,12 @@
   var formInsertXsender = $("#xsender-0")
   var formInsertXreceive = $("#form-insert-xreceive")
   var formInsertXreceiver = $("#xreceiver-0")
-  var formInsertXexam = $("#form-insert-xexam")
+  var formInsertXexam = $("#xexam-0")
   var formInsertVnote = $("#form-insert-vnote")
   var formInsertExamSample = $("#form-insert-examsample")
   var formInsertSampleCode5 = $("#form-insert-sample-code-5")
+  var formInsertOwnerPhone = $("#ownerphone-0")
+  var formInsertOwnerMail = $("#ownermail-0")
 
   var formSummary = $("#form-summary")
   var formSummaryFrom = $("#form-summary-from")
@@ -1106,7 +1131,12 @@
 
     installRemindv2('0', 'xsender');
     installRemindv2('0', 'xreceiver');
-    installRemindv2('0', 'xsender');
+    installRemindv2('0', 'xresender');
+    installRemindv2('0', 'xexam');
+    installRemindv2('0', 'xphone');
+    installRemindv2('0', 'fax');
+    installRemindv2('0', 'onwerphone');
+    installRemindv2('0', 'onwermail');
 
     installExamRemind()
     parseField(global_field)
@@ -1816,6 +1846,7 @@
       setTimeout(() => {
         var key = paintext(input.val())
         var html = ''
+        
         for (const index in remindv2[type]) {
           if (remindv2[type].hasOwnProperty(index)) {
             const element = paintext(remindv2[type][index]['name']);
@@ -1901,6 +1932,8 @@
     global_saved = 0
     parseSaved()
     parseBox(global_form)
+    formInsertOwnerPhone.val('')
+    formInsertOwnerMail.val('')
     formInsertCode.val('')
     formInsertSenderEmploy.val('')
     formInsertReceiverEmploy.val('')
@@ -2373,6 +2406,8 @@
             exam: getExam(),
             result: formInsertResult.val(),
             receive: formInsertReceive.val(),
+            ownerphone: formInsertOwnerPhone.val(),
+            ownermail: formInsertOwnerMail.val(),
             numberword: formInsertNumberWord.val(),
             type: getCheckbox('type', formInsertTypeOther),
           }
@@ -2471,6 +2506,8 @@
           }
 
           if (data['form']['printer'] >= 5) {
+            formInsertOwnerPhone.val(data['form']['ownerphone'])
+            formInsertOwnerMail.val(data['form']['ownermail'])
             formInsertReceiveLeader.val(data['form']['receiveleader'])
             formInsertOwner.val(data['form']['owner'])
             if (data['form']['noticetime']) {
@@ -2501,6 +2538,7 @@
         (response, status) => {
           checkResult(response, status).then(data => {
             remind = JSON.parse(data['remind'])
+            remindv2 = JSON.parse(data['remindv2'])
             if (global_form > global_saved) {
               global_saved = global_form
             }
@@ -2748,7 +2786,7 @@
             html = html.replace('target', data['target'])
 
             if (data['owner']) {
-              var x = '<p class="p14"> &emsp;&emsp; Thông tin mẫu:</p> <p class="p14"> &emsp;&emsp;&emsp; Chủ hộ: (owner)</p> <p class="p14"> &emsp;&emsp;&emsp; Nơi lấy mẫu: (sampleplace)</p>'
+              var x = '<p class="p14"> &emsp;&emsp; Thông tin mẫu:</p> <p class="p14"> &emsp;&emsp;&emsp; Chủ hộ: (owner)</p> <p class="p14"> &emsp;&emsp;&emsp; Nơi lấy mẫu: (sampleplace)</p> ()'
               x = x.replace('(sampleplace)', data['sampleplace'])
               x = x.replace('(owner)', data['owner'])
               html = html.replace('owner', x)

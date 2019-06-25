@@ -17,10 +17,10 @@
       <td> {sample} </td>
       <td>
         <span class="dropdown">
-          <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" id="menu-{index}" data-toggle="dropdown">
             <span class="glyphicon glyphicon-eye-open"></span>
           </button>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+          <ul class="dropdown-menu" role="menu" aria-labelledby="menu-{index}">
             <!-- BEGIN: printer -->
             <li role="presentation" onclick="preview({id}, {printercount})"><a role="menuitem" href="#"> Mẫu {printercount} </a></li>
             <!-- END: printer -->
