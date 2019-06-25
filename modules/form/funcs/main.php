@@ -70,9 +70,10 @@ if (!empty($action)) {
 			$printer = $nv_Request->get_string('printer', 'get/post', '');
 			$keyword = $nv_Request->get_string('keyword', 'get/post', 1);
 			$other = $nv_Request->get_array('other', 'get/post', 1);
+			$xcode = $nv_Request->get_string('xcode', 'get/post', 1);
 
 			$result['status'] = 1;
-			$result['html'] = formList($keyword, $page, $limit, $printer, $other);
+			$result['html'] = formList($keyword, $page, $limit, $printer, $other, $xcode);
 		break;
 		case 'preview':
 		case 'getForm':

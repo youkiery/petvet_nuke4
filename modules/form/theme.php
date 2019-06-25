@@ -115,18 +115,18 @@ function summaryContent($from, $end, $exam = '', $unit = '', $sample = '') {
 //   }
 // }
 
-function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = array('exam' => '', 'unit' => '', 'sample' => '')) {
+function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = array('exam' => '', 'unit' => '', 'sample' => ''), $xcode = '') {
   global $db, $sampleType, $user_info;
-
   $xtpl = new XTemplate("list.tpl", PATH);
+  $xcode = str_replace('/', ', ', $xcode);
 
-  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and printer >= '. $printer . ' and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%"';
+  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and printer >= '. $printer . ' and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%"';
   $query = $db->query($sqlCount);
   $count = $query->fetch();
 
   $xtpl->assign('total', $count['count']);
 
-  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and printer >= '. $printer .' and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
+  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and printer >= '. $printer .' and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%" order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
   $query = $db->query($sql);
 
   $index = 1;
@@ -134,18 +134,17 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
   $end = $from - 1;
   while ($row = $query->fetch()) {
       $end ++;
-      if (!empty($sampleType[$row['typeindex']])) {
-        $xtpl->assign('type', $sampleType[$row['typeindex']]);
-      }
-      else {
-        $xtpl->assign('type', $row['typevalue']);
-      }
       $xtpl->assign('index', $index++);
       $xtpl->assign('id', $row['id']);
+      $xtpl->assign('xcode', str_replace(', ', '/', $row['xcode']));
       $xtpl->assign('code', $row['code']);
       $xtpl->assign('number', $row['number']);
       $xtpl->assign('sample', $row['sample']);
-      // $xtpl->assign('printer', $row['printer']);
+      $xtpl->assign('printer', $row['printer']);
+      for ($i = 1; $i <= $row['printer']; $i++) { 
+        $xtpl->assign('printercount', $i);
+        $xtpl->parse('main.row.printer');
+      }
       $xtpl->assign('unit', $row['sender']);
       if (checkIsMod($user_info['userid'])) {
         $xtpl->parse('main.row.mod');

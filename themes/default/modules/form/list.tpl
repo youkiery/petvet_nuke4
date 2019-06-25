@@ -2,23 +2,31 @@
   <p> Hiển thị {from} - {end} trên {total} kết quả </p>
   <table class="table table-bordered">
     <tr>
-      <th>Số phiếu</th>
-      <th>Tên đơn vị</th>
-      <th>Số mẫu</th>
-      <th>Loại mẫu</th>
-      <th>Loại động vật</th>
+      <th> Số phiếu </th>
+      <th> Số ĐKXN </th>
+      <th> Tên đơn vị </th>
+      <th> Số mẫu </th>
+      <th> Loại động vật </th>
     </tr>
     <!-- BEGIN: row -->
     <tr>
       <td> {code} </td>
+      <td> {xcode} </td>
       <td> {unit} </td>
       <td> {number} </td>
-      <td> {type} </td>
       <td> {sample} </td>
       <td>
-        <button class="btn btn-info" onclick="preview({id})">
-          <span class="glyphicon glyphicon-eye-open"></span>
-        </button>  
+        <span class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-eye-open"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+            <!-- BEGIN: printer -->
+            <li role="presentation" onclick="preview({id}, {printercount})"><a role="menuitem" href="#"> Mẫu {printercount} </a></li>
+            <!-- END: printer -->
+          </ul>
+        </span>
+
         <!-- BEGIN: mod -->
         <button class="btn btn-info" onclick="edit({id})">
           <span class="glyphicon glyphicon-edit"></span>

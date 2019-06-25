@@ -133,10 +133,13 @@
   <div id="home" class="tab-pane active">
     <form onsubmit="filter(event)">
       <div class="row form-group">
-        <div class="col-sm-8">
+        <div class="col-sm-6">
           <input type="text" class="form-control" id="filter-keyword" placeholder="Mẫu phiếu" autocomplete="off">
         </div>
-        <div class="col-sm-8">
+        <div class="col-sm-6">
+          <input type="text" class="form-control" id="filter-xcode" placeholder="Số ĐKXN" autocomplete="off">
+        </div>
+        <div class="col-sm-6">
           <select class="form-control" id="filter-printer">
             <option value="1" selected>Mẫu 1</option>
             <option value="2">Mẫu 2</option>
@@ -145,7 +148,7 @@
             <option value="5">Mẫu 5</option>
           </select>
         </div>
-        <div class="col-sm-8">
+        <div class="col-sm-6">
           <select class="form-control" id="filter-limit">
             <option value="10">10</option>
             <option value="20">20</option>
@@ -156,13 +159,13 @@
         </div>
       </div>
       <div class="form-group row">
-        <div class="col-sm-8">
+        <div class="col-sm-6">
           <input type="text" class="form-control" id="filter-unit" placeholder="Đơn vị">
         </div>
-        <div class="col-sm-8">
+        <div class="col-sm-6">
           <input type="text" class="form-control" id="filter-exam" placeholder="Kết quả xét nghiệm">
         </div>
-        <div class="col-sm-8">
+        <div class="col-sm-6">
           <input type="text" class="form-control" id="filter-sample" placeholder="Loại động vật">
         </div>
       </div>      
@@ -936,6 +939,7 @@
   var formInsertNoticeTime = $("#form-insert-notice-time")
   var sample = $("#sample")
 
+  var filterXcode = $("#filter-xcode")
   var filterUnit = $("#filter-unit")
   var filterExam = $("#filter-exam")
   var filterSample = $("#filter-sample")
@@ -2516,7 +2520,7 @@
     e.preventDefault()
     $.post(
       strHref,
-      {action: 'filter', page: 1, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val(), other: getFilter()},
+      {action: 'filter', page: 1, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val(), other: getFilter(), xcode: filterXcode.val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           global_page = 1
@@ -2550,7 +2554,7 @@
     return ''
   }
 
-  function preview(id) {
+  function preview(id, printercount) {
     $.post(
       strHref,
       {action: 'preview', id: id},
@@ -2558,7 +2562,7 @@
         checkResult(response, status).then(data => {
           data['exam'] = JSON.parse(data['exam'])
           data['ig'] = JSON.parse(data['ig'])
-          printer(global_printer, data)
+          printer(printercount, data)
         }, () => {})
       }
     )
@@ -2624,9 +2628,9 @@
             
             html = html.replace('isenderunit', data['isenderunit'])
             html = html.replace('ireceiverunit', data['ireceiverunit'])
-            html = html.replace('xcode-0', data['xcode'][0])
-            html = html.replace('xcode-1', data['xcode'][1])
-            html = html.replace('xcode-2', data['xcode'][2])
+            html = html.replace('xcode-0', trim(data['xcode'][0]))
+            html = html.replace('xcode-1', trim(data['xcode'][1]))
+            html = html.replace('xcode-2', trim(data['xcode'][2]))
             html = html.replace('resend-0', resend[0])
             html = html.replace('resend-1', resend[1])
             html = html.replace('resend-2', resend[2])
@@ -2648,9 +2652,9 @@
             html = html.replace('xtable', parseFieldTable(data['ig']))
           break;
           case 3:
-            html = html.replace(/xcode-0/g, data['xcode'][0])
-            html = html.replace(/xcode-1/g, data['xcode'][1])
-            html = html.replace(/xcode-2/g, data['xcode'][2])
+            html = html.replace(/xcode-0/g, trim(data['xcode'][0]))
+            html = html.replace(/xcode-1/g, trim(data['xcode'][1]))
+            html = html.replace(/xcode-2/g, trim(data['xcode'][2]))
             html = html.replace(/xexam/g, data['xexam'])
             html = html.replace(/receiveleader/g, data['xresender'])
             html = html.replace('xtable', parseFieldTable2(data['ig']))
