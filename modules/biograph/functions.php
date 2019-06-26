@@ -12,7 +12,7 @@ if (!defined('NV_SYSTEM')) {
 }
 
 define('NV_IS_FORM', true); 
-define("PATH", '/modules/' . $module_file . '/template');
+define("PATH", 'modules/' . $module_file . '/template');
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 

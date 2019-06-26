@@ -11,14 +11,27 @@ if (!defined('PREFIX')) {
   die('Stop!!!');
 }
 
-function dogRowByList($list = 0) {
+function dogRowByList($keyword = '', $page = 1, $filter = 10) {
+  global $db;
   $index = 1;
-  if (!$list) {
-    $list = dogByKey();
-  }
   $xtpl = new XTemplate('dog-list.tpl', PATH);
-  var_dump($xtpl);die();
-  foreach ($list as $row) {
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%"';
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+
+  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%" limit ' . $filter . ' offset ' . (($page - 1) * $filter);
+  $query = $db->query($sql);
+
+  $xtpl->assign('keyword', 'Hiển thị');
+  if (strlen(trim($keyword)) > 0) {
+    $xtpl->assign('keyword', 'Tìm kiếm ' . $keyword . ',');
+  }
+
+  $xtpl->assign('from', ($page - 1) * $filter + 1);
+  $xtpl->assign('end', ($count + $filter >= ($page * $filter) ? $count : $page * $filter));
+  $xtpl->assign('total', $count);
+  while ($row = $query->fetch()) {
     $xtpl->assign('index', $index++);
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('microchip', $row['microchip']);

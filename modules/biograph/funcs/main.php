@@ -19,11 +19,10 @@ if (!empty($action)) {
 	switch ($action) {
 		case 'search':
 			$keyword = $nv_Request->get_string('keyword', 'post', '');
-			$list = dogByKey($keyword);
-
+			
 			$result['status'] = 1;
 			if (count($list)) {
-				$result['html'] = dogRowByList($list);
+				$result['html'] = dogRowByList($keyword);
 			}
 
 		break;

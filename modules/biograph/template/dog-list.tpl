@@ -1,5 +1,5 @@
 <!-- BEGIN: main -->
-<p>Tìm kiếm {keyword}, {from} - {to} trong {total} kết quả</p>
+<p> {keyword} {from} - {end} trong {total} kết quả</p>
 <table class="table">
   <tr>
     <th> STT </th>

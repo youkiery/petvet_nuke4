@@ -27,6 +27,18 @@ function dogByKey($keyword = '') {
   return $list;
 }
 
+function dogByKeyCount($keyword = '') {
+  global $db;
+  $list = array();
+  
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%"';
+  $query = $db->query($sql);
+  if (empty($row = $query->fetch())) {
+    return 0;
+  }
+  return $row['count'];
+}
+
 function cdate($time) {
   return date('d/m/Y', $time);
 }
