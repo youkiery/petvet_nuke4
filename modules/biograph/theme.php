@@ -16,8 +16,8 @@ function dogRowByList($list = 0) {
   if (!$list) {
     $list = dogByKey();
   }
-  die('a');
-  $xtpl = XTemplate('dog-list.tpl', PATH);
+  $xtpl = new XTemplate('dog-list.tpl', PATH);
+  var_dump($xtpl);die();
   foreach ($list as $row) {
     $xtpl->assign('index', $index++);
     $xtpl->assign('name', $row['name']);

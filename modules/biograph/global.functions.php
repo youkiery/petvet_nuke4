@@ -17,10 +17,9 @@ define('PERMISSION_MODULE', 1);
 function dogByKey($keyword = '') {
   global $db;
   $list = array();
-
-  $sql = 'select * from `'. PREFIX .'_pet` where name like '.$keyword.' or mircrochip like '.$keyword.'';
+  
+  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%"';
   $query = $db->query($sql);
-  die("b");
 
   while ($row = $query->fetch()) {
     $list[] = $row;
