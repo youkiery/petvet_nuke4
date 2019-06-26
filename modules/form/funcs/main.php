@@ -242,7 +242,7 @@ if (!empty($action)) {
 							}
 							$ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
 
-							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode($data['xcode'], ',') .'", isenderunit = "'. $data['isenderunit'] .'", ireceiverunit = "'. $data['ireceiverunit'] .'", xreceiver = "'. $data['xreceiver'] .'", xresender = "'. $data['xresender'] .'", xsender = "'. $data['xsender'] .'", iresend = '. $iresend .', xreceive = '. $xreceive .', xresend = "'. $xresend .'", xsend = '. $xsend .', ig = \''. $ig .'\', examdate = '. $examdate .', result = "'. $data['result'] .'" where id = ' . $id;
+							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode($data['xcode'], ',') .'", isenderunit = "'. $data['isenderunit'] .'", ireceiverunit = "'. $data['ireceiverunit'] .'", xreceiver = "'. $data['xreceiver'] .'", xresender = "'. $data['xresender'] .'", xsender = "'. $data['xsender'] .'", iresend = '. $iresend .', xreceive = '. $xreceive .', xresend = "'. $xresend .'", xsend = '. $xsend .', ig = \''. $ig .'\', examdate = '. $examdate .', result = "'. $data['result'] .'", note = "'.$data['note'].'" where id = ' . $id;
 							if ($db->query($sql)) {
 								checkPrinter($id, $form);
 								$result['notify'] = 'Đã cập nhật mẫu';
