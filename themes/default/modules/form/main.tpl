@@ -463,21 +463,21 @@
     </div>
 
     <div class="form-group row boxed box-1 box-1-10 box-21 box-21-13 box-31 box-31-7 box-4 box-4-8 box-5 box-5-8">
-      <label class="col-sm-6"> Số lượng mẫu </label>
+      <label class="col-sm-6"> Số lượng mẫu nhận </label>
       <div class="col-sm-12">
         <input type="number" class="form-control" id="form-insert-number" autocomplete="off">
       </div>
     </div>
 
     <div class="form-group row boxed box-1 box-1-11 box-21 box-21-14 box-31 box-31-8 box-4 box-4-9 box-5 box-5-9">
-      <label class="col-sm-6"> Số lượng mẫu (Chữ) </label>
+      <label class="col-sm-6"> Số lượng mẫu nhận (Chữ) </label>
       <div class="col-sm-12">
         <input type="text" class="form-control" id="form-insert-number-word" autocomplete="off">
       </div>
     </div>
 
-    <div class="form-group row boxed box-1 box-1-11 box-21 box-21-14 box-31 box-31-8 box-4 box-4-9 box-5 box-5-10">
-      <label class="col-sm-6"> Số lượng mẫu xét nghiệm </label>
+    <div class="form-group row boxed box-5 box-5-10">
+      <label class="col-sm-6"> Số lượng mẫu đạt yêu cầu </label>
       <div class="col-sm-12">
         <input type="text" class="form-control" id="form-insert-examsample" autocomplete="off">
       </div>
