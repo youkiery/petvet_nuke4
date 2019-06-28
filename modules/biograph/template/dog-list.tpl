@@ -10,14 +10,16 @@
     <th> Giống </th>
   </tr>
   <!-- BEGIN: row -->
-  <tr>
-    <td> {index} </td>
-    <td> {name} </td>
-    <td> {microchip} </td>
-    <td> {sex} </td>
-    <td> {dob} </td>
-    <td> {breed} </td>
-  </tr>
+  <a href="">
+    <tr>
+      <td> {index} </td>
+      <td> {name} </td>
+      <td> {microchip} </td>
+      <td> {sex} </td>
+      <td> {dob} </td>
+      <td> {breed} </td>
+    </tr>
+  </a>
   <!-- END: row -->
 </table>
 {nav}
