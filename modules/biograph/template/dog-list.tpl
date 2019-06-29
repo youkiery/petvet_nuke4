@@ -10,17 +10,16 @@
     <th> Giống </th>
   </tr>
   <!-- BEGIN: row -->
-  <a href="">
-    <tr>
-      <td> {index} </td>
-      <td> {name} </td>
-      <td> {microchip} </td>
-      <td> {sex} </td>
-      <td> {dob} </td>
-      <td> {breed} </td>
-    </tr>
-  </a>
+  <tr class="clickable-row" data-href='/index.php?nv=biograph&op=detail&id={id}'>
+    <td> {index} </td>
+    <td> {name} </td>
+    <td> {microchip} </td>
+    <td> {sex} </td>
+    <td> {dob} </td>
+    <td> {breed} </td>
+  </tr>
   <!-- END: row -->
 </table>
 {nav}
+
 <!-- END: main -->

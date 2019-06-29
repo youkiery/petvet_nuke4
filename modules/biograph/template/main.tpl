@@ -19,6 +19,12 @@
     var keyword = $("#keyword")
     var thisUrl = '/biograph/main'
 
+    $(document).ready(() => {
+      $(".clickable-row").click(function() {
+        window.location.replace($(this).data("href"));
+      });
+    });
+
     function search() {
       request(thisUrl,
         {action: 'search', keyword: keyword.val()}).then(data => {

@@ -15,4 +15,3 @@ define('NV_IS_FORM', true);
 define("PATH", 'modules/' . $module_file . '/template');
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
-

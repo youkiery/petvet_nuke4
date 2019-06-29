@@ -34,6 +34,7 @@ function dogRowByList($keyword = '', $page = 1, $filter = 10) {
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index++);
     $xtpl->assign('name', $row['name']);
+    $xtpl->assign('id', $row['id']);
     $xtpl->assign('microchip', $row['microchip']);
     $xtpl->assign('breed', $row['breed']);
     $xtpl->assign('sex', $row['sex']);
