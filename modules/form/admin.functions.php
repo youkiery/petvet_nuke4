@@ -17,18 +17,6 @@ define("PATH", NV_ROOTDIR . "/themes/" . $global_config['admin_theme'] . "/modul
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';
 
-function getUserPermission($userid) {
-  global $db, $db_config;
-
-  $sql = 'select * from `'. $db_config['prefix'] .'_user_allow` where userid = ' . $userid;
-  $query = $db->query($sql);
-
-  if (empty($row = $query->fetch() && $row['former'])) {
-    return 0;
-  }
-  return $row['former'];
-}
-
 function getNotAllow($key = '') {
   global $db, $db_config;
 

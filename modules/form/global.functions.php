@@ -14,6 +14,18 @@ if (!defined('NV_MAINFILE')) {
 define("PREFIX", $db_config['prefix'] . "_" . $module_name);
 define('PERMISSION_MODULE', 1);
 
+function getUserPermission($userid) {
+  global $db, $db_config;
+
+	$sql = 'select * from `'. $db_config['prefix'] .'_user_allow` where userid = ' . $userid;
+  $query = $db->query($sql);
+
+  if (empty($row = $query->fetch()) && empty($row['former'])) {
+    return 0;
+  }
+  return $row['former'];
+}
+
 function totime($time) {
   if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
     $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);
@@ -69,7 +81,9 @@ function getRemindv2($type = '') {
 		if (empty($list[$row['type']])) {
 			$list[$row['type']] = array();
 		}
-		$list[$row['type']][] = $row;
+		if (!empty($row['name'])) {
+			$list[$row['type']][] = $row;
+		}
 	}
 
 	return $list;

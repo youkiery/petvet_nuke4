@@ -127,7 +127,19 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
   global $db, $sampleType, $user_info;
   $xtpl = new XTemplate("list.tpl", PATH);
   $xcode = str_replace('/', ', ', $xcode);
-  
+
+  // $lowest = 5;
+  // if (!empty($user_info['userid'])) {
+  //   $risk = getUserPermission($user_info['userid']);
+  //   $risk = explode(',', $risk);
+  //   if (count($risk)) {
+  //     $lowest = $risk[0];
+  //   }
+  // }
+  // if ($lowest >= $printer) {
+  //   $printer = $lowest;
+  // }
+
   $part = array('printer >= ' . $printer);
   if ($printer >= 1) {
     $part[] = 'code like "%'. $keyword .'%"';
@@ -156,8 +168,9 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
       $end ++;
       $xtpl->assign('index', $index++);
       $xtpl->assign('id', $row['id']);
-      $xtpl->assign('xcode', str_replace(', ', '/', $row['xcode']));
-      $xtpl->assign('xcode', str_replace(',', '/', $row['xcode']));
+      $xcode = str_replace(', ', '/', $row['xcode']);
+      $xcode = str_replace(',', '/', $xcode);
+      $xtpl->assign('xcode', $xcode);
       $xtpl->assign('code', $row['code']);
       $xtpl->assign('number', $row['number']);
       $xtpl->assign('sample', $row['sample']);

@@ -177,10 +177,10 @@ if (!empty($action)) {
 								checkRemindRow($data['receiver'], 1);
 
 								// reminded exam
-								foreach ($exam as $examMain) {
+								foreach ($data['exam'] as $examMain) {
 									checkRemindv2($examMain['symbol'], 'symbol');
 									checkRemindv2($examMain['method'], 'method');
-									foreach ($examMain as $examNote) {
+									foreach ($examMain['exam'] as $examNote) {
 										checkRemindv2($examNote, 'exam');
 									}
 								}
@@ -202,7 +202,6 @@ if (!empty($action)) {
 								}
 								else {
 									$sql = 'insert into `'. PREFIX .'_row` (code, sender, receive, resend, stateIndex, stateValue, receiver, ireceive, iresend, form, number, exam, sample, sampleCode, typeIndex, typeValue, time, xnote, numberword) values("'. $data['code'] .'", "'. $data['sender'] .'", ' . totime($data['receive']) . ', ' . totime($data['resend']) . ', '. $data['state']['index'] .', "'. $data['state']['value'] . '", "' . $data['receiver'] . '", '. totime($data['ireceive']) . ',  '. totime($data['ireceive']) . ', "'. implode(', ', $data['forms']) .'", ' . $data['number'] .', \'' . $exam . '\', "'. $data['sample'] .'", "'. $data['samplecode'] .'", '. $data['type']['index'] .', "'. $data['type']['value'] .'", '. time() . ', "'. $data['xnote'] .'", "'. $data['numberword'] .'")';
-									die($sql);
 									$query = $db->query($sql);
 									$result['id'] = $db->lastInsertId();
 								}
@@ -234,11 +233,11 @@ if (!empty($action)) {
 							$xsend = totime($data['xsend']);
 							$examdate = totime($data['examdate']);
 
-							foreach ($exam as $examMain) {
+							foreach ($data['ig'] as $examMain) {
 								checkRemindv2($examMain['symbol'], 'symbol');
 								checkRemindv2($examMain['method'], 'method');
-								foreach ($examMain as $examNote) {
-									checkRemindv2($examNote, 'exam');
+								foreach ($examMain['mainer'] as $examNote) {
+									checkRemindv2($examNote['main'], 'exam');
 								}
 							}
 							$ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
@@ -263,6 +262,13 @@ if (!empty($action)) {
 							$ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
 							checkRemindv2($data['xresender'], 'xresender');
 							checkRemindv2($data['xexam'] , 'xexam');
+							foreach ($data['ig'] as $examMain) {
+								checkRemindv2($examMain['symbol'], 'symbol');
+								checkRemindv2($examMain['method'], 'method');
+								foreach ($examMain['mainer'] as $examNote) {
+									checkRemindv2($examNote['main'], 'exam');
+								}
+							}
 
 							$sql = 'update `'. PREFIX .'_row` set ig = \''. $ig .'\', xresender = "'. $data['xresender'] .'", xexam = "'. $data['xexam'] .'", vnote = "'. $data['vnote'] .'" where id = ' . $id;
 							if ($db->query($sql)) {
@@ -292,10 +298,10 @@ if (!empty($action)) {
 							// check reminded
 							checkRemindv2($data['xphone'], 'xphone');
 							checkRemindv2($data['fax'], 'fax');
-							foreach ($exam as $examMain) {
+							foreach ($data['exam'] as $examMain) {
 								checkRemindv2($examMain['symbol'], 'symbol');
 								checkRemindv2($examMain['method'], 'method');
-								foreach ($examMain as $examNote) {
+								foreach ($examMain['exam'] as $examNote) {
 									checkRemindv2($examNote, 'exam');
 								}
 							}
@@ -329,10 +335,11 @@ if (!empty($action)) {
 
 							checkRemindv2($data['ownerphone'], 'ownerphone');
 							checkRemindv2($data['ownermail'], 'ownermail');
-							foreach ($exam as $examMain) {
+							foreach ($data['exam'] as $examMain) {
 								checkRemindv2($examMain['symbol'], 'symbol');
 								checkRemindv2($examMain['method'], 'method');
-								foreach ($examMain as $examNote) {
+								foreach ($examMain['exam'] as $examNote) {
+									echo $examNote;
 									checkRemindv2($examNote, 'exam');
 								}
 							}
