@@ -33,6 +33,8 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("main.tpl", "modules/biograph/template");
 
+// updatePet(array('userid' => 1, 'name' => 'Tũn', 'dateofbirth' => '1561796000', 'species' => 'Giống', 'breed' => 'Loài', 'sex' => 'cái', 'color' => 'Màu', 'microchip' => '48751471200046'), 1);
+
 $xtpl->assign("content", dogRowByList());
 $xtpl->parse("main");
 $contents = $xtpl->text("main");

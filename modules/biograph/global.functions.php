@@ -14,31 +14,6 @@ if (!defined('NV_MAINFILE')) {
 define("PREFIX", $db_config['prefix'] . "_" . $module_name);
 define('PERMISSION_MODULE', 1);
 
-function dogByKey($keyword = '') {
-  global $db;
-  $list = array();
-  
-  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%"';
-  $query = $db->query($sql);
-
-  while ($row = $query->fetch()) {
-    $list[] = $row;
-  }
-  return $list;
-}
-
-function dogByKeyCount($keyword = '') {
-  global $db;
-  $list = array();
-  
-  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%"';
-  $query = $db->query($sql);
-  if (empty($row = $query->fetch())) {
-    return 0;
-  }
-  return $row['count'];
-}
-
 function cdate($time) {
   return date('d/m/Y', $time);
 }
@@ -76,6 +51,111 @@ function getRemind($type = '') {
 	}
 
 	return $list;
+}
+
+function getPetById($id) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
+  $query = $db->query($sql);
+
+  return $query->fetch();
+}
+
+function insertPet($data) {
+  global $db;
+
+  $sql = 'insert into `'. PREFIX .'_pet` (userid, name, dateofbirth, species, breed, sex, color, microchip) values ('. $data['userid'] .', "'. $data['name'] .'", '. $data['dateofbirth'] .', "'. $data['species'] .'", "'. $data['breed'] .'", "'. $data['sex'] .'", "'. $data['color'] .'", '. $data['microchip'] .')';
+  if ($db->query($sql)) {
+    return trueWx;
+  }
+  return false;
+}
+
+function insertUser($data) {
+  global $db;
+
+  $sql = 'insert into `'. PREFIX .'_user` (username, password, fullname, mobile, address) values ('. $data['username'] .', "'. md5('vet_' . $data['password']) .'", '. $data['fullname'] .', "'. $data['mobile'] .'", "'. $data['address'] .'")';
+  if ($db->query($sql)) {
+    return true;
+  }
+  return false;
+}
+
+function updatePet($data, $id) {
+  global $db;
+  $sql_part = array();
+  foreach ($data as $key => $value) {
+    $sql_part[] = $key . ' = "' . $value . '" ';
+  }
+
+  $sql = 'update `'. PREFIX .'_pet` set ' . implode(', ', $sql_part) . ' where id = ' . $id;
+
+  if ($db->query($sql)) {
+    return true;
+  }
+  return false;
+}
+
+function updateUser($data, $id) {
+  global $db;
+  $sql_part = array();
+  foreach ($data as $key => $value) {
+    $sql_part[] = $key . ' = "' . $value . '" ';
+  }
+
+  $sql = 'update `'. PREFIX .'_user` set ' . implode(', ', $sql_part) . ' where id = ' . $id;
+
+  if ($db->query($sql)) {
+    return true;
+  }
+  return false;
+}
+
+function checkUser($username, $password) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_user` where username = "'. $username .'" and password = "'. md5('pet_' . $password) .'"';
+  $query = $db->query($sql);
+
+  if ($row = $query->fetch()) {
+    return $row;
+  }
+  return false;
+}
+
+function getPetDeactiveList($keyword = '', $page = 1, $limit = 10) {
+  global $db;
+  $data = array('list' => array(), 'count' => 0);
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'. $keyword .'%" or microchip like "%'.$keyword.'%" and active = 0';
+  $query = $db->query($sql);
+  $data['count'] = $query->fetch()['count'];
+
+  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $keyword .'%" or microchip like "%'.$keyword.'%" and active = 0 limit ' . $limit . ' offset ' . (($page - 1) * $limit);
+  $query = $db->query($sql);
+
+  while($row = $query->fetch()) {
+    $data['list'][] = $row;
+  }
+  return $data;
+}
+
+function getPetActiveList($keyword = '', $page = 1, $limit = 10) {
+  global $db;
+  $data = array('list' => array(), 'count' => 0);
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%"';
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+
+  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%" limit ' . $filter . ' offset ' . (($page - 1) * $filter);
+  $query = $db->query($sql);
+
+  while($row = $query->fetch()) {
+    $data['list'][] = $row;
+  }
+  return $data;
 }
 
 function deuft8($str) {

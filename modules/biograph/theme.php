@@ -16,12 +16,7 @@ function dogRowByList($keyword = '', $page = 1, $filter = 10) {
   $index = 1;
   $xtpl = new XTemplate('dog-list.tpl', PATH);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%"';
-  $query = $db->query($sql);
-  $count = $query->fetch()['count'];
-
-  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%" limit ' . $filter . ' offset ' . (($page - 1) * $filter);
-  $query = $db->query($sql);
+  $data = getPetActiveList($keyword, $page, $filter);
 
   $xtpl->assign('keyword', 'Hiển thị');
   if (strlen(trim($keyword)) > 0) {
@@ -29,7 +24,7 @@ function dogRowByList($keyword = '', $page = 1, $filter = 10) {
   }
 
   $xtpl->assign('from', ($page - 1) * $filter + 1);
-  $xtpl->assign('end', ($count + $filter >= ($page * $filter) ? $count : $page * $filter));
+  $xtpl->assign('end', ($data['count'] + $filter >= ($page * $filter) ? $count : $page * $filter));
   $xtpl->assign('total', $count);
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index++);
