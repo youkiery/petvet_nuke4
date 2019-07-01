@@ -112,18 +112,24 @@ if (!empty($action)) {
 					$result['form']['state']['value'] = $result['form']['statevalue'];
 				}
 				
-				if ($action == 'preview') {
-					$result = $result['form'];
-					if (!empty($result['form'])) {
-						$result['form'] = explode(', ', $result['form']);
-					}
-					if (!empty($result['exam'])) {
-						$result['exam'] = explode(', ', $result['exam']);
-					}
-					if (!empty($result['method'])) {
-						$result['method'] = explode(', ', $result['method']);
-					}
-				}
+				$temp = $result['form']['status'];
+				$result['form']['status'] = array();
+				$result['form']['status']['index'] = $temp;
+				
+				// if ($action == 'preview') {
+				// 	$result = $result['form'];
+				// 	if (!empty($result['form'])) {
+				// 		$result['form'] = explode(', ', $result['form']);
+				// 	}
+				// 	if (!empty($result['exam'])) {
+				// 		$result['exam'] = explode(', ', $result['exam']);
+				// 	}
+				// 	if (!empty($result['method'])) {
+				// 		$result['method'] = explode(', ', $result['method']);
+				// 	}
+				// }
+				// var_dump($result['form']);
+				// die();
 				$result['status'] = 1;
 			}
 		break;
@@ -199,12 +205,12 @@ if (!empty($action)) {
 								// 	checkRemindv2($value, 'method');
 								// }
 								if ($id) {
-									$sql = 'update `'. PREFIX .'_row` set code = "'. $data['code'] .'", sender = "' . $data['sender'] . '", receive = ' . totime($data['receive']) . ', resend = ' . totime($data['resend']) . ', stateIndex = '. $data['state']['index'] .', stateValue = "'. $data['state']['value'] .'", receiver = "' . $data['receiver'] . '", ireceive = '. totime($data['ireceive']) . ', iresend = '. totime($data['iresend']) . ', form = "'. implode(', ', $data['forms']) .'", number = ' . $data['number'] .', exam = \'' . $exam . '\', sample = "'. $data['sample'] .'", sampleCode = "'. $data['samplecode'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", xnote = "'. $data['xnote'] .'", numberword = "'. $data['numberword'] .'" where id = ' . $id;
+									$sql = 'update `'. PREFIX .'_row` set code = "'. $data['code'] .'", sender = "' . $data['sender'] . '", receive = ' . totime($data['receive']) . ', resend = ' . totime($data['resend']) . ', stateIndex = '. $data['state']['index'] .', stateValue = "'. $data['state']['value'] .'", receiver = "' . $data['receiver'] . '", ireceive = '. totime($data['ireceive']) . ', iresend = '. totime($data['iresend']) . ', form = "'. implode(', ', $data['form']) .'", number = ' . $data['number'] .', exam = \'' . $exam . '\', sample = "'. $data['sample'] .'", sampleCode = "'. $data['samplecode'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", xnote = "'. $data['xnote'] .'", numberword = "'. $data['numberword'] .'" where id = ' . $id;
 									$query = $db->query($sql);
 									$result['id'] = $id;
 								}
 								else {
-									$sql = 'insert into `'. PREFIX .'_row` (code, sender, receive, resend, stateIndex, stateValue, receiver, ireceive, iresend, form, number, exam, sample, sampleCode, typeIndex, typeValue, time, xnote, numberword) values("'. $data['code'] .'", "'. $data['sender'] .'", ' . totime($data['receive']) . ', ' . totime($data['resend']) . ', '. $data['state']['index'] .', "'. $data['state']['value'] . '", "' . $data['receiver'] . '", '. totime($data['ireceive']) . ',  '. totime($data['ireceive']) . ', "'. implode(', ', $data['forms']) .'", ' . $data['number'] .', \'' . $exam . '\', "'. $data['sample'] .'", "'. $data['samplecode'] .'", '. $data['type']['index'] .', "'. $data['type']['value'] .'", '. time() . ', "'. $data['xnote'] .'", "'. $data['numberword'] .'")';
+									$sql = 'insert into `'. PREFIX .'_row` (code, sender, receive, resend, stateIndex, stateValue, receiver, ireceive, iresend, form, number, exam, sample, sampleCode, typeIndex, typeValue, time, xnote, numberword) values("'. $data['code'] .'", "'. $data['sender'] .'", ' . totime($data['receive']) . ', ' . totime($data['resend']) . ', '. $data['state']['index'] .', "'. $data['state']['value'] . '", "' . $data['receiver'] . '", '. totime($data['ireceive']) . ',  '. totime($data['ireceive']) . ', "'. implode(', ', $data['form']) .'", ' . $data['number'] .', \'' . $exam . '\', "'. $data['sample'] .'", "'. $data['samplecode'] .'", '. $data['type']['index'] .', "'. $data['type']['value'] .'", '. time() . ', "'. $data['xnote'] .'", "'. $data['numberword'] .'")';
 									$query = $db->query($sql);
 									$result['id'] = $db->lastInsertId();
 								}

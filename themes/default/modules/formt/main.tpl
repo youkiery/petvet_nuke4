@@ -189,7 +189,7 @@
       </div>
     </div>
     
-    <div class="row form-group boxed box-2 box-2-1 box-3 box-3-1 box-21 box-21-1 box-31 box-31-2 box-4 box-4-1 box-5 box-5-19">
+    <div class="row form-group boxed box-2 box-2-1 box-3 box-3-1 box-4 box-4-1 box-5 box-5-19">
       <label class="col-sm-6">Số ĐKXN</label>
       <div class="col-sm-6">
         <input type="text" class="form-control input-box xcode" id="form-insert-xcode-1" autocomplete="off">
@@ -199,26 +199,6 @@
       </div>
       <div class="col-sm-6">
         <input type="text" class="form-control input-box xcode" id="form-insert-xcode-3" autocomplete="off">
-      </div>
-    </div>
-
-    <div class="row form-group boxed box-31 box-31-3">
-      <label class="col-sm-6">Số trang</label>
-      <div class="col-sm-6">
-        <input type="text" class="form-control input-box page" id="form-insert-page-1" autocomplete="off">
-      </div>
-      <div class="col-sm-6">
-        <input type="text" class="form-control input-box page" id="form-insert-page-2" autocomplete="off">
-      </div>
-    </div>
-
-    <div class="row form-group boxed box-31 box-31-4">
-      <label class="col-sm-6">Liên</label>
-      <div class="col-sm-6">
-        <input type="text" class="form-control input-box no" id="form-insert-no-1" autocomplete="off">
-      </div>
-      <div class="col-sm-6">
-        <input type="text" class="form-control input-box no" id="form-insert-no-2" autocomplete="off">
       </div>
     </div>
 
@@ -232,7 +212,7 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-21 box-21-2 box-4 box-4-14">
+    <div class="row form-group boxed box-4 box-4-14">
       <label class="col-sm-6"> Thời gian nhận mẫu </label>
       <label class="col-sm-9">
         Giờ 
@@ -252,14 +232,14 @@
       </label>
     </div>
 
-    <div class="row form-group boxed box-1 box-1-3 box-21 box-21-3 box-31 box-31-1 box-4 box-4-15 box-5 box-5-14">
+    <div class="row form-group boxed box-1 box-1-3 box-4 box-4-15 box-5 box-5-14">
       <label class="col-sm-6">Ngày nhận mẫu</label>
       <div class="col-sm-12">
         <input type="text" class="form-control" id="form-insert-receive" autocomplete="off">
       </div>
     </div>
     
-    <div class="row form-group boxed box-1 box-1-4 box-31 box-31-14">
+    <div class="row form-group boxed box-1 box-1-4">
       <label class="col-sm-6">Ngày hẹn trả kết quả</label>
       <div class="col-sm-12">
         <input type="text" class="form-control" id="form-insert-resend" autocomplete="off">
@@ -342,7 +322,7 @@
       </button>
     </div>
 
-    <div class="row form-group boxed box-21 box-21-4">
+    <div class="row form-group boxed">
       <label class="col-sm-6">
         Người giao mẫu
       </label>
@@ -352,7 +332,7 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-2 box-2-2 box-21 box-21-5 box-31 box-31-5 box-4 box-4-2">
+    <div class="row form-group boxed box-2 box-2-2 box-4 box-4-2">
       <label class="col-sm-6">
         Bộ phận giao mẫu - Khách hàng yêu cầu xét nghiệm
       </label>
@@ -422,7 +402,7 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-21 box-21-6 box-4 box-4-16">
+    <div class="row form-group boxed box-4 box-4-16">
       <label class="col-sm-6">
         Người nhận mẫu
       </label>
@@ -432,7 +412,7 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-2 box-2-3 box-21 box-21-7">
+    <div class="row form-group boxed box-2 box-2-3">
       <label class="col-sm-6">
         Bộ phận nhận mẫu
       </label>
@@ -442,7 +422,7 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-21 box-21-8 box-4 box-4-4">
+    <div class="row form-group boxed box-4 box-4-4">
       <label class="col-sm-6">
         Số điện thoại
       </label>
@@ -452,7 +432,7 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-21 box-21-8 box-4 box-4-5">
+    <div class="row form-group boxed box-4 box-4-5">
       <label class="col-sm-6">
         fax
       </label>
@@ -462,14 +442,14 @@
       </div>
     </div>
 
-    <div class="form-group row boxed box-1 box-1-10 box-21 box-21-13 box-31 box-31-7 box-4 box-4-8 box-5 box-5-10">
+    <div class="form-group row boxed box-1 box-1-10 box-4 box-4-8 box-5 box-5-10">
       <label class="col-sm-6"> Số lượng mẫu nhận </label>
       <div class="col-sm-12">
         <input type="number" class="form-control" id="form-insert-number" autocomplete="off">
       </div>
     </div>
 
-    <div class="form-group row boxed box-1 box-1-11 box-21 box-21-14 box-31 box-31-8 box-4 box-4-9 box-5 box-5-11">
+    <div class="form-group row boxed box-1 box-1-11 box-4 box-4-9 box-5 box-5-11">
       <label class="col-sm-6"> Số lượng mẫu nhận (Chữ) </label>
       <div class="col-sm-12">
         <input type="text" class="form-control" id="form-insert-number-word" autocomplete="off">
@@ -483,7 +463,7 @@
       </div>
     </div>
 
-    <div class="boxed box-1 box-1-12 box-21 box-21-9 box-31 box-31-6 box-4 box-4-7 box-5 box-5-9">
+    <div class="boxed box-1 box-1-12 box-4 box-4-7 box-5 box-5-9">
       <label> Loại mẫu </label>
       <div id="type-0">
         <input type="radio" name="type" class="check-box type" id="typed-0" checked>
@@ -516,21 +496,14 @@
       </div>
     </div>
 
-    <div class="form-group row boxed box-1 box-1-13 box-21 box-21-10 box-31 box-31-9 box-4 box-4-6 box-5 box-5-8">
+    <div class="form-group row boxed box-1 box-1-13 box-4 box-4-6 box-5 box-5-8">
       <label class="col-sm-6"> Loài vật được lấy mẫu </label>
       <div class="col-sm-12">
         <input type="text" class="form-control sample" id="form-insert-sample" autocomplete="off">
       </div>
     </div>
 
-    <!-- <div class="form-group row boxed box-21 box-21-11">
-      <label class="col-sm-6"> Số lượng mẫu </label>
-      <div class="col-sm-12">
-        <input type="text" class="form-control" id="form-insert-number2" autocomplete="off">
-      </div>
-    </div> -->
-
-    <div class="form-group row boxed box-1 box-1-14 box-21 box-21-16 box-31 box-31-10">
+    <div class="form-group row boxed box-1 box-1-14">
       <label class="col-sm-6"> Ký hiệu mẫu </label>
       <div class="col-sm-12" id="form-insert-sample-parent">
         <input type="text" class="form-control" id="form-insert-sample-code" autocomplete="off">
@@ -544,7 +517,7 @@
       </div>
     </div>
 
-    <div class="form-group row boxed box-21 box-21-15 box-4 box-4-11">
+    <div class="form-group row boxed box-4 box-4-11">
       <label class="col-sm-6"> Tình trạng mẫu </label>
       <div>
         <input type="radio" name="status" class="check-box status status-0" checked>
@@ -556,47 +529,7 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-21 box-21-17 box-31 box-31-11">
-      <label> Đính kèm danh sách nhận diện mẫu </label>
-      <div>
-        <input type="radio" name="attach" class="check-box attach attach-0" checked>
-        Có
-      </div>
-      <div>
-        <input type="radio" name="attach" class="check-box attach attach-1">
-        Không
-      </div>
-    </div>
-
-    <div class="boxed box-21 box-21-18">
-      <label> Hình thức bảo quản </label>
-      <div>
-        <input type="radio" name="xstatus" class="check-box xstatus status-0" checked>
-        Thùng đá
-      </div>
-      <div>
-        <input type="radio" name="xstatus" class="check-box xstatus status-1">
-        Xe lạnh
-      </div>
-      <div>
-        <input type="radio" name="xstatus" class="check-box xstatus status-2">
-        Phương tiện khác
-      </div>
-    </div>
-
-    <div class="boxed box-21 box-21-19">
-      <label class="6"> Chất lượng chung của mẫu </label>
-      <div>
-        <input type="radio" name="quality" class="check-box quality quality-0" checked>
-        Đạt
-      </div>
-      <div>
-        <input type="radio" name="quality" class="check-box quality quality-1">
-        Không đạt
-      </div>
-    </div>
-
-    <div class="boxed box-1 box-1-15 box-21 box-21-20 box-31 box-31-12 box-4 box-4-17 box-5 box-5-16 bordered">
+    <div class="boxed box-1 box-1-15 box-4 box-4-17 box-5 box-5-16 bordered">
       <label>
         Yêu cầu xét nghiệm
         <button class="btn btn-success" onclick="insertMethod()"> <span class="glyphicon glyphicon-plus"></span> </button>
@@ -604,45 +537,12 @@
       <div id="form-insert-request"></div>
     </div>
 
-    <div class="row form-group boxed box-1 box-1-16 box-21 box-21-21">
+    <div class="row form-group boxed box-1 box-1-16">
       <label class="col-sm-6">
         Ghi chú
       </label>
       <div class="col-sm-20">
         <textarea class="form-control" id="form-insert-xnote" autocomplete="off"></textarea>
-      </div>
-    </div>
-
-    <div class="row form-group boxed box-21 box-21-22">
-      <label class="col-sm-6"> Thời gian kết thúc</label>
-      <label class="col-sm-6">
-        Giờ 
-        <select class="form-control" id="form-insert-ended-hour">
-          <!-- BEGIN: hour2 -->
-          <option value="{value}">{value}</option>
-          <!-- END: hour2 -->
-        </select>
-      </label>
-      <label class="col-sm-6">
-        Phút 
-        <select class="form-control" id="form-insert-ended-minute">
-          <!-- BEGIN: minute2 -->
-          <option value="{value}">{value}</option>
-          <!-- END: minute2 -->
-        </select>
-      </label>
-      <label class="col-sm-6">
-        Số bản in
-        <input type="text" class="form-control" id="form-insert-ended-copy" autocomplete="off">
-      </label>
-    </div>
-
-    <div class="row form-group boxed box-31 box-31-13">
-      <label class="col-sm-6">
-        Yêu cầu khác
-      </label>
-      <div class="col-sm-20">
-        <input type="text" class="form-control" id="form-insert-other" autocomplete="off">
       </div>
     </div>
 
@@ -696,7 +596,7 @@
         Người phụ trách
       </label>
       <div class="col-sm-20">
-        <input type="text" class="form-control" id="form-insert-receive-leader">
+        <input type="text" class="form-control" id="form-insert-receive-leader" autocomplete="off">
       </div>
     </div>
 
@@ -723,7 +623,7 @@
     <div class="row form-group boxed box-3 box-3-7">
       <label class="col-sm-6"> Bộ phận xét nghiệm </label>
       <div class="col-sm-10 relative">
-        <input type="text" id="xexam-0" class="form-control">
+        <input type="text" id="xexam-0" class="form-control" autocomplete="off">
         <div class="suggest" id="xexam-suggest-0"></div>
       </div>
     </div>
@@ -731,14 +631,14 @@
     <div class="row form-group boxed box-2 box-2-8">
       <label class="col-sm-6"> Ngày giao mẫu </label>
       <div class="col-sm-10">
-        <input type="text" id="form-insert-xsend" class="form-control">
+        <input type="text" id="form-insert-xsend" class="form-control" autocomplete="off">
       </div>
     </div>
 
     <div class="row form-group boxed box-2 box-2-9">
       <label class="col-sm-6"> Người giao mẫu </label>
       <div class="col-sm-10 relative">
-        <input type="text" id="xsender-0" class="form-control">
+        <input type="text" id="xsender-0" class="form-control" autocomplete="off">
         <div class="suggest" id="xsender-suggest-0"></div>
       </div>
     </div>
@@ -746,14 +646,14 @@
     <div class="row form-group boxed box-2 box-2-10">
       <label class="col-sm-6"> Ngày nhận mẫu </label>
       <div class="col-sm-10">
-        <input type="text" id="form-insert-xreceive" class="form-control">
+        <input type="text" id="form-insert-xreceive" class="form-control" autocomplete="off">
       </div>
     </div>
 
     <div class="row form-group boxed box-2 box-2-11">
       <label class="col-sm-6"> Người nhận mẫu </label>
       <div class="col-sm-10 relative">
-        <input type="text" id="xreceiver-0" class="form-control">
+        <input type="text" id="xreceiver-0" class="form-control" autocomplete="off">
         <div class="suggest" id="xreceiver-suggest-0"></div>
       </div>
     </div>
@@ -761,14 +661,14 @@
     <div class="row form-group boxed box-2 box-2-12">
       <label class="col-sm-6"> Ngày giao kết quả </label>
       <div class="col-sm-10">
-        <input type="text" id="form-insert-xresend" class="form-control">
+        <input type="text" id="form-insert-xresend" class="form-control" autocomplete="off">
       </div>
     </div>
 
     <div class="row form-group boxed box-2 box-2-13 box-3 box-3-8">
       <label class="col-sm-6"> Người phụ trách bộ phận xét nghiệm </label>
       <div class="col-sm-10 relative">
-        <input type="text" class="form-control" id="xresender-0">
+        <input type="text" class="form-control" id="xresender-0" autocomplete="off">
         <div class="suggest" id="xresender-suggest-0"></div>
       </div>
     </div>
@@ -829,7 +729,7 @@
     1: '<table class="table-bordered" border="1"><tr><td rowspan="2" class="cell-center" style="width: 20%; padding: 10pt 21pt;">CHI CỤC THÚ Y VÙNG V</td><td class="cell-center p15" style="height: 30pt;"> <b>PHIẾU GIẢI QUYẾT HỒ SƠ</b></td></tr><tr><td class="no-bordertop">Số: code/TYV5-TH</td></tr></table><p>&emsp; Tên đơn vị: senderemploy</p><p><div class="inline c50">&emsp; Ngày nhận: receive </div><div class="inline c50">Ngày hẹn trả kết quả: resend </div></p><p><div class="inline c30">&emsp; Hình thức nhận: </div><div class="inline c20">status-0 Trực tiếp</div><div class="inline c20"> status-1 Bưu điện</div><div class="inline c30">Khác: status-2</div></p><p>&emsp; Người nhận hồ sơ: receiveremploy</p><p><div class="inline c30">&emsp; Phòng chuyên môn:</div><div class="inline c40">Ngày nhận: ireceive </div><div class="inline c30">Ngày trả: iresend </div></p><table class="table-bordered" border="1"><tr><td class="text-center" style="height: 240px; vertical-align: baseline;"> <p class="text-center"> <u>Hồ sơ gồm:</u> </p> <div style="text-align: left;"> formcontent </div></td></tr></table><br><table class="table-bordered" border="1"><tr><th class="p13"> <b>Ý kiến của phòng, Bộ phận chịu trách nhiệm giải quyết</b> </th><th class="p13"> <b>Ý kiến của ban lãnh đạo</b> </th></tr><tr><td style="height: 220px;"></td><td></td></tr></table><p>&emsp;&emsp;Ghi chú: Hồ sơ có ý kiến của thủ trưởng (hoặc người được ủy quyền) phải giao lại cho Bộ phận một cửa trước 01 ngày so với ngày hẹn trả </p><br><br><br><p><div class="inline c40">Mã số: BM-02/TYV5-06</div><div class="inline c40">Mã số: Ngày ban hành: 02/11/2017</div><div class="inline c20">Lần sửa đổi: 02</div></p>',
     2: '<table class="table-bordered" border="1" style="width: 95%; margin: auto;"><tr><td style="width: 60%;" class="cell-center">CHI CỤC THÚ Y VÙNG V <br> <b> TRẠM CHẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT </b></td><td><div class="c20"></div><div class="c80"><b>Biểu mẫu số: BM.STTT.20.10 <br>Số soát xét: 03.02718</b></div></td></tr></table><br><div class="text-center"> <b>PHIẾU GIAO NHẬN MẪU VÀ KẾT QUẢ XÉT NGHIỆM</b> </div><div style="float: right; width: 160pt; margin-right: 10pt; border: 1px solid black; padding: 5pt;">Số ĐKXN: xcode-0/xcode-1/xcode-2 <br> Số trang: 01 <br> Liên: 01/02 </div><br><br><p><b>Bên giao mẫu: </b> isenderunit</p><p><b>Bên nhận mẫu: </b> ireceiverunit </p> <div> xtable </div> <div style="display: inline-block; width: 60px;"><b>Ghi chú:</b> </div><div style="margin-left: 1pt; display: inline-table; width: calc(100% - 65px);"></p> (note) - Bộ phận xét nghiệm trả kết quả trên chỉ tiêu xét nghiệm. <br>- Ngày xét nghiệm: examdate <br>- Ngày hẹn trả kết quả xét nghiệm: <i>ngày resend-0 tháng resend-1 năm resend-2</i>(result)</p></div><table><tr><td style="width: 5%"></td><td class="c30 text-center"><b>Người/Ngày giao mẫu <br></b><i>Ngày xsend-0 tháng xsend-1 năm xsend-2 <br> <br> <br> <br> <br></i> <div>xsender</div></td><td class="c30 text-center"><b>Người/Ngày nhận mẫu <br></b><i>Ngày xreceive-0 tháng xreceive-1 năm xreceive-2 <br> <br> <br> <br> <br></i> <div>xreceiver</div> </td><td class="c30 text-center"><b>Phụ trách bộ phận xét nghiệm <br></b><i>Ngày xresend-0 tháng xresend-1 năm xresend-2 <br> <br> <br> <br> <br></i> <div>xresender</div></td></tr></table>',
     3: '<table class="table-bordered" border="1"><tr><td class="cell-center"> <b>Biểu mẫu số: BM.STTT.22.01</b> </td><td class="cell-center"> <b>Số soát xét: 03.027148</b> </td></tr><tr><td colspan="2"><div class="cell-center">CHI CỤC THÚ Y VÙNG V <br> <b class="p16"> TRẠM CHẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT </b></div>Địa chỉ: Số 36, Phạm Hùng, phường Tân An, thành phố Buôn Ma Thuột, tỉnh Đăk Lăk. <br>Điện thoại: 0262 3877793</td></tr></table><br><div class="text-center p16"> <b> PHIẾU KẾT QUẢ XÉT NGHIỆM </b> </div><br><p> <b> Số ĐKXN: xcode-0/xcode-1/xcode-2 </b> </p><p class="text-center"> <b> Số phiếu kết quả thử nghiệm: xcode-0/xcode-1/xcode-2.CĐXN </b> </p><div id="a">xtable</div><p><div style="display: inline-block"><b> &emsp;&emsp; <u> Ghi chú: </u> </b> </div><div style="display: inline-flex"><i> (vnote) </i></div></p><p> <i> &emsp;&emsp; Kết quả chỉ có giá trị trên mẫu thử nghiệm. Việc sao chép kết quả này chỉ có giá trị khi được sao chép toàn bộ, và không có giá trị nếu chỉ sao chép một phần./. </i> </p><table><tr><td style="width: 5%"></td><td style="width: 40%" class="text-center"> <b>BỘ PHẬN XÉT NGHIỆM</b> <br> <i> (Ký, ghi rõ họ tên) </i> <br> <br> <br> <br> <br> xexam </td><td style="width: 20%"></td><td style="width: 40%" class="text-center"> <b> TRƯỞNG TRẠM </b> <br> <br> <br> <br> <br> <br> receiveleader </td><td style="width: 5%"></td></tr></table>',
-    4: '<table border="1" class="table-bordered"> <tr> <td class="text-center"> <b>Biểu mẫu số: BM.STTT.22.01</b> </td> <td class="text-center"> <b>Số soát xét: 03.02718</b> </td> </tr> <tr> <td colspan="2"> <div class="text-center"> <b>CHI CỤC THÚ Y VÙNG V</b> </div> <div class="text-center"> <b>TRẠM CHUẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT</b> </div> <div> Địa chỉ: Số 36 Phạm Hùng, Phường Tân An, Thành phố Buôn Ma Thuột, Tỉnh Đăklăk </div> <div> Điện thoại: 0262 3877793 </div> </td> </tr> </table> <div class="text-center p16" style="margin: 10px;"> <b>PHIẾU KẾT QUẢ XÉT NGHIỆM</b> </div> <div style="margin: 4px;"> <div style="float: left"> Số phiếu kết quả xét nghiệm: xcode-0/xcode-1/xcode-2.CĐXN </div> <div style="float: right">Trang: 1/2</div> </div> <table border="1" class="table-bordered"> <tr> <td colspan="2"> Tên khách hàng: (customer) </td> <td style="width: 30%"> Số ĐKXN: xcode-0/xcode-1/xcode-2</td> </tr> <tr> <td colspan="3"> <div> Địa chỉ khách hàng: (address) </div> <div style="float: left; width: 400px;"> Số điện thoại: (phone) </div> <div style="float: left; "> Fax: (fax) </div> </td> </tr> <tr> <td colspan="3"> Loài động vật lấy mẫu: (sample) </td> </tr> <td colspan="3"> Loại mẫu: (type) </td> </tr> <tr> <td colspan="3"> Số lượng mẫu: (number) (numberword) </td> </tr> <tr> <td colspan="3"> Ký hiệu mẫu: (sampleCode) </td> </tr> <tr> <td colspan="3"> Tình trạng khi nhận mẫu: (status) </td> </tr> <tr> <td style="width: 50%"> Ngày lấy mẫu: (sampleReceive) </td> <td colspan="2"> Người lấy mẫu: (sampleReceiver) </td> </tr> <tr> <td style="width: 50%"> Ngày, giờ nhận mẫu: (receiveHour)<sup>h</sup>(receiveMinute)<sup>p</sup> (ireceive)</td> <td colspan="2"> Người nhận mẫu: (ireceiver) </td> </tr> <tr> <td colspan="3">  <b><u>Chỉ tiêu xét nghiệm</u></b> <br> (exam) (index) (exam-content) </div> <div> &nbsp;&nbsp; Phương pháp xét nghiệm: (method); Ký hiệu phương pháp: (symbol). </div> (/exam) (note) </td> </tr> <tr> <td colspan="3"> Ngày phân tích: (examDate) </td> </tr> <tr> <td colspan="3"> <b> Kết quả: </b> <br> (result) </td> </tr> </table> <table style="width: 100%"> <tr> <td class="text-center"> Ngày examdate-0 tháng examdate-1 năm examdate-2 <br> <b>BỘ PHẬN XÉT NGHIỆM</b> <br> (Ký, ghi rõ họ tên) </td> <td class="text-center"> Ngày examdate-0 tháng examdate-1 năm examdate-2 <br> <b>TRƯỞNG TRẠM</b> </td> </tr> </table> </div>',
+    4: '<table border="1" class="table-bordered"> <tr> <td class="text-center"> <b>Biểu mẫu số: BM.STTT.22.01</b> </td> <td class="text-center"> <b>Số soát xét: 03.02718</b> </td> </tr> <tr> <td colspan="2"> <div class="text-center"> <b>CHI CỤC THÚ Y VÙNG V</b> </div> <div class="text-center"> <b>TRẠM CHUẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT</b> </div> <div> Địa chỉ: Số 36 Phạm Hùng, Phường Tân An, Thành phố Buôn Ma Thuột, Tỉnh Đăklăk </div> <div> Điện thoại: 0262 3877793 </div> </td> </tr> </table> <div class="text-center p16" style="margin: 10px;"> <b>PHIẾU KẾT QUẢ XÉT NGHIỆM</b> </div> <div style="margin: 4px;"> <div style="float: left"> Số phiếu kết quả xét nghiệm: xcode-0/xcode-1/xcode-2.CĐXN </div> </div> <table border="1" class="table-bordered"> <tr> <td colspan="2"> Tên khách hàng: (customer) </td> <td style="width: 30%"> Số ĐKXN: xcode-0/xcode-1/xcode-2</td> </tr> <tr> <td colspan="3"> <div> Địa chỉ khách hàng: (address) </div> <div style="float: left; width: 400px;"> Số điện thoại: (phone) </div> <div style="float: left; "> Fax: (fax) </div> </td> </tr> <tr> <td colspan="3"> Loài động vật lấy mẫu: (sample) </td> </tr> <td colspan="3"> Loại mẫu: (type) </td> </tr> <tr> <td colspan="3"> Số lượng mẫu: (number) (numberword) </td> </tr> <tr> <td colspan="3"> Ký hiệu mẫu: (sampleCode) </td> </tr> <tr> <td colspan="3"> Tình trạng khi nhận mẫu: (status) </td> </tr> <tr> <td style="width: 50%"> Ngày lấy mẫu: (sampleReceive) </td> <td colspan="2"> Người lấy mẫu: (sampleReceiver) </td> </tr> <tr> <td style="width: 50%"> Ngày, giờ nhận mẫu: (receiveHour)<sup>h</sup>(receiveMinute)<sup>p</sup> (ireceive)</td> <td colspan="2"> Người nhận mẫu: (ireceiver) </td> </tr> <tr> <td colspan="3">  <b><u>Chỉ tiêu xét nghiệm</u></b> <br> (exam) (index) (exam-content) </div> <div> &nbsp;&nbsp; Phương pháp xét nghiệm: (method); Ký hiệu phương pháp: (symbol). </div> (/exam) (note) </td> </tr> <tr> <td colspan="3"> Ngày phân tích: (examDate) </td> </tr> <tr> <td colspan="3"> <b> Kết quả: </b> <br> (result) </td> </tr> </table> <table style="width: 100%"> <tr> <td class="text-center"> Ngày examdate-0 tháng examdate-1 năm examdate-2 <br> <b>BỘ PHẬN XÉT NGHIỆM</b> <br> (Ký, ghi rõ họ tên) </td> <td class="text-center"> Ngày examdate-0 tháng examdate-1 năm examdate-2 <br> <b>TRƯỞNG TRẠM</b> </td> </tr> </table> </div>',
     5: '<style> p {margin: 3px;} </style><table><tr><td class="cell-center p12" style="position: relative;"> <div style="position: absolute; border-top: 1px solid black; width: 70px; top: 45px; left: 82px;"></div> CỤC THÚ Y <br> <b> CHI CỤC THÚ Y VÙNG V </b> <div style="margin-top: 10px; "></div> <span class="p14"> Số: &emsp;&emsp;/TYV5-TH </span> </td><td class="cell-center" style="position: relative"><div style="position: absolute; border-top: 1px solid black; width: 205px; height: 100px; top: 41px; left: 95px;"></div> <span class="p12">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</span> <br> <b class="p13"> Độc lập - Tự do - Hạnh phúc </b> <div style="margin-top: 15px;"></div> <span class="p14"> <i> Đăk Lăk, ngày noticetime-0 tháng noticetime-1 năm noticetime-2 </i> </span> </td></tr> </table><p class="text-center p16" style="padding-top: 5px;"> <b> THÔNG BÁO </b> </p><p class="text-center p15" style="padding-bottom: 15px;"> <b> Kết quả xét nghiệm </b> </p> <p class="p14">&emsp;&emsp; Chi cục Thú y vùng V thông báo kết quả xét nghiệm được thực hiện tại Trạm Chẩn đoán xét nghiệm bệnh động vật (trực thuộc Chi cục Thú y vùng V) như sau: </p> <p class="p14"> &emsp;&emsp; Tên khách hàng: senderemploy  </p> <p class="p14"> &emsp;&emsp; Địa chỉ: xaddress </p> (info) owner <p style="width: 60%; float: left;" class="p14"> &emsp;&emsp; Loài động vật được lấy mẫu: (sample)</p><p style="width: 35%; float: left; " class="p14">Loại mẫu: (sampletype)</p> <p style="clear: left; width: 60%; float: left;" class="p14"> &emsp;&emsp; Số lượng mẫu: number (numberword) </p> <p style="width: 35%; float: left;" class="p14">Số mẫu xét nghiệm: (examsample)</p> <p class="p14" style="clear: left;"> &emsp;&emsp; Ký hiệu mẫu: samplecode </p> <p class="p14"> &emsp;&emsp; Ngày nhận mẫu: sampletime </p> target <p class="p14"> &emsp;&emsp; <b> <u> Chỉ tiêu xét nghiệm: </u> </b> </p><div class="p14">(exam)</div>note<p class="p14"> &emsp;&emsp; <b> <u> Kết quả: </u> </b> </p><div class="p14">result</div><p class="p14"> <i> &emsp;&emsp;(Chi tiết xem phiếu kết quả xét nghiệm số: xcode-0/xcode-1/xcode-2.CĐXN của trạm chuẩn đoán xét nghiệm bệnh động vật)./. </i></p><div style="width: 60%; float: left;"><b class="p12"> <b> <i> Nơi nhận: </i> </b> </b> <p class="p11"> receivedis </p></div> <div style="width: 40%; float: left;" class="text-center p14"><b> CHI CỤC TRƯỞNG <br><br><br><br><br> receiveleader </b></td></tr></table>'
   }
   
@@ -1282,7 +1182,7 @@
         global_exam[indexes[1]]['exam'].splice(indexes[2], 1)
       }
       else {
-        global_exam.splice(indexes[2], 1)
+        global_exam.splice(indexes[1], 1)
       }
     }
     parseExam(global_exam)
@@ -1319,7 +1219,7 @@
     array.forEach((element, index) => {
       addInfo(dataPicker[name])
       if (dataPicker[name] == 1) {
-        $("#formed-" + index).val(element)
+        $("#form-" + index).val(element)
       }
       else {
         $("#resulted-" + index).val(element)
@@ -1427,13 +1327,13 @@
             <div class="row form-group">
               <label class="col-sm-6"> Kết quả </label>
               <div class="col-sm-10">
-                <input type="text" value="`+ note['result'] +`" class="form-control ig ig-result-`+ sampleIndex +`-`+ resultIndex +`-`+ noteIndex +`">
+                <input type="text" value="`+ note['result'] +`" class="form-control ig ig-result-`+ sampleIndex +`-`+ resultIndex +`-`+ noteIndex +`" autocomplete="off">
               </div>
             </div>
             <div class="row form-group">
               <label class="col-sm-6"> Ghi chú </label>
               <div class="col-sm-10">
-                <input type="text" value="`+ note['note'] +`" class="form-control ig ig-note-`+ sampleIndex +`-`+ resultIndex +`-`+ noteIndex +`">
+                <input type="text" value="`+ note['note'] +`" class="form-control ig ig-note-`+ sampleIndex +`-`+ resultIndex +`-`+ noteIndex +`" autocomplete="off">
               </div>
             </div>
           </div>`
@@ -1446,7 +1346,7 @@
             <label class="col-sm-6"> Chỉ tiêu </label>
             <div class="col-sm-10">
               <div class="relative">
-                <input type="text" value="`+ result['main'] +`" class="form-control ig ig-main-`+ sampleIndex +`-`+ resultIndex +`" id="main-s`+ sampleIndex +`">
+                <input type="text" value="`+ result['main'] +`" class="form-control ig ig-main-`+ sampleIndex +`-`+ resultIndex +`" id="main-s`+ sampleIndex +`" autocomplete="off">
                 <div class="suggest" id="main-suggest-s`+ sampleIndex +`"></div>
               </div>
             </div>
@@ -1456,7 +1356,7 @@
             <label class="col-sm-6"> Phương pháp </label>
             <div class="col-sm-10">
               <div class="relative">
-                <input type="text" value="`+ result['method'] +`" class="form-control ig ig-method-`+ sampleIndex +`-`+ resultIndex +`" id="method-s`+ sampleIndex +`">
+                <input type="text" value="`+ result['method'] +`" class="form-control ig ig-method-`+ sampleIndex +`-`+ resultIndex +`" id="method-s`+ sampleIndex +`" autocomplete="off">
                 <div class="suggest" id="method-suggest-s`+ sampleIndex +`"></div>
               </div>
             </div>
@@ -1481,20 +1381,20 @@
         <div class="row form-group">
           <label class="col-sm-6"> Kí hiệu mẫu </label>
           <div class="col-sm-10">
-            <input type="text" name="samplecode[]" value="`+ sample['code'] +`" class="form-control ig ig-code-`+ sampleIndex +`">
+            <input type="text" name="samplecode[]" value="`+ sample['code'] +`" class="form-control ig ig-code-`+ sampleIndex +`" autocomplete="off">
           </div>
         </div>
         <div class="row form-group">
           <label class="col-sm-6"> Loại mẫu </label>
           <div class="col-sm-10">
-            <input type="text" name="type[]" value="`+ sample['type'] +`" class="form-control ig ig-type-`+ sampleIndex +`">
+            <input type="text" name="type[]" value="`+ sample['type'] +`" class="form-control ig ig-type-`+ sampleIndex +`" autocomplete="off">
           </div>
         </div>
         
         <div class="row form-group">
           <label class="col-sm-6"> Số lượng mẫu </label>
           <div class="col-sm-10">
-            <input type="text" name="number[]" value="`+ sample['number'] +`" class="form-control ig ig-number-`+ sampleIndex +`">
+            <input type="text" name="number[]" value="`+ sample['number'] +`" class="form-control ig ig-number-`+ sampleIndex +`" autocomplete="off">
           </div>
         </div>
         
@@ -1975,7 +1875,7 @@
     formInsertEndedCopy.val('')
     formInsertSampleReceiver.val('')
     formInsertNote.val('')
-    formInsertReceiveDis.val('')
+    formInsertReceiveDis.val('- Lưu: VT, Dịch tễ, Kế toán.')
     formInsertReceiveLeader.val('')
     formInsertXaddress.val('')
     formInsertOwner.val('')
@@ -2008,6 +1908,8 @@
         }
       ]
     }]
+    $(".status").prop('checked', false)
+    $(".status-0").prop('checked', true)
     parseField(global_field)
     global_exam = [{
       method: '',
@@ -2015,16 +1917,6 @@
       exam: ['']
     }]
     parseExam(global_exam)
-
-    formInsertEndedHour.each((index, item) => {
-      item.removeAttribute('selected')
-    })
-    formInsertEndedHour[0].children[0].setAttribute('selected', true)
-
-    formInsertEndedMinute.each((index, item) => {
-      item.removeAttribute('selected')
-    })
-    formInsertEndedMinute[0].children[0].setAttribute('selected', true)
 
     formInsertSampleReceiveHour.each((index, item) => {
       item.removeAttribute('selected')
@@ -2149,22 +2041,20 @@
     switch (id) {
       case 1:
         var html = `
-          <div class="formed" id="form-` + length + `">
+          <div class="formed" id="formed-` + length + `">
             <button type="button" class="close" data-dismiss="modal" onclick="removeInfo(1, ` + length + `)">&times;</button>
             <br>
             <div class="row">
               <label class="col-sm-6"> Tên hồ sơ </label>
               <div class="col-sm-10 relative">
-                <input type="text" class="form-control input-box form" id="formed-` + length + `">
-                <div class="suggest" id="formed-suggest-` + length + `"></div>
+                <input type="text" class="form-control input-box form" id="form-` + length + `" autocomplete="off">
+                <div class="suggest" id="form-suggest-` + length + `"></div>
               </div>
             </div>
           </div>`
           
           formInsertForm.append(html)
-          infoData[1].forEach(item => {
-            installRemindv2('formed', 'form')
-          })
+          installRemindv2(length, 'form')
         break;
       case 2:
         var html = `
@@ -2221,7 +2111,7 @@
   function removeInfo(id, index) {
     switch (id) {
       case 1:
-        $("#form-" + index).remove()
+        $("#formed-" + index).remove()
         break;
       case 2:
         $("#exam-" + index).remove()
@@ -2318,8 +2208,7 @@
             receiver: formInsertReceiverEmploy.val(),
             ireceive: formInsertIreceive.val(),
             iresend: formInsertIresend.val(),
-            form: getInputs('form', ') '),
-            forms: getInputs('form'),
+            form: getInputs('form'),
             number: formInsertNumber.val(),
             sample: formInsertSample.val(),
             type: getCheckbox('type', formInsertTypeOther),
@@ -2502,6 +2391,9 @@
           }
 
           if (data['form']['printer'] >= 4) {
+            $(".status").prop('checked', false)
+            $(".status-" + data['form']['status']['index']).prop('checked', true)
+
             formInsertNote.val(data['form']['note'])
             formInsertIreceiverEmploy.val(data['form']['ireceiveremploy'])
             formInsertXphone.val(data['form']['xphone'])
@@ -2605,9 +2497,10 @@
       {action: 'preview', id: id},
       (response, status) => {
         checkResult(response, status).then(data => {
-          data['exam'] = JSON.parse(data['exam'])
-          data['ig'] = JSON.parse(data['ig'])
-          printer(printercount, data)
+          data['form']['exam'] = JSON.parse(data['form']['exam'])
+          data['form']['ig'] = JSON.parse(data['form']['ig'])
+          console.log(data);
+          printer(printercount, data['form'])
         }, () => {})
       }
     )
@@ -2661,10 +2554,21 @@
             html = html.replace('status-2', data['state']['index'] == 2 ? data['state']['value'] : '')
             html = html.replace('numberword', data['numberword'])
             var exam = extractExam(data['exam'], ')')
+            var temp = []
+            console.log(data['form']);
+            
+            if (data['form'].length > 1) {
+              data['form'].forEach((item, index) => {
+                data['form'][index] = (index + 1) + ') ' + item
+              })
+            }
 
             html = html.replace('formcontent', (data['form'].join('<br>') + '<br>Số lượng mẫu: ' + data['number'] + ', loại mẫu: ' + (data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text())) + ', loài động vật: ' + data['sample'] + '<br> Ký hiệu mẫu: ' + data['samplecode'].replace('-', ' đến ') + '<br>Yêu cầu xét nghiệm:<br>' + (exam.join('<br>') + (trim(data['xnote']).length ? '<br>' + data['xnote'].replace(/\n/g, '<br>') : ''))))
           break;
           case 2:
+            if (typeof(data['xcode']) == 'string') {
+              data['xcode'] = data['xcode'].split(',')
+            }
             prop = 1
             resend = data['iresend'].split('/')
             xresend = data['xresend'].split('/')
@@ -2690,9 +2594,9 @@
             html = html.replace('xsend-2', xsend[2])
             html = html.replace('examdate', data['examdate'])
             html = html.replace('iresend', data['iresend'])
-            html = html.replace('xsender', ucword(data['xsender']))
-            html = html.replace('xreceiver', ucword(data['xreceiver']))
-            html = html.replace('xresender', ucword(data['xresender']))
+            html = html.replace('xsender', data['xsender'])
+            html = html.replace('xreceiver', data['xreceiver'])
+            html = html.replace('xresender', data['xresender'])
             if (trim(data['result'])) {
               html = html.replace('(result)', '<br>- Kết quả: ' + data['result'].replace(/\n/g, '; '))
             }
@@ -2709,15 +2613,21 @@
             }
           break;
           case 3:
+            if (typeof(data['xcode']) == 'string') {
+              data['xcode'] = data['xcode'].split(',')
+            }
             html = html.replace(/xcode-0/g, trim(data['xcode'][0]))
             html = html.replace(/xcode-1/g, trim(data['xcode'][1]))
             html = html.replace(/xcode-2/g, trim(data['xcode'][2]))
-            html = html.replace(/xexam/g, ucword(data['xexam']))
-            html = html.replace(/receiveleader/g, ucword(data['xresender']))
+            html = html.replace(/xexam/g, data['xexam'])
+            html = html.replace(/receiveleader/g, data['xresender'])
             html = html.replace('xtable', parseFieldTable2(data['ig']))
             html = html.replace('(vnote)', data['vnote'].replace(/\n/g, '<br>'))
           break;
           case 4:
+            if (typeof(data['xcode']) == 'string') {
+              data['xcode'] = data['xcode'].split(',')
+            }
             var receive = data['receive'].split('/')
             var examdate = data['examdate'].split('/')
             html = html.replace(/xcode-0/g, trim(data['xcode'][0]))
@@ -2735,6 +2645,11 @@
             html = html.replace('(phone)', data['xphone'])
             html = html.replace('(fax)', data['fax'])
             html = html.replace('(type)', data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text()))
+            // if (typeof(data['status']) == 'number') {
+            //   var temp = data['status']
+            //   data['status'] = {}
+            //   data['status']['index'] = temp
+            // }
             html = html.replace('(status)', ticked[data['status']['index']] + ' yêu cầu xét nghiệm')
             html = html.replace('(sampleReceive)', data['samplereceive'])
             html = html.replace('(sampleReceiver)', data['samplereceiver'])
@@ -2781,6 +2696,9 @@
             html = html.replace('(parse)', parse)
           break;
           case 5:
+            if (typeof(data['xcode']) == 'string') {
+              data['xcode'] = data['xcode'].split(',')
+            }
             var iresend = data['resend'].split('/')
             var tabbed = '&emsp;&emsp;'
             
@@ -2851,7 +2769,7 @@
             html = html.replace('result', tabbed + data['result'].replace(/\n/g, '<br>' + tabbed))
             var owner = ''
             if (trim(data['ownermail']) || trim(data['ownerphone'])) {
-              owner += '<p style="width: 60%; float: left;" class="p14"> &emsp;&emsp; Số điện thoại: '+data['ownerphone']+'</p><p style="width: 35%; float: left; " class="p14">Email: '+data['ownermail']+'</p>'
+              owner += '<p style="width: 50%; float: left;" class="p14"> &emsp;&emsp; Số điện thoại: '+data['ownerphone']+'</p><p style="width: 45%; float: left; " class="p14">Email: '+data['ownermail']+'</p>'
             }
             html = html.replace('(info)', owner)
             var noteString = ''
@@ -2866,7 +2784,7 @@
             }
             html = html.replace('note', noteString)
             html = html.replace('receivedis', data['receivedis'].replace(/\n/g, '<br>'))
-            receiveleader = ucword(data['receiveleader'])
+            receiveleader = data['receiveleader']
             // receiveleader = trim().replace(/\b[a-z]/g, function(letter) {
             //   return letter.toUpperCase();
             // });
