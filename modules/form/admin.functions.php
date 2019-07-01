@@ -17,6 +17,18 @@ define("PATH", NV_ROOTDIR . "/themes/" . $global_config['admin_theme'] . "/modul
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';
 
+function getUserPermission($userid) {
+  global $db, $db_config;
+
+  $sql = 'select * from `'. $db_config['prefix'] .'_user_allow` where userid = ' . $userid;
+  $query = $db->query($sql);
+
+  if (empty($row = $query->fetch() && $row['former'])) {
+    return 0;
+  }
+  return $row['former'];
+}
+
 function getNotAllow($key = '') {
   global $db, $db_config;
 
@@ -33,7 +45,7 @@ function getNotAllow($key = '') {
 function getAllowUser($key = '') {
   global $db, $db_config;
 
-  $sql = 'select a.*, b.type from `'. $db_config['prefix'] .'_users` a inner join `'. $db_config['prefix'] .'_user_allow` b on a.userid = b.userid where a.first_name like "%'. $key .'%" and module = ' . PERMISSION_MODULE . ' order by type desc';
+  $sql = 'select a.*, b.type, b.former from `'. $db_config['prefix'] .'_users` a inner join `'. $db_config['prefix'] .'_user_allow` b on a.userid = b.userid where a.first_name like "%'. $key .'%" and module = ' . PERMISSION_MODULE . ' order by type desc';
   $query = $db->query($sql);
 
   $list = array();

@@ -23,9 +23,13 @@
         {fullname}
       </td>
       <td>
-        {permission}
+        {permission} <br>
+        <span class="font-size: .75em"> {risk} </span>
       </td>
       <td>
+        <button class="btn btn-info" onclick="getPermission({userid})">
+          get
+        </button>
         <!-- BEGIN: up -->
         <button class="btn btn-info" onclick="upUser({userid})">
           <span class="glyphicon glyphicon-arrow-up"></span>

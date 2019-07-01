@@ -25,6 +25,14 @@ function employerList($key = '') {
     $xtpl->assign('username', $row['username']);
     $xtpl->assign('fullname', $row['first_name']);
     $xtpl->assign('permission', $permissionType[$row['type']]);
+    $permist = explode(',', $row['former']);
+    $risk = '';
+    foreach ($permist as $value) {
+      if (trim($value)) {
+        $risk .= '<button class="btn btn-xs">' . ($value + 1) . '</button>';
+      }
+    }
+    $xtpl->assign('risk', $risk);
     if ($row['type'] == 1) {
       $xtpl->parse('main.row.up');
     }
@@ -149,6 +157,7 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
       $xtpl->assign('index', $index++);
       $xtpl->assign('id', $row['id']);
       $xtpl->assign('xcode', str_replace(', ', '/', $row['xcode']));
+      $xtpl->assign('xcode', str_replace(',', '/', $row['xcode']));
       $xtpl->assign('code', $row['code']);
       $xtpl->assign('number', $row['number']);
       $xtpl->assign('sample', $row['sample']);

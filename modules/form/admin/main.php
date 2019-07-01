@@ -26,6 +26,22 @@ if (!empty($action)) {
 			$result['status'] = 1;
 			$result['html'] = employerList($key);
 		break;
+		case 'getPermission':
+			$id = $nv_Request->get_string('id', 'get/post', '');
+
+			$result['status'] = 1;
+			$result['permist'] = getUserPermission($id);
+		break;
+		case 'savePermission':
+			$userid = $nv_Request->get_string('userid', 'get/post', '');
+			$permissionData = $nv_Request->get_string('permissionData', 'get/post', '');
+
+			$sql = 'update `'. $db_config['prefix'] .'_user_allow` set former = "'. $permissionData .'" where module = 1 and userid = ' . $userid;
+			if ($db->query($sql)) {
+				$result['status'] = 1;
+				$result['html'] = employerList();
+			}
+		break;
 		case 'filterEmploy':
 			$key = $nv_Request->get_string('key', 'get/post', '');
 
