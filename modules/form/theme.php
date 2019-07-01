@@ -119,14 +119,26 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
   global $db, $sampleType, $user_info;
   $xtpl = new XTemplate("list.tpl", PATH);
   $xcode = str_replace('/', ', ', $xcode);
+  
+  $part = array('printer >= ' . $printer);
+  if ($printer >= 1) {
+    $part[] = 'code like "%'. $keyword .'%"';
+    $part[] = 'sample like "%'. $other['sample'] .'%"';
+    $part[] = 'sender like "%'. $other['unit'] .'%"';
+    $part[] = 'exam like "%'. $other['exam'] .'%"';
+  }
 
-  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and printer >= '. $printer . ' and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%"';
+  if ($printer >= 2) {
+    $part[] = 'xcode like "%'. $xcode .'%"';
+  }
+
+  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where ' . (implode($part, ' and '));
   $query = $db->query($sqlCount);
   $count = $query->fetch();
 
   $xtpl->assign('total', $count['count']);
 
-  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and printer >= '. $printer .' and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%" order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
+  $sql = 'select * from `'. PREFIX .'_row` where '. (implode($part, ' and ')) .' order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
   $query = $db->query($sql);
 
   $index = 1;
