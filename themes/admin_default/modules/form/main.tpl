@@ -123,6 +123,7 @@
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
+          permission.modal('hide')
         }, () => {  })
       }
     )
