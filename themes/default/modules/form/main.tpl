@@ -2154,17 +2154,13 @@
             <br>
             <div class="row">
               <label class="col-sm-6"> Tên hồ sơ </label>
-              <div class="col-sm-10 relative">
+              <div class="col-sm-10">
                 <input type="text" class="form-control input-box form" id="formed-` + length + `">
-                <div class="suggest" id="formed-suggest-` + length + `"></div>
               </div>
             </div>
           </div>`
-          
+              
           formInsertForm.append(html)
-          infoData[1].forEach(item => {
-            installRemindv2('formed', 'form')
-          })
         break;
       case 2:
         var html = `
@@ -2690,9 +2686,9 @@
             html = html.replace('xsend-2', xsend[2])
             html = html.replace('examdate', data['examdate'])
             html = html.replace('iresend', data['iresend'])
-            html = html.replace('xsender', ucword(data['xsender']))
-            html = html.replace('xreceiver', ucword(data['xreceiver']))
-            html = html.replace('xresender', ucword(data['xresender']))
+            html = html.replace('xsender', data['xsender'])
+            html = html.replace('xreceiver', data['xreceiver'])
+            html = html.replace('xresender', data['xresender'])
             if (trim(data['result'])) {
               html = html.replace('(result)', '<br>- Kết quả: ' + data['result'].replace(/\n/g, '; '))
             }
@@ -2712,8 +2708,8 @@
             html = html.replace(/xcode-0/g, trim(data['xcode'][0]))
             html = html.replace(/xcode-1/g, trim(data['xcode'][1]))
             html = html.replace(/xcode-2/g, trim(data['xcode'][2]))
-            html = html.replace(/xexam/g, ucword(data['xexam']))
-            html = html.replace(/receiveleader/g, ucword(data['xresender']))
+            html = html.replace(/xexam/g, data['xexam'])
+            html = html.replace(/receiveleader/g, data['xresender'])
             html = html.replace('xtable', parseFieldTable2(data['ig']))
             html = html.replace('(vnote)', data['vnote'].replace(/\n/g, '<br>'))
           break;
@@ -2866,7 +2862,7 @@
             }
             html = html.replace('note', noteString)
             html = html.replace('receivedis', data['receivedis'].replace(/\n/g, '<br>'))
-            receiveleader = ucword(data['receiveleader'])
+            receiveleader = data['receiveleader']
             // receiveleader = trim().replace(/\b[a-z]/g, function(letter) {
             //   return letter.toUpperCase();
             // });
