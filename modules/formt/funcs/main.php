@@ -406,6 +406,9 @@ $today = strtotime(date('Y-m-d'));
 $from = $today - 60*60*24*7;
 $end = $today + 60*60*24*7;
 
+if (!empty($user_info['userid'])) {
+	$xtpl->assign("permist", getUserPermission($user_info['userid']));	
+}
 $xtpl->assign("methodOption", $methodHtml);
 $xtpl->assign('summarycontent', summaryContent($from, $end));
 $xtpl->assign('summaryfrom', date('d/m/Y', $from));

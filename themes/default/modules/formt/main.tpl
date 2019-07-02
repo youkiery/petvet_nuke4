@@ -876,6 +876,7 @@
   var global_id = 0
   var global_page = 1
   var global_printer = 1
+  var permist = "{permist}"
 
   var visible = {
     0: {1: '1', 2: '1'},
@@ -1513,7 +1514,7 @@
   }
 
   function parseIntNum(number) {
-    return ((number < 10 ? '0' : '') + number)
+    return ((Number(number) < 10 ? '0' : '') + number)
   }
 
   function parseFieldTable2(data) {
@@ -1540,18 +1541,18 @@
           result['note'].forEach((note, noteIndex) => {
             noteCount ++
             mainerNoteCount ++
-            html4 += `<td>`+ note['result'] +`</td> <td>`+ note['note'] +`</td></tr>`
+            html4 += `<td class="text-center">`+ note['result'] +`</td> <td>`+ note['note'] +`</td></tr>`
           })
-          html4 = `<td rowspan="`+ mainerNoteCount +`">`+ result['method'] + `</td>` + html4
+          html4 = `<td rowspan="`+ mainerNoteCount +`" class="text-center">`+ result['method'] + `</td>` + html4
         }
         else {
           noteCount ++
-          html4 += `<td>`+ result['method'] + `</td><td>`+ result['note'][0]['result'] +`</td> <td>`+ result['note'][0]['note'] +`</td></tr>`
+          html4 += `<td class="text-center">`+ result['method'] + `</td><td class="text-center">`+ result['note'][0]['result'] +`</td> <td>`+ result['note'][0]['note'] +`</td></tr>`
         }
         html3 += html4
       })
 
-      html2 += '<tr><td rowspan="'+ noteCount +'" class="text-center">'+ sample['code'] +'</td><td rowspan="'+ noteCount +'" class="text-center">'+ (index++) +'</td>' + html3;
+      html2 += '<tr><td rowspan="'+ noteCount +'" class="text-center">'+ parseIntNum(noteCount) +'</td><td rowspan="'+ sample['code'] +'" class="text-center">'+ (index++) +'</td>' + html3;
     })
 
     html += html2 + '</table>'
@@ -2803,8 +2804,8 @@
         var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
         winPrint.focus()
         winPrint.document.write(html);
-        winPrint.print()
-        winPrint.close()
+        // winPrint.print()
+        // winPrint.close()
       }
     }
   }
