@@ -232,7 +232,7 @@
       </label>
     </div>
 
-    <div class="row form-group boxed box-1 box-1-3 box-4 box-4-15 box-5 box-5-14">
+    <div class="row form-group boxed box-1 box-1-3 box-4 box-4-15 box-5 box-5-15">
       <label class="col-sm-6">Ngày nhận mẫu</label>
       <div class="col-sm-12">
         <input type="text" class="form-control" id="form-insert-receive" autocomplete="off">
@@ -591,7 +591,7 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-5 box-5-19">
+    <div class="row form-group boxed box-5 box-5-21">
       <label class="col-sm-6">
         Người phụ trách
       </label>
@@ -1272,7 +1272,8 @@
   }
 
   function parseForm(id) {
-    var list = []
+    var list = {}
+    var x = []
     var credit = document.getElementById('credit')
     var box = $(".box-" + id)
     $(".boxed").hide()
@@ -1289,6 +1290,7 @@
       }
 
       if (pos) {
+        x.push(pos)
         list[pos] = item
       }
     })
@@ -1296,6 +1298,8 @@
     for (const listKey in list) {
       if (list.hasOwnProperty(listKey)) {
         const item = list[listKey];
+        // console.log(item, listKey);
+        
         credit.appendChild(item)
       }
     }
@@ -2757,6 +2761,7 @@
                 }
                 else {
                   temp = temp.replace('(index)', '')
+                  temp = temp.replace('(dot)', '.')
                 }
                 temp = temp.replace('(content)', exam)
                 temp = temp.replace('(method)', main['method'])

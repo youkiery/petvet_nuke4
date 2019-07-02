@@ -107,9 +107,8 @@ function checkRemindv2($name, $type) {
 
 	if (!($id = getRemindIdv2($name, $type))) {
 		$sql = 'insert into `'. PREFIX .'_remindv2` (type, name, visible) values ("'. $type .'", "'. $name .'", 1)';
-		$query = $db->query($sql);
 
-		if (!empty($query->fetch())) {
+		if ($db->query($sql)) {
 			return $db->lastInsertId();
 		}
 		return 0;
