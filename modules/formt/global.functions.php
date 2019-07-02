@@ -70,10 +70,10 @@ function getRemindv2($type = '') {
 	$list = array();
 
 	if (!empty($type)) {
-		$sql = 'select * from `'. PREFIX .'_remindv2` where type = "'. $type .'"';
+		$sql = 'select * from `'. PREFIX .'_remindv2` where type = "'. $type .'" and visible = 1';
 	}
 	else {
-		$sql = 'select * from `'. PREFIX .'_remindv2`';
+		$sql = 'select * from `'. PREFIX .'_remindv2` where visible = 1';
 	}
 	$query = $db->query($sql);
 
@@ -89,10 +89,10 @@ function getRemindv2($type = '') {
 	return $list;
 }
 
-function getRemindIdv2($name, $type) {
+function getRemindIdv2($id) {
 	global $db;
 
-	$sql = 'select * from `'. PREFIX .'_remindv2` where type = "'. $type .'" and name = "'. $name .'"';
+	$sql = 'select * from `'. PREFIX .'_remindv2` where id = ' . $id;
 	$query = $db->query($sql);
 	$row = $query->fetch();
 

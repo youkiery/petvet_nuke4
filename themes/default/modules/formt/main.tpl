@@ -1792,7 +1792,7 @@
     }
   }
 
-  function removeRemindv2(name, type) {
+  function removeRemindv2(name, type, id) {
     if (id) {
       $.post(
         strHref,

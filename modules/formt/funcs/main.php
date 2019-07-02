@@ -54,6 +54,8 @@ if (!empty($action)) {
 		break;
 		case 'removeRemindv2':
 			$id = $nv_Request->get_string('id', 'get/post', '');
+			// $type = $nv_Request->get_string('type', 'get/post', '');
+			// $type = $nv_Request->get_string('type', 'get/post', '');
 
 			if (!(empty($id) || empty(getRemindIdv2($id)))) {
 				$sql = 'update `'.PREFIX.'_remindv2` set visible = 0 where id = '. $id;
