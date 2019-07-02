@@ -57,7 +57,7 @@ if (!empty($action)) {
 			// $type = $nv_Request->get_string('type', 'get/post', '');
 			// $type = $nv_Request->get_string('type', 'get/post', '');
 
-			if (!(empty($id) || empty(getRemindIdv2($id)))) {
+			if (!(empty($id) || empty(getRemindIdv2Id($id)))) {
 				$sql = 'update `'.PREFIX.'_remindv2` set visible = 0 where id = '. $id;
 				if ($db->query($sql)) {
 					$result['status'] = 1;
@@ -185,7 +185,7 @@ if (!empty($action)) {
 								checkRemindRow($data['receiver'], 1);
 
 								// reminded exam
-								foreach ($data['forms'] as $value) {
+								foreach ($data['form'] as $value) {
 									checkRemindv2($value, 'form');
 								}
 								foreach ($data['exam'] as $examMain) {
@@ -254,6 +254,7 @@ if (!empty($action)) {
 							$ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
 
 							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode($data['xcode'], ',') .'", isenderunit = "'. $data['isenderunit'] .'", ireceiverunit = "'. $data['ireceiverunit'] .'", xreceiver = "'. $data['xreceiver'] .'", xresender = "'. $data['xresender'] .'", xsender = "'. $data['xsender'] .'", iresend = '. $iresend .', xreceive = '. $xreceive .', xresend = "'. $xresend .'", xsend = '. $xsend .', ig = \''. $ig .'\', examdate = '. $examdate .', result = "'. $data['result'] .'", note = "'.$data['note'].'" where id = ' . $id;
+							die($sql);
 							if ($db->query($sql)) {
 								checkPrinter($id, $form);
 								$result['notify'] = 'Đã cập nhật mẫu';
