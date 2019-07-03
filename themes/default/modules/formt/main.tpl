@@ -235,21 +235,21 @@
     <div class="row form-group boxed box-1 box-1-3 box-4 box-4-16 box-5 box-5-15">
       <label class="col-sm-6">Ngày nhận mẫu</label>
       <div class="col-sm-12">
-        <input type="text" class="form-control" id="form-insert-receive" autocomplete="off">
+        <input type="text" value="{today}" class="form-control" id="form-insert-receive" autocomplete="off">
       </div>
     </div>
     
     <div class="row form-group boxed box-1 box-1-4">
       <label class="col-sm-6">Ngày hẹn trả kết quả</label>
       <div class="col-sm-12">
-        <input type="text" class="form-control" id="form-insert-resend" autocomplete="off">
+        <input type="text" value="{tomorrow}" class="form-control" id="form-insert-resend" autocomplete="off">
       </div>
     </div>
 
     <div class="row form-group boxed box-5 box-5-1">
       <label class="col-sm-6"> Ngày thông báo kết quả </label>
       <div class="col-sm-12">
-        <input type="text" class="form-control" id="form-insert-notice-time" autocomplete="off">
+        <input type="text" value="{today}" class="form-control" id="form-insert-notice-time" autocomplete="off">
       </div>
     </div>
 
@@ -258,7 +258,7 @@
         Ngày lấy mẫu
       </label>
       <div class="relative col-sm-12">
-        <input type="text" class="form-control" id="form-insert-sample-receive" autocomplete="off">
+        <input type="text" value="{yesterday}" class="form-control" id="form-insert-sample-receive" autocomplete="off">
       </div>
     </div>
 
@@ -309,7 +309,7 @@
     <div class="row form-group boxed box-1 box-1-8 box-2 box-2-7">
       <label class="col-sm-6">Ngày trả</label>
       <div class="col-sm-12">
-        <input type="text" class="form-control" id="form-insert-iresend" autocomplete="off">
+        <input type="text" value="{tomorrow}" class="form-control" id="form-insert-iresend" autocomplete="off">
       </div>
     </div>
 
@@ -578,7 +578,7 @@
         Ngày phân tích
       </label>
       <div class="relative col-sm-12">
-        <input type="text" class="form-control" id="form-insert-exam-date" autocomplete="off">
+        <input type="text" value="{tomorrow}" class="form-control" id="form-insert-exam-date" autocomplete="off">
       </div>
     </div>
 
@@ -652,7 +652,7 @@
     <div class="row form-group boxed box-2 box-2-9">
       <label class="col-sm-6"> Ngày giao mẫu </label>
       <div class="col-sm-10">
-        <input type="text" id="form-insert-xsend" class="form-control" autocomplete="off">
+        <input type="text" value="{today}" id="form-insert-xsend" class="form-control" autocomplete="off">
       </div>
     </div>
 
@@ -667,7 +667,7 @@
     <div class="row form-group boxed box-2 box-2-11">
       <label class="col-sm-6"> Ngày nhận mẫu </label>
       <div class="col-sm-10">
-        <input type="text" id="form-insert-xreceive" class="form-control" autocomplete="off">
+        <input type="text" value="{today}" id="form-insert-xreceive" class="form-control" autocomplete="off">
       </div>
     </div>
 
@@ -682,7 +682,7 @@
     <div class="row form-group boxed box-2 box-2-13">
       <label class="col-sm-6"> Ngày giao kết quả </label>
       <div class="col-sm-10">
-        <input type="text" id="form-insert-xresend" class="form-control" autocomplete="off">
+        <input type="text" value="{tomorrow}" id="form-insert-xresend" class="form-control" autocomplete="off">
       </div>
     </div>
 
@@ -747,7 +747,13 @@
   var style = '.table-bordered {border-collapse: collapse;}.table-wider td, .table-wider th {padding: 10px;}table {width: 100%;}table td {padding: 5px;}.no-bordertop {border-top: 1px solid white; }.no-borderleft {border-left: 1px solid white; }.c20, .c25, .c30, .c35, .c40, .c45, .c50, .c80 {display: inline-block;}.c20 {width: 19%;}.c25 {width: 24%;}.c30 {width: 29%;}.c35 {width: 34%;}.c40 {width: 39%;}.c45 {width: 44%;}.c50 {width: 49%;}.c80 {width: 79%;}.p11 {font-size: 11pt}.p12 {font-size: 12pt}.p13 {font-size: 13pt}.p14 {font-size: 14pt}.p15 {font-size: 15pt}.p16 {font-size: 16pt}.text-center, .cell-center {text-align: center;}.cell-center {vertical-align: inherit;} p {margin: 5px 0px;}'
   var profile = ['@page { size: A4 portrait; margin: 20mm 10mm 10mm 25mm; }', '@page { size: A4 landscape; margin: 20mm 10mm 10mm 25mm;}']
   var former = {
-    1: `<table class="table-bordered" border="1"><tr><td rowspan="2" class="cell-center" style="width: 20%; padding: 10pt 21pt;">CHI CỤC THÚ Y VÙNG V</td><td class="cell-center p15" style="height: 30pt;"> <b>PHIẾU GIẢI QUYẾT HỒ SƠ</b></td></tr><tr><td class="no-bordertop">Số: code/TYV5-TH</td></tr></table><p>&emsp; Tên đơn vị: senderemploy</p><p><div class="inline c50">&emsp; Ngày nhận: receive </div><div class="inline c50">Ngày hẹn trả kết quả: resend </div></p><p><div class="inline c30">&emsp; Hình thức nhận: </div><div class="inline c20">status-0 Trực tiếp</div><div class="inline c20"> status-1 Bưu điện</div><div class="inline c30">Khác: status-2</div></p><p>&emsp; Người nhận hồ sơ: receiveremploy</p><p><div class="inline c30">&emsp; Phòng chuyên môn:</div><div class="inline c40">Ngày nhận: ireceive </div><div class="inline c30">Ngày trả: iresend </div></p><table class="table-bordered" border="1"><tr><td class="text-center" style="height: 240px; vertical-align: baseline;"> <p class="text-center"> <u>Hồ sơ gồm:</u> </p> <div style="text-align: left;"> formcontent </div></td></tr></table><br><table class="table-bordered" border="1"><tr><th class="p13"> <b>Ý kiến của phòng, Bộ phận chịu trách nhiệm giải quyết</b> </th><th class="p13"> <b>Ý kiến của ban lãnh đạo</b> </th></tr><tr><td style="height: 220px;"></td><td></td></tr></table><p>&emsp;&emsp;Ghi chú: Hồ sơ có ý kiến của thủ trưởng (hoặc người được ủy quyền) phải giao lại cho Bộ phận một cửa trước 01 ngày so với ngày hẹn trả </p><br><br><br><p><div class="inline c40">Mã số: BM-02/TYV5-06</div><div class="inline c40">Mã số: Ngày ban hành: 02/11/2017</div><div class="inline c20">Lần sửa đổi: 02</div></p>`,
+    1: `<table class="table-bordered" border="1">
+      <tr>
+        <td rowspan="2" class="cell-center" style="width: 20%; padding: 10pt 21pt;"> CHI CỤC THÚ Y VÙNG V </td>
+        <td class="cell-center p15" style="height: 30pt;"> <b>PHIẾU GIẢI QUYẾT HỒ SƠ</b></td>
+      </tr>
+      <tr>
+        <td class="no-bordertop">Số: code/TYV5-TH</td></tr></table><p>&emsp; Tên đơn vị: senderemploy</p><p><div class="inline c50">&emsp; Ngày nhận: receive </div><div class="inline c50">Ngày hẹn trả kết quả: resend </div></p><p><div class="inline c30">&emsp; Hình thức nhận: </div><div class="inline c20">status-0 Trực tiếp</div><div class="inline c20"> status-1 Bưu điện</div><div class="inline c30">Khác: status-2</div></p><p>&emsp; Người nhận hồ sơ: receiveremploy</p><p><div class="inline c30">&emsp; Phòng chuyên môn:</div><div class="inline c40">Ngày nhận: ireceive </div><div class="inline c30">Ngày trả: iresend </div></p><table class="table-bordered" border="1"><tr><td class="text-center" style="height: 240px; vertical-align: baseline;"> <p class="text-center"> <u>Hồ sơ gồm:</u> </p> <div style="text-align: left;"> formcontent </div></td></tr></table><br><table class="table-bordered" border="1"><tr><th class="p13"> <b>Ý kiến của phòng, Bộ phận chịu trách nhiệm giải quyết</b> </th><th class="p13"> <b>Ý kiến của ban lãnh đạo</b> </th></tr><tr><td style="height: 220px;"></td><td></td></tr></table><p>&emsp;&emsp;Ghi chú: Hồ sơ có ý kiến của thủ trưởng (hoặc người được ủy quyền) phải giao lại cho Bộ phận một cửa trước 01 ngày so với ngày hẹn trả </p><br><br><br><p><div class="inline c40">Mã số: BM-02/TYV5-06</div><div class="inline c40">Mã số: Ngày ban hành: 02/11/2017</div><div class="inline c20">Lần sửa đổi: 02</div></p>`,
     2: `<table class="table-bordered" border="1" style="width: 95%; margin: auto;"><tr><td style="width: 60%;" class="cell-center">CHI CỤC THÚ Y VÙNG V <br> <b> TRẠM CHẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT </b></td><td><div class="c20"></div><div class="c80"><b>Biểu mẫu số: BM.STTT.20.10 <br>Số soát xét: 03.02718</b></div></td></tr></table><br><div class="text-center"> <b>PHIẾU GIAO NHẬN MẪU VÀ KẾT QUẢ XÉT NGHIỆM</b> </div><div style="float: right; width: 160pt; margin-right: 10pt; border: 1px solid black; padding: 5pt;">Số ĐKXN: xcode-0/xcode-1/xcode-2 <br> Số trang: (page) <br> Liên: 01/02 </div><br><br><p><b>Bên giao mẫu: </b> isenderunit</p><p><b>Bên nhận mẫu: </b> ireceiverunit </p> <div> xtable </div> <div style="display: inline-block; width: 60px;"><b>Ghi chú:</b> </div><div style="margin-left: 1pt; display: inline-table; width: calc(100% - 65px);"></p> (note) - Bộ phận xét nghiệm trả kết quả trên chỉ tiêu xét nghiệm. <br>- Ngày xét nghiệm: examdate <br>- Ngày hẹn trả kết quả xét nghiệm: <i>ngày resend-0 tháng resend-1 năm resend-2</i>(result)</p></div><table><tr><td style="width: 5%"></td><td class="c30 text-center"><b>Người/Ngày giao mẫu <br></b><i>Ngày xsend-0 tháng xsend-1 năm xsend-2 <br> <br> <br> <br> <br></i> <div><b>xsender</b></div></td><td class="c30 text-center"><b>Người/Ngày nhận mẫu <br></b><i>Ngày xreceive-0 tháng xreceive-1 năm xreceive-2 <br> <br> <br> <br> <br></i> <div><b>xreceiver<b></div> </td><td class="c30 text-center"><b>Phụ trách bộ phận xét nghiệm <br></b><i>Ngày xresend-0 tháng xresend-1 năm xresend-2 <br> <br> <br> <br> <br></i> <div><b>xresender</b></div></td></tr></table>`,
     3: '<table class="table-bordered" border="1"><tr><td class="cell-center"> <b>Biểu mẫu số: BM.STTT.22.01</b> </td><td class="cell-center"> <b>Số soát xét: 03.027148</b> </td></tr><tr><td colspan="2"><div class="cell-center">CHI CỤC THÚ Y VÙNG V <br> <b class="p16"> TRẠM CHẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT </b></div>Địa chỉ: Số 36, Phạm Hùng, phường Tân An, thành phố Buôn Ma Thuột, tỉnh Đăk Lăk. <br>Điện thoại: 0262 3877793</td></tr></table><br><div class="text-center p16"> <b> PHIẾU KẾT QUẢ XÉT NGHIỆM </b> </div> <br><span> <b> Số ĐKXN: xcode-0/xcode-1/xcode-2 </b> </span> <span style="float: right; width: 100px;"> Trang: (page) </span><p class="text-center"> <b> Số phiếu kết quả thử nghiệm: xcode-0/xcode-1/xcode-2.CĐXN </b> </p>  <div id="a">xtable</div><p><div style="display: inline-block"><b> &emsp;&emsp; <u> Ghi chú: </u> </b> </div><div style="display: inline-flex"><i> (vnote) </i></div></p><p> <i> &emsp;&emsp; Kết quả chỉ có giá trị trên mẫu thử nghiệm. Việc sao chép kết quả này chỉ có giá trị khi được sao chép toàn bộ, và không có giá trị nếu chỉ sao chép một phần./. </i> </p><table><tr><td style="width: 5%"></td><td style="width: 40%" class="text-center"> <b>BỘ PHẬN XÉT NGHIỆM</b> <br> <i> (Ký, ghi rõ họ tên) </i> <br> <br> <br> <br> <br> <b> xexam </b> </td><td style="width: 20%"></td><td style="width: 40%" class="text-center"> <b> TRƯỞNG TRẠM </b> <br> <br> <br> <br> <br> <br> <b> receiveleader </b> </td><td style="width: 5%"></td></tr></table>',
     4: '<table border="1" class="table-bordered"> <tr> <td class="text-center"> <b>Biểu mẫu số: BM.STTT.22.01</b> </td> <td class="text-center"> <b>Số soát xét: 03.02718</b> </td> </tr> <tr> <td colspan="2"> <div class="text-center"> <b>CHI CỤC THÚ Y VÙNG V</b> </div> <div class="text-center"> <b>TRẠM CHUẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT</b> </div> <div> <b> Địa chỉ: </b> Số 36 Phạm Hùng, Phường Tân An, Thành phố Buôn Ma Thuột, Tỉnh Đăklăk </div> <div> <b> Điện thoại: </b> 0262 3877793 </div> </td> </tr> </table> <div class="text-center p16" style="margin: 10px;"> <b>PHIẾU KẾT QUẢ XÉT NGHIỆM</b> </div> <div style="margin: 4px;"> <div style="float: left"> <b> Số phiếu kết quả xét nghiệm: xcode-0/xcode-1/xcode-2.CĐXN </b> </div> <div style="float: right"> <i> Trang (page) </i> </div> </div> <table border="1" class="table-bordered"> <tr> <td colspan="2"> <b>Tên /khách hàng:</b> (customer) </td> <td style="width: 30%"> <b>Số ĐKXN: xcode-0/xcode-1/xcode-2</b></td> </tr> <tr> <td colspan="3"> <div> <b>Địa chỉ khách hàng:</b> (address) </div> <div style="float: left; width: 400px;"> <b>Số điện thoại:</b>  (phone) </div> <div style="float: left; "> <b>Fax: </b>  (fax) </div> </td> </tr> <tr> <td colspan="3"> <b>Loài động vật lấy mẫu: </b>  (sample) </td> </tr> <td colspan="3"> <b>Loại mẫu: </b>  (type) </td> </tr> <tr> <td colspan="3"> <b>Số lượng mẫu:</b>  (number) (numberword) </td> </tr> <tr> <td colspan="3"> <b>Ký hiệu mẫu:</b>  (sampleCode) </td> </tr> <tr> <td colspan="3"> <b>Tình trạng khi nhận mẫu:</b>  (status) </td> </tr> <tr> <td style="width: 50%"> <b>Ngày lấy mẫu: </b>  (sampleReceive) </td> <td colspan="2"> <b>Người lấy mẫu: </b>  (sampleReceiver) </td> </tr> <tr> <td style="width: 50%"> <b>Ngày, giờ nhận mẫu:</b> (receiveHour)<sup>h</sup>(receiveMinute)<sup>p</sup> (ireceive)</td> <td colspan="2"> <b>Người nhận mẫu:</b> (ireceiver) </td> </tr> <tr> <td colspan="3">  <b><u>Chỉ tiêu xét nghiệm</u></b> <br> (exam) (index) (exam-content) </div> <div> &nbsp;&nbsp; Phương pháp xét nghiệm: (method); Ký hiệu phương pháp: (symbol). </div> (/exam) (note) </td> </tr> <tr> <td colspan="3"> <b>Ngày phân tích:</b> (examDate) </td> </tr> <tr> <td colspan="3"> <b> Kết quả: </b> <br> (result) </td> </tr> </table> <table style="width: 100%"> <tr> <td class="text-center"> Ngày examdate-0 tháng examdate-1 năm examdate-2 <br> <b>BỘ PHẬN XÉT NGHIỆM</b> <br> (Ký, ghi rõ họ tên) <br> <br> <br> <br> <br> <b>(xexam)</b> </td> <td class="text-center"> Ngày examdate-0 tháng examdate-1 năm examdate-2 <br> <b>TRƯỞNG TRẠM</b> <br> <br> <br> <br> <br> <br> <b>(xresender)</b> </td> </tr> </table> </div>',
@@ -901,6 +907,12 @@
   var global_page = 1
   var global_printer = 1
   var permist = "{permist}"
+  var defaultData = {
+    code: '-19',
+    today: '{today}',
+    yesterday: '{yesterday}',
+    tomorrow: '{tomorrow}'
+  }
 
   var visible = {
     0: {1: '1', 2: '1'},
@@ -1862,19 +1874,29 @@
     global_saved = 0
     parseSaved()
     parseBox(global_form)
+    console.log(defaultData);
+    
+    formInsertCode.val(defaultData['code'])
+    formInsertReceive.val(defaultData['today'])
+    formInsertResend.val(defaultData['tomorrow'])
+    formInsertIreceive.val(defaultData['today'])
+    formInsertIresend.val(defaultData['tomorrow'])
+
+    formInsertExamDate.val(defaultData['tomorrow'])
+    formInsertXreceive.val(defaultData['today'])
+    formInsertXsend.val(defaultData['today'])
+    formInsertXresend.val(defaultData['tomorrow'])
+    formInsertSampleReceive.val(defaultData['yesterday'])
+    formInsertNoticeTime.val(defaultData['today'])
+
     formInsertPage2.val('')
     formInsertPage3.val('')
     formInsertPage4.val('')
     formInsertOwnerPhone.val('')
     formInsertOwnerMail.val('')
-    formInsertCode.val('')
     formInsertSenderEmploy.val('')
     formInsertReceiverEmploy.val('')
-    formInsertReceive.val('')
-    formInsertResend.val('')
     formInsertExamSample.val('')
-    formInsertIreceive.val('')
-    formInsertIresend.val('')
     formInsertNumber.val('')
     formInsertSample.val('')
     formInsertStatus.val('')
@@ -1897,8 +1919,6 @@
     formInsertNumberWord.val('')
     formInsertAddress.val('')
     formInsertPhone.val('')
-    formInsertSampleReceive.val('')
-    formInsertExamDate.val('')
     formInsertOther.val('')
     formInsertResult.val('')
     formInsertIreceiverEmploy.val('')
@@ -1912,11 +1932,8 @@
     formInsertXaddress.val('')
     formInsertOwner.val('')
     formInsertSamplePlace.val('')
-    formInsertXreceive.val('')
     formInsertXreceiver.val('')
-    formInsertXresend.val('')
     formInsertXresender.val('')
-    formInsertXsend.val('')
     formInsertXsender.val('')
     formInsertXexam.val('')
     formInsertXphone.val('')

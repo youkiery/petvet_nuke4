@@ -379,6 +379,16 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("main.tpl", PATH);
 
+$today = strtotime(date('Y-m-d'));
+$tomorrow = $today + 60*60*24;
+$yesterday = $today - 60*60*24;
+$from = $today - 60*60*24*7;
+$end = $today + 60*60*24*7;
+
+$xtpl->assign("yesterday", date("d/m/Y", $yesterday));
+$xtpl->assign("today", date("d/m/Y", $today));
+$xtpl->assign("tomorrow", date("d/m/Y", $tomorrow));
+
 if (checkIsMod($user_info['userid'])) {
 	$method = getMethod();
 	$methodHtml = '';
@@ -403,10 +413,6 @@ if (checkIsMod($user_info['userid'])) {
 	$xtpl->parse('main.mod');
 	$xtpl->parse('main.mod2');
 }
-
-$today = strtotime(date('Y-m-d'));
-$from = $today - 60*60*24*7;
-$end = $today + 60*60*24*7;
 
 if (!empty($user_info['userid'])) {
 	$xtpl->assign("permist", getUserPermission($user_info['userid']));	
