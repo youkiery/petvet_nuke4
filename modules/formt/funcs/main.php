@@ -13,6 +13,57 @@ if (!defined('NV_IS_FORM')) {
 
 $page_title = "Nhập hồ sơ một chiều";
 
+// $sql = "select * from `". PREFIX ."_row`";
+// $query = $db->query($sql);
+
+// while ($row = $query->fetch()) {
+// 	var_dump($row);
+	// $row['form'] = explode(', ', $row['form']);
+	// $row['exam'] = json_decode($row['exam']);
+	
+	// checkRemindv2($row['sample'], 'sample');
+	// checkRemindv2($row['sender'], 'sender-employ');
+	// checkRemindv2($row['receiver'], 'receiver-employ');
+	// foreach ($row['form'] as $value) {
+	// 	checkRemindv2($value, 'form');
+	// }
+	// foreach ($row['exam'] as $examMain) {
+	// 	checkRemindv2($examMain->{'symbol'}, 'symbol');
+	// 	checkRemindv2($examMain->{'method'}, 'method');
+	// 	foreach ($examMain->{'exam'} as $examNote) {
+	// 		checkRemindv2($examNote, 'exam');
+	// 	}
+	// }
+	
+	// checkRemindv2($row['isenderunit'], 'isender-unit');
+	// checkRemindv2($row['ireceiverunit'], 'ireceiver-unit');
+	// checkRemindv2($row['xreceiver'], 'xreceiver');
+	// checkRemindv2($row['xresender'], 'xresender');
+	// checkRemindv2($row['xsender'], 'xsender');
+	// checkRemindv2($row['page2'], 'page2');
+
+	// checkRemindv2($row['xresender'], 'xresender');
+	// checkRemindv2($row['xexam'] , 'xexam');
+	// checkRemindv2($row['page3'], 'page3');
+
+	// checkRemindv2($row['address'], 'address');
+	// checkRemindv2($row['samplereceiver'], 'sample-receiver');
+	// checkRemindv2($row['ireceiveremploy'], 'ireceiver-employ');
+	// checkRemindv2($row['isenderunit'], 'isender-unit');
+	// checkRemindv2($row['xphone'], 'xphone');
+	// checkRemindv2($row['fax'], 'fax');
+	// checkRemindv2($row['page4'], 'page4');
+
+	// checkRemindv2($row['receiveleader'], 'receive-leader');
+	// checkRemindv2($row['sender'], 'sender-employ');
+	// checkRemindv2($row['sampleplace'], 'sample-place');
+	// checkRemindv2($row['owner'], 'owner');
+	// checkRemindv2($row['xaddress'], 'xaddress');
+	// checkRemindv2($row['ownerphone'], 'ownerphone');
+	// checkRemindv2($row['ownermail'], 'ownermail');
+// }
+// die();	
+
 if ($nv_Request->isset_request("excel", "get")) {
 	$excelf = totime($nv_Request->get_string('excelf', 'get/post', ''));
 	$excelt = totime($nv_Request->get_string('excelt', 'get/post', ''));

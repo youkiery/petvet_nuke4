@@ -6,7 +6,7 @@
   .right-click {
     float: left;
     overflow: hidden;
-    height: 32px;
+    height: 20px;
     width: 80%;
   }
   .right2-click {
@@ -735,25 +735,28 @@
   </div>
   <!-- END: mod2 -->
   <div id="menu2" class="tab-pane">
-    <label class="row">
+    <label class="row" style="width: 100%;">
       <div class="col-sm-6">Ngày bắt đầu</div>
       <div class="col-sm-12">
         <input type="text" value="{excelf}" class="form-control" id="excelf">
       </div>
     </label>
-    <label class="row">
+
+    <label class="row" style="width: 100%;">
       <div class="col-sm-6">Ngày kết thúc</div>
       <div class="col-sm-12">
         <input type="text" value="{excelt}" class="form-control" id="excelt">
       </div>
     </label>
+    <!-- <label style="width: 30%"> <input type="checkbox" id="index"> </label>
+    <label style="width: 30%"> <input type="checkbox" id=""> </label>
+    <label style="width: 30%"> <input type="checkbox" id=""> </label> -->
     <div class="text-center">
       <button class="btn btn-info" onclick="download()">
         Xuất ra Excel
       </button>
     </div>
   </div>
-</div>
 
 <script>
   var style = '.table-bordered {border-collapse: collapse;}.table-wider td, .table-wider th {padding: 10px;}table {width: 100%;}table td {padding: 5px;}.no-bordertop {border-top: 1px solid white; }.no-borderleft {border-left: 1px solid white; }.c20, .c25, .c30, .c35, .c40, .c45, .c50, .c80 {display: inline-block;}.c20 {width: 19%;}.c25 {width: 24%;}.c30 {width: 29%;}.c35 {width: 34%;}.c40 {width: 39%;}.c45 {width: 44%;}.c50 {width: 49%;}.c80 {width: 79%;}.p11 {font-size: 11pt}.p12 {font-size: 12pt}.p13 {font-size: 13pt}.p14 {font-size: 14pt}.p15 {font-size: 15pt}.p16 {font-size: 16pt}.text-center, .cell-center {text-align: center;}.cell-center {vertical-align: inherit;} p {margin: 5px 0px;}'
