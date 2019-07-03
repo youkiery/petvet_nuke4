@@ -102,10 +102,26 @@ function getRemindIdv2Id($id) {
 	return 0;
 }
 
+function getDefault() {
+	global $db;
+	$sql = 'select t1.type, t1.name FROM `'. PREFIX .'_remindv2` t1 INNER JOIN (SELECT Max(rate) as rate, type FROM `'. PREFIX .'_remindv2` GROUP  BY type) t2 ON t1.type = t2.type AND t1.rate = t2.rate';
+	$query = $db->query($sql);
+	$remind = array();
+
+	while ($row = $query->fetch()) {
+		$remind[$row['type']] = $row['name'];
+	}
+	return $remind;
+}
+
 function getRemindIdv2($name, $type) {
 	global $db;
 
 	$sql = 'select * from `'. PREFIX .'_remindv2` where name = "' . $name . '" and type = "'. $type .'"';
+	// if ($type == "owner") {
+	// 	die($sql);
+	// }
+	// echo $sql . '<br>';
 	$query = $db->query($sql);
 	$row = $query->fetch();
 
@@ -118,14 +134,20 @@ function getRemindIdv2($name, $type) {
 function checkRemindv2($name, $type) {
 	global $db;
 
-	if (!($id = getRemindIdv2($name, $type))) {
+	if ($id = getRemindIdv2($name, $type)) {
+		$sql = 'update `'. PREFIX .'_remindv2` set visible = 1, rate = rate + 1 where id = ' . $id;
+		if ($db->query($sql)) {
+			return $id;
+		}
+		return 0;
+	}
+	else {
 		$sql = 'insert into `'. PREFIX .'_remindv2` (type, name, visible) values ("'. $type .'", "'. $name .'", 1)';
 		if ($db->query($sql)) {
 			return $db->lastInsertId();
 		}
 		return 0;
 	}
-	return $id;
 }
 
 function removeRemindv2($id) {

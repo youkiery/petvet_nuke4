@@ -117,21 +117,6 @@ if (!empty($action)) {
 				$temp = $result['form']['status'];
 				$result['form']['status'] = array();
 				$result['form']['status']['index'] = $temp;
-				
-				// if ($action == 'preview') {
-				// 	$result = $result['form'];
-				// 	if (!empty($result['form'])) {
-				// 		$result['form'] = explode(', ', $result['form']);
-				// 	}
-				// 	if (!empty($result['exam'])) {
-				// 		$result['exam'] = explode(', ', $result['exam']);
-				// 	}
-				// 	if (!empty($result['method'])) {
-				// 		$result['method'] = explode(', ', $result['method']);
-				// 	}
-				// }
-				// var_dump($result['form']);
-				// die();
 				$result['status'] = 1;
 			}
 		break;
@@ -181,10 +166,10 @@ if (!empty($action)) {
 								$result['notify'] = 'Nhập thiếu thông tin: ' . $teriorname[$key];
 							}
 							else {
-								checkRemindRow($data['sender'], 2);
-								checkRemindRow($data['receiver'], 1);
-
 								// reminded exam
+								checkRemindv2($data['sample'], 'sample');
+								checkRemindv2($data['sender'], 'sender-employ');
+								checkRemindv2($data['receiver'], 'receiver-employ');
 								foreach ($data['form'] as $value) {
 									checkRemindv2($value, 'form');
 								}
@@ -197,15 +182,6 @@ if (!empty($action)) {
 								}
 								$exam = json_encode($data['exam'], JSON_UNESCAPED_UNICODE);
 
-								// foreach ($data['exams'] as $key => $value) {
-								// 	checkRemindRow($value, 3);
-								// }
-								// foreach ($data['symbol'] as $key => $value) {
-								// 	checkRemindv2($value, 'symbol');
-								// }
-								// foreach ($data['methods'] as $key => $value) {
-								// 	checkRemindv2($value, 'method');
-								// }
 								if ($id) {
 									$sql = 'update `'. PREFIX .'_row` set code = "'. $data['code'] .'", sender = "' . $data['sender'] . '", receive = ' . totime($data['receive']) . ', resend = ' . totime($data['resend']) . ', stateIndex = '. $data['state']['index'] .', stateValue = "'. $data['state']['value'] .'", receiver = "' . $data['receiver'] . '", ireceive = '. totime($data['ireceive']) . ', iresend = '. totime($data['iresend']) . ', form = "'. implode(', ', $data['form']) .'", number = ' . $data['number'] .', exam = \'' . $exam . '\', sample = "'. $data['sample'] .'", sampleCode = "'. $data['samplecode'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", xnote = "'. $data['xnote'] .'", numberword = "'. $data['numberword'] .'" where id = ' . $id;
 									$query = $db->query($sql);
@@ -223,6 +199,7 @@ if (!empty($action)) {
 									$result['html'] = formList($keyword, $page, $limit, $printer, $other);
 									$result['remind'] = json_encode(getRemind());
 									$result['remindv2'] = json_encode(getRemindv2());
+									$result['default'] = json_encode(getDefault());
 								}
 							}	
 						}
@@ -232,11 +209,12 @@ if (!empty($action)) {
 							$result['notify'] = 'Nhập thiếu thông tin: ' . $teriorname[$key];
 						}
 						else {
-							checkRemindv2($data['isenderunit'], 'isenderunit');
-							checkRemindv2($data['ireceiverunit'], 'isenderunit');
+							checkRemindv2($data['isenderunit'], 'isender-unit');
+							checkRemindv2($data['ireceiverunit'], 'ireceiver-unit');
 							checkRemindv2($data['xreceiver'], 'xreceiver');
 							checkRemindv2($data['xresender'], 'xresender');
 							checkRemindv2($data['xsender'], 'xsender');
+							checkRemindv2($data['page2'], 'page2');
 
 							$iresend = totime($data['iresend']);
 							$xreceive = totime($data['xreceive']);
@@ -253,7 +231,7 @@ if (!empty($action)) {
 							}
 							$ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
 
-							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode($data['xcode'], ',') .'", isenderunit = "'. $data['isenderunit'] .'", ireceiverunit = "'. $data['ireceiverunit'] .'", xreceiver = "'. $data['xreceiver'] .'", xresender = "'. $data['xresender'] .'", xsender = "'. $data['xsender'] .'", iresend = '. $iresend .', xreceive = '. $xreceive .', xresend = "'. $xresend .'", xsend = '. $xsend .', ig = \''. $ig .'\', examdate = '. $examdate .', result = "'. $data['result'] .'", note = "'.$data['note'].'", page2 = "'. $data['page'] .'" where id = ' . $id;
+							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode($data['xcode'], ',') .'", isenderunit = "'. $data['isenderunit'] .'", ireceiverunit = "'. $data['ireceiverunit'] .'", xreceiver = "'. $data['xreceiver'] .'", xresender = "'. $data['xresender'] .'", xsender = "'. $data['xsender'] .'", iresend = '. $iresend .', xreceive = '. $xreceive .', xresend = "'. $xresend .'", xsend = '. $xsend .', ig = \''. $ig .'\', examdate = '. $examdate .', result = "'. $data['result'] .'", note = "'.$data['note'].'", page2 = "'. $data['page2'] .'" where id = ' . $id;
 							if ($db->query($sql)) {
 								checkPrinter($id, $form);
 								$result['notify'] = 'Đã cập nhật mẫu';
@@ -262,6 +240,7 @@ if (!empty($action)) {
 								$result['html'] = formList($keyword, $page, $limit, $printer, $other);
 								$result['remind'] = json_encode(getRemind());
 								$result['remindv2'] = json_encode(getRemindv2());
+								$result['default'] = json_encode(getDefault());
 							}
 						}
 					break;
@@ -273,6 +252,7 @@ if (!empty($action)) {
 							$ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
 							checkRemindv2($data['xresender'], 'xresender');
 							checkRemindv2($data['xexam'] , 'xexam');
+							checkRemindv2($data['page3'], 'page3');
 							foreach ($data['ig'] as $examMain) {
 								checkRemindv2($examMain['symbol'], 'symbol');
 								checkRemindv2($examMain['method'], 'method');
@@ -281,7 +261,7 @@ if (!empty($action)) {
 								}
 							}
 
-							$sql = 'update `'. PREFIX .'_row` set ig = \''. $ig .'\', xresender = "'. $data['xresender'] .'", xexam = "'. $data['xexam'] .'", vnote = "'. $data['vnote'] .'", page3 = "'. $data['page'] .'" where id = ' . $id;
+							$sql = 'update `'. PREFIX .'_row` set ig = \''. $ig .'\', xresender = "'. $data['xresender'] .'", xexam = "'. $data['xexam'] .'", vnote = "'. $data['vnote'] .'", page3 = "'. $data['page3'] .'" where id = ' . $id;
 							if ($db->query($sql)) {
 								checkPrinter($id, $form);
 								$result['notify'] = 'Đã cập nhật mẫu';
@@ -290,6 +270,7 @@ if (!empty($action)) {
 								$result['html'] = formList($keyword, $page, $limit, $printer, $other);
 								$result['remind'] = json_encode(getRemind());
 								$result['remindv2'] = json_encode(getRemindv2());
+								$result['default'] = json_encode(getDefault());
 							}
 						}
 					break;
@@ -298,17 +279,19 @@ if (!empty($action)) {
 							$result['notify'] = 'Nhập thiếu thông tin: ' . $teriorname[$key];
 						}
 						else {
-							checkRemindRow($data['isenderunit'], 2);
-							checkRemindRow($data['ireceiveremploy'], 1);
 							$sampleReceive = totime($data['samplereceive']);
 							$receive = totime($data['receive']);
 							$examDate = totime($data['examdate']);
 							$note = nl2br($data['note']);
-							checkRemindRow($data['address'], 5);
-							checkRemindRows($data['result'], 5);
-							// check reminded
+
+							checkRemindv2($data['address'], 'address');
+							checkRemindv2($data['samplereceiver'], 'sample-receiver');
+							checkRemindv2($data['ireceiveremploy'], 'ireceiver-employ');
+							checkRemindv2($data['isenderunit'], 'isender-unit');
 							checkRemindv2($data['xphone'], 'xphone');
 							checkRemindv2($data['fax'], 'fax');
+							checkRemindv2($data['page4'], 'page4');
+							// check reminded
 							foreach ($data['exam'] as $examMain) {
 								checkRemindv2($examMain['symbol'], 'symbol');
 								checkRemindv2($examMain['method'], 'method');
@@ -318,7 +301,7 @@ if (!empty($action)) {
 							}
 							$exam = json_encode($data['exam'],JSON_UNESCAPED_UNICODE);
 
-							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(',', $data['xcode']) .'", receiveHour = '.$data['receivehour'].', receiveMinute = '.$data['receiveminute'].', sampleReceive = "'.$sampleReceive.'", address = "'.$data['address'].'", sampleReceiver = "'.$data['samplereceiver'].'", examDate = "'.$examDate.'", result = "'. $data['result'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', status = "'. $data['status']['index'] .'", sampleCode5 = "'. $data['samplecode5'] .'", receive = '. $receive .', note = "'. $note .'", xphone = "'. $data['xphone'] .'", sample = "'. $data['sample'] .'", isenderUnit = "'. $data['isenderunit'] .'", ireceiverEmploy = "'. $data['ireceiveremploy'] .'", exam = \''. $exam .'\', numberword = "'. $data['numberword'] .'", fax = "'. $data['fax'] .'", page4 = "'. $data['page'] .'", xexam = "'. $data['xexam'] .'", xresender = "'. $data['xresender'] .'"  where id = ' . $id;
+							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(',', $data['xcode']) .'", receiveHour = '.$data['receivehour'].', receiveMinute = '.$data['receiveminute'].', sampleReceive = "'.$sampleReceive.'", address = "'.$data['address'].'", sampleReceiver = "'.$data['samplereceiver'].'", examDate = "'.$examDate.'", result = "'. $data['result'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', status = "'. $data['status']['index'] .'", sampleCode5 = "'. $data['samplecode5'] .'", receive = '. $receive .', note = "'. $note .'", xphone = "'. $data['xphone'] .'", sample = "'. $data['sample'] .'", isenderUnit = "'. $data['isenderunit'] .'", ireceiverEmploy = "'. $data['ireceiveremploy'] .'", exam = \''. $exam .'\', numberword = "'. $data['numberword'] .'", fax = "'. $data['fax'] .'", page4 = "'. $data['page4'] .'", xexam = "'. $data['xexam'] .'", xresender = "'. $data['xresender'] .'"  where id = ' . $id;
 							$query = $db->query($sql);
 							if ($query) {
 								checkPrinter($id, $form);
@@ -328,6 +311,7 @@ if (!empty($action)) {
 								$result['html'] = formList($keyword, $page, $limit, $printer, $other);
 								$result['remind'] = json_encode(getRemind());
 								$result['remindv2'] = json_encode(getRemindv2());
+								$result['default'] = json_encode(getDefault());
 							}
 						}
 					break;
@@ -339,11 +323,11 @@ if (!empty($action)) {
 							$resend = totime($data['resend']);
 							$receive = totime($data['receive']);
 							$note = nl2br($data['note']);
-							checkRemindRow($data['xaddress'], 8);
-							checkRemindRow($data['onwer'], 9);
-							checkRemindRow($data['sampleplace'], 10);
-							checkRemindRow($data['sender'], 2);
-
+							
+							checkRemindv2($data['sender'], 'sender-employ');
+							checkRemindv2($data['sampleplace'], 'sample-place');
+							checkRemindv2($data['owner'], 'owner');
+							checkRemindv2($data['xaddress'], 'xaddress');
 							checkRemindv2($data['ownerphone'], 'ownerphone');
 							checkRemindv2($data['ownermail'], 'ownermail');
 							foreach ($data['exam'] as $examMain) {
@@ -365,6 +349,7 @@ if (!empty($action)) {
 								$result['html'] = formList($keyword, $page, $limit, $printer);
 								$result['remind'] = json_encode(getRemind());
 								$result['remindv2'] = json_encode(getRemindv2());
+								$result['default'] = json_encode(getDefault());
 							}
 						}
 					break;
@@ -385,9 +370,11 @@ $yesterday = $today - 60*60*24;
 $from = $today - 60*60*24*7;
 $end = $today + 60*60*24*7;
 
-$xtpl->assign("yesterday", date("d/m/Y", $yesterday));
-$xtpl->assign("today", date("d/m/Y", $today));
-$xtpl->assign("tomorrow", date("d/m/Y", $tomorrow));
+$remind = getDefault();
+
+$defaultData = array('code' => '-19', 'xcode' => '05,19,', 'result' => 'Âm tính (-)', 'receivedis' => '- Lưu: VT, Dịch tễ, Kế toán.', 'today' => date("d/m/Y", $today), 'yesterday' => date("d/m/Y", $yesterday), 'tomorrow' => date("d/m/Y", $tomorrow), 'remind' => $remind);
+
+$xtpl->assign("default", json_encode($defaultData));
 
 if (checkIsMod($user_info['userid'])) {
 	$method = getMethod();

@@ -192,10 +192,10 @@
     <div class="row form-group boxed box-2 box-2-1 box-3 box-3-1 box-4 box-4-1 box-5 box-5-19">
       <label class="col-sm-6">Số ĐKXN</label>
       <div class="col-sm-6">
-        <input type="text" class="form-control input-box xcode" id="form-insert-xcode-1" autocomplete="off">
+        <input type="text" value="5" class="form-control input-box xcode" id="form-insert-xcode-1" autocomplete="off">
       </div>
       <div class="col-sm-6">
-        <input type="text" class="form-control input-box xcode" id="form-insert-xcode-2" autocomplete="off">
+        <input type="text" value="19" class="form-control input-box xcode" id="form-insert-xcode-2" autocomplete="off">
       </div>
       <div class="col-sm-6">
         <input type="text" class="form-control input-box xcode" id="form-insert-xcode-3" autocomplete="off">
@@ -207,8 +207,8 @@
         Tên đơn vị - khách hàng
       </label>
       <div class="relative col-sm-12">
-        <input type="text" class="form-control" id="form-insert-sender-employ" autocomplete="off">
-        <div class="suggest" id="form-insert-sender-employ-suggest"></div>
+        <input type="text" value="{remind['sender-employ']}" class="form-control" id="sender-employ-0" autocomplete="off">
+        <div class="suggest" id="sender-employ-suggest-0"></div>
       </div>
     </div>
 
@@ -267,8 +267,8 @@
         Người lấy mẫu
       </label>
       <div class="relative col-sm-12">
-        <input type="text" class="form-control" id="form-insert-sample-receiver" autocomplete="off">
-        <div class="suggest" id="form-insert-sample-receiver-suggest"></div>
+        <input type="text" value="{remind['sample-receiver']}" class="form-control" id="sample-receiver-0" autocomplete="off">
+        <div class="suggest" id="sample-receiver-suggest-0"></div>
       </div>
     </div>
 
@@ -294,8 +294,8 @@
         Người nhận hồ sơ
       </label>
       <div class="relative col-sm-12">
-        <input type="text" class="form-control" id="form-insert-receiver-employ" autocomplete="off">
-        <div class="suggest" id="form-insert-receiver-employ-suggest"></div>
+        <input type="text" value="{remind['receiver-employ']}" class="form-control" id="receiver-employ-0" autocomplete="off">
+        <div class="suggest" id="receiver-employ-suggest-0"></div>
       </div>
     </div>
 
@@ -322,23 +322,13 @@
       </button>
     </div>
 
-    <div class="row form-group boxed">
-      <label class="col-sm-6">
-        Người giao mẫu
-      </label>
-      <div class="relative col-sm-12">
-        <input type="text" class="form-control" id="form-insert-isender-employ" autocomplete="off">
-        <div class="suggest" id="form-insert-isender-employ-suggest"></div>
-      </div>
-    </div>
-
     <div class="row form-group boxed box-2 box-2-3 box-4 box-4-3">
       <label class="col-sm-6">
         Bộ phận giao mẫu - Khách hàng yêu cầu xét nghiệm
       </label>
       <div class="relative col-sm-12">
-        <input type="text" class="form-control" id="form-insert-isender-unit" autocomplete="off">
-        <div class="suggest" id="form-insert-isender-unit-suggest"></div>
+        <input type="text" class="form-control" id="isender-unit-0" autocomplete="off">
+        <div class="suggest" id="isender-unit-suggest-0"></div>
       </div>
     </div>
 
@@ -347,8 +337,8 @@
         Địa chỉ
       </label>
       <div class="relative col-sm-12">
-        <input type="text" class="form-control" id="form-insert-address" autocomplete="off">
-        <div class="suggest" id="form-insert-address-suggest"></div>
+        <input type="text" class="form-control" id="address-0" autocomplete="off">
+        <div class="suggest" id="address-suggest-0"></div>
       </div>
     </div>
 
@@ -357,8 +347,8 @@
         Địa chỉ
       </label>
       <div class="relative col-sm-12">
-        <input type="text" class="form-control" id="form-insert-xaddress" autocomplete="off">
-        <div class="suggest" id="form-insert-xaddress-suggest"></div>
+        <input type="text" class="form-control" id="xaddress-0" autocomplete="off">
+        <div class="suggest" id="xaddress-suggest-0"></div>
       </div>
     </div>
 
@@ -367,8 +357,8 @@
         Chủ hộ
       </label>
       <div class="relative col-sm-12">
-        <input type="text" class="form-control" id="form-insert-owner" autocomplete="off">
-        <div class="suggest" id="form-insert-owner-suggest"></div>
+        <input type="text" class="form-control" id="owner-0" autocomplete="off">
+        <div class="suggest" id="owner-suggest-0"></div>
       </div>
     </div>
 
@@ -377,8 +367,8 @@
         Nơi lấy mẫu
       </label>
       <div class="relative col-sm-12">
-        <input type="text" class="form-control" id="form-insert-sample-place" autocomplete="off">
-        <div class="suggest" id="form-insert-sample-place-suggest"></div>
+        <input type="text" class="form-control" id="sample-place-0" autocomplete="off">
+        <div class="suggest" id="sample-place-suggest-0"></div>
       </div>
     </div>
 
@@ -407,8 +397,8 @@
         Người nhận mẫu
       </label>
       <div class="relative col-sm-12">
-        <input type="text" class="form-control" id="form-insert-ireceiver-employ" autocomplete="off">
-        <div class="suggest" id="form-insert-ireceiver-employ-suggest"></div>
+        <input type="text" class="form-control" id="ireceiver-employ-0" autocomplete="off">
+        <div class="suggest" id="ireceiver-employ-suggest-0"></div>
       </div>
     </div>
 
@@ -417,8 +407,8 @@
         Bộ phận nhận mẫu
       </label>
       <div class="relative col-sm-12">
-        <input type="text" class="form-control" id="form-insert-ireceiver-unit" autocomplete="off">
-        <div class="suggest" id="form-insert-ireceiver-unit-suggest"></div>
+        <input type="text" class="form-control" id="ireceiver-unit-0" autocomplete="off">
+        <div class="suggest" id="ireceiver-unit-suggest-0"></div>
       </div>
     </div>
 
@@ -498,8 +488,9 @@
 
     <div class="form-group row boxed box-1 box-1-13 box-4 box-4-7 box-5 box-5-8">
       <label class="col-sm-6"> Loài vật được lấy mẫu </label>
-      <div class="col-sm-12">
-        <input type="text" class="form-control sample" id="form-insert-sample" autocomplete="off">
+      <div class="col-sm-12 relative">
+        <input type="text" class="form-control sample" id="sample-0" autocomplete="off">
+        <div class="suggest" id="sample-suggest-0"></div>
       </div>
     </div>
 
@@ -623,21 +614,21 @@
     <div class="row form-group boxed box-2 box-2-2">
       <label class="col-sm-6"> Số trang </label>
       <div class="col-sm-10">
-        <input type="text" id="form-insert-page2" class="form-control">
+        <input type="text" id="form-insert-page2" class="form-control" autocomplete="off">
       </div>
     </div>
 
     <div class="row form-group boxed box-3 box-3-2">
       <label class="col-sm-6"> Số trang </label>
       <div class="col-sm-10">
-        <input type="text" id="form-insert-page3" class="form-control">
+        <input type="text" id="form-insert-page3" class="form-control" autocomplete="off">
       </div>
     </div>
 
     <div class="row form-group boxed box-4 box-4-2">
       <label class="col-sm-6"> Số trang </label>
       <div class="col-sm-10">
-        <input type="text" id="form-insert-page4" class="form-control">
+        <input type="text" id="form-insert-page4" class="form-control" autocomplete="off">
       </div>
     </div>
 
@@ -760,16 +751,30 @@
     5: '<style> p {margin: 3px;} </style><table><tr><td class="cell-center p12" style="position: relative;"> <div style="position: absolute; border-top: 1px solid black; width: 70px; top: 45px; left: 82px;"></div> CỤC THÚ Y <br> <b> CHI CỤC THÚ Y VÙNG V </b> <div style="margin-top: 10px; "></div> <span class="p14"> Số: &emsp;&emsp;/TYV5-TH </span> </td><td class="cell-center" style="position: relative"><div style="position: absolute; border-top: 1px solid black; width: 205px; height: 100px; top: 41px; left: 95px;"></div> <span class="p12">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</span> <br> <b class="p13"> Độc lập - Tự do - Hạnh phúc </b> <div style="margin-top: 15px;"></div> <span class="p14"> <i> Đăk Lăk, ngày noticetime-0 tháng noticetime-1 năm noticetime-2 </i> </span> </td></tr> </table><p class="text-center p16" style="padding-top: 5px;"> <b> THÔNG BÁO </b> </p><p class="text-center p15" style="padding-bottom: 15px;"> <b> Kết quả xét nghiệm </b> </p> <p class="p14">&emsp;&emsp; Chi cục Thú y vùng V thông báo kết quả xét nghiệm được thực hiện tại Trạm Chẩn đoán xét nghiệm bệnh động vật (trực thuộc Chi cục Thú y vùng V) như sau: </p> <p class="p14"> &emsp;&emsp; Tên khách hàng: senderemploy  </p> <p class="p14"> &emsp;&emsp; Địa chỉ: xaddress </p> (info) owner <p style="width: 60%; float: left;" class="p14"> &emsp;&emsp; Loài động vật được lấy mẫu: (sample)</p><p style="width: 35%; float: left; " class="p14">Loại mẫu: (sampletype)</p> <p style="clear: left; width: 60%; float: left;" class="p14"> &emsp;&emsp; Số lượng mẫu: number (numberword) </p> <p style="width: 35%; float: left;" class="p14">Số mẫu xét nghiệm: (examsample)</p> <p class="p14" style="clear: left;"> &emsp;&emsp; Ký hiệu mẫu: samplecode </p> <p class="p14"> &emsp;&emsp; Ngày nhận mẫu: sampletime </p> target <p class="p14"> &emsp;&emsp; <b> <u> Chỉ tiêu xét nghiệm: </u> </b> </p><div class="p14">(exam)</div>note<p class="p14"> &emsp;&emsp; <b> <u> Kết quả: </u> </b> </p><div class="p14">result</div><p class="p14"> <i> &emsp;&emsp;(Chi tiết xem phiếu kết quả xét nghiệm số: xcode-0/xcode-1/xcode-2.CĐXN của trạm chuẩn đoán xét nghiệm bệnh động vật)./. </i></p><div style="width: 60%; float: left;"><b class="p12"> <b> <i> Nơi nhận: </i> </b> </b> <p class="p11"> receivedis </p></div> <div style="width: 40%; float: left;" class="text-center p14"><b> CHI CỤC TRƯỞNG <br><br><br><br><br> receiveleader </b></td></tr></table>'
   }
   
-  var ticked = ['Đạt', 'Không đạt']
-  var methodModal = $("#method-modal")
-  var formInsert = $('#form-insert')
-  var remind = JSON.parse('{remind}')
-  var remindv2 = JSON.parse('{remindv2}')
-  var relation = JSON.parse('{relation}')
   var credit = $("#credit")
   var menu1 = $("#menu1")
   var content = $("#content")
   var formRemove = $("#form-remove")
+
+  var formInsertSenderEmploy = $("#sender-employ-0")
+  var formInsertReceiverEmploy = $("#receiver-employ-0")
+  var formInsertIreceiverEmploy = $("#ireceiver-employ-0")
+  var formInsertXaddress = $("#xaddress-0")
+  var formInsertOwner = $("#owner-0")
+  var formInsertSamplePlace = $("#sample-place-0")
+  var formInsertXphone = $("#xphone-0")
+  var formInsertFax = $("#fax-0")
+  var formInsertXresender = $("#xresender-0")
+  var formInsertXsender = $("#xsender-0")
+  var formInsertXreceiver = $("#xreceiver-0")
+  var formInsertIsenderUnit = $("#isender-unit-0")
+  var formInsertIreceiverUnit = $("#ireceiver-unit-0")
+  var formInsertSampleReceiver = $("#sample-receiver-0")
+  var formInsertAddress = $("#address-0")
+  var formInsertXexam = $("#xexam-0")
+  var formInsertOwnerPhone = $("#ownerphone-0")
+  var formInsertOwnerMail = $("#ownermail-0")
+
   var formInsertCode = $("#form-insert-code")
   var formInsertReceiverState = $("#form-insert-receive-state")
   var formInsertReceiverState2 = $("#form-insert-receive-state2")
@@ -783,7 +788,7 @@
   var formInsertNumber = $("#form-insert-number")
   var formInsertNumberWord = $("#form-insert-number-word")
   var formInsertNumber2 = $("#form-insert-number2")
-  var formInsertSample = $("#form-insert-sample")
+  var formInsertSample = $("#sample-0")
   var formInsertStatus = $("#form-insert-status")
   var formInsertSampleCode = $("#form-insert-sample-code")
   var formInsertSampleParent = $("#form-insert-sample-parent")
@@ -791,38 +796,11 @@
   var formInsertResult = $("#form-insert-result") 
   var formInsertTypeOther = $("#form-insert-type-other") 
 
-  var formInsertSenderUnit = $("#form-insert-sender-unit")
-  var formInsertSenderUnitSuggest = $("#form-insert-sender-unit-suggest")
-  var formInsertSenderEmploy = $("#form-insert-sender-employ")
-  var formInsertSenderEmploySuggest = $("#form-insert-sender-employ-suggest")
-  var formInsertReceiverUnit = $("#form-insert-receiver-unit")
-  var formInsertReceiverUnitSuggest = $("#form-insert-receiver-unit-suggest")
-  var formInsertReceiverEmploy = $("#form-insert-receiver-employ")
-  var formInsertReceiverEmploySuggest = $("#form-insert-receiver-employ-suggest")
-  var formInsertSamplerUnit = $("#form-insert-sampler-unit")
-  var formInsertSamplerUnitSuggest = $("#form-insert-sampler-unit-suggest")
-  var formInsertSamplerEmploy = $("#form-insert-sampler-employ")
-  var formInsertSamplerEmploySuggest = $("#form-insert-sampler-employ-suggest")
 
-  var formInsertIsenderEmploy = $("#form-insert-isender-employ")
-  var formInsertIsenderEmploySuggest = $("#form-insert-isender-employ-suggest")
-  var formInsertIreceiverEmploy = $("#form-insert-ireceiver-employ")
-  var formInsertIreceiverEmploySuggest = $("#form-insert-ireceiver-employ-suggest")
-
-  var formInsertIsenderUnit = $("#form-insert-isender-unit")
-  var formInsertIsenderUnitSuggest = $("#form-insert-isender-unit-suggest")
-  var formInsertIreceiverUnit = $("#form-insert-ireceiver-unit")
-  var formInsertIreceiverUnitSuggest = $("#form-insert-ireceiver-unit-suggest")
-  var formInsertSampleReceiver = $("#form-insert-sample-receiver")
-  var formInsertSampleReceiverSuggest = $("#form-insert-sample-receiver-suggest")
   var formInsertSampleReceive = $("#form-insert-sample-receive")
   var formInsertSampleTime = $("#form-insert-sample-time")
 
-  var formInsertCustomer = $("#form-insert-customer")
-  var formInsertCustomerSuggest = $("#form-insert-customer-suggest")
   var formInsertPhone = $("#form-insert-phone")
-  var formInsertAddress = $("#form-insert-address")
-  var formInsertAddressSuggest = $("#form-insert-address-suggest")
 
   var formInsertSampleReceiveTime = $("#form-insert-sample-receive-time")
   var formInsertSampleReceiveHour = $("#form-insert-sample-receive-hour")
@@ -859,31 +837,17 @@
   var formInsertReceiveDis = $("#form-insert-receive-dis")
   var formInsertReceiveLeader = $("#form-insert-receive-leader")
   var formInsertAttach = $("#form-insert-attach")
-  var formInsertXaddress = $("#form-insert-xaddress")
-  var formInsertXaddressSuggest = $("#form-insert-xaddress-suggest")
-  var formInsertOwner = $("#form-insert-owner")
-  var formInsertOwnerSuggest = $("#form-insert-owner-suggest")
-  var formInsertSamplePlace = $("#form-insert-sample-place")
-  var formInsertSamplePlaceSuggest = $("#form-insert-sample-place-suggest")
-  var formInsertXphone = $("#xphone-0")
   var formInsertXnote = $("#form-insert-xnote")
   var formInsertPage2 = $("#form-insert-page2")
   var formInsertPage3 = $("#form-insert-page3")
   var formInsertPage4 = $("#form-insert-page4")
-  var formInsertFax = $("#fax-0")
 
   var formInsertXresend = $("#form-insert-xresend")
-  var formInsertXresender = $("#xresender-0")
   var formInsertXsend = $("#form-insert-xsend")
-  var formInsertXsender = $("#xsender-0")
   var formInsertXreceive = $("#form-insert-xreceive")
-  var formInsertXreceiver = $("#xreceiver-0")
-  var formInsertXexam = $("#xexam-0")
   var formInsertVnote = $("#form-insert-vnote")
   var formInsertExamSample = $("#form-insert-examsample")
   var formInsertSampleCode5 = $("#form-insert-sample-code-5")
-  var formInsertOwnerPhone = $("#ownerphone-0")
-  var formInsertOwnerMail = $("#ownermail-0")
 
   var formSummary = $("#form-summary")
   var formSummaryFrom = $("#form-summary-from")
@@ -907,12 +871,14 @@
   var global_page = 1
   var global_printer = 1
   var permist = "{permist}"
-  var defaultData = {
-    code: '-19',
-    today: '{today}',
-    yesterday: '{yesterday}',
-    tomorrow: '{tomorrow}'
-  }
+  var defaultData = JSON.parse(`{default}`)
+
+  var ticked = ['Đạt', 'Không đạt']
+  var methodModal = $("#method-modal")
+  var formInsert = $('#form-insert')
+  var remind = JSON.parse('{remind}')
+  var remindv2 = JSON.parse('{remindv2}')
+  var relation = JSON.parse('{relation}')
 
   var visible = {
     0: {1: '1', 2: '1'},
@@ -931,7 +897,7 @@
     code: '',
     type: '',
     number: 1,
-    status: 1,
+    status: 0,
     mainer: [{
       main: '',
       method: '',
@@ -946,127 +912,11 @@
     symbol: '',
     exam: ['']
   }]
-  var globalTarget = {
-    'sender-unit': {
-      input: formInsertSenderUnit,
-      suggest: formInsertSenderUnitSuggest,
-      data: 1,
-      name: 'value'
-    },
-    'sender-employ': {
-      input: formInsertSenderEmploy,
-      suggest: formInsertSenderEmploySuggest,
-      data: 2,
-      name: 'value'
-    },
-    'receiver-unit': {
-      input: formInsertReceiverUnit,
-      suggest: formInsertReceiverUnitSuggest,
-      data: 2,
-      name: 'value'
-    },
-    'receiver-employ': {
-      input: formInsertReceiverEmploy,
-      suggest: formInsertReceiverEmploySuggest,
-      data: 1,
-      name: 'value'
-    },
-    'sampler-unit': {
-      input: formInsertSamplerUnit,
-      suggest: formInsertSamplerUnitSuggest,
-      data: 2,
-      name: 'value'
-    },
-    'sampler-employ': {
-      input: formInsertSamplerEmploy,
-      suggest: formInsertSamplerEmploySuggest,
-      data: 1,
-      name: 'value'
-    },
-    'ireceiver-unit': {
-      input: formInsertIreceiverUnit,
-      suggest: formInsertIreceiverUnitSuggest,
-      data: 2,
-      name: 'value'
-    },
-    'ireceiver-employ': {
-      input: formInsertIreceiverEmploy,
-      suggest: formInsertIreceiverEmploySuggest,
-      data: 1,
-      name: 'value'
-    },
-    'isender-unit': {
-      input: formInsertIsenderUnit,
-      suggest: formInsertIsenderUnitSuggest,
-      data: 2,
-      name: 'value'
-    },
-    'isender-employ': {
-      input: formInsertIsenderEmploy,
-      suggest: formInsertIsenderEmploySuggest,  
-      data: 1,
-      name: 'value'
-    },
-    'customer': {
-      input: formInsertCustomer,
-      suggest: formInsertCustomerSuggest,
-      data: 4,
-      name: 'value'
-    },
-    'address': {
-      input: formInsertAddress,
-      suggest: formInsertAddressSuggest,
-      data: 5,
-      name: 'value'
-    },
-    'sample-receiver': {
-      input: formInsertSampleReceiver,
-      suggest: formInsertSampleReceiverSuggest,
-      data: 1,
-      name: 'value'
-    },
-    'xaddress': {
-      input: formInsertXaddress,
-      suggest: formInsertXaddressSuggest,
-      data: 8,
-      name: 'value'
-    },
-    'owner': {
-      input: formInsertOwner,
-      suggest: formInsertOwnerSuggest,
-      data: 9,
-      name: 'value'
-    },
-    'sample-place': {
-      input: formInsertSamplePlace,
-      suggest: formInsertSamplePlaceSuggest,
-      data: 10,
-      name: 'value'
-    }
-  }
 
   $(document).ready(() => {
     htmlInfo = formInsertInfo.html()
     addInfo(1)
-    addInfo(3)
-    installRemind('sender-unit');
-    installRemind('sender-employ');
-    installRemind('receiver-unit');
-    installRemind('receiver-employ');
-    installRemind('sampler-unit');
-    installRemind('sampler-employ');
-
-    installRemind('ireceiver-employ');
-    installRemind('ireceiver-unit');
-    installRemind('isender-employ');
-    installRemind('isender-unit');
-    installRemind('sample-receiver');
-    installRemind('customer');
-    installRemind('address');
-    installRemind('xaddress');
-    installRemind('owner');
-    installRemind('sample-place');
-
+    // addInfo(3)
     installRemindv2('0', 'xsender');
     installRemindv2('0', 'xreceiver');
     installRemindv2('0', 'xresender');
@@ -1075,8 +925,19 @@
     installRemindv2('0', 'fax');
     installRemindv2('0', 'ownerphone');
     installRemindv2('0', 'ownermail');
+    installRemindv2('0', 'sample');
+    installRemindv2('0', 'sender-employ');
+    installRemindv2('0', 'receiver-employ');
+    installRemindv2('0', 'ireceiver-employ');
+    installRemindv2('0', 'ireceiver-unit');
+    installRemindv2('0', 'isender-unit');
+    installRemindv2('0', 'sample-receiver');
+    installRemindv2('0', 'address');
+    installRemindv2('0', 'xaddress');
+    installRemindv2('0', 'owner');
+    installRemindv2('0', 'sample-place');
 
-    installExamRemind()
+    // installExamRemind()
     parseField(global_field)
     parseExam(global_exam)        
     parseBox(1)
@@ -1285,7 +1146,7 @@
         var temp2 = []
         main['exam'].forEach(exam => {
           temp2.push({
-            result: '',
+            result: defaultData['result'],
             note: exam
           })
         })
@@ -1299,7 +1160,7 @@
       maintemp.push({
         code: data['samplecode'][i],
         number: 1,
-        status: 1,
+        status: 0,
         type: type,
         mainer: temp
       })
@@ -1367,8 +1228,9 @@
             <button class="close right" data-dismiss="modal" onclick="removeField('`+ sampleIndex +`,`+ resultIndex +`,`+ noteIndex +`')">&times;</button>
             <div class="row form-group">
               <label class="col-sm-6"> Kết quả </label>
-              <div class="col-sm-10">
-                <input type="text" value="`+ note['result'] +`" class="form-control ig ig-result-`+ sampleIndex +`-`+ resultIndex +`-`+ noteIndex +`" autocomplete="off">
+              <div class="col-sm-10 relative">
+                <input type="text" value="`+ note['result'] +`" class="form-control ig ig-result-`+ sampleIndex +`-`+ resultIndex +`-`+ noteIndex +`" id="result-`+ sampleIndex +`-`+ resultIndex +`-`+ noteIndex +`" autocomplete="off">
+                <div class="suggest" id="result-suggest-`+ sampleIndex +`-`+ resultIndex +`-`+ noteIndex +`"></div>
               </div>
             </div>
             <div class="row form-group">
@@ -1378,6 +1240,10 @@
               </div>
             </div>
           </div>`
+          installer.push({
+            name: sampleIndex +`-`+ resultIndex +`-`+ noteIndex,
+            type: 'result'
+          })
         })
 
         html2 += `
@@ -1441,8 +1307,8 @@
         
         <div class="row form-group">
           <label class="col-sm-6"> Tình trạng mẫu </label>
-            <input type="radio" name="samplestatus-`+ sampleIndex +`" `+ (Number(sample['status']) ? 'checked' : '' ) +` class="form-control ig ig-status0-`+ sampleIndex +`"> Đạt<br>
-            <input type="radio" name="samplestatus" `+ (Number(sample['status']) ? '' : 'checked' ) +` class="form-control ig ig-status1-`+ sampleIndex +`"> Không đạt
+            <input type="radio" name="samplestatus-`+ sampleIndex +`" `+ (Number(sample['status']) ? '' : 'checked' ) +` class="form-control ig ig-status0-`+ sampleIndex +`"> Đạt<br>
+            <input type="radio" name="samplestatus" `+ (Number(sample['status']) ? 'checked' : '' ) +` class="form-control ig ig-status1-`+ sampleIndex +`"> Không đạt
         </div>
         `+ html2 +`
         <button class="btn btn-info" onclick="addField('`+ sampleX +`,`+ resultX +`')"><span class="glyphicon glyphicon-plus"></span></button>
@@ -1674,7 +1540,7 @@
           code: '',
           type: '',
           number: 1,
-          status: 1,
+          status: 0,
           mainer: [
             {
               main: '',
@@ -1749,35 +1615,6 @@
     methodModal.modal('show')
   }
 
-  function installRemind(name) {
-    var timeout
-    globalTarget[name]['input'].keyup(() => {
-      clearTimeout(timeout)
-      setTimeout(() => {
-        var key = paintext(globalTarget[name]['input'].val())
-        var html = ''
-        for (const index in remind[globalTarget[name]['data']]) {
-          if (remind[globalTarget[name]['data']].hasOwnProperty(index)) {
-            const element = paintext(remind[globalTarget[name]['data']][index]['value']);
-            
-            if (element.search(key) >= 0) {
-              html += '<div class="suggest_item" onclick="selectRemind(\'' + name + '\', \'' + remind[globalTarget[name]['data']][index]['value'] + '\')"><span class="right-click">' + remind[globalTarget[name]['data']][index]['value'] + '</span><button class="close right" data-dismiss="modal" onclick="removeRemind('+remind[globalTarget[name]['data']][index]['id']+', \''+name+'\')">&times;</button></div>'
-            }
-          }
-        }
-        globalTarget[name]['suggest'].html(html)
-      }, 200);
-    })
-    globalTarget[name]['input'].focus(() => {
-      globalTarget[name]['suggest'].show()
-    })
-    globalTarget[name]['input'].blur(() => {
-      setTimeout(() => {
-        globalTarget[name]['suggest'].hide()
-      }, 200);
-    })
-  }
-
   function installRemindv2(name, type) {
     var timeout
     var input = $("#"+ type +"-" + name)
@@ -1809,23 +1646,6 @@
         suggest.hide()
       }, 200);
     })
-  }
-
-  function removeRemind(id, name) {
-    if (id) {
-      $.post(
-        strHref,
-        {action: 'removeRemind', id: id},
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            remind = JSON.parse(data['remind'])
-            setTimeout(() => {
-              globalTarget[name][input].val('')
-            }, 100);
-          }, () => {})
-        }
-      )
-    }
   }
 
   function removeRemindv2(name, type, id) {
@@ -1874,14 +1694,12 @@
     global_saved = 0
     parseSaved()
     parseBox(global_form)
-    console.log(defaultData);
+    var xcode = defaultData['xcode'].split(',')
     
-    formInsertCode.val(defaultData['code'])
     formInsertReceive.val(defaultData['today'])
     formInsertResend.val(defaultData['tomorrow'])
     formInsertIreceive.val(defaultData['today'])
     formInsertIresend.val(defaultData['tomorrow'])
-
     formInsertExamDate.val(defaultData['tomorrow'])
     formInsertXreceive.val(defaultData['today'])
     formInsertXsend.val(defaultData['today'])
@@ -1889,61 +1707,60 @@
     formInsertSampleReceive.val(defaultData['yesterday'])
     formInsertNoticeTime.val(defaultData['today'])
 
-    formInsertPage2.val('')
-    formInsertPage3.val('')
-    formInsertPage4.val('')
-    formInsertOwnerPhone.val('')
-    formInsertOwnerMail.val('')
-    formInsertSenderEmploy.val('')
-    formInsertReceiverEmploy.val('')
+    formInsertPage2.val(defaultData['remind']['page2'])
+    formInsertPage3.val(defaultData['remind']['page3'])
+    formInsertPage4.val(defaultData['remind']['page4'])
+    formInsertReceiveDis.val(defaultData['receivedis'])
+    formInsertCode.val(defaultData['code'])
+    formInsertXcode1.val(xcode[0])
+    formInsertXcode2.val(xcode[1])
+    formInsertXcode3.val('')
+
+    formInsertSenderEmploy.val(defaultData['remind']['sender-employ'])
+    formInsertReceiverEmploy.val(defaultData['remind']['receiver-employ'])
+    formInsertIsenderUnit.val(defaultData['remind']['isender-unit'])
+    formInsertIreceiverEmploy.val(defaultData['remind']['ireceiver-employ'])
+    formInsertIreceiverUnit.val(defaultData['remind']['ireceiver-unit'])
+    formInsertSampleReceiver.val(defaultData['remind']['sample-receiver'])
+    formInsertXreceiver.val(defaultData['remind']['xreceiver'])
+    formInsertXresender.val(defaultData['remind']['xresender'])
+    formInsertXsender.val(defaultData['remind']['xsender'])
+    formInsertXexam.val(defaultData['remind']['xexam'])
+    formInsertAddress.val(defaultData['remind']['address'])
+    formInsertXphone.val(defaultData['remind']['xphone'])
+    formInsertFax.val(defaultData['remind']['fax'])
+    formInsertSample.val(defaultData['remind']['sample'])
+    formInsertXaddress.val(defaultData['remind']['xaddress'])
+    formInsertOwnerPhone.val(defaultData['remind']['ownerphone'])
+    formInsertOwnerMail.val(defaultData['remind']['ownermail'])
+    formInsertOwner.val(defaultData['remind']['owner'])
+    formInsertSamplePlace.val(defaultData['remind']['sample-place'])
+
     formInsertExamSample.val('')
     formInsertNumber.val('')
-    formInsertSample.val('')
     formInsertStatus.val('')
     formInsertSampleCode.val('')
     formInsertSampleCode5.val('')
     formInsertTarget.val('')
-    formInsertXcode1.val('')
-    formInsertXcode2.val('')
-    formInsertXcode3.val('')
-    formInsertPage1.val('')
-    formInsertPage2.val('')
-    formInsertNo1.val('')
-    formInsertNo2.val('')
-    formInsertIsenderEmploy.val('')
-    formInsertIsenderUnit.val('')
-    formInsertIreceiverEmploy.val('')
-    formInsertIreceiverUnit.val('')
+    // formInsertPage1.val('')
+    // formInsertPage2.val('')
+    // formInsertNo1.val('')
+    // formInsertNo2.val('')
     formInsertQuality.val('')
-    formInsertCustomer.val('')
     formInsertNumberWord.val('')
-    formInsertAddress.val('')
     formInsertPhone.val('')
     formInsertOther.val('')
     formInsertResult.val('')
-    formInsertIreceiverEmploy.val('')
-    formInsertIreceiverUnit.val('')
     formInsertTarget.val('')
     formInsertEndedCopy.val('')
-    formInsertSampleReceiver.val('')
     formInsertNote.val('')
-    formInsertReceiveDis.val('- Lưu: VT, Dịch tễ, Kế toán.')
     formInsertReceiveLeader.val('')
-    formInsertXaddress.val('')
-    formInsertOwner.val('')
-    formInsertSamplePlace.val('')
-    formInsertXreceiver.val('')
-    formInsertXresender.val('')
-    formInsertXsender.val('')
-    formInsertXexam.val('')
-    formInsertXphone.val('')
-    formInsertFax.val('')
     formInsertVnote.val('')
     global_field = [{
       code: '',
       type: '',
       number: 1,
-      status: true,
+      status: 0,
       mainer: [
         {
           main: '',
@@ -2018,73 +1835,6 @@
     formInsert.modal('show')
   }
 
-  function installExamRemind() {
-    $(".examed").each((index, item) => {
-      var id = item.getAttribute('id').replace('examed-', '')
-      var timeout
-      
-      $("#examed-" + id).keyup(() => {
-        clearTimeout(timeout)
-        setTimeout(() => {
-          var key = paintext(item.value)
-          var html = ''
-          for (const index in remind[3]) {
-            if (remind[3].hasOwnProperty(index)) {
-              const element = paintext(remind[3][index]['value']);
-              
-              if (element.search(key) >= 0) {
-                html += '<div class="suggest_item" onclick="selectRemindv2a(\'' + '#examed-' + id + '\', \'' + remind[3][index]['value'] + '\')"><span class="right2-click">' + remind[3][index]['value'] + '</span><button class="close right" data-dismiss="modal" onclick="removeRemind('+remind[3][index]['id']+', \''+'#examed-' + id+'\')">&times;</button></div>'
-              }
-            }
-          }
-          $("#exam-suggest-" + id).html(html)
-        }, 200);
-      })
-      $("#examed-" + id).focus(() => {
-        $("#exam-suggest-" + id).show()
-      })
-      $("#examed-" + id).blur(() => {
-        setTimeout(() => {
-          $("#exam-suggest-" + id).hide()
-        }, 200);
-      })
-    })
-  }
-
-  function installResultRemind() {
-    $(".resulted").each((index, item) => {
-      var id = item.getAttribute('id').replace('resulted-', '')
-      var timeout
-      
-      $("#resulted-" + id).keyup(() => {
-        clearTimeout(timeout)
-        setTimeout(() => {
-          var key = paintext(item.value)
-          var html = ''
-          for (const index in remind[6]) {
-            if (remind[6].hasOwnProperty(index)) {
-              const element = paintext(remind[6][index]['value']);
-              
-              if (element.search(key) >= 0) {
-                html += '<div class="suggest_item" onclick="selectRemindv2(\'' + '#resulted-' + id + '\', \'' + remind[6][index]['value'] + '\')"><span class="right-click">' + remind[6][index]['value'] + '</span><button class="close right" data-dismiss="modal" onclick="removeRemind('+remind[6][index]['id']+', \''+'#resulted-' + id+'\')">&times;</button></div>'
-              }
-            }
-          }
-          $("#resulted-suggest-" + id).html(html)
-        }, 200);
-      })
-      $("#resulted-" + id).focus(() => {
-        $("#resulted-suggest-" + id).show()
-      })
-      $("#examed-" + id).blur(() => {
-        setTimeout(() => {
-          $("#exam-suggest-" + id).hide()
-        }, 200);
-      })
-    })
-  }
-
-
   function addInfo(id) {
     var length = infoData[id].length
     switch (id) {
@@ -2135,7 +1885,6 @@
         formInsertRequest.append(html)
         installRemindv2(length, 'symbol')
         installRemindv2(length, 'method')
-        installExamRemind()
       break;
       case 3:
         var html = `
@@ -2151,7 +1900,6 @@
             </div>
           </div>`
         formInsertResult.append(html)
-        installResultRemind()
       break;
     }
     infoData[id].push(html)
@@ -2205,24 +1953,6 @@
     })    
     return list
   }
-
-  // function checkSampleCode(target, parent, number = 1) {
-  //   var value = trim(target.val()).toUpperCase()
-  //   while (value.search('  ') >= 0) {
-  //     value = value.replace(/  /g, ' ')
-  //   }
-  //   value = value.replace(/;/g, ',')
-  //   value = value.split(/, /g)
-  //   target.val(value.join(', '))
-    
-  //   if (value.length != number) {
-  //     parent.addClass('has-error')
-  //     alert_msg('Sai số lượng ký hiệu mẫu: ' + value.length + '/' + number);
-  //     return 0
-  //   }
-  //   parent.removeClass('has-error')
-  //   return 1
-  // }
 
   function remove(id) {
     formRemove.modal('show')
@@ -2403,8 +2133,10 @@
             formInsertIreceive.val(data['form']['ireceive'])
             formInsertIresend.val(data['form']['iresend'])
             formInsertNumber.val(data['form']['number'])
+            formInsertExamSample.val(data['form']['number'])
             formInsertSample.val(data['form']['sample'])
             formInsertSampleCode.val(data['form']['samplecode'])
+            formInsertSampleCode5.val(data['form']['samplecode'])
             formInsertXnote.val(data['form']['xnote'])
             formInsertNumberWord.val(data['form']['numberword']),
 
@@ -2495,7 +2227,12 @@
           checkResult(response, status).then(data => {
             remind = JSON.parse(data['remind'])
             remindv2 = JSON.parse(data['remindv2'])
+            defaultData = JSON.parse(data['default'])
             if (global_form > global_saved) {
+              if (global_form = 1) {
+                formInsertExamSample.val(formInsertNumber.val())
+                formInsertSampleCode.val(formInsertSampleCode5.val())
+              }
               global_saved = global_form
             }
             parseSaved()
@@ -2618,7 +2355,7 @@
               })
             }
 
-            html = html.replace('formcontent', (data['form'].join('<br>') + '<br>Số lượng mẫu: ' + data['number'] + ', loại mẫu: ' + (data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text())) + ', loài động vật: ' + data['sample'] + '<br> Ký hiệu mẫu: ' + data['samplecode'].replace('-', ' đến ') + '<br>Yêu cầu xét nghiệm:<br>' + (exam.join('<br>') + (trim(data['xnote']).length ? '<br>' + data['xnote'].replace(/\n/g, '<br>') : ''))))
+            html = html.replace('formcontent', (data['form'].join('<br>') + '<br>Số lượng mẫu: ' + data['number'] + ', loại mẫu: ' + (data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text())) + ', loài động vật: ' + data['sample'] + '<br> Ký hiệu mẫu: ' + data['samplecode'] + '<br>Yêu cầu xét nghiệm:<br>' + (exam.join('<br>') + (trim(data['xnote']).length ? '<br>' + data['xnote'].replace(/\n/g, '<br>') : ''))))
           break;
           case 2:
             if (typeof(data['xcode']) == 'string') {
