@@ -894,7 +894,7 @@
   var global_id = 0
   var global_page = 1
   var global_printer = 1
-  var permist = "{permist}"
+  // var permist = "{permist}".split(',')
   var defaultData = JSON.parse(`{default}`)
 
   var ticked = ['Đạt', 'Không đạt']
@@ -905,6 +905,7 @@
   var relation = JSON.parse('{relation}')
 
   var visible = {
+    // "-1": {1: '6', 2: '6'},
     0: {1: '1', 2: '1'},
     1: {1: '1, 2', 2: '1, 2'},
     2: {1: '1, 2, 3', 2: '1, 2, 3'},
@@ -2141,8 +2142,19 @@
           global_id = id
           global_form = global_printer
           global_saved = data['form']['printer']
+          // if (String(global_printer - 1).indexOf(permist) >= 0) {
+          //   global_form = global_printer
+          //   global_saved = data['form']['printer']
+          // }
+          // else if (permist[0] < data['form']['printer']) {
+          //   global_form = permist[0]
+          //   global_saved = data['form']['printer']
+          // }
+          // else {
+          //   global_form = 6
+          //   global_saved = -1
+          // }
           parseSaved()
-          
           parseBox(global_form)
           infoData = {1: [], 2: [], 3: []}
 

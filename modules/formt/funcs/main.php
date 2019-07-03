@@ -440,10 +440,14 @@ if (checkIsMod($user_info['userid'])) {
 	$xtpl->parse('main.mod2');
 }
 
-if (!empty($user_info['userid'])) {
-	$xtpl->assign("permist", getUserPermission($user_info['userid']));	
+if (!empty($user_info)) {
+	if (in_array('1', $user_info['in_groups'])) {
+		$xtpl->assign("permist", '1,2,3,4,5');	
+	}
+	else {
+		$xtpl->assign("permist", getUserPermission($user_info['userid']));	
+	}
 }
-
 
 $day = date('w');
 $week_start = date('d/m/Y', strtotime('-'.$day.' days'));
