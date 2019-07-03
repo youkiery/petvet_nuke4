@@ -13,10 +13,48 @@ if (!defined('NV_IS_FORM')) {
 
 $page_title = "Nhập hồ sơ một chiều";
 
+if ($nv_Request->isset_request("excel", "get")) {
+	$excelf = totime($nv_Request->get_string('excelf', 'get/post', ''));
+	$excelt = totime($nv_Request->get_string('excelt', 'get/post', ''));
+	include 'PHPExcel/IOFactory.php';
+	$fileType = 'Excel2007'; 
+
+	$objPHPExcel = PHPExcel_IOFactory::load('excel.xlsx');
+
+	$objPHPExcel
+			->setActiveSheetIndex(0)
+			->setCellValue('A1', "STT")
+			->setCellValue('B1', "Số ĐKXN")
+			->setCellValue('C1', "Đơn vị")
+			->setCellValue('D1', "Số lượng mẫu")
+			->setCellValue('E1', "Kết quả");
+	$i = 2;
+	$query = "SELECT * FROM " . PREFIX . "_row where time between $excelf and $excelt";
+
+	$re = $db->query($query);
+	$index = 1;
+	while ($row = $re->fetch()) {
+			$objPHPExcel
+			->setActiveSheetIndex(0)
+			->setCellValue('A' . $i, (($index < 10 ? '0' : '') . $index))
+			->setCellValue('B' . $i, str_replace(',', '/', str_replace(', ', '/', $row['xcode'])))
+			->setCellValue('C' . $i, $row['sender'])
+			->setCellValue('D' . $i, (($row['number'] < 10 ? '0' : '') . $row['number']))
+			->setCellValue('E' . $i, ((strpos($row['ig'], '(+)') !== false) ? 'Dương tính' : 'Âm tính'));
+			$i++;
+			$index++;
+	}
+	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+	$objWriter->save('excel-form.xlsx');
+	header('location: /excel-form.xlsx');
+}
+
 $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
 	$teriorname = array('endedcopy' => 'Bản copy', 'endedhour' => 'Giờ kết thúc', 'endedminute' => 'Phút kết thúc', 'code' => 'Mã phiếu', 'sender' => 'Người gửi', 'receive' => 'Người nhận', 'resend' => 'Ngày hẹn trả', 'state' => 'Hình thức nhận', 'receiver' => 'Người nhận', 'ireceive' => 'Ngày nhận', 'iresend' => 'Ngày hẹn trả', 'form' => 'Tên hồ sơ', 'number' => 'Số lượng mẫu', 'sample' => 'Loài được lấy mẫu', 'type' => 'Loại mẫu', 'samplecode' => 'Ký hiệu mẫu', 'exam' => 'Yêu cầu xét nghiệm', 'method' => 'Phương pháp', 'address' => 'Địa chỉ', 'phone' => 'Số điện thoại', 'samplereceive' => 'Ngày lấy mẫu', 'samplereceiver' => 'Người lấy mẫu', 'examdate' => 'Ngày xét nghiệm', 'result' => 'Kết quả', 'xcode' => 'Số ĐKXN', 'page' => 'Số trang', 'no' => 'Liên', 'customer' => 'Khách hàng', 'other' => 'Yêu cầu khác', 'receivehour' => 'Giờ nhận', 'receiveminute' => 'Phút nhận', 'isenderemploy' => 'Người gửi', 'isenderunit' => 'Đơn vị gửi', 'ireceiveremploy' => 'Người nhận', 'ireceiverunit' => 'Đơn vị nhận', 'status' => 'Tình trạng mẫu', 'xstatus' => 'Hình thức bảo quản', 'quality' => 'Chất lượng mẫu', 'ireceiver' => 'Người nhận', 'note' => 'Ghi chú', 'target' => 'Mục đích xét nghiệm', 'receivedis' => 'Nơi nhận', 'receiveleader' => 'Người phụ trách', 'xaddress' => 'Địa chỉ khách hàng', 'sampleplace' => 'Nơi lấy mẫu', 'owner' => 'Chủ hộ', 'xphone' => 'Số điện thoại', 'xnote' => 'Ghi chú', 'numberword' => 'Ghi chú (chữ)', 'fax' => 'Fax', 'xsender' => 'Người giao mẫu', 'xsend' => 'Ngày giao mẫu', 'xreceiver' => 'Người nhận mẫu', 'xreceive' => 'Ngày nhận mẫu', 'xresend' => 'Ngày giao kết quả', 'xresender' => 'Người phụ trách', 'ig' => 'Thông tin mẫu', 'vnote' => 'Ghi chú', 'samplecode5' => 'Ký hiệu mẫu', 'examsample' => 'Số lượng mẫu xét nghiệm', 'ownermail' => 'Email', 'ownerphone' => 'Số điện thoại', 'page2' => 'Số trang', 'page3' => 'Số trang', 'page4' => 'Số trang');
-	
+
+
+
 	$result = array("status" => 0);
 	switch ($action) {
 		// case 'catch-form':
@@ -324,6 +362,7 @@ if (!empty($action)) {
 							$receive = totime($data['receive']);
 							$note = nl2br($data['note']);
 							
+							checkRemindv2($data['receiveleader'], 'receive-leader');
 							checkRemindv2($data['sender'], 'sender-employ');
 							checkRemindv2($data['sampleplace'], 'sample-place');
 							checkRemindv2($data['owner'], 'owner');
@@ -404,6 +443,15 @@ if (checkIsMod($user_info['userid'])) {
 if (!empty($user_info['userid'])) {
 	$xtpl->assign("permist", getUserPermission($user_info['userid']));	
 }
+
+
+$day = date('w');
+$week_start = date('d/m/Y', strtotime('-'.$day.' days'));
+$week_end = date('d/m/Y', strtotime('+'.(6-$day).' days'));
+
+$xtpl->assign("excelf", $week_start);
+$xtpl->assign("excelt", $week_end);
+
 $xtpl->assign("methodOption", $methodHtml);
 $xtpl->assign('summarycontent', summaryContent($from, $end));
 $xtpl->assign('summaryfrom', date('d/m/Y', $from));

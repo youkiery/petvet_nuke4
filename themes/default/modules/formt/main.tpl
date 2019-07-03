@@ -127,6 +127,7 @@
   <!-- BEGIN: mod -->
   <li><a data-toggle="tab" href="#menu1"> Thêm văn bản </a></li>
   <!-- END: mod -->
+  <li><a data-toggle="tab" href="#menu2"> Xuất ra excel </a></li>
 </ul>
 
 <div class="tab-content">
@@ -185,17 +186,17 @@
     <div class="row form-group boxed box-1 box-1-1">
       <label class="col-sm-6">Số phiếu</label>
       <div class="col-sm-12">
-        <input type="text" class="form-control" id="form-insert-code" value="-19" autocomplete="off">
+        <input type="text" class="form-control" id="form-insert-code" autocomplete="off">
       </div>
     </div>
     
     <div class="row form-group boxed box-2 box-2-1 box-3 box-3-1 box-4 box-4-1 box-5 box-5-19">
       <label class="col-sm-6">Số ĐKXN</label>
       <div class="col-sm-6">
-        <input type="text" value="5" class="form-control input-box xcode" id="form-insert-xcode-1" autocomplete="off">
+        <input type="text" class="form-control input-box xcode" id="form-insert-xcode-1" autocomplete="off">
       </div>
       <div class="col-sm-6">
-        <input type="text" value="19" class="form-control input-box xcode" id="form-insert-xcode-2" autocomplete="off">
+        <input type="text" class="form-control input-box xcode" id="form-insert-xcode-2" autocomplete="off">
       </div>
       <div class="col-sm-6">
         <input type="text" class="form-control input-box xcode" id="form-insert-xcode-3" autocomplete="off">
@@ -235,21 +236,21 @@
     <div class="row form-group boxed box-1 box-1-3 box-4 box-4-16 box-5 box-5-15">
       <label class="col-sm-6">Ngày nhận mẫu</label>
       <div class="col-sm-12">
-        <input type="text" value="{today}" class="form-control" id="form-insert-receive" autocomplete="off">
+        <input type="text" class="form-control" id="form-insert-receive" autocomplete="off">
       </div>
     </div>
     
     <div class="row form-group boxed box-1 box-1-4">
       <label class="col-sm-6">Ngày hẹn trả kết quả</label>
       <div class="col-sm-12">
-        <input type="text" value="{tomorrow}" class="form-control" id="form-insert-resend" autocomplete="off">
+        <input type="text" class="form-control" id="form-insert-resend" autocomplete="off">
       </div>
     </div>
 
     <div class="row form-group boxed box-5 box-5-1">
       <label class="col-sm-6"> Ngày thông báo kết quả </label>
       <div class="col-sm-12">
-        <input type="text" value="{today}" class="form-control" id="form-insert-notice-time" autocomplete="off">
+        <input type="text" class="form-control" id="form-insert-notice-time" autocomplete="off">
       </div>
     </div>
 
@@ -258,7 +259,7 @@
         Ngày lấy mẫu
       </label>
       <div class="relative col-sm-12">
-        <input type="text" value="{yesterday}" class="form-control" id="form-insert-sample-receive" autocomplete="off">
+        <input type="text" class="form-control" id="form-insert-sample-receive" autocomplete="off">
       </div>
     </div>
 
@@ -267,7 +268,7 @@
         Người lấy mẫu
       </label>
       <div class="relative col-sm-12">
-        <input type="text" value="{remind['sample-receiver']}" class="form-control" id="sample-receiver-0" autocomplete="off">
+        <input type="text" class="form-control" id="sample-receiver-0" autocomplete="off">
         <div class="suggest" id="sample-receiver-suggest-0"></div>
       </div>
     </div>
@@ -294,7 +295,7 @@
         Người nhận hồ sơ
       </label>
       <div class="relative col-sm-12">
-        <input type="text" value="{remind['receiver-employ']}" class="form-control" id="receiver-employ-0" autocomplete="off">
+        <input type="text" class="form-control" id="receiver-employ-0" autocomplete="off">
         <div class="suggest" id="receiver-employ-suggest-0"></div>
       </div>
     </div>
@@ -309,7 +310,7 @@
     <div class="row form-group boxed box-1 box-1-8 box-2 box-2-7">
       <label class="col-sm-6">Ngày trả</label>
       <div class="col-sm-12">
-        <input type="text" value="{tomorrow}" class="form-control" id="form-insert-iresend" autocomplete="off">
+        <input type="text" class="form-control" id="form-insert-iresend" autocomplete="off">
       </div>
     </div>
 
@@ -532,7 +533,7 @@
       <label class="col-sm-6">
         Ghi chú
       </label>
-      <div class="col-sm-20">
+      <div class="col-sm-12">
         <textarea class="form-control" id="form-insert-xnote" autocomplete="off"></textarea>
       </div>
     </div>
@@ -550,7 +551,7 @@
       <label class="col-sm-6">
         Ghi chú
       </label>
-      <div class="col-sm-20">
+      <div class="col-sm-12">
         <textarea type="text" class="form-control" id="form-insert-note"></textarea>
       </div>
     </div>
@@ -559,7 +560,7 @@
       <label class="col-sm-6">
         Ghi chú
       </label>
-      <div class="col-sm-20">
+      <div class="col-sm-12">
         <textarea type="text" class="form-control" id="form-insert-cnote"></textarea>
       </div>
     </div>
@@ -569,7 +570,7 @@
         Ngày phân tích
       </label>
       <div class="relative col-sm-12">
-        <input type="text" value="{tomorrow}" class="form-control" id="form-insert-exam-date" autocomplete="off">
+        <input type="text" class="form-control" id="form-insert-exam-date" autocomplete="off">
       </div>
     </div>
 
@@ -577,7 +578,7 @@
       <label class="col-sm-6">
         Nơi nhận
       </label>
-      <div class="col-sm-20">
+      <div class="col-sm-12">
         <textarea type="text" class="form-control" id="form-insert-receive-dis"></textarea>
       </div>
     </div>
@@ -586,8 +587,9 @@
       <label class="col-sm-6">
         Người phụ trách
       </label>
-      <div class="col-sm-20">
-        <input type="text" class="form-control" id="form-insert-receive-leader" autocomplete="off">
+      <div class="col-sm-12 relative">
+        <input type="text" class="form-control" id="receive-leader-0" autocomplete="off">
+        <div class="suggest" id="receive-leader-suggest-0"></div>
       </div>
     </div>
 
@@ -595,7 +597,7 @@
       <label class="col-sm-6">
         Mục đích xét nghiệm
       </label>
-      <div class="col-sm-20">
+      <div class="col-sm-12">
         <textarea type="text" class="form-control" id="form-insert-target" autocomplete="off"></textarea>
       </div>
     </div>
@@ -606,35 +608,35 @@
 
     <div class="row form-group boxed box-3 box-3-7">
       <label class="col-sm-6"> Ghi chú </label>
-      <div class="col-sm-10">
+      <div class="col-sm-12">
         <textarea type="text" id="form-insert-vnote" class="form-control"></textarea>
       </div>
     </div>
 
     <div class="row form-group boxed box-2 box-2-2">
       <label class="col-sm-6"> Số trang </label>
-      <div class="col-sm-10">
+      <div class="col-sm-12">
         <input type="text" id="form-insert-page2" class="form-control" autocomplete="off">
       </div>
     </div>
 
     <div class="row form-group boxed box-3 box-3-2">
       <label class="col-sm-6"> Số trang </label>
-      <div class="col-sm-10">
+      <div class="col-sm-12">
         <input type="text" id="form-insert-page3" class="form-control" autocomplete="off">
       </div>
     </div>
 
     <div class="row form-group boxed box-4 box-4-2">
       <label class="col-sm-6"> Số trang </label>
-      <div class="col-sm-10">
+      <div class="col-sm-12">
         <input type="text" id="form-insert-page4" class="form-control" autocomplete="off">
       </div>
     </div>
 
     <div class="row form-group boxed box-3 box-3-8 box-4 box-4-23">
       <label class="col-sm-6"> Bộ phận xét nghiệm </label>
-      <div class="col-sm-10 relative">
+      <div class="col-sm-12 relative">
         <input type="text" id="xexam-0" class="form-control" autocomplete="off">
         <div class="suggest" id="xexam-suggest-0"></div>
       </div>
@@ -642,14 +644,14 @@
 
     <div class="row form-group boxed box-2 box-2-9">
       <label class="col-sm-6"> Ngày giao mẫu </label>
-      <div class="col-sm-10">
-        <input type="text" value="{today}" id="form-insert-xsend" class="form-control" autocomplete="off">
+      <div class="col-sm-12">
+        <input type="text" id="form-insert-xsend" class="form-control" autocomplete="off">
       </div>
     </div>
 
     <div class="row form-group boxed box-2 box-2-10">
       <label class="col-sm-6"> Người giao mẫu </label>
-      <div class="col-sm-10 relative">
+      <div class="col-sm-12 relative">
         <input type="text" id="xsender-0" class="form-control" autocomplete="off">
         <div class="suggest" id="xsender-suggest-0"></div>
       </div>
@@ -657,14 +659,14 @@
 
     <div class="row form-group boxed box-2 box-2-11">
       <label class="col-sm-6"> Ngày nhận mẫu </label>
-      <div class="col-sm-10">
-        <input type="text" value="{today}" id="form-insert-xreceive" class="form-control" autocomplete="off">
+      <div class="col-sm-12">
+        <input type="text" id="form-insert-xreceive" class="form-control" autocomplete="off">
       </div>
     </div>
 
     <div class="row form-group boxed box-2 box-2-12">
       <label class="col-sm-6"> Người nhận mẫu </label>
-      <div class="col-sm-10 relative">
+      <div class="col-sm-12 relative">
         <input type="text" id="xreceiver-0" class="form-control" autocomplete="off">
         <div class="suggest" id="xreceiver-suggest-0"></div>
       </div>
@@ -672,14 +674,14 @@
 
     <div class="row form-group boxed box-2 box-2-13">
       <label class="col-sm-6"> Ngày giao kết quả </label>
-      <div class="col-sm-10">
-        <input type="text" value="{tomorrow}" id="form-insert-xresend" class="form-control" autocomplete="off">
+      <div class="col-sm-12">
+        <input type="text" id="form-insert-xresend" class="form-control" autocomplete="off">
       </div>
     </div>
 
     <div class="row form-group boxed box-2 box-2-14 box-3 box-3-9 box-4 box-4-24">
       <label class="col-sm-6"> Người phụ trách bộ phận xét nghiệm </label>
-      <div class="col-sm-10 relative">
+      <div class="col-sm-12 relative">
         <input type="text" class="form-control" id="xresender-0" autocomplete="off">
         <div class="suggest" id="xresender-suggest-0"></div>
       </div>
@@ -732,6 +734,25 @@
     </button>
   </div>
   <!-- END: mod2 -->
+  <div id="menu2" class="tab-pane">
+    <label class="row">
+      <div class="col-sm-6">Ngày bắt đầu</div>
+      <div class="col-sm-12">
+        <input type="text" value="{excelf}" class="form-control" id="excelf">
+      </div>
+    </label>
+    <label class="row">
+      <div class="col-sm-6">Ngày kết thúc</div>
+      <div class="col-sm-12">
+        <input type="text" value="{excelt}" class="form-control" id="excelt">
+      </div>
+    </label>
+    <div class="text-center">
+      <button class="btn btn-info" onclick="download()">
+        Xuất ra Excel
+      </button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -835,7 +856,7 @@
   var formInsertNote =  $("#form-insert-note")
   var formInsertCnote =  $("#form-insert-cnote")
   var formInsertReceiveDis = $("#form-insert-receive-dis")
-  var formInsertReceiveLeader = $("#form-insert-receive-leader")
+  var formInsertReceiveLeader = $("#receive-leader-0")
   var formInsertAttach = $("#form-insert-attach")
   var formInsertXnote = $("#form-insert-xnote")
   var formInsertPage2 = $("#form-insert-page2")
@@ -858,6 +879,9 @@
   var formSummaryExam = $("#form-summary-exam")
   var formInsertNoticeTime = $("#form-insert-notice-time")
   var sample = $("#sample")
+
+  var excelf = $("#excelf")
+  var excelt = $("#excelt")
 
   var filterXcode = $("#filter-xcode")
   var filterUnit = $("#filter-unit")
@@ -936,6 +960,7 @@
     installRemindv2('0', 'xaddress');
     installRemindv2('0', 'owner');
     installRemindv2('0', 'sample-place');
+    installRemindv2('0', 'receive-leader');
 
     // installExamRemind()
     parseField(global_field)
@@ -944,11 +969,16 @@
     parseSaved()
   })
 
-  $("#form-insert-receive, #form-insert-resend, #form-insert-ireceive, #form-insert-iresend, #form-insert-sample-receive, #form-insert-sample-time, #form-insert-exam-date, #form-summary-from, #form-summary-end, #form-insert-notice-time, #form-insert-xresend, #form-insert-xreceive, #form-insert-xsend").datepicker({
+  $("#form-insert-receive, #form-insert-resend, #form-insert-ireceive, #form-insert-iresend, #form-insert-sample-receive, #form-insert-sample-time, #form-insert-exam-date, #form-summary-from, #form-summary-end, #form-insert-notice-time, #form-insert-xresend, #form-insert-xreceive, #form-insert-xsend, #excelf, #excelt").datepicker({
     format: 'dd/mm/yyyy',
     changeMonth: true,
     changeYear: true
   });
+
+	function download() {
+		var link = '/index.php?' + nv_name_variable + '=' + nv_module_name + '&excel=1&excelf=' + excelf.val() + '&excelt=' + excelt.val()
+		window.open(link)
+	}
 
   function parseBox(index) {
     if (visible[global_saved][1].search(index) >= 0) {
@@ -971,7 +1001,7 @@
         `<div class="row">
           <button type="button" class="close" data-dismiss="modal" onclick="splitExam(\'0-`+ mainIndex +`-`+ examIndex +`\')">&times;</button>
           <label class="col-sm-4"> Yêu cầu </label>
-          <div class="col-sm-10 relative">
+          <div class="col-sm-12 relative">
             <input type="text" value="`+ exam +`" class="form-control input-box exam examed iex iex-exam-` + mainIndex + `-`+ examIndex +`" id="exam-`+ mainIndex +`-`+ examIndex +`" style="float: none;" autocomplete="off">
             <div class="suggest exam-suggest" id="exam-suggest-`+ mainIndex +`-`+ examIndex +`"> </div>
           </div>
@@ -990,14 +1020,14 @@
         <button type="button" class="close" data-dismiss="modal" onclick="splitExam(\'0-`+ mainIndex +`\')">&times;</button>
         <div class="row">
           <label class="col-sm-4"> Phương pháp </label>
-          <div class="col-sm-10 relative">
+          <div class="col-sm-12 relative">
             <input type="text" value="`+ main['method'] +`" class="form-control input-box method iex iex-method-` + mainIndex + `" id="method-` + mainIndex + `" style="float: none;" autocomplete="off">
             <div class="suggest" id="method-suggest-` + mainIndex + `"> </div>
           </div>
         </div>
         <div class="row">
           <label class="col-sm-4"> Ký hiệu </label>
-          <div class="col-sm-10 relative">
+          <div class="col-sm-12 relative">
             <input type="text" value="`+ main['symbol'] +`" class="form-control input-box symbol iex iex-symbol-` + mainIndex + `" id="symbol-` + mainIndex + `" style="float: none;" autocomplete="off">
             <div class="suggest" id="symbol-suggest-` + mainIndex + `"> </div>
           </div>
@@ -1146,7 +1176,7 @@
         var temp2 = []
         main['exam'].forEach(exam => {
           temp2.push({
-            result: defaultData['result'],
+            result: '',
             note: exam
           })
         })
@@ -1228,14 +1258,14 @@
             <button class="close right" data-dismiss="modal" onclick="removeField('`+ sampleIndex +`,`+ resultIndex +`,`+ noteIndex +`')">&times;</button>
             <div class="row form-group">
               <label class="col-sm-6"> Kết quả </label>
-              <div class="col-sm-10 relative">
+              <div class="col-sm-12 relative">
                 <input type="text" value="`+ note['result'] +`" class="form-control ig ig-result-`+ sampleIndex +`-`+ resultIndex +`-`+ noteIndex +`" id="result-`+ sampleIndex +`-`+ resultIndex +`-`+ noteIndex +`" autocomplete="off">
                 <div class="suggest" id="result-suggest-`+ sampleIndex +`-`+ resultIndex +`-`+ noteIndex +`"></div>
               </div>
             </div>
             <div class="row form-group">
               <label class="col-sm-6"> Ghi chú </label>
-              <div class="col-sm-10">
+              <div class="col-sm-12">
                 <input type="text" value="`+ note['note'] +`" class="form-control ig ig-note-`+ sampleIndex +`-`+ resultIndex +`-`+ noteIndex +`" autocomplete="off">
               </div>
             </div>
@@ -1251,7 +1281,7 @@
           <button class="close right" data-dismiss="modal" onclick="removeField('`+ sampleIndex +`,`+ resultIndex +`')">&times;</button>
           <div class="row form-group">
             <label class="col-sm-6"> Chỉ tiêu </label>
-            <div class="col-sm-10">
+            <div class="col-sm-12">
               <div class="relative">
                 <input type="text" value="`+ result['main'] +`" class="form-control ig ig-main-`+ sampleIndex +`-`+ resultIndex +`" id="main-s`+ sampleIndex +`" autocomplete="off">
                 <div class="suggest" id="main-suggest-s`+ sampleIndex +`"></div>
@@ -1261,7 +1291,7 @@
           
           <div class="row form-group">
             <label class="col-sm-6"> Phương pháp </label>
-            <div class="col-sm-10">
+            <div class="col-sm-12">
               <div class="relative">
                 <input type="text" value="`+ result['method'] +`" class="form-control ig ig-method-`+ sampleIndex +`-`+ resultIndex +`" id="method-s`+ sampleIndex +`" autocomplete="off">
                 <div class="suggest" id="method-suggest-s`+ sampleIndex +`"></div>
@@ -1290,20 +1320,20 @@
           <button class="close right" data-dismiss="modal" onclick="removeField('`+ sampleIndex +`')">&times;</button>
           <div class="row form-group">
             <label class="col-sm-6"> Kí hiệu mẫu </label>
-            <div class="col-sm-10">
+            <div class="col-sm-12">
               <input type="text" name="samplecode[]" value="`+ sample['code'] +`" class="form-control ig ig-code-`+ sampleIndex +`" autocomplete="off">
             </div>
           </div>
           <div class="row form-group">
             <label class="col-sm-6"> Loại mẫu </label>
-            <div class="col-sm-10">
+            <div class="col-sm-12">
               <input type="text" name="type[]" value="`+ sample['type'] +`" class="form-control ig ig-type-`+ sampleIndex +`" autocomplete="off">
             </div>
           </div>
           
           <div class="row form-group">
             <label class="col-sm-6"> Số lượng mẫu </label>
-            <div class="col-sm-10">
+            <div class="col-sm-12">
               <input type="text" name="number[]" value="`+ sample['number'] +`" class="form-control ig ig-number-`+ sampleIndex +`" autocomplete="off">
             </div>
           </div>
@@ -1741,6 +1771,7 @@
     formInsertOwnerMail.val(defaultData['remind']['ownermail'])
     formInsertOwner.val(defaultData['remind']['owner'])
     formInsertSamplePlace.val(defaultData['remind']['sample-place'])
+    formInsertReceiveLeader.val(defaultData['remind']['receive-leader'])
 
     formInsertExamSample.val('')
     formInsertStatus.val('')
@@ -1754,7 +1785,6 @@
     formInsertTarget.val('')
     formInsertEndedCopy.val('')
     formInsertNote.val('')
-    formInsertReceiveLeader.val('')
     formInsertVnote.val('')
     global_field = [{
       code: '',
@@ -1850,7 +1880,7 @@
             <br>
             <div class="row">
               <label class="col-sm-6"> Tên hồ sơ </label>
-              <div class="col-sm-10 relative">
+              <div class="col-sm-12 relative">
                 <input type="text" class="form-control input-box form" id="form-` + length + `" autocomplete="off">
                 <div class="suggest" id="form-suggest-` + length + `"></div>
               </div>
@@ -1867,21 +1897,21 @@
             <br>
             <div class="row">
               <label class="col-sm-4"> Phương pháp </label>
-              <div class="col-sm-10 relative">
+              <div class="col-sm-12 relative">
                 <input type="text" class="form-control input-box method" id="method-` + length + `" style="float: none;" autocomplete="off">
                 <div class="suggest" id="method-suggest-` + length + `"> </div>
               </div>
             </div>
             <div class="row">
               <label class="col-sm-4"> Ký hiệu </label>
-              <div class="col-sm-10 relative">
+              <div class="col-sm-12 relative">
                 <input type="text" class="form-control input-box symbol" id="symbol-` + length + `" style="float: none;" autocomplete="off">
                 <div class="suggest" id="symbol-suggest-` + length + `"> </div>
               </div>
             </div>
             <div class="row">
               <label class="col-sm-4"> Yêu cầu </label>
-              <div class="col-sm-10 relative">
+              <div class="col-sm-12 relative">
                 <input type="text" class="form-control input-box exam examed" id="examed-` + length + `" style="float: none;" autocomplete="off">
                 <div class="suggest exam-suggest" id="exam-suggest-` + length + `"> </div>
               </div>
@@ -1898,7 +1928,7 @@
             <br>
             <div class="row">
               <label class="col-sm-4"> Kết quả </label>
-              <div class="col-sm-10 relative">
+              <div class="col-sm-12 relative">
                 <input type="text" class="form-control input-box resulted resulted" id="resulted-` + length + `" style="float: none;" autocomplete="off">
                 <div class="suggest resulted-suggest" id="resulted-suggest-` + length + `"> </div>
               </div>
