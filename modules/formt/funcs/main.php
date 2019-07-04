@@ -85,19 +85,22 @@ if ($nv_Request->isset_request("excel", "get")) {
 	$re = $db->query($query);
 	$index = 1;
 	while ($row = $re->fetch()) {
-			$objPHPExcel
-			->setActiveSheetIndex(0)
-			->setCellValue('A' . $i, (($index < 10 ? '0' : '') . $index))
-			->setCellValue('B' . $i, str_replace(',', '/', str_replace(', ', '/', $row['xcode'])))
-			->setCellValue('C' . $i, $row['sender'])
-			->setCellValue('D' . $i, (($row['number'] < 10 ? '0' : '') . $row['number']))
-			->setCellValue('E' . $i, ((strpos($row['ig'], '(+)') !== false) ? 'Dương tính' : 'Âm tính'));
-			$i++;
-			$index++;
+		$ig = json_decode($row['ig']);
+		var_dump($ig);
+		die();
+			// $objPHPExcel
+			// ->setActiveSheetIndex(0)
+			// ->setCellValue('A' . $i, (($index < 10 ? '0' : '') . $index))
+			// ->setCellValue('B' . $i, str_replace(',', '/', str_replace(', ', '/', $row['xcode'])))
+			// ->setCellValue('C' . $i, $row['sender'])
+			// ->setCellValue('D' . $i, (($row['number'] < 10 ? '0' : '') . $row['number']))
+			// ->setCellValue('E' . $i, ((strpos($row['ig'], '(+)') !== false) ? 'Dương tính' : 'Âm tính'));
+			// $i++;
+			// $index++;
 	}
 	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
 	$objWriter->save('excel-form.xlsx');
-	header('location: /excel-form.xlsx');
+	// header('location: /excel-form.xlsx');
 }
 
 $action = $nv_Request->get_string('action', 'post/get', "");
@@ -298,6 +301,10 @@ if (!empty($action)) {
 							$result['notify'] = 'Nhập thiếu thông tin: ' . $teriorname[$key];
 						}
 						else {
+							if (!empty($_POST['data']) && !empty($_POST['data']['note'])) {
+								$note = $_POST['data']['note'];
+							}
+
 							checkRemindv2($data['isenderunit'], 'isender-unit');
 							checkRemindv2($data['ireceiverunit'], 'ireceiver-unit');
 							checkRemindv2($data['xreceiver'], 'xreceiver');
@@ -320,7 +327,7 @@ if (!empty($action)) {
 							}
 							$ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
 
-							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode($data['xcode'], ',') .'", isenderunit = "'. $data['isenderunit'] .'", ireceiverunit = "'. $data['ireceiverunit'] .'", xreceiver = "'. $data['xreceiver'] .'", xresender = "'. $data['xresender'] .'", xsender = "'. $data['xsender'] .'", iresend = '. $iresend .', xreceive = '. $xreceive .', xresend = "'. $xresend .'", xsend = '. $xsend .', ig = \''. $ig .'\', examdate = '. $examdate .', result = "'. $data['result'] .'", note = "'.$data['note'].'", page2 = "'. $data['page2'] .'" where id = ' . $id;
+							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode($data['xcode'], ',') .'", isenderunit = "'. $data['isenderunit'] .'", ireceiverunit = "'. $data['ireceiverunit'] .'", xreceiver = "'. $data['xreceiver'] .'", xresender = "'. $data['xresender'] .'", xsender = "'. $data['xsender'] .'", iresend = '. $iresend .', xreceive = '. $xreceive .', xresend = "'. $xresend .'", xsend = '. $xsend .', ig = \''. $ig .'\', examdate = '. $examdate .', result = "'. $data['result'] .'", note = "'.$note.'", page2 = "'. $data['page2'] .'" where id = ' . $id;
 							if ($db->query($sql)) {
 								checkPrinter($id, $form);
 								$result['notify'] = 'Đã cập nhật mẫu';
@@ -338,6 +345,9 @@ if (!empty($action)) {
 							$result['notify'] = 'Nhập thiếu thông tin: ' . $teriorname[$key];
 						}
 						else {
+							if (!empty($_POST['data']) && !empty($_POST['data']['vnote'])) {
+								$vnote = $_POST['data']['vnote'];
+							}				
 							$ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
 							checkRemindv2($data['xresender'], 'xresender');
 							checkRemindv2($data['xexam'] , 'xexam');
@@ -350,7 +360,7 @@ if (!empty($action)) {
 								}
 							}
 
-							$sql = 'update `'. PREFIX .'_row` set ig = \''. $ig .'\', xresender = "'. $data['xresender'] .'", xexam = "'. $data['xexam'] .'", vnote = "'. $data['vnote'] .'", page3 = "'. $data['page3'] .'" where id = ' . $id;
+							$sql = 'update `'. PREFIX .'_row` set ig = \''. $ig .'\', xresender = "'. $data['xresender'] .'", xexam = "'. $data['xexam'] .'", vnote = "'. $vnote .'", page3 = "'. $data['page3'] .'" where id = ' . $id;
 							if ($db->query($sql)) {
 								checkPrinter($id, $form);
 								$result['notify'] = 'Đã cập nhật mẫu';
