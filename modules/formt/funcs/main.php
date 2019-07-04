@@ -11,7 +11,7 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
-$page_title = "Nhập hồ sơ một chiều";
+$page_title = "Nhập hồ sơ một cửa";
 
 // $sql = "select * from `". PREFIX ."_row`";
 // $query = $db->query($sql);
@@ -464,6 +464,37 @@ $remind = getDefault();
 
 $defaultData = array('code' => '-19', 'xcode' => '05,19,', 'result' => 'Âm tính (-)', 'receivedis' => '- Lưu: VT, Dịch tễ, Kế toán.', 'number' => '1', 'numberword' => 'Một', 'today' => date("d/m/Y", $today), 'yesterday' => date("d/m/Y", $yesterday), 'tomorrow' => date("d/m/Y", $tomorrow), 'remind' => $remind);
 
+/** */
+// $permist = '';
+// if (!empty($user_info)) {
+// 	if (in_array('1', $user_info['in_groups'])) {
+// 		$permist = '1,2,3,4,5';
+// 	}
+// 	else {
+// 		$permist = getUserPermission($user_info['userid']);
+// 	}
+// }
+// $xtpl->assign('permist', $permist);	
+
+// $permist = explode(',', $permist);
+
+// $top = 10;
+// foreach ($permist as $key) {
+// 	$xtpl->assign('top', $top += 35);	
+// 	$xtpl->parse('main.mod2.p' . ($key + 1));
+// }
+// $xtpl->assign('top', $top += 35);	
+/** */
+$permist = '0,1,2,3,4';
+$permist = explode(',', $permist);
+$top = 10;
+foreach ($permist as $key) {
+	$xtpl->assign('top', $top += 35);	
+	$xtpl->parse('main.mod2.p' . ($key + 1));
+}
+$xtpl->assign('top', $top += 35);	
+
+
 $xtpl->assign("default", json_encode($defaultData));
 
 if (checkIsMod($user_info['userid'])) {
@@ -489,15 +520,6 @@ if (checkIsMod($user_info['userid'])) {
 	}
 	$xtpl->parse('main.mod');
 	$xtpl->parse('main.mod2');
-}
-
-if (!empty($user_info)) {
-	if (in_array('1', $user_info['in_groups'])) {
-		$xtpl->assign("permist", '1,2,3,4,5');	
-	}
-	else {
-		$xtpl->assign("permist", getUserPermission($user_info['userid']));	
-	}
 }
 
 $day = date('w');

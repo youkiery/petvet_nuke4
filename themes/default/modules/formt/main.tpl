@@ -687,49 +687,54 @@
       </div>
     </div>
 
-    <button class="btn btn-info saved float-button" id="saved-2-1" style="top: 10px; right: 10px;" onclick="printer(1)">
+    <!-- BEGIN: p1 -->
+    <button class="btn btn-info saved float-button" id="saved-2-1" style="top: {top}px; right: 10px;" onclick="printer(1)">
       <span class="glyphicon glyphicon-print"></span>
     </button>
-
-    <button class="btn btn-info saved float-button" id="saved-2-2" style="top: 45px; right: 10px;" onclick="printer(2)">
-      <span class="glyphicon glyphicon-print"></span>
-    </button>
-
-    <button class="btn btn-info saved float-button" id="saved-2-3" style="top: 80px; right: 10px;" onclick="printer(3)">
-      <span class="glyphicon glyphicon-print"></span>
-    </button>
-
-    <button class="btn btn-info saved float-button" id="saved-2-4" style="top: 115px; right: 10px;" onclick="printer(4)">
-      <span class="glyphicon glyphicon-print"></span>
-    </button>
-
-    <button class="btn btn-info saved float-button" id="saved-2-5" style="top: 150px; right: 10px;" onclick="printer(5)">
-      <span class="glyphicon glyphicon-print"></span>
-    </button>
-
-    <button class="btn btn-warning saved float-button" id="saved-1-1" style="top: 10px; right: 50px;" onclick="parseBox(1)">
+    <button class="btn btn-warning saved float-button" id="saved-1-1" style="top: {top}px; right: 50px;" onclick="parseBox(1)">
       Mẫu 1
     </button>
-
-    <button class="btn btn-warning saved float-button" id="saved-1-2" style="top: 45px; right: 50px;" onclick="parseBox(2)">
+    <!-- END: p1 -->
+    
+    <!-- BEGIN: p2 -->
+    <button class="btn btn-info saved float-button" id="saved-2-2" style="top: {top}px; right: 10px;" onclick="printer(2)">
+      <span class="glyphicon glyphicon-print"></span>
+    </button>
+    <button class="btn btn-warning saved float-button" id="saved-1-2" style="top: {top}px; right: 50px;" onclick="parseBox(2)">
       Mẫu 2
     </button>
+    <!-- END: p2 -->
 
-    <button class="btn btn-warning saved float-button" id="saved-1-3" style="top: 80px; right: 50px;" onclick="parseBox(3)">
+    <!-- BEGIN: p3 -->
+    <button class="btn btn-info saved float-button" id="saved-2-3" style="top: {top}px; right: 10px;" onclick="printer(3)">
+      <span class="glyphicon glyphicon-print"></span>
+    </button>
+    <button class="btn btn-warning saved float-button" id="saved-1-3" style="top: {top}px; right: 50px;" onclick="parseBox(3)">
       Mẫu 3
     </button>
+    <!-- END: p3 -->
 
-    <button class="btn btn-warning saved float-button" id="saved-1-4" style="top: 115px; right: 50px;" onclick="parseBox(4)">
+    <!-- BEGIN: p4 -->
+    <button class="btn btn-info saved float-button" id="saved-2-4" style="top: {top}px; right: 10px;" onclick="printer(4)">
+      <span class="glyphicon glyphicon-print"></span>
+    </button>
+    <button class="btn btn-warning saved float-button" id="saved-1-4" style="top: {top}px; right: 50px;" onclick="parseBox(4)">
       Mẫu 4
     </button>
+    <!-- END: p4 -->
 
-    <button class="btn btn-warning saved float-button" id="saved-1-5" style="top: 150px; right: 50px;" onclick="parseBox(5)">
+    <!-- BEGIN: p5 -->
+    <button class="btn btn-info saved float-button" id="saved-2-5" style="top: {top}px; right: 10px;" onclick="printer(5)">
+      <span class="glyphicon glyphicon-print"></span>
+    </button>
+    <button class="btn btn-warning saved float-button" id="saved-1-5" style="top: {top}px; right: 50px;" onclick="parseBox(5)">
       Mẫu 5
     </button>
+    <!-- END: p5 -->
 
-    <button class="btn btn-success float-button" style="top: 185px; right: 50px;" onclick="insertSubmit()"> Lưu </button>
+    <button class="btn btn-success float-button" style="top: {top}px; right: 50px;" onclick="insertSubmit()"> Lưu </button>
 
-    <button class="btn btn-info saved-0 float-button" style="top: 185px; right: 10px;" onclick="newForm()">
+    <button class="btn btn-info saved-0 float-button" style="top: {top}px; right: 10px;" onclick="newForm()">
       <span class="glyphicon glyphicon-file"></span>
     </button>
   </div>
@@ -897,7 +902,7 @@
   var global_id = 0
   var global_page = 1
   var global_printer = 1
-  // var permist = "{permist}".split(',')
+  var permist = "{permist}".split(',')
   var defaultData = JSON.parse(`{default}`)
 
   var ticked = ['Đạt', 'Không đạt']
