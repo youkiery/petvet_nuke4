@@ -98,17 +98,17 @@ if ($nv_Request->isset_request("excel", "get")) {
 		// 	}
 		// }
 
-		// $objPHPExcel
-			// ->setActiveSheetIndex(0)
-			// ->setCellValue('A' . $i, (($index < 10 ? '0' : '') . $index))
-			// ->setCellValue('B' . $i, str_replace(',', '/', str_replace(', ', '/', $row['xcode'])))
-			// ->setCellValue('C' . $i, $row['sender'])
-			// ->setCellValue('D' . $i, (($row['number'] < 10 ? '0' : '') . $row['number']))
-			// ->setCellValue('E' . $i, ((strpos($row['ig'], '(+)') !== false) ? 'Dương tính' : 'Âm tính'));
-			// $i++;
-			// $index++;
+		$objPHPExcel
+			->setActiveSheetIndex(0)
+			->setCellValue('A' . $i, (($index < 10 ? '0' : '') . $index))
+			->setCellValue('B' . $i, str_replace(',', '/', str_replace(', ', '/', $row['xcode'])))
+			->setCellValue('C' . $i, $row['sender'])
+			->setCellValue('D' . $i, (($row['number'] < 10 ? '0' : '') . $row['number']))
+			->setCellValue('E' . $i, ((strpos($row['ig'], '(+)') !== false) ? 'Dương tính' : 'Âm tính'));
+			$i++;
+			$index++;
 	}
-	die();
+	// die();
 	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
 	$objWriter->save('excel-form.xlsx');
 	// header('location: /excel-form.xlsx');

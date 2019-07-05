@@ -134,20 +134,23 @@ function getRemindIdv2($name, $type) {
 function checkRemindv2($name, $type) {
 	global $db;
 
-	if ($id = getRemindIdv2($name, $type)) {
-		$sql = 'update `'. PREFIX .'_remindv2` set visible = 1, rate = rate + 1 where id = ' . $id;
-		if ($db->query($sql)) {
-			return $id;
+	if (!empty($name)) {
+		if ($id = getRemindIdv2($name, $type)) {
+			$sql = 'update `'. PREFIX .'_remindv2` set visible = 1, rate = rate + 1 where id = ' . $id;
+			if ($db->query($sql)) {
+				return $id;
+			}
+			return 0;
 		}
-		return 0;
-	}
-	else {
-		$sql = 'insert into `'. PREFIX .'_remindv2` (type, name, visible) values ("'. $type .'", "'. $name .'", 1)';
-		if ($db->query($sql)) {
-			return $db->lastInsertId();
+		else {
+			$sql = 'insert into `'. PREFIX .'_remindv2` (type, name, visible) values ("'. $type .'", "'. $name .'", 1)';
+			if ($db->query($sql)) {
+				return $db->lastInsertId();
+			}
+			return 0;
 		}
-		return 0;
 	}
+	return 0;
 }
 
 function removeRemindv2($id) {
