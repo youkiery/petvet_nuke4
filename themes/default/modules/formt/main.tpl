@@ -753,9 +753,38 @@
         <input type="text" value="{excelt}" class="form-control" id="excelt">
       </div>
     </label>
-    <!-- <label style="width: 30%"> <input type="checkbox" id="index"> </label>
-    <label style="width: 30%"> <input type="checkbox" id=""> </label>
-    <label style="width: 30%"> <input type="checkbox" id=""> </label> -->
+<!-- khách hàng, địa chỉ, email, điện thoại, chỉ hộ, nơi lấy mẫu, mục đích, nơi nhận, người phụ trách --> 
+    <label style="width: 30%"> <input type="checkbox" id="index"> STT </label>
+    <label style="width: 30%"> <input type="checkbox" id="set"> Kết quả xét nghiệm </label>
+    <label style="width: 30%"> <input type="checkbox" id="code"> Số phiếu </label>
+    <label style="width: 30%"> <input type="checkbox" id="code"> Tên đơn vị </label>
+    <label style="width: 30%"> <input type="checkbox" id="receive"> Ngày nhận mẫu </label>
+    <label style="width: 30%"> <input type="checkbox" id="resend"> Ngày hẹn trả kết quả </label>
+    <label style="width: 30%"> <input type="checkbox" id="status"> Hình thức nhận </label>
+    <label style="width: 30%"> <input type="checkbox" id="ireceiver"> Người nhận hồ sơ </label>
+    <label style="width: 30%"> <input type="checkbox" id="ireceive"> Ngày nhận hồ sơ </label>
+    <label style="width: 30%"> <input type="checkbox" id="iresend"> Ngay trả hồ sơ </label>
+    <label style="width: 30%"> <input type="checkbox" id="number"> Số lượng mẫu </label>
+    <label style="width: 30%"> <input type="checkbox" id="sampletype"> Loại mẫu </label>
+    <label style="width: 30%"> <input type="checkbox" id="sample"> Loài vật lấy mẫu </label>
+    <label style="width: 30%"> <input type="checkbox" id="xcode"> Số ĐKXN </label>
+    <label style="width: 30%"> <input type="checkbox" id="isenderunit"> Bộ phận giao mẫu </label>
+    <label style="width: 30%"> <input type="checkbox" id="ireceiverunit"> Bộ phận nhận mẫu </label>
+    <label style="width: 30%"> <input type="checkbox" id="examdate"> Ngày phân tích </label>
+    <label style="width: 30%"> <input type="checkbox" id=""> Bộ phận xét nghiệm </label>
+    <label style="width: 30%"> <input type="checkbox" id=""> Người phụ trách bộ phận xét nghiệm </label>
+    <label style="width: 30%"> <input type="checkbox" id=""> Lượng mẫu xét nghiệm </label>
+    <label style="width: 30%"> <input type="checkbox" id=""> Người lấy mẫu </label>
+    <label style="width: 30%"> <input type="checkbox" id=""> Thời gian lấy mẫu </label>
+    <label style="width: 30%"> <input type="checkbox" id=""> Khách hàng </label>
+    <label style="width: 30%"> <input type="checkbox" id=""> Địa chỉ </label>
+    <label style="width: 30%"> <input type="checkbox" id=""> Email </label>
+    <label style="width: 30%"> <input type="checkbox" id=""> Điện thoại </label>
+    <label style="width: 30%"> <input type="checkbox" id=""> Chủ hộ </label>
+    <label style="width: 30%"> <input type="checkbox" id=""> Nơi lấy mẫu </label>
+    <label style="width: 30%"> <input type="checkbox" id=""> Mục đích </label>
+    <label style="width: 30%"> <input type="checkbox" id=""> Nơi nhận </label>
+    <label style="width: 30%"> <input type="checkbox" id=""> Người phụ trách </label>
     <div class="text-center">
       <button class="btn btn-info" onclick="download()">
         Xuất ra Excel

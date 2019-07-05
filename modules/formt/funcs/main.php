@@ -85,10 +85,20 @@ if ($nv_Request->isset_request("excel", "get")) {
 	$re = $db->query($query);
 	$index = 1;
 	while ($row = $re->fetch()) {
-		$ig = json_decode($row['ig']);
-		var_dump($ig);
-		die();
-			// $objPHPExcel
+		// if (!empty($row['ig'])) {
+		// 	$ig = json_decode($row['ig']);
+		// 	foreach ($ig as $sample) {
+		// 		echo  $sample->{'code'} . '<br>';
+		// 		foreach ($sample->{'mainer'} as $mainer) {
+		// 			foreach ($mainer->{'note'} as $note) {
+		// 				echo '&emsp; ' . $note->{'note'} . '<br>';
+		// 				echo '&emsp;&emsp; ' . $note->{'result'} . '<br>'; 
+		// 			}
+		// 		}
+		// 	}
+		// }
+
+		// $objPHPExcel
 			// ->setActiveSheetIndex(0)
 			// ->setCellValue('A' . $i, (($index < 10 ? '0' : '') . $index))
 			// ->setCellValue('B' . $i, str_replace(',', '/', str_replace(', ', '/', $row['xcode'])))
@@ -98,6 +108,7 @@ if ($nv_Request->isset_request("excel", "get")) {
 			// $i++;
 			// $index++;
 	}
+	die();
 	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
 	$objWriter->save('excel-form.xlsx');
 	// header('location: /excel-form.xlsx');
