@@ -315,6 +315,15 @@ if (!empty($action)) {
 							if (!empty($_POST['data']) && !empty($_POST['data']['note'])) {
 								$note = $_POST['data']['note'];
 							}
+							foreach ($data['ig'] as $sample) {
+								foreach ($sample['mainer'] as $mainer) {
+									checkRemindv2($mainer['main'], 'symbol');
+									checkRemindv2($mainer['method'], 'method');
+									foreach ($mainer['note'] as $examNote) {
+										checkRemindv2($examNote['note'], 'exam');
+									}
+								}
+							}
 
 							checkRemindv2($data['isenderunit'], 'isender-unit');
 							checkRemindv2($data['ireceiverunit'], 'ireceiver-unit');
@@ -329,13 +338,13 @@ if (!empty($action)) {
 							$xsend = totime($data['xsend']);
 							$examdate = totime($data['examdate']);
 
-							foreach ($data['ig'] as $examMain) {
-								checkRemindv2($examMain['symbol'], 'symbol');
-								checkRemindv2($examMain['method'], 'method');
-								foreach ($examMain['mainer'] as $examNote) {
-									checkRemindv2($examNote['main'], 'exam');
-								}
-							}
+							// foreach ($data['ig'] as $examMain) {
+							// 	checkRemindv2($examMain['symbol'], 'symbol');
+							// 	checkRemindv2($examMain['method'], 'method');
+							// 	foreach ($examMain['mainer'] as $examNote) {
+							// 		checkRemindv2($examNote['main'], 'exam');
+							// 	}
+							// }
 							$ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
 
 							$sql = 'update `'. PREFIX .'_row` set xcode = "'. implode($data['xcode'], ',') .'", isenderunit = "'. $data['isenderunit'] .'", ireceiverunit = "'. $data['ireceiverunit'] .'", xreceiver = "'. $data['xreceiver'] .'", xresender = "'. $data['xresender'] .'", xsender = "'. $data['xsender'] .'", iresend = '. $iresend .', xreceive = '. $xreceive .', xresend = "'. $xresend .'", xsend = '. $xsend .', ig = \''. $ig .'\', examdate = '. $examdate .', result = "'. $data['result'] .'", note = "'.$note.'", page2 = "'. $data['page2'] .'" where id = ' . $id;
@@ -363,11 +372,13 @@ if (!empty($action)) {
 							checkRemindv2($data['xresender'], 'xresender');
 							checkRemindv2($data['xexam'] , 'xexam');
 							checkRemindv2($data['page3'], 'page3');
-							foreach ($data['ig'] as $examMain) {
-								checkRemindv2($examMain['symbol'], 'symbol');
-								checkRemindv2($examMain['method'], 'method');
-								foreach ($examMain['mainer'] as $examNote) {
-									checkRemindv2($examNote['main'], 'exam');
+							foreach ($data['ig'] as $sample) {
+								foreach ($sample['mainer'] as $mainer) {
+									checkRemindv2($mainer['main'], 'symbol');
+									checkRemindv2($mainer['method'], 'method');
+									foreach ($mainer['note'] as $examNote) {
+										checkRemindv2($examNote['note'], 'exam');
+									}
 								}
 							}
 
