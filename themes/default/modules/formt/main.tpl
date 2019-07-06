@@ -1053,7 +1053,7 @@
               CỤC THÚ Y <br>
               <b> CHI CỤC THÚ Y VÙNG V </b>
               <div style="margin-top: 10px; "></div>
-              <span class="p14"> Số: &emsp;&emsp;/TYV5-TH </span>
+              <span class="p14"> Số: (mcode)/TYV5-TH </span>
             </td>
             <td class="cell-center" style="position: relative">
               <div style="position: absolute; border-top: 1px solid black; width: 209px; height: 100px; top: 41px; left: 93px;"></div>
@@ -1230,6 +1230,7 @@
   var formInsertVnote = $("#form-insert-vnote")
   var formInsertExamSample = $("#form-insert-examsample")
   var formInsertSampleCode5 = $("#form-insert-sample-code-5")
+  var formInsertMcode = $("#form-insert-mcode")
 
   var formSummary = $("#form-summary")
   var formSummaryFrom = $("#form-summary-from")
@@ -2135,6 +2136,7 @@
     formInsertSamplePlace.val(defaultData['remind']['sample-place'])
     formInsertReceiveLeader.val(defaultData['remind']['receive-leader'])
 
+    formInsertMcode.val('')
     formInsertExamSample.val('')
     formInsertStatus.val('')
     formInsertSampleCode.val('')
@@ -2474,6 +2476,7 @@
             examsample: formInsertExamSample.val(),
             target: formInsertTarget.val(),
             note: formInsertNote.val(),
+            mcode: formInsertMcode.val(),
             receivedis: formInsertReceiveDis.val(),
             receiveleader: formInsertReceiveLeader.val(),
             sampleplace: formInsertSamplePlace.val(),
@@ -2617,6 +2620,7 @@
             formInsertTarget.val(data['form']['target'])
             formInsertReceiveDis.val(data['form']['receivedis'])
             formInsertExamSample.val(data['form']['examsample'])
+            formInsertMcode.val(data['form']['mcode'])
           }
           
           $('a[href="#menu1"]').tab('show')
@@ -2977,6 +2981,7 @@
             })
             
             html = html.replace('(exam)', parse)
+            html = html.replace('(mcode)', data['mcode'])
             html = html.replace('result', tabbed + data['result'].replace(/\n/g, '<br>' + tabbed))
             var owner = ''
             if (trim(data['ownermail']) || trim(data['ownerphone'])) {
