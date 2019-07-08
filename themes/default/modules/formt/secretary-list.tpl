@@ -5,16 +5,16 @@
       <th> Số phiếu </th>
       <th> Số ĐKXN </th>
       <th> Tên đơn vị </th>
+      <th> Số lượng mẫu </th>
       <th> Trạng thái </th>
-      <th> Loại động vật </th>
     </tr>
     <!-- BEGIN: row -->
     <tr>
       <td> {code} </td>
       <td> {xcode} </td>
       <td> {unit} </td>
+      <td> {number} </td>
       <td> {state} </td>
-      <td> {sample} </td>
       <td>
         <button class="btn btn-info" onclick="editSecret({id})">
           <span class="glyphicon glyphicon-edit"></span>

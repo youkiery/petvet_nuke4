@@ -135,7 +135,7 @@ function secretaryList($page = 1, $limit = 10) {
       $xcode = str_replace(',', '/', $xcode);
       $xtpl->assign('xcode', $xcode);
       $xtpl->assign('code', $row['code']);
-      $xtpl->assign('sample', $row['sample']);
+      $xtpl->assign('number', $row['number']);
       $xtpl->assign('printer', $row['printer']);
       for ($i = 1; $i <= $row['printer']; $i++) { 
         $xtpl->assign('printercount', $i);
