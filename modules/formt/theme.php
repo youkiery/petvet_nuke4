@@ -12,8 +12,8 @@ if (!defined('PREFIX')) {
 }
 
 $sampleType = array(0 => 'Nguyên con', 'Huyết thanh', 'Máu', 'Phủ tạng', 'Swab');
-$permissionType = array('Bị cấm', 'Chỉ đọc', 'Chỉnh sửa');
-
+$permissionType = array('Bị cấm', 'Chỉ đọc', 'Thư ký', 'Chỉnh sửa');
+//                       0      , 1        , 2       , 3
 function employerList($key = '') {
   global $db, $permissionType;
 
@@ -33,10 +33,10 @@ function employerList($key = '') {
       }
     }
     $xtpl->assign('risk', $risk);
-    if ($row['type'] == 1) {
+    if ($row['type'] < 3) {
       $xtpl->parse('main.row.up');
     }
-    else if ($row['type'] == 2) {
+    if ($row['type'] > 0) {
       $xtpl->parse('main.row.down');
     }
     $xtpl->parse('main.row');

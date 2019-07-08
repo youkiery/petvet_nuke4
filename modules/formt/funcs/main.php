@@ -648,20 +648,17 @@ $xtpl->assign('top', $top += 35);
 
 $xtpl->assign("default", json_encode($defaultData));
 
-$permission = getUserPermission($user_info['userid']);
+$permission = getUserType($user_info['userid']);
 
-if ($permission == 3 || $permission == 1) {
+if ($permission == 2 || $permission == 3) {
 	$xtpl->assign('secretary', secretaryList());
 	$xtpl->parse('main.secretary2');
 	$xtpl->parse('main.secretary');
 }
 
-if (checkIsMod($user_info['userid'])) {
-	$method = getMethod();
-	$methodHtml = '';
-	foreach ($method as $index => $row) {
-		$methodHtml .= '<option value="'. $row['symbol'] .'" class="'.$index.'">'. $row['name'] .'</option>';
-	}
+$methodHtml = '';
+$method = array();
+if ($permission || checkIsMod($user_info['userid'])) {
 	
 	for ($i = 0; $i < 60; $i++) { 
 		if ($i < 10) {
@@ -677,8 +674,15 @@ if (checkIsMod($user_info['userid'])) {
 			$xtpl->parse('main.mod2.hour2');
 		}
 	}
-	$xtpl->parse('main.mod');
-	$xtpl->parse('main.mod2');
+	if ($permission > 1) {
+		$method = getMethod();
+		$methodHtml = '';
+		foreach ($method as $index => $row) {
+			$methodHtml .= '<option value="'. $row['symbol'] .'" class="'.$index.'">'. $row['name'] .'</option>';
+		}
+		$xtpl->parse('main.mod');
+		$xtpl->parse('main.mod2');
+	}
 }
 
 $day = date('w');

@@ -79,7 +79,11 @@ if (!empty($action)) {
 			$key = $nv_Request->get_string('key', 'get/post', '');
 
 			if ($id = checkUserPermission($userid)) {
-				$sql = 'update `'.$db_config['prefix'].'_user_allow` set type = 2 where id = ' . $id;
+				$permission = getUserType($userid);
+				if ($permission < 3) {
+					$permission ++;
+				}
+				$sql = 'update `'.$db_config['prefix'].'_user_allow` set type = '. $permission .' where id = ' . $id;
 				if ($db->query($sql)) {
 					$result['status'] = 1;
 					$result['html'] = employerList($key);
@@ -91,7 +95,11 @@ if (!empty($action)) {
 			$key = $nv_Request->get_string('key', 'get/post', '');
 
 			if ($id = checkUserPermission($userid)) {
-				$sql = 'update `'.$db_config['prefix'].'_user_allow` set type = 1 where id = ' . $id;
+				$permission = getUserType($userid);
+				if ($permission > 0) {
+					$permission --;
+				}
+				$sql = 'update `'.$db_config['prefix'].'_user_allow` set type = '. $permission .' where id = ' . $id;
 				if ($db->query($sql)) {
 					$result['status'] = 1;
 					$result['html'] = employerList($key);
