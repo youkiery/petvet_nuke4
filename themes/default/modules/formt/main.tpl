@@ -955,7 +955,13 @@
           <td style="width: 5%"></td>
         </tr>
       </table>`,
-    4: `<table border="1" class="table-bordered">
+    4: `
+        <style>
+          * {
+            font-size: 15pt;
+          }
+        </style>
+        <table border="1" class="table-bordered">
           <tr>
             <td class="text-center"> <b>Biểu mẫu số: BM.STTT.22.01</b> </td> 
             <td class="text-center"> <b>Số soát xét: 03.02718</b> </td>
@@ -963,7 +969,7 @@
           <tr>
             <td colspan="2"> 
               <div class="text-center"> <b>CHI CỤC THÚ Y VÙNG V</b> </div>
-              <div class="text-center"> <b>TRẠM CHUẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT</b> </div> 
+              <div class="text-center"> <b>TRẠM CHẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT</b> </div> 
               <div> 
                 <b> Địa chỉ: </b> 
                 Số 36 Phạm Hùng, Phường Tân An, Thành phố Buôn Ma Thuột, Tỉnh Đăklăk
@@ -1106,7 +1112,7 @@
         note
         <p class="p14"> &emsp;&emsp; <b> <u> Kết quả: </u> </b> </p>
         <div class="p14">result</div>
-        <p class="p14"> <i> &emsp;&emsp;(Chi tiết xem phiếu kết quả xét nghiệm số: xcode-0/xcode-1/xcode-2.CĐXN của trạm chuẩn đoán xét nghiệm bệnh động vật)./. </i></p>
+        <p class="p14"> <i> &emsp;&emsp;(Chi tiết xem phiếu kết quả xét nghiệm số: xcode-0/xcode-1/xcode-2.CĐXN của trạm chẩn đoán xét nghiệm bệnh động vật)./. </i></p>
         <div style="width: 60%; float: left;"><b class="p12"> <b> <i> Nơi nhận: </i> </b> </b> <p class="p11"> receivedis </p></div>
         <div style="width: 40%; float: left;" class="text-center p14">
           <b> CHI CỤC TRƯỞNG <br><br><br><br><br> receiveleader </b>

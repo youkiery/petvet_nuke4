@@ -28,7 +28,7 @@
       </td>
       <td>
         <button class="btn btn-info" onclick="getPermission({userid})">
-          get
+          Thay đổi
         </button>
         <!-- BEGIN: up -->
         <button class="btn btn-info" onclick="upUser({userid})">

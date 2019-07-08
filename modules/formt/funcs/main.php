@@ -669,7 +669,7 @@ $xtpl->assign("default", json_encode($defaultData));
 
 $permission = getUserType($user_info['userid']);
 
-if ($permission == 2 || $permission == 3) {
+if ($permission >= 2) {
 	$xtpl->assign('secretary', secretaryList());
 	$xtpl->parse('main.secretary2');
 	$xtpl->parse('main.secretary');
