@@ -148,6 +148,7 @@ if (!empty($action)) {
 					$xtpl->assign('content', $row['content']);
 					$xtpl->assign('type', $row['type']);
 					$xtpl->assign('pay' . $row['pay'], 'checked');
+					$result['ig'] = $row['ig'];
 				}
 				else {
 					$sql = 'select * from `'. PREFIX .'_row` where id = ' . $id;
@@ -161,6 +162,19 @@ if (!empty($action)) {
 					$xtpl->assign('content', $row['target']);
 					$xtpl->assign('type', (!empty($sampleType[$row['typeindex']] ? $sampleType[$row['typeindex']] : $row['typevalue'])));
 					$xtpl->assign('pay0', 'checked');
+					$tempData = array();
+					$ig = json_decode($row['ig']);
+					foreach ($ig as $sample) {
+						foreach ($sample->{'mainer'} as $mainer) {
+							foreach ($mainer->{'note'} as $note) {
+								if (empty($tempData[$note->{'note'}])) {
+									$tempData[$note->{'note'}] = 0;
+								}
+								$tempData[$note->{'note'}] += $sample->{'number'};
+							}
+						}
+					}
+					$result['ig'] = json_encode($tempData);
 				}
 				$xtpl->assign('sample', $row['sample']);
 				$xcode = explode(',', $row['xcode']);
@@ -171,7 +185,6 @@ if (!empty($action)) {
 				$xtpl->assign('reformer', $row['reformer']);
 				$xtpl->parse('main');
 				$result['status'] = 1;
-				$result['ig'] = $row['ig'];
 				$result['html'] = $xtpl->text();
 			}
 		break;
@@ -198,6 +211,9 @@ if (!empty($action)) {
 						if ($dataKey == 'date') {
 							$temp[] = $dataKey . ' = "'. totime($dataRow) .'"';
 						}
+						else if ($dataKey == 'ig') {
+							$temp[] = $dataKey . ' = \''. json_encode($dataRow) .'\'';
+						}
 						else {
 							$temp[] = $dataKey . ' = "'. $dataRow .'"';
 						}
@@ -212,13 +228,15 @@ if (!empty($action)) {
 						if ($dataKey == 'date') {
 							$temp2[] = totime($dataRow);
 						}
+						else if ($dataKey == 'ig') {
+							$temp2[] = '\''. json_encode($dataRow) .'\'';
+						}
 						else {
 							$temp2[] = '"'. $dataRow .'"';
 						}
 						$temp[] = $dataKey;
 					}
-					$sql = 'insert `'. PREFIX .'_secretary` ('. implode(', ', $temp) .', ig, rid) values (' . implode(', ', $temp2) . ', \''. $rowd['ig'] .'\', '. $id .')';
-					// die($sql);	
+					$sql = 'insert `'. PREFIX .'_secretary` ('. implode(', ', $temp) .', rid) values (' . implode(', ', $temp2) . ', '. $id .')';
 				}
 				if ($db->query($sql)) {
 					$result['notify'] = 'Đã cập nhật thành công';
@@ -380,7 +398,8 @@ if (!empty($action)) {
 			$other = $nv_Request->get_array('other', 'get/post', 1);
 
 			$result['notify'] = 'Nhập sai thông tin, hoặc thông tin lỗi';
-			if (!checkIsMod($user_info['userid'])) {
+			$permission = getUserType($user_info['userid']);
+			if ($permission < 2) {
 				$result['notify'] = 'Tài khoản không có quyền truy cập';
 			}
 			else {

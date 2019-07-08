@@ -633,7 +633,7 @@
     <div class="row form-group boxed box-3 box-3-7">
       <label class="col-sm-6"> Ghi chú </label>
       <div class="col-sm-12">
-        <textarea type="text" id="form-insert-vnote" class="form-control"></textarea>
+        <textarea id="form-insert-vnote" class="form-control"></textarea>
       </div>
     </div>
 
@@ -1098,6 +1098,7 @@
         <p style="clear: left; width: 60%; float: left;" class="p14"> &emsp;&emsp; Số lượng mẫu: number (numberword) </p> 
         <p style="width: 35%; float: left;" class="p14">Số mẫu xét nghiệm: (examsample)</p>
         <p class="p14" style="clear: left;"> &emsp;&emsp; Ký hiệu mẫu: samplecode </p>
+        <p class="p14"> &emsp;&emsp; Ngày Lấy mẫu:... sampletime </p>
         <p class="p14"> &emsp;&emsp; Ngày nhận mẫu: sampletime </p>
         target 
         <p class="p14"> &emsp;&emsp; <b> <u> Chỉ tiêu xét nghiệm: </u> </b> </p>
@@ -1110,48 +1111,6 @@
         <div style="width: 40%; float: left;" class="text-center p14">
           <b> CHI CỤC TRƯỞNG <br><br><br><br><br> receiveleader </b>
         </div>`,
-    6: `<div style="position: relative; text-align: center; width: fit-content; margin-left: 10pt;">
-          CHI CỤC THÚ Y VÙNG <br>
-          <b> Bộ phận một cửa - Phòng tổng hợp </b>
-          <div class="position: absolute; top 50pt; left: 150pt; width: 100pt; height: 1pt; background: black;"></div>
-        </div>
-        <p style="float: right;">
-          <i> Ngày (xresend-0) tháng (xresend-1) năm (xresend-2) </i>
-        </p>
-        <div style="clear: right;"></div>
-        <p class="text-center">
-          <b> DỊCH VỤ VÀ PHÍ, LỆ PHÍ </b>
-        </p>
-        <p class="text-center"> <b> Đề nghị Phòng Kế toán thực hiện thu dịch vụ và các khoản khí, lệ phí sau: </b>  </p>
-        <p>
-          1. Tên tổ chức, cá nhân: (senderemploy)
-        </p>
-        <p>
-          2. Địa chỉ giao dịch: (xaddress)
-        </p>
-        <p style="float: left; margin: 0pt 0pt 0pt 30pt; width: 100pt;"> Điện thoại: (ownerphone) </p>
-        <p style="float: left; margin: 0pt 0pt 0pt 30pt; width: 70pt;"> Fax: (fax) </p>
-        <p style="float: left; margin: 0pt 0pt 0pt 30pt;"> Email: (ownermail) </p>
-        <div style="clear: left;"></div>
-        <p>
-          3. Nội dung công việc: (content)
-        </p>
-        <p>
-          <i> Nội dung thu: </i>
-        </p>
-        <p> 4.1. Dịch vụ (theo TT.283-Bộ Tài chính và QĐ số 29 của Cơ quan) </p>
-        <p> a) Lấy mẫu: <span style="width: 100pt;"> (sampletype) </span>; &nbsp; - Loài động vật: (sample)</p>
-        <p> b) Xét nghiệm: Số phiếu kết quả xét nghiệm: (xcode) </p>
-        (content)
-        <p>
-          Thông báo số: (mcode)/TYV5-TH, ngày (xresend)
-        </p>
-        <div class="text-center" style="float: right; margin-right: 100pt;">
-          <b>Người đề nghị</b><br>
-          <i> Ký, ghi rõ họ tên </i>
-          <br><br><br><br><br>
-          (reformer)
-        </div>`
   }
   
   var credit = $("#credit")
@@ -1767,6 +1726,7 @@
           global_ig = JSON.parse(data['ig'])
           // $("#smsample").html(parseField(JSON.parse(data['ig'])))
           secretary.html(data['html'])
+          parseIgSecret(global_ig)
           $("#sdate").datepicker({
             format: 'dd/mm/yyyy',
             changeMonth: true,
@@ -1777,7 +1737,47 @@
     )
   }
 
+  function parseIgSecret(data) {
+    var html = ''
+    var installer = []
+    var index = 1
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        const element = data[key];
+        html += `
+          <div class="row form-group" style="width: 100%;">
+            <label class="col-sm-6">
+              Chỉ tiêu:
+            </label>
+            <div class="col-sm-12 relative">
+              <input type="text" class="form-control exam-sx exam-sx-`+index+`" value="`+ key +`" id="exam-sx`+ (index) +`">
+              <div class="suggest" id="exam-suggest-sx`+ (index) +`"> </div>
+            </div>
+            <div class="col-sm-4">
+              <input type="number" class="form-control number-sx-`+index+`" id="number-sx`+ (index) +`" value="`+ element +`">
+            </div>
+          </div>
+        `
+        installer.push({
+          name: "sx" + index,
+          type: 'exam'
+        })
+
+        index ++
+      }
+    }
+    $("#smsample").html(html)
+    installer.forEach(item => {
+      installRemindv2(item['name'], item['type'])
+    })
+  }
+
   function checkSecretary() {
+    var temp = {}
+    $(".exam-sx").each((index, item) => {
+      var idp = item.getAttribute('class').replace('form-control exam-sx exam-sx-', '')
+      temp[$(".exam-sx-" + idp).val()] = $(".number-sx-" + idp).val()
+    })
     var data = {
       date: $('#sdate').val(),
       org: $('#sorg').val(),
@@ -1791,7 +1791,8 @@
       xcode: $('#sxcode1').val() + ',' + $('#sxcode2').val() +','+ $('#sxcode3').val(),
       mcode: $('#smcode').val(),
       reformer: $('#sreformer').val(),
-      pay: ($("#pay1").prop('checked') ? 1 : 0)
+      pay: ($("#pay1").prop('checked') ? 1 : 0),
+      ig: temp
     }
     return data
   }
@@ -1870,22 +1871,10 @@
       html = html.replace('(date)', data['date'])
       html = html.replace('(reformer)', data['reformer'])
       var temp = ''
-      var tempData = {}
-      global_ig.forEach(sample => {
-        sample['mainer'].forEach(main => {
-          main['note'].forEach(note => {
-            if (tempData[trim(note['note'])]) {
-              tempData[trim(note['note'])] = 0
-            }
-            tempData[trim(note['note'])] = sample['number']
-          })
-        })
-      })
-
-      for (const key in tempData) {
-        if (tempData.hasOwnProperty(key)) {
-          const element = tempData[key];
-          temp += '<p><div style="width: 80%; display: inline-block;">- Chỉ tiêu: '+key+'</div><span style="width: 20%;">/<div style="width: 20pt; text-align: center; display: inline-block">'+element+'</div> mẫu.</span> </p>'
+      for (const key in data['ig']) {
+        if (data['ig'].hasOwnProperty(key)) {
+          const element = data['ig'][key];
+          temp += '<p><div style="width: 80%; display: inline-block;">&emsp;- Chỉ tiêu: '+key+'</div><span style="width: 20%;">/<div style="width: 20pt; text-align: center; display: inline-block">'+element+'</div> mẫu.</span> </p>'
         }
       }
       html = html.replace('(xcontent)', temp)
@@ -2337,11 +2326,12 @@
     formInsertQuality.val('')
     formInsertPhone.val('')
     formInsertOther.val('')
-    formInsertResult.val('')
+    formInsertResult.val('........................................................................................................................................................................................................')
     formInsertTarget.val('')
     formInsertEndedCopy.val('')
     formInsertNote.val('')
-    formInsertVnote.val('')
+    formInsertVnote.val(`(*)- Các chỉ tiêu được công nhận TCVN ISO/IEC 17025:2007.
+    - Các chỉ tiêu được chứng nhận đăng ký hoạt động thử nghiệm.`)
     global_field = [{
       code: '',
       type: '',
@@ -3134,7 +3124,7 @@
             html = html.replace('samplecode', data['samplecode5'])
             html = html.replace('(examsample)', data['examsample'])
             html = html.replace('(sample)', data['sample'])
-            html = html.replace('sampletime', data['receive'])
+            html = html.replace(/sampletime/g, data['receive'])
             html = html.replace('(sampletype)', data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text()))
             html = html.replace('number', data['number'])
             

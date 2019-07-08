@@ -50,7 +50,7 @@
 
   <div class="form-group row">
     <label class="col-sm-6">
-      Loại mẫu
+      Lấy mẫu
     </label>
     <div class="col-sm-12">
       <input type="text" value="{type}" class="form-control" id="stype" autocomplete="off">

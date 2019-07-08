@@ -107,7 +107,7 @@ function summaryContent($from, $end, $exam = '', $unit = '', $sample = '') {
 }
 
 function secretaryList($page = 1, $limit = 10) {
-  global $db;
+  global $db, $user_info;
   $xtpl = new XTemplate("secretary-list.tpl", PATH);
   $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where printer = 5';
   $query = $db->query($sqlCount);
@@ -142,7 +142,9 @@ function secretaryList($page = 1, $limit = 10) {
         $xtpl->parse('main.row.printer');
       }
       $xtpl->assign('unit', $row['sender']);
-      if (checkIsMod($user_info['userid'])) {
+
+      if (getUserType($user_info['userid']) > 1) {
+        // if (checkIsMod($user_info['userid'])) {
         $xtpl->parse('main.row.mod');
       }
       $xtpl->parse('main.row');
@@ -201,9 +203,13 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
         $xtpl->parse('main.row.printer');
       }
       $xtpl->assign('unit', $row['sender']);
-      if (checkIsMod($user_info['userid'])) {
+      if (getUserType($user_info['userid']) > 1) {
+        // if (checkIsMod($user_info['userid'])) {
         $xtpl->parse('main.row.mod');
       }
+      // if (checkIsMod($user_info['userid'])) {
+      //   $xtpl->parse('main.row.mod');
+      // }
       $xtpl->parse('main.row');
   }
   $xtpl->assign('from', $from);

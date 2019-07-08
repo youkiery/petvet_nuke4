@@ -31,10 +31,9 @@ function getUserType($userid) {
 
 	$sql = 'select * from `'. $db_config['prefix'] .'_user_allow` where userid = ' . $userid;
   $query = $db->query($sql);
-
   if (empty($row = $query->fetch()) && empty($row['type'])) {
-    return 0;
-  }
+		return 0;
+	}
   return $row['type'];
 }
 
