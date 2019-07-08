@@ -2913,7 +2913,7 @@
           data['form']['exam'] = JSON.parse(data['form']['exam'])
           data['form']['ig'] = JSON.parse(data['form']['ig'])
           data['form']['form'] = data['form']['form'].split(', ')
-          printer(printercount, data['form'])
+          printer(printercount, data['form'], 1)
         }, () => {})
       }
     )
@@ -2943,7 +2943,7 @@
     return result
   }
 
-  function printer(id, data = {}) {
+  function printer(id, data = {}, prev = 0) {
     if (Object.keys(data).length || visible[global_saved][2].search(id) >= 0) {
       if (!Object.keys(data).length) {
         var data = checkForm(id)
@@ -3221,8 +3221,10 @@
         var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
         winPrint.focus()
         winPrint.document.write(html);
-        winPrint.print()
-        winPrint.close()
+        if (!prev) {
+          winPrint.print()
+          winPrint.close()
+        }
       }
     }
   }
