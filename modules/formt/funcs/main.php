@@ -12,6 +12,7 @@ if (!defined('NV_IS_FORM')) {
 }
 
 $page_title = "Nhập hồ sơ một cửa";
+$sampleType = array(0 => 'Nguyên con', 'Huyết thanh', 'Máu', 'Phủ tạng', 'Swab');
 
 // $sql = "select * from `". PREFIX ."_row`";
 // $query = $db->query($sql);
@@ -116,7 +117,7 @@ if ($nv_Request->isset_request("excel", "get")) {
 
 $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
-	$teriorname = array('endedcopy' => 'Bản copy', 'endedhour' => 'Giờ kết thúc', 'endedminute' => 'Phút kết thúc', 'code' => 'Mã phiếu', 'sender' => 'Người gửi', 'receive' => 'Người nhận', 'resend' => 'Ngày hẹn trả', 'state' => 'Hình thức nhận', 'receiver' => 'Người nhận', 'ireceive' => 'Ngày nhận', 'iresend' => 'Ngày hẹn trả', 'form' => 'Tên hồ sơ', 'number' => 'Số lượng mẫu', 'sample' => 'Loài được lấy mẫu', 'type' => 'Loại mẫu', 'samplecode' => 'Ký hiệu mẫu', 'exam' => 'Yêu cầu xét nghiệm', 'method' => 'Phương pháp', 'address' => 'Địa chỉ', 'phone' => 'Số điện thoại', 'samplereceive' => 'Ngày lấy mẫu', 'samplereceiver' => 'Người lấy mẫu', 'examdate' => 'Ngày xét nghiệm', 'result' => 'Kết quả', 'xcode' => 'Số ĐKXN', 'page' => 'Số trang', 'no' => 'Liên', 'customer' => 'Khách hàng', 'other' => 'Yêu cầu khác', 'receivehour' => 'Giờ nhận', 'receiveminute' => 'Phút nhận', 'isenderemploy' => 'Người gửi', 'isenderunit' => 'Đơn vị gửi', 'ireceiveremploy' => 'Người nhận', 'ireceiverunit' => 'Đơn vị nhận', 'status' => 'Tình trạng mẫu', 'xstatus' => 'Hình thức bảo quản', 'quality' => 'Chất lượng mẫu', 'ireceiver' => 'Người nhận', 'note' => 'Ghi chú', 'target' => 'Mục đích xét nghiệm', 'receivedis' => 'Nơi nhận', 'receiveleader' => 'Người phụ trách', 'xaddress' => 'Địa chỉ khách hàng', 'sampleplace' => 'Nơi lấy mẫu', 'owner' => 'Chủ hộ', 'xphone' => 'Số điện thoại', 'xnote' => 'Ghi chú', 'numberword' => 'Ghi chú (chữ)', 'fax' => 'Fax', 'xsender' => 'Người giao mẫu', 'xsend' => 'Ngày giao mẫu', 'xreceiver' => 'Người nhận mẫu', 'xreceive' => 'Ngày nhận mẫu', 'xresend' => 'Ngày giao kết quả', 'xresender' => 'Người phụ trách', 'ig' => 'Thông tin mẫu', 'vnote' => 'Ghi chú', 'samplecode5' => 'Ký hiệu mẫu', 'examsample' => 'Số lượng mẫu xét nghiệm', 'ownermail' => 'Email', 'ownerphone' => 'Số điện thoại', 'page2' => 'Số trang', 'page3' => 'Số trang', 'page4' => 'Số trang');
+	$teriorname = array('endedcopy' => 'Bản copy', 'endedhour' => 'Giờ kết thúc', 'endedminute' => 'Phút kết thúc', 'code' => 'Mã phiếu', 'sender' => 'Người gửi', 'receive' => 'Người nhận', 'resend' => 'Ngày hẹn trả', 'state' => 'Hình thức nhận', 'receiver' => 'Người nhận', 'ireceive' => 'Ngày nhận', 'iresend' => 'Ngày hẹn trả', 'form' => 'Tên hồ sơ', 'number' => 'Số lượng mẫu', 'sample' => 'Loài được lấy mẫu', 'type' => 'Loại mẫu', 'samplecode' => 'Ký hiệu mẫu', 'exam' => 'Yêu cầu xét nghiệm', 'method' => 'Phương pháp', 'address' => 'Địa chỉ', 'phone' => 'Số điện thoại', 'samplereceive' => 'Ngày lấy mẫu', 'samplereceiver' => 'Người lấy mẫu', 'examdate' => 'Ngày xét nghiệm', 'result' => 'Kết quả', 'xcode' => 'Số ĐKXN', 'page' => 'Số trang', 'no' => 'Liên', 'customer' => 'Khách hàng', 'other' => 'Yêu cầu khác', 'receivehour' => 'Giờ nhận', 'receiveminute' => 'Phút nhận', 'isenderemploy' => 'Người gửi', 'isenderunit' => 'Đơn vị gửi', 'ireceiveremploy' => 'Người nhận', 'ireceiverunit' => 'Đơn vị nhận', 'status' => 'Tình trạng mẫu', 'xstatus' => 'Hình thức bảo quản', 'quality' => 'Chất lượng mẫu', 'ireceiver' => 'Người nhận', 'note' => 'Ghi chú', 'target' => 'Mục đích xét nghiệm', 'receivedis' => 'Nơi nhận', 'receiveleader' => 'Người phụ trách', 'xaddress' => 'Địa chỉ khách hàng', 'sampleplace' => 'Nơi lấy mẫu', 'owner' => 'Chủ hộ', 'xphone' => 'Số điện thoại', 'xnote' => 'Ghi chú', 'numberword' => 'Ghi chú (chữ)', 'fax' => 'Fax', 'xsender' => 'Người giao mẫu', 'xsend' => 'Ngày giao mẫu', 'xreceiver' => 'Người nhận mẫu', 'xreceive' => 'Ngày nhận mẫu', 'xresend' => 'Ngày giao kết quả', 'xresender' => 'Người phụ trách', 'ig' => 'Thông tin mẫu', 'vnote' => 'Ghi chú', 'samplecode5' => 'Ký hiệu mẫu', 'examsample' => 'Số lượng mẫu xét nghiệm', 'ownermail' => 'Email', 'ownerphone' => 'Số điện thoại', 'page2' => 'Số trang', 'page3' => 'Số trang', 'page4' => 'Số trang', 'date' => 'Ngày tháng', 'org' => 'Tên tổ chức', 'address' => 'Địa chỉ', 'phone' => 'Điện thoại', 'mail' => 'email', 'content' => 'Nội dung công việc', 'type' => 'Loại mẫu', 'sample' => 'Loại động vật', 'mcode' => 'Số phiếu', 'reformer' => 'Người đề nghị');
 
 
 
@@ -130,6 +131,120 @@ if (!empty($action)) {
 		// 	$result['status'] = 1;
 		// 	$result['html'] = $xtpl->text();
 		// break;
+		case 'editSecret':
+			$id = $nv_Request->get_string('id', 'get/post', 0);
+
+			if (!empty($id)) {
+				$sql = 'select * from `'. PREFIX .'_secretary` where rid = ' . $id;
+				$query = $db->query($sql);
+				$xtpl = new XTemplate('secretary.tpl', PATH);
+				if (!empty($row = $query->fetch())) {
+					$xtpl->assign('date', date('d/m/Y', $row['date']));
+					$xtpl->assign('org', $row['org']);
+					$xtpl->assign('address', $row['address']);
+					$xtpl->assign('fax', $row['fax']);
+					$xtpl->assign('phone', $row['phone']);
+					$xtpl->assign('mail', $row['mail']);
+					$xtpl->assign('content', $row['content']);
+					$xtpl->assign('type', $row['type']);
+					$xtpl->assign('pay' . $row['pay'], 'checked');
+				}
+				else {
+					$sql = 'select * from `'. PREFIX .'_row` where id = ' . $id;
+					$query = $db->query($sql);
+					$row = $query->fetch();
+					$xtpl->assign('date', date('d/m/Y', $row['xresend']));
+					$xtpl->assign('org', $row['sender']);
+					$xtpl->assign('address', $row['xaddress']);	
+					$xtpl->assign('phone', $row['ownerxphone']);
+					$xtpl->assign('mail', $row['ownermail']);
+					$xtpl->assign('content', $row['target']);
+					$xtpl->assign('type', (!empty($sampleType[$row['typeindex']] ? $sampleType[$row['typeindex']] : $row['typevalue'])));
+					$xtpl->assign('pay0', 'checked');
+				}
+				$xtpl->assign('sample', $row['sample']);
+				$xcode = explode(',', $row['xcode']);
+				$xtpl->assign('xcode0', $xcode[0]);
+				$xtpl->assign('xcode1', $xcode[1]);
+				$xtpl->assign('xcode2', $xcode[2]);
+				$xtpl->assign('mcode', $row['mcode']);
+				$xtpl->assign('reformer', $row['reformer']);
+				$xtpl->parse('main');
+				$result['status'] = 1;
+				$result['ig'] = $row['ig'];
+				$result['html'] = $xtpl->text();
+			}
+		break;
+		case 'secretary':
+			$id = $nv_Request->get_string('id', 'get/post', 0);
+			$data = $nv_Request->get_array('data', 'get/post', 0);
+
+			if ($key = precheck($data)) {
+				$result['notify'] = 'Nhập thiếu thông tin: ' . $teriorname[$key];
+			}
+			else {
+				$sql = 'select * from `'. PREFIX .'_row` where id = ' . $id;
+				$query = $db->query($sql);
+
+				$rowd = $query->fetch();
+
+				$sql = 'select * from `'. PREFIX .'_secretary` where rid = ' . $id;
+				$query = $db->query($sql);
+
+				if (!empty($row = $query->fetch())) {
+					// update
+					$temp = array();
+					foreach ($data as $dataKey => $dataRow) {
+						if ($dataKey == 'date') {
+							$temp[] = $dataKey . ' = "'. totime($dataRow) .'"';
+						}
+						else {
+							$temp[] = $dataKey . ' = "'. $dataRow .'"';
+						}
+					}
+					$sql = 'update `'. PREFIX .'_secretary` set ' . implode(', ', $temp) . ' where id = ' . $row['id'];
+				}
+				else {
+					// insert
+					$temp = array();
+					$temp2 = array();
+					foreach ($data as $dataKey => $dataRow) {
+						if ($dataKey == 'date') {
+							$temp2[] = totime($dataRow);
+						}
+						else {
+							$temp2[] = '"'. $dataRow .'"';
+						}
+						$temp[] = $dataKey;
+					}
+					$sql = 'insert `'. PREFIX .'_secretary` ('. implode(', ', $temp) .', ig, rid) values (' . implode(', ', $temp2) . ', \''. $rowd['ig'] .'\', '. $id .')';
+					// die($sql);	
+				}
+				if ($db->query($sql)) {
+					$result['notify'] = 'Đã cập nhật thành công';
+					$result['status'] = 1;
+				}
+			}
+		break;
+		// case 'payChange':
+		// 	$id = $nv_Request->get_string('id', 'get/post', 0);
+		// 	$pay = $nv_Request->get_string('pay', 'get/post', 0);
+
+
+		// 	$sql = 'select * from `'. PREFIX .'_secretary` where rid = ' . $id;
+		// 	$query = $db->query($sql);
+
+		// 	if (empty($query->fetch())) {
+		// 		$result['notice'] = 'Lưu mẫu trước khi thay đổi trạng thái';
+		// 	}
+		// 	else {
+		// 		$sql = 'update `'. PREFIX .'_secretary` set pay = "'. $pay .'" where id = ' . $id;
+		// 		if ($db->query($sql)) {
+		// 			$result['notice'] = 'Đã cập nhật trạng thái';
+		// 		}
+		// 	}
+		// 	$result['status'] = 1;
+		// break;
 		case 'summaryFilter':
 			$from = $nv_Request->get_string('from', 'get/post', '');
 			$end = $nv_Request->get_string('end', 'get/post', '');
@@ -142,6 +257,16 @@ if (!empty($action)) {
 
 			$result['status'] = 1;
 			$result['html'] = summaryContent($from, $end, $exam, $unit, $sample);
+		break;
+		case 'secretaryPage':
+			$page = $nv_Request->get_string('page', 'get/post', '');
+
+			if (empty($page) || $page < 1) {
+				$page = 1;
+			}
+
+			$result['status'] = 1;
+			$result['html'] = secretaryList($page);
 		break;
 		case 'removeRemind':
 			$id = $nv_Request->get_string('id', 'get/post', '');
@@ -521,8 +646,15 @@ foreach ($permist as $key) {
 }
 $xtpl->assign('top', $top += 35);	
 
-
 $xtpl->assign("default", json_encode($defaultData));
+
+$permission = getUserPermission($user_info['userid']);
+
+if ($permission == 3 || $permission == 1) {
+	$xtpl->assign('secretary', secretaryList());
+	$xtpl->parse('main.secretary2');
+	$xtpl->parse('main.secretary');
+}
 
 if (checkIsMod($user_info['userid'])) {
 	$method = getMethod();
@@ -567,7 +699,7 @@ $xtpl->assign("remind", json_encode(getRemind()));
 $xtpl->assign("remindv2", json_encode(getRemindv2()));
 $xtpl->assign("relation", json_encode(getRelation()));
 $xtpl->parse("main");
-$contents = $xtpl->text("main");
+$contents = $xtpl->text();
 include ( NV_ROOTDIR . "/includes/header.php" );
 echo nv_site_theme($contents);
 include ( NV_ROOTDIR . "/includes/footer.php" );

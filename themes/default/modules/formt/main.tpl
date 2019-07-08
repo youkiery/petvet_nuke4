@@ -128,6 +128,9 @@
   <li><a data-toggle="tab" href="#menu1"> Thêm văn bản </a></li>
   <!-- END: mod -->
   <li><a data-toggle="tab" href="#menu2"> Xuất ra excel </a></li>
+  <!-- BEGIN: secretary -->
+  <li><a data-toggle="tab" href="#menu3"> Thư ký </a></li>
+  <!-- END: secretary -->
 </ul>
 
 <div class="tab-content">
@@ -774,7 +777,7 @@
         <input type="text" value="{excelt}" class="form-control" id="excelt">
       </div>
     </label>
-<!-- khách hàng, địa chỉ, email, điện thoại, chỉ hộ, nơi lấy mẫu, mục đích, nơi nhận, người phụ trách --> 
+    <!-- khách hàng, địa chỉ, email, điện thoại, chỉ hộ, nơi lấy mẫu, mục đích, nơi nhận, người phụ trách --> 
     <label style="width: 30%"> <input type="checkbox" id="index"> STT </label>
     <label style="width: 30%"> <input type="checkbox" id="set"> Kết quả xét nghiệm </label>
     <label style="width: 30%"> <input type="checkbox" id="code"> Số phiếu </label>
@@ -812,6 +815,23 @@
       </button>
     </div>
   </div>
+  <!-- BEGIN: secretary2 -->
+  <div id="menu3" class="tab-pane">
+    <div id="secretary-list">
+      {secretary}
+    </div>
+    <button class="btn btn-info float-button" style="top: 10px; right: 50px;" onclick="previewSecretary()">
+      <span class="glyphicon glyphicon-print"></span>
+    </button>
+    <button class="btn btn-info float-button" style="top: 10px; right: 10px;" onclick="toggleSecretary()">
+      <span class="glyphicon glyphicon-eye-close"></span>
+    </button>
+    <button class="btn btn-success float-button" style="top: 45px; right: 10px;" onclick="submitSecretary()">
+      Lưu
+    </button>
+    <div id="secretary"></div>
+  </div>
+  <!-- END: secretary2 -->
 
 <script>
   var style = '.table-bordered {border-collapse: collapse;}.table-wider td, .table-wider th {padding: 10px;}table {width: 100%;}table td {padding: 5px;}.no-bordertop {border-top: 1px solid white; }.no-borderleft {border-left: 1px solid white; }.c20, .c25, .c30, .c35, .c40, .c45, .c50, .c80 {display: inline-block;}.c20 {width: 19%;}.c25 {width: 24%;}.c30 {width: 29%;}.c35 {width: 34%;}.c40 {width: 39%;}.c45 {width: 44%;}.c50 {width: 49%;}.c80 {width: 79%;}.p11 {font-size: 11pt}.p12 {font-size: 12pt}.p13 {font-size: 13pt}.p14 {font-size: 14pt}.p15 {font-size: 15pt}.p16 {font-size: 16pt}.text-center, .cell-center {text-align: center;}.cell-center {vertical-align: inherit;} p {margin: 5px 0px;}'
@@ -1039,10 +1059,11 @@
             <td class="text-center"> 
               <i> Ngày examdate-0 tháng examdate-1 năm examdate-2 </i> <br>
               <b>TRƯỞNG TRẠM</b> <br> <br> <br> <br> <br> <br> 
-              <b>(xresender)</b> 
+              <b class="p11">(xresender)</b> 
             </td> 
           </tr> 
-        </table>`,
+        </table>
+        `,
     5: `<style>
           p {margin: 3px;}
         </style>
@@ -1136,6 +1157,8 @@
   var credit = $("#credit")
   var menu1 = $("#menu1")
   var content = $("#content")
+  var secretary = $("#secretary")
+  var secretaryList = $("#secretary-list")
   var formRemove = $("#form-remove")
 
   var formInsertSenderEmploy = $("#sender-employ-0")
@@ -1177,7 +1200,6 @@
   var formInsertOther = $("#form-insert-other")
   var formInsertResult = $("#form-insert-result") 
   var formInsertTypeOther = $("#form-insert-type-other") 
-
 
   var formInsertSampleReceive = $("#form-insert-sample-receive")
   var formInsertSampleTime = $("#form-insert-sample-time")
@@ -1256,6 +1278,7 @@
   var global_id = 0
   var global_page = 1
   var global_printer = 1
+  var global_ig = []
   var permist = "{permist}".split(',')
   var defaultData = JSON.parse(`{default}`)
 
@@ -1265,6 +1288,9 @@
   var remind = JSON.parse('{remind}')
   var remindv2 = JSON.parse('{remindv2}')
   var relation = JSON.parse('{relation}')
+  var toggle = 1
+  var global_secretary = 0
+  var spage = 1
 
   var visible = {
     // "-1": {1: '6', 2: '6'},
@@ -1348,6 +1374,18 @@
       global_form = index
       parseForm(index)
     }
+  }
+
+  function toggleSecretary() {
+    if (toggle) {
+      secretaryList.hide()
+      secretary.show()
+    }
+    else {
+      secretaryList.show()
+      secretary.hide()
+    }
+    toggle = !toggle
   }
 
   function parseExam(data) {
@@ -1717,6 +1755,160 @@
       installRemindv2(item['name'], item['type'])
     })
   }
+
+  function editSecret(id) {
+    $.post(
+      strHref,
+      {action: 'editSecret', id: id},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          toggleSecretary()
+          global_secretary = id
+          global_ig = JSON.parse(data['ig'])
+          // $("#smsample").html(parseField(JSON.parse(data['ig'])))
+          secretary.html(data['html'])
+          $("#sdate").datepicker({
+            format: 'dd/mm/yyyy',
+            changeMonth: true,
+            changeYear: true
+          });
+        }, () => {})
+      }
+    )
+  }
+
+  function checkSecretary() {
+    var data = {
+      date: $('#sdate').val(),
+      org: $('#sorg').val(),
+      address: $('#saddress').val(),
+      phone: $('#sphone').val(),
+      fax: $('#sfax').val(),
+      mail: $('#smail').val(),
+      content: $('#scontent').val(),
+      type: $('#stype').val(),
+      sample: $('#ssample').val(),
+      xcode: $('#sxcode1').val() + ',' + $('#sxcode2').val() +','+ $('#sxcode3').val(),
+      mcode: $('#smcode').val(),
+      reformer: $('#sreformer').val(),
+      pay: ($("#pay1").prop('checked') ? 1 : 0)
+    }
+    return data
+  }
+
+  function submitSecretary() {
+    $.post(
+      strHref,
+      {action: 'secretary', id: global_secretary, data: checkSecretary()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          console.log(data)
+        }, () => {})
+      }
+    )
+  }
+
+  function previewSecretary() {
+    data = checkSecretary()
+    var html = `
+      <div style="position: relative; text-align: center; width: fit-content; margin-left: 10pt;">
+        CHI CỤC THÚ Y VÙNG <br>
+        <b> Bộ phận một cửa - Phòng tổng hợp </b>
+        <div class="position: absolute; top 50pt; left: 150pt; width: 100pt; height: 1pt; background: black;"></div>
+      </div>
+      <p style="float: right;">
+        <i> Ngày (date0) tháng (date1) năm (date2) </i>
+      </p>
+      <div style="clear: right;"></div>
+      <p class="text-center">
+        <b> DỊCH VỤ VÀ PHÍ, LỆ PHÍ </b>
+      </p>
+      <p class="text-center"> <b> Đề nghị Phòng Kế toán thực hiện thu dịch vụ và các khoản khí, lệ phí sau: </b>  </p>
+      <p>
+        1. Tên tổ chức, cá nhân: (org)
+      </p>
+      <p>
+        2. Địa chỉ giao dịch: (address)
+      </p>
+      <p style="float: left; margin: 0pt 0pt 0pt 30pt; width: 100pt;"> Điện thoại: (phone) </p>
+      <p style="float: left; margin: 0pt 0pt 0pt 30pt; width: 70pt;"> Fax: (fax) </p>
+      <p style="float: left; margin: 0pt 0pt 0pt 30pt;"> Email: (mail) </p>
+      <div style="clear: left;"></div>
+      <p>
+        3. Nội dung công việc: (content)
+      </p>
+      <p>
+        <i> Nội dung thu: </i>
+      </p>
+      <p> 4.1. Dịch vụ (theo TT.283-Bộ Tài chính và QĐ số 29 của Cơ quan) </p>
+      <p> a) Lấy mẫu: <span style="width: 100pt;"> (type) </span>; &nbsp; - Loài động vật: (sample)</p>
+      <p> b) Xét nghiệm: Số phiếu kết quả xét nghiệm: (xcode) </p>
+      (xcontent)
+      <p>
+        Thông báo số: (mcode)/TYV5-TH, ngày (date)
+      </p>
+      <div class="text-center" style="float: right; margin-right: 100pt;">
+        <b>Người đề nghị</b><br>
+        <i> Ký, ghi rõ họ tên </i>
+        <br><br><br><br><br>
+        (reformer)
+      </div>`
+      var date = data['date'].split('/')
+      var xcode = data['xcode'].split(',')
+      html = html.replace('(date0)', date[0])
+      html = html.replace('(date1)', date[1])
+      html = html.replace('(date2)', date[2])
+      html = html.replace('(org)', data['org'])
+      html = html.replace('(address)', data['address'])
+      html = html.replace('(phone)', data['phone'])
+      html = html.replace('(fax)', data['fax'])
+      html = html.replace('(mail)', data['mail'])
+      html = html.replace('(type)', data['type'])
+      html = html.replace('(sample)', data['sample'])
+      html = html.replace('(content)', data['content'])
+      html = html.replace('(mcode)', data['mcode'])
+      html = html.replace('(date)', data['date'])
+      html = html.replace('(reformer)', data['reformer'])
+      var temp = ''
+      var tempData = {}
+      global_ig.forEach(sample => {
+        sample['mainer'].forEach(main => {
+          main['note'].forEach(note => {
+            if (tempData[trim(note['note'])]) {
+              tempData[trim(note['note'])] = 0
+            }
+            tempData[trim(note['note'])] = sample['number']
+          })
+        })
+      })
+
+      for (const key in tempData) {
+        if (tempData.hasOwnProperty(key)) {
+          const element = tempData[key];
+          temp += '<p><div style="width: 80%; display: inline-block;">- Chỉ tiêu: '+key+'</div><span style="width: 20%;">/<div style="width: 20pt; text-align: center; display: inline-block">'+element+'</div> mẫu.</span> </p>'
+        }
+      }
+      html = html.replace('(xcontent)', temp)
+
+      var html = '<style>' + style + profile[0] + '</style>' + html
+      var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
+      winPrint.focus()
+      winPrint.document.write(html);
+      winPrint.print()
+      winPrint.close()
+  }
+
+  // function payChange() {
+  //   $.post(
+  //     strHref,
+  //     {action: 'payChange', id: global_secretary, data: checkSecretary()},
+  //     (response, status) => {
+  //       checkResult(response, status).then(data => {
+  //         console.log(data)
+  //       })
+  //     }
+  //   )
+  // }
 
   function checkSamplecode(samplecode, samplenumber) {
     var result = []
@@ -2675,16 +2867,31 @@
   }
 
   function goPage(page) {
-    $.post(
-      strHref,
-      {action: 'filter', page: page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val()},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          global_page = page
-          content.html(data['html'])
-        }, () => {})
-      }
-    )
+    var secret_tab = trim($('.nav-tabs .active').text()).toLowerCase()
+    if (secret_tab == 'thư ký') {
+      $.post(
+        strHref,
+        {action: 'secretaryPage', page: page},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            spage = page 
+            secretaryList.html(data['html'])
+          }, () => {})
+        }
+      )
+    }
+    else {
+      $.post(
+        strHref,
+        {action: 'filter', page: page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val()},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            global_page = page
+            content.html(data['html'])
+          }, () => {})
+        }
+      )
+    }
   }
 
   function findMethod(value) {

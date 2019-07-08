@@ -106,22 +106,53 @@ function summaryContent($from, $end, $exam = '', $unit = '', $sample = '') {
   return $xtpl->text();
 }
 
-// function checkSample() {
-//   global $db;
-//   $sql = 'select sample from `'. PREFIX .'_row`';
-//   $query = $db->query($sql);
-//   while (!empty($row = $query->fetch())) {
-//     $row = explode(', ', $row['sample']);
-//     foreach ($row as $value) {
-//       $sql = 'select * from `'. PREFIX .'_sample` where name like "%'. $value .'%"';
-//       $query2 = $db->query($sql);
-//       if (empty($query2->fetch())) {
-//         $sql = 'insert into `'. PREFIX .'_sample` (name) values ("'. $value .'")';
-//         $db->query($sql);
-//       }
-//     }
-//   }
-// }
+function secretaryList($page = 1, $limit = 10) {
+  global $db;
+  $xtpl = new XTemplate("secretary-list.tpl", PATH);
+  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where printer = 5';
+  $query = $db->query($sqlCount);
+  $count = $query->fetch();
+
+  $sql = 'select * from `'. PREFIX .'_row` where printer = 5 order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
+  $query = $db->query($sql);
+
+  $index = 1;
+  $from = ($page - 1) * $limit + 1;
+  $end = $from - 1;
+  while ($row = $query->fetch()) {
+      $sql = 'select * from `'. PREFIX .'_secretary` where rid = ' . $row['id'];
+      $squery = $db->query($sql);
+      $secretary = $squery->fetch();
+      $xtpl->assign('state', 'Chưa trả');
+      if (!empty($secretary) && !empty($secretary['pay'])) {
+        $xtpl->assign('state', 'Đã trả');
+      }
+      
+      $end ++;
+      $xtpl->assign('index', $index++);
+      $xtpl->assign('id', $row['id']);
+      $xcode = str_replace(', ', '/', $row['xcode']);
+      $xcode = str_replace(',', '/', $xcode);
+      $xtpl->assign('xcode', $xcode);
+      $xtpl->assign('code', $row['code']);
+      $xtpl->assign('sample', $row['sample']);
+      $xtpl->assign('printer', $row['printer']);
+      for ($i = 1; $i <= $row['printer']; $i++) { 
+        $xtpl->assign('printercount', $i);
+        $xtpl->parse('main.row.printer');
+      }
+      $xtpl->assign('unit', $row['sender']);
+      if (checkIsMod($user_info['userid'])) {
+        $xtpl->parse('main.row.mod');
+      }
+      $xtpl->parse('main.row');
+  }
+  $xtpl->assign('from', $from);
+  $xtpl->assign('end', $end);
+  $xtpl->assign('nav', navList($count['count'], $page, $limit));
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
 
 function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = array('exam' => '', 'unit' => '', 'sample' => ''), $xcode = '') {
   global $db, $sampleType, $user_info;
