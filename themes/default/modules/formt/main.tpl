@@ -214,7 +214,7 @@
       </div>
     </div>
     
-    <div class="row form-group boxed box-2 box-2-1 box-3 box-3-1 box-4 box-4-1 box-5 box-5-20">
+    <div class="row form-group boxed box-2 box-2-1 box-3 box-3-1 box-4 box-4-1 box-5 box-5-21">
       <label class="col-sm-6">Số ĐKXN</label>
       <div class="col-sm-6">
         <input type="text" class="form-control input-box xcode" id="form-insert-xcode-1" autocomplete="off">
@@ -257,7 +257,7 @@
       </label>
     </div>
 
-    <div class="row form-group boxed box-1 box-1-3 box-4 box-4-16 box-5 box-5-16">
+    <div class="row form-group boxed box-1 box-1-3 box-4 box-4-16 box-5 box-5-17">
       <label class="col-sm-6">Ngày nhận mẫu</label>
       <div class="col-sm-12">
         <input type="text" class="form-control" id="form-insert-receive" autocomplete="off">
@@ -278,7 +278,7 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-4 box-4-13">
+    <div class="row form-group boxed box-4 box-4-13 box-5 box-5-16">
       <label class="col-sm-6">
         Ngày lấy mẫu
       </label>
@@ -545,7 +545,7 @@
       </div>
     </div>
 
-    <div class="boxed box-1 box-1-15 box-4 box-4-18 box-5 box-5-17 bordered">
+    <div class="boxed box-1 box-1-15 box-4 box-4-18 box-5 box-5-18 bordered">
       <label>
         Yêu cầu xét nghiệm
         <button class="btn btn-success" onclick="insertMethod()"> <span class="glyphicon glyphicon-plus"></span> </button>
@@ -562,7 +562,7 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-2 box-2-8 box-5 box-5-19 box-4 box-4-22">
+    <div class="row form-group boxed box-2 box-2-8 box-5 box-5-20 box-4 box-4-22">
       <label class="col-sm-6">
         Kết quả
       </label>
@@ -571,7 +571,7 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-5 box-5-18 box-4 box-4-20">
+    <div class="row form-group boxed box-5 box-5-19 box-4 box-4-20">
       <label class="col-sm-6">
         Ghi chú
       </label>
@@ -598,7 +598,7 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-5 box-5-21">
+    <div class="row form-group boxed box-5 box-5-22">
       <label class="col-sm-6">
         Nơi nhận
       </label>
@@ -607,7 +607,7 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-5 box-5-22">
+    <div class="row form-group boxed box-5 box-5-23">
       <label class="col-sm-6">
         Người phụ trách
       </label>
@@ -1104,7 +1104,7 @@
         <p style="clear: left; width: 60%; float: left;" class="p14"> &emsp;&emsp; Số lượng mẫu: number (numberword) </p> 
         <p style="width: 35%; float: left;" class="p14">Số mẫu xét nghiệm: (examsample)</p>
         <p class="p14" style="clear: left;"> &emsp;&emsp; Ký hiệu mẫu: samplecode </p>
-        <p class="p14"> &emsp;&emsp; Ngày Lấy mẫu:... sampletime </p>
+        <p class="p14"> &emsp;&emsp; Ngày Lấy mẫu:... samplereceive </p>
         <p class="p14"> &emsp;&emsp; Ngày nhận mẫu: sampletime </p>
         target 
         <p class="p14"> &emsp;&emsp; <b> <u> Chỉ tiêu xét nghiệm: </u> </b> </p>
@@ -2677,6 +2677,7 @@
             ownermail: formInsertOwnerMail.val(),
             numberword: formInsertNumberWord.val(),
             type: getCheckbox('type', formInsertTypeOther),
+            samplereceive: formInsertSampleReceive.val()
           }
         }
       break;
@@ -3129,6 +3130,7 @@
             html = html.replace('xaddress', data['xaddress'])
             html = html.replace('samplecode', data['samplecode5'])
             html = html.replace('(examsample)', data['examsample'])
+            html = html.replace('samplereceive', data['samplereceive'])
             html = html.replace('(sample)', data['sample'])
             html = html.replace(/sampletime/g, data['receive'])
             html = html.replace('(sampletype)', data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text()))

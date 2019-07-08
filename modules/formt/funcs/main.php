@@ -582,6 +582,7 @@ if (!empty($action)) {
 						else {
 							$resend = totime($data['resend']);
 							$receive = totime($data['receive']);
+							$samplereceive = totime($data['samplereceive']);
 							$note = nl2br($data['note']);
 							
 							checkRemindv2($data['receiveleader'], 'receive-leader');
@@ -600,7 +601,7 @@ if (!empty($action)) {
 							}
 							$exam = json_encode($data['exam'], JSON_UNESCAPED_UNICODE);
 		
-							$sql = 'update `'. PREFIX .'_row` set xaddress = "'.$data['xaddress'].'", number = '. $data['number'] .', samplecode5 = "'. $data['samplecode5'] .'", examsample = "'. $data['examsample'] .'", note = "'. $note .'", noticetime = '. $resend .', target = "'. $data['target'].'", exam = \''. $exam .'\', receiveDis = "'. $data['receivedis'] .'", receiveLeader = "'. $data['receiveleader'] .'", sampleplace = "'. $data['sampleplace'] .'", owner = "'. $data['owner'] .'", xcode = "'. implode(',', $data['xcode']) .'", receive = "'. $receive .'", result = "'. $data['result'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", sender = "'. $data["sender"] .'", numberword = "'. $data['numberword'] .'", ownermail = "'. $data['ownermail'] .'", ownerphone = "'. $data['ownerphone'] .'", mcode = "'. $data['mcode'] .'" where id = ' . $id;
+							$sql = 'update `'. PREFIX .'_row` set xaddress = "'.$data['xaddress'].'", number = '. $data['number'] .', samplecode5 = "'. $data['samplecode5'] .'", examsample = "'. $data['examsample'] .'", note = "'. $note .'", noticetime = '. $resend .', target = "'. $data['target'].'", exam = \''. $exam .'\', receiveDis = "'. $data['receivedis'] .'", receiveLeader = "'. $data['receiveleader'] .'", sampleplace = "'. $data['sampleplace'] .'", owner = "'. $data['owner'] .'", xcode = "'. implode(',', $data['xcode']) .'", receive = "'. $receive .'", result = "'. $data['result'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", sender = "'. $data["sender"] .'", numberword = "'. $data['numberword'] .'", ownermail = "'. $data['ownermail'] .'", ownerphone = "'. $data['ownerphone'] .'", mcode = "'. $data['mcode'] .'", samplereceive = '. $samplereceive .' where id = ' . $id;
 							$query = $db->query($sql);
 							if ($query) {
 								checkPrinter($id, $form);
