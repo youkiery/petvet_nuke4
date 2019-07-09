@@ -4,10 +4,9 @@
 /data/
 /includes/
 /install/
-/themes/admin_default - Copy/
-/themes/default - Copy/
-/themes/mobile_default - Copy/
 /vendor/
+/PHPExcel
+/results_
 /composer.json
 /config.php
 /COPYRIGHT.txt
@@ -18,11 +17,3 @@
 /robots.php
 /robots.txt
 /web.config
-/roi.php
-/rock.php
-/PHPExcel.php
-/template.docx
-/excel.xlsx
-/excel-output.xlsx
-/PHPExcel
-/results_

@@ -13,6 +13,8 @@ if (!defined('NV_IS_FORM')) {
 
 $page_title = "Nhập hồ sơ một cửa";
 $sampleType = array(0 => 'Nguyên con', 'Huyết thanh', 'Máu', 'Phủ tạng', 'Swab');
+$xco = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
+$yco = array('index' => 'STT','set' => 'Kết quả xét nghiệm','code' => 'Số phiếu','code' => 'Tên đơn vị','receive' => 'Ngày nhận mẫu','resend' => 'Ngày hẹn trả kết quả','status' => 'Hình thức nhận','ireceiver' => 'Người nhận hồ sơ','ireceive' => 'Ngày nhận hồ sơ','iresend' => 'Ngay trả hồ sơ','number' => 'Số lượng mẫu','sampletype' => 'Loại mẫu','sample' => 'Loài vật lấy mẫu','xcode' => 'Số ĐKXN','isenderunit' => 'Bộ phận giao mẫu','ireceiverunit' => 'Bộ phận nhận mẫu','examdate' => 'Ngày phân tích','xresender' => 'Người phụ trách bộ phận xét nghiệm','xexam' => 'Bộ phận xét nghiệm','' => 'Lượng mẫu xét nghiệm','receiver' => 'Người lấy mẫu','samplereceive' => 'Thời gian lấy mẫu','senderemploy' => 'Khách hàng','xaddress' => 'Địa chỉ','ownermail' => 'Email','ownerphone' => 'Điện thoại','owner' => 'Chủ hộ','sampleplace' => 'Nơi lấy mẫu','target' => 'Mục đích','receivedis' => 'Nơi nhận','receiveleader' => 'Người phụ trách');
 
 // $sql = "select * from `". PREFIX ."_row`";
 // $query = $db->query($sql);
@@ -66,6 +68,10 @@ $sampleType = array(0 => 'Nguyên con', 'Huyết thanh', 'Máu', 'Phủ tạng',
 // die();	
 
 if ($nv_Request->isset_request("excel", "get")) {
+	$data = array('index', 'set', 'code', 'code', 'receive', 'number', 'xcode');
+	if (strlen($temp = $nv_Request->get_string('data', 'get', '')) > 0) {
+		$data = explode(',', $temp);
+	}
 	$excelf = totime($nv_Request->get_string('excelf', 'get/post', ''));
 	$excelt = totime($nv_Request->get_string('excelt', 'get/post', ''));
 	include 'PHPExcel/IOFactory.php';
@@ -73,19 +79,33 @@ if ($nv_Request->isset_request("excel", "get")) {
 
 	$objPHPExcel = PHPExcel_IOFactory::load('excel.xlsx');
 
-	$objPHPExcel
+	$j = 0;
+
+	foreach ($data as $tag) {
+		if ($tag == 'set') {
+			$objPHPExcel
 			->setActiveSheetIndex(0)
-			->setCellValue('A1', "STT")
-			->setCellValue('B1', "Số ĐKXN")
-			->setCellValue('C1', "Đơn vị")
-			->setCellValue('D1', "Số lượng mẫu")
-			->setCellValue('E1', "Kết quả");
+			->setCellValue($xco[$j ++] . '1', 'Số lượng mẫu')
+			->setCellValue($xco[$j ++] . '1', 'Ký hiệu mẫu')
+			->setCellValue($xco[$j ++] . '1', 'Chỉ tiêu xét nghiệm')
+			->setCellValue($xco[$j ++] . '1', 'Kết quả');
+		}
+		else {
+			$objPHPExcel
+			->setActiveSheetIndex(0)
+			->setCellValue($xco[$j ++] . '1', $yco[$tag]);
+		}
+	}
+
 	$i = 2;
 	$query = "SELECT * FROM " . PREFIX . "_row where time between $excelf and $excelt";
 
 	$re = $db->query($query);
 	$index = 1;
 	while ($row = $re->fetch()) {
+		$objPHPExcel->setActiveSheetIndex(0);
+		$j = 0;
+
 		// if (!empty($row['ig'])) {
 		// 	$ig = json_decode($row['ig']);
 		// 	foreach ($ig as $sample) {
@@ -99,19 +119,90 @@ if ($nv_Request->isset_request("excel", "get")) {
 		// 	}
 		// }
 
-		$objPHPExcel
-			->setActiveSheetIndex(0)
-			->setCellValue('A' . $i, (($index < 10 ? '0' : '') . $index))
-			->setCellValue('B' . $i, str_replace(',', '/', str_replace(', ', '/', $row['xcode'])))
-			->setCellValue('C' . $i, $row['sender'])
-			->setCellValue('D' . $i, (($row['number'] < 10 ? '0' : '') . $row['number']))
-			->setCellValue('E' . $i, ((strpos($row['ig'], '(+)') !== false) ? 'Dương tính' : 'Âm tính'));
-			$i++;
-			$index++;
+		foreach ($data as $tag) {
+			switch ($tag) {
+				case 'index':
+					$objPHPExcel
+						->setActiveSheetIndex(0)
+						->setCellValue($xco[$j ++] . $i, (($index < 10 ? '0' : '') . $index));
+					$index ++;
+				break;
+				case 'set':
+					$temp = $j;
+					$tempData = json_decode($row['ig']);
+					$length = count($tempData);
+					foreach ($tempData as $sample) {
+						$j = $temp;
+						$objPHPExcel
+						->setActiveSheetIndex(0)
+						->setCellValue($xco[$j ++] . $i, $sample->{'number'})
+						->setCellValue($xco[$j ++] . $i, $sample->{'code'});
+						foreach ($sample->{'mainer'} as $main) {
+							$xlength = count($main->{'note'});
+							foreach ($main->{'note'} as $note) {
+								$j = $temp + 2;
+								$objPHPExcel
+								->setActiveSheetIndex(0)
+								->setCellValue($xco[$j ++] . $i, $note->{'note'})
+								->setCellValue($xco[$j ++] . $i, $note->{'result'});
+								$xlength --;
+								if (!empty($xlength)) {
+									$i ++;
+								}
+							}
+						}
+						$length --;
+						if (!empty($length)) {
+							$i ++;
+						}
+					}
+				break;
+				case 'receive':
+				case 'resend':
+				case 'ireceive':
+				case 'iresend':
+				case 'examdate':
+				case 'samplereceive':
+					$objPHPExcel
+						->setActiveSheetIndex(0)
+						->setCellValue($xco[$j ++] . $i, date('d/m/Y', $row[$tag]));
+				break;
+				case 'status':
+					if ($row['typeindex'] < 1) $value = 'Trực tiếp';
+					else if ($row['typeindex'] < 2) $value = 'Bưu điện';
+					else $value = $row['typevalue'];
+					$objPHPExcel
+					 	->setActiveSheetIndex(0)
+					 	->setCellValue($xco[$j ++] . $i, $value);
+				break;
+				case 'sampletype':
+					if (!empty($sampleType[$row['typeindex']])) {
+						$value = $sampleType[$row['typeindex']];
+					}
+					else {
+						$value = $row['typevalue'];
+					}
+					$objPHPExcel
+						->setActiveSheetIndex(0)
+						->setCellValue($xco[$j ++] . $i, $value);
+				break;
+				default:
+					if (!empty($yco[$tag])) {
+						$objPHPExcel
+							->setActiveSheetIndex(0)
+							->setCellValue($xco[$j ++] . $i, $row[$tag]);
+					}
+				break;
+			}
+		}
+		
+		$i++;
 	}
-	// die();
+
 	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
 	$objWriter->save('excel-form.xlsx');
+	$objPHPExcel->disconnectWorksheets();
+	unset($objWriter, $objPHPExcel);
 	// header('location: /excel-form.xlsx');
 }
 
@@ -212,7 +303,7 @@ if (!empty($action)) {
 							$temp[] = $dataKey . ' = "'. totime($dataRow) .'"';
 						}
 						else if ($dataKey == 'ig') {
-							$temp[] = $dataKey . ' = \''. json_encode($dataRow) .'\'';
+							$temp[] = $dataKey . ' = \''. json_encode($dataRow, JSON_UNESCAPED_UNICODE) .'\'';
 						}
 						else {
 							$temp[] = $dataKey . ' = "'. $dataRow .'"';

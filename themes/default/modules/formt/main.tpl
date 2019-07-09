@@ -778,37 +778,37 @@
       </div>
     </label>
     <!-- khách hàng, địa chỉ, email, điện thoại, chỉ hộ, nơi lấy mẫu, mục đích, nơi nhận, người phụ trách --> 
-    <label style="width: 30%"> <input type="checkbox" id="index"> STT </label>
-    <label style="width: 30%"> <input type="checkbox" id="set"> Kết quả xét nghiệm </label>
-    <label style="width: 30%"> <input type="checkbox" id="code"> Số phiếu </label>
-    <label style="width: 30%"> <input type="checkbox" id="code"> Tên đơn vị </label>
-    <label style="width: 30%"> <input type="checkbox" id="receive"> Ngày nhận mẫu </label>
-    <label style="width: 30%"> <input type="checkbox" id="resend"> Ngày hẹn trả kết quả </label>
-    <label style="width: 30%"> <input type="checkbox" id="status"> Hình thức nhận </label>
-    <label style="width: 30%"> <input type="checkbox" id="ireceiver"> Người nhận hồ sơ </label>
-    <label style="width: 30%"> <input type="checkbox" id="ireceive"> Ngày nhận hồ sơ </label>
-    <label style="width: 30%"> <input type="checkbox" id="iresend"> Ngay trả hồ sơ </label>
-    <label style="width: 30%"> <input type="checkbox" id="number"> Số lượng mẫu </label>
-    <label style="width: 30%"> <input type="checkbox" id="sampletype"> Loại mẫu </label>
-    <label style="width: 30%"> <input type="checkbox" id="sample"> Loài vật lấy mẫu </label>
-    <label style="width: 30%"> <input type="checkbox" id="xcode"> Số ĐKXN </label>
-    <label style="width: 30%"> <input type="checkbox" id="isenderunit"> Bộ phận giao mẫu </label>
-    <label style="width: 30%"> <input type="checkbox" id="ireceiverunit"> Bộ phận nhận mẫu </label>
-    <label style="width: 30%"> <input type="checkbox" id="examdate"> Ngày phân tích </label>
-    <label style="width: 30%"> <input type="checkbox" id="xresender"> Người phụ trách bộ phận xét nghiệm </label>
-    <label style="width: 30%"> <input type="checkbox" id="xexam"> Bộ phận xét nghiệm </label>
-    <label style="width: 30%"> <input type="checkbox" id=""> Lượng mẫu xét nghiệm </label>
-    <label style="width: 30%"> <input type="checkbox" id="receiver"> Người lấy mẫu </label>
-    <label style="width: 30%"> <input type="checkbox" id="samplereceive"> Thời gian lấy mẫu </label>
-    <label style="width: 30%"> <input type="checkbox" id="senderemploy"> Khách hàng </label>
-    <label style="width: 30%"> <input type="checkbox" id="xaddress"> Địa chỉ </label>
-    <label style="width: 30%"> <input type="checkbox" id="ownermail"> Email </label>
-    <label style="width: 30%"> <input type="checkbox" id="ownerphone"> Điện thoại </label>
-    <label style="width: 30%"> <input type="checkbox" id="owner"> Chủ hộ </label>
-    <label style="width: 30%"> <input type="checkbox" id="sampleplace"> Nơi lấy mẫu </label>
-    <label style="width: 30%"> <input type="checkbox" id="target"> Mục đích </label>
-    <label style="width: 30%"> <input type="checkbox" id="receivedis"> Nơi nhận </label>
-    <label style="width: 30%"> <input type="checkbox" id="receiveleader"> Người phụ trách </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="index" checked> STT </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="set" checked> Kết quả xét nghiệm </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="code"> Số phiếu </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="code"> Tên đơn vị </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="receive"> Ngày nhận mẫu </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="resend"> Ngày hẹn trả kết quả </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="status"> Hình thức nhận </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="ireceiver"> Người nhận hồ sơ </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="ireceive"> Ngày nhận hồ sơ </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="iresend"> Ngay trả hồ sơ </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="number"> Số lượng mẫu </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="sampletype"> Loại mẫu </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="sample"> Loài vật lấy mẫu </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="xcode"> Số ĐKXN </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="isenderunit"> Bộ phận giao mẫu </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="ireceiverunit"> Bộ phận nhận mẫu </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="examdate"> Ngày phân tích </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="xresender"> Người phụ trách bộ phận xét nghiệm </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="xexam"> Bộ phận xét nghiệm </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id=""> Lượng mẫu xét nghiệm </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="receiver"> Người lấy mẫu </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="samplereceive"> Thời gian lấy mẫu </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="senderemploy"> Khách hàng </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="xaddress"> Địa chỉ </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="ownermail"> Email </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="ownerphone"> Điện thoại </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="owner"> Chủ hộ </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="sampleplace"> Nơi lấy mẫu </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="target"> Mục đích </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="receivedis"> Nơi nhận </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="receiveleader"> Người phụ trách </label>
     <div class="text-center">
       <button class="btn btn-info" onclick="download()">
         Xuất ra Excel
@@ -959,6 +959,10 @@
         <style>
           * {
             font-size: 15pt;
+          }
+          @page {
+            size: A4 portrait;
+            margin: 10mm 5mm 5mm 13mm;
           }
         </style>
         <table border="1" class="table-bordered">
@@ -1329,8 +1333,18 @@
     changeYear: true
   });
 
+  function checkExcel() {
+    var list = []
+    $('.po').each((index, checkbox) => {
+      if (checkbox.checked) {
+        list.push(checkbox.getAttribute('id'))
+      }
+    })
+    return list
+  }
+
 	function download() {
-		var link = '/index.php?' + nv_name_variable + '=' + nv_module_name + '&excel=1&excelf=' + excelf.val() + '&excelt=' + excelt.val()
+		var link = '/index.php?' + nv_name_variable + '=' + nv_module_name + '&excel=1&excelf=' + excelf.val() + '&excelt=' + excelt.val() + '&data=' + (checkExcel().join(','))
 		window.open(link)
 	}
 
@@ -1892,18 +1906,6 @@
       winPrint.print()
       winPrint.close()
   }
-
-  // function payChange() {
-  //   $.post(
-  //     strHref,
-  //     {action: 'payChange', id: global_secretary, data: checkSecretary()},
-  //     (response, status) => {
-  //       checkResult(response, status).then(data => {
-  //         console.log(data)
-  //       })
-  //     }
-  //   )
-  // }
 
   function checkSamplecode(samplecode, samplenumber) {
     var result = []
@@ -3044,7 +3046,7 @@
             html = html.replace('(page)', data['page4'])
             html = html.replace('(xexam)', data['xexam'])
             html = html.replace('(xresender)', data['xresender'])
-            html = html.replace('page', data['page'])
+            // html = html.replace('page', data['page'])
             html = html.replace(/xcode-0/g, trim(data['xcode'][0]))
             html = html.replace(/xcode-1/g, trim(data['xcode'][1]))
             html = html.replace(/xcode-2/g, trim(data['xcode'][2]))
