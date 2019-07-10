@@ -2,6 +2,16 @@
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 
+<div class="modal fade" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- BEGIN: btn_timkiem -->
 <a class="btn btn-primary" href="{SE_LINK}">{LANG.sereach}</a>
 <!-- END: btn_timkiem -->
