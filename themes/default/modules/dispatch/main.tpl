@@ -1,12 +1,52 @@
 <!-- BEGIN: main -->
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+<style>
+.ui-datepicker-trigger {
+	display: none;
+}
+</style>
 
-<div class="modal fade" role="dialog">
+<div class="modal fade" id="download-modal" role="dialog">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-body">
-				
+				<label class="row" style="width: 100%;">
+					<div class="col-sm-6">Ngày bắt đầu</div>
+					<div class="col-sm-12">
+						<input type="text" value="{excelf}" class="form-control" id="excelf">
+					</div>
+				</label>
+		
+				<label class="row" style="width: 100%;">
+					<div class="col-sm-6">Ngày kết thúc</div>
+					<div class="col-sm-12">
+						<input type="text" value="{excelt}" class="form-control" id="excelt">
+					</div>
+				</label>
+
+				<label style="width: 30%"> <input type="checkbox" class="po" id="index" checked> STT </label>
+				<label style="width: 30%"> <input type="checkbox" class="po" id="title" checked> Tên công văn </label>
+				<label style="width: 30%"> <input type="checkbox" class="po" id="catid" checked> Chủ đề </label>
+				<label style="width: 30%"> <input type="checkbox" class="po" id="type" checked> Loại công văn </label>
+				<label style="width: 30%"> <input type="checkbox" class="po" id="from_time" checked> Ngày gửi </label>
+				<label style="width: 30%"> <input type="checkbox" class="po" id="code" checked> Số công văn </label>
+				<label style="width: 30%"> <input type="checkbox" class="po" id="from_org"> Đơn vị soạn </label>
+				<label style="width: 30%"> <input type="checkbox" class="po" id="to_org"> Đơn vị nhận </label>
+				<label style="width: 30%"> <input type="checkbox" class="po" id="from_depid"> Tên phòng gửi </label>
+				<label style="width: 30%"> <input type="checkbox" class="po" id="from_signer"> Người ký </label>
+				<label style="width: 30%"> <input type="checkbox" class="po" id="date_iss"> Ngày ban hành </label>
+				<label style="width: 30%"> <input type="checkbox" class="po" id="date_first"> Ngày có hiệu lực </label>
+				<label style="width: 30%"> <input type="checkbox" class="po" id="date_die"> Ngày hết hiệu lực </label>
+				<label style="width: 30%"> <input type="checkbox" class="po" id="content"> Trích yếu công văn </label>
+				<label style="width: 30%"> <input type="checkbox" class="po" id="statusid"> Trạng thái </label>
+				<label style="width: 30%"> <input type="checkbox" class="po" id="deid"> Phòng ban nhận </label>
+
+				<div class="text-center">
+					<button class="btn btn-info" onclick="download(1)">
+						Tải về
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -20,6 +60,9 @@
 <div style="float: right" class="form-inline">
 	<input type="text" class="form-control" id="fromTime" value="{fromTime}" autocomplete="off">
 	<input type="text" class="form-control" id="endTime" value="{endTime}" autocomplete="off">
+	<button class="btn btn-warning" onclick="downloadCustomize()">
+		<span class="glyphicon glyphicon-download"></span>
+	</button>
 	<button class="btn btn-info" onclick="download()">
 		<span class="glyphicon glyphicon-download"></span>
 	</button>
@@ -147,8 +190,11 @@
 <script type="text/javascript">
 	var fromTime = $("#fromTime")
 	var endTime = $("#endTime")
+	var excelf = $("#excelf")
+	var excelt = $("#excelt")
+	var downloadModal = $("#download-modal")
 
-	$("#from, #to, #fromTime, #endTime").datepicker({
+	$("#from, #to, #fromTime, #endTime, #excelf, #excelt").datepicker({
 		showOn : "both",
 		dateFormat : "dd.mm.yy",
 		changeMonth : true,
@@ -158,10 +204,31 @@
 		buttonImageOnly : true
 	});
 
-	function download() {
-		var link = '/index.php?' + nv_name_variable + '=' + nv_module_name + '&excel=1&fromTime=' + fromTime.val() + '&endTime=' + endTime.val()
+	function downloadCustomize() {
+		excelf.val(fromTime.val())
+		excelt.val(endTime.val())
+		downloadModal.modal('show')		
+	}
+
+	function download(customize = 0) {
+		var extra = '&fromTime=' + fromTime.val() + '&endTime=' + endTime.val()
+		if (customize) {
+			extra = '&fromTime=' + excelf.val() + '&endTime=' + excelt.val() + '&data=' + checkExcel()
+		}
+		var link = '/index.php?' + nv_name_variable + '=' + nv_module_name + '&excel=1' + extra
 		window.open(link)
 	}
+
+	function checkExcel() {
+    var list = []
+    $('.po').each((index, checkbox) => {
+      if (checkbox.checked) {
+        list.push(checkbox.getAttribute('id'))
+      }
+    })
+    return list
+  }
+
 </script>
 
 <!-- END: main -->
