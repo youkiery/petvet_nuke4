@@ -206,7 +206,7 @@ if ($nv_Request->isset_request("excel", "get")) {
 	$objWriter->save('excel-form.xlsx');
 	$objPHPExcel->disconnectWorksheets();
 	unset($objWriter, $objPHPExcel);
-	// header('location: /excel-form.xlsx');
+	header('location: /excel-form.xlsx');
 }
 
 $action = $nv_Request->get_string('action', 'post/get', "");
