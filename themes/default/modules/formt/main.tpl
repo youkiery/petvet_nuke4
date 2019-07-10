@@ -781,7 +781,7 @@
     <label style="width: 30%"> <input type="checkbox" class="po" id="index" checked> STT </label>
     <label style="width: 30%"> <input type="checkbox" class="po" id="set" checked> Kết quả xét nghiệm </label>
     <label style="width: 30%"> <input type="checkbox" class="po" id="code"> Số phiếu </label>
-    <label style="width: 30%"> <input type="checkbox" class="po" id="code"> Tên đơn vị </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="sender"> Tên đơn vị </label>
     <label style="width: 30%"> <input type="checkbox" class="po" id="receive"> Ngày nhận mẫu </label>
     <label style="width: 30%"> <input type="checkbox" class="po" id="resend"> Ngày hẹn trả kết quả </label>
     <label style="width: 30%"> <input type="checkbox" class="po" id="status"> Hình thức nhận </label>
