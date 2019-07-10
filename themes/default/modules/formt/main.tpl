@@ -797,7 +797,7 @@
     <label style="width: 30%"> <input type="checkbox" class="po" id="examdate"> Ngày phân tích </label>
     <label style="width: 30%"> <input type="checkbox" class="po" id="xresender"> Người phụ trách bộ phận xét nghiệm </label>
     <label style="width: 30%"> <input type="checkbox" class="po" id="xexam"> Bộ phận xét nghiệm </label>
-    <label style="width: 30%"> <input type="checkbox" class="po" id=""> Lượng mẫu xét nghiệm </label>
+    <label style="width: 30%"> <input type="checkbox" class="po" id="examsample"> Lượng mẫu xét nghiệm </label>
     <label style="width: 30%"> <input type="checkbox" class="po" id="receiver"> Người lấy mẫu </label>
     <label style="width: 30%"> <input type="checkbox" class="po" id="samplereceive"> Thời gian lấy mẫu </label>
     <label style="width: 30%"> <input type="checkbox" class="po" id="senderemploy"> Khách hàng </label>

@@ -14,7 +14,7 @@ if (!defined('NV_IS_FORM')) {
 $page_title = "Nhập hồ sơ một cửa";
 $sampleType = array(0 => 'Nguyên con', 'Huyết thanh', 'Máu', 'Phủ tạng', 'Swab');
 $xco = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
-$yco = array('index' => 'STT','set' => 'Kết quả xét nghiệm','code' => 'Số phiếu','code' => 'Tên đơn vị','receive' => 'Ngày nhận mẫu','resend' => 'Ngày hẹn trả kết quả','status' => 'Hình thức nhận','ireceiver' => 'Người nhận hồ sơ','ireceive' => 'Ngày nhận hồ sơ','iresend' => 'Ngay trả hồ sơ','number' => 'Số lượng mẫu','sampletype' => 'Loại mẫu','sample' => 'Loài vật lấy mẫu','xcode' => 'Số ĐKXN','isenderunit' => 'Bộ phận giao mẫu','ireceiverunit' => 'Bộ phận nhận mẫu','examdate' => 'Ngày phân tích','xresender' => 'Người phụ trách bộ phận xét nghiệm','xexam' => 'Bộ phận xét nghiệm','' => 'Lượng mẫu xét nghiệm','receiver' => 'Người lấy mẫu','samplereceive' => 'Thời gian lấy mẫu','senderemploy' => 'Khách hàng','xaddress' => 'Địa chỉ','ownermail' => 'Email','ownerphone' => 'Điện thoại','owner' => 'Chủ hộ','sampleplace' => 'Nơi lấy mẫu','target' => 'Mục đích','receivedis' => 'Nơi nhận','receiveleader' => 'Người phụ trách');
+$yco = array('index' => 'STT','set' => 'Kết quả xét nghiệm','code' => 'Số phiếu','sender' => 'Tên đơn vị','receive' => 'Ngày nhận mẫu','resend' => 'Ngày hẹn trả kết quả','status' => 'Hình thức nhận','ireceiver' => 'Người nhận hồ sơ','ireceive' => 'Ngày nhận hồ sơ','iresend' => 'Ngay trả hồ sơ','number' => 'Số lượng mẫu','sampletype' => 'Loại mẫu','sample' => 'Loài vật lấy mẫu','xcode' => 'Số ĐKXN','isenderunit' => 'Bộ phận giao mẫu','ireceiverunit' => 'Bộ phận nhận mẫu','examdate' => 'Ngày phân tích','xresender' => 'Người phụ trách bộ phận xét nghiệm','xexam' => 'Bộ phận xét nghiệm','examsample' => 'Lượng mẫu xét nghiệm','receiver' => 'Người lấy mẫu','samplereceive' => 'Thời gian lấy mẫu','senderemploy' => 'Khách hàng','xaddress' => 'Địa chỉ','ownermail' => 'Email','ownerphone' => 'Điện thoại','owner' => 'Chủ hộ','sampleplace' => 'Nơi lấy mẫu','target' => 'Mục đích','receivedis' => 'Nơi nhận','receiveleader' => 'Người phụ trách');
 
 // $sql = "select * from `". PREFIX ."_row`";
 // $query = $db->query($sql);
@@ -72,6 +72,7 @@ if ($nv_Request->isset_request("excel", "get")) {
 	if (strlen($temp = $nv_Request->get_string('data', 'get', '')) > 0) {
 		$data = explode(',', $temp);
 	}
+
 	$excelf = totime($nv_Request->get_string('excelf', 'get/post', ''));
 	$excelt = totime($nv_Request->get_string('excelt', 'get/post', ''));
 	include 'PHPExcel/IOFactory.php';
@@ -90,7 +91,7 @@ if ($nv_Request->isset_request("excel", "get")) {
 			->setCellValue($xco[$j ++] . '1', 'Chỉ tiêu xét nghiệm')
 			->setCellValue($xco[$j ++] . '1', 'Kết quả');
 		}
-		else {
+		else if (!empty($yco[$tag])) {
 			$objPHPExcel
 			->setActiveSheetIndex(0)
 			->setCellValue($xco[$j ++] . '1', $yco[$tag]);
@@ -105,21 +106,13 @@ if ($nv_Request->isset_request("excel", "get")) {
 	while ($row = $re->fetch()) {
 		$objPHPExcel->setActiveSheetIndex(0);
 		$j = 0;
-
-		// if (!empty($row['ig'])) {
-		// 	$ig = json_decode($row['ig']);
-		// 	foreach ($ig as $sample) {
-		// 		echo  $sample->{'code'} . '<br>';
-		// 		foreach ($sample->{'mainer'} as $mainer) {
-		// 			foreach ($mainer->{'note'} as $note) {
-		// 				echo '&emsp; ' . $note->{'note'} . '<br>';
-		// 				echo '&emsp;&emsp; ' . $note->{'result'} . '<br>'; 
-		// 			}
-		// 		}
-		// 	}
-		// }
+		$xtag = 0;
+		$ytag = 0;
 
 		foreach ($data as $tag) {
+			if ($xtag > 0) {
+				$i = $xtag;
+			}
 			switch ($tag) {
 				case 'index':
 					$objPHPExcel
@@ -129,32 +122,39 @@ if ($nv_Request->isset_request("excel", "get")) {
 				break;
 				case 'set':
 					$temp = $j;
+					$xtag = $i;
 					$tempData = json_decode($row['ig']);
-					$length = count($tempData);
-					foreach ($tempData as $sample) {
-						$j = $temp;
-						$objPHPExcel
-						->setActiveSheetIndex(0)
-						->setCellValue($xco[$j ++] . $i, $sample->{'number'})
-						->setCellValue($xco[$j ++] . $i, $sample->{'code'});
-						foreach ($sample->{'mainer'} as $main) {
-							$xlength = count($main->{'note'});
-							foreach ($main->{'note'} as $note) {
-								$j = $temp + 2;
-								$objPHPExcel
-								->setActiveSheetIndex(0)
-								->setCellValue($xco[$j ++] . $i, $note->{'note'})
-								->setCellValue($xco[$j ++] . $i, $note->{'result'});
-								$xlength --;
-								if (!empty($xlength)) {
-									$i ++;
+					if (!empty($tempData)) {
+						$length = count($tempData);
+						foreach ($tempData as $sample) {
+							$j = $temp;
+							$objPHPExcel
+							->setActiveSheetIndex(0)
+							->setCellValue($xco[$j ++] . $i, $sample->{'number'})
+							->setCellValue($xco[$j ++] . $i, $sample->{'code'});
+							foreach ($sample->{'mainer'} as $main) {
+								$xlength = count($main->{'note'});
+								foreach ($main->{'note'} as $note) {
+									$j = $temp + 2;
+									$objPHPExcel
+									->setActiveSheetIndex(0)
+									->setCellValue($xco[$j ++] . $i, $note->{'note'})
+									->setCellValue($xco[$j ++] . $i, $note->{'result'});
+									$xlength --;
+									if (!empty($xlength)) {
+										$i ++;
+									}
 								}
 							}
+							$length --;
+							if (!empty($length)) {
+								$i ++;
+							}
 						}
-						$length --;
-						if (!empty($length)) {
-							$i ++;
-						}
+						$ytag = $i;
+					}
+					else {
+						$j += 4;
 					}
 				break;
 				case 'receive':
@@ -163,7 +163,7 @@ if ($nv_Request->isset_request("excel", "get")) {
 				case 'iresend':
 				case 'examdate':
 				case 'samplereceive':
-					$objPHPExcel
+						$objPHPExcel
 						->setActiveSheetIndex(0)
 						->setCellValue($xco[$j ++] . $i, date('d/m/Y', $row[$tag]));
 				break;
@@ -193,6 +193,9 @@ if ($nv_Request->isset_request("excel", "get")) {
 							->setCellValue($xco[$j ++] . $i, $row[$tag]);
 					}
 				break;
+			}
+			if ($ytag > 0) {
+				$i = $ytag;
 			}
 		}
 		
