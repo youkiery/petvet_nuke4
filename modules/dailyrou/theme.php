@@ -96,7 +96,9 @@ function scheduleList($startDate, $endDate) {
 
   while ($count < 7) {
     $xtpl->assign("date", date("d/m/Y", $date));
-    $xtpl->assign("day", $datetime[date("N", $date)]);
+    $xtpl->assign("daytime", $datetime[date("N", $date)]);
+    $xtpl->assign("day", reparseDay(date("N", $date)));
+    $xtpl->assign("time", $date);
 
     if ($currentRow["time"] == $date) {
       switch ($currentRow["type"]) {

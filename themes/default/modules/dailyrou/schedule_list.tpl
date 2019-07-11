@@ -12,15 +12,19 @@
     </thead>
     <tbody>
       <!-- BEGIN: row -->
-      <tr>
+      <tr id="{day}" time="{time}">
         <td> {date} </td>
-        <td> {day} </td>
-        <td class="dailyrou" id="{date}_0"> {morning_guard} </td>
-        <td class="dailyrou" id="{date}_1"> {afternoon_guard} </td>
-        <td class="dailyrou" id="{date}_2">
+        <td> {daytime} </td>
+        <td class="dailyrou" id="{day}_0">
+          {morning_guard}
+        </td>
+        <td class="dailyrou" id="{day}_1">
+          {afternoon_guard}
+        </td>
+        <td class="dailyrou" id="{day}_2">
           {morning_rest}
         </td>
-        <td class="dailyrou" id="{date}_3">
+        <td class="dailyrou" id="{day}_3">
           {afternoon_rest}
         </td>
       </tr>

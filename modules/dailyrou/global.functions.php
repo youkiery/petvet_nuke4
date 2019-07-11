@@ -13,6 +13,32 @@ if (!defined('NV_MAINFILE')) {
 
 define("PREFIX", $db_config['prefix'] . "_" . $module_name);
 
+function getUserFloor($userid = 0) {
+  global $db, $db_config;
+  $list = array();
+  
+  if (empty($userid)) {
+    $sql = 'select a.position, b.first_name from `'. PREFIX .'_user_position` a inner join `'. $db_config['prefix'] .'_users` b on a.userid = b.userid';
+    $query = $db->query($sql);
+
+    while ($row = $query->fetch()) {
+      if (empty($list[$row['position']])) {
+        $list[$row['position']] = array();
+      } 
+      $list[$row['position']][] = $row['first_name'];
+    }
+  }
+  else {
+    $sql = 'select * from `'. PREFIX .'_user_position` where userid = ' . $userid;
+    $query = $db->query($sql);
+  
+    $row = $query->fetch();
+    $list = $row['position'];
+  }
+
+  return $list;
+}
+
 function getWeekRegister($time) {
   global $db;
 
@@ -52,6 +78,19 @@ function getWeekRegister($time) {
     $data[$day][$row['type']][] = $row['user_id'];
   } 
   return json_encode($data);
+}
+
+function getUserList() {
+  global $db, $db_config;
+
+  $sql = 'select userid, last_name, first_name from `'. $db_config['prefix'] .'_users` where userid in (select user_id from `'. $db_config['prefix'] .'_rider_user` where type = 1)';
+  $query = $db->query($sql);
+  $list = array();
+
+  while ($row = $query->fetch()) {
+    $list[$row['userid']] = $row['first_name'];
+  }
+  return $list;
 }
 
 function reparseDay($day) {

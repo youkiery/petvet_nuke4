@@ -189,8 +189,42 @@
   var wconfirmData = []
   var manager = 0
 
-  var global_register = JSON.parse('{register}')
-  var global_thisDay = '{this_date}'
+  var global = {
+    register: JSON.parse('{register}'),
+    regist: [
+      [
+        [],[],[],[]
+      ],
+      [
+        [],[],[],[]
+      ],
+      [
+        [],[],[],[]
+      ],
+      [
+        [],[],[],[]
+      ],
+      [
+        [],[],[],[]
+      ],
+      [
+        [],[],[],[]
+      ],
+      [
+        [],[],[],[]
+      ]
+    ],
+    weekLimit: [2, 2, 2, 2, 2, 1, 1],
+    registing: [],
+    registStatus: false,
+    user: JSON.parse('{user_list}'),
+    except: JSON.parse('{except}'),
+    floor: JSON.parse('{floor}'),
+    ufloor: JSON.parse('{ufloor}'),
+    username: trim('{username}'),
+    day: '{this_date}',
+    time: '{this_time}'
+  }
 
   setEvent()
 
@@ -254,14 +288,74 @@
     }
   })
 
-  function parseWeekView() {
-    global_register.forEach((registerRow, rowIndex) => {
+  // function parseWeekView() {
+  //   global['register'].forEach((registerRow, rowIndex) => {
+  //     registerRow.forEach((registerData, dataIndex) => {
+  //       if (registerData.length) {
+  //         registerData.forEach(registerUserid => {
+  //           if (global['user'][registerUserid]) {
+  //             $('#' + rowIndex + '_' + dataIndex).text(global['user'][registerUserid])
+  //           }
+  //         })
+  //       }
+  //     })
+  //   })
+  // }
+
+  function parseWeekEdit() {
+    global['registStatus'] = !global['registStatus']
+    global['registing'] = global['regist'] 
+    if (global['registStatus']) {
+      parseWeekOn()
+    }
+    parseWeek()
+  }
+
+  function parseWeekOn() {
+    global['register'].forEach((registerRow, rowIndex) => {
+      var time = $("#" + rowIndex).attr('time')
+      var day = reparseDay(new Date(time * 1000).getDay())
+      // var color = ["white", "gray", "green", "red", "orange", "blue", "yellow"]
+
+      if (global['time'] > time) {
+        global['registing'][rowIndex] = [1, 1, 1, 1]
+      }
+      else {
+        global['registing'][rowIndex] = [2, 2, 2, 2]
+      }
       registerRow.forEach((registerData, dataIndex) => {
-        
+        if (registerData.length) {
+          var userList = $('#' + rowIndex + '_' + dataIndex).text().split(', ')
+          if (checkExcept(userList) >= global['weekLimit'][day] || checkFloor(userList) < 2) {
+            global['registing'][rowIndex][dataIndex] = 3
+          }
+          else {
+            if (userList.indexOf(global['username'] >= 0)) {
+              global['registing'][rowIndex][dataIndex] = 4
+            }
+          }
+        }
       })
     })
   }
-  parseWeekView()
+
+  function parseWeek() {
+    global['registing'].forEach((XCell, XCellIndex) => {
+      XCell.forEach((YCell, YCellIndex) => {
+        $('#' + XCellIndex + '_' + YCellIndex).attr('class', color[YCell])
+      })
+    })
+  }
+
+  function reparseDay(day) {
+    if (day) {
+      day --
+    }
+    else {
+      day = 6
+    }
+    return day
+  }
 
   function showSummary() {
     summary.modal("show")
@@ -691,19 +785,28 @@
     })
   }
 
-  function checkExcept(listText) {
-    var count = (listText.match(/,/g) || []).length
-    except.forEach(exceptName => {
-      var x = listText.search(exceptName)
-      
-      if (x >= 0) {
+  function checkExcept(list) {
+    var count = list.length
+
+    global['except'].forEach(exceptName => {
+      if (list.indexOf(exceptName) >= 0) {
         count --
       }
     })
-    if (count < 1) {
-      return 1
+    if (list.indexOf(global['username'])) {
+      return count - 1
     }
-    return 0
+    return count
+  }
+
+  function checkFloor(list) {
+    var count = list.filter(username => {
+      return global['floor'][global['ufloor']].indexOf(username) < 0
+    })
+    if (count.indexOf(global['username'])) {
+      return count.length + 1
+    }
+    return count.length
   }
 </script>
 <!-- END: main -->

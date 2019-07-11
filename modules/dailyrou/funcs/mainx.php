@@ -285,6 +285,10 @@ $xtpl->assign("content", scheduleList($this_week, $next_week));
 
 $xtpl->assign("register", getWeekRegister($time));
 $xtpl->assign("this_date", reparseDay(date('w', $time)));
+$xtpl->assign("this_time", $time);
+$xtpl->assign("user_list", json_encode(getUserList()));
+$xtpl->assign("floor", json_encode(getUserFloor()));
+$xtpl->assign("ufloor", json_encode(getUserFloor($user_info['userid'])));
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
