@@ -607,15 +607,23 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-5 box-5-23">
-      <label class="col-sm-6">
-        Người phụ trách
-      </label>
-      <div class="col-sm-12 relative">
-        <input type="text" class="form-control" id="receive-leader-0" autocomplete="off">
-        <div class="suggest" id="receive-leader-suggest-0"></div>
+    <div class="boxed box-5 box-5-23">
+      <div class="row form-group">
+        <label class="col-sm-6">
+          Người phụ trách
+        </label>
+        <div class="col-sm-12 relative">
+          <input type="text" class="form-control" id="receive-leader-0" autocomplete="off">
+          <div class="suggest" id="receive-leader-suggest-0"></div>
+        </div>
+      </div>
+      <div class="row form-group">
+        <label class="col-sm-6"> Chữ ký </label>
+        <div class="col-sm-12 relative" id="signer_receiveleader">
+        </div>
       </div>
     </div>
+
 
     <div class="row form-group boxed box-5 box-5-15">
       <label class="col-sm-6">
@@ -658,11 +666,18 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-3 box-3-8 box-4 box-4-23">
-      <label class="col-sm-6"> Bộ phận xét nghiệm </label>
-      <div class="col-sm-12 relative">
-        <input type="text" id="xexam-0" class="form-control" autocomplete="off">
-        <div class="suggest" id="xexam-suggest-0"></div>
+    <div class="boxed box-3 box-3-8 box-4 box-4-23">
+      <div class="row form-group">
+        <label class="col-sm-6"> Bộ phận xét nghiệm </label>
+        <div class="col-sm-12 relative">
+          <input type="text" id="xexam-0" class="form-control" autocomplete="off">
+          <div class="suggest" id="xexam-suggest-0"></div>
+        </div>
+      </div>
+      <div class="row form-group">
+        <label class="col-sm-6"> Chữ ký </label>
+        <div class="col-sm-12 relative" id="signer_xexam">
+        </div>
       </div>
     </div>
 
@@ -673,11 +688,18 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-2 box-2-10">
-      <label class="col-sm-6"> Người giao mẫu </label>
-      <div class="col-sm-12 relative">
-        <input type="text" id="xsender-0" class="form-control" autocomplete="off">
-        <div class="suggest" id="xsender-suggest-0"></div>
+    <div class="boxed box-2 box-2-10">
+      <div class="row form-group">
+        <label class="col-sm-6"> Người giao mẫu </label>
+        <div class="col-sm-12 relative">
+          <input type="text" id="xsender-0" class="form-control" autocomplete="off">
+          <div class="suggest" id="xsender-suggest-0"></div>
+        </div>
+      </div>
+      <div class="row form-group">
+        <label class="col-sm-6"> Chữ ký </label>
+        <div class="col-sm-12 relative" id="signer_xsender">
+        </div>
       </div>
     </div>
 
@@ -688,11 +710,18 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-2 box-2-12">
-      <label class="col-sm-6"> Người nhận mẫu </label>
-      <div class="col-sm-12 relative">
-        <input type="text" id="xreceiver-0" class="form-control" autocomplete="off">
-        <div class="suggest" id="xreceiver-suggest-0"></div>
+    <div class="boxed box-2 box-2-12">
+      <div class="row form-group">
+        <label class="col-sm-6"> Người nhận mẫu </label>
+        <div class="col-sm-12 relative">
+          <input type="text" id="xreceiver-0" class="form-control" autocomplete="off">
+          <div class="suggest" id="xreceiver-suggest-0"></div>
+        </div>
+      </div>
+      <div class="row form-group">
+        <label class="col-sm-6"> Chữ ký </label>
+        <div class="col-sm-12 relative" id="signer_xreceiver">
+        </div>
       </div>
     </div>
 
@@ -703,14 +732,20 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-2 box-2-14 box-3 box-3-9 box-4 box-4-24">
-      <label class="col-sm-6"> Người phụ trách bộ phận xét nghiệm </label>
-      <div class="col-sm-12 relative">
-        <input type="text" class="form-control" id="xresender-0" autocomplete="off">
-        <div class="suggest" id="xresender-suggest-0"></div>
+    <div class="boxed box-2 box-2-14 box-3 box-3-9 box-4 box-4-24">
+      <div class="row form-group">
+        <label class="col-sm-6"> Người phụ trách bộ phận xét nghiệm </label>
+        <div class="col-sm-12 relative">
+          <input type="text" class="form-control" id="xresender-0" autocomplete="off">
+          <div class="suggest" id="xresender-suggest-0"></div>
+        </div>
+      </div>
+      <div class="row form-group">
+        <label class="col-sm-6"> Chữ ký </label>
+        <div class="col-sm-12 relative" id="signer_xresender">
+        </div>
       </div>
     </div>
-
     <!-- BEGIN: p1 -->
     <button class="btn btn-info saved float-button" id="saved-2-1" style="top: {top}px; right: 10px;" onclick="printer(1)">
       <span class="glyphicon glyphicon-print"></span>
@@ -1295,6 +1330,36 @@
     symbol: '',
     exam: ['']
   }]
+  var global = {
+    signer: JSON.parse('{signer}'),
+    signdata: [
+      {
+        name: 'xsender',
+        id: 'signer_xsender',
+        form: 2
+      },
+      {
+        name: 'xreceiver',
+        id: 'signer_xreceiver',
+        form: 2
+      },
+      {
+        name: 'xresender',
+        id: 'signer_xresender',
+        form: 2
+      },
+      {
+        name: 'xexam',
+        id: 'signer_xexam',
+        form: 3
+      },
+      {
+        name: 'receiveleader',
+        id: 'signer_receiveleader',
+        form: 5
+      }
+    ]
+  }
 
   $(document).ready(() => {
     htmlInfo = formInsertInfo.html()
@@ -1333,6 +1398,48 @@
     changeMonth: true,
     changeYear: true
   });
+
+  function installSigner(id, selectid = 0) {
+    var html = ''
+    global['signer'].forEach((signer, signerid) => {
+      var check = ''
+      if (signerid == selectid) {
+        check = 'selected'
+      }
+      html += `
+      <option value="`+signerid+`" `+check+`>
+        `+ signer['name'] +`
+      </option>`   
+    })
+    html = `
+    <select class="form-control" id="signer_`+id+`">
+      `+ html +`
+    </select>
+    `
+    $('#' + id).html(html)
+  }
+
+  function installSignerTemplate(data = {'xsender': 0, 'xreceiver': 0, 'xresender': 0, 'xexam': 0, 'receiveleader': 0}) {
+    if (!data) {
+      data = {'xsender': 1, 'xreceiver': 0, 'xresender': 0, 'xexam': 0, 'receiveleader': 0}
+    }
+    global['signdata'].forEach(signData => {
+      if (global_saved >= signData['form']) {
+        installSigner(signData['id'], data[signData['name']])  
+      }
+    })
+  }
+
+  function checkSigner() {
+    var data = {}
+    global['signdata'].forEach(signData => {
+      if (global_saved >= signData['form']) {
+        console.log($('#signer_' + signData['id']))
+        data[signData['name']] = $('#signer_' + signData['id']).val()
+      }
+    })
+    return data
+  }
 
   function checkExcel() {
     var list = []
@@ -2285,6 +2392,7 @@
     parseSaved()
     parseBox(global_form)
     var xcode = defaultData['xcode'].split(',')
+    installSignerTemplate()
     
     formInsertReceive.val(defaultData['today'])
     formInsertResend.val(defaultData['tomorrow'])
@@ -2790,6 +2898,7 @@
     parseSaved()
     parseBox(global_form)
     infoData = {1: [], 2: [], 3: []}
+    installSignerTemplate(JSON.parse(data['form']['signer']))
 
     if (data['form']['printer'] >= 1) {
       try {
@@ -2903,7 +3012,7 @@
     if (Object.keys(data).length) {
       $.post(
         strHref,
-        {action: 'insert', form: global_form, id: global_id, data: data, page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val(), other: getFilter(), clone: global_clone},
+        {action: 'insert', form: global_form, id: global_id, data: data, page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val(), other: getFilter(), clone: global_clone, signer: checkSigner()},
         (response, status) => {
           checkResult(response, status).then(data => {
             remind = JSON.parse(data['remind'])
