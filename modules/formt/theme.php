@@ -205,6 +205,9 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
       $xtpl->assign('unit', $row['sender']);
       if (getUserType($user_info['userid']) > 1) {
         // if (checkIsMod($user_info['userid'])) {
+        if ($row['printer'] >= 5) {
+          $xtpl->parse('main.row.mod.clone');
+        } 
         $xtpl->parse('main.row.mod');
       }
       // if (checkIsMod($user_info['userid'])) {

@@ -31,6 +31,11 @@
         <button class="btn btn-info" onclick="edit({id})">
           <span class="glyphicon glyphicon-edit"></span>
         </button>  
+        <!-- BEGIN: clone -->
+        <button class="btn btn-warning" onclick="clone({id})">
+          <span class="glyphicon glyphicon-share"></span>
+        </button>
+        <!-- END: clone -->
         <button class="btn btn-danger" onclick="remove({id})">
           <span class="glyphicon glyphicon-remove"></span>
         </button>  

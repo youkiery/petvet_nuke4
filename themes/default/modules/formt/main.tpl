@@ -1248,6 +1248,7 @@
   var global_page = 1
   var global_printer = 1
   var global_ig = []
+  var global_clone = 0
   var permist = "{permist}".split(',')
   var defaultData = JSON.parse(`{default}`)
 
@@ -1522,7 +1523,9 @@
     $("." + name + "ed").remove()
     
     var array = data['form'][name]
-    array = array.split(', ')
+    if (typeof(array) == 'string') {
+      array = array.split(', ')
+    }
 
     array.forEach((element, index) => {
       addInfo(dataPicker[name])
@@ -2275,6 +2278,7 @@
   }
 
   function newForm() {
+    global_clone = 0
     global_id = 0
     global_form = 1
     global_saved = 0
@@ -2561,6 +2565,70 @@
     )
   }
 //
+  function checkAllForm() {
+    var data = {}
+    var sampleCode = checkSamplecode(formInsertSampleCode.val(), formInsertNumber.val())
+    if (sampleCode['result']) {
+      data = {
+        code: formInsertCode.val(),
+        sender: formInsertSenderEmploy.val(),
+        receive: formInsertReceive.val(),
+        resend: formInsertResend.val(),
+        state: getCheckbox('state', formInsertReceiverStateOther),
+        receiver: formInsertReceiverEmploy.val(),
+        ireceive: formInsertIreceive.val(),
+        iresend: formInsertIresend.val(),
+        form: getInputs('form'),
+        number: formInsertNumber.val(),
+        sample: formInsertSample.val(),
+        type: getCheckbox('type', formInsertTypeOther),
+        samplecode: formInsertSampleCode.val(),
+        exam: getExam(),
+        xnote: formInsertXnote.val(),
+        numberword: formInsertNumberWord.val(),
+        xcode: getInputs('xcode'),
+        isenderunit: formInsertIsenderUnit.val(),
+        ireceiverunit: formInsertIreceiverUnit.val(),
+        xreceiver: formInsertXreceiver.val(),
+        xsender: formInsertXsender.val(),
+        xresender: formInsertXresender.val(),
+        examdate: formInsertExamDate.val(),
+        xreceive: formInsertXreceive.val(),
+        xsend: formInsertXsend.val(),
+        result: formInsertResult.val(),
+        xresend: formInsertXresend.val(),
+        note: formInsertCnote.val(),
+        page2: formInsertPage2.val(),
+        ig: getIgField(),
+        vnote: formInsertVnote.val(),
+        xexam: formInsertXexam.val(),
+        page3: formInsertPage3.val(),
+        receivehour: formInsertSampleReceiveHour.val(),
+        receiveminute: formInsertSampleReceiveMinute.val(),
+        status: getCheckbox('status'),
+        samplecode5: formInsertSampleCode5.val(),
+        address: formInsertAddress.val(),
+        fax: formInsertFax.val(),
+        xphone: formInsertXphone.val(),
+        samplereceive: formInsertSampleReceive.val(),
+        samplereceiver: formInsertSampleReceiver.val(),
+        ireceiveremploy: formInsertIreceiverEmploy.val(),
+        page4: formInsertPage4.val(),
+        xaddress: formInsertXaddress.val(),
+        examsample: formInsertExamSample.val(),
+        target: formInsertTarget.val(),
+        mcode: formInsertMcode.val(),
+        receivedis: formInsertReceiveDis.val(),
+        receiveleader: formInsertReceiveLeader.val(),
+        sampleplace: formInsertSamplePlace.val(),
+        owner: formInsertOwner.val(),
+        ownerphone: formInsertOwnerPhone.val(),
+        ownermail: formInsertOwnerMail.val()
+      }
+    }
+    return data
+  }
+
   function checkForm(id) {
     var data = {}
     switch (id) {
@@ -2697,6 +2765,8 @@
           global_id = id
           global_form = global_printer
           global_saved = data['form']['printer']
+          parseData(data)
+
           // if (String(global_printer - 1).indexOf(permist) >= 0) {
           //   global_form = global_printer
           //   global_saved = data['form']['printer']
@@ -2709,110 +2779,6 @@
           //   global_form = 6
           //   global_saved = -1
           // }
-          parseSaved()
-          parseBox(global_form)
-          infoData = {1: [], 2: [], 3: []}
-
-          if (data['form']['printer'] >= 1) {
-            try {
-              temp = JSON.parse(data['form']['exam'])
-              global_exam = temp
-            }
-            catch (e) {
-              global_exam = [{
-                method: '',
-                symbol: '',
-                exam: ['']
-              }]
-            }
-            parseExam(global_exam)
-            
-            formInsertCode.val(data['form']['code'])
-            formInsertSenderEmploy.val(data['form']['sender'])
-            formInsertReceiverEmploy.val(data['form']['receiver'])
-            formInsertReceive.val(data['form']['receive'])
-            formInsertResend.val(data['form']['resend'])
-            formInsertIreceive.val(data['form']['ireceive'])
-            formInsertIresend.val(data['form']['iresend'])
-            formInsertNumber.val(data['form']['number'])
-            formInsertExamSample.val(data['form']['number'])
-            formInsertSample.val(data['form']['sample'])
-            formInsertSampleCode.val(data['form']['samplecode'])
-            formInsertSampleCode5.val(data['form']['samplecode'])
-            formInsertXnote.val(data['form']['xnote'])
-            formInsertNumberWord.val(data['form']['numberword']),
-
-            parseInputs(data, 'form')
-            $("#typed-" + data['form']['typeindex']).prop('checked', true)
-            if (data['form']['typeindex'] == 5) {
-              formInsertTypeOther.val(data['form']['typevalue'])
-            }
-            $("#state-" + data['form']['stateindex']).prop('checked', true)
-            if (data['form']['stateindex'] == 2) {
-              formInsertReceiverStateOther.val(data['form']['statevalue'])
-            }
-          }
-
-          if (data['form']['printer'] >= 2) {
-            var xcode = data['form']['xcode'].split(',')
-            formInsertCnote.val(data['form']['note'])
-            formInsertPage2.val(data['form']['page2'])
-            formInsertXcode1.val(xcode[0])
-            formInsertXcode2.val(xcode[1])
-            formInsertXcode3.val(xcode[2])
-            formInsertIsenderUnit.val(data['form']['isenderunit'])
-            formInsertIreceiverUnit.val(data['form']['ireceiverunit'])
-            parseField(JSON.parse(data['form']['ig']))
-            formInsertExamDate.val(data['form']['examdate'])
-            formInsertIresend.val(data['form']['iresend'])
-            formInsertXreceive.val(data['form']['xreceive'])
-            formInsertXreceiver.val(data['form']['xreceiver'])
-            formInsertXresend.val(data['form']['xresend'])
-            formInsertXresender.val(data['form']['xresender'])
-            formInsertXsend.val(data['form']['xsend'])
-            formInsertXsender.val(data['form']['xsender'])
-            formInsertResult.val(data['form']['result'])
-          }
-
-          if (data['form']['printer'] >= 3) {
-            formInsertPage3.val(data['form']['page3'])
-            formInsertXexam.val(data['form']['xexam'])
-            formInsertVnote.val(data['form']['vnote'])
-          }
-
-          if (data['form']['printer'] >= 4) {
-            $(".status").prop('checked', false)
-            $(".status-" + data['form']['status']['index']).prop('checked', true)
-
-            formInsertPage4.val(data['form']['page4'])
-            formInsertNote.val(data['form']['note'])
-            formInsertIreceiverEmploy.val(data['form']['ireceiveremploy'])
-            formInsertXphone.val(data['form']['xphone'])
-            formInsertSampleReceiver.val(data['form']['samplereceiver'])
-            formInsertSampleReceive.val(data['form']['samplereceive'])
-            formInsertAddress.val(data['form']['address'])
-            formInsertFax.val(data['form']['fax'])
-            formInsertSampleCode5.val(data['form']['samplecode5'])
-          }
-
-          if (data['form']['printer'] >= 5) {
-            formInsertOwnerPhone.val(data['form']['ownerphone'])
-            formInsertOwnerMail.val(data['form']['ownermail'])
-            formInsertReceiveLeader.val(data['form']['receiveleader'])
-            formInsertOwner.val(data['form']['owner'])
-            if (data['form']['noticetime']) {
-              formInsertNoticeTime.val(data['form']['noticetime'])
-            }
-            else {
-              formInsertNoticeTime.val(today)
-            }
-            formInsertSamplePlace.val(data['form']['sampleplace'])
-            formInsertXaddress.val(data['form']['xaddress'])
-            formInsertTarget.val(data['form']['target'])
-            formInsertReceiveDis.val(data['form']['receivedis'])
-            formInsertExamSample.val(data['form']['examsample'])
-            formInsertMcode.val(data['form']['mcode'])
-          }
           
           $('a[href="#menu1"]').tab('show')
         }, () => {})
@@ -2820,18 +2786,133 @@
     )
   }
 
+  function parseData(data) {
+    parseSaved()
+    parseBox(global_form)
+    infoData = {1: [], 2: [], 3: []}
+
+    if (data['form']['printer'] >= 1) {
+      try {
+        temp = JSON.parse(data['form']['exam'])
+        global_exam = temp
+      }
+      catch (e) {
+        global_exam = [{
+          method: '',
+          symbol: '',
+          exam: ['']
+        }]
+      }
+      parseExam(global_exam)
+      
+      formInsertCode.val(data['form']['code'])
+      formInsertSenderEmploy.val(data['form']['sender'])
+      formInsertReceiverEmploy.val(data['form']['receiver'])
+      formInsertReceive.val(data['form']['receive'])
+      formInsertResend.val(data['form']['resend'])
+      formInsertIreceive.val(data['form']['ireceive'])
+      formInsertIresend.val(data['form']['iresend'])
+      formInsertNumber.val(data['form']['number'])
+      formInsertExamSample.val(data['form']['number'])
+      formInsertSample.val(data['form']['sample'])
+      formInsertSampleCode.val(data['form']['samplecode'])
+      formInsertSampleCode5.val(data['form']['samplecode'])
+      formInsertXnote.val(data['form']['xnote'])
+      formInsertNumberWord.val(data['form']['numberword']),
+
+      parseInputs(data, 'form')
+      $("#typed-" + data['form']['typeindex']).prop('checked', true)
+      if (data['form']['typeindex'] == 5) {
+        formInsertTypeOther.val(data['form']['typevalue'])
+      }
+      $("#state-" + data['form']['stateindex']).prop('checked', true)
+      if (data['form']['stateindex'] == 2) {
+        formInsertReceiverStateOther.val(data['form']['statevalue'])
+      }
+    }
+
+    if (data['form']['printer'] >= 2) {
+      var xcode = data['form']['xcode'].split(',')
+      formInsertCnote.val(data['form']['note'])
+      formInsertPage2.val(data['form']['page2'])
+      formInsertXcode1.val(xcode[0])
+      formInsertXcode2.val(xcode[1])
+      formInsertXcode3.val(xcode[2])
+      formInsertIsenderUnit.val(data['form']['isenderunit'])
+      formInsertIreceiverUnit.val(data['form']['ireceiverunit'])
+      parseField(JSON.parse(data['form']['ig']))
+      formInsertExamDate.val(data['form']['examdate'])
+      formInsertIresend.val(data['form']['iresend'])
+      formInsertXreceive.val(data['form']['xreceive'])
+      formInsertXreceiver.val(data['form']['xreceiver'])
+      formInsertXresend.val(data['form']['xresend'])
+      formInsertXresender.val(data['form']['xresender'])
+      formInsertXsend.val(data['form']['xsend'])
+      formInsertXsender.val(data['form']['xsender'])
+      formInsertResult.val(data['form']['result'])
+    }
+
+    if (data['form']['printer'] >= 3) {
+      formInsertPage3.val(data['form']['page3'])
+      formInsertXexam.val(data['form']['xexam'])
+      formInsertVnote.val(data['form']['vnote'])
+    }
+
+    if (data['form']['printer'] >= 4) {
+      $(".status").prop('checked', false)
+      $(".status-" + data['form']['status']['index']).prop('checked', true)
+
+      formInsertPage4.val(data['form']['page4'])
+      formInsertNote.val(data['form']['note'])
+      formInsertIreceiverEmploy.val(data['form']['ireceiveremploy'])
+      formInsertXphone.val(data['form']['xphone'])
+      formInsertSampleReceiver.val(data['form']['samplereceiver'])
+      formInsertSampleReceive.val(data['form']['samplereceive'])
+      formInsertAddress.val(data['form']['address'])
+      formInsertFax.val(data['form']['fax'])
+      formInsertSampleCode5.val(data['form']['samplecode5'])
+    }
+
+    if (data['form']['printer'] >= 5) {
+      formInsertOwnerPhone.val(data['form']['ownerphone'])
+      formInsertOwnerMail.val(data['form']['ownermail'])
+      formInsertReceiveLeader.val(data['form']['receiveleader'])
+      formInsertOwner.val(data['form']['owner'])
+      if (data['form']['noticetime']) {
+        formInsertNoticeTime.val(data['form']['noticetime'])
+      }
+      else {
+        formInsertNoticeTime.val(today)
+      }
+      formInsertSamplePlace.val(data['form']['sampleplace'])
+      formInsertXaddress.val(data['form']['xaddress'])
+      formInsertTarget.val(data['form']['target'])
+      formInsertReceiveDis.val(data['form']['receivedis'])
+      formInsertExamSample.val(data['form']['examsample'])
+      formInsertMcode.val(data['form']['mcode'])
+    }
+  }
+
   function insertSubmit() {
-    var data = checkForm(global_form)
+    if (global_clone) {
+      var data = checkAllForm()
+    }
+    else {
+      var data = checkForm(global_form)
+    }
     if (Object.keys(data).length) {
       $.post(
         strHref,
-        {action: 'insert', form: global_form, id: global_id, data: data, page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val(), other: getFilter()},
+        {action: 'insert', form: global_form, id: global_id, data: data, page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val(), other: getFilter(), clone: global_clone},
         (response, status) => {
           checkResult(response, status).then(data => {
             remind = JSON.parse(data['remind'])
             remindv2 = JSON.parse(data['remindv2'])
             // defaultData = JSON.parse(data['default'])
-            if (global_form > global_saved) {
+            if (global_clone) {
+              global_clone = 0
+            }
+            else if (global_form > global_saved) {
               if (global_form == 1) {
                 formInsertExamSample.val(formInsertNumber.val())
                 formInsertSampleCode5.val(formInsertSampleCode.val())
@@ -2913,6 +2994,25 @@
           data['form']['ig'] = JSON.parse(data['form']['ig'])
           data['form']['form'] = data['form']['form'].split(', ')
           printer(printercount, data['form'], 1)
+        }, () => {})
+      }
+    )
+  }
+
+  function clone(id) {
+    $.post(
+      strHref,
+      {action: 'preview', id: id},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          newForm()
+          global_clone = 1
+          global_id = 0
+          global_form = 5
+          global_saved = 5
+          parseData(data)
+          
+          $('a[href="#menu1"]').tab('show')
         }, () => {})
       }
     )
