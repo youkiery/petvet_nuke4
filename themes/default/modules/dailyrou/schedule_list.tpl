@@ -15,12 +15,12 @@
       <tr>
         <td> {date} </td>
         <td> {day} </td>
-        <td class="dailyrou"> {morning_guard} </td>
-        <td class="dailyrou"> {afternoon_guard} </td>
-        <td class="dailyrou">
+        <td class="dailyrou" id="{date}_0"> {morning_guard} </td>
+        <td class="dailyrou" id="{date}_1"> {afternoon_guard} </td>
+        <td class="dailyrou" id="{date}_2">
           {morning_rest}
         </td>
-        <td class="dailyrou">
+        <td class="dailyrou" id="{date}_3">
           {afternoon_rest}
         </td>
       </tr>

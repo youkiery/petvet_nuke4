@@ -13,6 +13,57 @@ if (!defined('NV_MAINFILE')) {
 
 define("PREFIX", $db_config['prefix'] . "_" . $module_name);
 
+function getWeekRegister($time) {
+  global $db;
+
+  $day = date('w', strtotime(date('Y/m/d', $time)));
+  $week_start = strtotime(date('Y', $time) . '/' .  date('m', $time) . '/' . (date('d', $time) - $day + 1));
+  $week_end = $week_start + 60 * 60 * 24 * 7 - 1;
+
+  $sql = 'select * from `'. PREFIX .'_row` where time between ' . $week_start . ' and ' . $week_end;
+  $query = $db->query($sql);
+  $data = array(
+    0 => array(
+      0 => array(), array(), array(), array()
+    ),
+    array(
+      0 => array(), array(), array(), array()
+    ),
+    array(
+      0 => array(), array(), array(), array()
+    ),
+    array(
+      0 => array(), array(), array(), array()
+    ),
+    array(
+      0 => array(), array(), array(), array()
+    ),
+    array(
+      0 => array(), array(), array(), array()
+    ),
+    array(
+      0 => array(), array(), array(), array()
+    )
+  );
+
+  while ($row = $query->fetch()) {
+    $day = date('w', $row['time']);
+    $day = reparseDay($day);
+    $data[$day][$row['type']][] = $row['user_id'];
+  } 
+  return json_encode($data);
+}
+
+function reparseDay($day) {
+  if ($day == 0) {
+    $day = 6;
+  }
+  else {
+    $day --;
+  }
+  return $day;
+}
+
 function getPosition() {
   global $db;
 
