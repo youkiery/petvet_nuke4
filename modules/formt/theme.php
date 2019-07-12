@@ -173,15 +173,13 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
   //   $printer = $lowest;
   // }
 
-  $part = array('printer >= ' . $printer);
-
-  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%"';
+  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%" and printer >= '. $printer .'';
   $query = $db->query($sqlCount);
   $count = $query->fetch();
 
   $xtpl->assign('total', $count['count']);
 
-  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%" order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
+  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%" and printer >= '. $printer .' order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
   $query = $db->query($sql);
 
   $index = 1;
