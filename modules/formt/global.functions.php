@@ -14,6 +14,20 @@ if (!defined('NV_MAINFILE')) {
 define("PREFIX", $db_config['prefix'] . "_" . $module_name);
 define('PERMISSION_MODULE', 1);
 
+function getSigner() {
+	global $db;
+
+	$sql = 'select * from `'. PREFIX .'_signer`';
+	$query = $db->query($sql);
+	$list = array(array('name' => 'Không chọn', 'url' => ''));
+
+	while ($row = $query->fetch()) {
+		$list[] = array('name' => $row['name'], 'url' => $row['url']);
+	}
+
+	return $list;
+}
+
 function getUserPermission($userid) {
   global $db, $db_config;
 

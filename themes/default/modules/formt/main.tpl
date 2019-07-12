@@ -944,18 +944,28 @@
           <tr>
             <td style="width: 5%"></td>
             <td class="c30 text-center">
-              <b>Người/Ngày giao mẫu <br></b><i>Ngày xsend-0 tháng xsend-1 năm xsend-2 <br> <br> <br> <br> <br></i> <div><b>xsender</b></div>
+              <b>Người/Ngày giao mẫu <br></b>
+              <i>
+                Ngày xsend-0 tháng xsend-1 năm xsend-2
+                <br> (xsender-signer) <br>
+              </i>
+              <div><b>xsender</b></div>
             </td>
             <td class="c30 text-center">
               <b>Người/Ngày nhận mẫu <br></b>
               <i>
                 Ngày xreceive-0 tháng xreceive-1 năm xreceive-2 
-                <br> <br> <br> <br> <br>
+                <br> (xreceiver-signer) <br>
               </i> 
               <div><b>xreceiver</b></div> 
             </td>
             <td class="c30 text-center">
-              <b>Phụ trách bộ phận xét nghiệm <br></b><i>Ngày xresend-0 tháng xresend-1 năm xresend-2 <br> <br> <br> <br> <br></i> <div><b>xresender</b></div>
+              <b>Phụ trách bộ phận xét nghiệm <br></b>
+              <i>
+                Ngày xresend-0 tháng xresend-1 năm xresend-2
+                <br> (xresender-signer) <br>
+              </i>
+              <div><b>xresender</b></div>
             </td>
           </tr>
         </table>`,
@@ -984,9 +994,10 @@
       <table>
         <tr>
           <td style="width: 5%"></td>
-          <td style="width: 40%" class="text-center"> <b>BỘ PHẬN XÉT NGHIỆM</b> <br> <i> (Ký, ghi rõ họ tên) </i> <br> <br> <br> <br> <br> <b> xexam </b> </td>
+          <td style="width: 40%" class="text-center"> <b>BỘ PHẬN XÉT NGHIỆM</b> <br>
+          <i> (Ký, ghi rõ họ tên) </i> <br> (xexam-signer) <br> <b> xexam </b> </td>
           <td style="width: 20%"></td>
-          <td style="width: 40%" class="text-center"> <b> TRƯỞNG TRẠM </b> <br> <br> <br> <br> <br> <br> <b> receiveleader </b> </td>
+          <td style="width: 40%" class="text-center"> <b> TRƯỞNG TRẠM </b> <br> <br> (receiveleader-signer) <br> <b> receiveleader </b> </td>
           <td style="width: 5%"></td>
         </tr>
       </table>`,
@@ -1098,12 +1109,12 @@
             <td class="text-center"> 
               <i> Ngày examdate-0 tháng examdate-1 năm examdate-2 </i> <br>
               <b>BỘ PHẬN XÉT NGHIỆM</b> <br>
-              (Ký, ghi rõ họ tên) <br> <br> <br> <br> <br> 
+              (Ký, ghi rõ họ tên) <br> (xexam-signer) <br> 
               <b>(xexam)</b> 
             </td> 
             <td class="text-center"> 
               <i> Ngày examdate-0 tháng examdate-1 năm examdate-2 </i> <br>
-              <b>TRƯỞNG TRẠM</b> <br> <br> <br> <br> <br> <br> 
+              <b>TRƯỞNG TRẠM</b> <br> <br> (xresender-signer) <br> 
               <b class="p11">(xresender)</b> 
             </td> 
           </tr> 
@@ -1154,7 +1165,7 @@
         <p class="p14"> <i> &emsp;&emsp;(Chi tiết xem phiếu kết quả xét nghiệm số: xcode-0/xcode-1/xcode-2.CĐXN của trạm chẩn đoán xét nghiệm bệnh động vật)./. </i></p>
         <div style="width: 60%; float: left;"><b class="p12"> <b> <i> Nơi nhận: </i> </b> </b> <p class="p11"> receivedis </p></div>
         <div style="width: 40%; float: left;" class="text-center p14">
-          <b> CHI CỤC TRƯỞNG <br><br><br><br><br> receiveleader </b>
+          <b> CHI CỤC TRƯỞNG <br>(receiveleader-signer)<br> receiveleader </b>
         </div>`,
   }
   
@@ -1419,9 +1430,27 @@
     $('#' + id).html(html)
   }
 
-  function installSignerTemplate(data = {'xsender': 0, 'xreceiver': 0, 'xresender': 0, 'xexam': 0, 'receiveleader': 0}) {
+  function checkSimilarSigner(data) {
+    for (const signerKey in data) {
+      if (data.hasOwnProperty(signerKey)) {
+        var key = signerKey.replace('-', '')        
+        var count = -1
+        global['signer'].forEach((signer, signerIndex) => {
+          if (signer['name'] == defaultData['remind'][signerKey]) {
+            data[signerKey] = signerIndex
+          }
+        })
+      }
+    }
+
+    return data
+  }
+  installSignerTemplate()
+
+  function installSignerTemplate(data = 0) {
     if (!data) {
       data = {'xsender': 1, 'xreceiver': 0, 'xresender': 0, 'xexam': 0, 'receiveleader': 0}
+      data = checkSimilarSigner(data)
     }
     global['signdata'].forEach(signData => {
       if (global_saved >= signData['form']) {
@@ -1434,7 +1463,6 @@
     var data = {}
     global['signdata'].forEach(signData => {
       if (global_saved >= signData['form']) {
-        console.log($('#signer_' + signData['id']))
         data[signData['name']] = $('#signer_' + signData['id']).val()
       }
     })
@@ -2760,6 +2788,7 @@
             exam: getExam(),
             xnote: formInsertXnote.val(),
             numberword: formInsertNumberWord.val(),
+            signer: checkSigner()
           }
         }
       break;
@@ -2781,7 +2810,8 @@
             xresend: formInsertXresend.val(),
             note: formInsertCnote.val(),
             page2: formInsertPage2.val(),
-            ig: getIgField()
+            ig: getIgField(),
+            signer: checkSigner()
           }
         }
       break;
@@ -2794,7 +2824,8 @@
             xexam: formInsertXexam.val(),
             xresender: formInsertXresender.val(),
             page3: formInsertPage3.val(),
-            ig: getIgField()
+            ig: getIgField(),
+            signer: checkSigner()
           }
         }
       break;            
@@ -2825,7 +2856,8 @@
             page4: formInsertPage4.val(),
             xexam: formInsertXexam.val(),
             xresender: formInsertXresender.val(),
-            exam: getExam()
+            exam: getExam(),
+            signer: checkSigner()
           }
         }
       break;
@@ -2855,7 +2887,8 @@
             ownermail: formInsertOwnerMail.val(),
             numberword: formInsertNumberWord.val(),
             type: getCheckbox('type', formInsertTypeOther),
-            samplereceive: formInsertSampleReceive.val()
+            samplereceive: formInsertSampleReceive.val(),
+            signer: checkSigner()
           }
         }
       break;
@@ -3101,6 +3134,7 @@
         checkResult(response, status).then(data => {
           data['form']['exam'] = JSON.parse(data['form']['exam'])
           data['form']['ig'] = JSON.parse(data['form']['ig'])
+          data['form']['signer'] = JSON.parse(data['form']['signer'])
           data['form']['form'] = data['form']['form'].split(', ')
           printer(printercount, data['form'], 1)
         }, () => {})
@@ -3194,6 +3228,10 @@
             xresend = data['xresend'].split('/')
             xreceive = data['xreceive'].split('/')
             xsend = data['xsend'].split('/')
+
+            html = html.replace('(xresender-signer)', Number(data['signer']['xresender']) ? '<img src="'+ global['signer'][data['signer']['xresender']]['url'] +'">' : '<br><br><br>')
+            html = html.replace('(xreceiver-signer)', Number(data['signer']['xreceiver']) ? '<img src="'+ global['signer'][data['signer']['xreceiver']]['url'] +'">' : '<br><br><br>')
+            html = html.replace('(xsender-signer)', Number(data['signer']['xsender']) ? '<img src="'+ global['signer'][data['signer']['xsender']]['url'] +'">' : '<br><br><br>')
             
             html = html.replace('(page)', data['page2'])
             html = html.replace('isenderunit', data['isenderunit'])
@@ -3218,6 +3256,7 @@
             html = html.replace('xsender', data['xsender'])
             html = html.replace('xreceiver', data['xreceiver'])
             html = html.replace('xresender', data['xresender'])
+
             if (trim(data['result'])) {
               html = html.replace('(result)', '<br>- Kết quả: ' + data['result'].replace(/\n/g, '; '))
             }
@@ -3237,6 +3276,10 @@
             if (typeof(data['xcode']) == 'string') {
               data['xcode'] = data['xcode'].split(',')
             }
+
+            html = html.replace('(xexam-signer)', Number(data['signer']['xexam']) ? '<img src="'+ global['signer'][data['signer']['xexam']]['url'] +'">' : '<br><br><br>')
+            html = html.replace('(receiveleader-signer)', Number(data['signer']['receiveleader']) ? '<img src="'+ global['signer'][data['signer']['receiveleader']]['url'] +'">' : '<br><br><br>')
+
             html = html.replace('(page)', data['page3'])
             html = html.replace(/xcode-0/g, trim(data['xcode'][0]))
             html = html.replace(/xcode-1/g, trim(data['xcode'][1]))
@@ -3250,6 +3293,10 @@
             if (typeof(data['xcode']) == 'string') {
               data['xcode'] = data['xcode'].split(',')
             }
+
+            html = html.replace('(xexam-signer)', Number(data['signer']['xexam']) ? '<img src="'+ global['signer'][data['signer']['xexam']]['url'] +'">' : '<br><br><br>')
+            html = html.replace('(xresender-signer)', Number(data['signer']['xresender']) ? '<img src="'+ global['signer'][data['signer']['xresender']]['url'] +'">' : '<br><br><br>')
+
             var receive = data['receive'].split('/')
             var examdate = data['examdate'].split('/')
             html = html.replace('(page)', data['page4'])
@@ -3262,7 +3309,7 @@
             html = html.replace('(customer)', data['isenderunit'])
             html = html.replace('(number)', data['number'])
             html = html.replace('(sampleCode)', data['samplecode5'])
-
+            
             html = html.replace('(numberword)', data['numberword'])
             html = html.replace('(sample)', data['sample'])
             html = html.replace('(receiveHour)', data['receivehour'])
@@ -3327,6 +3374,8 @@
             }
             var iresend = data['resend'].split('/')
             var tabbed = '&emsp;&emsp;'
+            
+            html = html.replace('(receiveleader-signer)', Number(data['signer']['receiveleader']) ? '<img src="'+ global['signer'][data['signer']['receiveleader']]['url'] +'">' : '<br><br><br>')
             
             html = html.replace('xcode-0', trim(data['xcode'][0]))
             html = html.replace('xcode-1', trim(data['xcode'][1]))
@@ -3423,8 +3472,6 @@
             html = html.replace('receiveleader', receiveleader)
           break;
         }
-        
-        // console.log(html);
         
         var html = '<style>' + style + profile[prop] + '</style>' + html
         var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');

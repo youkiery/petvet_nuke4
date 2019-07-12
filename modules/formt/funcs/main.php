@@ -911,7 +911,7 @@ $xtpl->assign("method", json_encode($method));
 $xtpl->assign("remind", json_encode(getRemind()));
 $xtpl->assign("remindv2", json_encode(getRemindv2()));
 $xtpl->assign("relation", json_encode(getRelation()));
-$xtpl->assign("signer", json_encode(array(array('name' => 'Hồ Ngọc Hà', 'url' => '/themes/default/images/users/no_avatar.png'), array('name' => 'Hồ Quang Hiếu', 'url' => '/themes/default/images/users/no_avatar.png'))));
+$xtpl->assign("signer", json_encode(getSigner()));
 $xtpl->parse("main");
 $contents = $xtpl->text();
 include ( NV_ROOTDIR . "/includes/header.php" );
