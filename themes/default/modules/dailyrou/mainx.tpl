@@ -234,6 +234,16 @@
     doctorId = doctor.val()
     user_position = doctor[0].children[doctor[0].selectedIndex].getAttribute('position')
     username = trim($("#doctor option:selected").text())
+    global['username'] = username
+    for (const key in global['floor']) {
+      if (global['floor'].hasOwnProperty(key)) {
+        const floor = global['floor'][key];
+        if (floor.indexOf(global['username']) >= 0) {
+          global['ufloor'] = key
+          break;
+        }
+      }
+    }
     regist = false
   })
 
