@@ -26,7 +26,7 @@ function dogRowByList($keyword = '', $page = 1, $filter = 10) {
   $xtpl->assign('from', ($page - 1) * $filter + 1);
   $xtpl->assign('end', ($data['count'] + $filter >= ($page * $filter) ? $count : $page * $filter));
   $xtpl->assign('total', $count);
-  while ($row = $query->fetch()) {
+  foreach ($data as $row) {
     $xtpl->assign('index', $index++);
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('id', $row['id']);

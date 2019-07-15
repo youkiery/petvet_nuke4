@@ -1,4 +1,5 @@
 <!-- BEGIN: main -->
+  <a href="/biograph/user"> Đăng nhập </a>
   <div class="text-center start-content">
     <img src="/assets/images/banner88x31.png">
     <p> Nhập tên hoặc mã microchip để tìm kiếm thông tin</p>

@@ -148,8 +148,8 @@ function getPetActiveList($keyword = '', $page = 1, $limit = 10) {
   $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%"';
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
-
-  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%" limit ' . $filter . ' offset ' . (($page - 1) * $filter);
+  
+  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%" limit ' . $limit . ' offset ' . (($page - 1) * $limit);
   $query = $db->query($sql);
 
   while($row = $query->fetch()) {
