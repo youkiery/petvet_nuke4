@@ -19,6 +19,4 @@
 /web.config
 /PHPExcel.php
 /.htaccess
-/excel-form.xlsx
-/excel-output.xlsx
-/excel.xlsx
+/excel
