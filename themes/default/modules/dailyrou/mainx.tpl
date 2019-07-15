@@ -143,12 +143,12 @@
   {content}
 </div>
 <div>
+  <div style="width: 20px; height: 20px; display: inline-block; background: gray;"> </div> Quá hạn đăng ký <br>
   <div style="width: 20px; height: 20px; display: inline-block; background: green;"></div> Có thể đăng ký <br>
   <div style="width: 20px; height: 20px; display: inline-block; background: red;"> </div> Không thể đăng ký <br>
-  <div style="width: 20px; height: 20px; display: inline-block; background: gray;"> </div> Quá hạn đăng ký <br>
   <div style="width: 20px; height: 20px; display: inline-block; background: orange;"></div> Có thể bỏ đăng ký <br>
-  <div style="width: 20px; height: 20px; display: inline-block; background: purple;"></div> Đăng ký <br>
-  <div style="width: 20px; height: 20px; display: inline-block; background: blue;"></div> Bỏ đăng ký <br>
+  <div style="width: 20px; height: 20px; display: inline-block; background: purple;"></div> Bỏ đắng ký <br>
+  <div style="width: 20px; height: 20px; display: inline-block; background: blue;"></div> Đăng ký <br>
 </div>
 <script>
   var today = new Date('{date}').setHours(0)
@@ -316,6 +316,7 @@
       var time = $("#" + rowIndex).attr('time')
       var day = reparseDay(new Date(time * 1000).getDay())
       // var color = ["white", "gray", "green", "red", "orange", "blue", "yellow"]
+      //               0        1       2        3      4         5       6
 
       if (global['time'] > time) {
         global['registing'][rowIndex] = [1, 1, 1, 1]
@@ -325,14 +326,17 @@
       }
       registerRow.forEach((registerData, dataIndex) => {
         if (registerData.length) {
-          var userList = $('#' + rowIndex + '_' + dataIndex).text().split(', ')
-          if (checkExcept(userList) >= global['weekLimit'][day] || checkFloor(userList) < 2) {
-            global['registing'][rowIndex][dataIndex] = 3
+          var userListString = $('#' + rowIndex + '_' + dataIndex).text()
+          var userList = userListString.split(', ')
+          console.log(global['registing'][rowIndex][dataIndex])
+          if (global['registing'][rowIndex][dataIndex] == 1) {
+
           }
-          else {
-            if (userList.indexOf(global['username'] >= 0)) {
-              global['registing'][rowIndex][dataIndex] = 4
-            }
+          else if (userListString.search(global['username']) >= 0) {
+            global['registing'][rowIndex][dataIndex] = 4
+          }
+          else if (checkExcept(userList) >= global['weekLimit'][day] || checkFloor(userList) < 2) {
+            global['registing'][rowIndex][dataIndex] = 3
           }
         }
       })
@@ -465,7 +469,7 @@
   }
 
   register.click(() => {
-    registOn()
+    parseWeekEdit()
     tickOn()
   })
 
@@ -523,91 +527,6 @@
 
   // event function
 
-  function registOn() {
-    var table = content[0].children[0].children[1].children
-    var i = 0
-    var tempToday = today / 1000
-    for (const rowKey in table) {
-      if (table.hasOwnProperty(rowKey)) {
-        // var color = ["white", "gray", "green", "red", "orange", "blue", "yellow"]
-        const row = table[rowKey];
-        var time = row.children[0].innerText.split('/')
-        var thisDate = new Date(time[2], time[1] - 1, time[0]).getTime() / 1000
-        var check = true
-        
-        if (tempToday >= thisDate) {
-          var moi = [0, 0, 1, 1, 1, 1]
-          check = false
-        }
-        else {
-          var moi = [0, 0, 2, 2, 2, 2]
-        }
-
-        while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
-          var thisIndex = Number(dbdata[i]["type"]) + 2
-          if (check) {
-            if (dbdata[i]["userid"] == doctorId) {
-              moi[thisIndex] = 4
-            }
-          }
-          i ++
-        }
-
-        if (check) {
-          if (checkSchedule(trim(row.children[2].innerText).split(', ')) || checkSchedule(trim(row.children[3].innerText).split(', ')) || checkSchedule(trim(row.children[4].innerText).split(', ')) || checkSchedule(trim(row.children[5].innerText).split(', '))) {
-            var check = true
-            if (row.children[2].innerText.search(username) >= 0) {
-              check = false
-              moi[2] = 4
-            }
-            if (row.children[3].innerText.search(username) >= 0) {
-              check = false
-              moi[3] = 4
-            }
-            if (row.children[4].innerText.search(username) >= 0) {
-              check = false
-              moi[4] = 4
-            }
-            if (row.children[5].innerText.search(username) >= 0) {
-              check = false
-              moi[5] = 4
-            }
-            if (check) {
-              moi[2] = 3
-              moi[3] = 3
-              moi[4] = 3
-              moi[5] = 3
-            }
-          }          
-        }
-
-        moi.forEach((cellColor, index) => {
-          row.children[index].setAttribute("class", color[cellColor])
-        });
-      }
-    }
-  }
-
-  function checkSchedule(list) {
-    var tempUserdb = JSON.parse(JSON.stringify(userdb))
-
-    if (user_position > 0) {
-      if (list.length && list[0].length) {
-        list.forEach(item => {
-          tempUserdb[user_position] = tempUserdb[user_position].filter((user, userIndex) => {
-            return item != user['first_name']
-          })
-        })
-        
-        if (tempUserdb[user_position].length <= 1) {
-          return true
-        }
-      }
-    }
-    
-    return false
-  }
-
   function registOff() {
     var table = content[0].children[0].children[1].children
     var moi = [0, 0, 0, 0, 0, 0]
@@ -661,10 +580,8 @@
           registConfirm.modal("hide")
           tickOff()
           registOff()
-          $(".btn, .form-control").attr("disabled", false)
-        }, () => {
-          $(".btn, .form-control").attr("disabled", false)
-        })
+          global['registStatus'] = false
+        }, () => { })
       }
     )
   }
@@ -793,19 +710,16 @@
         count --
       }
     })
-    if (list.indexOf(global['username'])) {
-      return count - 1
-    }
     return count
   }
 
   function checkFloor(list) {
-    var count = list.filter(username => {
-      return global['floor'][global['ufloor']].indexOf(username) < 0
+    var count = global['floor'][global['ufloor']]
+    list.forEach(username => {
+      count = count.filter(userfloor => {
+        return count.indexOf(username) < 0
+      })
     })
-    if (count.indexOf(global['username'])) {
-      return count.length + 1
-    }
     return count.length
   }
 </script>
