@@ -129,7 +129,7 @@
   <!-- END: mod -->
   <li><a data-toggle="tab" href="#menu2"> Xuất ra excel </a></li>
   <!-- BEGIN: secretary -->
-  <li><a data-toggle="tab" href="#menu3"> Thư ký </a></li>
+  <li><a data-toggle="tab" href="#menu3"> Kế toán </a></li>
   <!-- END: secretary -->
 </ul>
 
@@ -917,7 +917,7 @@
         <div class="inline c40">Mã số: BM-02/TYV5-06</div>
         <div class="inline c40">Mã số: Ngày ban hành: 02/11/2017</div>
         <div class="inline c20">Lần sửa đổi: 02</div>`,
-    2: `<table class="table-bordered" border="1" style="width: 95%; margin: auto;">
+    2: `<table class="table-bordered" border="1">
           <tr>
             <td style="width: 60%;" class="cell-center">CHI CỤC THÚ Y VÙNG V <br> <b> TRẠM CHẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT </b></td>
             <td><div class="c20"></div><div class="c80"><b>Biểu mẫu số: BM.STTT.20.01 <br>Số soát xét: 03.02718</b></div></td>
@@ -1004,11 +1004,11 @@
     4: `
         <style>
           * {
-            font-size: 15pt;
+            font-size: 14pt;
           }
           @page {
             size: A4 portrait;
-            margin: 10mm 5mm 5mm 13mm;
+            margin: 15mm 10mm 5mm 15mm;
           }
         </style>
         <table border="1" class="table-bordered">
@@ -2026,6 +2026,7 @@
       html = html.replace('(sample)', data['sample'])
       html = html.replace('(content)', data['content'])
       html = html.replace('(mcode)', data['mcode'])
+      html = html.replace('(xcode)', xcode.join('/'))
       html = html.replace('(date)', data['date'])
       html = html.replace('(reformer)', data['reformer'])
       var temp = ''
@@ -3090,7 +3091,7 @@
 
   function goPage(page) {
     var secret_tab = trim($('.nav-tabs .active').text()).toLowerCase()
-    if (secret_tab == 'thư ký') {
+    if (secret_tab == 'kế toán') {
       $.post(
         strHref,
         {action: 'secretaryPage', page: page},
@@ -3278,7 +3279,7 @@
             }
 
             html = html.replace('(xexam-signer)', Number(data['signer']['xexam']) ? '<img src="'+ global['signer'][data['signer']['xexam']]['url'] +'">' : '<br><br><br>')
-            html = html.replace('(receiveleader-signer)', Number(data['signer']['receiveleader']) ? '<img src="'+ global['signer'][data['signer']['receiveleader']]['url'] +'">' : '<br><br><br>')
+            html = html.replace('(receiveleader-signer)', Number(data['signer']['xresender']) ? '<img src="'+ global['signer'][data['signer']['xresender']]['url'] +'">' : '<br><br><br>')
 
             html = html.replace('(page)', data['page3'])
             html = html.replace(/xcode-0/g, trim(data['xcode'][0]))
@@ -3478,8 +3479,10 @@
         winPrint.focus()
         winPrint.document.write(html);
         if (!prev) {
-          winPrint.print()
-          winPrint.close()
+          setTimeout(() => {
+            winPrint.print()
+            winPrint.close()
+          }, 300)
         }
       }
     }
