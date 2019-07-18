@@ -15,3 +15,15 @@ define('NV_IS_FORM', true);
 define("PATH", 'modules/' . $module_file . '/template');
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
+
+function checkLogin($username, $password) {
+  global $db;
+
+  $sql = 'select * from ' . PREFIX . '_user where username = ' . $username . ' and password = ' . md5($password);
+  $query = $db->query($sql);
+
+  if (!empty($query->fetch())) {
+    return true;
+  }
+  return false;
+}

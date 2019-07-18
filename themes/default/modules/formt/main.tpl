@@ -1125,15 +1125,15 @@
         </style>
         <table>
           <tr>
-            <td class="cell-center p12" style="position: relative;">
-              <div style="position: absolute; border-top: 1px solid black; width: 70px; top: 45px; left: 82px;"></div>
+            <td class="cell-center p12">
+              <div style="position: absolute; border-top: 1px solid black; width: 70px; top: 54px; left: 92px;"></div>
               CỤC THÚ Y <br>
               <b> CHI CỤC THÚ Y VÙNG V </b>
               <div style="margin-top: 10px; "></div>
               <span class="p14"> Số: (mcode)/TYV5-TH </span>
             </td>
-            <td class="cell-center" style="position: relative">
-              <div style="position: absolute; border-top: 1px solid black; width: 209px; height: 100px; top: 41px; left: 93px;"></div>
+            <td class="cell-center">
+              <div style="position: absolute; border-top: 1px solid black; width: 209px; top: 54px; left: 347px;"></div>
               <span class="p12">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</span> <br>
               <b class="p13"> Độc lập - Tự do - Hạnh phúc </b> 
               <div style="margin-top: 15px;"></div>
@@ -1154,7 +1154,7 @@
         <p style="clear: left; width: 60%; float: left;" class="p14"> &emsp;&emsp; Số lượng mẫu: number (numberword) </p> 
         <p style="width: 35%; float: left;" class="p14">Số mẫu xét nghiệm: (examsample)</p>
         <p class="p14" style="clear: left;"> &emsp;&emsp; Ký hiệu mẫu: samplecode </p>
-        <p class="p14"> &emsp;&emsp; Ngày Lấy mẫu:... samplereceive </p>
+        <p class="p14"> &emsp;&emsp; Ngày lấy mẫu: samplereceive </p>
         <p class="p14"> &emsp;&emsp; Ngày nhận mẫu: sampletime </p>
         target 
         <p class="p14"> &emsp;&emsp; <b> <u> Chỉ tiêu xét nghiệm: </u> </b> </p>
@@ -1445,7 +1445,6 @@
 
     return data
   }
-  installSignerTemplate()
 
   function installSignerTemplate(data = 0) {
     if (!data) {
@@ -1453,7 +1452,7 @@
       data = checkSimilarSigner(data)
     }
     global['signdata'].forEach(signData => {
-      if (global_saved >= signData['form']) {
+      if ((global_saved + 1) >= signData['form']) {
         installSigner(signData['id'], data[signData['name']])  
       }
     })
@@ -1462,7 +1461,7 @@
   function checkSigner() {
     var data = {}
     global['signdata'].forEach(signData => {
-      if (global_saved >= signData['form']) {
+      if ((global_saved + 1) >= signData['form']) {
         data[signData['name']] = $('#signer_' + signData['id']).val()
       }
     })
@@ -3475,14 +3474,14 @@
         }
         
         var html = '<style>' + style + profile[prop] + '</style>' + html
-        var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
+        var winPrint = window.open(origin + '/index.php?nv=' + nv_module_name + '&hash=' + (new Date()).getTime(), '_blank', 'left=0,top=0,width=800,height=600');
         winPrint.focus()
         winPrint.document.write(html);
         if (!prev) {
           setTimeout(() => {
             winPrint.print()
             winPrint.close()
-          }, 300)
+          }, 500)
         }
       }
     }

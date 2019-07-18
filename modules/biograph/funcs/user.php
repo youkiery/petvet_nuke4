@@ -24,7 +24,19 @@ if (!empty($action)) {
 			if (count($list)) {
 				$result['html'] = dogRowByList($keyword);
 			}
+		break;
+		case 'login':
+			$username = $nv_Request->get_string('login', 'post', '');
+			$password = $nv_Request->get_string('password', 'post', '');
 
+			if (!empty($username) && !empty($password)) {
+				if (checkLogin($username, $password)) {
+					$_SESSION['username'] = $username;
+					$_SESSION['password'] = $password;
+
+					
+				}
+			}
 		break;
 	}
 	echo json_encode($result);
@@ -32,10 +44,27 @@ if (!empty($action)) {
 }
 
 $id = $nv_Request->get_int('id', 'get', 0);
+$global = array();
+$global['login'] = 0;
 
 $xtpl = new XTemplate("user.tpl", "modules/biograph/template");
 
-$xtpl->parse("main.log");
+if (!empty($_SESSION['username']) && !empty($_SESSION['password'])) {
+	$username = $_SESSION['username'];
+	$password = $_SESSION['password'];
+	// hash split username, password
+	if (checkLogin($username, $password)) {
+		$global['login'] = 1;
+	}
+}
+
+if ($global['login']) {
+	$xtpl->parse('main.log');
+}
+else {
+	$xtpl->parse('main.nolog');
+}
+
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 include ("modules/biograph/layout/header.php");
