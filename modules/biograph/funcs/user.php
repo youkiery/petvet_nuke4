@@ -10,31 +10,120 @@
 if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
+define('BUILDER_INSERT', 0);
+define('BUILDER_EDIT', 1);
 
 $page_title = "autoload";
 
 $action = $nv_Request->get_string('action', 'post', '');
+$userinfo = getUserInfo();
+
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
-		case 'search':
-			$keyword = $nv_Request->get_string('keyword', 'post', '');
+		case 'filter':
+			$filter = $nv_Request->get_array('filter', 'post');
 			
-			$result['status'] = 1;
-			if (count($list)) {
-				$result['html'] = dogRowByList($keyword);
+			if (count($filter) > 1) {
+				$result['html'] = userDogRowByList($userinfo['id'], $filter);
+				if ($result['html']) {
+					$result['status'] = 1;
+				}
+			}
+		break;
+		case 'get':
+			$id = $nv_Request->get_string('id', 'post');
+			
+			$sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
+			$query = $db->query($sql);
+
+			if (!empty($row = $query->fetch())) {
+				$result['data'] = array('name' => $row['name'], 'dob' => $row['dateofbirth'], 'species' => $row['species'], 'breed' => $row['breed'], 'sex' => $row['sex'], 'color' => $row['color'], 'microchip' => $row['microchip']);
+				$result['status'] = 1;
+			}
+		break;
+		case 'check':
+			$id = $nv_Request->get_string('id', 'post');
+			$type = $nv_Request->get_string('type', 'post');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+			$sql = 'update `'. PREFIX .'_pet` set active = '. $type .' where id = ' . $id;
+			if ($db->query($sql)) {
+				$result['html'] = userDogRowByList($userinfo['id'], $filter);
+				if ($result['html']) {
+					$result['status'] = 1;
+				}
+			}
+		break;
+		case 'remove':
+			$id = $nv_Request->get_string('id', 'post');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+			$sql = 'delete from `'. PREFIX .'_pet` where id = ' . $id;
+			if ($db->query($sql)) {
+				$result['html'] = userDogRowByList($userinfo['id'], $filter);
+				if ($result['html']) {
+					$result['status'] = 1;
+				}
 			}
 		break;
 		case 'login':
-			$username = $nv_Request->get_string('login', 'post', '');
+			$username = $nv_Request->get_string('username', 'post', '');
 			$password = $nv_Request->get_string('password', 'post', '');
 
 			if (!empty($username) && !empty($password)) {
+				$username = strtolower($username);
 				if (checkLogin($username, $password)) {
 					$_SESSION['username'] = $username;
 					$_SESSION['password'] = $password;
+					$result['status'] = 1;
+				}
+			}
+		case 'signup':
+			$username = $nv_Request->get_string('username', 'post', '');
+			$password = $nv_Request->get_string('password', 'post', '');
+			$fullname = $nv_Request->get_string('fullname', 'post', '');
+			$mobile = $nv_Request->get_string('phone', 'post', '');
+			$address = $nv_Request->get_string('address', 'post', '');
 
-					
+			if (!empty($username) && !empty($password)) {
+				$username = strtolower($username);
+				if (!checkLogin($username, $password)) {
+					$sql = 'insert into `'. PREFIX .'_user` (username, password, fullname, mobile, address, active, image) values("'. $username .'", "'. md5($password) .'", "'. $fullname .'", "'. $mobile .'", "'. $address .'", 0, "")';
+					if ($db->query($sql)) {
+						$_SESSION['username'] = $username;
+						$_SESSION['password'] = $password;
+						$result['status'] = 1;
+					}
+				}
+			}
+		break;
+		case 'insertpet':
+			$data = $nv_Request->get_array('data', 'post');
+
+			if (count($data) > 1 && !checkPet($data['name'], $userinfo['id'])) {
+				$data['dob'] = totime($data['dob']);
+				$sql = 'insert into `'. PREFIX .'_pet` (userid, name, dateofbirth, species, breed, sex, color, microchip, active, image) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT) .', 0, "")';
+
+				if ($db->query($sql)) {
+					$result['status'] = 1;
+					$result['notify'] = 'Đã thêm thú cưng';
+					$result['html'] = userDogRowByList($userinfo['id']);
+				}
+			}
+		break;
+		case 'editpet':
+			$id = $nv_Request->get_string('id', 'post', '');
+			$data = $nv_Request->get_array('data', 'post');
+
+			if (count($data) > 1 && !empty($id)) {
+				$data['dateofbirth'] = totime($data['dob']);
+				unset($data['dob']);
+				$sql = 'update `'. PREFIX .'_pet` set '. sqlBuilder($data, BUILDER_EDIT) .' where id = ' . $id;
+				if ($db->query($sql)) {
+					$result['status'] = 1;
+					$result['notify'] = 'Đã chỉnh sửa thú cưng';
+					$result['html'] = userDogRowByList($userinfo['id']);
 				}
 			}
 		break;
@@ -49,25 +138,28 @@ $global['login'] = 0;
 
 $xtpl = new XTemplate("user.tpl", "modules/biograph/template");
 
-if (!empty($_SESSION['username']) && !empty($_SESSION['password'])) {
-	$username = $_SESSION['username'];
-	$password = $_SESSION['password'];
-	// hash split username, password
-	if (checkLogin($username, $password)) {
-		$global['login'] = 1;
-	}
-}
-
-if ($global['login']) {
+if (count($userinfo) > 0) {
+	// logged
+	$xtpl->assign('fullname', $userinfo['fullname']);
+	$xtpl->assign('mobile', $userinfo['mobile']);
+	$xtpl->assign('address', $userinfo['address']);
+	$xtpl->assign('address', $userinfo['address']);
+	$xtpl->assign('list', userDogRowByList($userinfo['id']));
 	$xtpl->parse('main.log');
 }
 else {
 	$xtpl->parse('main.nolog');
 }
 
+
+if (!empty($user_info) && !empty($user_info['userid']) && (in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
+	$xtpl->parse('main.mod');
+}
+
+$xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
+
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 include ("modules/biograph/layout/header.php");
 echo $contents;
 include ("modules/biograph/layout/footer.php");
-

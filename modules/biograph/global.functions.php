@@ -147,7 +147,7 @@ function getPetActiveList($keyword = '', $page = 1, $limit = 10) {
 
   $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%"';
   $query = $db->query($sql);
-  $count = $query->fetch()['count'];
+  $data['count'] = $query->fetch()['count'];
   
   $sql = 'select * from `'. PREFIX .'_pet` where name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%" limit ' . $limit . ' offset ' . (($page - 1) * $limit);
   $query = $db->query($sql);
@@ -156,6 +156,46 @@ function getPetActiveList($keyword = '', $page = 1, $limit = 10) {
     $data['list'][] = $row;
   }
   return $data;
+}
+
+function checkPet($name, $userid) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_pet` where name = "'. $name .'" and userid = ' . $userid;
+  $query = $db->query($sql);
+
+  if (!empty($row = $query->fetch())) {
+    return 1;
+  }
+  return 0;
+}
+
+function sqlBuilder($data, $type) {
+  $string = array();
+  foreach ($data as $key => $value) {
+    if ($type) {
+      // edit
+      $string[] = $key . ' = "' . $value . '"';
+    }
+    else {
+      // insert
+      $string[] = '"' . $value . '"';
+    }
+  }
+  return implode(', ', $string);
+}
+
+function totime($time) {
+  if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
+    $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);
+    if (!$time) {
+      $time = time();
+    }
+  }
+  else {
+    $time = time();
+  }
+  return $time;
 }
 
 function deuft8($str) {

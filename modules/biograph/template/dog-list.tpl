@@ -1,5 +1,9 @@
 <!-- BEGIN: main -->
-<p> {keyword} {from} - {end} trong {total} kết quả</p>
+<p> 
+  <!-- BEGIN: msg -->
+  Tìm kiếm {keyword} từ {from} đến {end} trong {count} kết quả
+  <!-- END: msg -->
+</p>
 <table class="table">
   <tr>
     <th> STT </th>
@@ -8,6 +12,7 @@
     <th> Giới tính </th>
     <th> Ngày sinh </th>
     <th> Giống </th>
+    <th></th>
   </tr>
   <!-- BEGIN: row -->
   <tbody>
@@ -18,6 +23,26 @@
       <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {sex} </a> </td>
       <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {dob} </a> </td>
       <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {breed} </a> </td>
+      <td>
+        <!-- BEGIN: mod -->
+        <button class="btn btn-info" onclick="editPet({id})">
+          <span class="glyphicon glyphicon-edit"></span>
+        </button>
+        <!-- BEGIN: uncheck -->
+        <button class="btn btn-warning" onclick="check({id}, 0)">
+          <span class="glyphicon glyphicon-unchecked"></span>
+        </button>
+        <!-- END: uncheck -->
+        <!-- BEGIN: check -->
+        <button class="btn btn-success" onclick="check({id}, 1)">
+          <span class="glyphicon glyphicon-check"></span>
+        </button>
+        <!-- END: check -->
+        <button class="btn btn-danger" onclick="deletePet({id})">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+        <!-- END: mod -->
+      </td>
     </tr>
   </tbody>
   <!-- END: row -->
