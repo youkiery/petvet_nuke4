@@ -17,6 +17,9 @@ $page_title = "autoload";
 
 $action = $nv_Request->get_string('action', 'post', '');
 $userinfo = getUserInfo();
+if (empty($userinfo)) {
+	header('location: /' . $module_name . '/user');
+}
 
 if (!empty($action)) {
 	$result = array('status' => 0);
@@ -42,6 +45,18 @@ if (!empty($action)) {
 				$result['status'] = 1;
 			}
 		break;
+		case 'getuser':
+			$id = $nv_Request->get_string('id', 'post');
+			
+			$sql = 'select * from `'. PREFIX .'_user` where id = ' . $id;
+			$query = $db->query($sql);
+
+			if (!empty($row = $query->fetch())) {
+				$result['data'] = array('fullname' => $row['fullname'], 'mobile' => $row['mobile'], 'address' => $row['address']);
+				$result['image'] = $row['image'];
+				$result['status'] = 1;
+			}
+		break;
 		case 'check':
 			$id = $nv_Request->get_string('id', 'post');
 			$type = $nv_Request->get_string('type', 'post');
@@ -55,6 +70,19 @@ if (!empty($action)) {
 				}
 			}
 		break;
+		case 'checkuser':
+			$id = $nv_Request->get_string('id', 'post');
+			$type = $nv_Request->get_string('type', 'post');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+			$sql = 'update `'. PREFIX .'_user` set active = '. $type .' where id = ' . $id;
+			if ($db->query($sql)) {
+				$result['html'] = userRowList($filter);
+				if ($result['html']) {
+					$result['status'] = 1;
+				}
+			}
+		break;
 		case 'remove':
 			$id = $nv_Request->get_string('id', 'post');
 			$filter = $nv_Request->get_array('filter', 'post');
@@ -62,6 +90,18 @@ if (!empty($action)) {
 			$sql = 'delete from `'. PREFIX .'_pet` where id = ' . $id;
 			if ($db->query($sql)) {
 				$result['html'] = userDogRowByList($userinfo['id'], $filter);
+				if ($result['html']) {
+					$result['status'] = 1;
+				}
+			}
+		break;
+		case 'removeuser':
+			$id = $nv_Request->get_string('id', 'post');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+			$sql = 'delete from `'. PREFIX .'_user` where id = ' . $id;
+			if ($db->query($sql)) {
+				$result['html'] = userRowList($filter);
 				if ($result['html']) {
 					$result['status'] = 1;
 				}
@@ -127,6 +167,21 @@ if (!empty($action)) {
 				}
 			}
 		break;
+		case 'edituser':
+			$id = $nv_Request->get_string('id', 'post', '');
+			$data = $nv_Request->get_array('data', 'post');
+			$filter = $nv_Request->get_array('filter', 'post');
+			$image = $nv_Request->get_string('image', 'post');
+
+			if (count($data) > 1 && !empty($id)) {
+				$sql = 'update `'. PREFIX .'_user` set '. sqlBuilder($data, BUILDER_EDIT) . (strlen(trim($image)) > 0 ? ', image = "'. $image .'"' : '') . ' where id = ' . $id;
+				if ($db->query($sql)) {
+					$result['status'] = 1;
+					$result['notify'] = 'Đã chỉnh sửa thú cưng';
+					$result['html'] = userRowList($filter);
+				}
+			}
+		break;
 	}
 	echo json_encode($result);
 	die();
@@ -143,17 +198,20 @@ if (count($userinfo) > 0) {
 	$xtpl->assign('fullname', $userinfo['fullname']);
 	$xtpl->assign('mobile', $userinfo['mobile']);
 	$xtpl->assign('address', $userinfo['address']);
-	$xtpl->assign('address', $userinfo['address']);
+	$xtpl->assign('image', $userinfo['image']);
 	$xtpl->assign('list', userDogRowByList($userinfo['id']));
+
+	if (!empty($user_info) && !empty($user_info['userid']) && (in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
+		$xtpl->assign('userlist', userRowList());
+	
+		$xtpl->parse('main.log.user');
+		$xtpl->parse('main.log.mod');
+	}
+
 	$xtpl->parse('main.log');
 }
 else {
 	$xtpl->parse('main.nolog');
-}
-
-
-if (!empty($user_info) && !empty($user_info['userid']) && (in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
-	$xtpl->parse('main.mod');
 }
 
 $xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
