@@ -17,9 +17,11 @@ $page_title = "autoload";
 
 $action = $nv_Request->get_string('action', 'post', '');
 $userinfo = getUserInfo();
-if (empty($userinfo)) {
-	header('location: /' . $module_name . '/user');
-}
+// $user_info['in_groups'] = array();
+// if (empty($userinfo)) {
+// 	header('location: /' . $module_name . '/user/');
+// 	die();
+// }
 
 if (!empty($action)) {
 	$result = array('status' => 0);
@@ -29,6 +31,16 @@ if (!empty($action)) {
 			
 			if (count($filter) > 1) {
 				$result['html'] = userDogRowByList($userinfo['id'], $filter);
+				if ($result['html']) {
+					$result['status'] = 1;
+				}
+			}
+		break;
+		case 'filteruser':
+			$filter = $nv_Request->get_array('filter', 'post');
+			
+			if (count($filter) > 1) {
+				$result['html'] = userRowList($filter);
 				if ($result['html']) {
 					$result['status'] = 1;
 				}
@@ -206,6 +218,7 @@ if (count($userinfo) > 0) {
 	
 		$xtpl->parse('main.log.user');
 		$xtpl->parse('main.log.mod');
+		$xtpl->parse('main.log.mod2');
 	}
 
 	$xtpl->parse('main.log');

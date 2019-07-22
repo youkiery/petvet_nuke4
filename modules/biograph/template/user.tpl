@@ -318,7 +318,8 @@
       <button class="btn btn-success" onclick="addPet()">
         <span class="glyphicon glyphicon-plus">  </span>
       </button>
-
+      
+      <!-- BEGIN: mod2 -->
       <div class="row">
         <div class="col-sm-4">
           <label> <input type="radio" name="status" class="status" id="status-0" checked> Toàn bộ </label>
@@ -332,6 +333,7 @@
           </button>
         </div>
       </div>
+      <!-- END: mod2 -->
       <div id="pet-list">
         {list}
       </div>
@@ -799,6 +801,18 @@
     $.post(
       global['url'],
       {action: 'checkuser', id: id, type: type, filter: checkUserFilter()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          userList.html(data['html'])
+        }, () => {})
+      }
+    )
+  }
+
+  function filterUser() {
+    $.post(
+      global['url'],
+      {action: 'filteruser', filter: checkUserFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
           userList.html(data['html'])
