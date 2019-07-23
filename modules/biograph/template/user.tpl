@@ -11,176 +11,8 @@
     }
   </style>
   <div class="container">
-    <div id="insert-user" class="modal fade" role="dialog">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-body text-center">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <p>
-              Chỉnh sửa thông tin
-            </p>
-
-            <label class="row">
-              <div class="col-sm-3">
-                Tên
-              </div>
-              <div class="col-sm-9">
-                <input type="text" class="form-control" id="user-name">
-              </div>
-            </label>
-
-            <label class="row">
-              <div class="col-sm-3">
-                Số điện thoại
-              </div>
-              <div class="col-sm-9">
-                <input type="text" class="form-control" id="user-mobile">
-              </div>
-            </label>
-
-            <label class="row">
-              <div class="col-sm-3">
-                Địa chỉ
-              </div>
-              <div class="col-sm-9">
-                <input type="text" class="form-control" id="user-address">
-              </div>
-            </label>
-
-            <label class="row">
-              <div class="col-sm-3">
-                Hình ảnh
-              </div>
-              <div class="col-sm-9">
-                <div>
-                  <img class="img-responsive" id="user-preview" style="display: inline-block; height: 128px; margin: 10px;">
-                </div>
-                <input type="file" class="form-control" id="user-image" onchange="onselected(this)">
-              </div>
-            </label>
-
-            <button class="btn btn-danger" onclick="editUserSubmit()">
-              Chỉnh sửa thông tin
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="remove-pet" class="modal fade" role="dialog">
-      <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-          <div class="modal-body text-center">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <p>
-              Xác nhận xóa?
-            </p>
-            <button class="btn btn-danger" onclick="removePetSubmit()">
-              Xóa
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="remove-user" class="modal fade" role="dialog">
-      <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-          <div class="modal-body text-center">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <p>
-              Xác nhận xóa?
-            </p>
-            <button class="btn btn-danger" onclick="removeUserSubmit()">
-              Xóa
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="insert-pet" class="modal fade" role="dialog">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-body">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <p class="text-center"> <b> Thêm thú cưng </b> </p>
-            <label class="row">
-              <div class="col-sm-3">
-                Tên thú cưng
-              </div>
-              <div class="col-sm-9">
-                <input type="text" class="form-control" id="pet-name">
-              </div>
-            </label>
-
-            <label class="row">
-              <div class="col-sm-3">
-                Ngày sinh
-              </div>
-              <div class="col-sm-9">
-                <input type="text" class="form-control" id="pet-dob">
-              </div>
-            </label>
-
-            <label class="row">
-              <div class="col-sm-3">
-                Giống 
-              </div>
-              <div class="col-sm-9">
-                <input type="text" class="form-control" id="pet-species">
-              </div>
-            </label>
-
-            <label class="row">
-              <div class="col-sm-3">
-                Loài
-              </div>
-              <div class="col-sm-9">
-                <input type="text" class="form-control" id="pet-breed">
-              </div>
-            </label>
-
-            <label class="row">
-              <div class="col-sm-3">
-                Giới tính
-              </div>
-              <div class="col-sm-9">
-                <input type="text" class="form-control" id="pet-sex">
-              </div>
-            </label>
-
-            <label class="row">
-              <div class="col-sm-3">
-                Màu sắc
-              </div>
-              <div class="col-sm-9">
-                <input type="text" class="form-control" id="pet-color">
-              </div>
-            </label>
-            
-            <label class="row">
-              <div class="col-sm-3">
-                Microchip
-              </div>
-              <div class="col-sm-9">
-                <input type="text" class="form-control" id="pet-microchip">
-              </div>
-            </label>
-
-            <div class="text-center">
-              <button class="btn btn-success" id="ibtn" onclick="insertPetSubmit()">
-                Thêm thú cưng
-              </button>
-              <button class="btn btn-success" id="ebtn" onclick="editPetSubmit()" style="display: none;">
-                Chỉnh sửa
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
     <!-- BEGIN: nolog -->
+    <a href="/biograph/"> Trang chủ </a>
     <ul class="nav nav-tabs">
       <li class="active"><a class="tabber tabber-1" data-toggle="tab" href="#login"> Đăng nhập </a></li>
       <li><a class="tabber tabber-0" data-toggle="tab" href="#signup"> Đăng ký </a></li>
@@ -271,6 +103,177 @@
     </div>    
   <!-- END: nolog -->
   <!-- BEGIN: log -->
+  <div id="insert-user" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-body text-center">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <p>
+            Chỉnh sửa thông tin
+          </p>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Tên
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="user-name">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Số điện thoại
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="user-mobile">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Địa chỉ
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="user-address">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Hình ảnh
+            </div>
+            <div class="col-sm-9">
+              <div>
+                <img class="img-responsive" id="user-preview" style="display: inline-block; height: 128px; margin: 10px;">
+              </div>
+              <input type="file" class="form-control" id="user-image" onchange="onselected(this)">
+            </div>
+          </label>
+
+          <button class="btn btn-danger" onclick="editUserSubmit()">
+            Chỉnh sửa thông tin
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="remove-pet" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-body text-center">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <p>
+            Xác nhận xóa?
+          </p>
+          <button class="btn btn-danger" onclick="removePetSubmit()">
+            Xóa
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="remove-user" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-body text-center">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <p>
+            Xác nhận xóa?
+          </p>
+          <button class="btn btn-danger" onclick="removeUserSubmit()">
+            Xóa
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="insert-pet" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-body">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <p class="text-center"> <b> Thêm thú cưng </b> </p>
+          <label class="row">
+            <div class="col-sm-3">
+              Tên thú cưng
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="pet-name">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Ngày sinh
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="pet-dob">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Giống 
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="pet-species">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Loài
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="pet-breed">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Giới tính
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="pet-sex">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Màu sắc
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="pet-color">
+            </div>
+          </label>
+          
+          <label class="row">
+            <div class="col-sm-3">
+              Microchip
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="pet-microchip">
+            </div>
+          </label>
+
+          <div class="text-center">
+            <button class="btn btn-success" id="ibtn" onclick="insertPetSubmit()">
+              Thêm thú cưng
+            </button>
+            <button class="btn btn-success" id="ebtn" onclick="editPetSubmit()" style="display: none;">
+              Chỉnh sửa
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a href="/biograph/logout"> Đăng xuất </a>
   <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#profile"> Thông tin cá nhân </a></li>
     <li><a data-toggle="tab" href="#list"> Danh sách thú cưng </a></li>

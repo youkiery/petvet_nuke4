@@ -11,6 +11,8 @@ if (!defined('PREFIX')) {
   die('Stop!!!');
 }
 
+
+
 function userDogRowByList($userid, $filter = array('keyword' => '', )) {
   global $db, $user_info;
   $index = 1;
@@ -41,7 +43,7 @@ function userDogRowByList($userid, $filter = array('keyword' => '', )) {
   return $xtpl->text();
 }
 
-function userDogRowByList($userid = 0, $filter = array('keyword' => '', ), $limit = array('page' => 0, 'limit' => 10)) {
+function userDogRow($userid = 0, $filter = array('keyword' => '', ), $limit = array('page' => 0, 'limit' => 10)) {
   global $db, $user_info;
   $index = 1;
   $xtpl = new XTemplate('dog-list.tpl', PATH);

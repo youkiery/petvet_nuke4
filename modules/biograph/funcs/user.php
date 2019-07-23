@@ -17,7 +17,7 @@ $page_title = "autoload";
 
 $action = $nv_Request->get_string('action', 'post', '');
 $userinfo = getUserInfo();
-// $user_info['in_groups'] = array();
+$user_info['in_groups'] = array();
 // if (empty($userinfo)) {
 // 	header('location: /' . $module_name . '/user/');
 // 	die();
