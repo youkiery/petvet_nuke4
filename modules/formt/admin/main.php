@@ -80,7 +80,7 @@ if (!empty($action)) {
 
 			if ($id = checkUserPermission($userid)) {
 				$permission = getUserType($userid);
-				if ($permission < 4) {
+				if ($permission < 5) {
 					$permission ++;
 				}
 				$sql = 'update `'.$db_config['prefix'].'_user_allow` set type = '. $permission .' where id = ' . $id;

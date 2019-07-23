@@ -123,17 +123,20 @@
 </div>
 
 <ul class="nav nav-tabs">
+  <!-- BEGIN: user -->
   <li class="active"><a data-toggle="tab" href="#home"> Danh sách </a></li>
-  <!-- BEGIN: mod -->
+  <!-- END: user -->
+  <!-- BEGIN: super_user -->
   <li><a data-toggle="tab" href="#menu1"> Thêm văn bản </a></li>
-  <!-- END: mod -->
+  <!-- END: super_user -->
   <li><a data-toggle="tab" href="#menu2"> Xuất ra excel </a></li>
   <!-- BEGIN: secretary -->
-  <li><a data-toggle="tab" href="#menu3"> Kế toán </a></li>
+  <li class="{secretary_active}"><a data-toggle="tab" href="#menu3"> Kế toán </a></li>
   <!-- END: secretary -->
 </ul>
 
 <div class="tab-content">
+  <!-- BEGIN: super_user2 -->
   <div id="home" class="tab-pane active">
     <form onsubmit="filter(event)">
       <div class="row form-group">
@@ -182,8 +185,9 @@
       {content}
     </div>
   </div>
-
-  <!-- BEGIN: mod2 -->
+  <!-- END: super_user2 -->
+  
+  <!-- BEGIN: super_user3 -->
   <div id="menu1" class="tab-pane">
     <div id="credit"></div>
     <div class="row form-group boxed box-1 box-1-1">
@@ -797,7 +801,7 @@
       <span class="glyphicon glyphicon-file"></span>
     </button>
   </div>
-  <!-- END: mod2 -->
+  <!-- END: super_user3 -->
   <div id="menu2" class="tab-pane">
     <label class="row" style="width: 100%;">
       <div class="col-sm-6">Ngày bắt đầu</div>
@@ -851,7 +855,7 @@
     </div>
   </div>
   <!-- BEGIN: secretary2 -->
-  <div id="menu3" class="tab-pane">
+  <div id="menu3" class="tab-pane {secretary_active}">
     <div id="secretary-list">
       {secretary}
     </div>
@@ -1160,7 +1164,7 @@
         <p class="p14" style="clear: left;"> &emsp;&emsp; <b> <u> Chỉ tiêu xét nghiệm: </u> </b> </p>
         <div class="p14">(exam)</div>
         note
-        <p class="p14"> &emsp;&emsp; <b> <u> Kết quả: </u> </b> </p>
+        <p class="p14" style="clear: both;"> &emsp;&emsp; <b> <u> Kết quả: </u> </b> </p>
         <div class="p14">result</div>
         <p class="p14"> <i> &emsp;&emsp;(Chi tiết xem phiếu kết quả xét nghiệm số: xcode-0/xcode-1/xcode-2.CĐXN của trạm chẩn đoán xét nghiệm bệnh động vật)./. </i></p>
         <div style="width: 60%; float: left;"><b class="p12"> <b> <i> Nơi nhận: </i> </b> </b> <p class="p11"> receivedis </p></div>
@@ -1743,8 +1747,6 @@
     for (const listKey in list) {
       if (list.hasOwnProperty(listKey)) {
         const item = list[listKey];
-        // console.log(item, listKey);
-        
         credit.appendChild(item)
       }
     }
@@ -1917,7 +1919,7 @@
         `
         installer.push({
           name: "sx" + index,
-          type: 'exam'
+          type: 'examsx'
         })
 
         index ++
@@ -1960,7 +1962,7 @@
       {action: 'secretary', id: global_secretary, data: checkSecretary()},
       (response, status) => {
         checkResult(response, status).then(data => {
-          console.log(data)
+          // console.log(data)
         }, () => {})
       }
     )
@@ -2474,7 +2476,7 @@
     formInsertQuality.val('')
     formInsertPhone.val('')
     formInsertOther.val('')
-    formInsertResult.val('........................................................................................................................................................................................................')
+    formInsertResult.val('....................................................................................................')
     formInsertTarget.val('')
     formInsertEndedCopy.val('')
     formInsertNote.val('')
@@ -2929,7 +2931,12 @@
 
   function parseData(data) {
     parseSaved()
-    parseBox(global_form)
+    if (permist[0] && data['form']['printer'] >= (permist[0] + 1)) {
+      parseBox(permist[0] + 1)
+    }
+    else {
+      parseBox(-1)
+    }
     infoData = {1: [], 2: [], 3: []}
     installSignerTemplate(JSON.parse(data['form']['signer']))
 
@@ -3105,7 +3112,8 @@
     else {
       $.post(
         strHref,
-        {action: 'filter', page: page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val()},
+        // page: 1, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val(), other: getFilter(), xcode: filterXcode.val()
+        {action: 'filter', page: page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val(), other: getFilter(), xcode: filterXcode.val()},
         (response, status) => {
           checkResult(response, status).then(data => {
             global_page = page
@@ -3341,7 +3349,7 @@
               note.forEach(item => {
                 notes.push('<i>' + item + '</i>')
               })
-              noteString += '<u style="display: inline-block"><b>Ghi chú:</b></u> <div style="display: inline-table">' + notes.join('<br>') + '</div>'
+              noteString += '<b style="float: left; width: 80px;">Ghi chú:</b> <div style="float: left; width: calc(100% - 80px);">' + notes.join('<br>') + '</div>'
             }
             html = html.replace('(note)', noteString)
 
@@ -3461,7 +3469,7 @@
               note.forEach(item => {
                 notes.push('<i>' + item + '</i>')
               })
-              noteString += '<div class="p14"> <u style="display: inline-block"><b>Ghi chú:</b></u> <span style="display: inline-table">' + notes.join('<br>') + '</span></div>'
+              noteString += '<div class="p14"> <b style="float: left; width: 80px;">Ghi chú:</b> <span style="float: left; width: calc(100% - 80px);">' + notes.join('<br>') + '</span></div>'
             }
             html = html.replace('note', noteString)
             html = html.replace('receivedis', data['receivedis'].replace(/\n/g, '<br>'))

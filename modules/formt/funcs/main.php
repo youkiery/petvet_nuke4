@@ -252,7 +252,7 @@ if (!empty($action)) {
 					$xtpl->assign('date', date('d/m/Y', $row['xresend']));
 					$xtpl->assign('org', $row['sender']);
 					$xtpl->assign('address', $row['xaddress']);	
-					$xtpl->assign('phone', $row['ownerxphone']);
+					$xtpl->assign('phone', $row['ownerphone']);
 					$xtpl->assign('mail', $row['ownermail']);
 					$xtpl->assign('content', $row['target']);
 					$xtpl->assign('type', (!empty($sampleType[$row['typeindex']] ? $sampleType[$row['typeindex']] : $row['typevalue'])));
@@ -278,6 +278,10 @@ if (!empty($action)) {
 				$xtpl->assign('xcode2', $xcode[2]);
 				$xtpl->assign('mcode', $row['mcode']);
 				$xtpl->assign('reformer', $row['reformer']);
+				$permission = getUserType($user_info['userid']);
+				if ($permission == 1 || $permission == 5) {
+					$xtpl->parse('main.secretary');
+				}
 				$xtpl->parse('main');
 				$result['status'] = 1;
 				$result['html'] = $xtpl->text();
@@ -299,11 +303,22 @@ if (!empty($action)) {
 				$sql = 'select * from `'. PREFIX .'_secretary` where rid = ' . $id;
 				$query = $db->query($sql);
 
+				foreach ($data['ig'] as $igKey => $igVal) {
+					checkRemindv2($igKey, 'examsx');
+				}
+
+				$permission = getUserType($user_info['userid']);
+
 				if (!empty($row = $query->fetch())) {
 					// update
 					$temp = array();
 					foreach ($data as $dataKey => $dataRow) {
-						if ($dataKey == 'date') {
+						if ($dataKey == 'pay') {
+							if ($permission == 1 || $permission == 5) {
+								$temp[] = $dataKey . ' = "'. $dataRow .'"';
+							}
+						}
+						else if ($dataKey == 'date') {
 							$temp[] = $dataKey . ' = "'. totime($dataRow) .'"';
 						}
 						else if ($dataKey == 'ig') {
@@ -826,7 +841,151 @@ $remind = getDefault();
 
 $defaultData = array('code' => '-19', 'xcode' => '05,19,', 'result' => 'Âm tính (-)', 'receivedis' => '- Lưu: VT, Dịch tễ, Kế toán.', 'number' => '1', 'numberword' => 'Một', 'today' => date("d/m/Y", $today), 'yesterday' => date("d/m/Y", $yesterday), 'tomorrow' => date("d/m/Y", $tomorrow), 'remind' => $remind);
 
+
+$methodHtml = '';
+$method = array();
+$permission = getUserType($user_info['userid']);
+
+// $permissionType = array('Bị cấm', 'Kế toán', 'Chỉ đọc', 'Nhân viên', 'Siêu nhân viên', 'Quản lý');
+//                          0      , 1        , 2        , 3          , 4               ,  5
+
+switch ($permission) {
+	case 1:
+		$xtpl->assign('secretary_active', 'active');
+		$xtpl->assign('secretary', secretaryList());
+		$xtpl->parse('main.secretary2');
+		$xtpl->parse('main.secretary');
+	break;
+	case 2:
+		$xtpl->assign('content', formList());
+		$xtpl->parse('main.user');
+		$xtpl->parse('main.super_user2');
+	break;
+	case 3:
+		$method = getMethod();
+		$methodHtml = '';
+		foreach ($method as $index => $row) {
+			$methodHtml .= '<option value="'. $row['symbol'] .'" class="'.$index.'">'. $row['name'] .'</option>';
+		}
+		$xtpl->assign("methodOption", $methodHtml);
+
+		for ($i = 0; $i < 60; $i++) { 
+			if ($i < 10) {
+				$xtpl->assign('value', '0' . $i);
+			}
+			else {
+				$xtpl->assign('value', $i);
+			}
+			$xtpl->parse('main.super_user3.minute');
+			$xtpl->parse('main.super_user3.minute2');
+			if ($i < 24) {
+				$xtpl->parse('main.super_user3.hour');
+				$xtpl->parse('main.super_user3.hour2');
+			}
+		}
+
+		$permist = getUserPermission($user_info['userid']);
+		$permist = explode(',', $permist);
+		$top = 10;
+		foreach ($permist as $key) {
+			$xtpl->assign('top', $top += 35);	
+			$xtpl->parse('main.super_user3.p' . ($key + 1));
+		}
+		$xtpl->assign('top', $top += 35);	
+
+		$xtpl->assign('content', formList());
+		$xtpl->parse('main.user');
+		$xtpl->parse('main.super_user');
+		$xtpl->parse('main.super_user2');
+		$xtpl->parse('main.super_user3');
+	break;
+	case 4: 
+		$method = getMethod();
+		$methodHtml = '';
+		foreach ($method as $index => $row) {
+			$methodHtml .= '<option value="'. $row['symbol'] .'" class="'.$index.'">'. $row['name'] .'</option>';
+		}
+		$xtpl->assign("methodOption", $methodHtml);
+
+		for ($i = 0; $i < 60; $i++) { 
+			if ($i < 10) {
+				$xtpl->assign('value', '0' . $i);
+			}
+			else {
+				$xtpl->assign('value', $i);
+			}
+			$xtpl->parse('main.super_user3.minute');
+			$xtpl->parse('main.super_user3.minute2');
+			if ($i < 24) {
+				$xtpl->parse('main.super_user3.hour');
+				$xtpl->parse('main.super_user3.hour2');
+			}
+		}
+
+		$permist = getUserPermission($user_info['userid']);
+		$permist = explode(',', $permist);
+		$top = 10;
+		foreach ($permist as $key) {
+			$xtpl->assign('top', $top += 35);	
+			$xtpl->parse('main.super_user3.p' . ($key + 1));
+		}
+		$xtpl->assign('top', $top += 35);	
+
+		$xtpl->assign('content', formList());
+		$xtpl->parse('main.user');
+		$xtpl->parse('main.super_user');
+		$xtpl->parse('main.super_user2');
+		$xtpl->parse('main.super_user3');
+		$xtpl->assign('secretary', secretaryList());
+		$xtpl->parse('main.secretary2');
+		$xtpl->parse('main.secretary');
+	break;
+	case 5: 
+		$method = getMethod();
+		$methodHtml = '';
+		foreach ($method as $index => $row) {
+			$methodHtml .= '<option value="'. $row['symbol'] .'" class="'.$index.'">'. $row['name'] .'</option>';
+		}
+		$xtpl->assign("methodOption", $methodHtml);
+
+		$permist = '0,1,2,3,4';
+		$permist = explode(',', $permist);
+
+		for ($i = 0; $i < 60; $i++) { 
+			if ($i < 10) {
+				$xtpl->assign('value', '0' . $i);
+			}
+			else {
+				$xtpl->assign('value', $i);
+			}
+			$xtpl->parse('main.super_user3.minute');
+			$xtpl->parse('main.super_user3.minute2');
+			if ($i < 24) {
+				$xtpl->parse('main.super_user3.hour');
+				$xtpl->parse('main.super_user3.hour2');
+			}
+		}
+
+		$top = 10;
+		foreach ($permist as $key) {
+			$xtpl->assign('top', $top += 35);	
+			$xtpl->parse('main.super_user3.p' . ($key + 1));
+		}
+		$xtpl->assign('top', $top += 35);	
+
+		$xtpl->assign('content', formList());
+		$xtpl->parse('main.user');
+		$xtpl->parse('main.super_user');
+		$xtpl->parse('main.super_user2');
+		$xtpl->parse('main.super_user3');
+		$xtpl->assign('secretary', secretaryList());
+		$xtpl->parse('main.secretary2');
+		$xtpl->parse('main.secretary');
+	break;
+}
+
 /** */
+
 // $permist = '';
 // if (!empty($user_info)) {
 // 	if (in_array('1', $user_info['in_groups'])) {
@@ -838,63 +997,53 @@ $defaultData = array('code' => '-19', 'xcode' => '05,19,', 'result' => 'Âm tín
 // }
 // $xtpl->assign('permist', $permist);	
 
-// $permist = explode(',', $permist);
 
+/** */
+
+// $permist = '0,1,2,3,4';
+// $permist = explode(',', $permist);
 // $top = 10;
 // foreach ($permist as $key) {
 // 	$xtpl->assign('top', $top += 35);	
 // 	$xtpl->parse('main.mod2.p' . ($key + 1));
 // }
 // $xtpl->assign('top', $top += 35);	
+// $permission = getUserType($user_info['userid']);
+// if ($permission >= 2) {
+// 	$xtpl->assign('secretary', secretaryList());
+// 	$xtpl->parse('main.secretary2');
+// 	$xtpl->parse('main.secretary');
+// }
+
 /** */
-$permist = '0,1,2,3,4';
-$permist = explode(',', $permist);
-$top = 10;
-foreach ($permist as $key) {
-	$xtpl->assign('top', $top += 35);	
-	$xtpl->parse('main.mod2.p' . ($key + 1));
-}
-$xtpl->assign('top', $top += 35);	
 
-$xtpl->assign("default", json_encode($defaultData));
-
-$permission = getUserType($user_info['userid']);
-
-if ($permission >= 2) {
-	$xtpl->assign('secretary', secretaryList());
-	$xtpl->parse('main.secretary2');
-	$xtpl->parse('main.secretary');
-}
-
-$methodHtml = '';
-$method = array();
-if ($permission || checkIsMod($user_info['userid'])) {
+// if ($permission || checkIsMod($user_info['userid'])) {
 	
-	for ($i = 0; $i < 60; $i++) { 
-		if ($i < 10) {
-			$xtpl->assign('value', '0' . $i);
-		}
-		else {
-			$xtpl->assign('value', $i);
-		}
-		$xtpl->parse('main.mod2.minute');
-		$xtpl->parse('main.mod2.minute2');
-		if ($i < 24) {
-			$xtpl->parse('main.mod2.hour');
-			$xtpl->parse('main.mod2.hour2');
-		}
-	}
-	if ($permission > 1) {
-		$method = getMethod();
-		$methodHtml = '';
-		foreach ($method as $index => $row) {
-			$methodHtml .= '<option value="'. $row['symbol'] .'" class="'.$index.'">'. $row['name'] .'</option>';
-		}
-		$xtpl->parse('main.mod');
-		$xtpl->parse('main.mod2');
-	}
-}
-
+// 	for ($i = 0; $i < 60; $i++) { 
+// 		if ($i < 10) {
+// 			$xtpl->assign('value', '0' . $i);
+// 		}
+// 		else {
+// 			$xtpl->assign('value', $i);
+// 		}
+// 		$xtpl->parse('main.mod2.minute');
+// 		$xtpl->parse('main.mod2.minute2');
+// 		if ($i < 24) {
+// 			$xtpl->parse('main.mod2.hour');
+// 			$xtpl->parse('main.mod2.hour2');
+// 		}
+// 	}
+// 	if ($permission > 2) {
+// 		$method = getMethod();
+// 		$methodHtml = '';
+// 		foreach ($method as $index => $row) {
+// 			$methodHtml .= '<option value="'. $row['symbol'] .'" class="'.$index.'">'. $row['name'] .'</option>';
+// 		}
+// 		$xtpl->parse('main.mod');
+// 		$xtpl->parse('main.mod2');
+// 	}
+// }
+/** */
 $day = date('w');
 $week_start = date('d/m/Y', strtotime('-'.$day.' days'));
 $week_end = date('d/m/Y', strtotime('+'.(6-$day).' days'));
@@ -902,17 +1051,17 @@ $week_end = date('d/m/Y', strtotime('+'.(6-$day).' days'));
 $xtpl->assign("excelf", $week_start);
 $xtpl->assign("excelt", $week_end);
 
-$xtpl->assign("methodOption", $methodHtml);
+$xtpl->assign('permist', implode(',', $permist));	
 $xtpl->assign('summarycontent', summaryContent($from, $end));
 $xtpl->assign('summaryfrom', date('d/m/Y', $from));
 $xtpl->assign('summaryend', date('d/m/Y', $end));
 $xtpl->assign('today', date('d/m/Y', time()));
-$xtpl->assign('content', formList());
 $xtpl->assign("method", json_encode($method));
 $xtpl->assign("remind", json_encode(getRemind()));
 $xtpl->assign("remindv2", json_encode(getRemindv2()));
 $xtpl->assign("relation", json_encode(getRelation()));
 $xtpl->assign("signer", json_encode(getSigner()));
+$xtpl->assign("default", json_encode($defaultData));
 $xtpl->parse("main");
 $contents = $xtpl->text();
 include ( NV_ROOTDIR . "/includes/header.php" );

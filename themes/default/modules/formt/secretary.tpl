@@ -95,6 +95,7 @@
     </div>
   </div>
 
+  <!-- BEGIN: secretary -->
   <div class="row form-group">
     <label class="col-sm-6"> Thanh toán </label>
     <div class="col-sm-12">
@@ -102,4 +103,5 @@
       <label> <input type="radio" name="pay" value="1" id="pay1" {pay1}> Đã trả </label>
     </div>
   </div>
+  <!-- END: secretary -->
 <!-- END: main -->

@@ -12,8 +12,8 @@ if (!defined('PREFIX')) {
 }
 
 $sampleType = array(0 => 'Nguyên con', 'Huyết thanh', 'Máu', 'Phủ tạng', 'Swab');
-$permissionType = array('Bị cấm', 'Chỉ đọc', 'Kế toán', 'Siêu kế toán', 'Siêu nhân viên');
-//                       0      , 1        , 2        , 3             , 4
+$permissionType = array('Bị cấm', 'Kế toán', 'Chỉ đọc', 'Nhân viên', 'Siêu nhân viên', 'Quản lý');
+//                       0      , 1        , 2        , 3          , 4             ,  5
 function employerList($key = '') {
   global $db, $permissionType;
 
@@ -33,7 +33,7 @@ function employerList($key = '') {
       }
     }
     $xtpl->assign('risk', $risk);
-    if ($row['type'] < 4) {
+    if ($row['type'] < 5) {
       $xtpl->parse('main.row.up');
     }
     if ($row['type'] > 0) {
@@ -201,7 +201,7 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
         $xtpl->parse('main.row.printer');
       }
       $xtpl->assign('unit', $row['sender']);
-      if (getUserType($user_info['userid']) > 1) {
+      if (getUserType($user_info['userid']) > 2) {
         // if (checkIsMod($user_info['userid'])) {
         if ($row['printer'] >= 5) {
           $xtpl->parse('main.row.mod.clone');
