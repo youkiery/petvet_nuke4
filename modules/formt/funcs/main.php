@@ -708,7 +708,7 @@ if (!empty($action)) {
 									}
 								}
 	
-								$sql = 'update `'. PREFIX .'_row` set ig = \''. $ig .'\', xresender = "'. $data['xresender'] .'", xexam = "'. $data['xexam'] .'", vnote = "'. $vnote .'", page3 = "'. $data['page3'] .'", signer = \''. $signer .'\' where id = ' . $id;
+								$sql = 'update `'. PREFIX .'_row` set  xcode = "'. implode(',', $data['xcode']) .'", ig = \''. $ig .'\', xresender = "'. $data['xresender'] .'", xexam = "'. $data['xexam'] .'", vnote = "'. $vnote .'", page3 = "'. $data['page3'] .'", signer = \''. $signer .'\' where id = ' . $id;
 								if ($db->query($sql)) {
 									checkPrinter($id, $form);
 									$result['notify'] = 'Đã cập nhật mẫu';
