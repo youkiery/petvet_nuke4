@@ -3349,7 +3349,7 @@
               note.forEach(item => {
                 notes.push('<i>' + item + '</i>')
               })
-              noteString += '<b style="float: left; width: 80px;">Ghi chú:</b> <div style="float: left; width: calc(100% - 80px);">' + notes.join('<br>') + '</div>'
+              noteString += '<i> <b style="float: left; width: 80px;">Ghi chú:</b> </i> <div style="float: left; width: calc(100% - 80px);">' + notes.join('<br>') + '</div>'
             }
             html = html.replace('(note)', noteString)
 
@@ -3469,7 +3469,7 @@
               note.forEach(item => {
                 notes.push('<i>' + item + '</i>')
               })
-              noteString += '<div class="p14"> <b style="float: left; width: 80px;">Ghi chú:</b> <span style="float: left; width: calc(100% - 80px);">' + notes.join('<br>') + '</span></div>'
+              noteString += '<div class="p14"> <i> <b style="float: left; width: 80px;">Ghi chú:</b> </i> <span style="float: left; width: calc(100% - 80px);">' + notes.join('<br>') + '</span></div>'
             }
             html = html.replace('note', noteString)
             html = html.replace('receivedis', data['receivedis'].replace(/\n/g, '<br>'))
