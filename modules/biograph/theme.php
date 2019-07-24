@@ -81,7 +81,7 @@ function dogRowByList($keyword = '', $page = 1, $filter = 10) {
   $data = getPetActiveList($keyword, $page, $filter);
 
   if (strlen(trim($keyword)) > 0) {
-    $xtpl->assign('keyword', 'Tìm kiếm ' . $keyword . ',');
+    $xtpl->assign('keyword', ' "' . $keyword . '",');
   }
   $count = $data['count'];
 
@@ -90,7 +90,7 @@ function dogRowByList($keyword = '', $page = 1, $filter = 10) {
   $xtpl->assign('count', $count);
   $xtpl->parse('main.msg');
 
-  foreach ($data as $row) {
+  foreach ($data['list'] as $row) {
     $xtpl->assign('index', $index++);
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('id', $row['id']);

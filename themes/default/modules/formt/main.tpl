@@ -1160,8 +1160,9 @@
         <p class="p14" style="clear: left;"> &emsp;&emsp; Ký hiệu mẫu: samplecode </p>
         <p style="width: 45%; float: left;" class="p14"> &emsp;&emsp; Ngày lấy mẫu: samplereceive </p>
         <p style="width: 45%; float: left;" class="p14"> &emsp;&emsp; Ngày nhận mẫu: sampletime </p>
+        <div style="clear: left;"> </div>
         target 
-        <p class="p14" style="clear: left;"> &emsp;&emsp; <b> <u> Chỉ tiêu xét nghiệm: </u> </b> </p>
+        <p class="p14"> &emsp;&emsp; <b> <u> Chỉ tiêu xét nghiệm: </u> </b> </p>
         <div class="p14">(exam)</div>
         note
         <p class="p14" style="clear: both;"> &emsp;&emsp; <b> <u> Kết quả: </u> </b> </p>

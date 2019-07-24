@@ -31,26 +31,11 @@ if (!empty($action)) {
 	die();
 }
 
-$id = $nv_Request->get_int('id', 'get', 0);
+$xtpl = new XTemplate("list.tpl", "modules/biograph/template");
 
-$xtpl = new XTemplate("detail.tpl", "modules/biograph/template");
+$keyword = $nv_Request->get_string('keyword', 'get', '');
 
-$sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
-$query = $db->query($sql);
-
-if (!empty($row = $query->fetch())) {
-	$xtpl->assign('name', $row['name']);
-	$xtpl->assign('dob', $row['dateofbirth']);
-	$xtpl->assign('breed', $row['breed']);
-	$xtpl->assign('species', $row['species']);
-	$xtpl->assign('sex', $row['sex']);
-	$xtpl->assign('color', $row['color']);
-	$xtpl->assign('microchip', $row['microchip']);
-	$xtpl->parse("main.detail");
-}
-else {
-	$xtpl->parse("main.error");
-}
+$xtpl->assign('content', dogRowByList($keyword));
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
