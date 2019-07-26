@@ -856,6 +856,40 @@
   </div>
   <!-- BEGIN: secretary2 -->
   <div id="menu3" class="tab-pane {secretary_active}">
+    <form onsubmit="secretaryFilter(event)">
+      <div class="row form-group">
+        <div class="col-sm-6">
+          <input type="text" class="form-control" id="sfilter-keyword" placeholder="Mẫu phiếu" autocomplete="off">
+        </div>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" id="sfilter-xcode" placeholder="Số ĐKXN" autocomplete="off">
+        </div>
+        <div class="col-sm-6">
+          <select class="form-control" id="sfilter-limit">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="75">75</option>
+            <option value="100">100</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-6">
+          <input type="text" class="form-control" id="sfilter-unit" placeholder="Đơn vị">
+        </div>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" id="sfilter-exam" placeholder="Kết quả xét nghiệm">
+        </div>
+        <div class="col-sm-6">
+          <input type="text" class="form-control" id="sfilter-sample" placeholder="Loại động vật">
+        </div>
+      </div>      
+      <div class="text-center">
+        <button class="btn btn-info"><span class="glyphicon glyphicon-search"></span></button>
+      </div>
+    </form>
+
     <div id="secretary-list">
       {secretary}
     </div>
@@ -1292,6 +1326,13 @@
   var filterExam = $("#filter-exam")
   var filterSample = $("#filter-sample")
 
+  var sfilterKeyword = $("#sfilter-keyword")
+  var sfilterXcode = $("#sfilter-xcode")
+  var sfilterLimit = $("#sfilter-limit")
+  var sfilterUnit = $("#sfilter-unit")
+  var sfilterExam = $("#sfilter-exam")
+  var sfilterSample = $("#sfilter-sample")
+
   var global_html = {}
   var global_form = 1
   var global_saved = 0
@@ -1348,6 +1389,9 @@
   }]
   var global = {
     signer: JSON.parse('{signer}'),
+    secretary: {
+      page: 1
+    },
     signdata: [
       {
         name: 'xsender',
@@ -3096,15 +3140,41 @@
     )
   }
 
+  function getSecretaryFilter() {
+    var data = {
+      keyword: sfilterKeyword.val(),
+      xcode: sfilterXcode.val(),
+      limit: sfilterLimit.val(),
+      unit: sfilterUnit.val(),
+      exam: sfilterExam.val(),
+      sample: sfilterSample.val()
+    }
+    return data
+  }
+
+  function secretaryFilter(e) {
+    e.preventDefault()
+    $.post(
+      strHref,
+      {action: 'secretaryfilter', page: 1, filter: getSecretaryFilter()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          global['secretary']['page'] = 1
+          secretaryList.html(data['html'])
+        }, () => {})
+      }
+    )
+  }
+
   function goPage(page) {
     var secret_tab = trim($('.nav-tabs .active').text()).toLowerCase()
     if (secret_tab == 'kế toán') {
       $.post(
         strHref,
-        {action: 'secretaryPage', page: page},
+        {action: 'secretaryfilter', page: page, filter: getSecretaryFilter()},
         (response, status) => {
           checkResult(response, status).then(data => {
-            spage = page 
+            global['secretary']['page'] = page
             secretaryList.html(data['html'])
           }, () => {})
         }
@@ -3118,7 +3188,7 @@
         (response, status) => {
           checkResult(response, status).then(data => {
             global_page = page
-            content.html(data['html'])
+            secretaryList.html(data['html'])
           }, () => {})
         }
       )

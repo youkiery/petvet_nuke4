@@ -433,6 +433,13 @@ if (!empty($action)) {
 			$result['status'] = 1;
 			$result['html'] = formList($keyword, $page, $limit, $printer, $other, $xcode);
 		break;
+		case 'secretaryfilter':
+			$page = $nv_Request->get_string('page', 'get/post', 1);
+			$filter = $nv_Request->get_array('filter', 'get/post');
+
+			$result['status'] = 1;
+			$result['html'] = secretaryList($page, $filter);
+		break;
 		case 'preview':
 		case 'getForm':
 			$id = $nv_Request->get_string('id', 'get/post', '');
