@@ -11,6 +11,7 @@ if (!defined('NV_ADMIN')) {
     die('Stop!!!');
 }
 
-// $submenu['except'] = "Người ngoại lệ";
+$submenu['user'] = "Quản lý người dùng";
+$submenu['pet'] = "Quản lý thú cưng";
 
-$allow_func = array('main'); 
+$allow_func = array('main', 'user', 'pet'); 
