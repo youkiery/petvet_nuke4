@@ -14,4 +14,4 @@ if (!defined('NV_IS_FORM')) {
 unset($_SESSION['username']);
 unset($_SESSION['password']);
 
-header('location: /biograph/user');
+header('location: /biograph/login');

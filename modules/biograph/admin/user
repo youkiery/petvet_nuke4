@@ -8,7 +8,7 @@
   }
 </style>
 
-<div class="container">
+  <div class="container">
   <!-- BEGIN: log -->
   <div id="insert-user" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
@@ -180,29 +180,86 @@
     </div>
   </div>
 
-  <div style="float: right;">
-    <a href="/biograph/logout"> Đăng xuất </a>
-  </div>
+  <a href="/biograph/logout"> Đăng xuất </a>
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#profile"> Thông tin cá nhân </a></li>
+    <li><a data-toggle="tab" href="#list"> Danh sách thú cưng </a></li>
+    <!-- BEGIN: adminnav -->
+    <li><a data-toggle="tab" href="#adminuser"> Xác nhận người dùng </a></li>
+    <li><a data-toggle="tab" href="#adminpet"> Xác nhận thú cưng </a></li>
+    <!-- END: adminnav -->
+  </ul>
 
-  <h2> Thông tin cá nhân </h2>
-  <div style="float: left;">
-    <img src="{image}" style="width: 128px; height: 128px;">
-  </div>
-  <div style="float: left; margin-left: 10px;">
-    <p> Tên: {fullname} </p>
-    <p> Điện thoại: {mobile} </p>
-    <p> Địa chỉ: {address} </p>
-  </div>
-  <div style="clear: left;"></div>
-  <h2> Danh sách thú cưng </h2>
+  <div class="tab-content">
+    <div id="profile" class="tab-pane fade in active">
+      <h2> Thông tin cá nhân </h2>
+      <div style="float: left;">
+        <img src="{image}" style="width: 128px; height: 128px;">
+      </div>
+      <div style="float: left; margin-left: 10px;">
+        <p> Tên: {fullname} </p>
+        <p> Điện thoại: {mobile} </p>
+        <p> Địa chỉ: {address} </p>
+      </div>
+      <div style="clear: both;">
+        <!-- BEGIN: mod -->
+        <div class="row">
+          <div class="col-sm-4">
+            <label> <input type="radio" name="user-status" class="user-status" id="user-status-0" checked> Toàn bộ </label>
+            <label> <input type="radio" name="user-status" class="user-status" id="user-status-1"> Chưa xác nhận </label>
+            <label> <input type="radio" name="user-status" class="user-status" id="user-status-2"> Đã xác nhận </label>
+          </div>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="user-keyword" placeholder="Nhập từ khóa">
+            <button class="btn btn-info" onclick="filterUser()">
+              <span class="glyphicon glyphicon-filter"></span>
+            </button>
+          </div>
+        </div>
+        <!-- END: mod -->
+        <div id="user-list">
+          <!-- BEGIN: user -->
+          {userlist}
+          <!-- END: user -->
+        </div>
+      </div>
+    </div>
+    <div id="list" class="tab-pane fade">
+      <button class="btn btn-success" onclick="addPet()">
+        <span class="glyphicon glyphicon-plus">  </span>
+      </button>
+      
+      <!-- BEGIN: mod2 -->
+      <div class="row">
+        <div class="col-sm-4">
+          <label> <input type="radio" name="status" class="status" id="status-0" checked> Toàn bộ </label>
+          <label> <input type="radio" name="status" class="status" id="status-1"> Chưa xác nhận </label>
+          <label> <input type="radio" name="status" class="status" id="status-2"> Đã xác nhận </label>
+        </div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="keyword" placeholder="Nhập từ khóa">
+          <button class="btn btn-info" onclick="filter()">
+            <span class="glyphicon glyphicon-filter"></span>
+          </button>
+        </div>
+      </div>
+      <!-- END: mod2 -->
+      <div id="pet-list">
+        {list}
+      </div>
+    </div>
+    <!-- BEGIN: adminnav2 -->
+    <div id="adminuser" class="tab-pane fade">
 
-  <button class="btn btn-success" onclick="addPet()">
-    <span class="glyphicon glyphicon-plus">  </span>
-  </button>
-  
-  <div id="pet-list">
-    {list}
+    </div>
+    <div id="adminpet" class="tab-pane fade">
+
+    </div>
+    <!-- END: adminnav2 -->
+
   </div>
+    
+  <!-- END: log -->
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase-app.js"></script>
@@ -648,4 +705,58 @@
     )
   }
 </script>
+<!-- END: main -->
+
+
+<!-- BEGIN: main -->
+<p> 
+  <!-- BEGIN: msg -->
+  Tìm kiếm {keyword} từ {from} đến {end} trong {count} kết quả
+  <!-- END: msg -->
+</p>
+<table class="table">
+  <tr>
+    <th> STT </th>
+    <th> Tên </th>
+    <th> Số microchip </th>
+    <th> Giới tính </th>
+    <th> Ngày sinh </th>
+    <th> Giống </th>
+    <th></th>
+  </tr>
+  <!-- BEGIN: row -->
+  <tbody>
+    <tr class="clickable-row" data-href=''>
+      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {index} </a> </td>
+      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {name} </a> </td>
+      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {microchip} </a> </td>
+      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {sex} </a> </td>
+      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {dob} </a> </td>
+      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {breed} </a> </td>
+      <td>
+        <!-- BEGIN: mod -->
+        <button class="btn btn-info" onclick="editPet({id})">
+          <span class="glyphicon glyphicon-edit"></span>
+        </button>
+        <!-- BEGIN: uncheck -->
+        <button class="btn btn-warning" onclick="check({id}, 0)">
+          <span class="glyphicon glyphicon-unchecked"></span>
+        </button>
+        <!-- END: uncheck -->
+        <!-- BEGIN: check -->
+        <button class="btn btn-success" onclick="check({id}, 1)">
+          <span class="glyphicon glyphicon-check"></span>
+        </button>
+        <!-- END: check -->
+        <button class="btn btn-danger" onclick="deletePet({id})">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+        <!-- END: mod -->
+      </td>
+    </tr>
+  </tbody>
+  <!-- END: row -->
+</table>
+{nav}
+
 <!-- END: main -->

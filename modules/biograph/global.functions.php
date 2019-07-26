@@ -14,6 +14,17 @@ if (!defined('NV_MAINFILE')) {
 define("PREFIX", $db_config['prefix'] . "_" . $module_name);
 define('PERMISSION_MODULE', 1);
 
+function checkObj($obj) {
+  $check = true;
+  foreach ($obj as $key => $value) {
+    if (empty($value)) {
+      $check = false;
+    }
+  }
+
+  return $check;
+}
+
 function cdate($time) {
   return date('d/m/Y', $time);
 }

@@ -1,5 +1,7 @@
 <!-- BEGIN: main -->
-<img src="/assets/images/banner88x31.png">
+<a href="/biograph/">
+  <img src="/assets/images/banner88x31.png">
+</a>
 <div style="width: 60%; float: right;">
   <label class="input-group">
     <input type="text" class="form-control" name="keyword" id="keyword" placeholder="Nhập tên hoặc mã số">
@@ -9,7 +11,6 @@
   </label>
 </div>
 <div style="clear: both;"></div>
-
 
 <div id="content">
   {content}

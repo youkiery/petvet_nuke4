@@ -28,16 +28,6 @@
         <button class="btn btn-info" onclick="editPet({id})">
           <span class="glyphicon glyphicon-edit"></span>
         </button>
-        <!-- BEGIN: uncheck -->
-        <button class="btn btn-warning" onclick="check({id}, 0)">
-          <span class="glyphicon glyphicon-unchecked"></span>
-        </button>
-        <!-- END: uncheck -->
-        <!-- BEGIN: check -->
-        <button class="btn btn-success" onclick="check({id}, 1)">
-          <span class="glyphicon glyphicon-check"></span>
-        </button>
-        <!-- END: check -->
         <button class="btn btn-danger" onclick="deletePet({id})">
           <span class="glyphicon glyphicon-remove"></span>
         </button>
