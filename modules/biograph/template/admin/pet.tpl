@@ -9,64 +9,7 @@
 </style>
 
 <div class="container">
-
-  <div id="insert-user" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-md">
-      <div class="modal-content">
-        <div class="modal-body text-center">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <p>
-            Chỉnh sửa thông tin
-          </p>
-
-          <label class="row">
-            <div class="col-sm-6">
-              Tên
-            </div>
-            <div class="col-sm-18">
-              <input type="text" class="form-control" id="user-name">
-            </div>
-          </label>
-
-          <label class="row">
-            <div class="col-sm-6">
-              Số điện thoại
-            </div>
-            <div class="col-sm-18">
-              <input type="text" class="form-control" id="user-mobile">
-            </div>
-          </label>
-
-          <label class="row">
-            <div class="col-sm-6">
-              Địa chỉ
-            </div>
-            <div class="col-sm-18">
-              <input type="text" class="form-control" id="user-address">
-            </div>
-          </label>
-
-          <label class="row">
-            <div class="col-sm-6">
-              Hình ảnh
-            </div>
-            <div class="col-sm-18">
-              <div>
-                <img class="img-responsive" id="user-preview" style="display: inline-block; height: 128px; margin: 10px;">
-              </div>
-              <input type="file" class="form-control" id="user-image" onchange="onselected(this)">
-            </div>
-          </label>
-
-          <button class="btn btn-danger" onclick="editUserSubmit()">
-            Chỉnh sửa thông tin
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="remove-user" class="modal fade" role="dialog">
+  <div id="remove-pet" class="modal fade" role="dialog">
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
         <div class="modal-body text-center">
@@ -74,7 +17,7 @@
           <p>
             Xác nhận xóa?
           </p>
-          <button class="btn btn-danger" onclick="removeUserSubmit()">
+          <button class="btn btn-danger" onclick="removePetSubmit()">
             Xóa
           </button>
         </div>
@@ -82,22 +25,107 @@
     </div>
   </div>
 
+  <div id="insert-pet" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-body">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <p class="text-center"> <b> Thêm thú cưng </b> </p>
+          <label class="row">
+            <div class="col-sm-6">
+              Tên thú cưng
+            </div>
+            <div class="col-sm-18">
+              <input type="text" class="form-control" id="pet-name">
+            </div>
+          </label>
 
+          <label class="row">
+            <div class="col-sm-6">
+              Ngày sinh
+            </div>
+            <div class="col-sm-18">
+              <input type="text" class="form-control" id="pet-dob">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-6">
+              Giống 
+            </div>
+            <div class="col-sm-18">
+              <input type="text" class="form-control" id="pet-species">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-6">
+              Loài
+            </div>
+            <div class="col-sm-18">
+              <input type="text" class="form-control" id="pet-breed">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-6">
+              Giới tính
+            </div>
+            <div class="col-sm-18">
+              <input type="text" class="form-control" id="pet-sex">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-6">
+              Màu sắc
+            </div>
+            <div class="col-sm-18">
+              <input type="text" class="form-control" id="pet-color">
+            </div>
+          </label>
+          
+          <label class="row">
+            <div class="col-sm-6">
+              Microchip
+            </div>
+            <div class="col-sm-18">
+              <input type="text" class="form-control" id="pet-microchip">
+            </div>
+          </label>
+
+          <div class="text-center">
+            <button class="btn btn-success" id="ibtn" onclick="insertPetSubmit()">
+              Thêm thú cưng
+            </button>
+            <button class="btn btn-success" id="ebtn" onclick="editPetSubmit()" style="display: none;">
+              Chỉnh sửa
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-success" onclick="addPet()">
+    <span class="glyphicon glyphicon-plus">  </span>
+  </button>
+      
   <div class="row">
     <div class="col-sm-4">
-      <label> <input type="radio" name="user-status" class="user-status" id="user-status-0" checked> Toàn bộ </label>
-      <label> <input type="radio" name="user-status" class="user-status" id="user-status-1"> Chưa xác nhận </label>
-      <label> <input type="radio" name="user-status" class="user-status" id="user-status-2"> Đã xác nhận </label>
+      <label> <input type="radio" name="status" class="status" id="status-0" checked> Toàn bộ </label>
+      <label> <input type="radio" name="status" class="status" id="status-1"> Chưa xác nhận </label>
+      <label> <input type="radio" name="status" class="status" id="status-2"> Đã xác nhận </label>
     </div>
     <div class="col-sm-8">
-      <input type="text" class="form-control" id="user-keyword" placeholder="Nhập từ khóa">
-      <button class="btn btn-info" onclick="filterUser()">
+      <input type="text" class="form-control" id="keyword" placeholder="Nhập từ khóa">
+      <button class="btn btn-info" onclick="filter()">
         <span class="glyphicon glyphicon-filter"></span>
       </button>
     </div>
   </div>
-  <div id="user-list">
-    {userlist}
+  <div id="pet-list">
+    {list}
   </div>
 </div>
 
@@ -167,13 +195,6 @@
 
   var storage = firebase.storage();
   var storageRef = firebase.storage().ref();
-
-
-  tabber.click((e) => {
-    var className = e.currentTarget.getAttribute('class')
-    global[login] = Number(splipper(className, 'tabber'))
-    // button.text(global['text'][global['login']])
-  })
 
   $("#pet-dob").datepicker({
     format: 'dd/mm/yyyy',
@@ -246,6 +267,40 @@
     }
   }
 
+  function deletePet(id) {
+    global['id'] = id
+    removetPet.modal('show')
+  }
+
+  function removePetSubmit() {
+    $.post(
+      global['url'],
+      {action: 'remove', id: global['id'], filter: checkFilter()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          petList.html(data['html'])
+          removetPet.modal('hide')
+        }, () => {})
+      }
+    )
+  }
+
+  function editPet(id) {
+    $.post(
+      global['url'],
+      {action: 'get', id: id},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          global['id'] = id
+          parseInputSet(data['data'], pet)
+          ibtn.hide()
+          ebtn.show()
+          insertPet.modal('show')
+        }, () => {})
+      }
+    )
+  }
+
   function editPetSubmit() {
     $.post(
       global['url'],
@@ -311,6 +366,26 @@
     )
   }
 
+  function addPet() {
+    ibtn.show()
+    ebtn.hide()
+    insertPet.modal('show')
+  }
+
+  function insertPetSubmit() {
+    $.post(
+      global['url'],
+      {action: 'insertpet', data: checkInputSet(pet)},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          petList.html(data['html'])
+          clearInputSet(pet)
+          insertPet.modal('hide')
+        }, () => {})
+      }
+    )
+  }
+
   function clearInputSet(dataSet) {
     for (const dataKey in dataSet) {
       if (dataSet.hasOwnProperty(dataKey)) {
@@ -339,41 +414,6 @@
         inputSet[dataKey].val(dataSet[dataKey])
       }
     }
-  }
-
-  function editUser(id) {
-    $.post(
-      global['url'],
-      {action: 'getuser', id: id},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          global['id'] = id
-          parseInputSet(data['data'], user)
-          var image = new Image()
-          image.src = data['image']
-          image.addEventListener('load', (e) => {
-            userPreview.attr('src', image.src)
-          })
-          insertUser.modal('show')
-        }, () => {})
-      }
-    )
-  }
-
-  function editUserSubmit() {
-    uploader().then((imageUrl) => {
-      $.post(
-        global['url'],
-        {action: 'edituser', data: checkInputSet(user), image: imageUrl, id: global['id'], filter: checkUserFilter()},
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            userList.html(data['html'])
-            clearInputSet(pet)
-            insertUser.modal('hide')
-          }, () => {})
-        }
-      )
-    })
   }
 
   function uploader() {
@@ -419,61 +459,18 @@
     })
 	}
 
-  function checkUserFilter() {
-    var temp = $(".user-status").filter((index, item) => {
-      return item.checked
-    })
-    var value = 0
-    if (temp[0]) {
-      value = splipper(temp[0].getAttribute('id'), 'user-status')
-    }
-    var data = {
-      keyword: $("#user-keyword").val(),
-      status: value
-    }
-    return data
-  }
-
-  function deleteUser(id) {
-    global['id'] = id
-    removetUser.modal('show')
-  }
-
-  function removeUserSubmit() {
-    $.post(
-      global['url'],
-      {action: 'removeuser', id: global['id'], filter: checkUserFilter()},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          petList.html(data['html'])
-          removetUser.modal('hide')
-        }, () => {})
-      }
-    )
-  }
-
-  function checkUser(id, type) {
-    $.post(
-      global['url'],
-      {action: 'checkuser', id: id, type: type, filter: checkUserFilter()},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          userList.html(data['html'])
-        }, () => {})
-      }
-    )
-  }
-
-  function filterUser() {
-    $.post(
-      global['url'],
-      {action: 'filteruser', filter: checkUserFilter()},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          userList.html(data['html'])
-        }, () => {})
-      }
-    )
-  }
+  // function editPetSubmit() {
+  //   $.post(
+  //     global['url'],
+  //     {action: 'editpet', id: global['id'], data: checkInputSet(pet)},
+  //     (response, status) => {
+  //       checkResult(response, status).then(data => {
+  //         petList.html(data['html'])
+  //         clearInputSet(user)
+  //         insertUser.modal('hide')
+  //       }, () => {})
+  //     }
+  //   )
+  // }
 </script>
 <!-- END: main -->

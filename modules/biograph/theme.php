@@ -11,44 +11,12 @@ if (!defined('PREFIX')) {
   die('Stop!!!');
 }
 
-
-
 function userDogRowByList($userid, $filter = array('keyword' => '', )) {
   global $db, $user_info;
   $index = 1;
   $xtpl = new XTemplate('dog-list.tpl', PATH);
 
   $data = getUserPetList($userid, $filter);
-
-  foreach ($data as $row) {
-    $xtpl->assign('index', $index++);
-    $xtpl->assign('name', $row['name']);
-    $xtpl->assign('id', $row['id']);
-    $xtpl->assign('microchip', $row['microchip']);
-    $xtpl->assign('breed', $row['breed']);
-    $xtpl->assign('sex', $row['sex']);
-    $xtpl->assign('dob', cdate($row['dateofbirth']));
-    if (!empty($user_info) && !empty($user_info['userid']) && (in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
-      if ($row['active']) {
-        $xtpl->parse('main.row.mod.uncheck');
-      }
-      else {
-        $xtpl->parse('main.row.mod.check');
-      }
-    }
-    $xtpl->parse('main.row.mod');
-    $xtpl->parse('main.row');
-  }
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
-
-function userDogRow($userid = 0, $filter = array('keyword' => '', ), $limit = array('page' => 0, 'limit' => 10)) {
-  global $db, $user_info;
-  $index = 1;
-  $xtpl = new XTemplate('dog-list.tpl', PATH);
-
-  $data = getUserPetList($userid, $filter, $limit);
 
   foreach ($data as $row) {
     $xtpl->assign('index', $index++);

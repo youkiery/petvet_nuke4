@@ -45,3 +45,54 @@ function userRowList($filter = array('keyword' => '', 'status' => 0)) {
   return $xtpl->text();
 }
 
+function getUserInfo($userid) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_user` where id = ' . $userid;
+  $query = $db->query($sql);
+
+  return $query->fetch();
+}
+
+function userDogRow($userid = 0, $filter = array('keyword' => '', 'status' => 0), $limit = array('page' => 1, 'limit' => 10)) {
+  global $db, $user_info;
+  $index = 1;
+  $xtpl = new XTemplate('pet-list.tpl', PATH);
+  
+  $data = getUserPetList($filter, $limit);
+
+  foreach ($data as $row) {
+    $owner = getUserInfo($row['userid']);
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('owner', $owner['fullname']);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('microchip', $row['microchip']);
+    $xtpl->assign('breed', $row['breed']);
+    $xtpl->assign('sex', $row['sex']);
+    $xtpl->assign('dob', cdate($row['dateofbirth']));
+    if ($row['active']) {
+      $xtpl->parse('main.row.uncheck');
+    }
+    else {
+      $xtpl->parse('main.row.check');
+    }
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function getUserPetList($filter, $limit) {
+  global $db;
+
+  $list = array();
+  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '') . ' limit ' . $limit['limit'] . ' offset ' . ($limit['page'] - 1) * $limit['limit'];
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $list[] = $row;
+  }
+
+  return $list;
+}
