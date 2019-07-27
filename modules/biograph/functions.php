@@ -115,7 +115,6 @@ function getUserPetList($userid, $filter) {
 
   $list = array();
   $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userid . ' and name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '');
-  // die($sql);
   $query = $db->query($sql);
 
   while ($row = $query->fetch()) {

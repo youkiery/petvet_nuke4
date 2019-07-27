@@ -873,6 +873,19 @@
             <option value="100">100</option>
           </select>
         </div>
+        <div class="col-sm-6">
+          <select class="form-control" id="sfilter-pay">
+            <option value="0">
+              Toàn bộ
+            </option>
+            <option value="1">
+              Chưa trả
+            </option>
+            <option value="2">
+              Đã trả
+            </option>
+          </select>
+        </div>
       </div>
       <div class="form-group row">
         <div class="col-sm-6">
@@ -1332,6 +1345,7 @@
   var sfilterUnit = $("#sfilter-unit")
   var sfilterExam = $("#sfilter-exam")
   var sfilterSample = $("#sfilter-sample")
+  var sfilterPay = $("#sfilter-pay")
 
   var global_html = {}
   var global_form = 1
@@ -3147,7 +3161,8 @@
       limit: sfilterLimit.val(),
       unit: sfilterUnit.val(),
       exam: sfilterExam.val(),
-      sample: sfilterSample.val()
+      sample: sfilterSample.val(),
+      pay: sfilterPay.val()
     }
     return data
   }
