@@ -167,6 +167,23 @@
             </div>
           </label>
 
+          <div class="row">
+            <div class="col-sm-6">
+              Chó cha
+              <div class="relative">
+                <input class="form-control" id="parent-m" type="text">
+                <div class="suggest" id="parent-suggest-m"></div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              Chó mẹ
+              <div class="relative">
+                <input class="form-control" id="parent-f" type="text">
+                <div class="suggest" id="parent-suggest-f"></div>
+              </div>
+            </div>
+          </div>
+
           <div class="text-center">
             <button class="btn btn-success" id="ibtn" onclick="insertPetSubmit()">
               Thêm thú cưng
@@ -192,6 +209,21 @@
     <p> Tên: {fullname} </p>
     <p> Điện thoại: {mobile} </p>
     <p> Địa chỉ: {address} </p>
+
+    <button class="btn btn-info">
+      Chỉnh sửa thông tin
+    </button>
+
+    <!-- BEGIN: center -->
+    <button class="btn btn-info" onclick="center()">
+      Đăng ký trại
+    </button>
+    <!-- END: center -->
+    <!-- BEGIN: xcenter -->
+    <button class="btn btn-success btn-xs">
+      Đã đăng ký trại
+    </button>
+    <!-- END: xcenter -->
   </div>
   <div style="clear: left;"></div>
   <h2> Danh sách thú cưng </h2>
@@ -272,7 +304,7 @@
   var storage = firebase.storage();
   var storageRef = firebase.storage().ref();
 
-
+  
   tabber.click((e) => {
     var className = e.currentTarget.getAttribute('class')
     global[login] = Number(splipper(className, 'tabber'))
@@ -284,6 +316,57 @@
     changeMonth: true,
     changeYear: true
   });
+
+  $(this).ready(() => {
+    installRemind('m', 'parent')
+    installRemind('f', 'parent')
+  })
+
+  function installRemind(name, type) {
+    var timeout
+    var input = $("#"+ type +"-" + name)
+    var suggest = $("#"+ type +"-suggest-" + name)
+
+    input.keyup(() => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        var key = paintext(input.val())
+        var html = ''
+
+        $.post(
+          global['url'],
+          {action: 'parent', keyword: key},
+          (response, status) => {
+            checkResult(response, status).then(data => {
+              suggest.html(data['html'])
+            }, () => {})
+          }
+        )
+        
+        suggest.html(html)
+      }, 200);
+    })
+    input.focus(() => {
+      suggest.show()
+    })
+    input.blur(() => {
+      setTimeout(() => {
+        suggest.hide()
+      }, 200);
+    })
+  }
+
+  function center() {
+    $.post(
+      global['url'],
+      {action: 'center'},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          window.location.reload()
+        }, () => {})
+      }
+    )
+  }
 
   function onselected(input) {
     if (input.files && input.files[0]) {

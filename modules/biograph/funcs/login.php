@@ -26,22 +26,24 @@ if (!empty($action)) {
 
 			if (checkObj($data)) {
 				$data['username'] = strtolower($data['username']);
-				if (checkLogin($data['username'], $data['password'])) {
+
+					if (checkLogin($data['username'], $data['password'])) {
 					$_SESSION['username'] = $data['username'];
 					$_SESSION['password'] = $data['password'];
 					$result['status'] = 1;
 				}
 			}
+		break;
 		case 'signup':
-			$data = $nv_Request->get_string('data', 'post');
+			$data = $nv_Request->get_array('data', 'post');
 
-			if (!checkObj($data)) {
+			if (checkObj($data)) {
 				$data['username'] = strtolower($data['username']);
 				if (!checkLogin($data['username'], $data['password'])) {
-					$sql = 'insert into `'. PREFIX .'_user` (username, password, fullname, mobile, politic, address, active, image) values("'. $data['username'] .'", "'. md5($data['password']) .'", "'. $data['fullname'] .'", "'. $data['mobile'] .'", "'. $data['politic'] .'", "'. $data['address'] .'", 0, "")';
+					$sql = 'insert into `'. PREFIX .'_user` (username, password, fullname, mobile, politic, address, active, image) values("'. $data['username'] .'", "'. md5($data['password']) .'", "'. $data['fullname'] .'", "'. $data['phone'] .'", "'. $data['politic'] .'", "'. $data['address'] .'", 0, "")';
 					if ($db->query($sql)) {
-						$_SESSION['username']	 = $username;
-						$_SESSION['password'] = $password;
+						$_SESSION['username']	 = $data['username'];
+						$_SESSION['password'] = $data['password'];
 						$result['status'] = 1;
 					}
 				}

@@ -190,7 +190,7 @@
     if (signupData = checkSignup()) {
       $.post(
         global['url'],
-        {action: 'signup', username: username.val(), password: password.val(), fullname: fullname.val(), phone: phone.val(), address: address.val()},
+        {action: 'signup', data: checkSignup()},
         (response, status) => {
           checkResult(response, status).then(data => {
             window.location.href = '/biograph/user'; 

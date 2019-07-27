@@ -193,6 +193,42 @@ if (!empty($action)) {
 				}
 			}
 		break;
+		case 'center':
+			if (!empty($userinfo)) {
+				$sql = 'update `'. PREFIX .'_user` set center = 1 where id = ' . $userinfo['id'];
+
+				if ($db->query($sql)) {
+					$result['status'] = 1;
+				}
+			}
+		break;
+		case 'parent':
+			$keyword = $nv_Request->get_string('keyword', 'post', '');
+
+			$sql = 'select a.id, a.name, b.fullname, b.image from `'. PREFIX .'_pet` a inner join `'. PREFIX .'_user` b on a.userid = b.id where a.name like "%'. $keyword .'%" or b.fullname like "%'. $keyword .'%"';
+			$query = $db->query($sql);
+
+			$html = '';
+			while ($row = $query->fetch()) {
+				$html .= `
+				<div class="item_suggest" onclick="pickParent(`. $row['id'] .`)">
+					<div style="float: left; width: 32px;">
+					</div>
+					<div style="float: left; width: calc(100% - 32px);">
+						<p> `. $row['fullname'] .` </p>
+						<p> `. $row['name'] .` </p>
+					</div>
+				</div>
+				`;
+			}
+
+			if (empty($html)) {
+				$html = 'Không có kết quả trùng khớp';
+			}
+
+			$result['status'] = 1;
+			$result['html'] = $html;
+		break;
 	}
 	echo json_encode($result);
 	die();
@@ -204,27 +240,29 @@ $global['login'] = 0;
 
 $xtpl = new XTemplate("user.tpl", "modules/biograph/template");
 
-if (count($userinfo) > 0) {
-	// logged
-	$xtpl->assign('fullname', $userinfo['fullname']);
-	$xtpl->assign('mobile', $userinfo['mobile']);
-	$xtpl->assign('address', $userinfo['address']);
-	$xtpl->assign('image', $userinfo['image']);
-	$xtpl->assign('list', userDogRowByList($userinfo['id']));
+$xtpl->assign('fullname', $userinfo['fullname']);
+$xtpl->assign('mobile', $userinfo['mobile']);
+$xtpl->assign('address', $userinfo['address']);
+$xtpl->assign('image', $userinfo['image']);
+$xtpl->assign('list', userDogRowByList($userinfo['id']));
 
-	if (!empty($user_info) && !empty($user_info['userid']) && (in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
-		$xtpl->assign('userlist', userRowList());
-	
-		$xtpl->parse('main.log.user');
-		$xtpl->parse('main.log.mod');
-		$xtpl->parse('main.log.mod2');
-	}
-
-	$xtpl->parse('main.log');
+if (!$userinfo['center']) {
+	$xtpl->parse('main.log.center');
 }
 else {
-	$xtpl->parse('main.nolog');
+	$xtpl->parse('main.log.xcenter');
 }
+
+
+// if (!empty($user_info) && !empty($user_info['userid']) && (in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
+// 	$xtpl->assign('userlist', userRowList());
+	
+// 	$xtpl->parse('main.log.user');
+// 	$xtpl->parse('main.log.mod');
+// 	$xtpl->parse('main.log.mod2');
+// }
+
+$xtpl->parse('main.log');
 
 $xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
 
