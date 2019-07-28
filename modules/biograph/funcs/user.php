@@ -52,7 +52,7 @@ if (!empty($action)) {
 			$query = $db->query($sql);
 
 			if (!empty($row = $query->fetch())) {
-				$result['data'] = array('name' => $row['name'], 'dob' => $row['dateofbirth'], 'species' => $row['species'], 'breed' => $row['breed'], 'sex' => $row['sex'], 'color' => $row['color'], 'microchip' => $row['microchip']);
+				$result['data'] = array('name' => $row['name'], 'dob' => $row['dateofbirth'], 'species' => $row['species'], 'breed' => $row['breed'], 'sex' => $row['sex'], 'color' => $row['color'], 'microchip' => $row['microchip'], 'parentf' => $row['parentf'], 'parentm' => $row['parentm']);
 				$result['status'] = 1;
 			}
 		break;
@@ -154,7 +154,7 @@ if (!empty($action)) {
 
 			if (count($data) > 1 && !checkPet($data['name'], $userinfo['id'])) {
 				$data['dob'] = totime($data['dob']);
-				$sql = 'insert into `'. PREFIX .'_pet` (userid, name, dateofbirth, species, breed, sex, color, microchip, active, image) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT) .', 0, "")';
+				$sql = 'insert into `'. PREFIX .'_pet` (userid, name, dateofbirth, species, breed, sex, color, microchip, active, image, parentm, parentf) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT) .', 0, "")';
 
 				if ($db->query($sql)) {
 					$result['status'] = 1;
@@ -210,16 +210,16 @@ if (!empty($action)) {
 
 			$html = '';
 			while ($row = $query->fetch()) {
-				$html .= `
-				<div class="item_suggest" onclick="pickParent(`. $row['id'] .`)">
-					<div style="float: left; width: 32px;">
+				$html .= '
+				<div class="suggest_item2" onclick="pickParent(this, '. $row['id'] .')">
+					<div class="xleft">
 					</div>
-					<div style="float: left; width: calc(100% - 32px);">
-						<p> `. $row['fullname'] .` </p>
-						<p> `. $row['name'] .` </p>
+					<div class="xright">
+						<p> '. $row['fullname'] .' </p>
+						<p> '. $row['name'] .' </p>
 					</div>
 				</div>
-				`;
+				';
 			}
 
 			if (empty($html)) {

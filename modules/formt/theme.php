@@ -128,9 +128,6 @@ function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '
   $query = $db->query($sqlCount);
   $count = $query->fetch();
 
-  // $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%" and printer >= '. $printer .' order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
-
-
   $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and printer = 5 '. $exsql .' order by id desc limit ' . $filter['limit'] . ' offset ' . ($page - 1) * $filter['limit'];
   $query = $db->query($sql);
 

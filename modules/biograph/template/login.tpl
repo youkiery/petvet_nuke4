@@ -1,5 +1,4 @@
 <!-- BEGIN: main -->
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script> 
 
 <style>
   label {
@@ -22,7 +21,7 @@
           Tên Đăng nhập
         </div>
         <div class="col-sm-9">
-          <input type="text" class="form-control" id="username">
+          <input type="text" class="form-control" id="username" autocomplete="off">
         </div>
       </label>
     </div>
@@ -66,7 +65,7 @@
               Họ và tên
             </div>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="fullname">
+              <input type="text" class="form-control" id="fullname" autocomplete="off">
             </div>
           </label>
         </div>
@@ -77,7 +76,7 @@
               Số CMND
             </div>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="politic">
+              <input type="text" class="form-control" id="politic" autocomplete="off">
             </div>
           </label>
         </div>
@@ -88,7 +87,7 @@
               Điện thoại
             </div>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="phone">
+              <input type="text" class="form-control" id="phone" autocomplete="off">
             </div>
           </label>
         </div>
@@ -99,7 +98,7 @@
               Địa chỉ
             </div>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="address">
+              <input type="text" class="form-control" id="address" autocomplete="off">
             </div>
           </label>
         </div>

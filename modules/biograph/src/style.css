@@ -6,6 +6,69 @@
   width: 500px;
 }
 
+#ui-datepicker-div {
+  z-index: 10000 !important;
+}
+
+#msgshow {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  background: white;
+  padding: 10px;
+  z-index: 100;
+  border: 1px solid gray;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  display: none;
+  z-index: 10000;
+}
+
+.relative {
+  position: relative;
+}
+
+.suggest_item {
+  height: 37px;
+  padding: 5px;
+  border-bottom: 1px solid #ddd;
+}
+.suggest_item2 {
+  height: 65px;
+  padding: 5px;
+  border-bottom: 1px solid #ddd;
+}
+.suggest {
+  z-index: 100;
+  background: white;
+  display: none;
+  position: absolute;
+  overflow-y:scroll;
+  max-height: 300px;
+  width: -webkit-fill-available;
+  width: 100%;
+}
+.suggest div:hover {
+	background: #afa;
+	cursor: pointer;
+}
+
+.xleft {
+  float: left; width: 64px; height: 64px;
+}
+.xright {
+  float: left; width: calc(100% - 64px);
+}
+
+.saved {
+  z-index: 10;
+}
+
+.cell-center {
+  text-align: center;
+  vertical-align: inherit;
+}
+
 @media screen and (max-width: 640px) {
   .start-content {
     padding: 0px;

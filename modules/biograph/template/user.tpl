@@ -1,5 +1,4 @@
 <!-- BEGIN: main -->
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script> 
 <link rel="stylesheet" href="/modules/biograph/src/glyphicons.css">
 
 <style>
@@ -254,6 +253,8 @@
     sex: $("#pet-sex"),
     color: $("#pet-color"),
     microchip: $("#pet-microchip"),
+    parentm: $("#parent-m"),
+    parentf: $("#parent-f"),
   }
   var user = {
     fullname: $("#user-name"),
@@ -321,6 +322,11 @@
     installRemind('m', 'parent')
     installRemind('f', 'parent')
   })
+
+  function pickParent(e, id) {
+    var idp = splipper(e.parentNode.getAttribute('id'), 'parent-suggest')
+    $('#parent-' + idp).val(id)
+  }
 
   function installRemind(name, type) {
     var timeout
@@ -577,6 +583,7 @@
   function parseInputSet(dataSet, inputSet) {
     for (const dataKey in dataSet) {
       if (dataSet.hasOwnProperty(dataKey)) {
+        console.log(dataKey)
         inputSet[dataKey].val(dataSet[dataKey])
       }
     }
