@@ -140,13 +140,13 @@
   <div id="home" class="tab-pane active">
     <form onsubmit="filter(event)">
       <div class="row form-group">
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <input type="text" class="form-control" id="filter-keyword" placeholder="Mẫu phiếu" autocomplete="off">
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <input type="text" class="form-control" id="filter-xcode" placeholder="Số ĐKXN" autocomplete="off">
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <select class="form-control" id="filter-printer">
             <option value="1" selected>Mẫu 1</option>
             <option value="2">Mẫu 2</option>
@@ -155,7 +155,7 @@
             <option value="5">Mẫu 5</option>
           </select>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <select class="form-control" id="filter-limit">
             <option value="10">10</option>
             <option value="20">20</option>
@@ -164,18 +164,29 @@
             <option value="100">100</option>
           </select>
         </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <input type="text" class="form-control" id="filter-unit" placeholder="Đơn vị">
         </div>
-        <div class="col-sm-6">
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-4">
           <input type="text" class="form-control" id="filter-exam" placeholder="Kết quả xét nghiệm">
         </div>
-        <div class="col-sm-6">
+
+        <div class="col-sm-4">
           <input type="text" class="form-control" id="filter-sample" placeholder="Loại động vật">
         </div>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="filter-from" value="{last_week}">
+        </div>
+  
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="filter-end" value="{today}">
+        </div>
+
       </div>      
+      
+
       <div class="text-center">
         <button class="btn btn-info"><span class="glyphicon glyphicon-search"></span></button>
       </div>
@@ -858,13 +869,13 @@
   <div id="menu3" class="tab-pane {secretary_active}">
     <form onsubmit="secretaryFilter(event)">
       <div class="row form-group">
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <input type="text" class="form-control" id="sfilter-keyword" placeholder="Mẫu phiếu" autocomplete="off">
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <input type="text" class="form-control" id="sfilter-xcode" placeholder="Số ĐKXN" autocomplete="off">
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <select class="form-control" id="sfilter-limit">
             <option value="10">10</option>
             <option value="20">20</option>
@@ -873,7 +884,7 @@
             <option value="100">100</option>
           </select>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <select class="form-control" id="sfilter-pay">
             <option value="0">
               Toàn bộ
@@ -886,18 +897,27 @@
             </option>
           </select>
         </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <input type="text" class="form-control" id="sfilter-unit" placeholder="Đơn vị">
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-4">
           <input type="text" class="form-control" id="sfilter-exam" placeholder="Kết quả xét nghiệm">
         </div>
-        <div class="col-sm-6">
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-4">
           <input type="text" class="form-control" id="sfilter-sample" placeholder="Loại động vật">
         </div>
-      </div>      
+
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="sfilter-from" value="{today}">
+        </div>
+
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="sfilter-end" value="{last_week}">
+        </div>
+      </div>
+
       <div class="text-center">
         <button class="btn btn-info"><span class="glyphicon glyphicon-search"></span></button>
       </div>
@@ -1338,6 +1358,8 @@
   var filterUnit = $("#filter-unit")
   var filterExam = $("#filter-exam")
   var filterSample = $("#filter-sample")
+  var filterFrom = $("#filter-from")
+  var filterEnd = $("#filter-end")
 
   var sfilterKeyword = $("#sfilter-keyword")
   var sfilterXcode = $("#sfilter-xcode")
@@ -1346,6 +1368,8 @@
   var sfilterExam = $("#sfilter-exam")
   var sfilterSample = $("#sfilter-sample")
   var sfilterPay = $("#sfilter-pay")
+  var sfilterFrom = $("#sfilter-from")
+  var sfilterEnd = $("#sfilter-end")
 
   var global_html = {}
   var global_form = 1
@@ -1467,7 +1491,7 @@
     parseSaved()
   })
 
-  $("#form-insert-receive, #form-insert-resend, #form-insert-ireceive, #form-insert-iresend, #form-insert-sample-receive, #form-insert-sample-time, #form-insert-exam-date, #form-summary-from, #form-summary-end, #form-insert-notice-time, #form-insert-xresend, #form-insert-xreceive, #form-insert-xsend, #excelf, #excelt").datepicker({
+  $("#form-insert-receive, #form-insert-resend, #form-insert-ireceive, #form-insert-iresend, #form-insert-sample-receive, #form-insert-sample-time, #form-insert-exam-date, #form-summary-from, #form-summary-end, #form-insert-notice-time, #form-insert-xresend, #form-insert-xreceive, #form-insert-xsend, #excelf, #excelt, #filter-from, #filter-end, #sfilter-from, #sfilter-end").datepicker({
     format: 'dd/mm/yyyy',
     changeMonth: true,
     changeYear: true
@@ -1698,7 +1722,9 @@
     var data = {
       unit: filterUnit.val(),
       exam: filterExam.val(),
-      sample: filterSample.val()
+      sample: filterSample.val(),
+      from: filterFrom.val(),
+      end: filterEnd.val()
     }
     return data
   }
@@ -3162,7 +3188,9 @@
       unit: sfilterUnit.val(),
       exam: sfilterExam.val(),
       sample: sfilterSample.val(),
-      pay: sfilterPay.val()
+      pay: sfilterPay.val(),
+      from: sfilterFrom.val(),
+      end: sfilterEnd.val()
     }
     return data
   }
@@ -3203,7 +3231,7 @@
         (response, status) => {
           checkResult(response, status).then(data => {
             global_page = page
-            secretaryList.html(data['html'])
+            content.html(data['html'])
           }, () => {})
         }
       )

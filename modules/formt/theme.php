@@ -110,6 +110,18 @@ function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '
   global $db, $user_info;
   $xtpl = new XTemplate("secretary-list.tpl", PATH);
 
+  $today = time();
+  if (empty($filter['from'])) {
+    $filter['from'] = date('d/m/Y', $today);
+  }
+
+  if (empty($filter['end'])) {
+    $filter['end'] = date('d/m/Y', $today - 60 * 60 * 24 * 7);
+  }
+
+  $filter['from'] = totime($filter['from']);
+  $filter['end'] = totime($filter['end']);
+
   $exsql = '';
   if ($filter['pay'] > 0) {
     $filter['pay'] --;
@@ -123,16 +135,16 @@ function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '
 
   }
 
-  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and printer = 5 ' . $exsql;
+  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and printer = 5 and (time between '. $filter['from'] .' and '. $filter['end'] .') ' . $exsql;
 
   $query = $db->query($sqlCount);
   $count = $query->fetch();
 
-  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and printer = 5 '. $exsql .' order by id desc limit ' . $filter['limit'] . ' offset ' . ($page - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and printer = 5 and (time between '. $filter['from'] .' and '. $filter['end'] .') '. $exsql .' order by id desc limit ' . $filter['limit'] . ' offset ' . ($page - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   $index = 1;
-  $from = ($page - 1) * $limit + 1;
+  $from = ($page - 1) * $filter['limit'] + 1;
   $end = $from - 1;
   while ($row = $query->fetch()) {
       $sql = 'select * from `'. PREFIX .'_secretary` where rid = ' . $row['id'];
@@ -166,6 +178,7 @@ function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '
   }
   $xtpl->assign('from', $from);
   $xtpl->assign('end', $end);
+  $xtpl->assign('total', $count['count']);
   $xtpl->assign('nav', navList($count['count'], $page, $filter['limit']));
   $xtpl->parse('main');
   return $xtpl->text();
@@ -175,6 +188,18 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
   global $db, $sampleType, $user_info;
   $xtpl = new XTemplate("list.tpl", PATH);
   $xcode = str_replace('/', ', ', $xcode);
+
+  $today = time();
+  if (empty($other['end'])) {
+    $other['end'] = date('d/m/Y', $today);
+  }
+
+  if (empty($other['from'])) {
+    $other['from'] = date('d/m/Y', $today - 60 * 60 * 24 * 7);
+  }
+
+  $other['from'] = totime($other['from']);
+  $other['end'] = totime($other['end']);
 
   // $lowest = 5;
   // if (!empty($user_info['userid'])) {
@@ -188,13 +213,14 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
   //   $printer = $lowest;
   // }
 
-  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%" and printer >= '. $printer .'';
+  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%" and printer >= '. $printer .' and (time between '. $other['from'] .' and '. $other['end'] .')';
+
   $query = $db->query($sqlCount);
   $count = $query->fetch();
 
   $xtpl->assign('total', $count['count']);
 
-  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%" and printer >= '. $printer .' order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
+  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%" and printer >= '. $printer .' and (time between '. $other['from'] .' and '. $other['end'] .') order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
   $query = $db->query($sql);
 
   $index = 1;
@@ -230,6 +256,7 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
   }
   $xtpl->assign('from', $from);
   $xtpl->assign('end', $end);
+  $xtpl->assign('total', $count['count']);
   $xtpl->assign('nav', navList($count['count'], $page, $limit));
   $xtpl->parse('main');
   return $xtpl->text();
