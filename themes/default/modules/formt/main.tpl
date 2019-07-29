@@ -1968,16 +1968,16 @@
               Chỉ tiêu:
             </label>
             <div class="col-sm-12 relative">
-              <input type="text" class="form-control exam-sx exam-sx-`+index+`" value="`+ key +`" id="exam-sx`+ (index) +`">
-              <div class="suggest" id="exam-suggest-sx`+ (index) +`"> </div>
+              <input type="text" class="form-control exam-sx exam-sx-`+index+`" value="`+ key +`" id="examsx-`+ (index) +`" autocomplete="off">
+              <div class="suggest" id="examsx-suggest-`+ (index) +`"> </div>
             </div>
             <div class="col-sm-4">
-              <input type="number" class="form-control number-sx-`+index+`" id="number-sx`+ (index) +`" value="`+ element +`">
+              <input type="number" class="form-control number-sx-`+index+`" id="number-sx`+ (index) +`" value="`+ element +`" autocomplete="off">
             </div>
           </div>
         `
         installer.push({
-          name: "sx" + index,
+          name: index,
           type: 'examsx'
         })
 
@@ -2049,9 +2049,9 @@
       <p>
         2. Địa chỉ giao dịch: (address)
       </p>
-      <p style="float: left; margin: 0pt 0pt 0pt 30pt; width: 100pt;"> Điện thoại: (phone) </p>
-      <p style="float: left; margin: 0pt 0pt 0pt 30pt; width: 70pt;"> Fax: (fax) </p>
-      <p style="float: left; margin: 0pt 0pt 0pt 30pt;"> Email: (mail) </p>
+      <p style="float: left; margin: 0pt 0pt 0pt 20pt; width: 150pt;"> Điện thoại: (phone) </p>
+      <p style="float: left; margin: 0pt 0pt 0pt 20pt; width: 70pt;"> Fax: (fax) </p>
+      <p style="float: left; margin: 0pt 0pt 0pt 20pt;"> Email: (mail) </p>
       <div style="clear: left;"></div>
       <p>
         3. Nội dung công việc: (content)
@@ -2404,10 +2404,10 @@
     var timeout
     var input = $("#"+ type +"-" + name)
     var suggest = $("#"+ type +"-suggest-" + name)
-    
+
     input.keyup(() => {
       clearTimeout(timeout)
-      setTimeout(() => {
+      timeout = setTimeout(() => {
         var key = paintext(input.val())
         var html = ''
         

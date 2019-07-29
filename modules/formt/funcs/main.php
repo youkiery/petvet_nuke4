@@ -856,6 +856,8 @@ $permission = getUserType($user_info['userid']);
 // $permissionType = array('Bị cấm', 'Kế toán', 'Chỉ đọc', 'Nhân viên', 'Siêu nhân viên', 'Quản lý');
 //                          0      , 1        , 2        , 3          , 4               ,  5
 
+$permist = array();
+
 switch ($permission) {
 	case 1:
 		$xtpl->assign('secretary_active', 'active');
