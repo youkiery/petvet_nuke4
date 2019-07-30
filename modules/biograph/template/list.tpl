@@ -1,6 +1,6 @@
 <!-- BEGIN: main -->
 <a href="/biograph/">
-  <img src="/assets/images/banner88x31.png">
+  <img src="/modules/biograph/src/banner.png" style="width: 100px;">
 </a>
 <div style="width: 60%; float: right;">
   <label class="input-group">

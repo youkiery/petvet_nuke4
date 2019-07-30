@@ -1,3 +1,10 @@
+#error {
+  font-weight: bold;
+  font-size: 1.25em;
+  color: red;
+  text-align: center;
+}
+
 .start-content {
   padding-top: 3cm;
 }

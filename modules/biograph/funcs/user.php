@@ -240,6 +240,7 @@ $global['login'] = 0;
 
 $xtpl = new XTemplate("user.tpl", "modules/biograph/template");
 
+$xtpl->assign('userid', $userinfo['id']);
 $xtpl->assign('fullname', $userinfo['fullname']);
 $xtpl->assign('mobile', $userinfo['mobile']);
 $xtpl->assign('address', $userinfo['address']);

@@ -9,6 +9,10 @@
 
 <div class="container">
   <!-- BEGIN: log -->
+  <a href="/biograph/">
+    <img src="/modules/biograph/src/banner.png" style="width: 200px;">
+  </a>
+
   <div id="insert-user" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -209,7 +213,7 @@
     <p> Điện thoại: {mobile} </p>
     <p> Địa chỉ: {address} </p>
 
-    <button class="btn btn-info">
+    <button class="btn btn-info" onclick="editUser({userid})">
       Chỉnh sửa thông tin
     </button>
 
@@ -618,6 +622,7 @@
             userList.html(data['html'])
             clearInputSet(pet)
             insertUser.modal('hide')
+            window.location.reload()
           }, () => {})
         }
       )

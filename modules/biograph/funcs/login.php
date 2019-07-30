@@ -27,11 +27,14 @@ if (!empty($action)) {
 			if (checkObj($data)) {
 				$data['username'] = strtolower($data['username']);
 
-					if (checkLogin($data['username'], $data['password'])) {
+  			if (checkLogin($data['username'], $data['password'])) {
 					$_SESSION['username'] = $data['username'];
 					$_SESSION['password'] = $data['password'];
 					$result['status'] = 1;
 				}
+        else {
+					$result['error'] = 'Tên đăng nhập hoặc mật khẩu không đúng';
+        }
 			}
 		break;
 		case 'signup':
@@ -47,6 +50,9 @@ if (!empty($action)) {
 						$result['status'] = 1;
 					}
 				}
+        else {
+					$result['error'] = 'Tên đăng nhập hoặc mật khẩu không đúng';
+        }
 			}
 		break;
 	}

@@ -5,7 +5,7 @@
   </div>
   
     <div class="text-center start-content">
-      <img src="/assets/images/banner88x31.png">
+      <img src="/modules/biograph/src/banner.png">
       <p> Nhập tên hoặc mã microchip để tìm kiếm thông tin</p>
       <form action="/biograph/list">
         <div style="width: 60%; margin: auto;">

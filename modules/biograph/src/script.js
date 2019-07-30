@@ -35,7 +35,7 @@ function checkResult(response, status) {
         }
       }
       catch (e) {
-        reject()
+        reject(data)
       }
     }
   })

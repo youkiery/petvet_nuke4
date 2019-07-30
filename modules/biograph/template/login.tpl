@@ -7,7 +7,12 @@
 </style>
 
 <div class="container">
-  <a href="/biograph/"> Trang chủ </a>
+  <div class="text-center start-content" style="padding-top: 50px;">
+    <a href="/biograph/">
+      <img src="/modules/biograph/src/banner.png" style="width: 200px;">
+    </a>
+  </div>
+
   <div style="max-width: 500px; margin: auto;">
 
     <ul class="nav nav-tabs">
@@ -110,6 +115,9 @@
         </div>
 
       </div>
+      <div id="error">
+
+      </div>
     </div>    
   </div>
 </div>
@@ -125,6 +133,17 @@
   var phone = $("#phone")
   var politic = $("#politic")
   var address = $("#address")
+  var error = $("#error")
+
+  function displayError(errorText) {
+    var text = ''
+    
+    if (errorText) {
+      text = errorText
+    }
+
+    error.text(text)
+  }
 
   function checkLogin() {
     var data = {
@@ -176,12 +195,14 @@
         (response, status) => {
           checkResult(response, status).then(data => {
             window.location.href = '/biograph/user'; 
-          }, () => {})
+          }, (data) => {
+            displayError(data['error'])
+          })
         }
       )
     }
     else {
-      
+      displayError('Chưa điền đủ thông tin')
     }
   }
 
@@ -193,12 +214,14 @@
         (response, status) => {
           checkResult(response, status).then(data => {
             window.location.href = '/biograph/user'; 
-          }, () => {})
+          }, (data) => {
+            displayError(data['error'])
+          })
         }
       )
     }
     else {
-
+      displayError('Chưa điền đủ thông tin')
     }
   }
 
