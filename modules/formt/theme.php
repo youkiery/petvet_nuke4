@@ -111,16 +111,16 @@ function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '
   $xtpl = new XTemplate("secretary-list.tpl", PATH);
 
   $today = time();
-  if (empty($filter['from'])) {
-    $filter['from'] = date('d/m/Y', $today);
+  if (empty($filter['end'])) {
+    $filter['end'] = date('d/m/Y', $today);
   }
 
-  if (empty($filter['end'])) {
-    $filter['end'] = date('d/m/Y', $today - 60 * 60 * 24 * 30);
+  if (empty($filter['from'])) {
+    $filter['from'] = date('d/m/Y', $today - 60 * 60 * 24 * 30);
   }
 
   $filter['from'] = totime($filter['from']);
-  $filter['end'] = totime($filter['end']);
+  $filter['end'] = totime($filter['end'] + 60 * 60 * 24 * - 1);
 
   $exsql = '';
   if ($filter['pay'] > 0) {
@@ -199,7 +199,7 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
   }
 
   $other['from'] = totime($other['from']);
-  $other['end'] = totime($other['end']);
+  $other['end'] = totime($other['end'] + 60 * 60 * 24 - 1);
 
   // $lowest = 5;
   // if (!empty($user_info['userid'])) {
@@ -221,6 +221,7 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
   $xtpl->assign('total', $count['count']);
 
   $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%" and printer >= '. $printer .' and (time between '. $other['from'] .' and '. $other['end'] .') order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
+  // die($sql);
   $query = $db->query($sql);
 
   $index = 1;

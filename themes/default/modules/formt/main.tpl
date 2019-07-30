@@ -910,11 +910,11 @@
         </div>
 
         <div class="col-sm-4">
-          <input type="text" class="form-control" id="sfilter-from" value="{today}">
+          <input type="text" class="form-control" id="sfilter-from" value="{last_week}">
         </div>
 
         <div class="col-sm-4">
-          <input type="text" class="form-control" id="sfilter-end" value="{last_week}">
+          <input type="text" class="form-control" id="sfilter-end" value="{today}">
         </div>
       </div>
 
