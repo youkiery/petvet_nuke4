@@ -2,14 +2,14 @@
 <a href="/biograph/">
   <img src="/modules/biograph/src/banner.png" style="width: 100px;">
 </a>
-<div style="width: 60%; float: right;">
+<form style="width: 60%; float: right;">
   <label class="input-group">
-    <input type="text" class="form-control" name="keyword" id="keyword" placeholder="Nhập tên hoặc mã số">
+    <input type="text" class="form-control" name="keyword" value="{keyword}" id="keyword" placeholder="Nhập tên hoặc mã số">
     <div class="input-group-btn">
-      <button class="btn btn-info" onclick="search()"> Tìm kiếm </button>
+      <button class="btn btn-info"> Tìm kiếm </button>
     </div>
   </label>
-</div>
+</form>
 <div style="clear: both;"></div>
 
 <div id="content">

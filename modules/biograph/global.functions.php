@@ -156,11 +156,11 @@ function getPetActiveList($keyword = '', $page = 1, $limit = 10) {
   global $db;
   $data = array('list' => array(), 'count' => 0);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where active = 1 and (name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%")';
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where active > 0 and (name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%")';
   $query = $db->query($sql);
   $data['count'] = $query->fetch()['count'];
   
-  $sql = 'select * from `'. PREFIX .'_pet` where active = 1 and (name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%") limit ' . $limit . ' offset ' . (($page - 1) * $limit);
+  $sql = 'select * from `'. PREFIX .'_pet` where active > 0 and (name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%") limit ' . $limit . ' offset ' . (($page - 1) * $limit);
   $query = $db->query($sql);
 
   while($row = $query->fetch()) {
