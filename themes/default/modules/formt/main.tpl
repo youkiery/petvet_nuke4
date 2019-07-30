@@ -3572,7 +3572,7 @@
             html = html.replace('result', tabbed + data['result'].replace(/\n/g, '<br>' + tabbed))
             var owner = ''
             if (trim(data['ownermail']) || trim(data['ownerphone'])) {
-              owner += '<p class="p14"> &emsp;&emsp; Số điện thoại: '+data['ownerphone']+'</p><p class="p14"> &emsp;&emsp;Email: '+data['ownermail']+'</p>'
+              owner += '<p class="p14"> &emsp;&emsp; Số điện thoại: '+data['ownerphone']+'</p><p class="p14"> &emsp;&emsp; Email: '+data['ownermail']+'</p>'
             }
             html = html.replace('(info)', owner)
             var noteString = ''

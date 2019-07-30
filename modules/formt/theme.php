@@ -116,7 +116,7 @@ function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '
   }
 
   if (empty($filter['end'])) {
-    $filter['end'] = date('d/m/Y', $today - 60 * 60 * 24 * 7);
+    $filter['end'] = date('d/m/Y', $today - 60 * 60 * 24 * 30);
   }
 
   $filter['from'] = totime($filter['from']);
@@ -195,7 +195,7 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
   }
 
   if (empty($other['from'])) {
-    $other['from'] = date('d/m/Y', $today - 60 * 60 * 24 * 7);
+    $other['from'] = date('d/m/Y', $today - 60 * 60 * 24 * 30);
   }
 
   $other['from'] = totime($other['from']);

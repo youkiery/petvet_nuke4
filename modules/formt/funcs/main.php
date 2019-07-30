@@ -838,6 +838,11 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("main.tpl", PATH);
 
+$today = time();
+
+$xtpl->assign('today', date('d/m/Y', $today));
+$xtpl->assign('last_week', date('d/m/Y', $today - 60 * 60 * 24 * 30));
+
 $today = strtotime(date('Y-m-d'));
 $tomorrow = $today + 60*60*24;
 $yesterday = $today - 60*60*24;
@@ -852,11 +857,6 @@ $defaultData = array('code' => '-19', 'xcode' => '05,19,', 'result' => 'Âm tín
 $methodHtml = '';
 $method = array();
 $permission = getUserType($user_info['userid']);
-
-$today = time();
-
-$xtpl->assign('today', date('d/m/Y', $today));
-$xtpl->assign('last_week', date('d/m/Y', $today - 60 * 60 * 24 * 7));
 
 // $permissionType = array('Bị cấm', 'Kế toán', 'Chỉ đọc', 'Nhân viên', 'Siêu nhân viên', 'Quản lý');
 //                          0      , 1        , 2        , 3          , 4               ,  5
