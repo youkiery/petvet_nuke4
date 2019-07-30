@@ -196,6 +196,33 @@ function sqlBuilder($data, $type) {
   return implode(', ', $string);
 }
 
+function getPetRelation($petid) {
+  global $db;
+
+  $pet = getPetById($petid);
+  $parent = array('f' => getPetById($pet['fid']), 'm' => getPetById($pet['mid']));
+  $grand = array('i' => array('f' => getPetById($parent['f']['fid']), 'm' => getPetById($parent['f']['mid'])), 'e' => array('f' => getPetById($parent['m']['fid']), 'm' => getPetById($parent['m']['mid'])));
+
+}
+
+function getPetSibling($petid) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_pet` where '
+}
+
+function getPetGrand($fid, $mid) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_pet` where id = '
+}
+
+function getPetParent($petid) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_pet` where id = '
+}
+
 function totime($time) {
   if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
     $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);

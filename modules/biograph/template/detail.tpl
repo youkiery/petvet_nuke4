@@ -14,5 +14,35 @@
       <p> microchip: {microchip} </p>
     </div>
   </div>
+
+  <table class="table table-bordered">
+    <tr>
+      <th colspan="4" class="text-center">
+        Gia phả
+      </th>
+    </tr>
+    <tr>
+      <th class="text-center">
+        Ông/Bà
+      </th>
+      <th class="text-center">
+        Bố/Mẹ
+      </th>
+      <th class="text-center">
+        Anh/Chị/Em
+      </th>
+      <th class="text-center">
+        Con
+      </th>
+    </tr>
+    <!-- BEGIN: row -->
+    <tr>
+      <td> {grand} </td>
+      <td> {parent} </td>
+      <td> {sibling} </td>
+      <td> {child} </td>
+    </tr>
+    <!-- END: row -->
+  </table>
 </div>
 <!-- END: main -->

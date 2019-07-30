@@ -46,6 +46,7 @@ if (!empty($row = $query->fetch())) {
 	$xtpl->assign('sex', $row['sex']);
 	$xtpl->assign('color', $row['color']);
 	$xtpl->assign('microchip', $row['microchip']);
+	$xtpl->assign('image', $row['image']);
 	$xtpl->parse("main.detail");
 }
 else {

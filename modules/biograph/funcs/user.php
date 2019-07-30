@@ -52,7 +52,7 @@ if (!empty($action)) {
 			$query = $db->query($sql);
 
 			if (!empty($row = $query->fetch())) {
-				$result['data'] = array('name' => $row['name'], 'dob' => $row['dateofbirth'], 'species' => $row['species'], 'breed' => $row['breed'], 'sex' => $row['sex'], 'color' => $row['color'], 'microchip' => $row['microchip'], 'parentf' => $row['parentf'], 'parentm' => $row['parentm']);
+				$result['data'] = array('name' => $row['name'], 'dob' => $row['dateofbirth'], 'species' => $row['species'], 'breed' => $row['breed'], 'sex' => $row['sex'], 'color' => $row['color'], 'microchip' => $row['microchip'], 'parentf' => $row['fid'], 'parentm' => $row['mid']);
 				$result['status'] = 1;
 			}
 		break;
@@ -154,7 +154,8 @@ if (!empty($action)) {
 
 			if (count($data) > 1 && !checkPet($data['name'], $userinfo['id'])) {
 				$data['dob'] = totime($data['dob']);
-				$sql = 'insert into `'. PREFIX .'_pet` (userid, name, dateofbirth, species, breed, sex, color, microchip, active, image, parentm, parentf) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT) .', 0, "")';
+        // ???
+				$sql = 'insert into `'. PREFIX .'_pet` (userid, name, dateofbirth, species, breed, sex, color, microchip, active, image, mid, fid) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT) .', 0, "")';
 
 				if ($db->query($sql)) {
 					$result['status'] = 1;
