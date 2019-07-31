@@ -1,12 +1,8 @@
 <!-- BEGIN: main -->
 <div class="container">
-  <div style="float: right;">
-    <a href="/biograph/login"> Đăng nhập </a>
-  </div>
-  
     <div class="text-center start-content">
       <img src="/modules/biograph/src/banner.png">
-      <p> Nhập tên hoặc mã microchip để tìm kiếm thông tin</p>
+      <p class="secondary"> Nâng niu tình yêu động vật </p>
       <form action="/biograph/list">
         <div style="width: 60%; margin: auto;">
           <label class="input-group">
@@ -15,6 +11,7 @@
               <button class="btn btn-info" onclick="search()"> Tìm kiếm </button>
             </div>
           </label>
+          <a href="/biograph/login"> Đăng nhập </a> |
           <a href="/user/kernel"> Đăng ký giống </a> |
           <a href="/user/center"> Đăng ký trại </a>
         </div>

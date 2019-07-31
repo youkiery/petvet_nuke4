@@ -17,6 +17,9 @@ $page_title = "autoload";
 
 $action = $nv_Request->get_string('action', 'post', '');
 $userinfo = getUserInfo();
+if (!empty($userinfo)) {
+  header('location: /biograph/user');
+}
 
 if (!empty($action)) {
 	$result = array('status' => 0);
@@ -27,10 +30,15 @@ if (!empty($action)) {
 			if (checkObj($data)) {
 				$data['username'] = strtolower($data['username']);
 
-  			if (checkLogin($data['username'], $data['password'])) {
-					$_SESSION['username'] = $data['username'];
-					$_SESSION['password'] = $data['password'];
-					$result['status'] = 1;
+  			if (!empty($checker = checkLogin($data['username'], $data['password']))) {
+          if ($checker['active'] > 0) {
+            $_SESSION['username'] = $data['username'];
+            $_SESSION['password'] = $data['password'];
+            $result['status'] = 1;
+          }
+          else {
+  					$result['error'] = 'Tài khoản chưa được cấp quyền đăng nhập';
+          }
 				}
         else {
 					$result['error'] = 'Tên đăng nhập hoặc mật khẩu không đúng';
@@ -43,7 +51,7 @@ if (!empty($action)) {
 			if (checkObj($data)) {
 				$data['username'] = strtolower($data['username']);
 				if (!checkLogin($data['username'], $data['password'])) {
-					$sql = 'insert into `'. PREFIX .'_user` (username, password, fullname, mobile, politic, address, active, image) values("'. $data['username'] .'", "'. md5($data['password']) .'", "'. $data['fullname'] .'", "'. $data['phone'] .'", "'. $data['politic'] .'", "'. $data['address'] .'", 0, "")';
+					$sql = 'insert into `'. PREFIX .'_user` (username, password, fullname, mobile, politic, address, active, image) values("'. $data['username'] .'", "'. md5($data['password']) .'", "'. $data['fullname'] .'", "'. $data['phone'] .'", "'. $data['politic'] .'", "'. $data['address'] .'", 1, "")';
 					if ($db->query($sql)) {
 						$_SESSION['username']	 = $data['username'];
 						$_SESSION['password'] = $data['password'];

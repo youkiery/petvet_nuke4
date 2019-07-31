@@ -83,8 +83,8 @@ function checkLogin($username, $password) {
   $sql = 'select * from ' . PREFIX . '_user where username = "' . $username . '" and password = "' . md5($password) . '"';
   $query = $db->query($sql);
 
-  if (!empty($query->fetch())) {
-    return true;
+  if (!empty($checker = $query->fetch())) {
+    return $checker;
   }
   return false;
 }

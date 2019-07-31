@@ -47,6 +47,43 @@ if (!empty($row = $query->fetch())) {
 	$xtpl->assign('color', $row['color']);
 	$xtpl->assign('microchip', $row['microchip']);
 	$xtpl->assign('image', $row['image']);
+
+  $relation = getPetRelation($id);
+  $bay = array('grand' => array(), 'parent' => array(), 'sibling' => array(), 'child' => array());
+
+  if ($relation['grand']) {    
+    foreach ($relation['grand'] as $row) {
+      foreach ($row as $row2) {
+        if ($row2) {
+          $bay['grand'][] = '<a href="/biograph/&op=detail&id=">';
+        }
+      }
+    }
+  }
+  if ($relation['parent']) {    
+    foreach ($relation['parent'] as $row) {
+      if ($row) {
+        $bay['parent'][] = $row;
+      }
+    }
+  }
+  if ($relation['sibling']) {    
+    foreach ($relation['sibling'] as $row) {
+      if ($row['id']) {
+        $bay['parent'][] = $row;
+      }
+    }
+  }
+  if ($relation['child']) {    
+    foreach ($relation['child'] as $row) {
+      if ($row['id']) {
+        $bay['child'][] = $row;
+      }
+    }
+  }
+
+
+
 	$xtpl->parse("main.detail");
 }
 else {
@@ -54,6 +91,7 @@ else {
 }
 
 $xtpl->parse("main");
+
 $contents = $xtpl->text("main");
 include ("modules/biograph/layout/header.php");
 echo $contents;

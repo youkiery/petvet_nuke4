@@ -200,27 +200,54 @@ function getPetRelation($petid) {
   global $db;
 
   $pet = getPetById($petid);
-  $parent = array('f' => getPetById($pet['fid']), 'm' => getPetById($pet['mid']));
+  $parent = getPetParent($pet);
+  $sibling = getPetSibling($parent, $petid);
+  $grand = getPetGrand($parent);
+  $child = getPetChild($petid);
+
+  $result = array('parent' => $parent, 'sibling' => $sibling, 'grand' => $grand, 'child' => $child);
+  return $result;
+}
+
+function getPetSibling($parent, $petid) {
+  global $db;
+
+  $list = array();
+  $sql = 'select * from `'. PREFIX .'_pet` where (fid = ' . $parent['f']['id'] . ' or mid = ' . $parent['m']['id'] . ') and id <> ' . $petid;
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $list[] = $row;
+  }
+  return $list;
+}
+
+function getPetGrand($parent) {
+  global $db;
+
   $grand = array('i' => array('f' => getPetById($parent['f']['fid']), 'm' => getPetById($parent['f']['mid'])), 'e' => array('f' => getPetById($parent['m']['fid']), 'm' => getPetById($parent['m']['mid'])));
-
+  return $grand;
 }
 
-function getPetSibling($petid) {
+function getPetParent($pet) {
   global $db;
 
-  $sql = 'select * from `'. PREFIX .'_pet` where '
+  $parent = array('f' => getPetById($pet['fid']), 'm' => getPetById($pet['mid']));
+  return $parent;
 }
 
-function getPetGrand($fid, $mid) {
+function getPetChild($petid) {
   global $db;
 
-  $sql = 'select * from `'. PREFIX .'_pet` where id = '
-}
+  $list = array();
+  $sql = 'select * from `'. PREFIX .'_pet` where fid = ' . $petid . ' or mid = ' . $petid;
+  $query = $db->query($sql);
 
-function getPetParent($petid) {
-  global $db;
+  while ($row = $query->fetch()) {
+    $list[] = $row;
+  }
 
-  $sql = 'select * from `'. PREFIX .'_pet` where id = '
+  return $list;
 }
 
 function totime($time) {
