@@ -55,7 +55,7 @@ if (!empty($row = $query->fetch())) {
     foreach ($relation['grand'] as $row) {
       foreach ($row as $row2) {
         if ($row2) {
-          $bay['grand'][] = '<a href="/biograph/&op=detail&id=">';
+          $bay['grand'][] = '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>';
         }
       }
     }
@@ -63,26 +63,29 @@ if (!empty($row = $query->fetch())) {
   if ($relation['parent']) {    
     foreach ($relation['parent'] as $row) {
       if ($row) {
-        $bay['parent'][] = $row;
+        $bay['parent'][] = '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>';
       }
     }
   }
   if ($relation['sibling']) {    
     foreach ($relation['sibling'] as $row) {
       if ($row['id']) {
-        $bay['parent'][] = $row;
+        $bay['parent'][] = '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>';
       }
     }
   }
   if ($relation['child']) {    
     foreach ($relation['child'] as $row) {
       if ($row['id']) {
-        $bay['child'][] = $row;
+        $bay['child'][] = '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>';
       }
     }
   }
 
-
+  $xtpl->assign('grand', implode('<br>', $bay['grand']));
+  $xtpl->assign('parent', implode('<br>', $bay['parent']));
+  $xtpl->assign('sibling', implode('<br>', $bay['sibling']));
+  $xtpl->assign('child', implode('<br>', $bay['child']));
 
 	$xtpl->parse("main.detail");
 }

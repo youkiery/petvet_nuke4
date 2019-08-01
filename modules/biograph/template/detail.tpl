@@ -1,5 +1,20 @@
 <!-- BEGIN: main -->
 <div class="container">
+  <a href="/biograph/">
+    <img src="/modules/biograph/src/banner.png" style="width: 100px;">
+  </a>
+  <form style="width: 60%; float: right;">
+    <label class="input-group">
+      <input type="hidden" name="nv" value="biograph">
+      <input type="hidden" name="op" value="list">
+      <input type="text" class="form-control" name="keyword" value="{keyword}" id="keyword" placeholder="Nhập tên hoặc mã số">
+      <div class="input-group-btn">
+        <button class="btn btn-info"> Tìm kiếm </button>
+      </div>
+    </label>
+  </form>
+  <div style="clear: both;"></div>
+
   <div class="row">
     <div class="img-responsive col-sm-4">
       <img src="{image}">
@@ -35,14 +50,12 @@
         Con
       </th>
     </tr>
-    <!-- BEGIN: row -->
     <tr>
       <td> {grand} </td>
       <td> {parent} </td>
       <td> {sibling} </td>
       <td> {child} </td>
     </tr>
-    <!-- END: row -->
   </table>
 </div>
 <!-- END: main -->
