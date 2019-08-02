@@ -14,6 +14,26 @@ if (!defined('NV_MAINFILE')) {
 define("PREFIX", $db_config['prefix'] . "_" . $module_name);
 define('PERMISSION_MODULE', 1);
 
+// lấy khoảng thời gian khóa văn bản
+function getLocker() {
+  global $db, $db_config, $module_name;
+  $sql = 'select * from `'. $db_config['prefix'] .'_config` where module = "' . $module_name . '" and config_name = "locked_time"';
+  // die($sql);
+  $query = $db->query($sql);
+  // chọn dữ liệu từ bảng config
+
+  if (empty($row = $query->fetch())) {
+    $sql = 'insert into `'. $db_config['prefix'] .'_config` (lang, module, config_name, config_value) values ("sys", "'. $module_name .'", "locked_time", "0")';
+    // die($sql);
+    $query = $db->query($sql);
+
+    return 0;
+  }
+  else {
+    return $row['config_value'];
+  }
+}
+
 function getSigner() {
 	global $db;
 

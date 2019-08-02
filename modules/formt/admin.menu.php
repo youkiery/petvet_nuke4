@@ -11,6 +11,7 @@ if (!defined('NV_ADMIN')) {
     die('Stop!!!');
 }
 
+$submenu['locked'] = "Khóa văn bản";
 // $submenu['except'] = "Người ngoại lệ";
 
-$allow_func = array('main'); 
+$allow_func = array('main', 'locked'); 

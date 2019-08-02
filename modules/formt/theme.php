@@ -161,7 +161,8 @@ function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '
       $xcode = str_replace(', ', '/', $row['xcode']);
       $xcode = str_replace(',', '/', $xcode);
       $xtpl->assign('xcode', $xcode);
-      $xtpl->assign('code', $row['code']);
+      $xtpl->assign('notice', $row['mcode']);
+      $xtpl->assign('noticetime', date('d/m/Y', $row['noticetime']));
       $xtpl->assign('number', $row['number']);
       $xtpl->assign('printer', $row['printer']);
       for ($i = 1; $i <= $row['printer']; $i++) { 
