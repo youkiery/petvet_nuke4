@@ -199,6 +199,8 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
     $other['from'] = date('d/m/Y', $today - 60 * 60 * 24 * 30);
   }
 
+  $locker_time = getLocker();
+
   $other['from'] = totime($other['from']);
   $other['end'] = totime($other['end'] + 60 * 60 * 24 - 1);
 
@@ -249,6 +251,12 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
         if ($row['printer'] >= 5) {
           $xtpl->parse('main.row.mod.clone');
         } 
+
+        // echo date('d/m/Y', $row['time']) . ': ' . date('d/m/Y', $locker_time) . '<br>';
+
+        if ($row['time'] > $locker_time) {
+          $xtpl->parse('main.row.mod.lockg');
+        }
         $xtpl->parse('main.row.mod');
       }
       // if (checkIsMod($user_info['userid'])) {
@@ -256,6 +264,7 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
       // }
       $xtpl->parse('main.row');
   }
+  // die();
   $xtpl->assign('from', $from);
   $xtpl->assign('end', $end);
   $xtpl->assign('total', $count['count']);

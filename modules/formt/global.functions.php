@@ -16,7 +16,14 @@ define('PERMISSION_MODULE', 1);
 
 // lấy khoảng thời gian khóa văn bản
 function getLocker() {
-  global $db, $db_config, $module_name;
+  global $db, $db_config, $module_name, $user_info;
+
+  if (!empty($user_info)) {
+    if (in_array('1', $user_info['in_groups'])) {
+      return 0;
+    }
+  }
+
   $sql = 'select * from `'. $db_config['prefix'] .'_config` where module = "' . $module_name . '" and config_name = "locked_time"';
   // die($sql);
   $query = $db->query($sql);

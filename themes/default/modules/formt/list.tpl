@@ -28,17 +28,19 @@
         </span>
 
         <!-- BEGIN: mod -->
-        <button class="btn btn-info" onclick="edit({id})">
-          <span class="glyphicon glyphicon-edit"></span>
-        </button>  
         <!-- BEGIN: clone -->
         <button class="btn btn-warning" onclick="clone({id})">
           <span class="glyphicon glyphicon-share"></span>
         </button>
         <!-- END: clone -->
+        <!-- BEGIN: lockg -->
+        <button class="btn btn-info" onclick="edit({id})">
+          <span class="glyphicon glyphicon-edit"></span>
+        </button>  
         <button class="btn btn-danger" onclick="remove({id})">
           <span class="glyphicon glyphicon-remove"></span>
         </button>  
+        <!-- END: lockg -->
         <!-- END: mod -->
       </td>
     </tr>
