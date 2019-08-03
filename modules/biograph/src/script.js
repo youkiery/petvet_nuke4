@@ -55,3 +55,16 @@ function paintext(string) {
   str = str.trim(); 
   return str;
 }
+
+function loadImage(url, section) {
+  var image = new Image()
+  image.src = url
+  image.classList["value"] = ('img-responsive')
+  image.onload = function() {
+    section.append(image)
+    section.removeClass('thumbnail')
+  }
+  image.onerror = function () {
+    console.log('load image error')
+  }
+}

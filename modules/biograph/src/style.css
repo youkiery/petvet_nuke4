@@ -76,6 +76,12 @@
   vertical-align: inherit;
 }
 
+.thumbnail {
+  width: 240px;
+  height: 240px;
+  background: url(/modules/biograph/src/thumbnail.jpg);
+}
+
 @media screen and (max-width: 640px) {
   .start-content {
     padding: 0px;

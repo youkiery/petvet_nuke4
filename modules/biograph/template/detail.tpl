@@ -16,8 +16,7 @@
   <div style="clear: both;"></div>
 
   <div class="row">
-    <div class="img-responsive col-sm-4">
-      <img src="{image}">
+    <div class="col-sm-4 thumbnail" id="avatar" style="width: 240px; height: 240px;">
     </div>
     <div class="col-sm-8">
       <p> Tên: {name} </p>
@@ -72,4 +71,11 @@
     </tr>
   </table>
 </div>
+
+<script>
+  var avatar = $("#avatar")
+
+  loadImage('{image}', avatar)
+  // loadImage('http://localhost/modules/biograph/src/banner.png', avatar)
+</script>
 <!-- END: main -->
