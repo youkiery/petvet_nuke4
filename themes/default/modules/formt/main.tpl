@@ -1990,7 +1990,7 @@
         const element = data[key];
         html += `
           <div class="row form-group" style="width: 100%;">
-            <button type="button" class="close" data-dismiss="modal" onclick="removeIgSecret('`+ key +`')">&times;</button>
+            <button type="button" class="close" data-dismiss="modal" onclick="removeIgSecret('`+ index +`')">&times;</button>
             <label class="col-sm-6">
               Chỉ tiêu:
             </label>
@@ -2012,7 +2012,7 @@
       }
     }
     html += `
-      <button class="btn btn-info">
+      <button class="btn btn-info" onclick="insertIgSecret()">
         Thêm
       </button>
     `
@@ -2024,8 +2024,23 @@
   }
 
   function removeIgSecret(key) {
-    delete global_ig[key]
-    if (Object.keys(global_ig)) {
+    var dat = []
+    $(".exam-sx").each((index, item) => {
+      dat.push({
+        name: item.value,
+        value: $("#number-sx" + (index + 1)).val()
+      })
+    })
+    delete dat[key - 1]
+    var temp = {}
+    for (const key in dat) {
+      if (dat.hasOwnProperty(key)) {
+        const element = dat[key];
+        temp[element['name']] = element['value']
+      }
+    }
+    global_ig = temp
+    if (!Object.keys(global_ig).length) {
       global_ig = {'': ''}
     }
     parseIgSecret(global_ig)
@@ -2073,6 +2088,7 @@
       (response, status) => {
         checkResult(response, status).then(data => {
           // console.log(data)
+          remindv2 = JSON.parse(data['remind'])
         }, () => {})
       }
     )
