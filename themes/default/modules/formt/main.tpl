@@ -1990,6 +1990,7 @@
         const element = data[key];
         html += `
           <div class="row form-group" style="width: 100%;">
+            <button type="button" class="close" data-dismiss="modal" onclick="removeIgSecret('`+ key +`')">&times;</button>
             <label class="col-sm-6">
               Chỉ tiêu:
             </label>
@@ -2010,10 +2011,34 @@
         index ++
       }
     }
+    html += `
+      <button class="btn btn-info">
+        Thêm
+      </button>
+    `
     $("#smsample").html(html)
     installer.forEach(item => {
       installRemindv2(item['name'], item['type'])
     })
+    installRemindv2('0', 'reformer');
+  }
+
+  function removeIgSecret(key) {
+    delete global_ig[key]
+    if (Object.keys(global_ig)) {
+      global_ig = {'': ''}
+    }
+    parseIgSecret(global_ig)
+  }
+
+  function insertIgSecret() {
+    var dat = {}
+    $(".exam-sx").each((index, item) => {
+      dat[item.value] = $("#number-sx" + (index + 1)).val()
+    })
+    dat[''] = ''
+    global_ig = dat
+    parseIgSecret(global_ig)
   }
 
   function checkSecretary() {
@@ -2034,7 +2059,7 @@
       sample: $('#ssample').val(),
       xcode: $('#sxcode1').val() + ',' + $('#sxcode2').val() +','+ $('#sxcode3').val(),
       mcode: $('#smcode').val(),
-      reformer: $('#sreformer').val(),
+      reformer: $('#reformer-0').val(),
       pay: ($("#pay1").prop('checked') ? 1 : 0),
       ig: temp
     }

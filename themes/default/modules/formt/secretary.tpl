@@ -90,8 +90,9 @@
 
   <div class="row form-group">
     <label class="col-sm-6"> Người đề nghị </label>
-    <div class="col-sm-12">
-      <input type="text" value="{reformer}" class="form-control" id="sreformer" autocomplete="off">
+    <div class="col-sm-12 relative">
+      <input type="text" value="{reformer}" class="form-control" id="reformer-0" autocomplete="off">
+      <div class="suggest" id="reformer-suggest-0"></div>
     </div>
   </div>
 

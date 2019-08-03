@@ -306,6 +306,7 @@ if (!empty($action)) {
 				foreach ($data['ig'] as $igKey => $igVal) {
 					checkRemindv2($igKey, 'examsx');
 				}
+				checkRemindv2($data['reformer'], 'reformer');
 
 				$permission = getUserType($user_info['userid']);
 
