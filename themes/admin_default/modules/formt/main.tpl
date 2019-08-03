@@ -119,7 +119,7 @@
   function admin(userid, type) {
     $.post(
       strHref,
-      {action: 'admin', userid: userid, type: type},
+      {action: 'admin', userid: userid, type: type, key: formKeyword.val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])

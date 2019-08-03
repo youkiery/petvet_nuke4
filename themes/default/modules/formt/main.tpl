@@ -1918,7 +1918,7 @@
       html += `    
       <div class="bordered">
         <span class="marker"> Mẫu `+(sampleIndex + 1)+` </span>
-        <span style="float: right;"> <button class="btn btn-info" onclick="toggle('#toggle-`+sampleIndex+`')"> <span class="glyphicon glyphicon-eye-open"></span> </button> </span>
+        <span style="float: right;"> <button class="btn btn-info" onclick="toggleButton('#toggle-`+sampleIndex+`')"> <span class="glyphicon glyphicon-eye-open"></span> </button> </span>
         <br>
         <div id="toggle-`+sampleIndex+`">
           <button class="close right" data-dismiss="modal" onclick="removeField('`+ sampleIndex +`')">&times;</button>
@@ -2672,7 +2672,7 @@
     formSummary.modal('show')
   }
 
-  function toggle(section) {
+  function toggleButton(section) {
     $(section).fadeToggle()
   }
 

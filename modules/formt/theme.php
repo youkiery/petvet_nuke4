@@ -33,6 +33,12 @@ function employerList($key = '') {
       }
     }
     $xtpl->assign('risk', $risk);
+    if ($row['admin']) {
+      $xtpl->parse('main.row.admin');
+    }
+    else {
+      $xtpl->parse('main.row.noadmin');
+    }
     if ($row['type'] < 5) {
       $xtpl->parse('main.row.up');
     }
@@ -223,7 +229,7 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
 
   $xtpl->assign('total', $count['count']);
 
-  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%" and printer >= '. $printer .' and (time between '. $other['from'] .' and '. $other['end'] .') order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
+  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%" and printer >= '. $printer .' and (time between '. $other['from'] .' and '. $other['end'] .') order by xcode desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
   // die($sql);
   $query = $db->query($sql);
 

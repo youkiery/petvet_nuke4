@@ -30,6 +30,18 @@
         <button class="btn btn-info" onclick="getPermission({userid})">
           Thay đổi
         </button>
+
+        <!-- BEGIN: admin -->
+        <button class="btn btn-warning" onclick="admin({userid}, 0)">
+          <span class="glyphicon glyphicon-user"></span>
+        </button>
+        <!-- END: admin -->
+        <!-- BEGIN: noadmin -->
+        <button class="btn btn-success" onclick="admin({userid}, 1)">
+          <span class="glyphicon glyphicon-user"></span>
+        </button>
+        <!-- END: noadmin -->
+
         <!-- BEGIN: up -->
         <button class="btn btn-info" onclick="upUser({userid})">
           <span class="glyphicon glyphicon-arrow-up"></span>

@@ -33,7 +33,7 @@ function getNotAllow($key = '') {
 function getAllowUser($key = '') {
   global $db, $db_config;
 
-  $sql = 'select a.*, b.type, b.former from `'. $db_config['prefix'] .'_users` a inner join `'. $db_config['prefix'] .'_user_allow` b on a.userid = b.userid where a.first_name like "%'. $key .'%" and module = ' . PERMISSION_MODULE . ' order by type desc';
+  $sql = 'select a.*, b.type, b.former, b.admin from `'. $db_config['prefix'] .'_users` a inner join `'. $db_config['prefix'] .'_user_allow` b on a.userid = b.userid where a.first_name like "%'. $key .'%" and module = ' . PERMISSION_MODULE . ' order by type desc';
   $query = $db->query($sql);
 
   $list = array();

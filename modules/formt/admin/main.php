@@ -106,6 +106,22 @@ if (!empty($action)) {
 				}
 			}
 		break;
+		case 'admin':
+			$userid = $nv_Request->get_string('userid', 'get/post', '');
+			$type = $nv_Request->get_string('type', 'get/post', '');
+			$key = $nv_Request->get_string('key', 'get/post', '');
+
+      // $admin_info['in_groups'] = array(1);
+			if (in_array('1', $admin_info['in_groups'])) {
+        $sql = 'update `'. $db_config['prefix'] .'_user_allow` set admin = ' . $type . ' where userid = ' . $userid;
+
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+					$result['html'] = employerList($key);
+        }
+        // die($sql);
+			}
+		break;
 	}
 
 	echo json_encode($result);
