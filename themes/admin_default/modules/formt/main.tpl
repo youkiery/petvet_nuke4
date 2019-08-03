@@ -116,6 +116,18 @@
     return data.join(',')
   }
 
+  function admin(userid, type) {
+    $.post(
+      strHref,
+      {action: 'admin', userid: userid, type: type},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          content.html(data['html'])
+        }, () => {  })
+      }
+    )
+  } 
+
   function savePermission() {
     $.post(
       strHref,
