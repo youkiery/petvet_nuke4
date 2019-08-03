@@ -870,7 +870,7 @@
     <form onsubmit="secretaryFilter(event)">
       <div class="row form-group">
         <div class="col-sm-4">
-          <input type="text" class="form-control" id="sfilter-keyword" placeholder="Mẫu phiếu" autocomplete="off">
+          <input type="text" class="form-control" id="sfilter-keyword" placeholder="Số thông báo" autocomplete="off">
         </div>
         <div class="col-sm-4">
           <input type="text" class="form-control" id="sfilter-xcode" placeholder="Số ĐKXN" autocomplete="off">

@@ -135,12 +135,12 @@ function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '
 
   }
 
-  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and printer = 5 and (time between '. $filter['from'] .' and '. $filter['end'] .') ' . $exsql;
+  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where mcode like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and printer = 5 and (time between '. $filter['from'] .' and '. $filter['end'] .') ' . $exsql;
 
   $query = $db->query($sqlCount);
   $count = $query->fetch();
 
-  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and printer = 5 and (time between '. $filter['from'] .' and '. $filter['end'] .') '. $exsql .' order by id desc limit ' . $filter['limit'] . ' offset ' . ($page - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_row` where mcode like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and printer = 5 and (time between '. $filter['from'] .' and '. $filter['end'] .') '. $exsql .' order by id desc limit ' . $filter['limit'] . ' offset ' . ($page - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   $index = 1;
