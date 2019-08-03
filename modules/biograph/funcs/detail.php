@@ -51,9 +51,34 @@ if (!empty($row = $query->fetch())) {
   $relation = getPetRelation($id);
   // $bay = array('grand' => array(), 'parent' => array(), 'sibling' => array(), 'child' => array());
 
-  if ($relation['grand']['e']['f']) {
-    // $xtpl->assign('')
+  if ($row = $relation['grand']['e']['f']) {
+    $xtpl->assign('egrandma', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>');
   }
+  if ($row = $relation['grand']['e']['m']) {
+    $xtpl->assign('egrandpa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>');
+  }
+  if ($row = $relation['grand']['i']['f']) {
+    $xtpl->assign('igrandma', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>');
+  }
+  if ($row = $relation['grand']['i']['m']) {
+    $xtpl->assign('igrandpa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>');
+  }
+
+  if ($row = $relation['parent']['m']) {
+    $xtpl->assign('mama', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>');
+  }
+  if ($row = $relation['parent']['f']) {
+    $xtpl->assign('papa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>');
+  }
+
+  if (count($child = $relation['child'])) {
+    $html = '';    
+    foreach ($child as $row) {
+      $html = '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>';
+    }
+    $xtpl->assign('child', $html);
+  }
+
 
   // if ($relation['grand']) {    
   //   foreach ($relation['grand'] as $row) {
