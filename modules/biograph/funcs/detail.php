@@ -49,38 +49,42 @@ if (!empty($row = $query->fetch())) {
 	$xtpl->assign('image', $row['image']);
 
   $relation = getPetRelation($id);
-  $bay = array('grand' => array(), 'parent' => array(), 'sibling' => array(), 'child' => array());
+  // $bay = array('grand' => array(), 'parent' => array(), 'sibling' => array(), 'child' => array());
 
-  if ($relation['grand']) {    
-    foreach ($relation['grand'] as $row) {
-      foreach ($row as $row2) {
-        if ($row2) {
-          $bay['grand'][] = '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>';
-        }
-      }
-    }
+  if ($relation['grand']['e']['f']) {
+    // $xtpl->assign('')
   }
-  if ($relation['parent']) {    
-    foreach ($relation['parent'] as $row) {
-      if ($row) {
-        $bay['parent'][] = '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>';
-      }
-    }
-  }
-  if ($relation['sibling']) {    
-    foreach ($relation['sibling'] as $row) {
-      if ($row['id']) {
-        $bay['parent'][] = '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>';
-      }
-    }
-  }
-  if ($relation['child']) {    
-    foreach ($relation['child'] as $row) {
-      if ($row['id']) {
-        $bay['child'][] = '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>';
-      }
-    }
-  }
+
+  // if ($relation['grand']) {    
+  //   foreach ($relation['grand'] as $row) {
+  //     foreach ($row as $row2) {
+  //       if ($row2) {
+  //         $bay['grand'][] = '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>';
+  //       }
+  //     }
+  //   }
+  // }
+  // if ($relation['parent']) {    
+  //   foreach ($relation['parent'] as $row) {
+  //     if ($row) {
+  //       $bay['parent'][] = '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>';
+  //     }
+  //   }
+  // }
+  // if ($relation['sibling']) {    
+  //   foreach ($relation['sibling'] as $row) {
+  //     if ($row['id']) {
+  //       $bay['parent'][] = '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>';
+  //     }
+  //   }
+  // }
+  // if ($relation['child']) {    
+  //   foreach ($relation['child'] as $row) {
+  //     if ($row['id']) {
+  //       $bay['child'][] = '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>';
+  //     }
+  //   }
+  // }
 
   $xtpl->assign('grand', implode('<br>', $bay['grand']));
   $xtpl->assign('parent', implode('<br>', $bay['parent']));

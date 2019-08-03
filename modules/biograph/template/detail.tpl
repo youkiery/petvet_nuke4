@@ -44,17 +44,31 @@
         Bố/Mẹ
       </th>
       <th class="text-center">
-        Anh/Chị/Em
-      </th>
-      <th class="text-center">
         Con
       </th>
     </tr>
     <tr>
-      <td> {grand} </td>
-      <td> {parent} </td>
-      <td> {sibling} </td>
-      <td> {child} </td>
+      <td> Ông nội: {igrandpa} </td>
+      <td rowspan="2"> Bố: {papa} </td>
+      <td rowspan="4"> {child} </td>
+    </tr>
+    <tr>
+      <td>
+        Bà nội: {igrandma}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Ông ngoại: {egrandpa}
+      </td>
+      <td rowspan="2">
+        Mẹ: {mama}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Bà ngoại: {egrandma}
+      </td>
     </tr>
   </table>
 </div>

@@ -205,7 +205,7 @@ function getPetRelation($petid) {
   $grand = getPetGrand($parent);
   $child = getPetChild($petid);
 
-  $result = array('parent' => $parent, 'sibling' => $sibling, 'grand' => $grand, 'child' => $child);
+  $result = array('parent' => $parent, 'grand' => $grand, 'child' => $child);
   return $result;
 }
 
