@@ -129,8 +129,9 @@
             <div class="col-sm-3">
               Giống 
             </div>
-            <div class="col-sm-9">
+            <div class="col-sm-9 relative">
               <input type="text" class="form-control" id="species-pet">
+              <div class="suggest" id="species-suggest-pet"></div>
             </div>
           </label>
 
@@ -138,8 +139,9 @@
             <div class="col-sm-3">
               Loài
             </div>
-            <div class="col-sm-9">
+            <div class="col-sm-9 relative">
               <input type="text" class="form-control" id="breed-pet">
+              <div class="suggest" id="breed-suggest-pet"></div>
             </div>
           </label>
 
@@ -148,7 +150,8 @@
               Giới tính
             </div>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="pet-sex">
+              <input type="radio" name="sex" class="form-control" id="pet-sex-0">
+              <input type="radio" name="sex" class="form-control" id="pet-sex-1">
             </div>
           </label>
 
@@ -254,7 +257,8 @@
     dob: $("#pet-dob"),
     species: $("#species-pet"),
     breed: $("#breed-pet"),
-    sex: $("#pet-sex"),
+    sex0: $("#pet-sex-0"),
+    sex1: $("#pet-sex-1"),
     color: $("#pet-color"),
     microchip: $("#pet-microchip"),
     parentm: $("#parent-m"),
@@ -339,7 +343,6 @@
     var timeout
     var input = $("#"+ type +"-" + name)
     var suggest = $("#"+ type +"-suggest-" + name)
-    // console.log(input, )
 
     input.keyup(() => {
       clearTimeout(timeout)
@@ -374,6 +377,7 @@
     var timeout
     var input = $("#"+ type +"-" + name)
     var suggest = $("#"+ type +"-suggest-" + name)
+    console.log(input, "#"+ type +"-" + name, suggest, "#"+ type +"-suggest-" + name)
 
     input.keyup(() => {
       clearTimeout(timeout)
@@ -401,6 +405,10 @@
         suggest.hide()
       }, 200);
     })
+  }
+
+  function selectRemindv2(name, type, value) {
+    $("#"+ type +"-" + name).val(value)
   }
 
   function center() {

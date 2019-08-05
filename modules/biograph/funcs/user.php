@@ -153,8 +153,18 @@ if (!empty($action)) {
 			$data = $nv_Request->get_array('data', 'post');
 
 			if (count($data) > 1 && !checkPet($data['name'], $userinfo['id'])) {
-				$data['dob'] = totime($data['dob']);
         // ???
+        $sex = 0;
+        if ($data['sex1']) {
+          $sex = 1;
+        }
+
+        unset($data['sex0']);
+        unset($data['sex1']);
+				$data['dob'] = totime($data['dob']);
+				$data['sex'] = $sex;
+
+
         checkRemind($data['species'], 'species');
         checkRemind($data['breed'], 'breed');
 
