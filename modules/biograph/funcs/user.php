@@ -155,6 +155,9 @@ if (!empty($action)) {
 			if (count($data) > 1 && !checkPet($data['name'], $userinfo['id'])) {
 				$data['dob'] = totime($data['dob']);
         // ???
+        checkRemind($data['species'], 'species');
+        checkRemind($data['breed'], 'breed');
+
 				$sql = 'insert into `'. PREFIX .'_pet` (userid, name, dateofbirth, species, breed, sex, color, microchip, active, image, mid, fid) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT) .', 0, "")';
 
 				if ($db->query($sql)) {
@@ -170,11 +173,20 @@ if (!empty($action)) {
 
 			if (count($data) > 1 && !empty($id)) {
 				$data['dateofbirth'] = totime($data['dob']);
+				$data['fid'] = $data['parentf'];
+				$data['mid'] = $data['parentm'];
 				unset($data['dob']);
+				unset($data['parentf']);
+				unset($data['parentm']);
+        
+        checkRemind($data['species'], 'species');
+        checkRemind($data['breed'], 'breed');
+
 				$sql = 'update `'. PREFIX .'_pet` set '. sqlBuilder($data, BUILDER_EDIT) .' where id = ' . $id;
 				if ($db->query($sql)) {
 					$result['status'] = 1;
 					$result['notify'] = 'Đã chỉnh sửa thú cưng';
+					$result['remind'] = json_encode(getRemind());
 					$result['html'] = userDogRowByList($userinfo['id']);
 				}
 			}
@@ -190,6 +202,7 @@ if (!empty($action)) {
 				if ($db->query($sql)) {
 					$result['status'] = 1;
 					$result['notify'] = 'Đã chỉnh sửa thú cưng';
+					$result['remind'] = json_encode(getRemind());
 					$result['html'] = userRowList($filter);
 				}
 			}
@@ -246,6 +259,7 @@ $xtpl->assign('fullname', $userinfo['fullname']);
 $xtpl->assign('mobile', $userinfo['mobile']);
 $xtpl->assign('address', $userinfo['address']);
 $xtpl->assign('image', $userinfo['image']);
+$xtpl->assign('remind', json_encode(getRemind()));
 $xtpl->assign('list', userDogRowByList($userinfo['id']));
 
 if (!$userinfo['center']) {

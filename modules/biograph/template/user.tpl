@@ -130,7 +130,7 @@
               Giống 
             </div>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="pet-species">
+              <input type="text" class="form-control" id="species-pet">
             </div>
           </label>
 
@@ -139,7 +139,7 @@
               Loài
             </div>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="pet-breed">
+              <input type="text" class="form-control" id="breed-pet">
             </div>
           </label>
 
@@ -252,8 +252,8 @@
   var pet = {
     name: $("#pet-name"),
     dob: $("#pet-dob"),
-    species: $("#pet-species"),
-    breed: $("#pet-breed"),
+    species: $("#species-pet"),
+    breed: $("#breed-pet"),
     sex: $("#pet-sex"),
     color: $("#pet-color"),
     microchip: $("#pet-microchip"),
@@ -293,6 +293,7 @@
     contentType: 'image/jpeg',
   };
   var file, filename
+  remind = JSON.parse('{remind}')
 
   var firebaseConfig = {
   apiKey: "AIzaSyDWt6y4laxeTBq2RYDY6Jg4_pOkdxwsjUE",
@@ -325,6 +326,8 @@
   $(this).ready(() => {
     installRemind('m', 'parent')
     installRemind('f', 'parent')
+    installRemindv2('pet', 'species')
+    installRemindv2('pet', 'breed')
   })
 
   function pickParent(e, id) {
@@ -336,6 +339,7 @@
     var timeout
     var input = $("#"+ type +"-" + name)
     var suggest = $("#"+ type +"-suggest-" + name)
+    // console.log(input, )
 
     input.keyup(() => {
       clearTimeout(timeout)
@@ -353,6 +357,39 @@
           }
         )
         
+        suggest.html(html)
+      }, 200);
+    })
+    input.focus(() => {
+      suggest.show()
+    })
+    input.blur(() => {
+      setTimeout(() => {
+        suggest.hide()
+      }, 200);
+    })
+  }
+
+  function installRemindv2(name, type) {
+    var timeout
+    var input = $("#"+ type +"-" + name)
+    var suggest = $("#"+ type +"-suggest-" + name)
+
+    input.keyup(() => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        var key = paintext(input.val())
+        var html = ''
+        
+        for (const index in remind[type]) {
+          if (remind[type].hasOwnProperty(index)) {
+            const element = paintext(remind[type][index]['name']);
+            
+            if (element.search(key) >= 0) {
+              html += '<div class="suggest_item" onclick="selectRemindv2(\'' + name + '\', \'' + type + '\', \'' + remind[type][index]['name'] + '\')"><p class="right-click">' + remind[type][index]['name'] + '</p></div>'
+            }
+          }
+        }
         suggest.html(html)
       }, 200);
     })
@@ -485,6 +522,7 @@
         checkResult(response, status).then(data => {
           petList.html(data['html'])
           clearInputSet(pet)
+          remind = JSON.parse(data['remind'])
           insertPet.modal('hide')
         }, () => {})
       }
@@ -556,6 +594,7 @@
         checkResult(response, status).then(data => {
           petList.html(data['html'])
           clearInputSet(pet)
+          remind = JSON.parse(data['remind'])
           insertPet.modal('hide')
         }, () => {})
       }
@@ -587,7 +626,6 @@
   function parseInputSet(dataSet, inputSet) {
     for (const dataKey in dataSet) {
       if (dataSet.hasOwnProperty(dataKey)) {
-        console.log(dataKey)
         inputSet[dataKey].val(dataSet[dataKey])
       }
     }

@@ -42,6 +42,47 @@ function ctime($time) {
   return $time;
 }
 
+function checkRemind($name, $type) {
+	global $db;
+
+	if (!empty($name)) {
+		if ($id = getRemindIdv2($name, $type)) {
+			$sql = 'update `'. PREFIX .'_remind` set visible = 1, rate = rate + 1 where id = ' . $id;
+			if ($db->query($sql)) {
+				return $id;
+			}
+			return 0;
+		}
+		else {
+			$sql = 'insert into `'. PREFIX .'_remind` (type, name, visible) values ("'. $type .'", "'. $name .'", 1)';
+      die($sql);
+			if ($db->query($sql)) {
+				return $db->lastInsertId();
+			}
+			return 0;
+		}
+	}
+	return 0;
+}
+
+function getRemindIdv2($name, $type) {
+	global $db;
+
+	$sql = 'select * from `'. PREFIX .'_remind` where name = "' . $name . '" and type = "'. $type .'"';
+
+	// if ($type == "owner") {
+	// 	die($sql);
+	// }
+	// echo $sql . '<br>';
+	$query = $db->query($sql);
+	$row = $query->fetch();
+
+	if (!empty($row)) {
+		return $row['id'];
+	}
+	return 0;
+}
+
 function getRemind($type = '') {
 	global $db;
 	$list = array();
@@ -67,10 +108,12 @@ function getRemind($type = '') {
 function getPetById($id) {
   global $db;
 
-  $sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
-  $query = $db->query($sql);
-
-  return $query->fetch();
+  if ($id) {
+    $sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
+    $query = $db->query($sql);
+    return $query->fetch();
+  }
+  return false;
 }
 
 function insertPet($data) {
@@ -201,7 +244,7 @@ function getPetRelation($petid) {
 
   $pet = getPetById($petid);
   $parent = getPetParent($pet);
-  $sibling = getPetSibling($parent, $petid);
+  // $sibling = getPetSibling($parent, $petid);
   $grand = getPetGrand($parent);
   $child = getPetChild($petid);
 

@@ -18,6 +18,20 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
+ 		case 'checkpet':
+			$id = $nv_Request->get_string('id', 'post');
+			$type = $nv_Request->get_string('type', 'post');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+			$sql = 'update `'. PREFIX .'_pet` set active = '. $type .' where id = ' . $id;
+			if ($db->query($sql)) {
+				$result['html'] = userDogRow($filter);
+				if ($result['html']) {
+					$result['status'] = 1;
+				}
+			}
+		break;
+
 		case 'filter':
 			$filter = $nv_Request->get_array('filter', 'post');
 			
