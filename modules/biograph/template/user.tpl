@@ -177,6 +177,15 @@
             </div>
           </label>
 
+          <label class="row">
+            <div class="col-sm-3">
+              Xăm tai
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="pet-miear">
+            </div>
+          </label>
+
           <div class="row">
             <div class="col-sm-6">
               Chó cha
@@ -312,6 +321,15 @@
               <input type="text" class="form-control" id="parent-microchip">
             </div>
           </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Xăm tai
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="parent-miear">
+            </div>
+          </label>
                     
           <label class="row">
             <div class="col-sm-3">
@@ -394,6 +412,7 @@
     sex1: $("#pet-sex-1"),
     color: $("#pet-color"),
     microchip: $("#pet-microchip"),
+    miear: $("#pet-miear"),
     parentm: $("#parent-m-s"),
     parentf: $("#parent-f-s")
   }
@@ -404,6 +423,7 @@
     sex1: $("#parent-sex-1"),
     color: $("#parent-color"),
     microchip: $("#parent-microchip"),
+    miear: $("#pet-miear"),
     species: $("#species-parent"),
     breed: $("#breed-parent")
   }
