@@ -55,9 +55,9 @@
             </div>
             <div class="col-sm-9">
               <div>
-                <img class="img-responsive" id="user-preview" style="display: inline-block; height: 128px; margin: 10px;">
+                <img class="img-responsive" id="user-preview" style="display: inline-block; width: 128px; height: 128px; margin: 10px;">
               </div>
-              <input type="file" class="form-control" id="user-image" onchange="onselected(this)">
+              <input type="file" class="form-control" id="user-image" onchange="onselected(this, 'user')">
             </div>
           </label>
 
@@ -150,8 +150,12 @@
               Giới tính
             </div>
             <div class="col-sm-9">
-              <input type="radio" name="sex" class="form-control" id="pet-sex-0">
-              <input type="radio" name="sex" class="form-control" id="pet-sex-1">
+              <label>
+                <input type="radio" name="sex" id="pet-sex-0" checked> Giống đực
+              </label>
+              <label>
+                <input type="radio" name="sex" id="pet-sex-1"> Giống cái
+              </label>
             </div>
           </label>
 
@@ -177,18 +181,48 @@
             <div class="col-sm-6">
               Chó cha
               <div class="relative">
-                <input class="form-control" id="parent-m" type="text">
+                <div class="input-group">
+                  <input class="form-control" id="parent-m" type="text" autocomplete="off">
+                  <input class="form-control" id="parent-m-s" type="hidden">
+                  <div class="input-group-btn">
+                    <button class="btn btn-success" style="height: 34px;" onclick="addParent('m')">
+                      <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                  </div>
+                </div>
                 <div class="suggest" id="parent-suggest-m"></div>
               </div>
             </div>
+
             <div class="col-sm-6">
               Chó mẹ
               <div class="relative">
-                <input class="form-control" id="parent-f" type="text">
+                <div class="input-group">
+                  <input class="form-control" id="parent-f" type="text" autocomplete="off">
+                  <input class="form-control" id="parent-f-s" type="hidden">
+                  <div class="input-group-btn relative">
+                    <button class="btn btn-success" style="height: 34px;" onclick="addParent('f')">
+                      <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                  </div>
+                </div>
                 <div class="suggest" id="parent-suggest-f"></div>
               </div>
             </div>
           </div>
+
+                    
+          <label class="row">
+            <div class="col-sm-3">
+              Hình ảnh
+            </div>
+            <div class="col-sm-9">
+              <div>
+                <img class="img-responsive" id="pet-preview" style="display: inline-block; width: 128px; height: 128px; margin: 10px;">
+              </div>
+              <input type="file" class="form-control" id="user-image" onchange="onselected(this, 'pet')">
+            </div>
+          </label>
 
           <div class="text-center">
             <button class="btn btn-success" id="ibtn" onclick="insertPetSubmit()">
@@ -196,6 +230,104 @@
             </button>
             <button class="btn btn-success" id="ebtn" onclick="editPetSubmit()" style="display: none;">
               Chỉnh sửa
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="insert-parent" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-body">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <p class="text-center"> <b> Thêm cha mẹ </b> </p>
+          <label class="row">
+            <div class="col-sm-3">
+              Tên thú cưng
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="parent-name">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Ngày sinh
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="parent-dob">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Giống 
+            </div>
+            <div class="col-sm-9 relative">
+              <input type="text" class="form-control" id="species-parent">
+              <div class="suggest" id="species-suggest-parent"></div>
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Loài
+            </div>
+            <div class="col-sm-9 relative">
+              <input type="text" class="form-control" id="breed-parent">
+              <div class="suggest" id="breed-suggest-parent"></div>
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Giới tính
+            </div>
+            <div class="col-sm-9">
+              <label>
+                <input type="radio" name="psex" id="parent-sex-0" checked> Giống đực
+              </label>
+              <label>
+                <input type="radio" name="psex" id="parent-sex-1"> Giống cái
+              </label>
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Màu sắc
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="parent-color">
+            </div>
+          </label>
+          
+          <label class="row">
+            <div class="col-sm-3">
+              Microchip
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="parent-microchip">
+            </div>
+          </label>
+                    
+          <label class="row">
+            <div class="col-sm-3">
+              Hình ảnh
+            </div>
+            <div class="col-sm-9">
+              <div>
+                <img class="img-responsive" id="parent-preview" style="display: inline-block; width: 128px; height: 128px; margin: 10px;">
+              </div>
+              <input type="file" class="form-control" id="user-image" onchange="onselected(this, 'parent')">
+            </div>
+          </label>
+
+          <div class="text-center">
+            <button class="btn btn-success" onclick="insertParentSubmit()">
+              Thêm thú cưng
             </button>
           </div>
         </div>
@@ -250,7 +382,8 @@
     login: 1,
     text: ['Đăng ky', 'Đăng nhập'],
     url: '{origin}',
-    id: -1
+    id: -1,
+    parent: 'm'
   }
   var pet = {
     name: $("#pet-name"),
@@ -261,8 +394,18 @@
     sex1: $("#pet-sex-1"),
     color: $("#pet-color"),
     microchip: $("#pet-microchip"),
-    parentm: $("#parent-m"),
-    parentf: $("#parent-f"),
+    parentm: $("#parent-m-s"),
+    parentf: $("#parent-f-s")
+  }
+  var parent = {
+    name: $("#parent-name"),
+    dob: $("#parent-dob"),
+    sex0: $("#parent-sex-0"),
+    sex1: $("#parent-sex-1"),
+    color: $("#parent-color"),
+    microchip: $("#parent-microchip"),
+    species: $("#species-parent"),
+    breed: $("#breed-parent")
   }
   var user = {
     fullname: $("#user-name"),
@@ -271,6 +414,7 @@
   }
   var userImage = $("#user-image")
   var userPreview = $("#user-preview")
+  var petPreview = $("#pet-preview")
   var username = $("#username")
   var password = $("#password")
   var vpassword = $("#vpassword")
@@ -285,6 +429,7 @@
 
   var insertPet = $("#insert-pet")
   var insertUser = $("#insert-user")
+  var insertParent = $("#insert-parent")
   var removetPet = $("#remove-pet")
   var removetUser = $("#remove-user")
   var petList = $("#pet-list")
@@ -298,6 +443,26 @@
   };
   var file, filename
   remind = JSON.parse('{remind}')
+  var thumbnail
+  var canvas = document.createElement('canvas')
+
+  var thumbnailImage = new Image()
+  thumbnailImage.src = '/modules/biograph/src/thumbnail.jpg'
+  thumbnailImage.onload = (e) => {
+    var context = canvas.getContext('2d')
+    var width = thumbnailImage.width
+    var height = thumbnailImage.height
+    var x = width
+    if (height > width) {
+      x = height
+    }
+    var rate = 256 / x
+    canvas.width = rate * width
+    canvas.height = rate * height
+
+    context.drawImage(thumbnailImage, 0, 0, width, height, 0, 0, canvas.width, canvas.height)
+    thumbnail = canvas.toDataURL("image/jpeg")
+  }
 
   var firebaseConfig = {
   apiKey: "AIzaSyDWt6y4laxeTBq2RYDY6Jg4_pOkdxwsjUE",
@@ -313,7 +478,6 @@
 
   var storage = firebase.storage();
   var storageRef = firebase.storage().ref();
-
   
   tabber.click((e) => {
     var className = e.currentTarget.getAttribute('class')
@@ -321,7 +485,7 @@
     // button.text(global['text'][global['login']])
   })
 
-  $("#pet-dob").datepicker({
+  $("#pet-dob, #parent-dob").datepicker({
     format: 'dd/mm/yyyy',
     changeMonth: true,
     changeYear: true
@@ -332,11 +496,43 @@
     installRemind('f', 'parent')
     installRemindv2('pet', 'species')
     installRemindv2('pet', 'breed')
+    installRemindv2('parent', 'species')
+    installRemindv2('parent', 'breed')
   })
 
-  function pickParent(e, id) {
+  function addParent(name) {
+    insertParent.modal('show')
+    global['parent'] = name
+    clearInputSet(parent)
+    petPreview.val('')
+    $("#parent" + global['parent']).val('')
+    $("#parent" + global['parent' + '-s']).val(0)
+  }
+
+  function insertParentSubmit() {
+    uploader().then((imageUrl) => {
+      $.post(
+        global['url'],
+        {action: 'insert-parent', id: global['id'], data: checkInputSet(parent), image: imageUrl},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            petList.html(data['html'])
+            clearInputSet(parent)
+            petPreview.val('')
+            remind = JSON.parse(data['remind'])
+            insertParent.modal('hide')
+            $("#parent-" + global['parent']).val(data['name'])
+            $("#parent-" + global['parent'] + '-s').val(data['id'])
+          }, () => {})
+        }
+      )
+    })
+  }
+
+  function pickParent(e, name, id) {
     var idp = splipper(e.parentNode.getAttribute('id'), 'parent-suggest')
-    $('#parent-' + idp).val(id)
+    $('#parent-' + idp + '-s').val(id)
+    $('#parent-' + idp).val(name)
   }
 
   function installRemind(name, type) {
@@ -377,7 +573,6 @@
     var timeout
     var input = $("#"+ type +"-" + name)
     var suggest = $("#"+ type +"-suggest-" + name)
-    console.log(input, "#"+ type +"-" + name, suggest, "#"+ type +"-suggest-" + name)
 
     input.keyup(() => {
       clearTimeout(timeout)
@@ -423,7 +618,7 @@
     )
   }
 
-  function onselected(input) {
+  function onselected(input, previewname) {
     if (input.files && input.files[0]) {
       var reader = new FileReader();
       var fullname = input.files[0].name
@@ -455,7 +650,7 @@
             cctx.fillRect(0, 0, cc.width, cc.height);
             cctx.drawImage(c, 0, 0, c.width, c.height, 0, 0, cc.width, cc.height);
             file = cc.toDataURL("image/jpeg")
-            userPreview.attr('src', file)
+            $("#" + previewname + "-preview").attr('src', file)
             file = file.substr(file.indexOf(',') + 1);
           }
         };
@@ -467,26 +662,25 @@
     }
 	}
 
-
-  function preview() {
-    var file = userImage[0]['files']
-    if (file && file[0]) {
-      var reader = new FileReader();
-      reader.readAsDataURL(file[0]);  
-      reader.onload = (e) => {
-        var type = e.target["result"].split('/')[1].split(";")[0];
-        if (["jpeg", "jpg", "png", "bmp", "gif"].indexOf(type) >= 0) {
-          cc.width = image.width * ratio;
-          cc.height = image.height * ratio;
-          cctx.fillStyle = "#fff";
-          cctx.fillRect(0, 0, cc.width, cc.height);
-          cctx.drawImage(c, 0, 0, c.width, c.height, 0, 0, cc.width, cc.height);
-          var base64Image = cc.toDataURL("image/jpeg");
-          this.post.image.push(base64Image)
-        }
-      }
-    }
-  }
+  // function preview() {
+  //   var file = userImage[0]['files']
+  //   if (file && file[0]) {
+  //     var reader = new FileReader();
+  //     reader.readAsDataURL(file[0]);  
+  //     reader.onload = (e) => {
+  //       var type = e.target["result"].split('/')[1].split(";")[0];
+  //       if (["jpeg", "jpg", "png", "bmp", "gif"].indexOf(type) >= 0) {
+  //         cc.width = image.width * ratio;
+  //         cc.height = image.height * ratio;
+  //         cctx.fillStyle = "#fff";
+  //         cctx.fillRect(0, 0, cc.width, cc.height);
+  //         cctx.drawImage(c, 0, 0, c.width, c.height, 0, 0, cc.width, cc.height);
+  //         var base64Image = cc.toDataURL("image/jpeg");
+  //         this.post.image.push(base64Image)
+  //       }
+  //     }
+  //   }
+  // }
 
   function deletePet(id) {
     global['id'] = id
@@ -514,6 +708,16 @@
         checkResult(response, status).then(data => {
           global['id'] = id
           parseInputSet(data['data'], pet)
+          $("#parent-f").val(data['more']['f'])
+          $("#parent-m").val(data['more']['m'])
+          $("#pet-sex-" + data['more']['sex']).prop('checked', true)
+          var image = new Image()
+          image.src = data['image']
+          petPreview.attr('src', thumbnail)
+          image.addEventListener('load', (e) => {
+            petPreview.attr('src', image.src)
+          })
+
           ibtn.hide()
           ebtn.show()
           insertPet.modal('show')
@@ -523,18 +727,23 @@
   }
 
   function editPetSubmit() {
-    $.post(
-      global['url'],
-      {action: 'editpet', id: global['id'], data: checkInputSet(pet)},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          petList.html(data['html'])
-          clearInputSet(pet)
-          remind = JSON.parse(data['remind'])
-          insertPet.modal('hide')
-        }, () => {})
-      }
-    )
+    uploader().then((imageUrl) => {
+      $.post(
+        global['url'],
+        {action: 'editpet', id: global['id'], data: checkInputSet(pet), image: imageUrl},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            petList.html(data['html'])
+            clearInputSet(pet)
+            $("#parent-m").val('')
+            $("#parent-f").val('')
+            petPreview.val('')
+            remind = JSON.parse(data['remind'])
+            insertPet.modal('hide')
+          }, () => {})
+        }
+      )
+    })
   }
 
   function splipper(text, part) {
@@ -592,6 +801,10 @@
     ibtn.show()
     ebtn.hide()
     insertPet.modal('show')
+    clearInputSet(pet)
+    $("#parent-m").val('')
+    $("#parent-f").val('')
+    petPreview.attr('src', thumbnail)
   }
 
   function insertPetSubmit() {
@@ -602,6 +815,9 @@
         checkResult(response, status).then(data => {
           petList.html(data['html'])
           clearInputSet(pet)
+          $("#parent-m").val('')
+          $("#parent-f").val('')
+          petPreview.val('')
           remind = JSON.parse(data['remind'])
           insertPet.modal('hide')
         }, () => {})
@@ -710,6 +926,8 @@
           }, function() {
             // Upload completed successfully, now we can get the download URL
             uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+
+            file = false
             resolve(downloadURL)
             console.log('File available at', downloadURL);
           });

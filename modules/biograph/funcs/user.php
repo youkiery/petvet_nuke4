@@ -10,8 +10,9 @@
 if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
-define('BUILDER_INSERT', 0);
-define('BUILDER_EDIT', 1);
+define('BUILDER_INSERT_NAME', 0);
+define('BUILDER_INSERT_VALUE', 1);
+define('BUILDER_EDIT', 2);
 
 $page_title = "autoload";
 
@@ -52,7 +53,9 @@ if (!empty($action)) {
 			$query = $db->query($sql);
 
 			if (!empty($row = $query->fetch())) {
-				$result['data'] = array('name' => $row['name'], 'dob' => $row['dateofbirth'], 'species' => $row['species'], 'breed' => $row['breed'], 'sex' => $row['sex'], 'color' => $row['color'], 'microchip' => $row['microchip'], 'parentf' => $row['fid'], 'parentm' => $row['mid']);
+				$result['data'] = array('name' => $row['name'], 'dob' => $row['dateofbirth'], 'species' => $row['species'], 'breed' => $row['breed'], 'color' => $row['color'], 'microchip' => $row['microchip'], 'parentf' => $row['fid'], 'parentm' => $row['mid']);
+        $result['more'] = array('sex' => intval($row['sex']), 'm' => getPetNameId($row['mid']), 'f' => getPetNameId($row['fid']));
+        $result['image'] = $row['image'];
 				$result['status'] = 1;
 			}
 		break;
@@ -158,41 +161,94 @@ if (!empty($action)) {
         if ($data['sex1']) {
           $sex = 1;
         }
+				$data['dob'] = totime($data['dob']);
+				$data['sex'] = $sex;
+				$data['dateofbirth'] = totime($data['dob']);
+        $data['fid'] = $data['parentf'];
+				$data['mid'] = $data['parentm'];
 
         unset($data['sex0']);
         unset($data['sex1']);
-				$data['dob'] = totime($data['dob']);
-				$data['sex'] = $sex;
-
+				unset($data['dob']);
+        unset($data['parentf']);        
+				unset($data['parentm']);
 
         checkRemind($data['species'], 'species');
         checkRemind($data['breed'], 'breed');
 
-				$sql = 'insert into `'. PREFIX .'_pet` (userid, name, dateofbirth, species, breed, sex, color, microchip, active, image, mid, fid) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT) .', 0, "")';
+				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 0, "")';
+        // die($sql);
 
 				if ($db->query($sql)) {
 					$result['status'] = 1;
 					$result['notify'] = 'Đã thêm thú cưng';
+					$result['remind'] = json_encode(getRemind());
+					$result['html'] = userDogRowByList($userinfo['id']);
+				}
+			}
+		break;
+		case 'insert-parent':
+			$data = $nv_Request->get_array('data', 'post');
+			$image = $nv_Request->get_string('image', 'post');
+
+			if (count($data) > 1 && !checkPet($data['name'], $userinfo['id'])) {
+        $sex = 0;
+        if ($data['sex1']) {
+          $sex = 1;
+        }
+				$data['dateofbirth'] = totime($data['dob']);
+				$data['sex'] = $sex;
+        $data['fid'] = $data['parentf'];
+				$data['mid'] = $data['parentm'];
+
+        unset($data['sex0']);
+        unset($data['sex1']);
+        unset($data['parentf']);        
+				unset($data['parentm']);
+				unset($data['dob']);
+
+        checkRemind($data['species'], 'species');
+        checkRemind($data['breed'], 'breed');
+
+				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 0, "")';
+
+				if ($db->query($sql)) {
+					$result['status'] = 1;
+					$result['name'] = $data['name'];
+					$result['notify'] = 'Đã thêm thú cưng';
+					$result['id'] = $db->lastInsertId();
+					$result['remind'] = json_encode(getRemind());
 					$result['html'] = userDogRowByList($userinfo['id']);
 				}
 			}
 		break;
 		case 'editpet':
 			$id = $nv_Request->get_string('id', 'post', '');
+			$image = $nv_Request->get_string('image', 'post');
 			$data = $nv_Request->get_array('data', 'post');
 
 			if (count($data) > 1 && !empty($id)) {
 				$data['dateofbirth'] = totime($data['dob']);
 				$data['fid'] = $data['parentf'];
 				$data['mid'] = $data['parentm'];
+        $sex = 0;
+        if ($data['sex1']) {
+          $sex = 1;
+        }
+
+        unset($data['sex0']);
+        unset($data['sex1']);
+				$data['sex'] = $sex;
+
 				unset($data['dob']);
-				unset($data['parentf']);
+				unset($data['parentf']);        
 				unset($data['parentm']);
         
         checkRemind($data['species'], 'species');
         checkRemind($data['breed'], 'breed');
 
-				$sql = 'update `'. PREFIX .'_pet` set '. sqlBuilder($data, BUILDER_EDIT) .' where id = ' . $id;
+				$sql = 'update `'. PREFIX .'_pet` set '. sqlBuilder($data, BUILDER_EDIT) .', image = "'. $image .'" where id = ' . $id;
+
 				if ($db->query($sql)) {
 					$result['status'] = 1;
 					$result['notify'] = 'Đã chỉnh sửa thú cưng';
@@ -229,13 +285,13 @@ if (!empty($action)) {
 		case 'parent':
 			$keyword = $nv_Request->get_string('keyword', 'post', '');
 
-			$sql = 'select a.id, a.name, b.fullname, b.image from `'. PREFIX .'_pet` a inner join `'. PREFIX .'_user` b on a.userid = b.id where a.name like "%'. $keyword .'%" or b.fullname like "%'. $keyword .'%"';
+			$sql = 'select a.id, a.name, b.fullname, b.image from `'. PREFIX .'_pet` a inner join `'. PREFIX .'_user` b on a.userid = b.id where (a.name like "%'. $keyword .'%" or b.fullname like "%'. $keyword .'%") and userid = ' . $userinfo['id'];
 			$query = $db->query($sql);
 
 			$html = '';
 			while ($row = $query->fetch()) {
 				$html .= '
-				<div class="suggest_item2" onclick="pickParent(this, '. $row['id'] .')">
+				<div class="suggest_item2" onclick="pickParent(this, \''. $row['name'] .'\', '. $row['id'] .')">
 					<div class="xleft">
 					</div>
 					<div class="xright">

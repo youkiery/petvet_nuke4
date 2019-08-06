@@ -55,7 +55,6 @@ function checkRemind($name, $type) {
 		}
 		else {
 			$sql = 'insert into `'. PREFIX .'_remind` (type, name, visible) values ("'. $type .'", "'. $name .'", 1)';
-      die($sql);
 			if ($db->query($sql)) {
 				return $db->lastInsertId();
 			}
@@ -108,12 +107,21 @@ function getRemind($type = '') {
 function getPetById($id) {
   global $db;
 
-  if ($id) {
+  if (intval($id)) {
     $sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
     $query = $db->query($sql);
     return $query->fetch();
   }
   return false;
+}
+
+function getPetNameId($id) {
+  global $db;
+
+  if ($id && !empty($pet = getPetById($id)) && !empty($pet['name'])) {
+    return $pet['name'];
+  }
+  return '';
 }
 
 function insertPet($data) {
@@ -227,13 +235,19 @@ function checkPet($name, $userid) {
 function sqlBuilder($data, $type) {
   $string = array();
   foreach ($data as $key => $value) {
-    if ($type) {
-      // edit
-      $string[] = $key . ' = "' . $value . '"';
-    }
-    else {
-      // insert
-      $string[] = '"' . $value . '"';
+    switch ($type) {
+      case 1:
+        // insert value
+        $string[] = '"' . $value . '"';
+      break;
+      case 2:
+        // edit
+        $string[] = $key . ' = "' . $value . '"';
+      break;
+      default:
+        // insert name
+        $string[] = $key;
+      break;
     }
   }
   return implode(', ', $string);
@@ -274,6 +288,7 @@ function getPetGrand($parent) {
 
 function getPetParent($pet) {
   global $db;
+  // echo json_encode($pet);die();
 
   $parent = array('f' => getPetById($pet['fid']), 'm' => getPetById($pet['mid']));
   return $parent;
