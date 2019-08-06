@@ -52,29 +52,28 @@ if (!empty($row = $query->fetch())) {
   // $bay = array('grand' => array(), 'parent' => array(), 'sibling' => array(), 'child' => array());
 
   if ($row = $relation['grand']['e']['f']) {
-    $xtpl->assign('egrandma', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>');
+    $xtpl->assign('egrandma', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
   }
   if ($row = $relation['grand']['e']['m']) {
-    $xtpl->assign('egrandpa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>');
+    $xtpl->assign('egrandpa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
   }
   if ($row = $relation['grand']['i']['f']) {
-    $xtpl->assign('igrandma', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>');
+    $xtpl->assign('igrandma', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
   }
   if ($row = $relation['grand']['i']['m']) {
-    $xtpl->assign('igrandpa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>');
+    $xtpl->assign('igrandpa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
   }
-
   if ($row = $relation['parent']['m']) {
-    $xtpl->assign('mama', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>');
+    $xtpl->assign('mama', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
   }
   if ($row = $relation['parent']['f']) {
-    $xtpl->assign('papa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>');
+    $xtpl->assign('papa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
   }
 
   if (count($child = $relation['child'])) {
     $html = '';    
     foreach ($child as $row) {
-      $html = '<a href="/index.php?nv=biograph&op=detail&id=' . $row['name'] . '">' . $row['name'] . '</a>';
+      $html = '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>';
     }
     $xtpl->assign('child', $html);
   }

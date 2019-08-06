@@ -1,4 +1,94 @@
 <!-- BEGIN: main -->
+<style>
+*, *:before, *:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+#wrapper {
+  position: relative;
+}
+.branch {
+  position: relative;
+  margin-left: 250px;
+}
+.branch:before {
+  content: "";
+  width: 50px;
+  border-top: 2px solid #eee9dc;
+  position: absolute;
+  left: -100px;
+  top: 50%;
+  margin-top: 1px;
+}
+.entry {
+  position: relative;
+  min-height: 60px;
+}
+.entry:before {
+  content: "";
+  height: 100%;
+  border-left: 2px solid #eee9dc;
+  position: absolute;
+  left: -50px;
+}
+.entry:after {
+  content: "";
+  width: 50px;
+  border-top: 2px solid #eee9dc;
+  position: absolute;
+  left: -50px;
+  top: 50%;
+  margin-top: 1px;
+}
+.entry:first-child:before {
+  width: 10px;
+  height: 50%;
+  top: 50%;
+  margin-top: 2px;
+  border-radius: 10px 0 0 0;
+}
+.entry:first-child:after {
+  height: 10px;
+  border-radius: 10px 0 0 0;
+}
+.entry:last-child:before {
+  width: 10px;
+  height: 50%;
+  border-radius: 0 0 0 10px;
+}
+.entry:last-child:after {
+  height: 10px;
+  border-top: none;
+  border-bottom: 2px solid #eee9dc;
+  border-radius: 0 0 0 10px;
+  margin-top: -9px;
+}
+.entry.sole:before {
+  display: none;
+}
+.entry.sole:after {
+  width: 50px;
+  height: 0;
+  margin-top: 1px;
+  border-radius: 0;
+}
+.label {
+  display: block;
+  min-width: 150px;
+  padding: 5px 10px;
+  line-height: 20px;
+  text-align: center;
+  border: 2px solid #eee9dc;
+  border-radius: 5px;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -15px;
+  color: black;
+}
+
+</style>
 <div class="container">
   <a href="/biograph/">
     <img src="/modules/biograph/src/banner.png" style="width: 100px;">
@@ -29,7 +119,28 @@
     </div>
   </div>
 
-  <table class="table table-bordered">
+  <div id="wrapper"><span class="label"> {name} </span>
+    <div class="branch lv1">
+      <div class="entry"><span class="label"> Bố <br> {papa} </span>
+        <div class="branch lv2">
+          <div class="entry"><span class="label"> Ông nội <br> {igrandpa} </span>
+          </div>
+          <div class="entry"><span class="label"> Bà nội <br> {igrandma} </span>
+          </div>
+        </div>
+      </div>
+      <div class="entry"><span class="label"> Mẹ <br> {mama} </span>
+        <div class="branch lv2">
+          <div class="entry"><span class="label"> Ông ngoại <br> {egrandpa} </span>
+          </div>
+          <div class="entry"><span class="label"> Bà ngoại <br> {egrandma} </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <table class="table table-bordered">
     <tr>
       <th colspan="4" class="text-center">
         Gia phả
@@ -70,7 +181,7 @@
       </td>
     </tr>
   </table>
-</div>
+</div> -->
 
 <script>
   var avatar = $("#avatar")
