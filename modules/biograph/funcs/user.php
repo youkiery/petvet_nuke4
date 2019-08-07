@@ -36,6 +36,52 @@ if (!empty($action)) {
 				}
 			}
 		break;
+    case 'get-request':
+      $id = $nv_Request->get_string('id', 'post', 0);
+
+      if (!empty($id)) {
+        $result['status'] = 1;
+        $result['html'] = requestDetail($id);
+      }
+    break;
+    case 'request':
+      $id = $nv_Request->get_string('id', 'post', 0);
+      $type = $nv_Request->get_string('type', 'post', 0);
+
+      if (!empty($id)) {
+        if (!empty($request = getPetRequest($id, $type)) && count($request) > 0) {
+          $sql = 'update `'. PREFIX .'_request` set time = ' . time() . ', status = 1 where type = '. $type .' and petid = ' . $id;
+          // die($sql);
+          if ($db->query($sql)) {
+            $result['status'] = 1;
+            $result['html'] = requestDetail($id);
+          }
+        }
+        else {
+          $sql = 'insert into `'. PREFIX .'_request` (petid,	type, status, time) values('. $id .', '. $type .', 1, '. time() .')';
+          // die($sql);
+          if ($db->query($sql)) {
+            $result['status'] = 1;
+            $result['html'] = requestDetail($id);
+          }
+        }
+      }
+    break;
+    case 'cancel':
+      $id = $nv_Request->get_string('id', 'post', 0);
+      $type = $nv_Request->get_string('type', 'post', 0);
+
+      if (!empty($id)) {
+        if (!empty($request = getPetRequest($id, $type)) && count($request) > 0) {
+          $sql = 'update `'. PREFIX .'_request` set time = ' . time() . ', status = 0 where type = '. $type .' and petid = ' . $id;
+          // die($sql);
+          if ($db->query($sql)) {
+            $result['status'] = 1;
+            $result['html'] = requestDetail($id);
+          }
+        }
+      }
+    break;
 		case 'filteruser':
 			$filter = $nv_Request->get_array('filter', 'post');
 			

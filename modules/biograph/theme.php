@@ -11,6 +11,74 @@ if (!defined('PREFIX')) {
   die('Stop!!!');
 }
 
+function getPetRequest($petid, $type = -1) {
+  global $db;
+
+  if ($type >= 0) {
+    $sql = 'select * from `'. PREFIX .'_request` where petid = ' . $petid . ' and type = ' . $type . ' order by time';
+    $query = $db->query($sql);
+
+    if (!empty($row = $query->fetch())) {
+      return $row;
+    }
+    return array();
+  }
+  $list = array();
+  $sql = 'select * from `'. PREFIX .'_request` where petid = ' . $petid . ' order by time';
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $list[] = $row;
+  }
+
+  return $list;
+}
+
+function requestDetail($petid) {
+  $request_array = array(
+    array(
+      'title' => 'Bắn microchip',
+      'type' => 0
+    ),
+    array(
+      'title' => 'Tiêm phòng bệnh',
+      'type' => 1
+    ),
+    array(
+      'title' => 'Tiêm phòng dại',
+      'type' => 2
+    ),
+  );
+  $xtpl = new XTemplate('request-detail.tpl', PATH);
+
+  foreach ($request_array as $row) {
+    $xtpl->assign('title', $row['title']);
+    $xtpl->assign('type', $row['type']);
+    $xtpl->assign('id', $petid);
+    if (!empty($request = getPetRequest($petid, $row['type']))) {
+      $request['status'] = intval($request['status']);
+      switch ($request['status']) {
+        case 0:
+          $xtpl->parse('main.row.rerequest');
+        break;
+        case 1:
+          $xtpl->parse('main.row.cancel');
+        break;
+        default:
+          $xtpl->parse('main.row.request');
+        break;
+      }
+    }
+    else {
+      $xtpl->parse('main.row.request');
+    }
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function userDogRowByList($userid, $filter = array('keyword' => '', )) {
   global $db, $user_info;
   $index = 1;
@@ -27,8 +95,34 @@ function userDogRowByList($userid, $filter = array('keyword' => '', )) {
     $xtpl->assign('sex', $row['sex']);
     $xtpl->assign('dob', cdate($row['dateofbirth']));
     if (!empty($user_info) && !empty($user_info['userid']) && (in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
-      // $request = getPetRequest($row['id']);
-      // if ($request[''])
+      $request = getPetRequest($row['id']);
+      if ($count = count($request) > 0) {
+        $counter = 0;
+        $scounter = 0;
+        foreach ($request as $requester) {
+          // request status: 0-fail, 1-requesting, 2-success
+          if ($requester['status'] > 0) {
+            if ($requester['status'] == 2) {
+              ++$scounter;
+            } 
+            ++$counter;
+          }
+        }
+        if ($counter == 0) {
+          $xtpl->assign('request', 'danger');
+        }
+        else if ($counter == $count) {
+          if ($scounter == $count) {
+            $xtpl->assign('request', 'success');
+          }
+          else {
+            $xtpl->assign('request', 'info');
+          }
+        }
+        else {
+          $xtpl->assign('request', 'warning');
+        }
+      }
       if ($row['active']) {
         $xtpl->parse('main.row.mod.uncheck');
       }

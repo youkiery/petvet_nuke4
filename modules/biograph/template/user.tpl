@@ -13,6 +13,21 @@
     <img src="/modules/biograph/src/banner.png" style="width: 200px;">
   </a>
 
+  <div id="request-detail" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body text-center">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <p>
+            Yêu cầu tiêm phòng, bắn chip
+          </p>
+
+          <div id="request-content"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="pet-vaccine" class="modal fade" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -505,6 +520,8 @@
   var insertUser = $("#insert-user")
   var insertParent = $("#insert-parent")
   var petVaccine = $("#pet-vaccine")
+  var requestContent = $("#request-content")
+  var requestDetail = $("#request-detail")
   var removetPet = $("#remove-pet")
   var removetUser = $("#remove-user")
   var petList = $("#pet-list")
@@ -574,6 +591,43 @@
     installRemindv2('parent', 'species')
     installRemindv2('parent', 'breed')
   })
+
+  function request(id) {
+    $.post(
+      global['url'],
+      {action: 'get-request', id: id},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          requestContent.html(data['html'])
+          requestDetail.modal('show')
+        }, () => {})
+      }
+    )
+  }
+
+  function requestSubmit(id, type) {
+    $.post(
+      global['url'],
+      {action: 'request', id: id, type: type},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          requestContent.html(data['html'])
+        }, () => {})
+      }
+    )
+  }
+
+  function cancelSubmit(id, type) {
+    $.post(
+      global['url'],
+      {action: 'cancel', id: id, type: type},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          requestContent.html(data['html'])
+        }, () => {})
+      }
+    )
+  }
 
   function addVaccine(id) {
     global['id'] = id
