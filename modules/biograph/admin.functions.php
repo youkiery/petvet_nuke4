@@ -17,6 +17,41 @@ define("PATH", NV_ROOTDIR . "/modules/" . $module_file . '/template/admin/');
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';
 
+function requestList($page = 1, $limit = 10) {
+  global $db, $request_array;
+
+  $xtpl = new XTemplate('request-list.tpl', PATH);
+  // die(PATH);
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_request` where status = 1';
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList($count, $page, $limit));
+
+  $sql = 'select * from `'. PREFIX .'_request` where status = 1 limit ' . $limit . ' offset ' . ($page - 1) * $limit;
+  $query = $db->query($sql);
+  $index = 1;
+
+  while ($row = $query->fetch()) {
+    $pet = getPetById($row['petid']);
+    $owner = getOwnerById($pet['userid']);
+
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('pet', $pet['name']);
+    $xtpl->assign('owner', $owner['fullname']);
+    $xtpl->assign('mobile', $owner['mobile']);
+    $xtpl->assign('address', $owner['address']);
+    $xtpl->assign('type', $request_array[$row['type']]['title']);
+
+    $xtpl->parse('main.row');
+  }
+
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function userRowList($filter = array('keyword' => '', 'status' => 0)) {
   global $db, $user_info;
 

@@ -14,6 +14,21 @@ if (!defined('NV_MAINFILE')) {
 define("PREFIX", $db_config['prefix'] . "_" . $module_name);
 define('PERMISSION_MODULE', 1);
 
+$request_array = array(
+  array(
+    'title' => 'Bắn microchip',
+    'type' => 0
+  ),
+  array(
+    'title' => 'Tiêm phòng bệnh',
+    'type' => 1
+  ),
+  array(
+    'title' => 'Tiêm phòng dại',
+    'type' => 2
+  ),
+);
+
 function checkObj($obj) {
   $check = true;
   foreach ($obj as $key => $value) {
@@ -109,6 +124,28 @@ function getPetById($id) {
 
   if (intval($id)) {
     $sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
+    $query = $db->query($sql);
+    return $query->fetch();
+  }
+  return false;
+}
+
+function getOwnerById($id) {
+  global $db;
+
+  if (intval($id)) {
+    $sql = 'select * from `'. PREFIX .'_user` where id = ' . $id;
+    $query = $db->query($sql);
+    return $query->fetch();
+  }
+  return false;
+}
+
+function getRequestId($id) {
+  global $db;
+
+  if (intval($id)) {
+    $sql = 'select * from `'. PREFIX .'_request` where id = ' . $id;
     $query = $db->query($sql);
     return $query->fetch();
   }

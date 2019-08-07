@@ -35,20 +35,7 @@ function getPetRequest($petid, $type = -1) {
 }
 
 function requestDetail($petid) {
-  $request_array = array(
-    array(
-      'title' => 'Bắn microchip',
-      'type' => 0
-    ),
-    array(
-      'title' => 'Tiêm phòng bệnh',
-      'type' => 1
-    ),
-    array(
-      'title' => 'Tiêm phòng dại',
-      'type' => 2
-    ),
-  );
+  global $request_array;
   $xtpl = new XTemplate('request-detail.tpl', PATH);
 
   foreach ($request_array as $row) {
