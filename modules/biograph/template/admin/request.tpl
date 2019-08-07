@@ -2,6 +2,16 @@
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script> 
 <link rel="stylesheet" href="/modules/biograph/src/glyphicons.css">
 
+<!-- <form onsubmit="filter()">
+  <input type="text" class="form-control" id="keyword" placeholder="Từ khóa">
+  <input type="text" class="form-control" id="atime">
+  <input type="text" class="form-control" id="ztime">
+
+  <button class="btn btn-info">
+    <span class="glyphicon glyphicon-search"></span>
+  </button>
+</form> -->
+
 <div id="content">
   {content}
 </div>
