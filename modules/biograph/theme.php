@@ -27,6 +27,8 @@ function userDogRowByList($userid, $filter = array('keyword' => '', )) {
     $xtpl->assign('sex', $row['sex']);
     $xtpl->assign('dob', cdate($row['dateofbirth']));
     if (!empty($user_info) && !empty($user_info['userid']) && (in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
+      // $request = getPetRequest($row['id']);
+      // if ($request[''])
       if ($row['active']) {
         $xtpl->parse('main.row.mod.uncheck');
       }

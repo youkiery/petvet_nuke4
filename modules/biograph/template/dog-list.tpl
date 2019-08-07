@@ -25,6 +25,12 @@
       <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {breed} </a> </td>
       <td>
         <!-- BEGIN: mod -->
+        <button class="btn btn-{request}" onclick="request({id})">
+          <img src="/modules/biograph/src/request.png" style="width: 20px; height: 20px;">
+        </button>
+        <button class="btn btn-info" onclick="addVaccine({id})">
+          <img src="/modules/biograph/src/syringe.png" style="width: 20px; height: 20px;">
+        </button>
         <button class="btn btn-info" onclick="editPet({id})">
           <span class="glyphicon glyphicon-edit"></span>
         </button>

@@ -232,6 +232,13 @@ function checkPet($name, $userid) {
   return 0;
 }
 
+function checkPrvVaccine($data) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_vaccine` where type = ' . $data['type'] . ' and ';
+  return false;
+}
+
 function sqlBuilder($data, $type) {
   $string = array();
   foreach ($data as $key => $value) {
