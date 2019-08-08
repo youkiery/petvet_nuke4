@@ -2,7 +2,7 @@
 <div class="container">
     <div class="text-center start-content">
       <img src="/modules/biograph/src/banner.png">
-      <p class="secondary"> Nâng niu tình yêu động vật </p>
+      <p> Nâng niu tình yêu động vật </p>
       <form action="/biograph/list">
         <div style="width: 60%; margin: auto;">
           <label class="input-group">
@@ -11,9 +11,9 @@
               <button class="btn btn-info" onclick="search()"> Tìm kiếm </button>
             </div>
           </label>
-          <a href="/biograph/login"> Đăng nhập </a> |
-          <a href="/user/kernel"> Đăng ký giống </a> |
-          <a href="/user/center"> Đăng ký trại </a>
+          <!-- <a href="/biograph/login"> Đăng nhập </a> | -->
+          <a href="/biograph/private"> Cá nhân </a> |
+          <a href="/biograph/center"> Trang trại </a>
         </div>
       </form>
     </div>

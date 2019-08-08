@@ -119,7 +119,7 @@
     </div>
   </div>
 
-  <div id="wrapper"><span class="label"> {name} </span>
+  <div id="wrapper" style="overflow: scroll"><span class="label"> {name} </span>
     <div class="branch lv1">
       <div class="entry"><span class="label"> Bố <br> {papa} </span>
         <div class="branch lv2">
