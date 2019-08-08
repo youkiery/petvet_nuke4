@@ -18,7 +18,10 @@ $page_title = "autoload";
 $action = $nv_Request->get_string('action', 'post', '');
 $userinfo = getUserInfo();
 if (!empty($userinfo)) {
-  header('location: /biograph/user');
+  if ($userinfo['center']) {
+    header('location: /biograph/center');
+  }
+  header('location: /biograph/private');
 }
 
 if (!empty($action)) {
