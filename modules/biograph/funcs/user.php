@@ -28,9 +28,11 @@ if (!empty($action)) {
 	switch ($action) {
 		case 'filter':
 			$filter = $nv_Request->get_array('filter', 'post');
+			$tabber = $nv_Request->get_array('tabber', 'post');
 			
 			if (count($filter) > 1) {
-				$result['html'] = userDogRowByList($userinfo['id'], $filter);
+				// $result['html'] = userDogRowByList($userinfo['id'], $filter, $tabber);
+				$result['html'] = userDogRowByList($userinfo['id'], $tabber, $filter);
 				if ($result['html']) {
 					$result['status'] = 1;
 				}
@@ -234,6 +236,18 @@ if (!empty($action)) {
         $data['fid'] = $data['parentf'];
 				$data['mid'] = $data['parentm'];
 
+        if (!empty($data['breeder'])) {
+          if ($data['sex']) {
+            $data['breeder'] = 0;
+          }
+          else {
+            $data['breeder'] = 1;
+          }
+        }
+        else {
+          $data['breeder'] = 2;
+        }
+
         unset($data['sex0']);
         unset($data['sex1']);
 				unset($data['dob']);
@@ -313,6 +327,18 @@ if (!empty($action)) {
         
         checkRemind($data['species'], 'species');
         checkRemind($data['breed'], 'breed');
+
+        if (!empty($data['breeder'])) {
+          if ($data['sex']) {
+            $data['breeder'] = 0;
+          }
+          else {
+            $data['breeder'] = 1;
+          }
+        }
+        else {
+          $data['breeder'] = 2;
+        }
 
 				$sql = 'update `'. PREFIX .'_pet` set '. sqlBuilder($data, BUILDER_EDIT) .', image = "'. $image .'" where id = ' . $id;
 
@@ -397,19 +423,15 @@ $xtpl->assign('list', userDogRowByList($userinfo['id']));
 
 if (!$userinfo['center']) {
 	$xtpl->parse('main.log.center');
+  $xtpl->assign('tabber', '0, 1, 2');
 }
 else {
+  $xtpl->assign('tabber', '0');
 	$xtpl->parse('main.log.xcenter');
+	$xtpl->parse('main.log.tabber');
+	$xtpl->parse('main.log.breeder');
+	$xtpl->parse('main.log.breeder2');
 }
-
-
-// if (!empty($user_info) && !empty($user_info['userid']) && (in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
-// 	$xtpl->assign('userlist', userRowList());
-	
-// 	$xtpl->parse('main.log.user');
-// 	$xtpl->parse('main.log.mod');
-// 	$xtpl->parse('main.log.mod2');
-// }
 
 $xtpl->parse('main.log');
 

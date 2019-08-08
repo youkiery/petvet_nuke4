@@ -223,6 +223,19 @@
             </div>
           </label>
 
+          <!-- BEGIN: breeder -->
+          <label class="row">
+            <div class="col-sm-3">
+              Là cá thể giống
+            </div>
+            <div class="col-sm-9">
+              <label>
+                <input type="checkbox" id="pet-breeder" checked>
+              </label>
+            </div>
+          </label>
+          <!-- END: breeder -->
+
           <label class="row">
             <div class="col-sm-3">
               Màu sắc
@@ -283,7 +296,6 @@
               </div>
             </div>
           </div>
-
                     
           <label class="row">
             <div class="col-sm-3">
@@ -368,6 +380,19 @@
             </div>
           </label>
 
+          <!-- BEGIN: breeder2 -->
+          <label class="row">
+            <div class="col-sm-3">
+              Là cá thể giống 
+            </div>
+            <div class="col-sm-9">
+              <label>
+                <input type="checkbox" id="parent-breeder" checked> 
+              </label>
+            </div>
+          </label>
+          <!-- END: breeder2 -->
+
           <label class="row">
             <div class="col-sm-3">
               Màu sắc
@@ -440,7 +465,7 @@
     </button>
     <!-- END: center -->
     <!-- BEGIN: xcenter -->
-    <button class="btn btn-success btn-xs">
+    <button class="btn btn-success btn-xs" style="min-height: 0px;">
       Đã đăng ký trại
     </button>
     <!-- END: xcenter -->
@@ -448,9 +473,30 @@
   <div style="clear: left;"></div>
   <h2> Danh sách thú cưng </h2>
 
-  <button class="btn btn-success" onclick="addPet()">
+  <form onsubmit="filterS(event)">
+    <input type="text" class="form-control" id="search-keyword" style="display: inline-block; width: 30%;" placeholder="Từ khóa">
+    <select class="form-control" id="search-limit" style="display: inline-block; width: 30%;">
+      <option value="10">10</option>
+      <option value="20">20</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+    </select>
+    <button class="btn btn-info">
+      <span class="glyphicon glyphicon-search"></span>
+    </button>
+  </form>
+
+  <button class="btn btn-success" style="float: right;" onclick="addPet()"> 
     <span class="glyphicon glyphicon-plus">  </span>
   </button>
+
+  <!-- BEGIN: tabber -->
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#a" onclick="change(0)"> Đực giống </a></li>
+    <li><a data-toggle="tab" href="#b" onclick="change(1)"> Cái giống </a></li>
+    <li><a data-toggle="tab" href="#c" onclick="change(2)"> Con non </a></li>
+  </ul>
+  <!-- END: tabber -->
   
   <div id="pet-list">
     {list}
@@ -465,7 +511,9 @@
     text: ['Đăng ky', 'Đăng nhập'],
     url: '{origin}',
     id: -1,
-    parent: 'm'
+    parent: 'm',
+    tabber: [{tabber}],
+    page: 1
   }
   var vaccine = {
     type: $("#vaccine-type"),
@@ -513,6 +561,8 @@
   var keyword = $("#keyword")
   var cstatus = $(".status")
   var button = $("#button")
+  var searchLimit = $("#search-limit")
+  var searchKeyword = $("#search-keyword")
   var ibtn = $("#ibtn")
   var ebtn = $("#ebtn")
 
@@ -592,6 +642,11 @@
     installRemindv2('parent', 'breed')
   })
 
+  function change(pid) {
+    global['tabber'][0] = pid
+    filter()
+  }
+
   function request(id) {
     $.post(
       global['url'],
@@ -667,6 +722,7 @@
             petPreview.val('')
             remind = JSON.parse(data['remind'])
             insertParent.modal('hide')
+            $("#parent-breeder").prop('checked', true)
             $("#parent-" + global['parent']).val(data['name'])
             $("#parent-" + global['parent'] + '-s').val(data['id'])
           }, () => {})
@@ -905,30 +961,42 @@
   }
 
   function checkFilter() {
-    var temp = cstatus.filter((index, item) => {
-      return item.checked
-    })
-    var value = 0
-    if (temp[0]) {
-      value = splipper(temp[0].getAttribute('id'), 'status')
-    }
+    // var temp = cstatus.filter((index, item) => {
+    //   return item.checked
+    // })
+    // var value = 0
+    // if (temp[0]) {
+    //   value = splipper(temp[0].getAttribute('id'), 'status')
+    // }
     var data = {
-      keyword: keyword.val(),
-      status: value
+      page: global['page'],
+      limit: searchLimit.val(),
+      keyword: searchKeyword.val(),
+      // status: value
     }
     return data
+  }
+
+  function goPage(page) {
+    global['page'] = page
+    filter()
   }
 
   function filter() {
     $.post(
       global['url'],
-      {action: 'filter', filter: checkFilter()},
+      {action: 'filter', filter: checkFilter(), tabber: global['tabber']},
       (response, status) => {
         checkResult(response, status).then(data => {
           petList.html(data['html'])
         }, () => {})
       }
     )
+  }
+
+  function filterS(e) {
+    e.preventDefault()
+    filter()
   }
 
   function check(id, type) {
@@ -956,13 +1024,14 @@
   function insertPetSubmit() {
     $.post(
       global['url'],
-      {action: 'insertpet', data: checkInputSet(pet)},
+      {action: 'insertpet', data: checkInputSet(pet), breeder: $("#pet-breeder").prop('checked', true)},
       (response, status) => {
         checkResult(response, status).then(data => {
           petList.html(data['html'])
           clearInputSet(pet)
           $("#parent-m").val('')
           $("#parent-f").val('')
+          $("#pet-breeder").prop('checked', true)
           petPreview.val('')
           remind = JSON.parse(data['remind'])
           insertPet.modal('hide')

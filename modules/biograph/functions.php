@@ -110,16 +110,24 @@ function getUserInfo() {
   return $data;
 }
 
-function getUserPetList($userid, $filter) {
+function getUserPetList($userid, $tabber, $filter) {
   global $db;
 
   $list = array();
-  $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userid . ' and name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '');
+  // $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userid . ' and name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '' . ' and breeder in ('. implode(', ', $tabber) .')');
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet`  where userid = ' . $userid . ' and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .')';
+  $query = $db->query($sql);
+  $count = $query->fetch();
+
+  $sql = 'select * from `'. PREFIX .'_pet`  where userid = ' . $userid . ' and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   while ($row = $query->fetch()) {
     $list[] = $row;
   }
 
-  return $list;
+  return array(
+    'count' => $count['count'],
+    'list' => $list
+  );
 }

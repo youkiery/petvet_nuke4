@@ -66,14 +66,14 @@ function requestDetail($petid) {
   return $xtpl->text();
 }
 
-function userDogRowByList($userid, $filter = array('keyword' => '', )) {
+function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('page' => 1, 'limit' => 10, 'keyword' => '')) {
   global $db, $user_info;
   $index = 1;
   $xtpl = new XTemplate('dog-list.tpl', PATH);
 
-  $data = getUserPetList($userid, $filter);
+  $data = getUserPetList($userid, $tabber, $filter);
 
-  foreach ($data as $row) {
+  foreach ($data['list'] as $row) {
     $xtpl->assign('index', $index++);
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('id', $row['id']);
@@ -120,6 +120,9 @@ function userDogRowByList($userid, $filter = array('keyword' => '', )) {
     $xtpl->parse('main.row.mod');
     $xtpl->parse('main.row');
   }
+  // echo json_encode($data);die();
+
+  $xtpl->assign('nav', navList($data['count'], $filter['page'], $filter['limit']));
   $xtpl->parse('main');
   return $xtpl->text();
 }
