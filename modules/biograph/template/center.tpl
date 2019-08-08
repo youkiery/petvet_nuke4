@@ -223,7 +223,6 @@
             </div>
           </label>
 
-          <!-- BEGIN: breeder -->
           <label class="row">
             <div class="col-sm-3">
               Là cá thể giống
@@ -234,7 +233,6 @@
               </label>
             </div>
           </label>
-          <!-- END: breeder -->
 
           <label class="row">
             <div class="col-sm-3">
@@ -380,7 +378,6 @@
             </div>
           </label>
 
-          <!-- BEGIN: breeder2 -->
           <label class="row">
             <div class="col-sm-3">
               Là cá thể giống 
@@ -391,7 +388,6 @@
               </label>
             </div>
           </label>
-          <!-- END: breeder2 -->
 
           <label class="row">
             <div class="col-sm-3">
@@ -458,17 +454,6 @@
     <button class="btn btn-info" onclick="editUser({userid})">
       Chỉnh sửa thông tin
     </button>
-
-    <!-- BEGIN: center -->
-    <button class="btn btn-info" onclick="center()">
-      Đăng ký trại
-    </button>
-    <!-- END: center -->
-    <!-- BEGIN: xcenter -->
-    <button class="btn btn-success btn-xs" style="min-height: 0px;">
-      Đã đăng ký trại
-    </button>
-    <!-- END: xcenter -->
   </div>
   <div style="clear: left;"></div>
   <h2> Danh sách thú cưng </h2>
@@ -490,13 +475,11 @@
     <span class="glyphicon glyphicon-plus">  </span>
   </button>
 
-  <!-- BEGIN: tabber -->
   <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#a" onclick="change(0)"> Đực giống </a></li>
     <li><a data-toggle="tab" href="#b" onclick="change(1)"> Cái giống </a></li>
     <li><a data-toggle="tab" href="#c" onclick="change(2)"> Con non </a></li>
   </ul>
-  <!-- END: tabber -->
   
   <div id="pet-list">
     {list}
