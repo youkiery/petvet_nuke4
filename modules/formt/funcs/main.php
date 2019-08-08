@@ -429,9 +429,10 @@ if (!empty($action)) {
 			$keyword = $nv_Request->get_string('keyword', 'get/post', 1);
 			$other = $nv_Request->get_array('other', 'get/post', 1);
 			$xcode = $nv_Request->get_string('xcode', 'get/post', 1);
+			$owner = $nv_Request->get_string('owner', 'get/post', 1);
 
 			$result['status'] = 1;
-			$result['html'] = formList($keyword, $page, $limit, $printer, $other, $xcode);
+			$result['html'] = formList($keyword, $page, $limit, $printer, $other, $xcode, $owner);
 		break;
 		case 'secretaryfilter':
 			$page = $nv_Request->get_string('page', 'get/post', 1);

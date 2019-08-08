@@ -170,6 +170,10 @@
       </div>
       <div class="form-group row">
         <div class="col-sm-4">
+          <input type="text" class="form-control" id="filter-owner" placeholder="Chủ hộ">
+        </div>
+
+        <div class="col-sm-4">
           <input type="text" class="form-control" id="filter-exam" placeholder="Kết quả xét nghiệm">
         </div>
 
@@ -906,6 +910,10 @@
       </div>
       <div class="form-group row">
         <div class="col-sm-4">
+          <input type="text" class="form-control" id="sfilter-owner" placeholder="Chủ hộ">
+        </div>
+
+        <div class="col-sm-4">
           <input type="text" class="form-control" id="sfilter-sample" placeholder="Loại động vật">
         </div>
 
@@ -1358,6 +1366,7 @@
   var filterUnit = $("#filter-unit")
   var filterExam = $("#filter-exam")
   var filterSample = $("#filter-sample")
+  var filterOwner = $("#filter-owner")
   var filterFrom = $("#filter-from")
   var filterEnd = $("#filter-end")
 
@@ -1368,6 +1377,7 @@
   var sfilterExam = $("#sfilter-exam")
   var sfilterSample = $("#sfilter-sample")
   var sfilterPay = $("#sfilter-pay")
+  var sfilterOwner = $("#sfilter-owner")
   var sfilterFrom = $("#sfilter-from")
   var sfilterEnd = $("#sfilter-end")
 
@@ -3194,7 +3204,7 @@
     e.preventDefault()
     $.post(
       strHref,
-      {action: 'filter', page: 1, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val(), other: getFilter(), xcode: filterXcode.val()},
+      {action: 'filter', page: 1, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val(), other: getFilter(), xcode: filterXcode.val(), owner: filterOwner.val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           global_page = 1
@@ -3215,7 +3225,8 @@
       sample: sfilterSample.val(),
       pay: sfilterPay.val(),
       from: sfilterFrom.val(),
-      end: sfilterEnd.val()
+      end: sfilterEnd.val(),
+      owner: sfilterOwner.val()
     }
     return data
   }

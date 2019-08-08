@@ -112,7 +112,7 @@ function summaryContent($from, $end, $exam = '', $unit = '', $sample = '') {
   return $xtpl->text();
 }
 
-function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '', 'unit' => '', 'exam' => '', 'xcode' => '', 'pay' => '0', 'limit' => 10)) {
+function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '', 'unit' => '', 'exam' => '', 'xcode' => '', 'pay' => '0', 'limit' => 10, 'owner' => '')) {
   global $db, $user_info;
   $xtpl = new XTemplate("secretary-list.tpl", PATH);
 
@@ -141,12 +141,13 @@ function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '
 
   }
 
-  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where mcode like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and printer = 5 and (time between '. $filter['from'] .' and '. $filter['end'] .') ' . $exsql;
+  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where mcode like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and owner like "%'. $filter['owner'] .'%" and printer = 5 and (time between '. $filter['from'] .' and '. $filter['end'] .') ' . $exsql;
 
   $query = $db->query($sqlCount);
   $count = $query->fetch();
 
-  $sql = 'select * from `'. PREFIX .'_row` where mcode like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and printer = 5 and (time between '. $filter['from'] .' and '. $filter['end'] .') '. $exsql .' order by id desc limit ' . $filter['limit'] . ' offset ' . ($page - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_row` where mcode like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and owner like "%'. $filter['owner'] .'%" and printer = 5 and (time between '. $filter['from'] .' and '. $filter['end'] .') '. $exsql .' order by id desc limit ' . $filter['limit'] . ' offset ' . ($page - 1) * $filter['limit'];
+  // die($sql);
   $query = $db->query($sql);
 
   $index = 1;
@@ -191,7 +192,7 @@ function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '
   return $xtpl->text();
 }
 
-function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = array('exam' => '', 'unit' => '', 'sample' => ''), $xcode = '') {
+function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = array('exam' => '', 'unit' => '', 'sample' => ''), $xcode = '', $owner = '') {
   global $db, $sampleType, $user_info;
   $xtpl = new XTemplate("list.tpl", PATH);
   $xcode = str_replace('/', ', ', $xcode);
@@ -222,15 +223,14 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
   //   $printer = $lowest;
   // }
 
-  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%" and printer >= '. $printer .' and (time between '. $other['from'] .' and '. $other['end'] .')';
+  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%" and owner like "%'. $owner .'%" and printer >= '. $printer .' and (time between '. $other['from'] .' and '. $other['end'] .')';
 
   $query = $db->query($sqlCount);
   $count = $query->fetch();
 
   $xtpl->assign('total', $count['count']);
 
-  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%" and printer >= '. $printer .' and (time between '. $other['from'] .' and '. $other['end'] .') order by xcode desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
-  // die($sql);
+  $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%" and owner like "%'. $owner .'%" and printer >= '. $printer .' and (time between '. $other['from'] .' and '. $other['end'] .') order by xcode desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
   $query = $db->query($sql);
 
   $index = 1;
