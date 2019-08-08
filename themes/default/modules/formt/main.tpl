@@ -1047,8 +1047,8 @@
         </tr>
         <tr>
           <td colspan="2">
-            <div class="cell-center">CHI CỤC THÚ Y VÙNG V <br> <b class="p16"> TRẠM CHẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT </b></div>
-            Địa chỉ: Số 36, Phạm Hùng, phường Tân An, thành phố Buôn Ma Thuột, tỉnh Đăk Lăk. <br>Điện thoại: 0262 3877793
+            <div class="cell-center">CHI CỤC THÚ Y VÙNG V <br> <b class="p14"> TRẠM CHẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT </b></div>
+            Địa chỉ: Số 36, Phạm Hùng, phường Tân An, thành phố Buôn Ma Thuột, tỉnh Đắk Lắk. <br>Điện thoại: 0262 3877793
           </td>
         </tr>
       </table>
@@ -1092,7 +1092,7 @@
               <div class="text-center"> <b>TRẠM CHẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT</b> </div> 
               <div> 
                 <b> Địa chỉ: </b> 
-                Số 36 Phạm Hùng, Phường Tân An, Thành phố Buôn Ma Thuột, Tỉnh Đăklăk
+                Số 36 Phạm Hùng, Phường Tân An, Thành phố Buôn Ma Thuột, Tỉnh Đắk Lắk.
               </div> 
               <div> 
                 <b> Điện thoại: </b>
@@ -1208,7 +1208,7 @@
               <span class="p12">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</span> <br>
               <b class="p13"> Độc lập - Tự do - Hạnh phúc </b> 
               <div style="margin-top: 15px;"></div>
-              <span class="p14"> <i> Đăk Lăk, ngày noticetime-0 tháng noticetime-1 năm noticetime-2 </i> </span> 
+              <span class="p14"> <i> Đắk Lắk, ngày noticetime-0 tháng noticetime-1 năm noticetime-2 </i> </span> 
             </td>
           </tr>
         </table>
@@ -1990,7 +1990,7 @@
         const element = data[key];
         html += `
           <div class="row form-group" style="width: 100%;">
-            <button type="button" class="close" data-dismiss="modal" onclick="removeIgSecret('`+ index +`')">&times;</button>
+            <button type="button" class="close" data-dismiss="modal" onclick="removeIgSecret('`+ key +`')">&times;</button>
             <label class="col-sm-6">
               Chỉ tiêu:
             </label>
@@ -2012,7 +2012,7 @@
       }
     }
     html += `
-      <button class="btn btn-info" onclick="insertIgSecret()">
+      <button class="btn btn-info">
         Thêm
       </button>
     `
@@ -2024,23 +2024,8 @@
   }
 
   function removeIgSecret(key) {
-    var dat = []
-    $(".exam-sx").each((index, item) => {
-      dat.push({
-        name: item.value,
-        value: $("#number-sx" + (index + 1)).val()
-      })
-    })
-    delete dat[key - 1]
-    var temp = {}
-    for (const key in dat) {
-      if (dat.hasOwnProperty(key)) {
-        const element = dat[key];
-        temp[element['name']] = element['value']
-      }
-    }
-    global_ig = temp
-    if (!Object.keys(global_ig).length) {
+    delete global_ig[key]
+    if (Object.keys(global_ig)) {
       global_ig = {'': ''}
     }
     parseIgSecret(global_ig)
@@ -2088,7 +2073,6 @@
       (response, status) => {
         checkResult(response, status).then(data => {
           // console.log(data)
-          remindv2 = JSON.parse(data['remind'])
         }, () => {})
       }
     )
