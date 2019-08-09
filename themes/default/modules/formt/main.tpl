@@ -2022,7 +2022,7 @@
       }
     }
     html += `
-      <button class="btn btn-info">
+      <button class="btn btn-info" onclick="insertIgSecret()">
         Thêm
       </button>
     `

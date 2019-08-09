@@ -138,7 +138,6 @@ function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '
     else {
       $exsql .= ' and id not in (select rid from `'. PREFIX .'_secretary` where pay = 1)';
     }
-
   }
 
   $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where mcode like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and owner like "%'. $filter['owner'] .'%" and printer = 5 and (time between '. $filter['from'] .' and '. $filter['end'] .') ' . $exsql;
@@ -147,7 +146,6 @@ function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '
   $count = $query->fetch();
 
   $sql = 'select * from `'. PREFIX .'_row` where mcode like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and owner like "%'. $filter['owner'] .'%" and printer = 5 and (time between '. $filter['from'] .' and '. $filter['end'] .') '. $exsql .' order by id desc limit ' . $filter['limit'] . ' offset ' . ($page - 1) * $filter['limit'];
-  // die($sql);
   $query = $db->query($sql);
 
   $index = 1;
@@ -231,6 +229,7 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
   $xtpl->assign('total', $count['count']);
 
   $sql = 'select * from `'. PREFIX .'_row` where code like "%'. $keyword .'%" and sample like "%'. $other['sample'] .'%" and sender like "%'. $other['unit'] .'%" and exam like "%'. $other['exam'] .'%" and xcode like "%'. $xcode .'%" and owner like "%'. $owner .'%" and printer >= '. $printer .' and (time between '. $other['from'] .' and '. $other['end'] .') order by xcode desc limit ' . $limit . ' offset ' . ($page - 1) * $limit;
+  // die($sql);
   $query = $db->query($sql);
 
   $index = 1;
