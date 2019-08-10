@@ -4,6 +4,140 @@
     width: 100%;
   }
 </style>
+
+<div id="insert-pet" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <p class="text-center"> <b> Thêm thú cưng </b> </p>
+        <label class="row">
+          <div class="col-sm-3">
+            Tên thú cưng
+          </div>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="pet-name">
+          </div>
+        </label>
+
+        <label class="row">
+          <div class="col-sm-3">
+            Ngày sinh
+          </div>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="pet-dob">
+          </div>
+        </label>
+
+        <label class="row">
+          <div class="col-sm-3">
+            Giống 
+          </div>
+          <div class="col-sm-9 relative">
+            <input type="text" class="form-control" id="species-pet">
+            <div class="suggest" id="species-suggest-pet"></div>
+          </div>
+        </label>
+
+        <label class="row">
+          <div class="col-sm-3">
+            Loài
+          </div>
+          <div class="col-sm-9 relative">
+            <input type="text" class="form-control" id="breed-pet">
+            <div class="suggest" id="breed-suggest-pet"></div>
+          </div>
+        </label>
+
+        <label class="row">
+          <div class="col-sm-3">
+            Giới tính
+          </div>
+          <div class="col-sm-9">
+            <label>
+              <input type="radio" name="sex" id="pet-sex-0" checked> Giống đực
+            </label>
+            <label>
+              <input type="radio" name="sex" id="pet-sex-1"> Giống cái
+            </label>
+          </div>
+        </label>
+
+        <label class="row">
+          <div class="col-sm-3">
+            Màu sắc
+          </div>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="pet-color">
+          </div>
+        </label>
+
+        <label class="row">
+          <div class="col-sm-3">
+            Microchip
+          </div>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="pet-microchip">
+          </div>
+        </label>
+
+        <label class="row">
+          <div class="col-sm-3">
+            Xăm tai
+          </div>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="pet-miear">
+          </div>
+        </label>
+
+        <label class="row">
+          <div class="col-sm-3">
+            Hình ảnh
+          </div>
+          <div class="col-sm-9">
+            <div>
+              <img class="img-responsive" id="pet-preview" style="display: inline-block; width: 128px; height: 128px; margin: 10px;">
+            </div>
+            <input type="file" class="form-control" id="user-image" onchange="onselected(this, 'pet')">
+          </div>
+        </label>
+
+        <div class="text-center">
+          <button class="btn btn-success" id="ibtn" onclick="insertPetSubmit()">
+            Thêm thú cưng
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="insert-breeder" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <p> Thêm lịch phối giống </p>
+        <label class="form-group">
+          Ngày phối giống
+          <input type="text" class="form-control" id="breeder-time">
+        </label>
+        <label class="form-group">
+          Đối tượng phối
+          <input type="text" class="form-control" id="breeder-time">
+        </label>
+
+        <div id="breeder-child"></div>
+
+        <label class="form-group">
+          Ghi chú
+          <input type="text" class="form-control" id="breeder-time">
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="container" style="margin-top: 20px;">
   <a href="/biograph/">
     <img src="/modules/biograph/src/banner.png" style="width: 100px;">
@@ -23,9 +157,252 @@
       <p> microchip: {microchip} </p>
     </div>
   </div>
+
+  <div id="breeder-content">
+    {breeder}
+  </div>
 <script>
+  var global = {
+    url: '{url}',
+    child: []
+  }
+  var breeder = {
+    time: $("#breeder-time"),
+    target: $("#breeder-target"),
+    note: $("#breeder-note"),
+  }
+  var pet = {
+    name: $("#pet-name"),
+    dob: $("#pet-dob"),
+    species: $("#species-pet"),
+    breed: $("#breed-pet"),
+    sex0: $("#pet-sex-0"),
+    sex1: $("#pet-sex-1"),
+    color: $("#pet-color"),
+    microchip: $("#pet-microchip"),
+    miear: $("#pet-miear"),
+  }
+
+  var insertBreeder = $("#insert-breeder")
+  var insertPet = $("#insert-pet")
+  var breederContent = $("#breeder-content")
+  var breederChild = $("#breeder-child")
   var avatar = $("#avatar")
 
   loadImage('{image}', avatar)
+
+  function addBreeder() {
+    insertBreeder.modal('show')
+    parseChild()
+  }
+
+  function insertBreederSubmit() {
+    $.post(
+      global['url'],
+      {action: 'insert-breeder', breeder: checkInputSet(breeder), child: global['child']},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          breederContent.html(data['html'])
+          global['child'] = []
+          clearInputSet(breeder)
+          parseChild()
+        }, () => {})
+      }
+    )
+  }
+
+  function parseChild() {
+    var html = ''
+    if (!global['child'].length) {
+      global['child'] = [{
+        id: 0,
+        name: ''
+      }]
+    }
+
+    global['child'].forEach(child => {
+      html += `
+        <div class="input-group">
+          <input class="form-control" id="parent-f" type="text" value="`+ child['name'] +`" autocomplete="off">
+          <input class="form-control" id="parent-f-s" type="hidden" value="`+ child['id'] +`">
+          <div class="input-group-btn relative">
+            <button class="btn btn-success" style="height: 34px;" onclick="addPet()">
+              <span class="glyphicon glyphicon-plus"></span>
+            </button>
+          </div>
+        </div>`
+    })
+    breederChild.html(html)
+  }
+
+  function checkInputSet(dataSet) {
+    var data = {}
+
+    for (const dataKey in dataSet) {
+      if (dataSet.hasOwnProperty(dataKey)) {
+        const cell = dataSet[dataKey];
+
+        data[dataKey] = cell.val()
+      }
+    }
+
+    return data
+  }
+
+  function parseInputSet(dataSet, inputSet) {
+    for (const dataKey in dataSet) {
+      if (dataSet.hasOwnProperty(dataKey)) {
+        inputSet[dataKey].val(dataSet[dataKey])
+      }
+    }
+  }
+
+  function addPet() {
+    insertPet.modal('show')
+  }
+
+  function installRemind(name, type) {
+    var timeout
+    var input = $("#"+ type +"-" + name)
+    var suggest = $("#"+ type +"-suggest-" + name)
+
+    input.keyup(() => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        var key = paintext(input.val())
+        var html = ''
+
+        $.post(
+          global['url'],
+          {action: 'parent', keyword: key},
+          (response, status) => {
+            checkResult(response, status).then(data => {
+              suggest.html(data['html'])
+            }, () => {})
+          }
+        )
+        
+        suggest.html(html)
+      }, 200);
+    })
+    input.focus(() => {
+      suggest.show()
+    })
+    input.blur(() => {
+      setTimeout(() => {
+        suggest.hide()
+      }, 200);
+    })
+  }
+
+  function onselected(input, previewname) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      var fullname = input.files[0].name
+      var name = Math.round(new Date().getTime() / 1000) + '_' + fullname.substr(0, fullname.lastIndexOf('.'))
+      var extension = fullname.substr(fullname.lastIndexOf('.') + 1)
+      filename = name + '.' + extension
+      
+      reader.onload = function (e) {
+        var type = e.target["result"].split('/')[1].split(";")[0];
+        if (["jpeg", "jpg", "png", "bmp", "gif"].indexOf(type) >= 0) {
+          var image = new Image();
+          image.src = e.target["result"];
+          image.onload = (e2) => {
+            var c = document.createElement("canvas")
+            var ctx = c.getContext("2d");
+            var ratio = 1;
+            if(image.width > maxWidth)
+              ratio = maxWidth / image.width;
+            else if(image.height > maxHeight)
+              ratio = maxHeight / image.height;
+            c.width = image["width"];
+            c.height = image["height"];
+            ctx.drawImage(image, 0, 0);
+            var cc = document.createElement("canvas")
+            var cctx = cc.getContext("2d");
+            cc.width = image.width * ratio;
+            cc.height = image.height * ratio;
+            cctx.fillStyle = "#fff";
+            cctx.fillRect(0, 0, cc.width, cc.height);
+            cctx.drawImage(c, 0, 0, c.width, c.height, 0, 0, cc.width, cc.height);
+            file = cc.toDataURL("image/jpeg")
+            $("#" + previewname + "-preview").attr('src', file)
+            file = file.substr(file.indexOf(',') + 1);
+          }
+        };
+      };
+
+      if (imageType.indexOf(extension) >= 0) {
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+	}
+
+  function editPetSubmit() {
+    uploader().then((imageUrl) => {
+      $.post(
+        global['url'],
+        {action: 'editpet', id: global['id'], data: checkInputSet(pet), image: imageUrl},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            petList.html(data['html'])
+            clearInputSet(pet)
+            $("#parent-m").val('')
+            $("#parent-f").val('')
+            petPreview.val('')
+            remind = JSON.parse(data['remind'])
+            insertPet.modal('hide')
+          }, () => {})
+        }
+      )
+    })
+  }
+
+  function uploader() {
+    return new Promise(resolve => {
+      if (!(file || filename)) {
+        resolve('')
+      }
+      else {
+        var uploadTask = storageRef.child('images/' + filename).putString(file, 'base64', metadata);
+        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+          function(snapshot) {
+            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+              case firebase.storage.TaskState.PAUSED: // or 'paused'
+                console.log('Upload is paused');
+                break;
+              case firebase.storage.TaskState.RUNNING: // or 'running'
+                console.log('Upload is running');
+                break;
+            }
+          }, function(error) {
+            resolve('')
+            switch (error.code) {
+              case 'storage/unauthorized':
+                // User doesn't have permission to access the object
+              break;
+              case 'storage/canceled':
+                // User canceled the upload
+              break;
+              case 'storage/unknown':
+                // Unknown error occurred, inspect error.serverResponse
+              break;
+            }
+          }, function() {
+            // Upload completed successfully, now we can get the download URL
+            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+
+            file = false
+            resolve(downloadURL)
+            console.log('File available at', downloadURL);
+          });
+        });
+      }
+    })
+	}
+
 </script>
 <!-- END: main -->

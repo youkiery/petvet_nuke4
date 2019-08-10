@@ -89,6 +89,35 @@ function checkLogin($username, $password) {
   return false;
 }
 
+function breederList($petid) {
+  global $db;
+
+  // $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userid;
+  // $query = $db->query($sql);
+  // $list = array();
+  // while ($row = $query->fetch()) {
+  //   $list[] = $row['id'];
+  // }
+  // $pet = implode(', ', $list);
+
+  $sql = 'select * from `'. PREFIX .'_breeder` where petid in ('. $petid .') order by time desc';
+  $query = $db->query($sql);
+  $xtpl = new XTemplate('breeder.tpl', PATH);
+  $index = 1;
+
+  while (!empty($row = $query->fetch())) {
+    $pet = getPetById($row['targetid']);
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('time', date('d/m/Y', $row['time']));
+    $xtpl->assign('target', $pet['name']);
+    $xtpl->assign('number', count(json_encode($row['child'])));
+    $xtpl->assign('note', ($row['note']));
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function getUserInfo() {
   global $db, $_SESSION;
   $data = array();

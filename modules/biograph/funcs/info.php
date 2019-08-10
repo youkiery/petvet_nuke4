@@ -40,8 +40,10 @@ if (!empty($row = $query->fetch())) {
 	$xtpl->assign('color', $row['color']);
 	$xtpl->assign('microchip', $row['microchip']);
 	$xtpl->assign('image', $row['image']);
+  $xtpl->assign('breeder', breederList($id));
 }
 
+$xtpl->assign('url', '/' . $module_name . '/' . $op . '/');
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
