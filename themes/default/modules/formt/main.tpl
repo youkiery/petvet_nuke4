@@ -2034,8 +2034,13 @@
   }
 
   function removeIgSecret(key) {
+    var dat = {}
+    $(".exam-sx").each((index, item) => {
+      dat[item.value] = $("#number-sx" + (index + 1)).val()
+    })
+    global_ig = dat
     delete global_ig[key]
-    if (Object.keys(global_ig)) {
+    if (!Object.keys(global_ig)) {
       global_ig = {'': ''}
     }
     parseIgSecret(global_ig)
