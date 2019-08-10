@@ -23,11 +23,18 @@
         </label>
 
         <div id="breeder-child"></div>
+        <button class="btn btn-success" onclick="addChild()">
+          <span class="glyphicon glyphicon-plus"></span>
+        </button>
 
         <label class="form-group">
           Ghi chú
           <input type="text" class="form-control" id="breeder-note">
         </label>
+
+        <button class="btn btn-success" onclick="insertBreederSubmit()">
+          Thêm lịch phối giống
+        </button>
       </div>
     </div>
   </div>
@@ -167,11 +174,12 @@
 <script>
   var global = {
     url: '{url}',
-    child: []
+    child: [],
+    childid: 0
   }
   var breeder = {
     time: $("#breeder-time"),
-    target: $("#breeder-target"),
+    target: $("#breeder-targetid"),
     note: $("#breeder-note"),
   }
   var pet = {
@@ -190,17 +198,22 @@
   var insertPet = $("#insert-pet")
   var breederContent = $("#breeder-content")
   var breederChild = $("#breeder-child")
+  var petPreview = $("#pet-preview")
   var avatar = $("#avatar")
+
+  var remind = JSON.parse('{remind}')
 
   loadImage('{image}', avatar)
 
-  $("#breeder-time").datepicker({
+  $("#breeder-time, #pet-dob").datepicker({
     format: 'dd/mm/yyyy',
     changeMonth: true,
     changeYear: true
   });
 
   installRemind('target', 'breeder')
+  installRemindv2('pet', 'species')
+  installRemindv2('pet', 'breed')
 
   function splipper(text, part) {
     var pos = text.search(part + '-')
@@ -214,20 +227,102 @@
     return result
   }
   
-  function pickParent(name, id) {
-    var idp = splip per(e.parentqNode.getAttribute('id'), 'parent-suggest')
-    breeder['target'] ~ 
+  function pickTarget(name, id, type = 1, index = 0) {
+    if (type) {
+      $("#breeder-target").val(name)
+      $("#breeder-targetid").val(id)
+    }
+    else {
+      $("#child-" + index).val(name)
+      $("#childid-" + index).val(id)
+    }
+  }
+
+  function checkChild() {
+    var dat = []
+    $(".child").each((index, item) => {
+      var ids = item.getAttribute('id')
+      var id = splipper(ids, 'child')
+      
+      dat.push({
+        id: $("#childid-" + id).val(),
+        name: $("#child-" + id).val()
+      })
+    })
+    return dat
+  }
+
+  function insertPetSubmit() {
+    $.post(
+      global['url'],
+      {action: 'insertpet', data: checkInputSet(pet)},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          clearInputSet(pet)
+          petPreview.val('')
+          remind = JSON.parse(data['remind'])
+          $("#child-" + global['childid']).val(data['name'])
+          $("#childid-" + global['childid']).val(data['id'])
+          insertPet.modal('hide')
+        }, () => {})
+      }
+    )
+  }
+
+  function installRemindv2(name, type) {
+    var timeout
+    var input = $("#"+ type +"-" + name)
+    var suggest = $("#"+ type +"-suggest-" + name)
+
+    input.keyup(() => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        var key = paintext(input.val())
+        var html = ''
+        
+        for (const index in remind[type]) {
+          if (remind[type].hasOwnProperty(index)) {
+            const element = paintext(remind[type][index]['name']);
+            
+            if (element.search(key) >= 0) {
+              html += '<div class="suggest_item" onclick="selectRemindv2(\'' + name + '\', \'' + type + '\', \'' + remind[type][index]['name'] + '\')"><p class="right-click">' + remind[type][index]['name'] + '</p></div>'
+            }
+          }
+        }
+        suggest.html(html)
+      }, 200);
+    })
+    input.focus(() => {
+      suggest.show()
+    })
+    input.blur(() => {
+      setTimeout(() => {
+        suggest.hide()
+      }, 200);
+    })
+  }
+
+  function selectRemindv2(name, type, value) {
+    $("#"+ type +"-" + name).val(value)
+  }
+
+  function clearInputSet(dataSet) {
+    for (const dataKey in dataSet) {
+      if (dataSet.hasOwnProperty(dataKey)) {
+        dataSet[dataKey].val('')
+      }
+    }
   }
 
   function addBreeder() {
-    insertBreedr.modal('show')
+    insertBreeder.modal('show')
     parseChild()
   }
 
   function insertBreederSubmit() {
     $.post(
       global['url'],
-      {action: 'insert-breeder', breeder: checkInputSet(breeder), child: global['child']},
+      {action: 'insert-breeder', breeder: checkInputSet(breeder), child: checkChild()},
       (response, status) => {
         checkResult(response, status).then(data => {
           breederContent.html(data['html'])
@@ -241,6 +336,7 @@
 
   function parseChild() {
     var html = ''
+    var installer = []
     if (!global['child'].length) {
       global['child'] = [{
         id: 0,
@@ -248,19 +344,50 @@
       }]
     }
 
-    global['child'].forEach(child => {
+    global['child'].forEach((child, index) => {
       html += `
-        <div class="input-group">
-          <input class="form-control" id="parent-f" type="text" value="`+ child['name'] +`" autocomplete="off">
-          <input class="form-control" id="parent-f-s" type="hidden" value="`+ child['id'] +`">
-          <div class="input-group-btn relative">
-            <button class="btn btn-success" style="height: 34px;" onclick="addPet()">
-              <span class="glyphicon glyphicon-plus"></span>
-            </button>
+        <div class="relative">
+          <div class="input-group">
+            <input class="form-control childid-`+ index +`" id="childid-`+ index +`" type="hidden" value="`+ child['id'] +`">
+            <input class="form-control child child-`+ index +`" id="child-`+ index +`" type="text" value="`+ child['name'] +`" autocomplete="off">
+            <div class="input-group-btn">
+              <button class="btn btn-success" style="height: 34px;" onclick="addPet(`+index+`)">
+                <span class="glyphicon glyphicon-plus"></span>
+              </button>
+            </div>
+            <div class="input-group-btn">
+              <button class="btn btn-danger" style="height: 34px;" onclick="deleteChild(`+index+`)">
+                <span class="glyphicon glyphicon-remove"></span>
+              </button>
+            </div>
           </div>
+          <div class="suggest" id="child-suggest-`+ index +`"></div>
         </div>`
+        installer.push({
+          type: 'child',
+          name: index
+        })
     })
     breederChild.html(html)
+    installer.forEach((item, index) => {
+      installRemind(item['name'], item['type'], index)
+    })
+  }
+
+  function addChild() {
+    global['child'] = checkChild()
+    global['child'].push({
+      id: 0,
+      name: ''
+    })
+    parseChild()
+  }
+
+  function deleteChild(index) {
+    global['child'] = global['child'].filter((item, child) => {
+      return index !== child
+    })
+    parseChild()
   }
 
   function checkInputSet(dataSet) {
@@ -285,15 +412,16 @@
     }
   }
 
-  function addPet() {
+  function addPet(id) {
+    global['childid'] = id
     insertPet.modal('show')
   }
 
-  function installRemind(name, type) {
+  function installRemind(name, type, index = -1) {
     var timeout
     var input = $("#"+ type +"-" + name)
     var suggest = $("#"+ type +"-suggest-" + name)
-
+    
     input.keyup(() => {
       clearTimeout(timeout)
       timeout = setTimeout(() => {
@@ -302,7 +430,7 @@
 
         $.post(
           global['url'],
-          {action: 'target', keyword: key},
+          {action: 'target', keyword: key, index: index},
           (response, status) => {
             checkResult(response, status).then(data => {
               suggest.html(data['html'])
