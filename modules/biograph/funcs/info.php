@@ -23,28 +23,26 @@ if (empty($userinfo)) {
 	die();
 }
 
-$id = $nv_Request->get_int('id', 'get', 0);
 $action = $nv_Request->get_string('action', 'post', '');
 
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
 		case 'insert-breeder':
-			$time = $nv_Request->get_string('time', 'post', 0);
-			$target = $nv_Request->get_string('target', 'post', 0);
-			$note = $nv_Request->get_string('note', 'post', 0);
+			$data = $nv_Request->get_array('data', 'post');
 			$child = $nv_Request->get_array('child', 'post');
+			$id = $nv_Request->get_string('id', 'post', 0);
 
-      $time = totime($time);
+      $data['time'] = totime($data['time']);
       $list = array();
 
       foreach ($child as $key => $row) {
-        if (!empty($row['name'])) {
+        if (!empty($row['name'])) { 
           $list[] = $row['id'];
         }
       }
 
-      $sql = 'insert into `'. PREFIX .'_breeder` (petid, targetid, child, time) values('. $id .', '. $target .', '. implode(', ', $list) .', '. time() .')';
+      $sql = 'insert into `'. PREFIX .'_breeder` (petid, targetid, child, time, note) values('. $id .', '. $data['target'] .', "'. json_encode(', ', $list) .'", "'. $data['time'] .'", "'. $data['note'] .'")';
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = breederList($id);
@@ -131,6 +129,7 @@ if (!empty($action)) {
 	die();
 }
 
+$id = $nv_Request->get_int('id', 'get', 0);
 $xtpl = new XTemplate("info.tpl", "modules/biograph/template");
 
 $sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
@@ -150,6 +149,7 @@ if (!empty($row = $query->fetch())) {
 
 $xtpl->assign('url', '/' . $module_name . '/' . $op . '/');
 $xtpl->assign('remind', json_encode(getRemind()));
+$xtpl->assign('id', $id);
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");

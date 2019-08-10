@@ -92,15 +92,7 @@ function checkLogin($username, $password) {
 function breederList($petid) {
   global $db;
 
-  // $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userid;
-  // $query = $db->query($sql);
-  // $list = array();
-  // while ($row = $query->fetch()) {
-  //   $list[] = $row['id'];
-  // }
-  // $pet = implode(', ', $list);
-
-  $sql = 'select * from `'. PREFIX .'_breeder` where petid in ('. $petid .') order by time desc';
+  $sql = 'select * from `'. PREFIX .'_breeder` where petid = '. $petid .' order by time desc';
   $query = $db->query($sql);
   $xtpl = new XTemplate('breeder.tpl', PATH);
   $index = 1;

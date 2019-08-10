@@ -12,11 +12,11 @@
   </tr>
   <!-- BEGIN: row -->
   <tr>
-    <td> (index) </td>
-    <td> (time) </td>
-    <td> (target) </td>
-    <td> (number) </td>
-    <td> (note) </td>
+    <td> {index} </td>
+    <td> {time} </td>
+    <td> {target} </td>
+    <td> {number} </td>
+    <td> {note} </td>
   </tr>
   <!-- END: row -->
 </table>

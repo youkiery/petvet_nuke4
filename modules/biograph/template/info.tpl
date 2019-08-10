@@ -173,6 +173,7 @@
   </div>
 <script>
   var global = {
+    id: '{id}',
     url: '{url}',
     child: [],
     childid: 0
@@ -322,13 +323,14 @@
   function insertBreederSubmit() {
     $.post(
       global['url'],
-      {action: 'insert-breeder', breeder: checkInputSet(breeder), child: checkChild()},
+      {action: 'insert-breeder', data: checkInputSet(breeder), id: global['id'], child: checkChild()},
       (response, status) => {
         checkResult(response, status).then(data => {
           breederContent.html(data['html'])
           global['child'] = []
           clearInputSet(breeder)
           parseChild()
+          insertBreeder.modal('hide')
         }, () => {})
       }
     )
