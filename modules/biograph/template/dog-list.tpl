@@ -17,12 +17,12 @@
   <!-- BEGIN: row -->
   <tbody>
     <tr class="clickable-row" data-href=''>
-      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {index} </a> </td>
-      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {name} </a> </td>
-      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {microchip} </a> </td>
-      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {sex} </a> </td>
-      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {dob} </a> </td>
-      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {breed} </a> </td>
+      <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {index} </a> </td>
+      <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {name} </a> </td>
+      <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {microchip} </a> </td>
+      <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {sex} </a> </td>
+      <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {dob} </a> </td>
+      <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {breed} </a> </td>
       <td>
         <!-- BEGIN: mod -->
         <button class="btn btn-{request}" onclick="request({id})">

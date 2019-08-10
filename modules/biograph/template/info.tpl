@@ -5,6 +5,35 @@
   }
 </style>
 
+<div class="modal" id="insert-breeder" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <p> Thêm lịch phối giống </p>
+        <label class="form-group">
+          Ngày phối giống
+          <input type="text" class="form-control" id="breeder-time">
+        </label>
+        <label class="form-group relative">
+          Đối tượng phối
+          <input type="text" class="form-control" id="breeder-target">
+          <input type="hidden" id="breeder-targetid">
+          <div class="suggest" id="breeder-suggest-target"></div>
+        </label>
+
+        <div id="breeder-child"></div>
+
+        <label class="form-group">
+          Ghi chú
+          <input type="text" class="form-control" id="breeder-note">
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <div id="insert-pet" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -112,32 +141,6 @@
   </div>
 </div>
 
-<div class="modal" id="insert-breeder" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <p> Thêm lịch phối giống </p>
-        <label class="form-group">
-          Ngày phối giống
-          <input type="text" class="form-control" id="breeder-time">
-        </label>
-        <label class="form-group">
-          Đối tượng phối
-          <input type="text" class="form-control" id="breeder-time">
-        </label>
-
-        <div id="breeder-child"></div>
-
-        <label class="form-group">
-          Ghi chú
-          <input type="text" class="form-control" id="breeder-time">
-        </label>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="container" style="margin-top: 20px;">
   <a href="/biograph/">
     <img src="/modules/biograph/src/banner.png" style="width: 100px;">
@@ -191,8 +194,33 @@
 
   loadImage('{image}', avatar)
 
+  $("#breeder-time").datepicker({
+    format: 'dd/mm/yyyy',
+    changeMonth: true,
+    changeYear: true
+  });
+
+  installRemind('target', 'breeder')
+
+  function splipper(text, part) {
+    var pos = text.search(part + '-')
+    var overleft = text.slice(pos)
+    if (number = overleft.search(' ') >= 0) {
+      overleft = overleft.slice(0, number)
+    }
+    var tick = overleft.lastIndexOf('-')
+    var result = overleft.slice(tick + 1, overleft.length)
+
+    return result
+  }
+  
+  function pickParent(name, id) {
+    var idp = splip per(e.parentqNode.getAttribute('id'), 'parent-suggest')
+    breeder['target'] ~ 
+  }
+
   function addBreeder() {
-    insertBreeder.modal('show')
+    insertBreedr.modal('show')
     parseChild()
   }
 
@@ -274,7 +302,7 @@
 
         $.post(
           global['url'],
-          {action: 'parent', keyword: key},
+          {action: 'target', keyword: key},
           (response, status) => {
             checkResult(response, status).then(data => {
               suggest.html(data['html'])
