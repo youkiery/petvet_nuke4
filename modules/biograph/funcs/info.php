@@ -44,7 +44,7 @@ if (!empty($action)) {
         }
       }
 
-      $sql = 'insert into `'. PREFIX .'_breeder` (petid, targetid, child, time) values('. $id .', '. $target .', '. implode(', ', $child) .', '. time() .')';
+      $sql = 'insert into `'. PREFIX .'_breeder` (petid, targetid, child, time) values('. $id .', '. $target .', '. implode(', ', $list) .', '. time() .')';
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = breederList($id);
