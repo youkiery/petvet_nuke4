@@ -53,21 +53,27 @@ if (!empty($row = $query->fetch())) {
 
   if ($row = $relation['grand']['e']['f']) {
     $xtpl->assign('egrandma', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
+    $xtpl->assign('efgrandma', parseInfo($row));
   }
   if ($row = $relation['grand']['e']['m']) {
     $xtpl->assign('egrandpa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
+    $xtpl->assign('efgrandpa', parseInfo($row));
   }
   if ($row = $relation['grand']['i']['f']) {
     $xtpl->assign('igrandma', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
+    $xtpl->assign('ifgrandma', parseInfo($row));
   }
   if ($row = $relation['grand']['i']['m']) {
     $xtpl->assign('igrandpa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
+    $xtpl->assign('ifgrandpa', parseInfo($row));
   }
   if ($row = $relation['parent']['m']) {
     $xtpl->assign('mama', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
+    $xtpl->assign('ifmama', parseInfo($row));
   }
   if ($row = $relation['parent']['f']) {
     $xtpl->assign('papa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
+    $xtpl->assign('ifpapa', parseInfo($row));
   }
 
   if (count($child = $relation['child'])) {

@@ -8,16 +8,19 @@
   #wrapper {
     position: relative;
   }
+  .popover {
+    width: 200px;
+  }
   .branch {
     position: relative;
-    margin-left: 250px;
+    margin-left: 200px;
   }
   .branch:before {
     content: "";
-    width: 50px;
+    width: 25px;
     border-top: 2px solid #eee9dc;
     position: absolute;
-    left: -100px;
+    left: -50px;
     top: 50%;
     margin-top: 1px;
   }
@@ -30,14 +33,24 @@
     height: 100%;
     border-left: 2px solid #eee9dc;
     position: absolute;
-    left: -50px;
+    left: -25px;
+  }
+  .after-hack {
+    position: absolute;
+    right: 0px;
+    z-index: 1;
+    width: 22px;
+    height: 22px;
+    min-width: 0px;
+    min-height: 0px;
+    padding: 5px 5px 5px 6px;
   }
   .entry:after {
     content: "";
-    width: 50px;
+    width: 25px;
     border-top: 2px solid #eee9dc;
     position: absolute;
-    left: -50px;
+    left: -25px;
     top: 50%;
     margin-top: 1px;
   }
@@ -118,21 +131,58 @@
     </div>
   </div>
 
-  <div id="wrapper" style="overflow: scroll"><span class="label"> {name} </span>
+  <div id="wrapper">
+    <span class="label"> {name} </span>
     <div class="branch lv1">
-      <div class="entry"><span class="label"> Bố <br> {papa} </span>
-        <div class="branch lv2">
-          <div class="entry"><span class="label"> Ông nội <br> {igrandpa} </span>
+      <div class="entry">
+        <span class="label"> 
+          Bố <br> {papa} 
+          <div style="position: relative; float: right; left: 30px;">
+            <button class="btn btn-sm btn-info after-hack" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{ifpapa}"><span class="glyphicon glyphicon-plus"></span></button>  
+            <button class="btn btn-sm btn-info after-hack" onclick="toggleX('igrand')"><span class="glyphicon glyphicon-plus"></span></button>  
           </div>
-          <div class="entry"><span class="label"> Bà nội <br> {igrandma} </span>
+        </span>
+        <div class="branch lv2" id="igrand" style="display: none;">
+          <div class="entry">
+            <span class="label"> Ông nội <br> {igrandpa} 
+              <div style="position: relative; float: right; left: 30px;">
+                <button class="btn btn-sm btn-info after-hack" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{ifgrandpa}"><span class="glyphicon glyphicon-plus"></span></button>  
+              </div>
+            </span>
+          </div>
+          <div class="entry">
+            <span class="label">
+              Bà nội <br> {igrandma}
+              <div style="position: relative; float: right; left: 30px;">
+                <button class="btn btn-sm btn-info after-hack" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{ifgrandma}"><span class="glyphicon glyphicon-plus"></span></button>  
+              </div>
+            </span>
           </div>
         </div>
       </div>
-      <div class="entry"><span class="label"> Mẹ <br> {mama} </span>
-        <div class="branch lv2">
-          <div class="entry"><span class="label"> Ông ngoại <br> {egrandpa} </span>
+      <div class="entry">
+        <span class="label">
+          Mẹ <br> {mama} 
+          <div style="position: relative; float: right; left: 30px;">
+            <button class="btn btn-sm btn-info after-hack" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{ifmama}"><span class="glyphicon glyphicon-plus"></span></button>  
+            <button class="btn btn-sm btn-info after-hack" onclick="toggleX('egrand')"><span class="glyphicon glyphicon-plus"></span></button>  
           </div>
-          <div class="entry"><span class="label"> Bà ngoại <br> {egrandma} </span>
+        </span>
+        <div class="branch lv2" id="egrand" style="display: none;">
+          <div class="entry">
+            <span class="label">
+              Ông ngoại <br> {egrandpa}
+              <div style="position: relative; float: right; left: 30px;">
+                <button class="btn btn-sm btn-info after-hack" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{efgrandpa}"><span class="glyphicon glyphicon-plus"></span></button>  
+              </div>
+            </span>
+          </div>
+          <div class="entry">
+            <span class="label"> Bà ngoại <br> {egrandma}
+              <div style="position: relative; float: right; left: 30px;">
+                <button class="btn btn-sm btn-info after-hack" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{efgrandma}"><span class="glyphicon glyphicon-plus"></span></button>  
+              </div>
+            </span>
           </div>
         </div>
       </div>
@@ -187,5 +237,13 @@
 
   loadImage('{image}', avatar)
   // loadImage('http://localhost/modules/biograph/src/banner.png', avatar)
+
+  function toggleX(name) {
+    $("#" + name).toggle()
+  }
+
+  $(document).ready(function(){
+    $('[data-toggle="popover"]').popover(); 
+  });
 </script>
 <!-- END: main -->

@@ -16,6 +16,16 @@ define("PATH", 'modules/' . $module_file . '/template');
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 
+function parseInfo($info) {
+  $age = round( time() - $info['dateofbirth']);
+  if ($age < 1) {
+    $age = 1;
+  }
+
+  // die( - $info['dob'] . "");
+  return 'Tên: '. $info['name'] .'<br>Tuổi: '. $age .'<br>Giống: '. $info['species'] .'<br>Loài: '. $info['breeder'] .'<br>';
+}
+
 function userRowList($filter = array()) {
   global $db, $user_info;
 
