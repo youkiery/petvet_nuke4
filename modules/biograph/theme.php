@@ -127,8 +127,8 @@ function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('pa
   return $xtpl->text();
 }
 
-function dogRowByList($keyword = '', $page = 1, $filter = 10) {
-  global $db;
+function mainPetList($keyword = '', $page = 1, $filter = 10) {
+  global $db, $sex_array;
   $index = 1;
   $xtpl = new XTemplate('dog-list.tpl', PATH);
 
@@ -145,12 +145,15 @@ function dogRowByList($keyword = '', $page = 1, $filter = 10) {
   $xtpl->parse('main.msg');
 
   foreach ($data['list'] as $row) {
+    // var_dump($row);die();
+    $owner = getOwnerById($row['userid']);
     $xtpl->assign('index', $index++);
     $xtpl->assign('name', $row['name']);
+    $xtpl->assign('owner', $owner['fullname']);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('microchip', $row['microchip']);
     $xtpl->assign('breed', $row['breed']);
-    $xtpl->assign('sex', $row['sex']);
+    $xtpl->assign('sex', $sex_array[$row['sex']]);
     $xtpl->assign('dob', cdate($row['dateofbirth']));
     $xtpl->parse('main.row');
   }

@@ -14,6 +14,10 @@ if (!defined('NV_MAINFILE')) {
 define("PREFIX", $db_config['prefix'] . "_" . $module_name);
 define('PERMISSION_MODULE', 1);
 
+$sex_array = array(
+  0 => 'Đực', 'Cái'
+);
+
 $request_array = array(
   array(
     'title' => 'Bắn microchip',

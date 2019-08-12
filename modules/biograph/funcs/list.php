@@ -36,7 +36,7 @@ $xtpl = new XTemplate("list.tpl", "modules/biograph/template");
 $keyword = $nv_Request->get_string('keyword', 'get', '');
 
 $xtpl->assign('keyword', $keyword);
-$xtpl->assign('content', dogRowByList($keyword));
+$xtpl->assign('content', mainPetList($keyword));
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");

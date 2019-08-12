@@ -7,24 +7,22 @@
 <table class="table">
   <tr>
     <th> STT </th>
-    <th> Tên thú cưng </th>
-    <th> Tên chủ </th>
-    <th> Số microchip/Xăm tai </th>
+    <th> Tên </th>
+    <th> Số microchip </th>
     <th> Giới tính </th>
-    <th> Giống </th>
     <th> Ngày sinh </th>
+    <th> Giống </th>
     <th></th>
   </tr>
   <!-- BEGIN: row -->
   <tbody>
     <tr class="clickable-row" data-href=''>
-      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {index} </a> </td>
-      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {name} </a> </td>
-      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {owner} </a> </td>
-      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {microchip} </a> </td>
-      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {sex} </a> </td>
-      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {breed} </a> </td>
-      <td> <a href="/index.php?nv=biograph&op=detail&id={id}"> {dob} </a> </td>
+      <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {index} </a> </td>
+      <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {name} </a> </td>
+      <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {microchip} </a> </td>
+      <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {sex} </a> </td>
+      <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {dob} </a> </td>
+      <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {breed} </a> </td>
       <td>
         <!-- BEGIN: mod -->
         <button class="btn btn-{request}" onclick="request({id})">
