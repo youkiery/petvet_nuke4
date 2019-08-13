@@ -13,28 +13,16 @@ if (!defined('NV_IS_FORM')) {
 
 $page_title = "autoload";
 
-$action = $nv_Request->get_string('action', 'post', '');
-if (!empty($action)) {
-	$result = array('status' => 0);
-	switch ($action) {
-		case 'search':
-			$keyword = $nv_Request->get_string('keyword', 'post', '');
-			
-			$result['status'] = 1;
-			if (count($list)) {
-				$result['html'] = dogRowByList($keyword);
-			}
+$xtpl = new XTemplate("main.tpl", "modules/biograph/template");
+$userinfo = getUserInfo();
 
-		break;
-	}
-	echo json_encode($result);
-	die();
+if (!empty($userinfo)) {
+  $xtpl->parse("main.log");
+}
+else {
+  $xtpl->parse("main.nolog");
 }
 
-$xtpl = new XTemplate("main.tpl", "modules/biograph/template");
-
-// updatePet(array('userid' => 1, 'name' => 'Tũn', 'dateofbirth' => '1561796000', 'species' => 'Giống', 'breed' => 'Loài', 'sex' => 'cái', 'color' => 'Màu', 'microchip' => '48751471200046'), 1);
-$xtpl->assign("content", dogRowByList());
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 include ("modules/biograph/layout/header.php");

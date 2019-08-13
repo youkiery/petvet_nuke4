@@ -11,9 +11,15 @@
               <button class="btn btn-info" onclick="search()"> Tìm kiếm </button>
             </div>
           </label>
-          <!-- <a href="/biograph/login"> Đăng nhập </a> | -->
+          <!-- BEGIN: nolog -->
+          <a href="/biograph/login"> Đăng nhập </a> |
+          <a href="/biograph/signup"> Đăng ký </a> |
+          <!-- END: nolog -->
+
+          <!-- BEGIN: log -->
           <a href="/biograph/private"> Cá nhân </a> |
           <a href="/biograph/center"> Trang trại </a>
+          <!-- END: log -->
         </div>
       </form>
     </div>
