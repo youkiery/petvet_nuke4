@@ -1,5 +1,15 @@
 <!-- BEGIN: main -->
 <style>
+  .igleft {
+    position: relative;
+    float: left;
+    left: 40px;
+  }
+  .igright {
+    position: relative;
+    float: right;
+    left: 5px;
+  }
   *, *:before, *:after {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -43,7 +53,7 @@
     height: 22px;
     min-width: 0px;
     min-height: 0px;
-    padding: 5px 5px 5px 6px;
+    padding: 5px 0px 10px 2px;
   }
   .entry:after {
     content: "";
@@ -99,6 +109,7 @@
     top: 50%;
     margin-top: -15px;
     color: black;
+    height: 54px;
   }
 </style>
 <div class="container">
@@ -137,24 +148,27 @@
       <div class="entry">
         <span class="label"> 
           Bố <br> {papa} 
-          <div style="position: relative; float: right; left: 30px;">
-            <button class="btn btn-sm btn-info after-hack" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{ifpapa}"><span class="glyphicon glyphicon-plus"></span></button>  
-            <button class="btn btn-sm btn-info after-hack" onclick="toggleX('igrand')"><span class="glyphicon glyphicon-plus"></span></button>  
+          <div class="igleft">
+            <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{igpapa}"><span class="glyphicon glyphicon-info-sign"></span></button>  
+          </div>
+          <div class="igright">
+            <button class="btn btn-sm btn-success after-hack" id="igrandon" onclick="toggleX('igrand')"><span class="glyphicon glyphicon-arrow-right"></span></button>  
+            <button class="btn btn-sm btn-warning after-hack" id="igrandoff" style="display: none;" onclick="toggleX('igrand')"><span class="glyphicon glyphicon-arrow-left"></span></button>  
           </div>
         </span>
         <div class="branch lv2" id="igrand" style="display: none;">
           <div class="entry">
-            <span class="label"> Ông nội <br> {igrandpa} 
-              <div style="position: relative; float: right; left: 30px;">
-                <button class="btn btn-sm btn-info after-hack" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{ifgrandpa}"><span class="glyphicon glyphicon-plus"></span></button>  
+            <span class="label"> Ông nội <br> {grandpa} 
+              <div class="igleft">
+                <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{igigrandpa}"><span class="glyphicon glyphicon-info-sign"></span></button>  
               </div>
             </span>
           </div>
           <div class="entry">
             <span class="label">
               Bà nội <br> {igrandma}
-              <div style="position: relative; float: right; left: 30px;">
-                <button class="btn btn-sm btn-info after-hack" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{ifgrandma}"><span class="glyphicon glyphicon-plus"></span></button>  
+              <div class="igleft">
+                <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{igigrandma}"><span class="glyphicon glyphicon-info-sign"></span></button>  
               </div>
             </span>
           </div>
@@ -163,24 +177,27 @@
       <div class="entry">
         <span class="label">
           Mẹ <br> {mama} 
-          <div style="position: relative; float: right; left: 30px;">
-            <button class="btn btn-sm btn-info after-hack" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{ifmama}"><span class="glyphicon glyphicon-plus"></span></button>  
-            <button class="btn btn-sm btn-info after-hack" onclick="toggleX('egrand')"><span class="glyphicon glyphicon-plus"></span></button>  
+          <div class="igleft">
+            <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{igmama}"><span class="glyphicon glyphicon-info-sign"></span></button>  
+          </div>
+          <div class="igright">
+            <button class="btn btn-sm btn-success after-hack" id="egrandon" onclick="toggleX('egrand')"><span class="glyphicon glyphicon-arrow-right"></span></button>  
+            <button class="btn btn-sm btn-warning after-hack" id="egrandoff" style="display: none;" onclick="toggleX('egrand')"><span class="glyphicon glyphicon-arrow-left"></span></button>  
           </div>
         </span>
         <div class="branch lv2" id="egrand" style="display: none;">
           <div class="entry">
             <span class="label">
               Ông ngoại <br> {egrandpa}
-              <div style="position: relative; float: right; left: 30px;">
-                <button class="btn btn-sm btn-info after-hack" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{efgrandpa}"><span class="glyphicon glyphicon-plus"></span></button>  
+              <div class="igleft">
+                <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{igegrandpa}"><span class="glyphicon glyphicon-info-sign"></span></button>  
               </div>
             </span>
           </div>
           <div class="entry">
             <span class="label"> Bà ngoại <br> {egrandma}
-              <div style="position: relative; float: right; left: 30px;">
-                <button class="btn btn-sm btn-info after-hack" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{efgrandma}"><span class="glyphicon glyphicon-plus"></span></button>  
+              <div class="igleft">
+                <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{igegrandma}"><span class="glyphicon glyphicon-info-sign"></span></button>  
               </div>
             </span>
           </div>
@@ -189,49 +206,6 @@
     </div>
   </div>
 
-  <!-- <table class="table table-bordered">
-    <tr>
-      <th colspan="4" class="text-center">
-        Gia phả
-      </th>
-    </tr>
-    <tr>
-      <th class="text-center">
-        Ông/Bà
-      </th>
-      <th class="text-center">
-        Bố/Mẹ
-      </th>
-      <th class="text-center">
-        Con
-      </th>
-    </tr>
-    <tr>
-      <td> Ông nội: {igrandpa} </td>
-      <td rowspan="2"> Bố: {papa} </td>
-      <td rowspan="4"> {child} </td>
-    </tr>
-    <tr>
-      <td>
-        Bà nội: {igrandma}
-      </td>
-    </tr>
-    <tr>
-      <td>
-        Ông ngoại: {egrandpa}
-      </td>
-      <td rowspan="2">
-        Mẹ: {mama}
-      </td>
-    </tr>
-    <tr>
-      <td>
-        Bà ngoại: {egrandma}
-      </td>
-    </tr>
-  </table>
-</div> -->
-
 <script>
   var avatar = $("#avatar")
 
@@ -239,11 +213,61 @@
   // loadImage('http://localhost/modules/biograph/src/banner.png', avatar)
 
   function toggleX(name) {
-    $("#" + name).toggle()
+    var target = $("#" + name)
+    if (target.css('display') == 'block') {
+      $("#" + name + "on").show()
+      $("#" + name + "off").hide()
+    }
+    else {
+      $("#" + name + "on").hide()
+      $("#" + name + "off").show()
+    }
+    target.toggle()
+  }
+
+  function splipper(text, part) {
+    var pos = text.search(part + '-')
+    var overleft = text.slice(pos)
+    if (number = overleft.search(' ') >= 0) {
+      overleft = overleft.slice(0, number)
+    }
+    var tick = overleft.lastIndexOf('-')
+    var result = overleft.slice(tick + 1, overleft.length)
+
+    return result
   }
 
   $(document).ready(function(){
-    $('[data-toggle="popover"]').popover(); 
+    $('[data-toggle="popover"]').popover();
+
+    $('[data-toggle="popover"]').click(function (e) {
+      e.stopPropagation();
+      var name = e.currentTarget.children[0].className
+      // var className = splipper(name, 'glyphicon')
+      // if (className == 'open') {
+      //   e.currentTarget.children[0].className = 'glyphicon glyphicon-eye-close'
+      // }
+      // else {
+      //   e.currentTarget.children[0].className = 'glyphicon glyphicon-info-sign'
+      // }
+    });
+  });
+
+
+  $(document).click(function (e) {
+      if (($('.popover').has(e.target).length == 0) || $(e.target).is('.close')) {
+        $('[data-toggle="popover"]').popover('hide');
+
+        // var name = e.currentTarget.children[0].className
+        // var className = splipper(name, 'glyphicon')
+        // if (className == 'open') {
+        //   e.currentTarget.children[0].className = 'glyphicon glyphicon-eye-close'
+        // }
+        // else {
+        //   e.currentTarget.children[0].className = 'glyphicon glyphicon-info-sign'
+        // }
+
+      }
   });
 </script>
 <!-- END: main -->

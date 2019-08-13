@@ -7,18 +7,20 @@
 </style>
 
 <div class="container">
-  <div class="text-center start-content" style="max-width: 400px; margin: auto; padding-top: 50px; border: 1px solid lightgray; padding: 15px;">
+  <div class="text-center start-content" style="padding-top: 50px;">
     <a href="/biograph/">
       <img src="/modules/biograph/src/banner.png" style="width: 200px;">
     </a>
+  </div>
 
     <div style="margin-top: 20px;"></div>
+
     <div class="row">
       <label>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
           Tên Đăng nhập
         </div>
-        <div class="col-sm-8">
+        <div class="col-sm-9">
           <input type="text" class="form-control" id="username" autocomplete="off">
         </div>
       </label>
@@ -26,21 +28,92 @@
 
     <div class="row">
       <label>
-        <div class="col-sm-4">
+        <div class="col-sm-3">
           Mật khẩu
         </div>
-        <div class="col-sm-8">
+        <div class="col-sm-9">
           <input type="password" class="form-control" id="password">
         </div>
       </label>
     </div>
 
-    <div class="text-center">
-      <button class="btn btn-info" onclick="login()">
-        Đăng nhập
-      </button>
-    </div>
-    <div id="error"> </div>
+    <div class="tab-content">
+      <div id="login" class="tab-pane fade in active">
+        <div class="text-center">
+          <button class="btn btn-info" onclick="login()">
+            Đăng nhập
+          </button>
+        </div>
+      </div>
+  
+      <div id="signup" class="tab-pane fade">
+
+        <div class="row">
+          <label>
+            <div class="col-sm-3">
+              Xác nhận mật khẩu
+            </div>
+            <div class="col-sm-9">
+              <input type="password" class="form-control" id="vpassword">
+            </div>
+          </label>
+        </div>
+
+        <div class="row">
+          <label>
+            <div class="col-sm-3">
+              Họ và tên
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="fullname" autocomplete="off">
+            </div>
+          </label>
+        </div>
+
+        <div class="row">
+          <label>
+            <div class="col-sm-3">
+              Số CMND
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="politic" autocomplete="off">
+            </div>
+          </label>
+        </div>
+
+        <div class="row">
+          <label>
+            <div class="col-sm-3">
+              Điện thoại
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="phone" autocomplete="off">
+            </div>
+          </label>
+        </div>
+
+        <div class="row">
+          <label>
+            <div class="col-sm-3">
+              Địa chỉ
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="address" autocomplete="off">
+            </div>
+          </label>
+        </div>
+
+        <div class="text-center">
+          <button class="btn btn-info" id="button" onclick="signup()">
+            Đăng ký
+          </button>
+        </div>
+
+      </div>
+      <div id="error">
+
+      </div>
+    </div>    
   </div>
 </div>
 

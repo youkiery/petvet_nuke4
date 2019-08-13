@@ -43,7 +43,7 @@ if (!empty($row = $query->fetch())) {
 	$xtpl->assign('dob', $row['dateofbirth']);
 	$xtpl->assign('breed', $row['breed']);
 	$xtpl->assign('species', $row['species']);
-	$xtpl->assign('sex', $row['sex']);
+  $xtpl->assign('sex', $sex_array[$row['sex']]);
 	$xtpl->assign('color', $row['color']);
 	$xtpl->assign('microchip', $row['microchip']);
 	$xtpl->assign('image', $row['image']);
@@ -51,38 +51,50 @@ if (!empty($row = $query->fetch())) {
   $relation = getPetRelation($id);
   // $bay = array('grand' => array(), 'parent' => array(), 'sibling' => array(), 'child' => array());
 
-  if ($row = $relation['grand']['e']['f']) {
-    $xtpl->assign('egrandma', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
-    $xtpl->assign('efgrandma', parseInfo($row));
-  }
-  if ($row = $relation['grand']['e']['m']) {
-    $xtpl->assign('egrandpa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
-    $xtpl->assign('efgrandpa', parseInfo($row));
-  }
-  if ($row = $relation['grand']['i']['f']) {
-    $xtpl->assign('igrandma', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
-    $xtpl->assign('ifgrandma', parseInfo($row));
-  }
-  if ($row = $relation['grand']['i']['m']) {
-    $xtpl->assign('igrandpa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
-    $xtpl->assign('ifgrandpa', parseInfo($row));
-  }
-  if ($row = $relation['parent']['m']) {
-    $xtpl->assign('mama', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
-    $xtpl->assign('ifmama', parseInfo($row));
-  }
-  if ($row = $relation['parent']['f']) {
-    $xtpl->assign('papa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
-    $xtpl->assign('ifpapa', parseInfo($row));
-  }
-
-  if (count($child = $relation['child'])) {
-    $html = '';    
-    foreach ($child as $row) {
-      $html = '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>';
+  // echo json_encode($relation); die();
+  
+  foreach ($relation['grand'] as $lv1) {
+    foreach ($lv1 as $lv2) {
+      $xtpl->assign($lv2['ns'], parseLink($lv2));
+      $xtpl->assign('ig' . $lv2['ns'], parseInfo($lv2));
     }
-    $xtpl->assign('child', $html);
+    foreach ($lv1['m'] as $lv2) {
+      $xtpl->assign($lv2['ns'], parseLink($lv2));
+      $xtpl->assign('ig' . $lv2['ns'], parseInfo($lv2));
+    }
   }
+  foreach ($relation['parent'] as $lv1) {
+    $xtpl->assign($lv1['ns'], parseLink($lv1));
+    $xtpl->assign('ig' . $lv1['ns'], parseInfo($lv1));
+  }
+  // if ($row = $relation['grand']['e']['m']) {
+  //   $xtpl->assign('egrandpa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
+  //   $xtpl->assign('efgrandpa', parseInfo($row));
+  // }
+  // if ($row = $relation['grand']['i']['f']) {
+  //   $xtpl->assign('igrandma', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
+  //   $xtpl->assign('ifgrandma', parseInfo($row));
+  // }
+  // if ($row = $relation['grand']['i']['m']) {
+  //   $xtpl->assign('igrandpa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
+  //   $xtpl->assign('ifgrandpa', parseInfo($row));
+  // }
+  // if ($row = $relation['parent']['m']) {
+  //   $xtpl->assign('mama', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
+  //   $xtpl->assign('ifmama', parseInfo($row));
+  // }
+  // if ($row = $relation['parent']['f']) {
+  //   $xtpl->assign('papa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
+  //   $xtpl->assign('ifpapa', parseInfo($row));
+  // }
+
+  // if (count($child = $relation['child'])) {
+  //   $html = '';    
+  //   foreach ($child as $row) {
+  //     $html = '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>';
+  //   }
+  //   $xtpl->assign('child', $html);
+  // }
 
 
   // if ($relation['grand']) {    

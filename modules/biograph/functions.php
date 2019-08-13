@@ -16,14 +16,24 @@ define("PATH", 'modules/' . $module_file . '/template');
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 
+function parseLink($info) {
+  if (!empty($info['id'])) {
+    return '<a href="/index.php?nv=biograph&op=detail&id=' . $info['id'] . '">' . $info['name'] . '</a>';
+  }
+  return '-';
+}
+
 function parseInfo($info) {
-  $age = round( time() - $info['dateofbirth']);
+  $age = round( time() - $info['dateofbirth']) / 60 / 60 / 24 / 365.25;
   if ($age < 1) {
     $age = 1;
   }
 
   // die( - $info['dob'] . "");
-  return 'Tên: '. $info['name'] .'<br>Tuổi: '. $age .'<br>Giống: '. $info['species'] .'<br>Loài: '. $info['breeder'] .'<br>';
+  if (!empty($info['id'])) {
+    return 'Tên: '. $info['name'] .'<br>Tuổi: '. $age .'<br>Giống: '. $info['species'] .'<br>Loài: '. $info['breeder'] .'<br>';
+  }
+  return '';
 }
 
 function userRowList($filter = array()) {

@@ -13,7 +13,7 @@
           </label>
           <!-- BEGIN: nolog -->
           <a href="/biograph/login"> Đăng nhập </a> |
-          <a href="/biograph/signup"> Đăng ký </a> |
+          <a href="/biograph/signup"> Đăng ký </a>
           <!-- END: nolog -->
 
           <!-- BEGIN: log -->

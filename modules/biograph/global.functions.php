@@ -304,41 +304,46 @@ function sqlBuilder($data, $type) {
 function getPetRelation($petid) {
   global $db;
 
+  // $sibling = getPetSibling($parent, $petid);
   $pet = getPetById($petid);
   $parent = getPetParent($pet);
-  // $sibling = getPetSibling($parent, $petid);
   $grand = getPetGrand($parent);
-  $child = getPetChild($petid);
+  // $child = getPetChild($petid);
 
-  $result = array('parent' => $parent, 'grand' => $grand, 'child' => $child);
+  $result = array('parent' => $parent, 'grand' => $grand);
   return $result;
 }
 
-function getPetSibling($parent, $petid) {
-  global $db;
+// function getPetSibling($parent, $petid) {
+//   global $db;
 
-  $list = array();
-  $sql = 'select * from `'. PREFIX .'_pet` where (fid = ' . $parent['f']['id'] . ' or mid = ' . $parent['m']['id'] . ') and id <> ' . $petid;
-  $query = $db->query($sql);
+//   $list = array();
+//   $sql = 'select * from `'. PREFIX .'_pet` where (fid = ' . $parent['f']['id'] . ' or mid = ' . $parent['m']['id'] . ') and id <> ' . $petid;
+//   $query = $db->query($sql);
 
-  while ($row = $query->fetch()) {
-    $list[] = $row;
-  }
-  return $list;
-}
+//   while ($row = $query->fetch()) {
+//     $list[] = $row;
+//   }
+//   return $list;
+// }
 
 function getPetGrand($parent) {
   global $db;
 
   $grand = array('i' => array('f' => getPetById($parent['f']['fid']), 'm' => getPetById($parent['f']['mid'])), 'e' => array('f' => getPetById($parent['m']['fid']), 'm' => getPetById($parent['m']['mid'])));
+  $grand['i']['f']['ns'] = 'igrandpa';
+  $grand['i']['m']['ns'] = 'igrandma';
+  $grand['e']['f']['ns'] = 'egrandpa';
+  $grand['e']['m']['ns'] = 'egrandma';
   return $grand;
 }
 
 function getPetParent($pet) {
   global $db;
-  // echo json_encode($pet);die();
 
   $parent = array('f' => getPetById($pet['fid']), 'm' => getPetById($pet['mid']));
+  $parent['f']['ns'] = 'papa';
+  $parent['m']['ns'] = 'mama';
   return $parent;
 }
 
