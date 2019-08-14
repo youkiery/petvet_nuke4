@@ -18,33 +18,33 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
-		case 'gopage':
-      $page = $nv_Request->get_int('page', 'post', 1);
+		case 'filter':
+      $filter = $nv_Request->get_array('filter', 'post');
 
       $result['status'] = 1;
-      $result['html'] = requestList($page);
+      $result['html'] = requestList($filter);
 		break;
 		case 'check':
       $id = $nv_Request->get_int('id', 'post', 1);
-      $page = $nv_Request->get_int('page', 'post', 1);
+      $filter = $nv_Request->get_array('filter', 'post');
 
       if (!empty($row = getRequestId($id))) {
         $sql = 'update `'. PREFIX .'_request` set status = 2 where id = ' . $id;
         if ($db->query($sql)) {
           $result['status'] = 1;
-          $result['html'] = requestList($page);
+          $result['html'] = requestList($filter);
         }
       }
 		break;
 		case 'remove':
       $id = $nv_Request->get_int('id', 'post', 1);
-      $page = $nv_Request->get_int('page', 'post', 1);
+      $filter = $nv_Request->get_array('filter', 'post');
 
       if (!empty($row = getRequestId($id))) {
         $sql = 'update `'. PREFIX .'_request` set status = 0 where id = ' . $id;
         if ($db->query($sql)) {
           $result['status'] = 1;
-          $result['html'] = requestList($page);
+          $result['html'] = requestList($filter);
         }
       }
 		break;
@@ -55,6 +55,10 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("request.tpl", PATH);
 
+$time = time();
+
+$xtpl->assign('atime', date('d/m/Y', $time - 60 * 60 * 24 * 30));
+$xtpl->assign('ztime', date('d/m/Y', $time));
 $xtpl->assign('content', requestList());
 
 $xtpl->parse("main");

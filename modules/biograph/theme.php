@@ -161,7 +161,6 @@ function mainPetList($keyword = '', $page = 1, $filter = 10) {
   return $xtpl->text();
 }
 
-
 function navList ($number, $page, $limit) {
   global $lang_global;
   $total_pages = ceil($number / $limit);

@@ -17,36 +17,64 @@ define("PATH", NV_ROOTDIR . "/modules/" . $module_file . '/template/admin/');
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';
 
-function requestList($page = 1, $limit = 10) {
+function requestList($filter = array('keyword' => '', 'page' => 1, 'limit' => 10, 'status' => 0)) {
   global $db, $request_array;
+
+  $time = time();
+  if (empty($filter['atime'])) {    
+    $filter['atime'] = date('d/m/Y', $time - 60 * 60 * 24 * 30);
+  }
+  if (empty($filter['ztime'])) {    
+    $filter['atime'] = date('d/m/Y', $time);
+  }
+  $filter['atime'] = totime($filter['atime']);
+  $filter['ztime'] = totime($filter['ztime']);
 
   $xtpl = new XTemplate('request-list.tpl', PATH);
   // die(PATH);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_request` where status = 1';
+  $filter['status'] = intval($filter['status']);
+  if (empty($filter['status'])) {
+    $filter['status'] = '0, 1, 2';
+  }
+  else {
+    $filter['status'] = $filter['status'] - 1;
+  }
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_request` a inner join `'. PREFIX .'_pet` b on a.petid = b.id inner join `'. PREFIX .'_user` c on b.userid = c.id where (b.name like "%'. $filter['keyword'] .'%" or c.fullname like "%'. $filter['keyword'] .'%") and a.status in (' . $filter['status'] . ')';
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
-  $xtpl->assign('nav', navList($count, $page, $limit));
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_request` where status = 1 limit ' . $limit . ' offset ' . ($page - 1) * $limit;
+  $sql = 'select a.*, b.name, c.fullname, c.mobile, c.address from `'. PREFIX .'_request` a inner join `'. PREFIX .'_pet` b on a.petid = b.id inner join `'. PREFIX .'_user` c on b.userid = c.id  where (b.name like "%'. $filter['keyword'] .'%" or c.fullname like "%'. $filter['keyword'] .'%") and a.status in (' . $filter['status'] . ') limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
-  $index = 1;
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
   while ($row = $query->fetch()) {
-    $pet = getPetById($row['petid']);
-    $owner = getOwnerById($pet['userid']);
-
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
-    $xtpl->assign('pet', $pet['name']);
-    $xtpl->assign('owner', $owner['fullname']);
-    $xtpl->assign('mobile', $owner['mobile']);
-    $xtpl->assign('address', $owner['address']);
+    $xtpl->assign('pet', $row['name']);
+    $xtpl->assign('owner', $row['fullname']);
+    $xtpl->assign('mobile', $row['mobile']);
+    $xtpl->assign('address', $row['address']);
     $xtpl->assign('type', $request_array[$row['type']]['title']);
+    switch ($row['status']) {
+      case 0:
+        $xtpl->assign('color', 'red');
+      break;
+      case 1:
+        $xtpl->assign('color', '');
+        $xtpl->parse('main.row.tick');
+      break;
+      case 2:
+        $xtpl->assign('color', 'green');
+      break;
+      default:
+        $xtpl->assign('color', '');
+    }
 
     $xtpl->parse('main.row');
   }
-
 
   $xtpl->parse('main');
   return $xtpl->text();

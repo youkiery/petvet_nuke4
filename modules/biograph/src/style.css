@@ -1,3 +1,13 @@
+.red {
+  background: pink;
+  color: black;
+}
+
+.green {
+  background: lightgreen;
+  color: black;
+}
+
 .btn {
   min-height: 36px;
 }
