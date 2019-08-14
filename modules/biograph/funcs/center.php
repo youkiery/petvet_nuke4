@@ -22,6 +22,11 @@ if (empty($userinfo)) {
 	header('location: /' . $module_name . '/login/');
 	die();
 }
+else {
+  if (empty($userinfo['center'])) {
+    header('location: /biograph/private');
+  }
+}
 
 if (!empty($action)) {
 	$result = array('status' => 0);

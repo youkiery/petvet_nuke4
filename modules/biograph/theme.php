@@ -69,7 +69,7 @@ function requestDetail($petid) {
 function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('page' => 1, 'limit' => 10, 'keyword' => '')) {
   global $db, $user_info;
   $index = 1;
-  $xtpl = new XTemplate('dog-list.tpl', PATH);
+  $xtpl = new XTemplate('dog-owner-list.tpl', PATH);
 
   $data = getUserPetList($userid, $tabber, $filter);
 

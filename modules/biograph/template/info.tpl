@@ -168,8 +168,28 @@
     </div>
   </div>
 
-  <div id="breeder-content">
-    {breeder}
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#a1"> Lịch sử phối giống </a></li>
+    <li><a data-toggle="tab" href="#a2"> Lịch sử tiêm phòng </a></li>
+    <li><a data-toggle="tab" href="#a3"> Lịch sử bệnh </a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div id="a1" class="tab-pane fade in active">
+      <div id="breeder-content">
+        {breeder}
+      </div>
+    </div>
+    <div id="a2" class="tab-pane fade">
+      <div id="vaccine-content">
+        {vaccine}
+      </div>
+    </div>
+    <div id="a3" class="tab-pane fade">
+      <div id="disease-content">
+        {disease}
+      </div>
+    </div>
   </div>
 <script>
   var global = {
