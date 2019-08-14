@@ -17,8 +17,7 @@
           <!-- END: nolog -->
 
           <!-- BEGIN: log -->
-          <a href="/biograph/private"> Cá nhân </a> |
-          <a href="/biograph/center"> Trang trại </a>
+          <a href="/biograph/login"> Quản lý thú cưng </a> |
           <!-- END: log -->
         </div>
       </form>

@@ -85,7 +85,6 @@
           <p>
             Chỉnh sửa thông tin
           </p>
-
           <label class="row">
             <div class="col-sm-3">
               Tên
