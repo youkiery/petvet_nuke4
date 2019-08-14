@@ -43,7 +43,16 @@ if (!empty($action)) {
 				$result['status'] = 1;
 			}
 		break;
-
+ 		case 'filteruser':
+			$filter = $nv_Request->get_array('filter', 'post');
+			
+			if (count($filter) > 1) {
+				$result['html'] = userRowList($filter);
+				if ($result['html']) {
+					$result['status'] = 1;
+				}
+			}
+		break;
 	}
 	echo json_encode($result);
 	die();

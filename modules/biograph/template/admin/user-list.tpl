@@ -27,12 +27,12 @@
       </button>
       <!-- BEGIN: uncheck -->
       <button class="btn btn-warning" onclick="checkUser({id}, 0)">
-        <span class="glyphicon glyphicon-unchecked"></span>
+        <span class="glyphicon glyphicon-check"></span>
       </button>
       <!-- END: uncheck -->
       <!-- BEGIN: check -->
       <button class="btn btn-success" onclick="checkUser({id}, 1)">
-        <span class="glyphicon glyphicon-check"></span>
+        <span class="glyphicon glyphicon-unchecked"></span>
       </button>
       <!-- END: check -->
       <button class="btn btn-danger" onclick="deleteUser({id})">
@@ -42,4 +42,5 @@
   </tr>
   <!-- END: row -->
 </table>
+{nav}
 <!-- END: main -->

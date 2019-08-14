@@ -9,7 +9,6 @@
 </style>
 
 <div class="container">
-
   <div id="insert-user" class="modal fade" role="dialog">
     <div class="modal-dialog modal-md">
       <div class="modal-content">
@@ -82,20 +81,26 @@
     </div>
   </div>
 
-
   <div class="row">
-    <div class="col-sm-4">
-      <label> <input type="radio" name="user-status" class="user-status" id="user-status-0" checked> Toàn bộ </label>
-      <label> <input type="radio" name="user-status" class="user-status" id="user-status-1"> Chưa xác nhận </label>
-      <label> <input type="radio" name="user-status" class="user-status" id="user-status-2"> Đã xác nhận </label>
-    </div>
     <div class="col-sm-8">
       <input type="text" class="form-control" id="user-keyword" placeholder="Nhập từ khóa">
-      <button class="btn btn-info" onclick="filterUser()">
-        <span class="glyphicon glyphicon-filter"></span>
-      </button>
+    </div>
+    <div class="col-sm-4">
+      <select class="form-control" id="user-limit">
+        <option value="10"> 10 </option>
+        <option value="20"> 20 </option>
+        <option value="50"> 50 </option>
+        <option value="75"> 75 </option>
+        <option value="100"> 100 </option>
+      </select>
     </div>
   </div>
+  <label> <input type="radio" name="user-status" class="user-status" id="user-status-0" checked> Toàn bộ </label>
+  <label> <input type="radio" name="user-status" class="user-status" id="user-status-1"> Chưa xác nhận </label>
+  <label> <input type="radio" name="user-status" class="user-status" id="user-status-2"> Đã xác nhận </label>
+  <button class="btn btn-info" onclick="filterUser()">
+    <span class="glyphicon glyphicon-filter"></span>
+  </button>
   <div id="user-list">
     {userlist}
   </div>
@@ -109,15 +114,6 @@
     text: ['Đăng ky', 'Đăng nhập'],
     url: '{origin}',
     id: -1
-  }
-  var pet = {
-    name: $("#pet-name"),
-    dob: $("#pet-dob"),
-    species: $("#pet-species"),
-    breed: $("#pet-breed"),
-    sex: $("#pet-sex"),
-    color: $("#pet-color"),
-    microchip: $("#pet-microchip"),
   }
   var user = {
     fullname: $("#user-name"),
@@ -138,11 +134,8 @@
   var ibtn = $("#ibtn")
   var ebtn = $("#ebtn")
 
-  var insertPet = $("#insert-pet")
   var insertUser = $("#insert-user")
-  var removetPet = $("#remove-pet")
   var removetUser = $("#remove-user")
-  var petList = $("#pet-list")
   var userList = $("#user-list")
   var tabber = $(".tabber")
   var maxWidth = 512
@@ -225,41 +218,6 @@
     }
 	}
 
-
-  function preview() {
-    var file = userImage[0]['files']
-    if (file && file[0]) {
-      var reader = new FileReader();
-      reader.readAsDataURL(file[0]);  
-      reader.onload = (e) => {
-        var type = e.target["result"].split('/')[1].split(";")[0];
-        if (["jpeg", "jpg", "png", "bmp", "gif"].indexOf(type) >= 0) {
-          cc.width = image.width * ratio;
-          cc.height = image.height * ratio;
-          cctx.fillStyle = "#fff";
-          cctx.fillRect(0, 0, cc.width, cc.height);
-          cctx.drawImage(c, 0, 0, c.width, c.height, 0, 0, cc.width, cc.height);
-          var base64Image = cc.toDataURL("image/jpeg");
-          this.post.image.push(base64Image)
-        }
-      }
-    }
-  }
-
-  function editPetSubmit() {
-    $.post(
-      global['url'],
-      {action: 'editpet', id: global['id'], data: checkInputSet(pet)},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          petList.html(data['html'])
-          clearInputSet(pet)
-          insertPet.modal('hide')
-        }, () => {})
-      }
-    )
-  }
-
   function splipper(text, part) {
     var pos = text.search(part + '-')
     var overleft = text.slice(pos)
@@ -270,45 +228,6 @@
     var result = overleft.slice(tick + 1, overleft.length)
 
     return result
-  }
-
-  function checkFilter() {
-    var temp = cstatus.filter((index, item) => {
-      return item.checked
-    })
-    var value = 0
-    if (temp[0]) {
-      value = splipper(temp[0].getAttribute('id'), 'status')
-    }
-    var data = {
-      keyword: keyword.val(),
-      status: value
-    }
-    return data
-  }
-
-  function filter() {
-    $.post(
-      global['url'],
-      {action: 'filter', filter: checkFilter()},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          petList.html(data['html'])
-        }, () => {})
-      }
-    )
-  }
-
-  function check(id, type) {
-    $.post(
-      global['url'],
-      {action: 'check', id: id, type: type, filter: checkFilter()},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          petList.html(data['html'])
-        }, () => {})
-      }
-    )
   }
 
   function clearInputSet(dataSet) {
@@ -368,7 +287,7 @@
         (response, status) => {
           checkResult(response, status).then(data => {
             userList.html(data['html'])
-            clearInputSet(pet)
+            clearInputSet(user)
             insertUser.modal('hide')
           }, () => {})
         }
@@ -429,9 +348,24 @@
     }
     var data = {
       keyword: $("#user-keyword").val(),
+      limit: $("#user-limit").val(),
+      page: global['page'],
       status: value
     }
     return data
+  }
+
+  function goPage(page) {
+    global['page'] = page
+    $.post(
+      global['url'],
+      {action: 'filteruser', filter: checkUserFilter()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          userList.html(data['html'])
+        }, () => {})
+      }
+    )
   }
 
   function deleteUser(id) {
@@ -445,7 +379,7 @@
       {action: 'removeuser', id: global['id'], filter: checkUserFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
-          petList.html(data['html'])
+          userList.html(data['html'])
           removetUser.modal('hide')
         }, () => {})
       }
@@ -465,6 +399,7 @@
   }
 
   function filterUser() {
+    global['page'] = 1
     $.post(
       global['url'],
       {action: 'filteruser', filter: checkUserFilter()},

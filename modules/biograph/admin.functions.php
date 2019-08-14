@@ -52,11 +52,17 @@ function requestList($page = 1, $limit = 10) {
   return $xtpl->text();
 }
 
-function userRowList($filter = array('keyword' => '', 'status' => 0)) {
+function userRowList($filter = array('keyword' => '', 'status' => 0, 'page' => 1, 'limit' => 10)) {
   global $db, $user_info;
 
   $xtpl = new XTemplate('user-list.tpl', PATH);
-  $sql = 'select * from `'. PREFIX .'_user` where fullname like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '');
+  $sql = 'select count(*) as count from `'. PREFIX .'_user` where fullname like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '');
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
+  $sql = 'select * from `'. PREFIX .'_user` where fullname like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '') . ' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  // die($sql);
   $query = $db->query($sql);
   $index = 1;
 

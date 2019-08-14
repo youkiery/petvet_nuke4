@@ -4,7 +4,7 @@
   Tìm kiếm {keyword} từ {from} đến {end} trong {count} kết quả
   <!-- END: msg -->
 </p>
-<table class="table">
+<table class="table table-bordered">
   <tr>
     <th> STT </th>
     <th> Tên </th>
@@ -31,12 +31,12 @@
         </button>
         <!-- BEGIN: uncheck -->
         <button class="btn btn-warning" onclick="checkPet({id}, 0)">
-          <span class="glyphicon glyphicon-unchecked"></span>
+          <span class="glyphicon glyphicon-check"></span>
         </button>
         <!-- END: uncheck -->
         <!-- BEGIN: check -->
         <button class="btn btn-success" onclick="checkPet({id}, 1)">
-          <span class="glyphicon glyphicon-check"></span>
+          <span class="glyphicon glyphicon-unchecked"></span>
         </button>
         <!-- END: check -->
         <button class="btn btn-danger" onclick="deletePet({id})">
