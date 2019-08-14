@@ -64,7 +64,7 @@ function userRowList($filter = array('keyword' => '', 'status' => 0, 'page' => 1
   $sql = 'select * from `'. PREFIX .'_user` where fullname like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '') . ' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   // die($sql);
   $query = $db->query($sql);
-  $index = 1;
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index ++);
@@ -95,14 +95,22 @@ function getUserInfo($userid) {
   return $query->fetch();
 }
 
-function userDogRow($userid = 0, $filter = array('keyword' => '', 'status' => 0), $limit = array('page' => 1, 'limit' => 10)) {
+function userDogRow($filter = array('keyword' => '', 'status' => 0, 'page' => 1, 'limit' => 10)) {
   global $db, $user_info;
-  $index = 1;
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
   $xtpl = new XTemplate('pet-list.tpl', PATH);
-  
-  $data = getUserPetList($filter, $limit);
 
-  foreach ($data as $row) {
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '');
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
+  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '') . ' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+
+  // $data = getUserPetList($filter);
+
+  while ($row = $query->fetch()) {
     $owner = getUserInfo($row['userid']);
     $xtpl->assign('index', $index++);
     $xtpl->assign('name', $row['name']);

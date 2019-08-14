@@ -129,7 +129,6 @@
   var phone = $("#phone")
   var address = $("#address")
   var keyword = $("#keyword")
-  var cstatus = $(".status")
   var button = $("#button")
   var ibtn = $("#ibtn")
   var ebtn = $("#ebtn")

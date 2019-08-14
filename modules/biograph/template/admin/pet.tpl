@@ -107,23 +107,30 @@
     </div>
   </div>
 
-  <button class="btn btn-success" onclick="addPet()">
+  <!-- <button class="btn btn-success" onclick="addPet()">
     <span class="glyphicon glyphicon-plus">  </span>
-  </button>
+  </button> -->
       
   <div class="row">
-    <div class="col-sm-4">
-      <label> <input type="radio" name="status" class="status" id="status-0" checked> Toàn bộ </label>
-      <label> <input type="radio" name="status" class="status" id="status-1"> Chưa xác nhận </label>
-      <label> <input type="radio" name="status" class="status" id="status-2"> Đã xác nhận </label>
-    </div>
     <div class="col-sm-8">
       <input type="text" class="form-control" id="keyword" placeholder="Nhập từ khóa">
-      <button class="btn btn-info" onclick="filter()">
-        <span class="glyphicon glyphicon-filter"></span>
-      </button>
+    </div>
+    <div class="col-sm-4">
+      <select class="form-control" id="limit">
+        <option value="10"> 10 </option>
+        <option value="20"> 20 </option>
+        <option value="50"> 50 </option>
+        <option value="75"> 75 </option>
+        <option value="100"> 100 </option>
+      </select>
     </div>
   </div>
+  <label> <input type="radio" name="status" class="status" id="status-0" checked> Toàn bộ </label>
+  <label> <input type="radio" name="status" class="status" id="status-1"> Chưa xác nhận </label>
+  <label> <input type="radio" name="status" class="status" id="status-2"> Đã xác nhận </label>
+  <button class="btn btn-info" onclick="filter()">
+    <span class="glyphicon glyphicon-filter"></span>
+  </button>
   <div id="pet-list">
     {list}
   </div>
@@ -136,6 +143,7 @@
     login: 1,
     text: ['Đăng ky', 'Đăng nhập'],
     url: '{origin}',
+    page: 1,
     id: -1
   }
   var pet = {
@@ -147,31 +155,12 @@
     color: $("#pet-color"),
     microchip: $("#pet-microchip"),
   }
-  var user = {
-    fullname: $("#user-name"),
-    mobile: $("#user-mobile"),
-    address: $("#user-address")
-  }
-  var userImage = $("#user-image")
-  var userPreview = $("#user-preview")
-  var username = $("#username")
-  var password = $("#password")
-  var vpassword = $("#vpassword")
-  var fullname = $("#fullname")
-  var phone = $("#phone")
-  var address = $("#address")
-  var keyword = $("#keyword")
-  var cstatus = $(".status")
-  var button = $("#button")
-  var ibtn = $("#ibtn")
-  var ebtn = $("#ebtn")
 
-  var insertPet = $("#insert-pet")
-  var insertUser = $("#insert-user")
+  var keyword = $("#keyword")
+  var limit = $("#limit")
+  var cstatus = $(".status")
   var removetPet = $("#remove-pet")
-  var removetUser = $("#remove-user")
   var petList = $("#pet-list")
-  var userList = $("#user-list")
   var tabber = $(".tabber")
   var maxWidth = 512
   var maxHeight = 512
@@ -337,12 +326,28 @@
     }
     var data = {
       keyword: keyword.val(),
+      page: global['page'],
+      limit: limit.val(),
       status: value
     }
     return data
   }
 
+  function goPage(page) {
+    global['page'] = page
+    $.post(
+      global['url'],
+      {action: 'filter', filter: checkFilter()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          petList.html(data['html'])
+        }, () => {})
+      }
+    )
+  }
+
   function filter() {
+    global['page'] = 1
     $.post(
       global['url'],
       {action: 'filter', filter: checkFilter()},
