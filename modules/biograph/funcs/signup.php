@@ -33,12 +33,21 @@ if (!empty($action)) {
 			if (checkObj($data)) {
 				$data['username'] = strtolower($data['username']);
 				if (!checkLogin($data['username'], $data['password'])) {
-					$sql = 'insert into `'. PREFIX .'_user` (username, password, fullname, mobile, politic, address, active, image) values("'. $data['username'] .'", "'. md5($data['password']) .'", "'. $data['fullname'] .'", "'. $data['phone'] .'", "'. $data['politic'] .'", "'. $data['address'] .'", 1, "")';
-					if ($db->query($sql)) {
-						$_SESSION['username']	 = $data['username'];
-						$_SESSION['password'] = $data['password'];
-						$result['status'] = 1;
-					}
+          // remove prefix
+          $sql = 'select * from `'. PREFIX .'_user` where mobile = "'. $data['phone'] .'"';
+          $query = $db->query($sql);
+
+          if (empty($query->fetch())) {
+            $sql = 'insert into `'. PREFIX .'_user` (username, password, fullname, mobile, politic, address, active, image) values("'. $data['username'] .'", "'. md5($data['password']) .'", "'. $data['fullname'] .'", "'. $data['phone'] .'", "'. $data['politic'] .'", "'. $data['address'] .'", 1, "")';
+            if ($db->query($sql)) {
+              $_SESSION['username']	 = $data['username'];
+              $_SESSION['password'] = $data['password'];
+              $result['status'] = 1;
+            }
+          }
+          else {
+            $result['error'] = 'Số điện thoại đã được sử dụng';
+          }
 				}
         else {
 					$result['error'] = 'Tên đăng nhập hoặc mật khẩu không đúng';
