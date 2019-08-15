@@ -10,7 +10,7 @@
 </style>
 
 <div class="container">
-  <div class="text-center start-content" style="max-width: 400px; margin: auto; padding-top: 50px; border: 1px solid lightgray; padding: 15px; border-radius: 20px;">
+  <div class="text-center start-content" style="max-width: 450px; margin: auto; padding-top: 50px; border: 1px solid lightgray; padding: 15px; border-radius: 20px;">
     <a href="/biograph/">
       <img src="/modules/biograph/src/banner.png" style="width: 200px; margin: 20px 20px;">
     </a>
@@ -85,6 +85,39 @@
     <div class="row">
       <label>
         <div class="col-sm-4">
+          Tỉnh
+        </div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="al1" autocomplete="off">
+        </div>
+      </label>
+    </div>
+
+    <div class="row">
+      <label>
+        <div class="col-sm-4">
+          Quận/Huyện/Thành phố
+        </div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="al2" autocomplete="off">
+        </div>
+      </label>
+    </div>
+
+    <div class="row">
+      <label>
+        <div class="col-sm-4">
+          Xã/Phường/Thị trấn
+        </div>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="al3" autocomplete="off">
+        </div>
+      </label>
+    </div>
+
+    <div class="row">
+      <label>
+        <div class="col-sm-4">
           Địa chỉ
         </div>
         <div class="col-sm-8">
@@ -118,6 +151,10 @@
   var address = $("#address")
   var error = $("#error")
 
+  var al1 = $("#al1")
+  var al2 = $("#al2")
+  var al3 = $("#al3")
+
   function displayError(errorText) {
     var text = ''
 
@@ -141,7 +178,7 @@
   }
 
   function checkSignup() {
-    var check = true
+    var check = false
     var data = {
       username: username.val(),
       password: password.val(),
@@ -150,6 +187,8 @@
       phone: phone.val(),
       politic: politic.val(),
       address: address.val(),
+      al1: al1.val(),
+      al2: al2.val()
     }
 
     if (data['password'] == data['vpassword']) {
@@ -163,6 +202,7 @@
         }
       }
     }
+    data['al3'] = al3.val()
 
     if (check) {
       return data
@@ -177,14 +217,14 @@
           {action: 'signup', data: checkSignup()},
           (response, status) => {
         checkResult(response, status).then(data => {
-          window.location.href = '/biograph/user';
+          window.location.reload();
         }, (data) => {
           displayError(data['error'])
         })
       }
       )
     } else {
-      displayError('Chưa điền đủ thông tin')
+      displayError('Chưa điền đủ thông tin, kiểm tra các trường và mật khẩu')
     }
   }
 

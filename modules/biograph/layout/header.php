@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="/modules/biograph/src/bootstrap.min.css">
-<link rel="stylesheet" href="/modules/biograph/src/style.css">
+<link rel="stylesheet" href="/modules/biograph/src/style.css?v=<?php echo round(time() / 60); ?>">
 <link rel="stylesheet" href="/modules/biograph/src/glyphicons.css">
 <link rel="stylesheet" href="/modules/biograph/src/jquery-ui.min.css">
 

@@ -17,6 +17,43 @@ define("PATH", NV_ROOTDIR . "/modules/" . $module_file . '/template/admin/');
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';
 
+function centerList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', 'status' => 0)) {
+  global $db;
+
+  $xtpl = new XTemplate('center-list.tpl', PATH);
+
+  $filter['status'] = intval($filter['status']);
+  if (empty($filter['status'])) {
+    $filter['status'] = '0, 1';
+  }
+  else {
+    $filter['status'] = $filter['status'] - 1;
+  }
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_user` where (fullname like "%'. $filter['keyword'] .'%") and center in (' . $filter['status'] . ')';
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
+  $sql = 'select * from `'. PREFIX .'_user` where (fullname like "%'. $filter['keyword'] .'%") and center in (' . $filter['status'] . ') limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('fullname', $row['fullname']);
+    $xtpl->assign('mobile', $row['mobile']);
+    $xtpl->assign('address', $row['address']);
+    $xtpl->assign('politic', $row['politic']);
+
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function requestList($filter = array('keyword' => '', 'page' => 1, 'limit' => 10, 'status' => 0)) {
   global $db, $request_array;
 

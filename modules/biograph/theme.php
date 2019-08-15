@@ -90,7 +90,7 @@ function requestDetail($petid) {
 }
 
 function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('page' => 1, 'limit' => 10, 'keyword' => '')) {
-  global $db, $user_info;
+  global $db, $user_info, $sex_array;
   $index = 1;
   $xtpl = new XTemplate('dog-owner-list.tpl', PATH);
 
@@ -102,7 +102,7 @@ function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('pa
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('microchip', $row['microchip']);
     $xtpl->assign('breed', $row['breed']);
-    $xtpl->assign('sex', $row['sex']);
+    $xtpl->assign('sex', $sex_array[$row['sex']]);
     $xtpl->assign('dob', cdate($row['dateofbirth']));
     if (!empty($user_info) && !empty($user_info['userid']) && (in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
       $request = getPetRequest($row['id']);

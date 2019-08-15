@@ -1,5 +1,5 @@
 <!-- BEGIN: main -->
-<div class="container" style="margin-top: 20px;">
+<div class="container">
   <a href="/biograph/">
     <img src="/modules/biograph/src/banner.png" style="width: 100px;">
   </a>

@@ -435,8 +435,7 @@
   </div>
 
   <h2> Thông tin cá nhân </h2>
-  <div style="float: left;">
-    <img src="{image}" style="width: 128px; height: 128px;">
+  <div style="float: left;" id="avatar">
   </div>
   <div style="float: left; margin-left: 10px;">
     <p> Tên: {fullname} </p>
@@ -601,6 +600,8 @@
     changeMonth: true,
     changeYear: true
   });
+
+  loadImage('{image}', '#avatar')
 
   $(this).ready(() => {
     installRemind('m', 'parent')
