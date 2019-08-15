@@ -17,7 +17,12 @@ $xtpl = new XTemplate("main.tpl", "modules/biograph/template");
 $userinfo = getUserInfo();
 
 if (!empty($userinfo)) {
-  $xtpl->parse("main.log");
+  if ($userinfo['center']) {
+    $xtpl->parse("main.log_center");
+  }
+  else {
+    $xtpl->parse("main.log");
+  }
 }
 else {
   $xtpl->parse("main.nolog");

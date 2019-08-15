@@ -13,12 +13,17 @@
           </label>
           <!-- BEGIN: nolog -->
           <a href="/biograph/login"> Đăng nhập </a> |
-          <a href="/biograph/signup"> Đăng ký </a>
           <!-- END: nolog -->
+          <a href="/biograph/private"> Cá nhân </a> | 
+          <a href="/biograph/center"> Trang trại </a>
+          <!-- <a href="/biograph/signup"> Đăng ký </a> -->
 
           <!-- BEGIN: log -->
-          <a href="/biograph/login"> Quản lý thú cưng </a> |
+          <!-- <a href="/biograph/login"> Quản lý giống </a> -->
           <!-- END: log -->
+          <!-- BEGIN: log_center -->
+          <!-- <a href="/biograph/login"> Quản lý trại </a> -->
+          <!-- END: log_center -->
         </div>
       </form>
     </div>

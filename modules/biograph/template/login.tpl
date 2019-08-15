@@ -4,19 +4,22 @@
   label {
     width: 100%;
   }
+  .col-sm-4 {
+    text-align: left;
+  }
 </style>
 
 <div class="container">
-  <div class="text-center start-content" style="max-width: 400px; margin: auto; padding-top: 50px; border: 1px solid lightgray; padding: 15px;">
+  <div class="text-center start-content" style="max-width: 400px; margin: auto; padding-top: 50px; border: 1px solid lightgray; padding: 15px; border-radius: 20px;">
     <a href="/biograph/">
-      <img src="/modules/biograph/src/banner.png" style="width: 200px;">
+      <img src="/modules/biograph/src/banner.png" style="width: 200px; margin: 20px 20px;">
     </a>
 
     <div style="margin-top: 20px;"></div>
     <div class="row">
       <label>
         <div class="col-sm-4">
-          Tên Đăng nhập
+          Tên đăng nhập
         </div>
         <div class="col-sm-8">
           <input type="text" class="form-control" id="username" autocomplete="off">
@@ -41,6 +44,8 @@
       </button>
     </div>
     <div id="error"> </div>
+    <br>
+    Chưa có tài khoản? <a href="/biograph/signup"> Đăng ký ngay!</a>
   </div>
 </div>
 
@@ -50,11 +55,6 @@
   }
   var username = $("#username")
   var password = $("#password")
-  var vpassword = $("#vpassword")
-  var fullname = $("#fullname")
-  var phone = $("#phone")
-  var politic = $("#politic")
-  var address = $("#address")
   var error = $("#error")
 
   function displayError(errorText) {
@@ -79,36 +79,6 @@
     return false
   }
 
-  function checkSignup() {
-    var check = true
-    var data = {
-      username: username.val(),
-      password: password.val(),
-      vpassword: vpassword.val(),
-      fullname: fullname.val(),
-      phone: phone.val(),
-      politic: politic.val(),
-      address: address.val(),
-    }
-
-    if (data['password'] == data['vpassword']) {
-      for (const key in data) {
-        if (data.hasOwnProperty(key)) {
-          const element = data[key];
-          
-          if (!element) {
-            check = false
-          }
-        }
-      }
-    }
-
-    if (check) {
-      return data
-    }
-    return false
-  }
-
   function login() {
     if (loginData = checkLogin()) {
       $.post(
@@ -127,25 +97,5 @@
       displayError('Chưa điền đủ thông tin')
     }
   }
-
-  function signup() {
-    if (signupData = checkSignup()) {
-      $.post(
-        global['url'],
-        {action: 'signup', data: checkSignup()},
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            window.location.reload() 
-          }, (data) => {
-            displayError(data['error'])
-          })
-        }
-      )
-    }
-    else {
-      displayError('Chưa điền đủ thông tin')
-    }
-  }
-
 </script>
 <!-- END: main -->
