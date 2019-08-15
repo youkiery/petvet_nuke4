@@ -30,7 +30,25 @@ $request_array = array(
   array(
     'title' => 'Tiêm phòng dại',
     'type' => 2
+  )
+);
+$vaccine_array = array(
+  array(
+    'title' => 'Dại',
+    'type' => 0
   ),
+  array(
+    'title' => '5 bệnh',
+    'type' => 1
+  ),
+  array(
+    'title' => '6 bệnh',
+    'type' => 2
+  ),
+  array(
+    'title' => '7 bệnh',
+    'type' => 3
+  )
 );
 
 function checkObj($obj) {

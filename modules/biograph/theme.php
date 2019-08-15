@@ -13,8 +13,22 @@ if (!defined('PREFIX')) {
 
 
 function vaccineList($petid) {
-  global $db, $request_array;
+  global $db, $vaccine_array;
   $xtpl = new XTemplate('vaccine.tpl', PATH);
+
+  $sql = 'select * from `'. PREFIX .'_vaccine` where petid = ' . $petid;
+  $query = $db->query($sql);
+  $index = 1;
+  while ($row = $query->fetch()) {
+    $pet = getPetById($petid);
+    // var_dump($pet);die();
+    $xtpl->assign('index', $index ++);
+    $xtpl->assign('pet', $pet['name']);
+    $xtpl->assign('time', date('d/m/Y', $row['time']));
+    $xtpl->assign('recall', date('d/m/Y', $row['recall']));
+    $xtpl->assign('type', $vaccine_array[$row['type']]['title']);
+    $xtpl->parse('main.row');
+  }
 
   $xtpl->parse('main');
   return $xtpl->text();

@@ -5,32 +5,82 @@
   }
 </style>
 
+<div id="pet-vaccine" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body text-center">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <p>
+          Thêm lịch tiêm phòng
+        </p>
+
+        <label class="row">
+          <div class="col-sm-3">
+            Loại tiêm phòng
+          </div>
+          <div class="col-sm-9">
+            <select class="form-control" id="vaccine-type">
+              <option value="0"> Dại </option>
+              <option value="1"> 5 Bệnh </option>
+              <option value="2"> 6 Bệnh </option>
+              <option value="3"> 7 Bệnh </option>
+            </select>
+          </div>
+        </label>
+
+        <label class="row">
+          <div class="col-sm-3">
+            Ngày tiêm phòng
+          </div>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="vaccine-time" autocomplete="off">
+          </div>
+        </label>
+
+        <label class="row">
+          <div class="col-sm-3">
+            Ngày nhắc
+          </div>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="vaccine-recall" autocomplete="off">
+          </div>
+        </label>
+
+        <button class="btn btn-success" onclick="insertVaccineSubmit()">
+          Thêm lịch tiêm phòng
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <div class="modal" id="insert-disease" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
         <label class="form-group">
           Ngày bệnh
-          <input type="text" class="form-control" id="disease-treat">
+          <input type="text" class="form-control" id="disease-treat" autocomplete="off">
         </label>
 
         <label class="form-group">
           Ngày điều trị
-          <input type="text" class="form-control" id="disease-treated">
+          <input type="text" class="form-control" id="disease-treated" autocomplete="off">
         </label>
 
         <!-- <label class="form-group">
           Đối tượng
           <div class="relative">
-            <input type="text" class="form-control" id="disease-target">
-            <div class="suggest" id="disease-suggest-target"></div>
+          <input type="text" class="form-control" id="disease-target">
+          <div class="suggest" id="disease-suggest-target"></div>
           </div>
         </label> -->
 
         <label class="form-group">
           Loại bệnh
           <div class="relative">
-            <input type="text" class="form-control" id="disease-disease">
+            <input type="text" class="form-control" id="disease-disease" autocomplete="off">
             <div class="suggest" id="disease-suggest-disease"></div>
           </div>
         </label>
@@ -58,11 +108,11 @@
         <p> Thêm lịch phối giống </p>
         <label class="form-group">
           Ngày phối giống
-          <input type="text" class="form-control" id="breeder-time">
+          <input type="text" class="form-control" id="breeder-time" autocomplete="off">
         </label>
         <label class="form-group relative">
           Đối tượng phối
-          <input type="text" class="form-control" id="breeder-target">
+          <input type="text" class="form-control" id="breeder-target" autocomplete="off">
           <input type="hidden" id="breeder-targetid">
           <div class="suggest" id="breeder-suggest-target"></div>
         </label>
@@ -97,7 +147,7 @@
             Tên thú cưng
           </div>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="pet-name">
+            <input type="text" class="form-control" id="pet-name" autocomplete="off">
           </div>
         </label>
 
@@ -106,7 +156,7 @@
             Ngày sinh
           </div>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="pet-dob">
+            <input type="text" class="form-control" id="pet-dob" autocomplete="off">
           </div>
         </label>
 
@@ -115,7 +165,7 @@
             Giống 
           </div>
           <div class="col-sm-9 relative">
-            <input type="text" class="form-control" id="species-pet">
+            <input type="text" class="form-control" id="species-pet" autocomplete="off">
             <div class="suggest" id="species-suggest-pet"></div>
           </div>
         </label>
@@ -125,7 +175,7 @@
             Loài
           </div>
           <div class="col-sm-9 relative">
-            <input type="text" class="form-control" id="breed-pet">
+            <input type="text" class="form-control" id="breed-pet" autocomplete="off">
             <div class="suggest" id="breed-suggest-pet"></div>
           </div>
         </label>
@@ -236,6 +286,7 @@
       </div>
     </div>
   </div>
+</div>
 <script>
   var global = {
     id: '{id}',
@@ -247,6 +298,11 @@
     time: $("#breeder-time"),
     target: $("#breeder-targetid"),
     note: $("#breeder-note"),
+  }
+  var vaccine = {
+    type: $("#vaccine-type"),
+    time: $("#vaccine-time"),
+    recall: $("#vaccine-recall")
   }
   var pet = {
     name: $("#pet-name"),
@@ -265,6 +321,7 @@
   var insertPet = $("#insert-pet")
   var breederContent = $("#breeder-content")
   var breederChild = $("#breeder-child")
+  var petVaccine = $("#pet-vaccine")
   var diseaseContent = $("#disease-content")
   var petPreview = $("#pet-preview")
   var avatar = $("#avatar")
@@ -277,7 +334,7 @@
 
   loadImage('{image}', avatar)
 
-  $("#breeder-time, #pet-dob, #disease-treat, #disease-treated").datepicker({
+  $("#breeder-time, #pet-dob, #disease-treat, #disease-treated, #vaccine-time, #vaccine-recall").datepicker({
     format: 'dd/mm/yyyy',
     changeMonth: true,
     changeYear: true
@@ -300,16 +357,15 @@
 
     return result
   }
-  
+
   function pickTarget(name, id, type = 1, index = 0) {
     if (type) {
       $("#breeder-target").val(name)
       $("#breeder-targetid").val(id)
-    }
-    else {
+    } else {
       $("#child-" + index).val(name)
       $("#childid-" + index).val(id)
-    }
+  }
   }
 
   // function pickTarget2(name, id) {
@@ -326,7 +382,7 @@
     $(".child").each((index, item) => {
       var ids = item.getAttribute('id')
       var id = splipper(ids, 'child')
-      
+
       dat.push({
         id: $("#childid-" + id).val(),
         name: $("#child-" + id).val()
@@ -337,36 +393,37 @@
 
   function insertPetSubmit() {
     $.post(
-      global['url'],
-      {action: 'insertpet', data: checkInputSet(pet)},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          clearInputSet(pet)
-          petPreview.val('')
-          remind = JSON.parse(data['remind'])
-          $("#child-" + global['childid']).val(data['name'])
-          $("#childid-" + global['childid']).val(data['id'])
-          insertPet.modal('hide')
-        }, () => {})
-      }
+        global['url'],
+        {action: 'insertpet', data: checkInputSet(pet)},
+        (response, status) => {
+      checkResult(response, status).then(data => {
+        clearInputSet(pet)
+        petPreview.val('')
+        remind = JSON.parse(data['remind'])
+        $("#child-" + global['childid']).val(data['name'])
+        $("#childid-" + global['childid']).val(data['id'])
+        insertPet.modal('hide')
+      }, () => {
+      })
+    }
     )
   }
 
   function installRemindv2(name, type) {
     var timeout
-    var input = $("#"+ type +"-" + name)
-    var suggest = $("#"+ type +"-suggest-" + name)
+    var input = $("#" + type + "-" + name)
+    var suggest = $("#" + type + "-suggest-" + name)
 
     input.keyup(() => {
       clearTimeout(timeout)
       timeout = setTimeout(() => {
         var key = paintext(input.val())
         var html = ''
-        
+
         for (const index in remind[type]) {
           if (remind[type].hasOwnProperty(index)) {
             const element = paintext(remind[type][index]['name']);
-            
+
             if (element.search(key) >= 0) {
               html += '<div class="suggest_item" onclick="selectRemindv2(\'' + name + '\', \'' + type + '\', \'' + remind[type][index]['name'] + '\')"><p class="right-click">' + remind[type][index]['name'] + '</p></div>'
             }
@@ -386,7 +443,7 @@
   }
 
   function selectRemindv2(name, type, value) {
-    $("#"+ type +"-" + name).val(value)
+    $("#" + type + "-" + name).val(value)
   }
 
   function clearInputSet(dataSet) {
@@ -408,17 +465,18 @@
 
   function insertBreederSubmit() {
     $.post(
-      global['url'],
-      {action: 'insert-breeder', data: checkInputSet(breeder), id: global['id'], child: checkChild()},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          breederContent.html(data['html'])
-          global['child'] = []
-          clearInputSet(breeder)
-          parseChild()
-          insertBreeder.modal('hide')
-        }, () => {})
-      }
+        global['url'],
+        {action: 'insert-breeder', data: checkInputSet(breeder), id: global['id'], child: checkChild()},
+        (response, status) => {
+      checkResult(response, status).then(data => {
+        breederContent.html(data['html'])
+        global['child'] = []
+        clearInputSet(breeder)
+        parseChild()
+        insertBreeder.modal('hide')
+      }, () => {
+      })
+    }
     )
   }
 
@@ -427,34 +485,34 @@
     var installer = []
     if (!global['child'].length) {
       global['child'] = [{
-        id: 0,
-        name: ''
-      }]
+          id: 0,
+          name: ''
+        }]
     }
 
     global['child'].forEach((child, index) => {
       html += `
-        <div class="relative">
-          <div class="input-group">
-            <input class="form-control childid-`+ index +`" id="childid-`+ index +`" type="hidden" value="`+ child['id'] +`">
-            <input class="form-control child child-`+ index +`" id="child-`+ index +`" type="text" value="`+ child['name'] +`" autocomplete="off">
-            <div class="input-group-btn">
-              <button class="btn btn-success" style="height: 34px;" onclick="addPet(`+index+`)">
-                <span class="glyphicon glyphicon-plus"></span>
-              </button>
-            </div>
-            <div class="input-group-btn">
-              <button class="btn btn-danger" style="height: 34px;" onclick="deleteChild(`+index+`)">
-                <span class="glyphicon glyphicon-remove"></span>
-              </button>
-            </div>
-          </div>
-          <div class="suggest" id="child-suggest-`+ index +`"></div>
-        </div>`
-        installer.push({
-          type: 'child',
-          name: index
-        })
+    <div class="relative">
+      <div class="input-group">
+      <input class="form-control childid-` + index + `" id="childid-` + index + `" type="hidden" value="` + child['id'] + `">
+      <input class="form-control child child-` + index + `" id="child-` + index + `" type="text" value="` + child['name'] + `" autocomplete="off">
+      <div class="input-group-btn">
+        <button class="btn btn-success" style="height: 34px;" onclick="addPet(` + index + `)">
+        <span class="glyphicon glyphicon-plus"></span>
+        </button>
+      </div>
+      <div class="input-group-btn">
+        <button class="btn btn-danger" style="height: 34px;" onclick="deleteChild(` + index + `)">
+        <span class="glyphicon glyphicon-remove"></span>
+        </button>
+      </div>
+      </div>
+      <div class="suggest" id="child-suggest-` + index + `"></div>
+    </div>`
+      installer.push({
+        type: 'child',
+        name: index
+      })
     })
     breederChild.html(html)
     installer.forEach((item, index) => {
@@ -514,23 +572,58 @@
     }
   }
 
-  function insertDiseaseSubmit() {
+  function checkDiseaseData() {
+    return {
+      treat: diseaseTreat.val(),
+      treated: diseaseTreated.val(),
+      disease: diseaseDisease.val(),
+      note: diseaseNote.val(),
+    }
+  }
+
+  function checkVaccineData() {
+    return {
+      type: vaccine['type'].val(),
+      time: vaccine['time'] .val(),
+      recall: vaccine['recall'].val()
+    }
+  }
+
+  function addVaccine(id) {
+    petVaccine.modal('show')
+  }
+
+  function insertVaccineSubmit() {
     $.post(
       global['url'],
-      {action: 'insert-disease', id: global['id'], data: checkDiseaseData()},
+      {action: 'insert-vaccine', data: checkVaccineData(), id: global['id']},
       (response, status) => {
         checkResult(response, status).then(data => {
-          diseaseContent.html(data['html'])
+          petVaccine.modal('hide')
         }, () => {})
       }
     )
   }
 
-  function installRemind(name, type, index = -1, func = '') {
+
+  function insertDiseaseSubmit() {
+    $.post(
+        global['url'],
+        {action: 'insert-disease', id: global['id'], data: checkDiseaseData()},
+        (response, status) => {
+      checkResult(response, status).then(data => {
+        diseaseContent.html(data['html'])
+      }, () => {
+      })
+    }
+    )
+  }
+
+  function installRemind(name, type, index = - 1, func = '') {
     var timeout
-    var input = $("#"+ type +"-" + name)
-    var suggest = $("#"+ type +"-suggest-" + name)
-    
+    var input = $("#" + type + "-" + name)
+    var suggest = $("#" + type + "-suggest-" + name)
+
     input.keyup(() => {
       clearTimeout(timeout)
       timeout = setTimeout(() => {
@@ -538,15 +631,16 @@
         var html = ''
 
         $.post(
-          global['url'],
-          {action: 'target', keyword: key, index: index, func: func},
-          (response, status) => {
-            checkResult(response, status).then(data => {
-              suggest.html(data['html'])
-            }, () => {})
-          }
+            global['url'],
+            {action: 'target', keyword: key, index: index, func: func},
+            (response, status) => {
+          checkResult(response, status).then(data => {
+            suggest.html(data['html'])
+          }, () => {
+          })
+        }
         )
-        
+
         suggest.html(html)
       }, 200);
     })
@@ -562,9 +656,9 @@
 
   function installRemind2(name, type) {
     var timeout
-    var input = $("#"+ type +"-" + name)
-    var suggest = $("#"+ type +"-suggest-" + name)
-    
+    var input = $("#" + type + "-" + name)
+    var suggest = $("#" + type + "-suggest-" + name)
+
     input.keyup(() => {
       clearTimeout(timeout)
       timeout = setTimeout(() => {
@@ -572,15 +666,16 @@
         var html = ''
 
         $.post(
-          global['url'],
-          {action: 'disease', keyword: key},
-          (response, status) => {
-            checkResult(response, status).then(data => {
-              suggest.html(data['html'])
-            }, () => {})
-          }
+            global['url'],
+            {action: 'disease', keyword: key},
+            (response, status) => {
+          checkResult(response, status).then(data => {
+            suggest.html(data['html'])
+          }, () => {
+          })
+        }
         )
-        
+
         suggest.html(html)
       }, 200);
     })
@@ -601,7 +696,7 @@
       var name = Math.round(new Date().getTime() / 1000) + '_' + fullname.substr(0, fullname.lastIndexOf('.'))
       var extension = fullname.substr(fullname.lastIndexOf('.') + 1)
       filename = name + '.' + extension
-      
+
       reader.onload = function (e) {
         var type = e.target["result"].split('/')[1].split(";")[0];
         if (["jpeg", "jpg", "png", "bmp", "gif"].indexOf(type) >= 0) {
@@ -611,9 +706,9 @@
             var c = document.createElement("canvas")
             var ctx = c.getContext("2d");
             var ratio = 1;
-            if(image.width > maxWidth)
+            if (image.width > maxWidth)
               ratio = maxWidth / image.width;
-            else if(image.height > maxHeight)
+            else if (image.height > maxHeight)
               ratio = maxHeight / image.height;
             c.width = image["width"];
             c.height = image["height"];
@@ -629,31 +724,33 @@
             $("#" + previewname + "-preview").attr('src', file)
             file = file.substr(file.indexOf(',') + 1);
           }
-        };
+        }
+        ;
       };
 
       if (imageType.indexOf(extension) >= 0) {
         reader.readAsDataURL(input.files[0]);
       }
     }
-	}
+  }
 
   function editPetSubmit() {
     uploader().then((imageUrl) => {
       $.post(
-        global['url'],
-        {action: 'editpet', id: global['id'], data: checkInputSet(pet), image: imageUrl},
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            petList.html(data['html'])
-            clearInputSet(pet)
-            $("#parent-m").val('')
-            $("#parent-f").val('')
-            petPreview.val('')
-            remind = JSON.parse(data['remind'])
-            insertPet.modal('hide')
-          }, () => {})
-        }
+          global['url'],
+          {action: 'editpet', id: global['id'], data: checkInputSet(pet), image: imageUrl},
+          (response, status) => {
+        checkResult(response, status).then(data => {
+          petList.html(data['html'])
+          clearInputSet(pet)
+          $("#parent-m").val('')
+          $("#parent-f").val('')
+          petPreview.val('')
+          remind = JSON.parse(data['remind'])
+          insertPet.modal('hide')
+        }, () => {
+        })
+      }
       )
     })
   }
@@ -662,37 +759,36 @@
     return new Promise(resolve => {
       if (!(file || filename)) {
         resolve('')
-      }
-      else {
+      } else {
         var uploadTask = storageRef.child('images/' + filename).putString(file, 'base64', metadata);
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
-          function(snapshot) {
-            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
-            switch (snapshot.state) {
-              case firebase.storage.TaskState.PAUSED: // or 'paused'
-                console.log('Upload is paused');
-                break;
-              case firebase.storage.TaskState.RUNNING: // or 'running'
-                console.log('Upload is running');
-                break;
-            }
-          }, function(error) {
-            resolve('')
-            switch (error.code) {
-              case 'storage/unauthorized':
-                // User doesn't have permission to access the object
+            function (snapshot) {
+              var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log('Upload is ' + progress + '% done');
+              switch (snapshot.state) {
+                case firebase.storage.TaskState.PAUSED: // or 'paused'
+                  console.log('Upload is paused');
+                  break;
+                case firebase.storage.TaskState.RUNNING: // or 'running'
+                  console.log('Upload is running');
+                  break;
+              }
+            }, function (error) {
+          resolve('')
+          switch (error.code) {
+            case 'storage/unauthorized':
+              // User doesn't have permission to access the object
               break;
-              case 'storage/canceled':
-                // User canceled the upload
+            case 'storage/canceled':
+              // User canceled the upload
               break;
-              case 'storage/unknown':
-                // Unknown error occurred, inspect error.serverResponse
+            case 'storage/unknown':
+              // Unknown error occurred, inspect error.serverResponse
               break;
-            }
-          }, function() {
-            // Upload completed successfully, now we can get the download URL
-            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+          }
+        }, function () {
+          // Upload completed successfully, now we can get the download URL
+          uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
 
             file = false
             resolve(downloadURL)
@@ -701,7 +797,7 @@
         });
       }
     })
-	}
+  }
 
 </script>
 <!-- END: main -->

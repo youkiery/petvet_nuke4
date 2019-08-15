@@ -65,6 +65,28 @@ if (!empty($action)) {
       }
 
 		break;
+    case 'insert-vaccine':
+			$id = $nv_Request->get_string('id', 'post', 0);
+			$data = $nv_Request->get_array('data', 'post');
+      
+      if (!empty($id) && count($data) > 0) {
+        $data['time'] = totime($data['time']);
+        $data['recall'] = totime($data['recall']);
+        if (!empty($row = checkPrvVaccine($data))) {
+          // 
+          $sql = 'update `'. PREFIX .'_vaccine` set status =  1 where id = ' . $row['id'];
+          die($sql);
+        }
+        else {
+          $sql = 'insert into `'. PREFIX .'_vaccine` (petid, time, recall, type, status) values ("'. $id .'", "'. $data['time'] .'", "'. $data['recall'] .'", "'. $data['type'] .'", 0)';
+          if ($db->query($sql)) {
+            $result['status'] = 1;
+            $result['notify'] = 'Đã thêm tiêm phòng';
+          }
+        }
+      }
+    break;
+
  		case 'target':
 			$keyword = $nv_Request->get_string('keyword', 'post', '');
 			$index = $nv_Request->get_int('index', 'post', -1);
