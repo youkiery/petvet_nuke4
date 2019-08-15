@@ -16,6 +16,29 @@ define("PATH", 'modules/' . $module_file . '/template');
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 
+function getPetRequest($petid, $type = -1) {
+  global $db;
+
+  if ($type >= 0) {
+    $sql = 'select * from `'. PREFIX .'_request` where petid = ' . $petid . ' and type = ' . $type . ' order by time';
+    $query = $db->query($sql);
+
+    if (!empty($row = $query->fetch())) {
+      return $row;
+    }
+    return array();
+  }
+  $list = array();
+  $sql = 'select * from `'. PREFIX .'_request` where petid = ' . $petid . ' order by time';
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $list[] = $row;
+  }
+
+  return $list;
+}
+
 function parseLink($info) {
   if (!empty($info['id'])) {
     return '<a href="/index.php?nv=biograph&op=detail&id=' . $info['id'] . '">' . $info['name'] . '</a>';

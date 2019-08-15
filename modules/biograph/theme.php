@@ -11,27 +11,36 @@ if (!defined('PREFIX')) {
   die('Stop!!!');
 }
 
-function getPetRequest($petid, $type = -1) {
-  global $db;
 
-  if ($type >= 0) {
-    $sql = 'select * from `'. PREFIX .'_request` where petid = ' . $petid . ' and type = ' . $type . ' order by time';
-    $query = $db->query($sql);
+function vaccineList($petid) {
+  global $db, $request_array;
+  $xtpl = new XTemplate('vaccine.tpl', PATH);
 
-    if (!empty($row = $query->fetch())) {
-      return $row;
-    }
-    return array();
-  }
-  $list = array();
-  $sql = 'select * from `'. PREFIX .'_request` where petid = ' . $petid . ' order by time';
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function DiseaseList($petid) {
+  global $db, $request_array;
+  $xtpl = new XTemplate('disease.tpl', PATH);
+
+  $sql = 'select * from `'. PREFIX .'_disease` where petid = ' . $petid;
   $query = $db->query($sql);
-
+  $index = 1;
   while ($row = $query->fetch()) {
-    $list[] = $row;
+    $pet = getPetById($petid);
+    // var_dump($pet);die();
+    $xtpl->assign('index', $index ++);
+    $xtpl->assign('pet', $pet['name']);
+    $xtpl->assign('treat', date('d/m/Y', $row['treat']));
+    $xtpl->assign('treated', date('d/m/Y', $row['treated']));
+    $xtpl->assign('disease', $row['disease']);
+    $xtpl->assign('note', $row['note']);
+    $xtpl->parse('main.row');
   }
 
-  return $list;
+  $xtpl->parse('main');
+  return $xtpl->text();
 }
 
 function requestDetail($petid) {

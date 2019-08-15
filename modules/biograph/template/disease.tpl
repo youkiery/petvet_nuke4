@@ -1,21 +1,23 @@
 <!-- BEGIN: main -->
-<button class="btn btn-success" onclick="addBreeder()">
+<button class="btn btn-success" onclick="addDisease()">
   <span class="glyphicon glyphicon-plus"> </span>
 </button>
 <table class="table table-bordered">
   <tr>
     <th> STT </th>
-    <th> Ngày phối </th>
-    <th> Đối tượng phối </th>
-    <th> Số con </th>
+    <th> Thú cưng </th>
+    <th> Ngày điều trị </th>
+    <th> Loại bệnh </th>
+    <th> Thời gian khỏi </th>
     <th> Ghi chú </th>
   </tr>
   <!-- BEGIN: row -->
   <tr>
     <td> {index} </td>
-    <td> {time} </td>
-    <td> {target} </td>
-    <td> {number} </td>
+    <td> {pet} </td>
+    <td> {treat} </td>
+    <td> {disease} </td>
+    <td> {treated} </td>
     <td> {note} </td>
   </tr>
   <!-- END: row -->

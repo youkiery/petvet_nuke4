@@ -49,25 +49,71 @@ if (!empty($action)) {
       }
 
 		break;
+		case 'insert-disease':
+			$data = $nv_Request->get_array('data', 'post');
+
+      $data['treat'] = totime($data['treat']);
+      $data['treated'] = totime($data['treated']);
+      checkRemind($data['disease'], 'disease');
+      $list = array();
+
+      $sql = 'insert into `'. PREFIX .'_disease` (petid, treat, treated, disease, note) values('. $id .', '. $data['treat'] .', '. $data['treated'] .', "'. $data['disease'] .'", "'. $data['note'] .'")';
+      die($sql); 
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = diseaseList($id);
+      }
+
+		break;
  		case 'target':
 			$keyword = $nv_Request->get_string('keyword', 'post', '');
 			$index = $nv_Request->get_int('index', 'post', -1);
+			$func = $nv_Request->get_string('func', 'post', '');
 
 			$sql = 'select a.id, a.name, b.fullname, b.image from `'. PREFIX .'_pet` a inner join `'. PREFIX .'_user` b on a.userid = b.id where (a.name like "%'. $keyword .'%" or b.fullname like "%'. $keyword .'%") and userid = ' . $userinfo['id'];
 			$query = $db->query($sql);
 
 			$html = '';
       $xtra = '';
-      if ($index >= 0) {
+      $ex = 'pickTarget';
+      if (!empty($func)) {
+        $ex = $func;
+      }
+      else if ($index >= 0) {
         $xtra .= ', 0, ' . $index;
       }
 			while ($row = $query->fetch()) {
 				$html .= '
-				<div class="suggest_item2" onclick="pickTarget(\''. $row['name'] .'\', '. $row['id'] . $xtra .')">
+				<div class="suggest_item2" onclick="'. $ex .'(\''. $row['name'] .'\', '. $row['id'] . $xtra .')">
 					<div class="xleft">
 					</div>
 					<div class="xright">
 						<p> '. $row['fullname'] .' </p>
+						<p> '. $row['name'] .' </p>
+					</div>
+				</div>
+				';
+			}
+
+			if (empty($html)) {
+				$html = 'Không có kết quả trùng khớp';
+			}
+
+			$result['status'] = 1;
+			$result['html'] = $html;
+		break;
+ 		case 'disease':
+			$keyword = $nv_Request->get_string('keyword', 'post', '');
+      checkRemind($keyword, 'disease');
+
+			$sql = 'select * from `'. PREFIX .'_remind` where type = "disease" and name like "%'. $keyword .'%"';
+			$query = $db->query($sql);
+
+			$html = '';
+			while ($row = $query->fetch()) {
+				$html .= '
+				<div class="suggest_item" onclick="pickDisease(\''. $row['name'] .'\')">
+					<div class="xright">
 						<p> '. $row['name'] .' </p>
 					</div>
 				</div>
@@ -145,6 +191,8 @@ if (!empty($row = $query->fetch())) {
 	$xtpl->assign('microchip', $row['microchip']);
 	$xtpl->assign('image', $row['image']);
   $xtpl->assign('breeder', breederList($id));
+  $xtpl->assign('vaccine', vaccineList($id));
+  $xtpl->assign('disease', diseaseList($id));
 }
 
 $xtpl->assign('url', '/' . $module_name . '/' . $op . '/');

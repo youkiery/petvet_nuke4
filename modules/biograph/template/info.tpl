@@ -5,6 +5,51 @@
   }
 </style>
 
+<div class="modal" id="insert-disease" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <label class="form-group">
+          Ngày bệnh
+          <input type="text" class="form-control" id="disease-treat">
+        </label>
+
+        <label class="form-group">
+          Ngày điều trị
+          <input type="text" class="form-control" id="disease-treated">
+        </label>
+
+        <!-- <label class="form-group">
+          Đối tượng
+          <div class="relative">
+            <input type="text" class="form-control" id="disease-target">
+            <div class="suggest" id="disease-suggest-target"></div>
+          </div>
+        </label> -->
+
+        <label class="form-group">
+          Loại bệnh
+          <div class="relative">
+            <input type="text" class="form-control" id="disease-disease">
+            <div class="suggest" id="disease-suggest-disease"></div>
+          </div>
+        </label>
+
+        <label class="form-group">
+          Ghi chú
+          <input type="text" class="form-control" id="disease-note">
+        </label>
+
+        <div class="tex-center">
+          <button class="btn btn-success" onclick="insertDiseaseSubmit()">
+            Thêm lịch sử bệnh
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="insert-breeder" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -216,23 +261,31 @@
   }
 
   var insertBreeder = $("#insert-breeder")
+  var insertDisease = $("#insert-disease")
   var insertPet = $("#insert-pet")
   var breederContent = $("#breeder-content")
   var breederChild = $("#breeder-child")
+  var diseaseContent = $("#disease-content")
   var petPreview = $("#pet-preview")
   var avatar = $("#avatar")
+  var diseaseTreat = $("#disease-treat")
+  var diseaseTreated = $("#disease-treated")
+  var diseaseDisease = $("#disease-disease")
+  var diseaseNote = $("#disease-note")
 
   var remind = JSON.parse('{remind}')
 
   loadImage('{image}', avatar)
 
-  $("#breeder-time, #pet-dob").datepicker({
+  $("#breeder-time, #pet-dob, #disease-treat, #disease-treated").datepicker({
     format: 'dd/mm/yyyy',
     changeMonth: true,
     changeYear: true
   });
 
   installRemind('target', 'breeder')
+  // installRemind('target', 'disease', 0, 'pickTarget2')
+  installRemind2('disease', 'disease')
   installRemindv2('pet', 'species')
   installRemindv2('pet', 'breed')
 
@@ -257,6 +310,15 @@
       $("#child-" + index).val(name)
       $("#childid-" + index).val(id)
     }
+  }
+
+  // function pickTarget2(name, id) {
+  //   global['id'] = id
+  //   $("#disease-target").val(name)
+  // }
+
+  function pickDisease(name) {
+    diseaseDisease.val(name)
   }
 
   function checkChild() {
@@ -338,6 +400,10 @@
   function addBreeder() {
     insertBreeder.modal('show')
     parseChild()
+  }
+
+  function addDisease() {
+    insertDisease.modal('show')
   }
 
   function insertBreederSubmit() {
@@ -439,7 +505,28 @@
     insertPet.modal('show')
   }
 
-  function installRemind(name, type, index = -1) {
+  function checkDiseaseData() {
+    return {
+      treat: diseaseTreat.val(),
+      treated: diseaseTreated.val(),
+      disease: diseaseDisease.val(),
+      note: diseaseNote.val(),
+    }
+  }
+
+  function insertDiseaseSubmit() {
+    $.post(
+      global['url'],
+      {action: 'insert-disease', id: global['id'], data: checkDiseaseData()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          diseaseContent.html(data['html'])
+        }, () => {})
+      }
+    )
+  }
+
+  function installRemind(name, type, index = -1, func = '') {
     var timeout
     var input = $("#"+ type +"-" + name)
     var suggest = $("#"+ type +"-suggest-" + name)
@@ -452,7 +539,41 @@
 
         $.post(
           global['url'],
-          {action: 'target', keyword: key, index: index},
+          {action: 'target', keyword: key, index: index, func: func},
+          (response, status) => {
+            checkResult(response, status).then(data => {
+              suggest.html(data['html'])
+            }, () => {})
+          }
+        )
+        
+        suggest.html(html)
+      }, 200);
+    })
+    input.focus(() => {
+      suggest.show()
+    })
+    input.blur(() => {
+      setTimeout(() => {
+        suggest.hide()
+      }, 200);
+    })
+  }
+
+  function installRemind2(name, type) {
+    var timeout
+    var input = $("#"+ type +"-" + name)
+    var suggest = $("#"+ type +"-suggest-" + name)
+    
+    input.keyup(() => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        var key = paintext(input.val())
+        var html = ''
+
+        $.post(
+          global['url'],
+          {action: 'disease', keyword: key},
           (response, status) => {
             checkResult(response, status).then(data => {
               suggest.html(data['html'])

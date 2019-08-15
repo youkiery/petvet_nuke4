@@ -116,7 +116,7 @@
         {action: 'login', data: loginData},
         (response, status) => {
           checkResult(response, status).then(data => {
-            window.location.href = '/biograph/user'; 
+            window.location.reload() 
           }, (data) => {
             displayError(data['error'])
           })
@@ -135,7 +135,7 @@
         {action: 'signup', data: checkSignup()},
         (response, status) => {
           checkResult(response, status).then(data => {
-            window.location.href = '/biograph/user'; 
+            window.location.reload() 
           }, (data) => {
             displayError(data['error'])
           })
