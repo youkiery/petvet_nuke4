@@ -81,6 +81,7 @@ if (!empty($action)) {
           $sql = 'insert into `'. PREFIX .'_vaccine` (petid, time, recall, type, status) values ("'. $id .'", "'. $data['time'] .'", "'. $data['recall'] .'", "'. $data['type'] .'", 0)';
           if ($db->query($sql)) {
             $result['status'] = 1;
+            $result['html'] = vaccineList($id);
             $result['notify'] = 'Đã thêm tiêm phòng';
           }
         }

@@ -323,6 +323,7 @@
   var breederChild = $("#breeder-child")
   var petVaccine = $("#pet-vaccine")
   var diseaseContent = $("#disease-content")
+  var vaccineContent = $("#vaccine-content")
   var petPreview = $("#pet-preview")
   var avatar = $("#avatar")
   var diseaseTreat = $("#disease-treat")
@@ -599,6 +600,7 @@
       {action: 'insert-vaccine', data: checkVaccineData(), id: global['id']},
       (response, status) => {
         checkResult(response, status).then(data => {
+          vaccineContent.html(data['html'])
           petVaccine.modal('hide')
         }, () => {})
       }
