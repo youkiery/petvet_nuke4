@@ -958,7 +958,7 @@
   function insertPetSubmit() {
     $.post(
       global['url'],
-      {action: 'insertpet', data: checkInputSet(pet), breeder: $("#pet-breeder").prop('checked', true)},
+      {action: 'insertpet', data: checkInputSet(pet)},
       (response, status) => {
         checkResult(response, status).then(data => {
           petList.html(data['html'])

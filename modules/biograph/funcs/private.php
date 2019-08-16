@@ -263,7 +263,6 @@ if (!empty($action)) {
         checkRemind($data['breed'], 'breed');
 
 				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 0, "")';
-        // die($sql);
 
 				if ($db->query($sql)) {
 					$result['status'] = 1;
