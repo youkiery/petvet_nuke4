@@ -70,11 +70,12 @@ function paintext(string) {
 
 function loadImage(url, section) {
   var image = new Image()
+  var section = document.getElementById(section)
   image.src = url
   image.classList["value"] = ('img-responsive')
   image.onload = function() {
     section.append(image)
-    section.removeClass('thumbnail')
+    section.classList.remove('thumbnail')
   }
   image.onerror = function () {
     console.log('load image error')

@@ -84,14 +84,14 @@ function checkRemind($name, $type) {
 
 	if (!empty($name)) {
 		if ($id = getRemindIdv2($name, $type)) {
-			$sql = 'update `'. PREFIX .'_remind` set visible = 1, rate = rate + 1 where id = ' . $id;
+			$sql = 'update `'. PREFIX .'_remind` set rate = rate + 1 where id = ' . $id;
 			if ($db->query($sql)) {
 				return $id;
 			}
 			return 0;
 		}
 		else {
-			$sql = 'insert into `'. PREFIX .'_remind` (type, name, visible) values ("'. $type .'", "'. $name .'", 1)';
+			$sql = 'insert into `'. PREFIX .'_remind` (type, name, visible) values ("'. $type .'", "'. $name .'", 0)';
 			if ($db->query($sql)) {
 				return $db->lastInsertId();
 			}

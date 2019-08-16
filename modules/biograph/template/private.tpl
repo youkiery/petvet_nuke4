@@ -264,6 +264,15 @@
             </div>
           </label>
 
+          <label class="row">
+            <div class="col-sm-3">
+              Xuất xứ
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="origin-pet">
+            </div>
+          </label>
+
           <div class="row">
             <div class="col-sm-6">
               Chó cha
@@ -435,7 +444,7 @@
   </div>
 
   <h2> Thông tin cá nhân </h2>
-  <div style="float: left;" id="avatar">
+  <div style="float: left; width: 250px; height: 250px;" class="thumbnail" id="avatar">
   </div>
   <div style="float: left; margin-left: 10px;">
     <p> Tên: {fullname} </p>
@@ -501,6 +510,7 @@
     color: $("#pet-color"),
     microchip: $("#pet-microchip"),
     miear: $("#pet-miear"),
+    origin: $("#pet-origin"),
     parentm: $("#parent-m-s"),
     parentf: $("#parent-f-s")
   }
@@ -604,13 +614,14 @@
     changeYear: true
   });
 
-  loadImage('{image}', '#avatar')
+  loadImage('{image}', 'avatar')
 
   $(this).ready(() => {
     installRemind('m', 'parent')
     installRemind('f', 'parent')
     installRemindv2('pet', 'species')
     installRemindv2('pet', 'breed')
+    installRemindv2('pet', 'origin')
     installRemindv2('parent', 'species')
     installRemindv2('parent', 'breed')
   })

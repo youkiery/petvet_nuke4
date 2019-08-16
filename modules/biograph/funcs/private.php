@@ -183,49 +183,49 @@ if (!empty($action)) {
 				}
 			}
 		break;
-		case 'removeuser':
-			$id = $nv_Request->get_string('id', 'post');
-			$filter = $nv_Request->get_array('filter', 'post');
+		// case 'removeuser':
+		// 	$id = $nv_Request->get_string('id', 'post');
+		// 	$filter = $nv_Request->get_array('filter', 'post');
 
-			$sql = 'delete from `'. PREFIX .'_user` where id = ' . $id;
-			if ($db->query($sql)) {
-				$result['html'] = userRowList($filter);
-				if ($result['html']) {
-					$result['status'] = 1;
-				}
-			}
-		break;
-		case 'login':
-			$username = $nv_Request->get_string('username', 'post', '');
-			$password = $nv_Request->get_string('password', 'post', '');
+		// 	$sql = 'delete from `'. PREFIX .'_user` where id = ' . $id;
+		// 	if ($db->query($sql)) {
+		// 		$result['html'] = userRowList($filter);
+		// 		if ($result['html']) {
+		// 			$result['status'] = 1;
+		// 		}
+		// 	}
+		// break;
+		// case 'login':
+		// 	$username = $nv_Request->get_string('username', 'post', '');
+		// 	$password = $nv_Request->get_string('password', 'post', '');
 
-			if (!empty($username) && !empty($password)) {
-				$username = strtolower($username);
-				if (checkLogin($username, $password)) {
-					$_SESSION['username'] = $username;
-					$_SESSION['password'] = $password;
-					$result['status'] = 1;
-				}
-			}
-		case 'signup':
-			$username = $nv_Request->get_string('username', 'post', '');
-			$password = $nv_Request->get_string('password', 'post', '');
-			$fullname = $nv_Request->get_string('fullname', 'post', '');
-			$mobile = $nv_Request->get_string('phone', 'post', '');
-			$address = $nv_Request->get_string('address', 'post', '');
+		// 	if (!empty($username) && !empty($password)) {
+		// 		$username = strtolower($username);
+		// 		if (checkLogin($username, $password)) {
+		// 			$_SESSION['username'] = $username;
+		// 			$_SESSION['password'] = $password;
+		// 			$result['status'] = 1;
+		// 		}
+		// 	}
+		// case 'signup':
+		// 	$username = $nv_Request->get_string('username', 'post', '');
+		// 	$password = $nv_Request->get_string('password', 'post', '');
+		// 	$fullname = $nv_Request->get_string('fullname', 'post', '');
+		// 	$mobile = $nv_Request->get_string('phone', 'post', '');
+		// 	$address = $nv_Request->get_string('address', 'post', '');
 
-			if (!empty($username) && !empty($password)) {
-				$username = strtolower($username);
-				if (!checkLogin($username, $password)) {
-					$sql = 'insert into `'. PREFIX .'_user` (username, password, fullname, mobile, address, active, image) values("'. $username .'", "'. md5($password) .'", "'. $fullname .'", "'. $mobile .'", "'. $address .'", 0, "")';
-					if ($db->query($sql)) {
-						$_SESSION['username'] = $username;
-						$_SESSION['password'] = $password;
-						$result['status'] = 1;
-					}
-				}
-			}
-		break;
+		// 	if (!empty($username) && !empty($password)) {
+		// 		$username = strtolower($username);
+		// 		if (!checkLogin($username, $password)) {
+		// 			$sql = 'insert into `'. PREFIX .'_user` (username, password, fullname, mobile, address, active, image) values("'. $username .'", "'. md5($password) .'", "'. $fullname .'", "'. $mobile .'", "'. $address .'", 0, "")';
+		// 			if ($db->query($sql)) {
+		// 				$_SESSION['username'] = $username;
+		// 				$_SESSION['password'] = $password;
+		// 				$result['status'] = 1;
+		// 			}
+		// 		}
+		// 	}
+		// break;
 		case 'insertpet':
 			$data = $nv_Request->get_array('data', 'post');
 
@@ -331,6 +331,7 @@ if (!empty($action)) {
         
         checkRemind($data['species'], 'species');
         checkRemind($data['breed'], 'breed');
+        checkRemind($data['origin'], 'origin');
 
         if (!empty($data['breeder'])) {
           if ($data['sex']) {
@@ -345,6 +346,7 @@ if (!empty($action)) {
         }
 
 				$sql = 'update `'. PREFIX .'_pet` set '. sqlBuilder($data, BUILDER_EDIT) .', image = "'. $image .'" where id = ' . $id;
+        // die($sql);
 
 				if ($db->query($sql)) {
 					$result['status'] = 1;
