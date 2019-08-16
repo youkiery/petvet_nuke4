@@ -14,6 +14,7 @@ if (!defined('NV_ADMIN')) {
 $submenu['user'] = "Quản lý người dùng";
 $submenu['pet'] = "Quản lý thú cưng";
 $submenu['request'] = "Yêu cầu tiêm phòng";
-$submenu['center'] = "Quản lý yêu cầu trang trại";
+$submenu['remind'] = "Danh sách gợi nhớ";
+// $submenu['center'] = "Quản lý yêu cầu trang trại";
 
-$allow_func = array('main', 'user', 'pet', 'request', 'center'); 
+$allow_func = array('main', 'user', 'pet', 'request', 'remind'); 

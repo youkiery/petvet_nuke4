@@ -445,6 +445,9 @@
     <button class="btn btn-info" onclick="editUser({userid})">
       Chỉnh sửa thông tin
     </button>
+    <button class="btn btn-info" onclick="center({userid})">
+      Đăng ký trại
+    </button>
   </div>
   <div style="clear: left;"></div>
   <h2> Danh sách thú cưng </h2>
@@ -625,6 +628,18 @@
         checkResult(response, status).then(data => {
           requestContent.html(data['html'])
           requestDetail.modal('show')
+        }, () => {})
+      }
+    )
+  }
+
+  function center(id) {
+    $.post(
+      global['url'],
+      {action: 'center', id: id},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          window.location.reload()
         }, () => {})
       }
     )

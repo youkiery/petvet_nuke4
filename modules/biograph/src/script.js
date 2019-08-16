@@ -56,6 +56,18 @@ function paintext(string) {
   return str;
 }
 
+  function splipper(text, part) {
+    var pos = text.search(part + '-')
+    var overleft = text.slice(pos)
+    if (number = overleft.search(' ') >= 0) {
+      overleft = overleft.slice(0, number)
+    }
+    var tick = overleft.lastIndexOf('-')
+    var result = overleft.slice(tick + 1, overleft.length)
+
+    return result
+  }
+
 function loadImage(url, section) {
   var image = new Image()
   image.src = url

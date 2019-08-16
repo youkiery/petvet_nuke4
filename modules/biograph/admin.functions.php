@@ -17,6 +17,48 @@ define("PATH", NV_ROOTDIR . "/modules/" . $module_file . '/template/admin/');
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';
 
+function remindList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', 'status' => 0)) {
+  global $db;
+
+  $xtpl = new XTemplate('remind-list.tpl', PATH);
+
+  $filter['status'] = intval($filter['status']);
+  if (empty($filter['status'])) {
+    $filter['status'] = '0, 1';
+  }
+  else {
+    $filter['status'] = $filter['status'] - 1;
+  }
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_remind` where (name like "%'. $filter['keyword'] .'%" or type like "%'. $filter['keyword'] .'%") and visible in (' . $filter['status'] . ')';
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
+  $sql = 'select * from `'. PREFIX .'_remind` where (name like "%'. $filter['keyword'] .'%" or type like "%'. $filter['keyword'] .'%") and visible in (' . $filter['status'] . ') limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('type', $row['type']);
+    $xtpl->assign('rate', $row['rate']);
+    if ($row['visible']) {
+      $xtpl->parse('main.row.no');
+    }
+    else {
+      $xtpl->parse('main.row.yes');
+    }
+
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function centerList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', 'status' => 0)) {
   global $db;
 
