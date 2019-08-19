@@ -19,12 +19,16 @@
             Loại tiêm phòng
           </div>
           <div class="col-sm-9">
-            <select class="form-control" id="vaccine-type">
-              <option value="0"> Dại </option>
-              <option value="1"> 5 Bệnh </option>
-              <option value="2"> 6 Bệnh </option>
-              <option value="3"> 7 Bệnh </option>
-            </select>
+            <div class="input-group">
+              <select class="form-control" id="vaccine-type">
+                {v}
+              </select>
+              <div class="input-group-btn" onclick="addDiseaseSuggest()">
+                <button class="btn btn-success">
+                  <span class="glyphicon glyphicon-plus"></span>
+                </button>
+              </div>
+            </div>
           </div>
         </label>
 
@@ -33,7 +37,7 @@
             Ngày tiêm phòng
           </div>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="vaccine-time" autocomplete="off">
+            <input type="text" class="form-control" id="vaccine-time" value="{today}" autocomplete="off">
           </div>
         </label>
 
@@ -42,7 +46,7 @@
             Ngày nhắc
           </div>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="vaccine-recall" autocomplete="off">
+            <input type="text" class="form-control" id="vaccine-recall" value="{recall}" autocomplete="off">
           </div>
         </label>
 
@@ -54,11 +58,33 @@
   </div>
 </div>
 
+<div class="modal" id="insert-disease-suggest" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <p class="text-center"> Nếu mũi tiêm phòng không có trong danh sách, hãy thêm tại đây </p>
+
+        <label>
+          Tên mũi tiêm phòng
+          <input type="text" class="form-control" id="disease-suggest">
+        </label>
+
+        <div class="text-center">
+          <button class="btn btn-success" onclick="insertDiseaseSuggestSubmit()">
+            Thêm lịch sử bệnh
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="modal" id="insert-disease" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
         <label class="form-group">
           Ngày bệnh
           <input type="text" class="form-control" id="disease-treat" autocomplete="off">
@@ -108,7 +134,7 @@
         <p> Thêm lịch phối giống </p>
         <label class="form-group">
           Ngày phối giống
-          <input type="text" class="form-control" id="breeder-time" autocomplete="off">
+          <input type="text" class="form-control" id="breeder-time" value="{today}" autocomplete="off">
         </label>
         <label class="form-group relative">
           Đối tượng phối
@@ -117,10 +143,15 @@
           <div class="suggest" id="breeder-suggest-target"></div>
         </label>
 
-        <div id="breeder-child"></div>
-        <button class="btn btn-success" onclick="addChild()">
+        <label class="form-group relative">
+          Số lượng con dự đoán
+          <input type="number" class="form-control" id="breeder-number" value="1" autocomplete="off">
+        </label>
+
+        <!-- <div id="breeder-child"></div> -->
+        <!-- <button class="btn btn-success" onclick="addChild()">
           <span class="glyphicon glyphicon-plus"></span>
-        </button>
+        </button> -->
 
         <label class="form-group">
           Ghi chú
@@ -162,7 +193,7 @@
 
         <label class="row">
           <div class="col-sm-3">
-            Giống 
+            Giống
           </div>
           <div class="col-sm-9 relative">
             <input type="text" class="form-control" id="species-pet" autocomplete="off">
@@ -227,7 +258,8 @@
           </div>
           <div class="col-sm-9">
             <div>
-              <img class="img-responsive" id="pet-preview" style="display: inline-block; width: 128px; height: 128px; margin: 10px;">
+              <img class="img-responsive" id="pet-preview"
+                style="display: inline-block; width: 128px; height: 128px; margin: 10px;">
             </div>
             <input type="file" class="form-control" id="user-image" onchange="onselected(this, 'pet')">
           </div>
@@ -248,6 +280,7 @@
     <img src="/modules/biograph/src/banner.png" style="width: 100px;">
   </a>
   <div style="clear: both;"></div>
+  <a href="/biograph/login" style="margin: 8px 0px; display: block;"> <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
 
   <div class="row">
     <div class="col-sm-4 thumbnail" id="avatar" style="width: 240px; height: 240px;">
@@ -297,6 +330,7 @@
   var breeder = {
     time: $("#breeder-time"),
     target: $("#breeder-targetid"),
+    number: $("#breeder-number"),
     note: $("#breeder-note"),
   }
   var vaccine = {
@@ -318,6 +352,7 @@
 
   var insertBreeder = $("#insert-breeder")
   var insertDisease = $("#insert-disease")
+  var insertDiseaseSuggest = $("#insert-disease-suggest")
   var insertPet = $("#insert-pet")
   var breederContent = $("#breeder-content")
   var breederChild = $("#breeder-child")
@@ -330,7 +365,9 @@
   var diseaseTreated = $("#disease-treated")
   var diseaseDisease = $("#disease-disease")
   var diseaseNote = $("#disease-note")
-
+  var def = {
+    today: '{today}'
+  }
   var remind = JSON.parse('{remind}')
 
   loadImage('{image}', avatar)
@@ -346,6 +383,22 @@
   installRemind2('disease', 'disease')
   installRemindv2('pet', 'species')
   installRemindv2('pet', 'breed')
+
+  function addDiseaseSuggest() {
+    insertDiseaseSuggest.modal('show')
+  }
+
+  function insertDiseaseSuggestSubmit() {
+    $.post(
+      global['url'],
+      { action: 'insert-disease-suggest', disease: $('#disease-suggest').val() },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          insertDiseaseSuggest.modal('hide')
+        }, () => { })
+      }
+    )
+  }
 
   function splipper(text, part) {
     var pos = text.search(part + '-')
@@ -366,7 +419,7 @@
     } else {
       $("#child-" + index).val(name)
       $("#childid-" + index).val(id)
-  }
+    }
   }
 
   // function pickTarget2(name, id) {
@@ -394,19 +447,19 @@
 
   function insertPetSubmit() {
     $.post(
-        global['url'],
-        {action: 'insertpet', data: checkInputSet(pet)},
-        (response, status) => {
-      checkResult(response, status).then(data => {
-        clearInputSet(pet)
-        petPreview.val('')
-        remind = JSON.parse(data['remind'])
-        $("#child-" + global['childid']).val(data['name'])
-        $("#childid-" + global['childid']).val(data['id'])
-        insertPet.modal('hide')
-      }, () => {
-      })
-    }
+      global['url'],
+      { action: 'insertpet', data: checkInputSet(pet) },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          clearInputSet(pet)
+          petPreview.val('')
+          remind = JSON.parse(data['remind'])
+          $("#child-" + global['childid']).val(data['name'])
+          $("#childid-" + global['childid']).val(data['id'])
+          insertPet.modal('hide')
+        }, () => {
+        })
+      }
     )
   }
 
@@ -466,18 +519,21 @@
 
   function insertBreederSubmit() {
     $.post(
-        global['url'],
-        {action: 'insert-breeder', data: checkInputSet(breeder), id: global['id'], child: checkChild()},
-        (response, status) => {
-      checkResult(response, status).then(data => {
-        breederContent.html(data['html'])
-        global['child'] = []
-        clearInputSet(breeder)
-        parseChild()
-        insertBreeder.modal('hide')
-      }, () => {
-      })
-    }
+      global['url'],
+      { action: 'insert-breeder', data: checkInputSet(breeder), id: global['id'] },
+      // {action: 'insert-breeder', data: checkInputSet(breeder), id: global['id'], child: checkChild()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          breederContent.html(data['html'])
+          global['child'] = []
+          clearInputSet(breeder)
+          $("#breeder-time").val(def['today'])
+          $("#breeder-number").val('1')
+          parseChild()
+          insertBreeder.modal('hide')
+        }, () => {
+        })
+      }
     )
   }
 
@@ -486,9 +542,9 @@
     var installer = []
     if (!global['child'].length) {
       global['child'] = [{
-          id: 0,
-          name: ''
-        }]
+        id: 0,
+        name: ''
+      }]
     }
 
     global['child'].forEach((child, index) => {
@@ -573,19 +629,21 @@
     }
   }
 
-  function checkDiseaseData() {
-    return {
-      treat: diseaseTreat.val(),
-      treated: diseaseTreated.val(),
-      disease: diseaseDisease.val(),
-      note: diseaseNote.val(),
-    }
-  }
+  // function checkDiseaseData() {
+  //   return {
+  //     treat: diseaseTreat.val(),
+  //     treated: diseaseTreated.val(),
+  //     disease: diseaseDisease.val(),
+  //     note: diseaseNote.val(),
+  //   }
+  // }
 
   function checkVaccineData() {
+    var type = vaccine['type'].val().split('-')
     return {
-      type: vaccine['type'].val(),
-      time: vaccine['time'] .val(),
+      type: type['0'],
+      val: type['1'],
+      time: vaccine['time'].val(),
       recall: vaccine['recall'].val()
     }
   }
@@ -597,12 +655,12 @@
   function insertVaccineSubmit() {
     $.post(
       global['url'],
-      {action: 'insert-vaccine', data: checkVaccineData(), id: global['id']},
+      { action: 'insert-vaccine', data: checkVaccineData(), id: global['id'] },
       (response, status) => {
         checkResult(response, status).then(data => {
           vaccineContent.html(data['html'])
           petVaccine.modal('hide')
-        }, () => {})
+        }, () => { })
       }
     )
   }
@@ -610,14 +668,14 @@
 
   function insertDiseaseSubmit() {
     $.post(
-        global['url'],
-        {action: 'insert-disease', id: global['id'], data: checkDiseaseData()},
-        (response, status) => {
-      checkResult(response, status).then(data => {
-        diseaseContent.html(data['html'])
-      }, () => {
-      })
-    }
+      global['url'],
+      { action: 'insert-disease', id: global['id'], data: checkDiseaseData() },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          diseaseContent.html(data['html'])
+          insertDisease.modal('hide')
+        }, () => { })
+      }
     )
   }
 
@@ -633,14 +691,14 @@
         var html = ''
 
         $.post(
-            global['url'],
-            {action: 'target', keyword: key, index: index, func: func},
-            (response, status) => {
-          checkResult(response, status).then(data => {
-            suggest.html(data['html'])
-          }, () => {
-          })
-        }
+          global['url'],
+          { action: 'target', keyword: key, index: index, func: func },
+          (response, status) => {
+            checkResult(response, status).then(data => {
+              suggest.html(data['html'])
+            }, () => {
+            })
+          }
         )
 
         suggest.html(html)
@@ -668,14 +726,14 @@
         var html = ''
 
         $.post(
-            global['url'],
-            {action: 'disease', keyword: key},
-            (response, status) => {
-          checkResult(response, status).then(data => {
-            suggest.html(data['html'])
-          }, () => {
-          })
-        }
+          global['url'],
+          { action: 'disease', keyword: key },
+          (response, status) => {
+            checkResult(response, status).then(data => {
+              suggest.html(data['html'])
+            }, () => {
+            })
+          }
         )
 
         suggest.html(html)
@@ -739,20 +797,20 @@
   function editPetSubmit() {
     uploader().then((imageUrl) => {
       $.post(
-          global['url'],
-          {action: 'editpet', id: global['id'], data: checkInputSet(pet), image: imageUrl},
-          (response, status) => {
-        checkResult(response, status).then(data => {
-          petList.html(data['html'])
-          clearInputSet(pet)
-          $("#parent-m").val('')
-          $("#parent-f").val('')
-          petPreview.val('')
-          remind = JSON.parse(data['remind'])
-          insertPet.modal('hide')
-        }, () => {
-        })
-      }
+        global['url'],
+        { action: 'editpet', id: global['id'], data: checkInputSet(pet), image: imageUrl },
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            petList.html(data['html'])
+            clearInputSet(pet)
+            $("#parent-m").val('')
+            $("#parent-f").val('')
+            petPreview.val('')
+            remind = JSON.parse(data['remind'])
+            insertPet.modal('hide')
+          }, () => {
+          })
+        }
       )
     })
   }
@@ -764,39 +822,39 @@
       } else {
         var uploadTask = storageRef.child('images/' + filename).putString(file, 'base64', metadata);
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
-            function (snapshot) {
-              var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              console.log('Upload is ' + progress + '% done');
-              switch (snapshot.state) {
-                case firebase.storage.TaskState.PAUSED: // or 'paused'
-                  console.log('Upload is paused');
-                  break;
-                case firebase.storage.TaskState.RUNNING: // or 'running'
-                  console.log('Upload is running');
-                  break;
-              }
-            }, function (error) {
-          resolve('')
-          switch (error.code) {
-            case 'storage/unauthorized':
-              // User doesn't have permission to access the object
-              break;
-            case 'storage/canceled':
-              // User canceled the upload
-              break;
-            case 'storage/unknown':
-              // Unknown error occurred, inspect error.serverResponse
-              break;
-          }
-        }, function () {
-          // Upload completed successfully, now we can get the download URL
-          uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+          function (snapshot) {
+            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+              case firebase.storage.TaskState.PAUSED: // or 'paused'
+                console.log('Upload is paused');
+                break;
+              case firebase.storage.TaskState.RUNNING: // or 'running'
+                console.log('Upload is running');
+                break;
+            }
+          }, function (error) {
+            resolve('')
+            switch (error.code) {
+              case 'storage/unauthorized':
+                // User doesn't have permission to access the object
+                break;
+              case 'storage/canceled':
+                // User canceled the upload
+                break;
+              case 'storage/unknown':
+                // Unknown error occurred, inspect error.serverResponse
+                break;
+            }
+          }, function () {
+            // Upload completed successfully, now we can get the download URL
+            uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
 
-            file = false
-            resolve(downloadURL)
-            console.log('File available at', downloadURL);
+              file = false
+              resolve(downloadURL)
+              console.log('File available at', downloadURL);
+            });
           });
-        });
       }
     })
   }

@@ -28,21 +28,44 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
+		case 'insert-disease-suggest':
+			$disease = $nv_Request->get_string('disease', 'post');
+
+      $sql = 'select * from `'. PREFIX .'_disease_suggest` where disease = "'. $disease .'"';
+      $query = $db->query($sql);
+
+      $sql = "";
+      if (!empty($row = $query->fetch())) {
+        if ($row['active'] = 1) {
+          $result['error'] = 'Đã có trong danh sách';
+        }
+        else {
+          $sql = 'update into `'. PREFIX .'_disease_suggest` set rate = rate + 1';
+        }
+      }
+      else {
+        $sql = 'insert into `'. PREFIX .'_disease_suggest` (userid, disease, active, rate) values('. $userinfo['id'] .', "'. $disease .'", 0, 1)';
+      }
+
+      if (!empty($sql) && $db->query($sql)) {
+        $result['status'] = 1;
+      }
+		break;
 		case 'insert-breeder':
 			$data = $nv_Request->get_array('data', 'post');
-			$child = $nv_Request->get_array('child', 'post');
+			// $child = $nv_Request->get_array('child', 'post');
 			$id = $nv_Request->get_string('id', 'post', 0);
 
       $data['time'] = totime($data['time']);
       $list = array();
 
-      foreach ($child as $key => $row) {
-        if (!empty($row['name'])) { 
-          $list[] = $row['id'];
-        }
-      }
+      // foreach ($child as $key => $row) {
+      //   if (!empty($row['name'])) { 
+      //     $list[] = $row['id'];
+      //   }
+      // }
 
-      $sql = 'insert into `'. PREFIX .'_breeder` (petid, targetid, child, time, note) values('. $id .', '. $data['target'] .', "'. json_encode(', ', $list) .'", "'. $data['time'] .'", "'. $data['note'] .'")';
+      $sql = 'insert into `'. PREFIX .'_breeder` (petid, targetid, child, time, number, note) values('. $id .', '. $data['target'] .', "[]", "'. $data['time'] .'", '. $data['number'] .', "'. $data['note'] .'")';
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = breederList($id);
@@ -50,6 +73,7 @@ if (!empty($action)) {
 
 		break;
 		case 'insert-disease':
+			$id = $nv_Request->get_string('id', 'post', 0);
 			$data = $nv_Request->get_array('data', 'post');
 
       $data['treat'] = totime($data['treat']);
@@ -58,7 +82,6 @@ if (!empty($action)) {
       $list = array();
 
       $sql = 'insert into `'. PREFIX .'_disease` (petid, treat, treated, disease, note) values('. $id .', '. $data['treat'] .', '. $data['treated'] .', "'. $data['disease'] .'", "'. $data['note'] .'")';
-      die($sql); 
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = diseaseList($id);
@@ -78,7 +101,7 @@ if (!empty($action)) {
           die($sql);
         }
         else {
-          $sql = 'insert into `'. PREFIX .'_vaccine` (petid, time, recall, type, status) values ("'. $id .'", "'. $data['time'] .'", "'. $data['recall'] .'", "'. $data['type'] .'", 0)';
+          $sql = 'insert into `'. PREFIX .'_vaccine` (petid, time, recall, type, val, status) values ("'. $id .'", "'. $data['time'] .'", "'. $data['recall'] .'", "'. $data['type'] .'",  "'. $data['val'] .'", 0)';
           if ($db->query($sql)) {
             $result['status'] = 1;
             $result['html'] = vaccineList($id);
@@ -218,8 +241,11 @@ if (!empty($row = $query->fetch())) {
   $xtpl->assign('disease', diseaseList($id));
 }
 
+$xtpl->assign('today', date('d/m/Y', time()));
+$xtpl->assign('recall', date('d/m/Y', time() + 60 * 60 * 24 * 21));
 $xtpl->assign('url', '/' . $module_name . '/' . $op . '/');
 $xtpl->assign('remind', json_encode(getRemind()));
+$xtpl->assign('v', parseVaccineType($userinfo['id']));
 $xtpl->assign('id', $id);
 
 $xtpl->parse("main");

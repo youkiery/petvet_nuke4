@@ -11,7 +11,7 @@
     <th> Loại tiêm phòng </th>
   </tr>
   <!-- BEGIN: row -->
-  <tr>
+  <tr class="{color}">
     <td> {index} </td>
     <td> {pet} </td>
     <td> {time} </td>

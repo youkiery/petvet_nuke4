@@ -15,6 +15,9 @@
     color: black;
     height: 54px;
   }
+  .btn {
+    min-height: 22px;
+  }
 </style>
 <div class="container">
   <a href="/biograph/">
@@ -142,7 +145,9 @@
   }
 
   $(document).ready(function(){
-    $('[data-toggle="popover"]').popover();
+    $('[data-toggle="popover"]').popover({
+      placement: 'left',
+    });
 
     $('[data-toggle="popover"]').click(function (e) {
       e.stopPropagation();
