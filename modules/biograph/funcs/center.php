@@ -373,9 +373,9 @@ if (!empty($action)) {
 				}
 			}
 		break;
-		case 'center':
+		case 'private':
 			if (!empty($userinfo)) {
-				$sql = 'update `'. PREFIX .'_user` set center = 1 where id = ' . $userinfo['id'];
+				$sql = 'update `'. PREFIX .'_user` set center = 0 where id = ' . $userinfo['id'];
 
 				if ($db->query($sql)) {
 					$result['status'] = 1;

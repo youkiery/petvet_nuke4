@@ -28,6 +28,22 @@
     </div>
   </div>
 
+  <div id="private-confirm" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-body text-center">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <p>
+            Xác nhận hủy đăng ký trại?
+          </p>
+          <button class="btn btn-info" onclick="privateSubmit()">
+            Xác nhận
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="pet-vaccine" class="modal fade" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -461,6 +477,9 @@
     <button class="btn btn-info" onclick="editUser({userid})">
       Chỉnh sửa thông tin
     </button>
+    <button class="btn btn-warning" onclick="privateConfirm()">
+      Huỷ ký trại
+    </button>
   </div>
   <div style="clear: left;"></div>
   <h2> Danh sách thú cưng </h2>
@@ -635,6 +654,22 @@
     installRemindv2('parent', 'species')
     installRemindv2('parent', 'breed')
   })
+
+  function privateConfirm() {
+    $("#private-confirm").modal('show')
+  }
+
+  function privateSubmit() {
+    $.post(
+      global['url'],
+      {action: 'private'},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          window.location.reload()
+        }, () => {})
+      }
+    )
+  }
 
   function change(pid) {
     global['tabber'][0] = pid

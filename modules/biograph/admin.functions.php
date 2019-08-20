@@ -131,12 +131,22 @@ function requestList($filter = array('keyword' => '', 'page' => 1, 'limit' => 10
 
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index++);
+    if ($row['type'] == 2) {
+      $sql = 'select * from `'. PREFIX .'_remind` where type = "request" and id = ' . $row['value'];
+    }
+    else {
+      $sql = 'select * from `'. PREFIX .'_remind` where type = "request" and xid = ' . $row['value'];
+    }
+    // die($sql);
+    $query2 = $db->query($sql);
+    $remind = $query2->fetch();
+
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('pet', $row['name']);
     $xtpl->assign('owner', $row['fullname']);
     $xtpl->assign('mobile', $row['mobile']);
     $xtpl->assign('address', $row['address']);
-    $xtpl->assign('type', $request_array[$row['type']]['title']);
+    $xtpl->assign('type', $remind['name']);
     switch ($row['status']) {
       case 0:
         $xtpl->assign('color', 'red');
