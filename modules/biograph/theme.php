@@ -16,9 +16,11 @@ function vaccineList($petid) {
   global $db, $vaccine_array;
   $xtpl = new XTemplate('vaccine.tpl', PATH);
 
-  $sql = 'select * from `'. PREFIX .'_vaccine` where petid = ' . $petid;
+  $sql = 'select * from `'. PREFIX .'_vaccine` where petid = ' . $petid . ' order by id desc';
   $query = $db->query($sql);
   $index = 1;
+  $today = time(); 
+  $time = $today + 60 * 60 * 24 * 30;
   while ($row = $query->fetch()) {
     $pet = getPetById($petid);
     // var_dump($pet);die();
@@ -26,7 +28,18 @@ function vaccineList($petid) {
     $xtpl->assign('pet', $pet['name']);
     $xtpl->assign('time', date('d/m/Y', $row['time']));
     $xtpl->assign('recall', date('d/m/Y', $row['recall']));
-    $xtpl->assign('type', $vaccine_array[$row['type']]['title']);
+    if ($time >= $row['recall'] && $row['status'] == 0) {
+      $xtpl->assign('color', 'red');
+    }
+    else {
+      $xtpl->assign('color', '');
+    }
+    if ($row['type'] == 1) {
+      $xtpl->assign('type', $vaccine_array[$row['val']]['title']);
+    }
+    else {
+      $xtpl->assign('type', pickVaccineId($row['val'])['disease']);
+    }
     $xtpl->parse('main.row');
   }
 
@@ -38,7 +51,7 @@ function DiseaseList($petid) {
   global $db, $request_array;
   $xtpl = new XTemplate('disease.tpl', PATH);
 
-  $sql = 'select * from `'. PREFIX .'_disease` where petid = ' . $petid;
+  $sql = 'select * from `'. PREFIX .'_disease` where petid = ' . $petid . ' order by id desc';
   $query = $db->query($sql);
   $index = 1;
   while ($row = $query->fetch()) {
@@ -58,23 +71,31 @@ function DiseaseList($petid) {
 }
 
 function requestDetail($petid) {
-  global $request_array;
+  global $db, $request_array;
   $xtpl = new XTemplate('request-detail.tpl', PATH);
+  $list = array();
 
-  foreach ($request_array as $row) {
-    $xtpl->assign('title', $row['title']);
-    $xtpl->assign('type', $row['type']);
+  $sql = 'select * from `'. PREFIX .'_remind` where type = "request" and visible = 1';
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $list[] = $row['xid'];
+    $xtpl->assign('title', $row['name']);
+    $xtpl->assign('type', $row['xid']);
     $xtpl->assign('id', $petid);
-    if (!empty($request = getPetRequest($petid, $row['type']))) {
+    if (!empty($request = getPetRequest($petid, $row['xid']))) {
       $request['status'] = intval($request['status']);
       switch ($request['status']) {
         case 0:
+          // decline
           $xtpl->parse('main.row.rerequest');
         break;
         case 1:
+          // picking
           $xtpl->parse('main.row.cancel');
         break;
         default:
+          // finish
           $xtpl->parse('main.row.request');
         break;
       }
@@ -83,6 +104,29 @@ function requestDetail($petid) {
       $xtpl->parse('main.row.request');
     }
     $xtpl->parse('main.row');
+  }
+
+  $sql = 'select * from `'. PREFIX .'_request` where type = 2 and petid = ' . $petid . ' and status <> 2';
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $sql = 'select * from `'. PREFIX .'_remind` where type = "request" and id = ' . $row['value'];
+    $query = $db->query($sql);
+    $remind = $query->fetch();
+
+    $xtpl->assign('title', $remind['name']);
+    $xtpl->assign('type', $row['value']);
+    $xtpl->assign('id', $petid);
+    $status = intval($row['status']);
+    switch ($status) {
+      case 1:
+        $xtpl->parse('main.row2.cancel2');
+      break;
+      case 0:
+        $xtpl->parse('main.row2.rerequest2');
+      break;
+    }
+    $xtpl->parse('main.row2');
   }
 
   $xtpl->parse('main');
@@ -104,7 +148,7 @@ function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('pa
     $xtpl->assign('breed', $row['breed']);
     $xtpl->assign('sex', $sex_array[$row['sex']]);
     $xtpl->assign('dob', cdate($row['dateofbirth']));
-    if (!empty($user_info) && !empty($user_info['userid']) && (in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
+    // if (!empty($user_info) && !empty($user_info['userid']) && (in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
       $request = getPetRequest($row['id']);
       if ($count = count($request) > 0) {
         $counter = 0;
@@ -133,13 +177,16 @@ function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('pa
           $xtpl->assign('request', 'warning');
         }
       }
+      else {
+        $xtpl->assign('request', 'info');
+      }
       if ($row['active']) {
         $xtpl->parse('main.row.mod.uncheck');
       }
       else {
         $xtpl->parse('main.row.mod.check');
       }
-    }
+    // }
     $xtpl->parse('main.row.mod');
     $xtpl->parse('main.row');
   }
@@ -152,7 +199,7 @@ function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('pa
 
 function mainPetList($keyword = '', $page = 1, $filter = 10) {
   global $db, $sex_array;
-  $index = 1;
+  $index = ($page - 1) * $filter + 1;
   $xtpl = new XTemplate('dog-list.tpl', PATH);
 
   $data = getPetActiveList($keyword, $page, $filter);
@@ -175,11 +222,43 @@ function mainPetList($keyword = '', $page = 1, $filter = 10) {
     $xtpl->assign('owner', $owner['fullname']);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('microchip', $row['microchip']);
-    $xtpl->assign('breed', $row['breed']);
+    $xtpl->assign('breed', $row['species']);
     $xtpl->assign('sex', $sex_array[$row['sex']]);
     $xtpl->assign('dob', cdate($row['dateofbirth']));
     $xtpl->parse('main.row');
   }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function transferList($userid, $filter = array('page' => 1, 'limit' => 10)) {
+  global $db;
+
+  $xtpl = new XTemplate('transfer-list.tpl', PATH);
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_transfer` where fromid = ' . $userid;
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
+  $sql = 'select * from `'. PREFIX .'_transfer` where fromid = ' . $userid . ' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+
+  while ($row = $query->fetch()) {
+    $target = checkUserinfo($row['targetid'], $row['type']);
+    $pet = getPetById($row['petid']);
+
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('target', $target['fullname']);
+    $xtpl->assign('address', $target['address']);
+    $xtpl->assign('mobile', $target['mobile']);
+    $xtpl->assign('id', $pet['id']);
+    $xtpl->assign('pet', $pet['name']);
+    $xtpl->assign('time', date('d/m/Y', $row['time']));
+    $xtpl->parse('main.row');
+  }
+
   $xtpl->parse('main');
   return $xtpl->text();
 }

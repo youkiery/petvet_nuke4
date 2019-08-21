@@ -141,6 +141,22 @@ function getRemind($type = '') {
 	return $list;
 }
 
+function checkUserinfo($userid, $type) {
+  global $db;
+
+  if ($type = 1) {
+    $sql = 'select * from `'. PREFIX .'_user` where id = ' . $userid;
+    $query = $db->query($sql);
+    return $query->fetch();
+  }
+  else {
+    $sql = 'select * from `'. PREFIX .'_contact` where id = ' . $userid;
+    $query = $db->query($sql);
+    return $query->fetch();
+  }
+  return false;
+}
+
 function getPetById($id) {
   global $db;
 
@@ -289,6 +305,33 @@ function checkPet($name, $userid) {
     return 1;
   }
   return 0;
+}
+
+function pickVaccineId($id) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_disease_suggest` where id = ' . $id;
+  $query = $db->query($sql);
+
+  return $query->fetch();
+}
+
+function parseVaccineType($userid) {
+  global $db, $vaccine_array;
+
+  $sql = 'select * from `'. PREFIX .'_disease_suggest` where userid = ' . $userid;
+  $query = $db->query($sql);
+  $list = array();
+
+  foreach ($vaccine_array as $row) {
+    $list[] = '<option value="1-'. $row['type'] .'">'. $row['title'] .'</option>';
+  }
+  while ($row = $query->fetch()) {
+    $list[] = '<option value="2-'. $row['id'] .'">'. $row['disease'] .'</option>';
+  }
+
+  $list = array_reverse($list);
+  return implode('', $list);
 }
 
 function checkPrvVaccine($data) {

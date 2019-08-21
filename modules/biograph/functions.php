@@ -16,11 +16,23 @@ define("PATH", 'modules/' . $module_file . '/template');
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 
+function checkUsername($user) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_user` where username = "'. $user . '"';
+  $query = $db->query($sql);
+
+  if (!empty($query->fetch())) {
+    return true;
+  }
+  return false;
+}
+
 function getPetRequest($petid, $type = -1) {
   global $db;
 
   if ($type >= 0) {
-    $sql = 'select * from `'. PREFIX .'_request` where petid = ' . $petid . ' and type = ' . $type . ' order by time';
+    $sql = 'select * from `'. PREFIX .'_request` where petid = ' . $petid . ' and type = 1 and value = ' . $type . ' order by time';
     $query = $db->query($sql);
 
     if (!empty($row = $query->fetch())) {
@@ -120,7 +132,7 @@ function userDogRow($userid = 0, $filter = array('keyword' => '', ), $limit = ar
   return $xtpl->text();
 }
 
-function checkLogin($username, $password) {
+function checkLogin($username, $password = '') {
   global $db;
 
   $sql = 'select * from ' . PREFIX . '_user where username = "' . $username . '" and password = "' . md5($password) . '"';
@@ -131,6 +143,28 @@ function checkLogin($username, $password) {
   }
   return false;
 }
+
+// checkMost($row, $stat) {
+//   if (in_array($row['species'], $stat['species'])) {
+//     if (empty($stat['species'])) {
+//       $stat['species'][$row['species']] = 0;
+//     }
+//     $stat['species'][$row['species']] ++;
+//   }
+
+// }
+
+// function checkUser($username) {
+//   global $db;
+
+//   $sql = 'select * from ' . PREFIX . '_user where username = "' . $username . '"';
+//   die($sql);
+
+//   if (!empty($checker = $query->fetch())) {
+//     return $checker;
+//   }
+//   return false;
+// }
 
 function breederList($petid) {
   global $db;
@@ -145,7 +179,7 @@ function breederList($petid) {
     $xtpl->assign('index', $index++);
     $xtpl->assign('time', date('d/m/Y', $row['time']));
     $xtpl->assign('target', $pet['name']);
-    $xtpl->assign('number', count(json_encode($row['child'])));
+    $xtpl->assign('number', $row['number']);
     $xtpl->assign('note', ($row['note']));
     $xtpl->parse('main.row');
   }
@@ -179,11 +213,11 @@ function getUserPetList($userid, $tabber, $filter) {
 
   $list = array();
   // $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userid . ' and name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '' . ' and breeder in ('. implode(', ', $tabber) .')');
-  $sql = 'select count(*) as count from `'. PREFIX .'_pet`  where userid = ' . $userid . ' and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .')';
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .')';
   $query = $db->query($sql);
   $count = $query->fetch();
 
-  $sql = 'select * from `'. PREFIX .'_pet`  where userid = ' . $userid . ' and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   while ($row = $query->fetch()) {
