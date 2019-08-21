@@ -28,7 +28,7 @@
           <img src="/modules/biograph/src/request.png" style="width: 20px; height: 20px;">
         </button>
         <button class="btn btn-warning" onclick="transfer({id})">
-          <span class="glyphicon glyphicon-share"></span>
+          <img src="/modules/biograph/src/transfer.png" style="width: 20px; height: 20px;">
         </button>
         <button class="btn btn-info" onclick="addVaccine({id})">
           <img src="/modules/biograph/src/syringe.png" style="width: 20px; height: 20px;">

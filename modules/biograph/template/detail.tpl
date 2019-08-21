@@ -14,6 +14,8 @@
     margin-top: -15px;
     color: black;
     height: 54px;
+    font-weight: normal;
+    font-size: inherit;
   }
   .btn {
     min-height: 22px;
@@ -23,6 +25,7 @@
   <a href="/biograph/">
     <img src="/modules/biograph/src/banner.png" style="width: 100px;">
   </a>
+  <a href="/biograph/list" style="margin: 8px 0px; display: block;"> <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
   <form style="width: 60%; float: right;">
     <label class="input-group">
       <input type="hidden" name="nv" value="biograph">
@@ -50,7 +53,7 @@
   </div>
 
   <div id="wrapper">
-    <span class="label"> {name} </span>
+    <span class="label" style="line-height: 40px;"> {name} </span>
     <div class="branch lv1">
       <div class="entry">
         <span class="label"> 
@@ -161,7 +164,6 @@
       // }
     });
   });
-
 
   $(document).click(function (e) {
       if (($('.popover').has(e.target).length == 0) || $(e.target).is('.close')) {

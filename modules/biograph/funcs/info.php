@@ -49,6 +49,7 @@ if (!empty($action)) {
 
       if (!empty($sql) && $db->query($sql)) {
         $result['status'] = 1;
+        $result['html'] = parseVaccineType($userinfo['id']);
       }
 		break;
 		case 'insert-breeder':
@@ -247,6 +248,26 @@ $xtpl->assign('url', '/' . $module_name . '/' . $op . '/');
 $xtpl->assign('remind', json_encode(getRemind()));
 $xtpl->assign('v', parseVaccineType($userinfo['id']));
 $xtpl->assign('id', $id);
+
+$request = 'breeder';
+if (!empty($_REQUEST['target']) && in_array($_REQUEST['target'], array('vaccine', 'disease'))) {
+  $request = $_REQUEST['target'];
+}
+
+switch ($_REQUEST['target']) {
+  case 'vaccine':
+    $xtpl->assign('a2', 'class="active"');
+    $xtpl->assign('al2', 'in active');
+  break;
+  case 'disease':
+    $xtpl->assign('a3', 'class="active"');
+    $xtpl->assign('al3', 'in active');
+  break;
+  default:
+    $xtpl->assign('a1', 'class="active"');
+    $xtpl->assign('al1', 'in active');
+  break;
+}
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
