@@ -17,10 +17,7 @@
     font-weight: normal;
     font-size: inherit;
   }
-  .btn {
-    min-height: 22px;
-  }
-</style>
+  </style>
 
 <div id="pet-vaccine" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -84,7 +81,7 @@
 
         <label>
           Tên mũi tiêm phòng
-          <input type="text" class="form-control" id="disease-suggest">
+          <input type="text" class="form-control" id="disease-suggest" autocomplete="off">
         </label>
 
         <div class="text-center">
@@ -112,14 +109,6 @@
           <input type="text" class="form-control" id="disease-treated" autocomplete="off">
         </label>
 
-        <!-- <label class="form-group">
-          Đối tượng
-          <div class="relative">
-          <input type="text" class="form-control" id="disease-target">
-          <div class="suggest" id="disease-suggest-target"></div>
-          </div>
-        </label> -->
-
         <label class="form-group">
           Loại bệnh
           <div class="relative">
@@ -130,7 +119,7 @@
 
         <label class="form-group">
           Ghi chú
-          <input type="text" class="form-control" id="disease-note">
+          <input type="text" class="form-control" id="disease-note" autocomplete="off">
         </label>
 
         <div class="tex-center">
@@ -153,10 +142,18 @@
           Ngày phối giống
           <input type="text" class="form-control" id="breeder-time" value="{today}" autocomplete="off">
         </label>
+
         <label class="form-group relative">
           Đối tượng phối
-          <input type="text" class="form-control" id="breeder-target" autocomplete="off">
-          <input type="hidden" id="breeder-targetid">
+          <div class="input-group">
+            <input type="text" class="form-control" id="breeder-target" autocomplete="off">
+            <input type="hidden" id="breeder-targetid">
+            <div class="input-group-btn">
+              <button class="btn btn-success" onclick="addTarget()">
+                <span class="glyphicon glyphicon-plus"></span>
+              </button>
+            </div>
+          </div>
           <div class="suggest" id="breeder-suggest-target"></div>
         </label>
 
@@ -172,7 +169,7 @@
 
         <label class="form-group">
           Ghi chú
-          <input type="text" class="form-control" id="breeder-note">
+          <input type="text" class="form-control" id="breeder-note" autocomplete="off">
         </label>
 
         <button class="btn btn-success" onclick="insertBreederSubmit()">
@@ -183,8 +180,184 @@
   </div>
 </div>
 
+<div id="modal-target" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <p class="text-center"> <b> Thêm thú cưng </b> </p>
+          <label class="row">
+            <div class="col-sm-3">
+              Chủ thú cưng
+            </div>
+            <div class="col-sm-9 relative">
+              <div class="input-group">
+                <input type="text" class="form-control" id="owner" autocomplete="off">
+                <div class="input-group-btn">
+                  <button class="btn btn-success" onclick="addOwner()">
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+                </div>
+              </div>
+              <div class="suggest" id="owner-suggest"></div>
+            </div>
+          </label>
 
-<div id="insert-pet" class="modal fade" role="dialog">
+          <label class="row">
+            <div class="col-sm-3">
+              Tên thú cưng
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="pet-name" autocomplete="off">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Ngày sinh
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="pet-dob" value="{today}" autocomplete="off">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Giống
+            </div>
+            <div class="col-sm-9 relative">
+              <input type="text" class="form-control" id="species" autocomplete="off">
+              <div class="suggest" id="species-suggest"></div>
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Loài
+            </div>
+            <div class="col-sm-9 relative">
+              <input type="text" class="form-control" id="breed-pet" autocomplete="off">
+              <div class="suggest" id="breed-suggest-pet"></div>
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Giới tính
+            </div>
+            <div class="col-sm-9">
+              <label>
+                <input type="radio" name="sex2" id="pet-sex-0" checked> Đực
+              </label>
+              <label>
+                <input type="radio" name="sex2" id="pet-sex-1"> Cái
+              </label>
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Màu sắc
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="pet-color" autocomplete="off">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Microchip
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="pet-microchip" autocomplete="off">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Xăm tai
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="pet-miear" autocomplete="off">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Xuất xứ
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="origin-pet" autocomplete="off">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Hình ảnh
+            </div>
+            <div class="col-sm-9">
+              <div>
+                <img class="img-responsive" id="pet-preview"
+                  style="display: inline-block; width: 128px; height: 128px; margin: 10px;">
+              </div>
+              <input type="file" class="form-control" id="user-image" onchange="onselected(this, 'pet')">
+            </div>
+          </label>
+
+          <div class="text-center">
+            <button class="btn btn-success" id="ibtn" onclick="insertPetSubmit()">
+              Thêm thú cưng
+            </button>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="modal-owner" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body text-center">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <p> Điền thông tin chủ trại </p>
+        <label class="row">
+          <div class="col-sm-3">
+            Tên
+          </div>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="owner-name">
+          </div>
+        </label>
+
+        <label class="row">
+          <div class="col-sm-3">
+            Số điện thoại
+          </div>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="owner-mobile">
+          </div>
+        </label>
+
+        <label class="row">
+          <div class="col-sm-3">
+            Địa chỉ
+          </div>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="owner-address">
+          </div>
+        </label>
+
+        <div class="text-center">
+          <button class="btn btn-success" onclick="insertOwnerSubmit()">
+            Thêm khách hàng
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div id="insert-pet" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body">
@@ -247,7 +420,7 @@
             Màu sắc
           </div>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="pet-color">
+            <input type="text" class="form-control" id="pet-color" autocomplete="off">
           </div>
         </label>
 
@@ -256,7 +429,7 @@
             Microchip
           </div>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="pet-microchip">
+            <input type="text" class="form-control" id="pet-microchip" autocomplete="off">
           </div>
         </label>
 
@@ -265,7 +438,7 @@
             Xăm tai
           </div>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="pet-miear">
+            <input type="text" class="form-control" id="pet-miear" autocomplete="off">
           </div>
         </label>
 
@@ -290,7 +463,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 <div class="container" style="margin-top: 20px;">
   <a href="/biograph/">
@@ -313,25 +486,25 @@
     </div>
   </div>
 
-  <div id="wrapper">
+  <div id="wrapper" style="margin: 20px 0px;">
     <span class="label" style="line-height: 40px;"> {name} </span>
     <div class="branch lv1">
       <div class="entry">
         <span class="label"> 
           Bố <br> {papa} 
           <div class="igleft">
-            <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{igpapa}"><span class="glyphicon glyphicon-info-sign"></span></button>  
+            <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px; min-height: 22px;" data-html="true"  data-toggle="popover" data-content="{igpapa}"><span class="glyphicon glyphicon-info-sign"></span></button>  
           </div>
           <div class="igright">
-            <button class="btn btn-sm btn-success after-hack" id="igrandon" onclick="toggleX('igrand')"><span class="glyphicon glyphicon-arrow-right"></span></button>  
-            <button class="btn btn-sm btn-warning after-hack" id="igrandoff" style="display: none;" onclick="toggleX('igrand')"><span class="glyphicon glyphicon-arrow-left"></span></button>  
+            <button class="btn btn-sm btn-success after-hack" id="igrandon" style="min-height: 22px;" onclick="toggleX('igrand')"><span class="glyphicon glyphicon-arrow-right"></span></button>  
+            <button class="btn btn-sm btn-warning after-hack" id="igrandoff" style="display: none; min-height: 22px;" onclick="toggleX('igrand')"><span class="glyphicon glyphicon-arrow-left"></span></button>  
           </div>
         </span>
         <div class="branch lv2" id="igrand" style="display: none;">
           <div class="entry">
             <span class="label"> Ông nội <br> {grandpa} 
               <div class="igleft">
-                <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{igigrandpa}"><span class="glyphicon glyphicon-info-sign"></span></button>  
+                <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px; min-height: 22px;" data-html="true"  data-toggle="popover" data-content="{igigrandpa}"><span class="glyphicon glyphicon-info-sign"></span></button>
               </div>
             </span>
           </div>
@@ -339,7 +512,7 @@
             <span class="label">
               Bà nội <br> {igrandma}
               <div class="igleft">
-                <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{igigrandma}"><span class="glyphicon glyphicon-info-sign"></span></button>  
+                <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px; min-height: 22px;" data-html="true"  data-toggle="popover" data-content="{igigrandma}"><span class="glyphicon glyphicon-info-sign"></span></button>
               </div>
             </span>
           </div>
@@ -349,11 +522,11 @@
         <span class="label">
           Mẹ <br> {mama} 
           <div class="igleft">
-            <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{igmama}"><span class="glyphicon glyphicon-info-sign"></span></button>  
+            <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px; min-height: 22px;" data-html="true"  data-toggle="popover" data-content="{igmama}"><span class="glyphicon glyphicon-info-sign"></span></button>  
           </div>
           <div class="igright">
-            <button class="btn btn-sm btn-success after-hack" id="egrandon" onclick="toggleX('egrand')"><span class="glyphicon glyphicon-arrow-right"></span></button>  
-            <button class="btn btn-sm btn-warning after-hack" id="egrandoff" style="display: none;" onclick="toggleX('egrand')"><span class="glyphicon glyphicon-arrow-left"></span></button>  
+            <button class="btn btn-sm btn-success after-hack" id="egrandon" style="min-height: 22px;" onclick="toggleX('egrand')"><span class="glyphicon glyphicon-arrow-right"></span></button>  
+            <button class="btn btn-sm btn-warning after-hack" id="egrandoff" style="display: none; min-height: 22px;" onclick="toggleX('egrand')"><span class="glyphicon glyphicon-arrow-left"></span></button>  
           </div>
         </span>
         <div class="branch lv2" id="egrand" style="display: none;">
@@ -361,14 +534,14 @@
             <span class="label">
               Ông ngoại <br> {egrandpa}
               <div class="igleft">
-                <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{igegrandpa}"><span class="glyphicon glyphicon-info-sign"></span></button>  
+                <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px; min-height: 22px;" data-html="true"  data-toggle="popover" data-content="{igegrandpa}"><span class="glyphicon glyphicon-info-sign"></span></button>
               </div>
             </span>
           </div>
           <div class="entry">
             <span class="label"> Bà ngoại <br> {egrandma}
               <div class="igleft">
-                <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{igegrandma}"><span class="glyphicon glyphicon-info-sign"></span></button>  
+                <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px; min-height: 22px;" data-html="true"  data-toggle="popover" data-content="{igegrandma}"><span class="glyphicon glyphicon-info-sign"></span></button>
               </div>
             </span>
           </div>
@@ -406,7 +579,13 @@
     id: '{id}',
     url: '{url}',
     child: [],
-    childid: 0
+    childid: 0,
+    owner: -1
+  }
+  var owner = {
+    fullname: $("#owner-name"),
+    mobile: $("#owner-mobile"),
+    address: $("#owner-address")
   }
   var breeder = {
     time: $("#breeder-time"),
@@ -429,7 +608,12 @@
     color: $("#pet-color"),
     microchip: $("#pet-microchip"),
     miear: $("#pet-miear"),
+    userid: $("#pet-id"),
+    type: $("#owner-type")
   }
+
+  var modalTarget = $("#modal-target")
+  var modalOwner = $("#modal-owner")
 
   var insertBreeder = $("#insert-breeder")
   var insertDisease = $("#insert-disease")
@@ -459,11 +643,141 @@
     changeYear: true
   });
 
-  installRemind('target', 'breeder')
-  // installRemind('target', 'disease', 0, 'pickTarget2')
-  installRemind2('disease', 'disease')
-  installRemindv2('pet', 'species')
-  installRemindv2('pet', 'breed')
+  function addOwner() {
+    modalOwner.modal('show')
+  }
+
+  function insertOwnerSubmit() {
+    $.post(
+      global['url'],
+      { action: 'insert-owner', data: checkInputSet(owner) },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#owner").val(data['name'])
+          global['owner'] = data['id']
+          global['type'] = data['type']
+          modalOwner.modal('hide')
+          clearInputSet(owner)
+        }, () => { })
+      }
+    )
+  }
+
+  function pickSpecies(name, id) {
+    $("#species").val(name)
+  }
+
+  function pickOwner(name, id, type) {
+    $("#owner-id").val(id)
+    $("#owner-type").val(type)
+    $("#owner").val(name)
+  }
+
+  function installRemindSpecies(section) {
+    var timeout
+    var input = $("#" + section)
+    var suggest = $("#" + section + "-suggest")
+
+    input.keyup(() => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        var key = paintext(input.val())
+        var html = ''
+
+        $.post(
+          global['url'],
+          { action: 'species', keyword: key },
+          (response, status) => {
+            checkResult(response, status).then(data => {
+              suggest.html(data['html'])
+            }, () => { })
+          }
+        )
+
+        suggest.html(html)
+      }, 200);
+    })
+    input.focus(() => {
+      suggest.show()
+    })
+    input.blur(() => {
+      setTimeout(() => {
+        suggest.hide()
+      }, 200);
+    })
+  }
+
+  function installRemind3(section) {
+    var timeout
+    var input = $("#" + section)
+    var suggest = $("#" + section + "-suggest")
+
+
+    input.keyup(() => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        var key = paintext(input.val())
+        var html = ''
+
+        $.post(
+          global['url'],
+          { action: 'owner', keyword: key },
+          (response, status) => {
+            checkResult(response, status).then(data => {
+              suggest.html(data['html'])
+            }, () => { })
+          }
+        )
+
+        suggest.html(html)
+      }, 200);
+    })
+    input.focus(() => {
+      suggest.show()
+    })
+    input.blur(() => {
+      setTimeout(() => {
+        suggest.hide()
+      }, 200);
+    })
+  }
+
+  function installRemindv2(name, type) {
+    var timeout
+    var input = $("#" + type + "-" + name)
+    var suggest = $("#" + type + "-suggest-" + name)
+
+    input.keyup(() => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        var key = paintext(input.val())
+        var html = ''
+
+        for (const index in remind[type]) {
+          if (remind[type].hasOwnProperty(index)) {
+            const element = paintext(remind[type][index]['name']);
+
+            if (element.search(key) >= 0) {
+              html += '<div class="suggest_item" onclick="selectRemindv2(\'' + name + '\', \'' + type + '\', \'' + remind[type][index]['name'] + '\')"><p class="right-click">' + remind[type][index]['name'] + '</p></div>'
+            }
+          }
+        }
+        suggest.html(html)
+      }, 200);
+    })
+    input.focus(() => {
+      suggest.show()
+    })
+    input.blur(() => {
+      setTimeout(() => {
+        suggest.hide()
+      }, 200);
+    })
+  }
+
+  function addTarget() {
+    modalTarget.modal('show')
+  }
 
   function addDiseaseSuggest() {
     insertDiseaseSuggest.modal('show')
@@ -536,14 +850,32 @@
           clearInputSet(pet)
           petPreview.val('')
           remind = JSON.parse(data['remind'])
-          $("#child-" + global['childid']).val(data['name'])
-          $("#childid-" + global['childid']).val(data['id'])
-          insertPet.modal('hide')
+          $("#species").val("")
+          $("#breeder-target").val(data['name'])
+          $("#breeder-targetid").val(data['id'])
+          modalTarget.modal('hide')
         }, () => {
         })
       }
     )
   }
+  // function insertPetSubmit() {
+  //   $.post(
+  //     global['url'],
+  //     { action: 'insertpet', data: checkInputSet(pet) },
+  //     (response, status) => {
+  //       checkResult(response, status).then(data => {
+  //         clearInputSet(pet)
+  //         petPreview.val('')
+  //         remind = JSON.parse(data['remind'])
+  //         $("#child-" + global['childid']).val(data['name'])
+  //         $("#childid-" + global['childid']).val(data['id'])
+  //         insertPet.modal('hide')
+  //       }, () => {
+  //       })
+  //     }
+  //   )
+  // }
 
   function installRemindv2(name, type) {
     var timeout
@@ -955,6 +1287,14 @@
   }
 
   $(document).ready(function(){
+    installRemindv2('pet', 'breed')
+    installRemindv2('pet', 'origin')
+    installRemindSpecies('species')
+
+    installRemind('target', 'breeder')
+    installRemind2('disease', 'disease')
+    installRemind3('owner')
+
     $('[data-toggle="popover"]').popover({
       placement: 'left',
     });

@@ -207,6 +207,7 @@ if (!empty($action)) {
         checkRemind($data['breed'], 'breed');
 
 				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image, fid, mid) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 0, "", 0, 0)';
+        // die($sql);
 
 				if ($db->query($sql)) {
 					$result['status'] = 1;
@@ -215,6 +216,70 @@ if (!empty($action)) {
 					$result['id'] = $db->lastInsertId();
 					$result['remind'] = json_encode(getRemind());
 				}
+			}
+		break;
+    case 'species':
+			$keyword = $nv_Request->get_string('keyword', 'post', '');
+
+			$sql = 'select * from `'. PREFIX .'_species` where (name like "%'. $keyword .'%" or fci like "%'. $keyword .'%" or origin like "%'. $keyword .'%") limit 10';
+			$query = $db->query($sql);
+
+			$html = '';
+			while ($row = $query->fetch()) {
+				$html .= '
+				<div class="suggest_item" onclick="pickSpecies(\''. $row['name'] .'\', '. $row['id'] .')">
+					'. $row['name'] .'
+				</div>
+				';
+			}
+
+			if (empty($html)) {
+				$html = 'Không có kết quả trùng khớp';
+			}
+
+			$result['status'] = 1;
+			$result['html'] = $html;
+		break;
+    case 'owner':
+			$keyword = $nv_Request->get_string('keyword', 'post', '');
+
+			$sql = 'select * from ((select id, fullname, mobile, address, 1 as type from `'. PREFIX .'_user`) union (select id, fullname, mobile, address, 2 as type from `'. PREFIX .'_contact` where userid = '. $userinfo['id'] .')) as a where (mobile like "%'. $keyword .'%" or fullname like "%'. $keyword .'%") limit 10';
+			$query = $db->query($sql);
+
+			$html = '';
+			while ($row = $query->fetch()) {
+				$html .= '
+				<div class="suggest_item" onclick="pickOwner(\''. $row['fullname'] .'\', '. $row['id'] .', '. $row['type'] .')">
+					'. $row['fullname'] .'
+				</div>
+				';
+			}
+
+			if (empty($html)) {
+				$html = 'Không có kết quả trùng khớp';
+			}
+
+			$result['status'] = 1;
+			$result['type'] = 2;
+			$result['html'] = $html;
+		break;
+		case 'insert-owner':
+			$data = $nv_Request->get_array('data', 'post');
+
+			if (count($data) > 1 && !empty($userinfo['id'])) {
+        // ???
+        $sql = 'select * from `'. PREFIX .'_contact` where mobile = "'. $data['mobile'] .'"';
+        $query = $db->query($sql);
+        if (empty($query->fetch)) {
+          $sql = 'insert into `'. PREFIX .'_contact` (fullname, address, mobile, userid) values ("'. $data['fullname'] .'", "'. $data['address'] .'", "'. $data['mobile'] .'", '. $userinfo['id'] .')';
+
+          if ($db->query($sql)) {
+            $result['status'] = 1;
+            $result['id'] = $db->lastInsertId();
+            $result['name'] = $data['fullname'];
+            // $result['html'] = userDogRowByList($userinfo['id']);
+          }
+        }
 			}
 		break;
 	}
