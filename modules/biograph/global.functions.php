@@ -168,11 +168,16 @@ function getPetById($id) {
   return false;
 }
 
-function getOwnerById($id) {
+function getOwnerById($id, $type = 1) {
   global $db;
 
   if (intval($id)) {
-    $sql = 'select * from `'. PREFIX .'_user` where id = ' . $id;
+    if ($type == 1) {
+      $sql = 'select * from `'. PREFIX .'_user` where id = ' . $id;
+    }
+    else {
+      $sql = 'select * from `'. PREFIX .'_contact` where id = ' . $id;
+    }
     $query = $db->query($sql);
     return $query->fetch();
   }

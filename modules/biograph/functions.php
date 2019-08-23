@@ -208,6 +208,18 @@ function getUserInfo() {
   return $data;
 }
 
+function checkTransferRequest($id) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_transfer_request` where id = ' . $id;
+  $query = $db->query($sql);
+
+  if ($row = $query->fetch()) {
+    return $row;
+  }
+  return false;
+}
+
 function getUserPetList($userid, $tabber, $filter) {
   global $db;
 

@@ -11,6 +11,37 @@ if (!defined('PREFIX')) {
   die('Stop!!!');
 }
 
+function transferqList($userinfo, $filter = array('page' => 1, 'limit' => 10)) {
+  global $db;
+
+  $xtpl = new XTemplate('transferq-list.tpl', PATH);
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_transfer_request` where userid = ' . $userinfo['id'];
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
+  $sql = 'select * from `'. PREFIX .'_transfer_request` where userid = ' . $userinfo['id'] . ' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+
+  while ($row = $query->fetch()) {
+    $pet = getPetById($row['petid']);
+    $owner = checkUserinfo($pet['userid'], $pet['type']);
+
+    // $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('image', $pet['image']);
+    $xtpl->assign('species', $pet['species']);
+    $xtpl->assign('breeder', $pet['breeder']);
+    $xtpl->assign('owner', $owner['fullname']);
+    $xtpl->assign('time', date('d/m/Y', $row['time']));
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
 
 function vaccineList($petid) {
   global $db, $vaccine_array;
@@ -216,7 +247,7 @@ function mainPetList($keyword = '', $page = 1, $filter = 10) {
 
   foreach ($data['list'] as $row) {
     // var_dump($row);die();
-    $owner = getOwnerById($row['userid']);
+    $owner = getOwnerById($row['userid'], $row['type']);
     $xtpl->assign('index', $index++);
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('owner', $owner['fullname']);
