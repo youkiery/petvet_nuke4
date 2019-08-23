@@ -176,9 +176,12 @@ function breederList($petid) {
 
   while (!empty($row = $query->fetch())) {
     $pet = getPetById($row['targetid']);
+    $owner = getOwnerById($pet['userid'], $pet['type']);
+
     $xtpl->assign('index', $index++);
     $xtpl->assign('time', date('d/m/Y', $row['time']));
     $xtpl->assign('target', $pet['name']);
+    $xtpl->assign('owner', $owner['fullname']);
     $xtpl->assign('number', $row['number']);
     $xtpl->assign('note', ($row['note']));
     $xtpl->parse('main.row');

@@ -7,6 +7,7 @@
     <th> STT </th>
     <th> Ngày phối </th>
     <th> Đối tượng phối </th>
+    <th> Chủ nuôi </th>
     <th> Số con </th>
     <th> Ghi chú </th>
   </tr>
@@ -15,6 +16,7 @@
     <td> {index} </td>
     <td> {time} </td>
     <td> {target} </td>
+    <td> {owner} </td>
     <td> {number} </td>
     <td> {note} </td>
   </tr>
