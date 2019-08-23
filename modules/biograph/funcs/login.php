@@ -32,19 +32,21 @@ if (!empty($action)) {
 
 			if (checkObj($data)) {
 				$data['username'] = strtolower($data['username']);
-
-  			if (!empty($checker = checkLogin($data['username'], $data['password']))) {
-          if ($checker['active'] > 0) {
+        if (!checkUsername($data['username'])) {
+  				$result['error'] = 'Tài khoản không tồn tại';
+        }
+        else if (empty($checker = checkLogin($data['username'], $data['password']))) {
+					$result['error'] = 'Mật khẩu không đúng';
+				}
+        else {
+          if ($checker['active'] <= 0) {
+  					$result['error'] = 'Tài khoản chưa được cấp quyền đăng nhập';
+          }
+          else {
             $_SESSION['username'] = $data['username'];
             $_SESSION['password'] = $data['password'];
             $result['status'] = 1;
           }
-          else {
-  					$result['error'] = 'Tài khoản chưa được cấp quyền đăng nhập';
-          }
-				}
-        else {
-					$result['error'] = 'Tên đăng nhập hoặc mật khẩu không đúng';
         }
 			}
 		break;
