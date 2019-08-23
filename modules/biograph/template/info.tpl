@@ -1,7 +1,24 @@
 <!-- BEGIN: main -->
 <style>
-  label {
-    width: 100%;
+  .label {
+    display: block;
+    min-width: 150px;
+    padding: 5px 10px;
+    line-height: 20px;
+    text-align: center;
+    border: 2px solid #eee9dc;
+    border-radius: 5px;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin-top: -15px;
+    color: black;
+    height: 54px;
+    font-weight: normal;
+    font-size: inherit;
+  }
+  .btn {
+    min-height: 22px;
   }
 </style>
 
@@ -293,6 +310,70 @@
       <p> Giới tính: {sex} </p>
       <p> Màu sắc: {color} </p>
       <p> microchip: {microchip} </p>
+    </div>
+  </div>
+
+  <div id="wrapper">
+    <span class="label" style="line-height: 40px;"> {name} </span>
+    <div class="branch lv1">
+      <div class="entry">
+        <span class="label"> 
+          Bố <br> {papa} 
+          <div class="igleft">
+            <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{igpapa}"><span class="glyphicon glyphicon-info-sign"></span></button>  
+          </div>
+          <div class="igright">
+            <button class="btn btn-sm btn-success after-hack" id="igrandon" onclick="toggleX('igrand')"><span class="glyphicon glyphicon-arrow-right"></span></button>  
+            <button class="btn btn-sm btn-warning after-hack" id="igrandoff" style="display: none;" onclick="toggleX('igrand')"><span class="glyphicon glyphicon-arrow-left"></span></button>  
+          </div>
+        </span>
+        <div class="branch lv2" id="igrand" style="display: none;">
+          <div class="entry">
+            <span class="label"> Ông nội <br> {grandpa} 
+              <div class="igleft">
+                <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{igigrandpa}"><span class="glyphicon glyphicon-info-sign"></span></button>  
+              </div>
+            </span>
+          </div>
+          <div class="entry">
+            <span class="label">
+              Bà nội <br> {igrandma}
+              <div class="igleft">
+                <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{igigrandma}"><span class="glyphicon glyphicon-info-sign"></span></button>  
+              </div>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="entry">
+        <span class="label">
+          Mẹ <br> {mama} 
+          <div class="igleft">
+            <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{igmama}"><span class="glyphicon glyphicon-info-sign"></span></button>  
+          </div>
+          <div class="igright">
+            <button class="btn btn-sm btn-success after-hack" id="egrandon" onclick="toggleX('egrand')"><span class="glyphicon glyphicon-arrow-right"></span></button>  
+            <button class="btn btn-sm btn-warning after-hack" id="egrandoff" style="display: none;" onclick="toggleX('egrand')"><span class="glyphicon glyphicon-arrow-left"></span></button>  
+          </div>
+        </span>
+        <div class="branch lv2" id="egrand" style="display: none;">
+          <div class="entry">
+            <span class="label">
+              Ông ngoại <br> {egrandpa}
+              <div class="igleft">
+                <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{igegrandpa}"><span class="glyphicon glyphicon-info-sign"></span></button>  
+              </div>
+            </span>
+          </div>
+          <div class="entry">
+            <span class="label"> Bà ngoại <br> {egrandma}
+              <div class="igleft">
+                <button class="btn btn-sm btn-info after-hack ipopover" style="right: 23px;" data-html="true"  data-toggle="popover" data-content="{igegrandma}"><span class="glyphicon glyphicon-info-sign"></span></button>  
+              </div>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -859,6 +940,36 @@
       }
     })
   }
+
+  function toggleX(name) {
+    var target = $("#" + name)
+    if (target.css('display') == 'block') {
+      $("#" + name + "on").show()
+      $("#" + name + "off").hide()
+    }
+    else {
+      $("#" + name + "on").hide()
+      $("#" + name + "off").show()
+    }
+    target.toggle()
+  }
+
+  $(document).ready(function(){
+    $('[data-toggle="popover"]').popover({
+      placement: 'left',
+    });
+
+    $('[data-toggle="popover"]').click(function (e) {
+      e.stopPropagation();
+      var name = e.currentTarget.children[0].className
+    });
+  });
+
+  $(document).click(function (e) {
+    if (($('.popover').has(e.target).length == 0) || $(e.target).is('.close')) {
+      $('[data-toggle="popover"]').popover('hide');
+    }
+  });
 
 </script>
 <!-- END: main -->

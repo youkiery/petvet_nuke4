@@ -240,6 +240,28 @@ if (!empty($row = $query->fetch())) {
   $xtpl->assign('breeder', breederList($id));
   $xtpl->assign('vaccine', vaccineList($id));
   $xtpl->assign('disease', diseaseList($id));
+
+  $relation = getPetRelation($id);
+  
+  foreach ($relation['grand'] as $lv1) {
+    foreach ($lv1 as $lv2) {
+      $xtpl->assign($lv2['ns'], parseLink($lv2));
+      $xtpl->assign('ig' . $lv2['ns'], parseInfo($lv2));
+    }
+    foreach ($lv1['m'] as $lv2) {
+      $xtpl->assign($lv2['ns'], parseLink($lv2));
+      $xtpl->assign('ig' . $lv2['ns'], parseInfo($lv2));
+    }
+  }
+  foreach ($relation['parent'] as $lv1) {
+    $xtpl->assign($lv1['ns'], parseLink($lv1));
+    $xtpl->assign('ig' . $lv1['ns'], parseInfo($lv1));
+  }
+
+  $xtpl->assign('grand', implode('<br>', $bay['grand']));
+  $xtpl->assign('parent', implode('<br>', $bay['parent']));
+  $xtpl->assign('sibling', implode('<br>', $bay['sibling']));
+  $xtpl->assign('child', implode('<br>', $bay['child']));
 }
 
 $xtpl->assign('today', date('d/m/Y', time()));

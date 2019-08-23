@@ -66,7 +66,7 @@ function parseInfo($info) {
 
   // die( - $info['dob'] . "");
   if (!empty($info['id'])) {
-    return 'Tên: '. $info['name'] .'<br>Tuổi: '. $age .'<br>Giống: '. $info['species'] .'<br>Loài: '. $info['breeder'] .'<br>';
+    return 'Tên: '. $info['name'] .'<br>Tuổi: '. $age .'<br>Giống: '. $info['species'] .'<br>Loài: '. $info['breed'] .'<br>';
   }
   return '';
 }
@@ -229,7 +229,8 @@ function getUserPetList($userid, $tabber, $filter) {
   $query = $db->query($sql);
   $count = $query->fetch();
 
-  $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  // die($sql);
   $query = $db->query($sql);
 
   while ($row = $query->fetch()) {

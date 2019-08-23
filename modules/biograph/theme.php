@@ -33,6 +33,7 @@ function transferqList($userinfo, $filter = array('page' => 1, 'limit' => 10)) {
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('image', $pet['image']);
     $xtpl->assign('species', $pet['species']);
+    $xtpl->assign('name', $pet['name']);
     $xtpl->assign('breeder', $pet['breeder']);
     $xtpl->assign('owner', $owner['fullname']);
     $xtpl->assign('time', date('d/m/Y', $row['time']));
@@ -176,7 +177,7 @@ function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('pa
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('microchip', $row['microchip']);
-    $xtpl->assign('breed', $row['breed']);
+    $xtpl->assign('breed', $row['species']);
     $xtpl->assign('sex', $sex_array[$row['sex']]);
     $xtpl->assign('dob', cdate($row['dateofbirth']));
     // if (!empty($user_info) && !empty($user_info['userid']) && (in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
