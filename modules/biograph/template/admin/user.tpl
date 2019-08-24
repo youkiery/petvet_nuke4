@@ -146,15 +146,15 @@
   var file, filename
 
   var firebaseConfig = {
-  apiKey: "AIzaSyDWt6y4laxeTBq2RYDY6Jg4_pOkdxwsjUE",
-  authDomain: "directed-sonar-241507.firebaseapp.com",
-  databaseURL: "https://directed-sonar-241507.firebaseio.com",
-  projectId: "directed-sonar-241507",
-  storageBucket: "directed-sonar-241507.appspot.com",
-  messagingSenderId: "816396321770",
-  appId: "1:816396321770:web:193e84ee21b16d41"
+    apiKey: "AIzaSyAgxaMbHnlYbUorxXuDqr7LwVUJYdL2lZo",
+    authDomain: "petcoffee-a3cbc.firebaseapp.com",
+    databaseURL: "https://petcoffee-a3cbc.firebaseio.com",
+    projectId: "petcoffee-a3cbc",
+    storageBucket: "petcoffee-a3cbc.appspot.com",
+    messagingSenderId: "351569277407",
+    appId: "1:351569277407:web:8ef565047997e013"
   };
-
+  
   firebase.initializeApp(firebaseConfig);
 
   var storage = firebase.storage();

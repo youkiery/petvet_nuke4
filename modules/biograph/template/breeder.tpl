@@ -9,7 +9,6 @@
     <th> Đối tượng phối </th>
     <th> Chủ nuôi </th>
     <th> Số con </th>
-    <th> Ghi chú </th>
   </tr>
   <!-- BEGIN: row -->
   <tr>
@@ -18,7 +17,20 @@
     <td> {target} </td>
     <td> {owner} </td>
     <td> {number} </td>
-    <td> {note} </td>
+  </tr>
+  <tr>
+    <td colspan="6">
+      <div class="row">
+        <div class="col-sm-8">
+          {note}
+        </div>
+        <div class="col-sm-4" style="text-align: right;">
+          <button class="btn btn-info" onclick="editBreeder({id})">
+            <span class="glyphicon glyphicon-edit"></span>
+          </button>
+        </div>
+      </div>
+    </td>
   </tr>
   <!-- END: row -->
 </table>

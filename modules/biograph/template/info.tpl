@@ -927,6 +927,11 @@
     parseChild()
   }
 
+  function editBreeder (id) {
+    global['id'] = id
+    
+  }
+
   function addDisease() {
     insertDisease.modal('show')
   }
