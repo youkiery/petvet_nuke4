@@ -41,7 +41,8 @@ if (!empty($action)) {
       $filter = $nv_Request->get_array('filter', 'post');
 
       if (!empty($row = getRequestId($id))) {
-        $sql = 'update `'. PREFIX .'_request` set status = 0 where id = ' . $id;
+        $sql = 'delete from `'. PREFIX .'_request` where id = ' . $id;
+        // $sql = 'update `'. PREFIX .'_request` set status = 0 where id = ' . $id;
         if ($db->query($sql)) {
           $result['status'] = 1;
           $result['html'] = requestList($filter);

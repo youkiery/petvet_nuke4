@@ -277,8 +277,10 @@ function transferList($userid, $filter = array('page' => 1, 'limit' => 10)) {
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
+  $list = array();
   while ($row = $query->fetch()) {
     $target = checkUserinfo($row['targetid'], $row['type']);
+    // echo $target['fullname'] . ' ('. $row['type'] .')<br>';
     $pet = getPetById($row['petid']);
 
     $xtpl->assign('index', $index++);
@@ -290,6 +292,8 @@ function transferList($userid, $filter = array('page' => 1, 'limit' => 10)) {
     $xtpl->assign('time', date('d/m/Y', $row['time']));
     $xtpl->parse('main.row');
   }
+  // die();
+  // die(implode(', ', $list));
 
   $xtpl->parse('main');
   return $xtpl->text();

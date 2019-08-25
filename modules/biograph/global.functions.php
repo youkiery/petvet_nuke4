@@ -144,7 +144,7 @@ function getRemind($type = '') {
 function checkUserinfo($userid, $type) {
   global $db;
 
-  if ($type = 1) {
+  if ($type == 1) {
     $sql = 'select * from `'. PREFIX .'_user` where id = ' . $userid;
     $query = $db->query($sql);
     return $query->fetch();
