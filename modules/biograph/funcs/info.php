@@ -118,6 +118,36 @@ if (!empty($action)) {
       }
 
 		break;
+    case 'get-vaccine':
+			$id = $nv_Request->get_string('id', 'post', 0);
+
+      $sql = 'select * from `'. PREFIX .'_vaccine` where id = ' . $id;
+      $query = $db->query($sql);
+      if ($row = $query->fetch()) {
+        $pet = getPetById($row['targetid']);
+        $result['data'] = array('type' => $row['type'] . '-' . $row['val'], 'time' => date('d/m/Y', $row['time']), 'recall' => date('d/m/Y', $row['recall']));
+        $result['status'] = 1;
+      }
+    break;
+
+    case 'edit-vaccine':
+			$id = $nv_Request->get_string('id', 'post', 0);
+			$vid = $nv_Request->get_string('vid', 'post', 0);
+			$data = $nv_Request->get_array('data', 'post');
+      
+      if (!empty($id) && count($data) > 0) {
+        $data['time'] = totime($data['time']);
+        $data['recall'] = totime($data['recall']);
+        
+        $sql = 'update `'. PREFIX .'_vaccine` set ' . sqlBuilder($data, BUILDER_EDIT) . ' where id = ' . $vid;
+        // die($sql);
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+          $result['html'] = vaccineList($id);
+        }
+      }
+    break;
+
     case 'insert-vaccine':
 			$id = $nv_Request->get_string('id', 'post', 0);
 			$data = $nv_Request->get_array('data', 'post');

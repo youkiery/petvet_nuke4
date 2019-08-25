@@ -57,6 +57,7 @@ function vaccineList($petid) {
     // var_dump($pet);die();
     $xtpl->assign('index', $index ++);
     $xtpl->assign('pet', $pet['name']);
+    $xtpl->assign('id', $row['id']);
     $xtpl->assign('time', date('d/m/Y', $row['time']));
     $xtpl->assign('recall', date('d/m/Y', $row['recall']));
     if ($time >= $row['recall'] && $row['status'] == 0) {

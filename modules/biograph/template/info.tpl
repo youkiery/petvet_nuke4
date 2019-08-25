@@ -64,8 +64,11 @@
           </div>
         </label>
 
-        <button class="btn btn-success" onclick="insertVaccineSubmit()">
+        <button class="btn btn-success" id="btn-vaccine-insert" onclick="insertVaccineSubmit()">
           Thêm lịch tiêm phòng
+        </button>
+        <button class="btn btn-success" id="btn-vaccine-edit" onclick="editVaccineSubmit()">
+          Sửa lịch tiêm phòng
         </button>
       </div>
     </div>
@@ -362,114 +365,6 @@
   </div>
 </div>
 
-<!-- <div id="insert-pet" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <p class="text-center"> <b> Thêm thú cưng </b> </p>
-        <label class="row">
-          <div class="col-sm-3">
-            Tên thú cưng
-          </div>
-          <div class="col-sm-9">
-            <input type="text" class="form-control" id="pet-name" autocomplete="off">
-          </div>
-        </label>
-
-        <label class="row">
-          <div class="col-sm-3">
-            Ngày sinh
-          </div>
-          <div class="col-sm-9">
-            <input type="text" class="form-control" id="pet-dob" autocomplete="off">
-          </div>
-        </label>
-
-        <label class="row">
-          <div class="col-sm-3">
-            Giống
-          </div>
-          <div class="col-sm-9 relative">
-            <input type="text" class="form-control" id="species-pet" autocomplete="off">
-            <div class="suggest" id="species-suggest-pet"></div>
-          </div>
-        </label>
-
-        <label class="row">
-          <div class="col-sm-3">
-            Loài
-          </div>
-          <div class="col-sm-9 relative">
-            <input type="text" class="form-control" id="breed-pet" autocomplete="off">
-            <div class="suggest" id="breed-suggest-pet"></div>
-          </div>
-        </label>
-
-        <label class="row">
-          <div class="col-sm-3">
-            Giới tính
-          </div>
-          <div class="col-sm-9">
-            <label>
-              <input type="radio" name="sex" id="pet-sex-0" checked> Giống đực
-            </label>
-            <label>
-              <input type="radio" name="sex" id="pet-sex-1"> Giống cái
-            </label>
-          </div>
-        </label>
-
-        <label class="row">
-          <div class="col-sm-3">
-            Màu sắc
-          </div>
-          <div class="col-sm-9">
-            <input type="text" class="form-control" id="pet-color" autocomplete="off">
-          </div>
-        </label>
-
-        <label class="row">
-          <div class="col-sm-3">
-            Microchip
-          </div>
-          <div class="col-sm-9">
-            <input type="text" class="form-control" id="pet-microchip" autocomplete="off">
-          </div>
-        </label>
-
-        <label class="row">
-          <div class="col-sm-3">
-            Xăm tai
-          </div>
-          <div class="col-sm-9">
-            <input type="text" class="form-control" id="pet-miear" autocomplete="off">
-          </div>
-        </label>
-
-        <label class="row">
-          <div class="col-sm-3">
-            Hình ảnh
-          </div>
-          <div class="col-sm-9">
-            <div>
-              <img class="img-responsive" id="pet-preview"
-                style="display: inline-block; width: 128px; height: 128px; margin: 10px;">
-            </div>
-            <input type="file" class="form-control" id="user-image" onchange="onselected(this, 'pet')">
-          </div>
-        </label>
-
-        <div class="text-center">
-          <button class="btn btn-success" id="ibtn" onclick="insertPetSubmit()">
-            Thêm thú cưng
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-
 <div class="container" style="margin-top: 20px;">
   <a href="/biograph/">
     <img src="/modules/biograph/src/banner.png" style="width: 100px;">
@@ -621,6 +516,10 @@
     breeder: {
       insert: $("#btn-breeder-insert"),
       edit: $("#btn-breeder-edit")
+    },
+    vaccine: {
+      insert: $("#btn-vaccine-insert"),
+      edit: $("#btn-vaccine-edit")
     }
   }
 
@@ -1110,7 +1009,25 @@
     }
   }
 
+  function editVaccine(id) {
+    $.post(
+      global['url'],
+      { action: 'get-vaccine', id: id },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          global['vaccine'] = id
+          button['vaccine']['edit'].show()
+          button['vaccine']['insert'].hide()
+          parseInputSet(data['data'], vaccine)
+          petVaccine.modal('show')
+        }, () => { })
+      }
+    )
+  }
+
   function addVaccine(id) {
+    button['vaccine']['edit'].show()
+    button['vaccine']['insert'].hide()
     petVaccine.modal('show')
   }
 
@@ -1118,6 +1035,19 @@
     $.post(
       global['url'],
       { action: 'insert-vaccine', data: checkVaccineData(), id: global['id'] },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          vaccineContent.html(data['html'])
+          petVaccine.modal('hide')
+        }, () => { })
+      }
+    )
+  }
+
+  function editVaccineSubmit() {
+    $.post(
+      global['url'],
+      { action: 'edit-vaccine', data: checkVaccineData(), vid: global['vaccine'], id: global['id'] },
       (response, status) => {
         checkResult(response, status).then(data => {
           vaccineContent.html(data['html'])
