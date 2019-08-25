@@ -18,6 +18,18 @@
     <td> {recall} </td>
     <td> {type} </td>
   </tr>
+  <tr>
+    <td colspan="5">
+      <div class="col-sm-6">
+        {note}
+      </div>
+      <div class="col-sm-6" style="text-align: right;">
+        <button class="btn btn-info" onclick="editVaccine({id})">
+          <span class="glyphicon glyphicon-edit"></span>
+        </button>
+      </div>
+    </td>
+  </tr>
   <!-- END: row -->
 </table>
 <!-- END: main -->

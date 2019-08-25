@@ -52,6 +52,35 @@ if (!empty($action)) {
         $result['html'] = parseVaccineType($userinfo['id']);
       }
 		break;
+    case 'get-breeder':
+			$id = $nv_Request->get_string('id', 'post', 0);
+
+      $sql = 'select * from `'. PREFIX .'_breeder` where id = ' . $id;
+      $query = $db->query($sql);
+      if ($row = $query->fetch()) {
+        $pet = getPetById($row['targetid']);
+        $result['data'] = array('time' => date('d/m/Y', $row['time']), 'target' => $pet['id'], 'number' => $row['number'], 'note' => $row['note']);
+        $result['name'] = $pet['name'];
+        $result['status'] = 1;
+      }
+    break;
+		case 'edit-breeder':
+			$data = $nv_Request->get_array('data', 'post');
+			$bid = $nv_Request->get_string('bid', 'post', 0);
+			$id = $nv_Request->get_string('id', 'post', 0);
+
+      $data['time'] = totime($data['time']);
+      $list = array();
+      $data['targetid'] = $data['target'];
+      unset($data['target']);
+
+      $sql = 'update `'. PREFIX .'_breeder` set '. sqlBuilder($data, BUILDER_EDIT) .' where id = ' . $bid;
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = breederList($id);
+      }
+
+		break;
 		case 'insert-breeder':
 			$data = $nv_Request->get_array('data', 'post');
 			// $child = $nv_Request->get_array('child', 'post');

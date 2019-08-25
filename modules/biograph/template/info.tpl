@@ -17,7 +17,7 @@
     font-weight: normal;
     font-size: inherit;
   }
-  </style>
+</style>
 
 <div id="pet-vaccine" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -172,9 +172,14 @@
           <input type="text" class="form-control" id="breeder-note" autocomplete="off">
         </label>
 
-        <button class="btn btn-success" onclick="insertBreederSubmit()">
-          Thêm lịch phối giống
-        </button>
+        <div class="text-center">
+          <button class="btn btn-success" id="btn-breeder-insert" onclick="insertBreederSubmit()">
+            Thêm lịch phối giống
+          </button>
+          <button class="btn btn-success" id="btn-breeder-edit" onclick="editBreederSubmit()">
+            Sửa lịch phối giống
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -580,7 +585,8 @@
     url: '{url}',
     child: [],
     childid: 0,
-    owner: -1
+    owner: -1,
+    breeder: 0
   }
   var owner = {
     fullname: $("#owner-name"),
@@ -610,6 +616,12 @@
     miear: $("#pet-miear"),
     userid: $("#pet-id"),
     type: $("#owner-type")
+  }
+  var button = {
+    breeder: {
+      insert: $("#btn-breeder-insert"),
+      edit: $("#btn-breeder-edit")
+    }
   }
 
   var modalTarget = $("#modal-target")
@@ -922,18 +934,49 @@
     }
   }
 
-  function addBreeder() {
-    insertBreeder.modal('show')
-    parseChild()
+  function addDisease() {
+    insertDisease.modal('show')
   }
 
   function editBreeder (id) {
-    global['id'] = id
-    
+    insertBreeder.modal('show')
+    $.post(
+      global['url'],
+      { action: 'get-breeder', id: id },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          parseInputSet(data['data'], breeder);
+          global['breeder'] = id
+          $("#breeder-target").val(data['name'])
+          button['breeder']['edit'].show()
+          button['breeder']['insert'].hide()
+        }, () => {})
+      }
+    )
   }
 
-  function addDisease() {
-    insertDisease.modal('show')
+  function addBreeder() {
+    insertBreeder.modal('show')
+    button['breeder']['edit'].show()
+    button['breeder']['insert'].hide()
+  }
+
+  function editBreederSubmit() {
+    $.post(
+      global['url'],
+      { action: 'edit-breeder', data: checkInputSet(breeder), bid: global['breeder'], id: global['id'] },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          breederContent.html(data['html'])
+          clearInputSet(breeder)
+          $("#breeder-time").val(def['today'])
+          $("#breeder-target").val('')
+          $("#breeder-number").val('1')
+          insertBreeder.modal('hide')
+        }, () => {
+        })
+      }
+    )
   }
 
   function insertBreederSubmit() {
@@ -1315,6 +1358,5 @@
       $('[data-toggle="popover"]').popover('hide');
     }
   });
-
 </script>
 <!-- END: main -->

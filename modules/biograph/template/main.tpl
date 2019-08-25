@@ -2,7 +2,7 @@
 <div class="container">
     <div class="text-center start-content">
       <img src="/modules/biograph/src/banner.png">
-      <p> Nâng niu tình yêu động vật </p>
+      <!-- <p> Nâng niu tình yêu động vật </p> -->
       <form action="/biograph/list">
         <div style="width: 60%; margin: auto;">
           <label class="input-group">

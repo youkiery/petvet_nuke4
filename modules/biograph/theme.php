@@ -52,7 +52,6 @@ function vaccineList($petid) {
   $query = $db->query($sql);
   $index = 1;
   $today = time(); 
-  $time = $today + 60 * 60 * 24 * 30;
   while ($row = $query->fetch()) {
     $pet = getPetById($petid);
     // var_dump($pet);die();
