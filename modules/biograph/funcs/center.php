@@ -226,6 +226,7 @@ if (!empty($action)) {
           }
         }
         else {
+          $type = 2;
           $sql = 'update `'. PREFIX .'_pet` set userid = ' . $ownerid . ', type = '. $type .' where id = ' . $petid;
           $sql2 = 'insert into `'. PREFIX .'_transfer` (fromid, targetid, petid, time, type) values('. $pet['userid'] .', '. $ownerid .', '. $petid .', '. time() .', '. $type .')';
           if ($db->query($sql) && $db->query($sql2)) {

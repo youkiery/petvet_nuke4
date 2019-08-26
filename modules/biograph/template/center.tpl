@@ -936,6 +936,7 @@
         checkResult(response, status).then(data => {
           transferOwner.val(data['name'])
           global['owner'] = data['id']
+          global['type'] = 2
           insertOwner.modal('hide')
           clearInputSet(owner)
         }, () => { })
@@ -1059,7 +1060,8 @@
       { action: 'new-request', name: $("#request-other").val(), id: global['request'] },
       (response, status) => {
         checkResult(response, status).then(data => {
-          requestDetail.modal('hide')
+          requestContent.html(data['html'])
+          // requestDetail.modal('hide')
         }, () => { })
       }
     )
@@ -1547,6 +1549,10 @@
       time: vaccine['time'].val(),
       recall: vaccine['recall'].val()
     }
+  }
+
+  function parentToggle(id) {
+    $(".i" + id).fadeToggle()
   }
 
   function uploader() {
