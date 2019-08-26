@@ -125,9 +125,12 @@
           <input type="text" class="form-control" id="disease-note" autocomplete="off">
         </label>
 
-        <div class="tex-center">
-          <button class="btn btn-success" onclick="insertDiseaseSubmit()">
+        <div class="text-center">
+          <button class="btn btn-success" id="btn-disease-insert" onclick="insertDiseaseSubmit()">
             Thêm lịch sử bệnh
+          </button>
+          <button class="btn btn-success" id="btn-disease-edit" onclick="editDiseaseSubmit()">
+            Sửa lịch sử bệnh
           </button>
         </div>
       </div>
@@ -491,12 +494,19 @@
     child: [],
     childid: 0,
     owner: -1,
-    breeder: 0
+    breeder: 0,
+    disease: 0
   }
   var owner = {
     fullname: $("#owner-name"),
     mobile: $("#owner-mobile"),
     address: $("#owner-address")
+  }
+  var disease = {
+    treat: $("#disease-treat"),
+    treated: $("#disease-treated"),
+    disease: $("#disease-disease"),
+    note: $("#disease-note"),
   }
   var breeder = {
     time: $("#breeder-time"),
@@ -523,6 +533,10 @@
     type: $("#owner-type")
   }
   var button = {
+    disease: {
+      insert: $("#btn-disease-insert"),
+      edit: $("#btn-disease-edit")
+    },
     breeder: {
       insert: $("#btn-breeder-insert"),
       edit: $("#btn-breeder-edit")
@@ -847,17 +861,50 @@
     }
   }
 
+  function editDisease(id) {
+    $.post(
+      global['url'],
+      { action: 'get-disease', id: id },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          parseInputSet(data['data'], disease);
+          global['disease'] = id
+          // $("#breeder-target").val(data['name'])
+          button['disease']['insert'].hide()
+          button['disease']['edit'].show()
+          insertDisease.modal('show')
+        }, () => {})
+      }
+    )
+  }
+
+  function editDiseaseSubmit() {
+    $.post(
+      global['url'],
+      { action: 'edit-disease', id: global['id'], did: global['disease'], data: checkDiseaseData() },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          clearInputSet(disease);
+          insertDisease.modal('hide')
+          diseaseContent.html(data['html'])
+        }, () => {})
+      }
+    )
+  }
+
   function addDisease() {
+    button['disease']['insert'].show()
+    button['disease']['edit'].show()
     insertDisease.modal('show')
   }
 
-  function editBreeder (id) {
-    insertBreeder.modal('show')
+  function editBreeder(id) {
     $.post(
       global['url'],
       { action: 'get-breeder', id: id },
       (response, status) => {
         checkResult(response, status).then(data => {
+          insertBreeder.modal('show')
           parseInputSet(data['data'], breeder);
           global['breeder'] = id
           $("#breeder-target").val(data['name'])

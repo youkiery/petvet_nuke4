@@ -90,6 +90,7 @@ function DiseaseList($petid) {
     $pet = getPetById($petid);
     // var_dump($pet);die();
     $xtpl->assign('index', $index ++);
+    $xtpl->assign('id', $row['id']);
     $xtpl->assign('pet', $pet['name']);
     $xtpl->assign('treat', date('d/m/Y', $row['treat']));
     $xtpl->assign('treated', date('d/m/Y', $row['treated']));

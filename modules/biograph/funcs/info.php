@@ -123,7 +123,6 @@ if (!empty($action)) {
       $data['treat'] = totime($data['treat']);
       $data['treated'] = totime($data['treated']);
       checkRemind($data['disease'], 'disease');
-      $list = array();
 
       $sql = 'insert into `'. PREFIX .'_disease` (petid, treat, treated, disease, note) values('. $id .', '. $data['treat'] .', '. $data['treated'] .', "'. $data['disease'] .'", "'. $data['note'] .'")';
       if ($db->query($sql)) {
@@ -132,6 +131,32 @@ if (!empty($action)) {
       }
 
 		break;
+		case 'edit-disease':
+			$did = $nv_Request->get_string('did', 'post', 0);
+			$id = $nv_Request->get_string('id', 'post', 0);
+			$data = $nv_Request->get_array('data', 'post');
+
+      $data['treat'] = totime($data['treat']);
+      $data['treated'] = totime($data['treated']);
+      checkRemind($data['disease'], 'disease');
+
+      $sql = 'update `'. PREFIX .'_disease` set ' . sqlBuilder($data, BUILDER_EDIT) . ' where id = ' . $did;
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = diseaseList($id);
+      }
+
+		break;
+    case 'get-disease':
+			$id = $nv_Request->get_string('id', 'post', 0);
+
+      $sql = 'select * from `'. PREFIX .'_disease` where id = ' . $id;
+      $query = $db->query($sql);
+      if ($row = $query->fetch()) {
+        $result['data'] = array('treat' => date('d/m/Y', $row['treat']), 'treated' => date('d/m/Y', $row['treated']), 'note' => $row['note'], 'disease' => $row['disease']);
+        $result['status'] = 1;
+      }
+    break;
     case 'get-vaccine':
 			$id = $nv_Request->get_string('id', 'post', 0);
 
@@ -224,7 +249,6 @@ if (!empty($action)) {
 		break;
  		case 'disease':
 			$keyword = $nv_Request->get_string('keyword', 'post', '');
-      checkRemind($keyword, 'disease');
 
 			$sql = 'select * from `'. PREFIX .'_remind` where type = "disease" and name like "%'. $keyword .'%"';
 			$query = $db->query($sql);

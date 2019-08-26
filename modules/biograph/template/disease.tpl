@@ -9,7 +9,6 @@
     <th> Ngày điều trị </th>
     <th> Loại bệnh </th>
     <th> Thời gian khỏi </th>
-    <th> Ghi chú </th>
   </tr>
   <!-- BEGIN: row -->
   <tr>
@@ -18,7 +17,20 @@
     <td> {treat} </td>
     <td> {disease} </td>
     <td> {treated} </td>
-    <td> {note} </td>
+  </tr>
+  <tr>
+    <td colspan="5">
+      <div class="row">
+        <div class="col-sm-6">
+          {note}
+        </div>
+        <div class="col-sm-6" style="text-align: right;">
+          <button class="btn btn-info" onclick="editDisease({id})">
+            <span class="glyphicon glyphicon-edit"></span>
+          </button>
+        </div>
+      </div>
+    </td>
   </tr>
   <!-- END: row -->
 </table>
