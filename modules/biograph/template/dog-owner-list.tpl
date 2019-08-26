@@ -13,8 +13,8 @@
     <th> Giống </th>
   </tr>
   <!-- BEGIN: row -->
-  <tbody>
-    <tr class="clickable-row" data-href=''>
+  <tbody class="{pc}" style="display: {display};">
+    <tr>
       <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {name} </a> </td>
       <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {microchip} </a> </td>
       <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {sex} </a> </td>

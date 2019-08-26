@@ -173,52 +173,63 @@ function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('pa
 
   foreach ($data['list'] as $row) {
     $xtpl->assign('index', $index++);
-    $xtpl->assign('name', $row['name']);
-    $xtpl->assign('id', $row['id']);
-    $xtpl->assign('microchip', $row['microchip']);
-    $xtpl->assign('breed', $row['species']);
-    $xtpl->assign('sex', $sex_array[$row['sex']]);
-    $xtpl->assign('dob', cdate($row['dateofbirth']));
-    // if (!empty($user_info) && !empty($user_info['userid']) && (in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
-      $request = getPetRequest($row['id']);
-      if ($count = count($request) > 0) {
-        $counter = 0;
-        $scounter = 0;
-        foreach ($request as $requester) {
-          // request status: 0-fail, 1-requesting, 2-success
-          if ($requester['status'] > 0) {
-            if ($requester['status'] == 2) {
-              ++$scounter;
-            } 
-            ++$counter;
-          }
-        }
-        if ($counter == 0) {
-          $xtpl->assign('request', 'danger');
-        }
-        else if ($counter == $count) {
-          if ($scounter == $count) {
-            $xtpl->assign('request', 'success');
-          }
-          else {
-            $xtpl->assign('request', 'info');
-          }
-        }
-        else {
-          $xtpl->assign('request', 'warning');
-        }
+    $list = array();
+    $list[] = $row;
+    $parent = getParentTree($row);
+    $list = array_merge($list, $parent);
+    $ping = 1;
+    $i = 1;
+    // echo json_encode($list); die();
+    foreach ($list as $check) {
+      if ($ping) {
+        $ping = 0;
+        $xtpl->assign('display', 'table-row-group');
+        $xtpl->assign('pc', '');
       }
       else {
-        $xtpl->assign('request', 'info');
+        $xtpl->assign('display', 'none');
+        $xtpl->assign('pc', 'i' . $row['id']);
       }
-      if ($row['active']) {
-        $xtpl->parse('main.row.uncheck');
-      }
-      else {
-        $xtpl->parse('main.row.check');
-      }
-    // }
-    $xtpl->parse('main.row');
+      $xtpl->assign('name', $check['name']);
+      $xtpl->assign('id', $check['id']);
+      $xtpl->assign('microchip', $check['microchip']);
+      $xtpl->assign('breed', $check['species']);
+      $xtpl->assign('sex', $sex_array[$check['sex']]);
+      $xtpl->assign('dob', cdate($check['dateofbirth']));
+      $request = getPetRequest($check['id']);
+        // if ($count = count($request) > 0) {
+        //   $counter = 0;
+        //   $scounter = 0;
+        //   foreach ($request as $requester) {
+        //     // request status: 0-fail, 1-requesting, 2-success
+        //     if ($requester['status'] > 0) {
+        //       if ($requester['status'] == 2) {
+        //         ++$scounter;
+        //       } 
+        //       ++$counter;
+        //     }
+        //   }
+        //   if ($counter == 0) {
+        //     $xtpl->assign('request', 'danger');
+        //   }
+        //   else if ($counter == $count) {
+        //     if ($scounter == $count) {
+        //       $xtpl->assign('request', 'success');
+        //     }
+        //     else {
+        //       $xtpl->assign('request', 'info');
+        //     }
+        //   }
+        //   else {
+        //     $xtpl->assign('request', 'warning');
+        //   }
+        // }
+        // else {
+        //   $xtpl->assign('request', 'info');
+        // }
+
+      $xtpl->parse('main.row');
+    }
   }
   // echo json_encode($data);die();
 

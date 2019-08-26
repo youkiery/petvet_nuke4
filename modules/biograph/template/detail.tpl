@@ -25,7 +25,7 @@
   <a href="/biograph/">
     <img src="/modules/biograph/src/banner.png" style="width: 100px;">
   </a>
-  <a href="/biograph/list" style="margin: 8px 0px; display: block;"> <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
+  <a href="#" style="margin: 8px 0px; display: block;" onclick="goback()"> <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
   <form style="width: 60%; float: right;">
     <label class="input-group">
       <input type="hidden" name="nv" value="biograph">
@@ -119,7 +119,7 @@
 <script>
   var avatar = $("#avatar")
 
-  loadImage('{image}', avatar)
+  loadImage('{image}', 'avatar')
   // loadImage('http://localhost/modules/biograph/src/banner.png', avatar)
 
   function toggleX(name) {
@@ -133,6 +133,10 @@
       $("#" + name + "off").show()
     }
     target.toggle()
+  }
+
+  function goback() {
+    window.history.back();
   }
 
   function splipper(text, part) {

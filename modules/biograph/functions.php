@@ -235,12 +235,12 @@ function getUserPetList($userid, $tabber, $filter) {
   global $db;
 
   $list = array();
-  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .')';
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where id not in ( select id from ((select mid as id from `pet_biograph_pet`) union (select fid as id from `pet_biograph_pet`)) as a) and userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $count = $query->fetch();
 
   // $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
-  $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_pet` where id not in ( select id from ((select mid as id from `pet_biograph_pet`) union (select fid as id from `pet_biograph_pet`)) as a) and userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   while ($row = $query->fetch()) {
@@ -251,4 +251,20 @@ function getUserPetList($userid, $tabber, $filter) {
     'count' => $count['count'],
     'list' => $list
   );
+}
+
+function getParentTree($data) {
+  global $db;
+
+  $list = array();
+  $papa = getPetById($data['mid']);
+  $mama = getPetById($data['fid']);
+
+  if (!empty($papa)) {
+    $list[] = $papa;
+  }
+  if (!empty($mama)) {
+    $list[] = $mama;
+  }
+  return $list;
 }
