@@ -367,7 +367,7 @@
 
 <div class="container" style="margin-top: 20px;">
   <a href="/biograph/">
-    <img src="/modules/biograph/src/banner.png" style="width: 100px;">
+    <img src="/modules/biograph/src/banner.png" style="width: 200px;">
   </a>
   <div style="clear: both;"></div>
   <a href="#" style="margin: 8px 0px; display: block;" onclick="goback()"> <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
