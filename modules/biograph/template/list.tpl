@@ -18,7 +18,32 @@
   <div id="content">
     {content}
   </div>
-  <script>
-  </script>
 </div>
+<script>
+  var global = {
+    page: 1
+  }
+  var keyword = $("#keyword")
+  var content = $("#content")
+
+  function checkFilter() {
+    return {
+      page: global['page'],
+      keyword: keyword.val()
+    }
+  }
+
+  function goPage(page) {
+    global['page'] = page
+    $.post(
+      global['url'],
+      { action: 'filter', data: checkFilter() },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          content.html(data['html'])
+        }, () => { })
+      }
+    )
+  }
+</script>
 <!-- END: main -->

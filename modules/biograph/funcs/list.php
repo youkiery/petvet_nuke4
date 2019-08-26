@@ -26,6 +26,12 @@ if (!empty($action)) {
 			}
 
 		break;
+    case 'filter':
+      $data = $nv_Request->get_array('data', 'post');
+
+      $result['status'] = 1;
+      $result['html'] = mainPetList($data['keyword'], $data['page']);
+    break;
 	}
 	echo json_encode($result);
 	die();

@@ -253,6 +253,7 @@ function mainPetList($keyword = '', $page = 1, $filter = 10) {
   $xtpl->assign('from', ($page - 1) * $filter + 1);
   $xtpl->assign('end', ($count + $filter >= ($page * $filter) ? $count : $page * $filter));
   $xtpl->assign('count', $count);
+  $xtpl->assign('nav', navList($count, $page, $filter));
   $xtpl->parse('main.msg');
 
   foreach ($data['list'] as $row) {

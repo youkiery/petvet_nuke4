@@ -52,12 +52,9 @@
     </div>
   </div>
 
-  <div class="panel">
-    <div class="panel-content">
-      <div class="panel-body">
-        {graph}
-      </div>
-    </div>
+  <div class="panel panel-primary">
+    <div class="panel-heading"> Sơ yếu lý lịch </div>
+    <div class="panel-body"> {graph} </div>
   </div>
 
   <div id="wrapper">
