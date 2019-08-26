@@ -870,8 +870,8 @@
 
   function addBreeder() {
     insertBreeder.modal('show')
-    button['breeder']['edit'].show()
-    button['breeder']['insert'].hide()
+    button['breeder']['edit'].hide()
+    button['breeder']['insert'].show()
   }
 
   function editBreederSubmit() {

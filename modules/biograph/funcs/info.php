@@ -109,6 +109,7 @@ if (!empty($action)) {
       // }
 
       $sql = 'insert into `'. PREFIX .'_breeder` (petid, targetid, child, time, number, note) values('. $id .', '. $data['target'] .', "[]", "'. $data['time'] .'", '. $data['number'] .', "'. $data['note'] .'")';
+      // die($sql);
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = breederList($id);
