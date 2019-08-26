@@ -97,8 +97,14 @@ $xtpl = new XTemplate("remind.tpl", PATH);
 
 $sql = 'select * from `'. PREFIX .'_remind` group by type';
 $query = $db->query($sql);
+
+$xtpl->assign('name', 'all');
+$xtpl->assign('value', 'Toàn bộ');
+$xtpl->parse('main.sel');
+$xtpl->parse('main.sele');
 while ($row = $query->fetch()) {
   $xtpl->assign('name', $row['type']);
+  $xtpl->assign('value', $select_array[$row['type']]);
   $xtpl->parse('main.sel');
   $xtpl->parse('main.sele');
 }

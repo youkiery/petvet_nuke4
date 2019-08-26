@@ -16,9 +16,10 @@ define("PATH", NV_ROOTDIR . "/modules/" . $module_file . '/template/admin/');
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';
+$select_array = array('breed' => 'Loài', 'disease' => 'Bệnh', 'origin' => 'Nguồn gốc', 'request' => 'Yêu cầu', 'species' => 'Giống');
 
 function remindList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', 'status' => 0, 'type' => '')) {
-  global $db;
+  global $db, $select_array;
 
   $xtpl = new XTemplate('remind-list.tpl', PATH);
 
@@ -30,7 +31,7 @@ function remindList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '',
     $filter['status'] = $filter['status'] - 1;
   }
   $xtra = '';
-  if (!empty($filter['type'])) {
+  if (!empty($filter['type']) && $filter['type'] != 'all') {
     $xtra .= 'and type = "'. $filter['type'] .'"';
   }
 
@@ -39,7 +40,7 @@ function remindList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '',
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_remind` where (name like "%'. $filter['keyword'] .'%" or type like "%'. $filter['keyword'] .'%") and visible in (' . $filter['status'] . ') '. $xtra .' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_remind` where (name like "%'. $filter['keyword'] .'%" or type like "%'. $filter['keyword'] .'%") and visible in (' . $filter['status'] . ') '. $xtra .' order by type, id limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
@@ -47,7 +48,7 @@ function remindList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '',
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('name', $row['name']);
-    $xtpl->assign('type', $row['type']);
+    $xtpl->assign('type', $select_array[$row['type']]);
     $xtpl->assign('rate', $row['rate']);
     if ($row['visible']) {
       $xtpl->parse('main.row.no');

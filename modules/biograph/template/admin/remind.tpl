@@ -45,7 +45,7 @@
             <div class="col-sm-16">
               <select class="form-control" id="edit-value">
                 <!-- BEGIN: sele -->
-                <option value="{name}"> {name} </option>
+                <option value="{name}"> {value} </option>
                 <!-- END: sele -->
               </select>
             </div>
@@ -96,7 +96,7 @@
       <div class="col-sm-6">
         <select class="form-control" id="type">
           <!-- BEGIN: sel -->
-          <option value="{name}"> {name} </option>
+          <option value="{name}"> {value} </option>
           <!-- END: sel -->
         </select>
       </div>
@@ -213,11 +213,11 @@
 
   function filterE(event) {
     event.preventDefault()
+    global['page'] = 1
     filter()
   }
 
   function filter() {
-    global['page'] = 1
     $.post(
       global['url'],
       {action: 'filter', filter: checkFilter()},
