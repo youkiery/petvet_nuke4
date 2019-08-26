@@ -58,6 +58,13 @@ function parseLink($info) {
   return '-';
 }
 
+function parseLink2($info) {
+  if (!empty($info['id'])) {
+    return '<a href="/index.php?nv=biograph&op=info&id=' . $info['id'] . '">' . $info['name'] . '</a>';
+  }
+  return '-';
+}
+
 function parseInfo($info) {
   $age = round( time() - $info['dateofbirth']) / 60 / 60 / 24 / 365.25;
   if ($age < 1) {
@@ -228,13 +235,12 @@ function getUserPetList($userid, $tabber, $filter) {
   global $db;
 
   $list = array();
-  // $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userid . ' and name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '' . ' and breeder in ('. implode(', ', $tabber) .')');
   $sql = 'select count(*) as count from `'. PREFIX .'_pet` where userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .')';
   $query = $db->query($sql);
   $count = $query->fetch();
 
+  // $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
-  // die($sql);
   $query = $db->query($sql);
 
   while ($row = $query->fetch()) {

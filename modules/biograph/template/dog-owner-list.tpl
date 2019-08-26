@@ -23,7 +23,6 @@
     </tr>
     <tr class="right">
       <td colspan="6">
-        <!-- BEGIN: mod -->
         <button class="btn btn-{request}" onclick="request({id})">
           <img src="/modules/biograph/src/request.png" style="width: 20px; height: 20px;">
         </button>
@@ -36,10 +35,12 @@
         <button class="btn btn-info" onclick="editPet({id})">
           <span class="glyphicon glyphicon-edit"></span>
         </button>
+        <button class="btn btn-info" onclick="parentToggle({id})">
+          <img src="/modules/biograph/src/parent.png" style="width: 20px; height: 20px;">
+        </button>
         <!-- <button class="btn btn-danger" onclick="deletePet({id})">
           <span class="glyphicon glyphicon-remove"></span>
         </button> -->
-        <!-- END: mod -->
       </td>
     </tr>
   </tbody>

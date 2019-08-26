@@ -111,11 +111,10 @@ function requestDetail($petid) {
   $query = $db->query($sql);
 
   while ($row = $query->fetch()) {
-    $list[] = $row['xid'];
     $xtpl->assign('title', $row['name']);
-    $xtpl->assign('type', $row['xid']);
+    $xtpl->assign('type', $row['id']);
     $xtpl->assign('id', $petid);
-    if (!empty($request = getPetRequest($petid, $row['xid']))) {
+    if (!empty($request = getPetRequest($petid, $row['id']))) {
       $request['status'] = intval($request['status']);
       switch ($request['status']) {
         case 0:
@@ -143,8 +142,8 @@ function requestDetail($petid) {
 
   while ($row = $query->fetch()) {
     $sql = 'select * from `'. PREFIX .'_remind` where type = "request" and id = ' . $row['value'];
-    $query = $db->query($sql);
-    $remind = $query->fetch();
+    $query2 = $db->query($sql);
+    $remind = $query2->fetch();
 
     $xtpl->assign('title', $remind['name']);
     $xtpl->assign('type', $row['value']);
@@ -213,13 +212,12 @@ function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('pa
         $xtpl->assign('request', 'info');
       }
       if ($row['active']) {
-        $xtpl->parse('main.row.mod.uncheck');
+        $xtpl->parse('main.row.uncheck');
       }
       else {
-        $xtpl->parse('main.row.mod.check');
+        $xtpl->parse('main.row.check');
       }
     // }
-    $xtpl->parse('main.row.mod');
     $xtpl->parse('main.row');
   }
   // echo json_encode($data);die();

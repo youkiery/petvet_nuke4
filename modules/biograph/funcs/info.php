@@ -369,16 +369,16 @@ if (!empty($row = $query->fetch())) {
   
   foreach ($relation['grand'] as $lv1) {
     foreach ($lv1 as $lv2) {
-      $xtpl->assign($lv2['ns'], parseLink($lv2));
+      $xtpl->assign($lv2['ns'], parseLink2($lv2));
       $xtpl->assign('ig' . $lv2['ns'], parseInfo($lv2));
     }
     foreach ($lv1['m'] as $lv2) {
-      $xtpl->assign($lv2['ns'], parseLink($lv2));
+      $xtpl->assign($lv2['ns'], parseLink2($lv2));
       $xtpl->assign('ig' . $lv2['ns'], parseInfo($lv2));
     }
   }
   foreach ($relation['parent'] as $lv1) {
-    $xtpl->assign($lv1['ns'], parseLink($lv1));
+    $xtpl->assign($lv1['ns'], parseLink2($lv1));
     $xtpl->assign('ig' . $lv1['ns'], parseInfo($lv1));
   }
 

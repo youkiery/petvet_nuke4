@@ -467,7 +467,7 @@
     <img src="/modules/biograph/src/banner.png" style="width: 100px;">
   </a>
   <div style="clear: both;"></div>
-  <a href="/biograph/login" style="margin: 8px 0px; display: block;"> <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
+  <a href="#" style="margin: 8px 0px; display: block;" onclick="goback()"> <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
 
   <div class="row">
     <div class="col-sm-4 thumbnail" id="avatar" style="width: 240px; height: 240px;">
@@ -713,6 +713,10 @@
         suggest.hide()
       }, 200);
     })
+  }
+
+  function goback() {
+    window.history.back();
   }
 
   function installRemind3(section) {

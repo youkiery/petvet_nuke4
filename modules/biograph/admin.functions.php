@@ -135,12 +135,14 @@ function requestList($filter = array('keyword' => '', 'page' => 1, 'limit' => 10
 
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index++);
-    if ($row['type'] == 2) {
-      $sql = 'select * from `'. PREFIX .'_remind` where type = "request" and id = ' . $row['value'];
-    }
-    else {
-      $sql = 'select * from `'. PREFIX .'_remind` where type = "request" and xid = ' . $row['value'];
-    }
+    // if ($row['type'] == 2) {
+    //   $sql = 'select * from `'. PREFIX .'_remind` where type = "request" and id = ' . $row['value'];
+    // }
+    // else {
+    //   $sql = 'select * from `'. PREFIX .'_remind` where type = "request" and xid = ' . $row['value'];
+    // }
+    $sql = 'select * from `'. PREFIX .'_remind` where type = "request" and id = ' . $row['value'];
+
     // die($sql);
     $query2 = $db->query($sql);
     $remind = $query2->fetch();
