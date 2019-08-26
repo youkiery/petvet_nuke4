@@ -52,6 +52,14 @@
     </div>
   </div>
 
+  <div class="panel">
+    <div class="panel-content">
+      <div class="panel-body">
+        {graph}
+      </div>
+    </div>
+  </div>
+
   <div id="wrapper">
     <span class="label" style="line-height: 40px;"> {name} </span>
     <div class="branch lv1">

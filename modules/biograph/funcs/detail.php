@@ -39,6 +39,7 @@ $sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
 $query = $db->query($sql);
 
 if (!empty($row = $query->fetch())) {
+	$xtpl->assign('graph', $row['graph']);
 	$xtpl->assign('name', $row['name']);
 	$xtpl->assign('dob', $row['dateofbirth']);
 	$xtpl->assign('breed', $row['breed']);

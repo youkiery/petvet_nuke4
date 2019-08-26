@@ -19,103 +19,6 @@
   }
 </style>
 
-<!-- <div id="pet-vaccine" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body text-center">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <p>
-          Thêm lịch tiêm phòng
-        </p>
-
-        <form onsubmit="return insert(event)" autocomplete="off">
-          <h2>
-              {lang.treat_title}
-              <span id="e_notify" style="display: none;"></span>
-          </h2>
-          <div class="row">
-            <div class="form-group col-md-7">
-              <div>
-                <label>{lang.customer}</label>
-                <div class="relative">
-                    <input class="form-control" id="customer_name" type="text" name="customer">
-                    <div id="customer_name_suggest" class="suggest"></div>
-                </div>
-              </div>
-            </div>
-            <div class="form-group col-md-7">
-              <div>
-                <label>{lang.phone}</label>
-                <div class="relative">
-                    <input class="form-control" id="customer_phone" type="number" name="phone">
-                    <div id="customer_phone_suggest" class="suggest"></div>
-                  </div>
-              </div>
-            </div>
-            <div class="form-group col-md-10">
-              <label>{lang.address}</label>
-              <input class="form-control" id="customer_address" type="text" name="address">
-            </div>
-          </div>
-          <div class="row">
-            <div class="form-group col-md-12">
-              <label>{lang.petname}</label>
-              <select class="form-control" id="pet_info" style="text-transform: capitalize;" name="petname"></select>
-            </div>
-            <div class="form-group col-md-12">
-              <label>{lang.treatcome}</label>
-              <div class="input-group date" data-provide="datepicker">
-                <input type="text" class="form-control" id="ngayluubenh" value="{now}" readonly>
-                <div class="input-group-addon">
-                    <span class="glyphicon glyphicon-th"></span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>{lang.temperate} </label>
-            <input class="form-control" type="text" id="temperate">
-          </div>
-          <div class="form-group">
-            <label>{lang.eye} </label>
-            <input class="form-control" type="text" id="eye">
-          </div>
-          <div class="form-group">
-            <label>{lang.other} </label>
-            <input class="form-control" type="text" id="other">
-          </div>
-          <div class="form-group">
-            <label>{lang.treating} </label>
-            <input class="form-control" type="text" id="treating2">
-          </div>
-          <div class="row">
-            <div class="form-group col-md-12">
-              <label>{lang.doctor2} </label>
-              <select class="form-control" name="doctor" id="doctor">
-                <!-- BEGIN: doctor -->
-                <option value="{doctor_value}">{doctor_name}</option>
-                <!-- END: doctor -->
-              </select>
-            </div>
-            <div class="form-group col-md-12">
-              <label>{lang.pet_status}</label>
-              <select class="form-control" name="tinhtrang" id="tinhtrang2">
-                <!-- BEGIN: status -->
-                <option value="{status_value}">{status_name}</option>
-                <!-- END: status -->
-              </select>
-            </div>
-          </div>
-          <div class="form-group text-center">
-            <input class="btn btn-info" type="submit" value="{lang.submit}">
-          </div>
-        </form>
-
-      </div>
-    </div>
-  </div>
-</div> -->
-
 <div id="pet-vaccine" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -469,6 +372,8 @@
   <div style="clear: both;"></div>
   <a href="#" style="margin: 8px 0px; display: block;" onclick="goback()"> <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
 
+  <div id="msgshow"></div>
+
   <div class="row">
     <div class="col-sm-4 thumbnail" id="avatar" style="width: 240px; height: 240px;">
     </div>
@@ -481,6 +386,13 @@
       <p> Màu sắc: {color} </p>
       <p> microchip: {microchip} </p>
     </div>
+  </div>
+
+  <div style="position: relative;">
+    <div id="editor"></div>
+    <button class="btn btn-info" style="position: absolute; top: 4px; right: 4px;" onclick="saveGraph()">
+      <span class="glyphicon glyphicon-floppy-disk"></span>
+    </button>
   </div>
 
   <div id="wrapper" style="margin: 20px 0px;">
@@ -571,6 +483,7 @@
     </div>
   </div>
 </div>
+<script src="/modules/biograph/src/ckeditor/ckeditor.js"></script>
 <script>
   var global = {
     id: '{id}',
@@ -1365,6 +1278,16 @@
     target.toggle()
   }
 
+  function saveGraph() {
+    $.post(
+      global['url'],
+      { action: 'save-graph', id: global['id'], data: CKEDITOR.instances['editor'].getData() },
+      (response, status) => {
+        checkResult(response, status).then(data => { }, () => { })
+      }
+    )
+  }
+
   $(document).ready(function(){
     installRemindv2('pet', 'breed')
     installRemindv2('pet', 'origin')
@@ -1373,6 +1296,9 @@
     installRemind('target', 'breeder')
     installRemind2('disease', 'disease')
     installRemind3('owner')
+
+    CKEDITOR.replace('editor');
+    CKEDITOR.instances['editor'].setData('{graph}')
 
     $('[data-toggle="popover"]').popover({
       placement: 'left',

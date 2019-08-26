@@ -28,6 +28,19 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
+    case 'save-graph':
+			$data = $nv_Request->get_string('data', 'post');
+			$id = $nv_Request->get_string('id', 'post');
+
+      if (!empty($id)) {
+        $sql = 'update `'. PREFIX .'_pet` set graph = "'. $data .'" where id = ' . $id;
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+          $result['notify'] = 'Đã cập nhật lý lịch trích ngang';
+        }
+      } 
+
+    break;
 		case 'insert-disease-suggest':
 			$disease = $nv_Request->get_string('disease', 'post');
 
@@ -361,6 +374,7 @@ if (!empty($row = $query->fetch())) {
 	$xtpl->assign('color', $row['color']);
 	$xtpl->assign('microchip', $row['microchip']);
 	$xtpl->assign('image', $row['image']);
+	$xtpl->assign('graph', $row['graph']);
   $xtpl->assign('breeder', breederList($id));
   $xtpl->assign('vaccine', vaccineList($id));
   $xtpl->assign('disease', diseaseList($id));
