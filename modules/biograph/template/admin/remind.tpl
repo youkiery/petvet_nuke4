@@ -123,6 +123,7 @@
     page: 1,
     id: 0
   }
+  var reversal = JSON.parse('{reversal}')
 
   var modalEdit = $("#modal-edit")
   var modalRemove = $("#modal-remove")
@@ -185,7 +186,7 @@
   function edit(id) {
     global['id'] = id
     $("#edit-name").val($("#name-" + id).text())
-    $("#edit-value").val($("#value-" + id).text())
+    $("#edit-value").val(reversal[trim($("#value-" + id).text())])
     btnInsert.hide()
     btnEdit.show()
     modalEdit.modal('show')

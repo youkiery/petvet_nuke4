@@ -138,6 +138,7 @@ function requestDetail($petid) {
   }
 
   $sql = 'select * from `'. PREFIX .'_request` where type = 2 and petid = ' . $petid . ' and status <> 2';
+  // die($sql);
   $query = $db->query($sql);
 
   while ($row = $query->fetch()) {

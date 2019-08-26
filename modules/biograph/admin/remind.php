@@ -109,6 +109,12 @@ while ($row = $query->fetch()) {
   $xtpl->parse('main.sele');
 }
 
+$reversal = array();
+foreach ($select_array as $name => $value) {
+  $reversal[$value] = $name;
+}
+
+$xtpl->assign('reversal', json_encode($reversal));
 $xtpl->assign('content', remindList());
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
