@@ -15,7 +15,7 @@
   </form>
   <div style="clear: both;"></div>
 
-  <div id="content">
+  <div id="content" style="font-size: 0px;">
     {content}
   </div>
 </div>

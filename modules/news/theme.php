@@ -240,7 +240,7 @@ function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('pa
   return $xtpl->text();
 }
 
-function mainPetList($keyword = '', $page = 1, $filter = 10) {
+function mainPetList($keyword = '', $page = 1, $filter = 12) {
   global $db, $sex_array;
   $index = ($page - 1) * $filter + 1;
   $xtpl = new XTemplate('dog-list.tpl', PATH);
