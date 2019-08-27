@@ -1067,10 +1067,10 @@
     )
   }
 
-  function requestSubmit(id, type) {
+  function requestSubmit(id, value, type) {
     $.post(
       global['url'],
-      { action: 'request', id: id, type: type },
+      { action: 'request', id: id, type: type, value: value },
       (response, status) => {
         checkResult(response, status).then(data => {
           requestContent.html(data['html'])
@@ -1122,7 +1122,7 @@
     uploader().then((imageUrl) => {
       $.post(
         global['url'],
-        { action: 'insert-parent', id: global['id'], data: checkInputSet(parent), image: imageUrl, tabber: global['tabber'] },
+        { action: 'insert-parent', id: global['id'], data: checkInputSet(parent), image: imageUrl, filter: checkFilter(), tabber: global['tabber'] },
         (response, status) => {
           checkResult(response, status).then(data => {
             petList.html(data['html'])
@@ -1337,11 +1337,17 @@
     )
   }
 
+  function checkPetData() {
+    var data = checkInputSet(pet)
+    data['breeder'] = $("#pet-breeder").prop('checked')
+    return data
+  }
+
   function editPetSubmit() {
     uploader().then((imageUrl) => {
       $.post(
         global['url'],
-        { action: 'editpet', id: global['id'], data: checkInputSet(pet), image: imageUrl, tabber: global['tabber'] },
+        { action: 'editpet', id: global['id'], data: checkPetData(), image: imageUrl, filter: checkFilter(), tabber: global['tabber'] },
         (response, status) => {
           checkResult(response, status).then(data => {
             petList.html(data['html'])
@@ -1433,7 +1439,7 @@
   function insertPetSubmit() {
     $.post(
       global['url'],
-      { action: 'insertpet', data: checkInputSet(pet), breeder: $("#pet-breeder").prop('checked', true) },
+      { action: 'insertpet', data: checkPetData(), filter: checkFilter(), tabber: global['tabber'] },
       (response, status) => {
         checkResult(response, status).then(data => {
           petList.html(data['html'])

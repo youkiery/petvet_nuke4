@@ -58,6 +58,7 @@
 
 <script>
   var global = {
+    id: 0,
     url: '{url}',
     page: 1
   }
@@ -67,13 +68,13 @@
 
   function checkFilter() {
     return {
-      id: global['id'],
       page: global['page'],
       limit: 10
     }
   }
 
   function goPage(page) {
+    global['page'] = page
     $.post(
       global['url'],
       {action: 'filter', filter: checkFilter()},
@@ -98,7 +99,7 @@
   function cancelSubmit() {
     $.post(
       global['url'],
-      {action: 'cancel', filter: checkFilter()},
+      {action: 'cancel', id: global[id], filter: checkFilter()},
       (result, statatus) => {
         checkResult(result, statatus).then(data => {
           modalCancel.modal('hide')
@@ -111,7 +112,7 @@
   function confirmSubmit() {
     $.post(
       global['url'],
-      {action: 'confirm', filter: checkFilter()},
+      {action: 'cancel', id: global[id], filter: checkFilter()},
       (result, statatus) => {
         checkResult(result, statatus).then(data => {
           modalConfirm.modal('hide')

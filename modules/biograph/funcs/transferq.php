@@ -19,11 +19,6 @@ if (empty($userinfo)) {
 	header('location: /' . $module_name . '/login/');
 	die();
 }
-else {
-  if ($userinfo['center']) {
-    header('location: /biograph/center');
-  }
-}
 
 if (!empty($action)) {
 	$result = array('status' => 0);
@@ -31,28 +26,28 @@ if (!empty($action)) {
 		case 'filter':
       $filter = $nv_Request->get_array('filter', 'post');
 
-      if (count($filter) < 2) {
-        $result['status'] = 1;
-        $result['html'] = transferqList($userinfo);
-      }
+      $result['status'] = 1;
+      $result['html'] = transferqList($userinfo['id'], $filter);
 		break;
 		case 'cancel':
       $filter = $nv_Request->get_array('filter', 'post');
+      $id = $nv_Request->get_int('id', 'post');
 
       if (count($filter) > 1 && !empty(checkTransferRequest($id))) {
         // zen: change to status
-        $sql = 'delete from `'. PREFIX .'_transfer_request` where id = ' . $filter['id'];
+        $sql = 'delete from `'. PREFIX .'_transfer_request` where id = ' . $id;
         if ($db->query($sql)) {
           $result['status'] = 1;
-          $result['html'] = transferqList($userinfo);
+          $result['html'] = transferqList($userinfo['id'], $filter);
         }
       }
 		break;
 		case 'confirm':
       $filter = $nv_Request->get_array('filter', 'post');
-      $row = checkTransferRequest($filter['id']);
+      $id = $nv_Request->get_int('id', 'post');
+      $row = checkTransferRequest($id);
 
-      if (count($filter) > 1 && !empty($row = checkTransferRequest($filter['id']))) {
+      if (count($filter) > 1 && !empty($row)) {
         // zen: change to status
         $pet = getPetById($row['petid']);
 
@@ -62,7 +57,7 @@ if (!empty($action)) {
 
         if ($db->query($sql) && $db->query($sql2) && $db->query($sql3)) {
           $result['status'] = 1;
-          $result['html'] = transferqList($userinfo);
+          $result['html'] = transferqList($userinfo['id'], $filter);
         }
       }
 		break;
@@ -73,7 +68,8 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("transferq.tpl", "modules/biograph/template");
 
-$xtpl->assign('content', transferqList($userinfo));
+$xtpl->assign('content', transferqList($userinfo['id']));
+$xtpl->assign('url', '/' . $module_name . '/' . $op . '/');
 $xtpl->assign('url', '/' . $module_name . '/' . $op . '/');
 
 $xtpl->parse("main");

@@ -382,8 +382,9 @@ if (!empty($action)) {
 		case 'editpet':
 			$id = $nv_Request->get_string('id', 'post', '');
 			$image = $nv_Request->get_string('image', 'post');
-			$tabber = $nv_Request->get_array('tabber', 'post');
 			$data = $nv_Request->get_array('data', 'post');
+			$filter = $nv_Request->get_array('filter', 'post');
+			$tabber = $nv_Request->get_array('tabber', 'post');
 
 			if (count($data) > 1 && !empty($id)) {
 				$data['dateofbirth'] = totime($data['dob']);
@@ -408,10 +409,10 @@ if (!empty($action)) {
 
         if (!empty($data['breeder'])) {
           if ($data['sex']) {
-            $data['breeder'] = 0;
+            $data['breeder'] = 1;
           }
           else {
-            $data['breeder'] = 1;
+            $data['breeder'] = 0;
           }
         }
         else {
@@ -419,6 +420,7 @@ if (!empty($action)) {
         }
 
 				$sql = 'update `'. PREFIX .'_pet` set '. sqlBuilder($data, BUILDER_EDIT) .', image = "'. $image .'" where id = ' . $id;
+        // die($sql);
 
 				if ($db->query($sql)) {
 					$result['status'] = 1;
@@ -524,17 +526,11 @@ $global['login'] = 0;
 
 $xtpl = new XTemplate("center.tpl", "modules/biograph/template");
 
-$xtpl->assign('userid', $userinfo['id']);
-$xtpl->assign('fullname', $userinfo['fullname']);
-$xtpl->assign('mobile', $userinfo['mobile']);
-$xtpl->assign('address', $userinfo['address']);
-$xtpl->assign('image', $userinfo['image']);
-$xtpl->assign('remind', json_encode(getRemind()));
-$xtpl->assign('list', userDogRowByList($userinfo['id']));
-
+$tabber = array('0');
 if (!$userinfo['center']) {
 	$xtpl->parse('main.log.center');
   $xtpl->assign('tabber', '0, 1, 2');
+  $tabber = array('0', '1', '2');
 }
 else {
   $xtpl->assign('tabber', '0');
@@ -543,6 +539,14 @@ else {
 	$xtpl->parse('main.log.breeder');
 	$xtpl->parse('main.log.breeder2');
 }
+
+$xtpl->assign('userid', $userinfo['id']);
+$xtpl->assign('fullname', $userinfo['fullname']);
+$xtpl->assign('mobile', $userinfo['mobile']);
+$xtpl->assign('address', $userinfo['address']);
+$xtpl->assign('image', $userinfo['image']);
+$xtpl->assign('remind', json_encode(getRemind()));
+$xtpl->assign('list', userDogRowByList($userinfo['id'], $tabber));
 
 $xtpl->assign('v', parseVaccineType($userinfo['id']));
 

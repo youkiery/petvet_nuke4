@@ -11,17 +11,17 @@ if (!defined('PREFIX')) {
   die('Stop!!!');
 }
 
-function transferqList($userinfo, $filter = array('page' => 1, 'limit' => 10)) {
+function transferqList($userid, $filter = array('page' => 1, 'limit' => 10)) {
   global $db;
 
   $xtpl = new XTemplate('transferq-list.tpl', PATH);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_transfer_request` where userid = ' . $userinfo['id'];
+  $sql = 'select count(*) as count from `'. PREFIX .'_transfer_request` where userid = ' . $userid;
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_transfer_request` where userid = ' . $userinfo['id'] . ' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_transfer_request` where userid = ' . $userid . ' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
@@ -304,7 +304,6 @@ function transferList($userid, $filter = array('page' => 1, 'limit' => 10)) {
     $xtpl->assign('time', date('d/m/Y', $row['time']));
     $xtpl->parse('main.row');
   }
-  // die();
   // die(implode(', ', $list));
 
   $xtpl->parse('main');

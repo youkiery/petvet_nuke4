@@ -13,4 +13,31 @@
     {content}
   </div>
 </div>
+<script>
+  var global = {
+    url: '{url}',
+    page: 1
+  }
+  var content = $("#content")
+
+  function checkFilter() {
+    return {
+      page: global['page'],
+      limit: 10
+    }
+  }
+
+  function goPage(page) {
+    global['page'] = page
+    $.post(
+      global['url'],
+      {action: 'filter', filter: checkFilter()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          content.html(data['html'])
+        }, () => {})
+      }
+    )
+  }
+</script>
 <!-- END: main -->

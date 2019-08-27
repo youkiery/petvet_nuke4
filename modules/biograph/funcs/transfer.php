@@ -19,17 +19,15 @@ if (empty($userinfo)) {
 	header('location: /' . $module_name . '/login/');
 	die();
 }
-else {
-  if ($userinfo['center']) {
-    header('location: /biograph/center');
-  }
-}
 
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
 		case 'filter':
+      $filter = $nv_Request->get_array('filter', 'post');
 
+      $result['status'] = 1;
+      $result['html'] = transferList($userinfo['id'], $filter);;
 		break;
 	}
 	echo json_encode($result);
@@ -39,7 +37,7 @@ if (!empty($action)) {
 $xtpl = new XTemplate("transfer.tpl", "modules/biograph/template");
 
 $xtpl->assign('content', transferList($userinfo['id']));
-$xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
+$xtpl->assign('url', '/' . $module_name . '/' . $op . '/');
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");

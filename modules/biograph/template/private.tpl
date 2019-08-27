@@ -1187,11 +1187,17 @@
     )
   }
 
+  function checkPetData() {
+    var data = checkInputSet(pet)
+    data['breeder'] = $("#pet-breeder").prop('checked')
+    return data
+  }
+
   function editPetSubmit() {
     uploader().then((imageUrl) => {
       $.post(
         global['url'],
-        { action: 'editpet', id: global['id'], data: checkInputSet(pet), image: imageUrl, filter: checkFilter(), tabber: global['tabber'] },
+        { action: 'editpet', id: global['id'], data: checkPetData(), image: imageUrl, filter: checkFilter(), tabber: global['tabber'] },
         (response, status) => {
           checkResult(response, status).then(data => {
             petList.html(data['html'])
@@ -1266,7 +1272,7 @@
   function insertPetSubmit() {
     $.post(
       global['url'],
-      { action: 'insertpet', data: checkInputSet(pet), filter: checkFilter(), tabber: global['tabber'] },
+      { action: 'insertpet', data: checkPetData(), filter: checkFilter(), tabber: global['tabber'] },
       (response, status) => {
         checkResult(response, status).then(data => {
           petList.html(data['html'])

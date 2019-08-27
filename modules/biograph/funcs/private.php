@@ -377,10 +377,10 @@ if (!empty($action)) {
 
         if (!empty($data['breeder'])) {
           if ($data['sex']) {
-            $data['breeder'] = 0;
+            $data['breeder'] = 1;
           }
           else {
-            $data['breeder'] = 1;
+            $data['breeder'] = 0;
           }
         }
         else {
