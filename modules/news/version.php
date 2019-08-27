@@ -1,35 +1,24 @@
 <?php
 
 /**
- * @Project NUKEVIET 4.x
- * @Author VINADES.,JSC <contact@vinades.vn>
- * @Copyright (C) 2014 VINADES.,JSC. All rights reserved
- * @License GNU/GPL version 2 or any later version
- * @Createdate 05/07/2010 09:47
+ * @Project Petcoffee-tech
+ * @Chistua (hchieuthua@gmail.com)
+ * @Copyright (C) 2019
+ * @Createdate 21-03-2019 13:15
  */
 
 if (!defined('NV_ADMIN') or !defined('NV_MAINFILE')) {
-    die('Stop!!!');
+  die('Stop!!!');
 }
 
 $module_version = array(
-    'name' => 'News', // Tieu de module
-    'modfuncs' => 'main,viewcat,topic,groups,detail,search,content,tag,rss', // Cac function co block
-    'change_alias' => 'topic,groups,content,rss',
-    'submenu' => 'content,rss,search',
-    'is_sysmod' => 0, // 1:0 => Co phai la module he thong hay khong
-    'virtual' => 1, // 1:0 => Co cho phep ao hao module hay khong
-    'version' => '4.3.04', // Phien ban cua modle
-    'date' => 'Friday, November 16, 2018 9:59:52 AM GMT+07:00', // Ngay phat hanh phien ban
-    'author' => 'VINADES <contact@vinades.vn>', // Tac gia
-    'note' => '', // Ghi chu
-    'uploads_dir' => array(
-        $module_upload,
-        $module_upload . '/source',
-        $module_upload . '/temp_pic',
-        $module_upload . '/topics'
-    ),
-    'files_dir' => array(
-        $module_upload . '/topics'
-    )
+    'name' => 'Quản lý chíp',
+    'modfuncs' => 'main, detail, bio, logout, list, login, signup, private, center, info, transfer, transferq',
+    'submenu' => 'main, detail, bio, logout, list, login, signup, private, center, info, transfer, transferq',
+    'is_sysmod' => 1,
+    'virtual' => 1,
+    'version' => '4.3.04',
+    'date' => 'Thusday, March 21, 2019 13:15:00 AM GMT+07:00',
+    'author' => 'Chistua <hchieuthua@gmail.com>',
+    'note' => ''
 );

@@ -1,478 +1,461 @@
 <?php
 
 /**
- * @Project NUKEVIET 4.x
- * @Author VINADES.,JSC <contact@vinades.vn>
- * @Copyright (C) 2014 VINADES.,JSC. All rights reserved
- * @License GNU/GPL version 2 or any later version
- * @Createdate 12/31/2009 0:51
+ * @Project Petcoffee-tech
+ * @Chistua (hchieuthua@gmail.com)
+ * @Copyright (C) 2019
+ * @Createdate 21-03-2019 13:15
  */
 
 if (!defined('NV_MAINFILE')) {
-    die('Stop!!!');
+	die('Stop!!!');
 }
 
-$global_code_defined = array(
-    'cat_visible_status' => array(1, 2),
-    'cat_locked_status' => 10,
-    'row_locked_status' => 20,
-    'edit_timeout' => 180
+define("PREFIX", $db_config['prefix'] . "_" . $module_name);
+define('PERMISSION_MODULE', 1);
+
+$sex_array = array(
+  0 => 'Đực', 'Cái'
 );
 
-$order_articles = $module_config[$module_name]['order_articles'];
-$order_articles_by = ($order_articles) ? 'weight' : 'publtime';
-$timecheckstatus = $module_config[$module_name]['timecheckstatus'];
-if ($timecheckstatus > 0 and $timecheckstatus < NV_CURRENTTIME) {
-    nv_set_status_module();
+$request_array = array(
+  array(
+    'title' => 'Bắn microchip',
+    'type' => 0
+  ),
+  array(
+    'title' => 'Tiêm phòng bệnh',
+    'type' => 1
+  ),
+  array(
+    'title' => 'Tiêm phòng dại',
+    'type' => 2
+  )
+);
+$vaccine_array = array(
+  array(
+    'title' => 'Dại',
+    'type' => 0
+  ),
+  array(
+    'title' => '5 bệnh',
+    'type' => 1
+  ),
+  array(
+    'title' => '6 bệnh',
+    'type' => 2
+  ),
+  array(
+    'title' => '7 bệnh',
+    'type' => 3
+  )
+);
+
+function checkObj($obj) {
+  $check = true;
+  foreach ($obj as $key => $value) {
+    if (empty($value)) {
+      $check = false;
+    }
+  }
+
+  return $check;
 }
 
-/**
- * nv_set_status_module()
- *
- * @return
- */
-function nv_set_status_module()
-{
-    global $nv_Cache, $db, $module_name, $module_data, $global_config;
-
-    $check_run_cronjobs = NV_ROOTDIR . '/' . NV_LOGS_DIR . '/data_logs/cronjobs_' . md5($module_data . 'nv_set_status_module' . $global_config['sitekey']) . '.txt';
-    $p = NV_CURRENTTIME - 300;
-    if (file_exists($check_run_cronjobs) and @filemtime($check_run_cronjobs) > $p) {
-        return;
-    }
-    file_put_contents($check_run_cronjobs, '');
-
-    // Dang cai bai cho kich hoat theo thoi gian
-    $query = $db->query('SELECT id, listcatid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_rows WHERE status=2 AND publtime < ' . NV_CURRENTTIME . ' ORDER BY publtime ASC');
-    while (list ($id, $listcatid) = $query->fetch(3)) {
-        $array_catid = explode(',', $listcatid);
-        foreach ($array_catid as $catid_i) {
-            $catid_i = intval($catid_i);
-            if ($catid_i > 0) {
-                $db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_' . $catid_i . ' SET status=1 WHERE id=' . $id);
-            }
-        }
-        $db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_rows SET status=1 WHERE id=' . $id);
-    }
-
-    // Ngung hieu luc cac bai da het han
-    $weight_min = 0;
-    $query = $db->query('SELECT id, listcatid, archive, weight FROM ' . NV_PREFIXLANG . '_' . $module_data . '_rows WHERE status=1 AND exptime > 0 AND exptime <= ' . NV_CURRENTTIME . ' ORDER BY weight DESC, exptime ASC');
-    while (list ($id, $listcatid, $archive, $weight) = $query->fetch(3)) {
-        if (intval($archive) == 0) {
-            nv_del_content_module($id);
-            $weight_min = $weight;
-        } else {
-            nv_archive_content_module($id, $listcatid);
-        }
-    }
-
-    // Tim kiem thoi gian chay lan ke tiep
-    $time_publtime = $db->query('SELECT min(publtime) FROM ' . NV_PREFIXLANG . '_' . $module_data . '_rows WHERE status=2 AND publtime > ' . NV_CURRENTTIME)->fetchColumn();
-    $time_exptime = $db->query('SELECT min(exptime) FROM ' . NV_PREFIXLANG . '_' . $module_data . '_rows WHERE status=1 AND exptime > ' . NV_CURRENTTIME)->fetchColumn();
-
-    $timecheckstatus = min($time_publtime, $time_exptime);
-    if (!$timecheckstatus) {
-        $timecheckstatus = max($time_publtime, $time_exptime);
-    }
-
-    $sth = $db->prepare("UPDATE " . NV_CONFIG_GLOBALTABLE . " SET config_value = :config_value WHERE lang = '" . NV_LANG_DATA . "' AND module = :module_name AND config_name = 'timecheckstatus'");
-    $sth->bindValue(':module_name', $module_name, PDO::PARAM_STR);
-    $sth->bindValue(':config_value', intval($timecheckstatus), PDO::PARAM_STR);
-    $sth->execute();
-
-    nv_fix_weight_content($weight_min);
-    $nv_Cache->delMod('settings');
-    $nv_Cache->delMod($module_name);
-
-    unlink($check_run_cronjobs);
-    clearstatcache();
+function cdate($time) {
+  return date('d/m/Y', $time);
 }
 
-/**
- * nv_del_content_module()
- *
- * @param mixed $id
- * @return
- */
-function nv_del_content_module($id)
-{
-    global $db, $module_name, $module_data, $title, $lang_module, $module_config;
-    $content_del = 'NO_' . $id;
-    $title = '';
-    list ($id, $listcatid, $title) = $db->query('SELECT id, listcatid, title FROM ' . NV_PREFIXLANG . '_' . $module_data . '_rows WHERE id=' . intval($id))->fetch(3);
-    if ($id > 0) {
-        $number_no_del = 0;
-        $array_catid = explode(',', $listcatid);
-        foreach ($array_catid as $catid_i) {
-            $catid_i = intval($catid_i);
-            if ($catid_i > 0) {
-                $_sql = 'DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_' . $catid_i . ' WHERE id=' . $id;
-                if (!$db->exec($_sql)) {
-                    ++$number_no_del;
-                }
-            }
-        }
-
-        $_sql = 'DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_rows WHERE id=' . $id;
-        if (!$db->exec($_sql)) {
-            ++$number_no_del;
-        }
-
-        $_sql = 'DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_detail WHERE id = ' . $id;
-        if (!$db->exec($_sql)) {
-            ++$number_no_del;
-        }
-
-        $db->query('DELETE FROM ' . NV_PREFIXLANG . '_comment WHERE module=' . $db->quote($module_name) . ' AND id = ' . $id);
-        $db->query('DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_block WHERE id = ' . $id);
-
-        $db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_tags SET numnews = numnews-1 WHERE tid IN (SELECT tid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_tags_id WHERE id=' . $id . ')');
-        $db->query('DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_tags_id WHERE id = ' . $id);
-
-        nv_delete_notification(NV_LANG_DATA, $module_name, 'post_queue', $id);
-
-        /*conenct to elasticsearch*/
-        if ($module_config[$module_name]['elas_use'] == 1) {
-            $nukeVietElasticSearh = new NukeViet\ElasticSearch\Functions($module_config[$module_name]['elas_host'], $module_config[$module_name]['elas_port'], $module_config[$module_name]['elas_index']);
-            $nukeVietElasticSearh->delete_data(NV_PREFIXLANG . '_' . $module_data . '_rows', $id);
-        }
-
-        if ($number_no_del == 0) {
-            $content_del = 'OK_' . $id . '_' . nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name, true);
-        } else {
-            $content_del = 'ERR_' . $lang_module['error_del_content'];
-        }
+function ctime($time) {
+  if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
+    $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);
+    if (!$time) {
+      $time = time();
     }
-    return $content_del;
+  }
+  else {
+    $time = time();
+  }
+  return $time;
 }
 
-/**
- * nv_fix_weight_content()
- *
- * @param mixed $weight_min
- * @return
- */
-function nv_fix_weight_content($weight_min)
-{
-    global $db, $module_data;
-    if ($weight_min > 0) {
-        $weight_min = $weight_min - 1;
-        $sql = 'SELECT id, listcatid FROM ' . NV_PREFIXLANG . '_' . $module_data . '_rows WHERE weight >= ' . $weight_min . ' ORDER BY weight ASC, publtime ASC';
-        $result = $db->query($sql);
-        $weight = $weight_min;
-        while ($_row2 = $result->fetch()) {
-            $db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_rows SET weight=' . $weight . ' WHERE id=' . $_row2['id']);
-            $_array_catid = explode(',', $_row2['listcatid']);
-            foreach ($_array_catid as $_catid) {
-                try {
-                    $db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_' . intval($_catid) . ' SET weight=' . $weight . ' WHERE id=' . $_row2['id']);
-                } catch (PDOException $e) {}
-            }
-            ++$weight;
-        }
-    }
+function checkRemind($name, $type) {
+	global $db;
+
+	if (!empty($name)) {
+		if ($id = getRemindIdv2($name, $type)) {
+			$sql = 'update `'. PREFIX .'_remind` set rate = rate + 1 where id = ' . $id;
+			if ($db->query($sql)) {
+				return $id;
+			}
+			return 0;
+		}
+		else {
+			$sql = 'insert into `'. PREFIX .'_remind` (type, name, visible) values ("'. $type .'", "'. $name .'", 0)';
+			if ($db->query($sql)) {
+				return $db->lastInsertId();
+			}
+			return 0;
+		}
+	}
+	return 0;
 }
 
-/**
- * nv_archive_content_module()
- *
- * @param mixed $id
- * @param mixed $listcatid
- * @return
- */
-function nv_archive_content_module($id, $listcatid)
-{
-    global $db, $module_data;
-    $array_catid = explode(',', $listcatid);
-    foreach ($array_catid as $catid_i) {
-        $catid_i = intval($catid_i);
-        if ($catid_i > 0) {
-            $db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_' . $catid_i . ' SET status=3 WHERE id=' . $id);
-        }
-    }
-    $db->query('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_rows SET status=3 WHERE id=' . $id);
+function getRemindIdv2($name, $type) {
+	global $db;
+
+	$sql = 'select * from `'. PREFIX .'_remind` where name = "' . $name . '" and type = "'. $type .'"';
+
+	// if ($type == "owner") {
+	// 	die($sql);
+	// }
+	// echo $sql . '<br>';
+	$query = $db->query($sql);
+	$row = $query->fetch();
+
+	if (!empty($row)) {
+		return $row['id'];
+	}
+	return 0;
 }
 
-/**
- * nv_link_edit_page()
- *
- * @param mixed $id
- * @return
- */
-function nv_link_edit_page($id)
-{
-    global $lang_global, $module_name;
-    $link = "<a class=\"btn btn-primary btn-xs btn_edit\" href=\"" . NV_BASE_ADMINURL . "index.php?" . NV_LANG_VARIABLE . "=" . NV_LANG_DATA . "&amp;" . NV_NAME_VARIABLE . "=" . $module_name . "&amp;" . NV_OP_VARIABLE . "=content&amp;id=" . $id . "\"><em class=\"fa fa-edit margin-right\"></em> " . $lang_global['edit'] . "</a>";
-    return $link;
+function getRemind($type = '') {
+	global $db;
+	$list = array();
+
+	if (!empty($type)) {
+		$sql = 'select * from `'. PREFIX .'_remind` where type = "'. $type .'"';
+	}
+	else {
+		$sql = 'select * from `'. PREFIX .'_remind`';
+	}
+	$query = $db->query($sql);
+
+	while ($row = $query->fetch()) {
+		if (empty($list[$row['type']])) {
+			$list[$row['type']] = array();
+		}
+		$list[$row['type']][] = $row;
+	}
+
+	return $list;
 }
 
-/**
- * nv_link_delete_page()
- *
- * @param mixed $id
- * @return
- */
-function nv_link_delete_page($id, $detail = 0)
-{
-    global $lang_global;
-    $link = "<a class=\"btn btn-danger btn-xs\" href=\"javascript:void(0);\" onclick=\"nv_del_content(" . $id . ", '" . md5($id . NV_CHECK_SESSION) . "','" . NV_BASE_ADMINURL . "', " . $detail . ")\"><em class=\"fa fa-trash-o margin-right\"></em> " . $lang_global['delete'] . "</a>";
-    return $link;
+function checkUserinfo($userid, $type) {
+  global $db;
+
+  if ($type == 1) {
+    $sql = 'select * from `'. PREFIX .'_user` where id = ' . $userid;
+    $query = $db->query($sql);
+    return $query->fetch();
+  }
+  else {
+    $sql = 'select * from `'. PREFIX .'_contact` where id = ' . $userid;
+    $query = $db->query($sql);
+    return $query->fetch();
+  }
+  return false;
 }
 
-/**
- * nv_get_firstimage()
- *
- * @param string $contents
- * @return
- */
-function nv_get_firstimage($contents)
-{
-    if (preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $contents, $img)) {
-        return $img[1];
-    } else {
-        return '';
-    }
+function getPetById($id) {
+  global $db;
+
+  if (intval($id)) {
+    $sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
+    $query = $db->query($sql);
+    return $query->fetch();
+  }
+  return false;
 }
 
-/**
- * nv_check_block_topcat_news()
- *
- * @param string $catid
- * @return boolean
- */
-function nv_check_block_topcat_news($catid)
-{
+function getOwnerById($id, $type = 1) {
+  global $db;
 
-    global $global_config, $module_info, $module_name;
-
-    if (!empty($module_info['theme'])) {
-        $ini_file = NV_ROOTDIR . '/themes/' . $module_info['theme'] . '/config.ini';
-    } else {
-        $ini_file = NV_ROOTDIR . '/themes/' . $global_config['site_theme'] . '/config.ini';
+  if (intval($id)) {
+    if ($type == 1) {
+      $sql = 'select * from `'. PREFIX .'_user` where id = ' . $id;
     }
-    $contents = file_get_contents($ini_file);
-
-    $find1 = "/<name>" . strtoupper($module_name) . "_TOPCAT_" . $catid . "<\/name>/";
-    $find2 = "/<tag>\[" . strtoupper($module_name) . "_TOPCAT_" . $catid . "\]<\/tag>/";
-    if (preg_match($find1, $contents) and preg_match($find2, $contents)) {
-        return true;
-    } else {
-        return false;
+    else {
+      $sql = 'select * from `'. PREFIX .'_contact` where id = ' . $id;
     }
+    $query = $db->query($sql);
+    return $query->fetch();
+  }
+  return false;
 }
 
-/**
- * nv_check_block_block_botcat_news()
- *
- * @param string $catid
- * @return boolean
- */
-function nv_check_block_block_botcat_news($catid)
-{
+function getRequestId($id) {
+  global $db;
 
-    global $global_config, $module_info, $module_name;
-
-    if (!empty($module_info['theme'])) {
-        $ini_file = NV_ROOTDIR . '/themes/' . $module_info['theme'] . '/config.ini';
-    } else {
-        $ini_file = NV_ROOTDIR . '/themes/' . $global_config['site_theme'] . '/config.ini';
-    }
-    $contents = file_get_contents($ini_file);
-
-    $find1 = "/<name>" . strtoupper($module_name) . "_BOTTOMCAT_" . $catid . "<\/name>/";
-    $find2 = "/<tag>\[" . strtoupper($module_name) . "_BOTTOMCAT_" . $catid . "\]<\/tag>/";
-    if (preg_match($find1, $contents) and preg_match($find2, $contents)) {
-        return true;
-    } else {
-        return false;
-    }
+  if (intval($id)) {
+    $sql = 'select * from `'. PREFIX .'_request` where id = ' . $id;
+    $query = $db->query($sql);
+    return $query->fetch();
+  }
+  return false;
 }
 
-/**
- * nv_add_block_topcat_news()
- *
- * @param string $catid
- * @return boolean
- */
-function nv_add_block_topcat_news($catid)
-{
+function getPetNameId($id) {
+  global $db;
 
-    global $global_config, $module_info, $module_name, $nv_Cache;
-
-    if (!empty($module_info['theme'])) {
-        $ini_file = NV_ROOTDIR . '/themes/' . $module_info['theme'] . '/config.ini';
-    } else {
-        $ini_file = NV_ROOTDIR . '/themes/' . $global_config['site_theme'] . '/config.ini';
-    }
-    $contents = file_get_contents($ini_file);
-
-    if (!nv_check_block_topcat_news($catid) and !empty($contents)) {
-        $find = "/<positions>/";
-        $pos = "
-        <position>
-            <name>" . strtoupper($module_name) . "_TOPCAT_" . $catid . "</name>
-            <tag>[" . strtoupper($module_name) . "_TOPCAT_" . $catid . "]</tag>
-        </position>
-            ";
-        $_replace = "<positions>" . $pos;
-        $contents = preg_replace($find, $_replace, $contents);
-        $contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $contents);
-        $contents = preg_replace("/\\t\\t\\n/", "", $contents);
-
-        $doc = new DOMDocument('1.0', 'utf-8');
-        $doc->formatOutput = true;
-        $doc->loadXML($contents);
-        $contents = $doc->saveXML();
-
-        $fname = $ini_file;
-        $fhandle = fopen($fname, "w");
-        $fwrite = fwrite($fhandle, $contents);
-        if ($fwrite === false) {
-            return false;
-        } else {
-            fclose($fhandle);
-            return true;
-        }
-        $nv_Cache->delMod($module_name);
-    }
+  if ($id && !empty($pet = getPetById($id)) && !empty($pet['name'])) {
+    return $pet['name'];
+  }
+  return '';
 }
 
-/**
- * nv_add_block_botcat_news()
- *
- * @param string $catid
- * @return boolean
- */
-function nv_add_block_botcat_news($catid)
-{
+function insertPet($data) {
+  global $db;
 
-    global $global_config, $module_info, $module_name, $nv_Cache;
-
-    if (!empty($module_info['theme'])) {
-        $ini_file = NV_ROOTDIR . '/themes/' . $module_info['theme'] . '/config.ini';
-    } else {
-        $ini_file = NV_ROOTDIR . '/themes/' . $global_config['site_theme'] . '/config.ini';
-    }
-    $contents = file_get_contents($ini_file);
-
-    if (!nv_check_block_block_botcat_news($catid) and !empty($contents)) {
-        $find = "/<positions>/";
-        $pos = "
-        <position>
-            <name>" . strtoupper($module_name) . "_BOTTOMCAT_" . $catid . "</name>
-            <tag>[" . strtoupper($module_name) . "_BOTTOMCAT_" . $catid . "]</tag>
-        </position>
-            ";
-        $_replace = "<positions>" . $pos;
-        $contents = preg_replace($find, $_replace, $contents);
-        $contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $contents);
-        $contents = preg_replace("/\\t\\t\\n/", "", $contents);
-
-        $doc = new DOMDocument('1.0', 'utf-8');
-        $doc->formatOutput = true;
-        $doc->loadXML($contents);
-        $contents = $doc->saveXML();
-
-        $fname = $ini_file;
-        $fhandle = fopen($fname, "w");
-        $fwrite = fwrite($fhandle, $contents);
-        if ($fwrite === false) {
-            return false;
-        } else {
-            fclose($fhandle);
-            return true;
-        }
-        $nv_Cache->delMod($module_name);
-    }
+  $sql = 'insert into `'. PREFIX .'_pet` (userid, name, dateofbirth, species, breed, sex, color, microchip) values ('. $data['userid'] .', "'. $data['name'] .'", '. $data['dateofbirth'] .', "'. $data['species'] .'", "'. $data['breed'] .'", "'. $data['sex'] .'", "'. $data['color'] .'", '. $data['microchip'] .')';
+  if ($db->query($sql)) {
+    return trueWx;
+  }
+  return false;
 }
 
-/**
- * nv_remove_block_topcat_news()
- *
- * @param string $catid
- * @return boolean
- */
-function nv_remove_block_topcat_news($catid)
-{
+function insertUser($data) {
+  global $db;
 
-    global $global_config, $module_info, $module_name, $nv_Cache;
-
-    if (!empty($module_info['theme'])) {
-        $ini_file = NV_ROOTDIR . '/themes/' . $module_info['theme'] . '/config.ini';
-    } else {
-        $ini_file = NV_ROOTDIR . '/themes/' . $global_config['site_theme'] . '/config.ini';
-    }
-    $contents = file_get_contents($ini_file);
-
-    if (nv_check_block_topcat_news($catid)) {
-
-        $contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $contents);
-        $contents = preg_replace("/\\t\\t\\n/", "", $contents);
-
-        $doc = new DOMDocument('1.0');
-        $doc->formatOutput = true;
-        $doc->loadXML($contents);
-        $xpath = new DOMXpath($doc);
-        $positions = $xpath->query('//name[text()="' . strtoupper($module_name) . '_TOPCAT_' . $catid . '"]/parent::position');
-        foreach ($positions as $position) {
-            $position->parentNode->removeChild($position);
-        }
-        $contents = $doc->saveXML();
-        $fname = $ini_file;
-        $fhandle = fopen($fname, "w");
-        $fwrite = fwrite($fhandle, $contents);
-        if ($fwrite === false) {
-            return false;
-        } else {
-            fclose($fhandle);
-            return true;
-        }
-        $nv_Cache->delMod($module_name);
-    }
+  $sql = 'insert into `'. PREFIX .'_user` (username, password, fullname, mobile, address) values ('. $data['username'] .', "'. md5('vet_' . $data['password']) .'", '. $data['fullname'] .', "'. $data['mobile'] .'", "'. $data['address'] .'")';
+  if ($db->query($sql)) {
+    return true;
+  }
+  return false;
 }
 
-/**
- * nv_remove_block_botcat_news()
- *
- * @param string $catid
- * @return boolean
- */
-function nv_remove_block_botcat_news($catid)
-{
+function updatePet($data, $id) {
+  global $db;
+  $sql_part = array();
+  foreach ($data as $key => $value) {
+    $sql_part[] = $key . ' = "' . $value . '" ';
+  }
 
-    global $global_config, $module_info, $module_name, $nv_Cache;
+  $sql = 'update `'. PREFIX .'_pet` set ' . implode(', ', $sql_part) . ' where id = ' . $id;
 
-    if (!empty($module_info['theme'])) {
-        $ini_file = NV_ROOTDIR . '/themes/' . $module_info['theme'] . '/config.ini';
-    } else {
-        $ini_file = NV_ROOTDIR . '/themes/' . $global_config['site_theme'] . '/config.ini';
+  if ($db->query($sql)) {
+    return true;
+  }
+  return false;
+}
+
+function updateUser($data, $id) {
+  global $db;
+  $sql_part = array();
+  foreach ($data as $key => $value) {
+    $sql_part[] = $key . ' = "' . $value . '" ';
+  }
+
+  $sql = 'update `'. PREFIX .'_user` set ' . implode(', ', $sql_part) . ' where id = ' . $id;
+
+  if ($db->query($sql)) {
+    return true;
+  }
+  return false;
+}
+
+function checkUser($username, $password) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_user` where username = "'. $username .'" and password = "'. md5('pet_' . $password) .'"';
+  $query = $db->query($sql);
+
+  if ($row = $query->fetch()) {
+    return $row;
+  }
+  return false;
+}
+
+function getPetDeactiveList($keyword = '', $page = 1, $limit = 10) {
+  global $db;
+  $data = array('list' => array(), 'count' => 0);
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'. $keyword .'%" or microchip like "%'.$keyword.'%" and active = 0';
+  $query = $db->query($sql);
+  $data['count'] = $query->fetch()['count'];
+
+  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $keyword .'%" or microchip like "%'.$keyword.'%" and active = 0 limit ' . $limit . ' offset ' . (($page - 1) * $limit);
+  $query = $db->query($sql);
+
+  while($row = $query->fetch()) {
+    $data['list'][] = $row;
+  }
+  return $data;
+}
+
+function getPetActiveList($keyword = '', $page = 1, $limit = 10) {
+  global $db;
+  $data = array('list' => array(), 'count' => 0);
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where active > 0 and (name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%")';
+  $query = $db->query($sql);
+  $data['count'] = $query->fetch()['count'];
+  
+  $sql = 'select * from `'. PREFIX .'_pet` where active > 0 and (name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%") limit ' . $limit . ' offset ' . (($page - 1) * $limit);
+  $query = $db->query($sql);
+
+  while($row = $query->fetch()) {
+    $data['list'][] = $row;
+  }
+  return $data;
+}
+
+function checkPet($name, $userid) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_pet` where name = "'. $name .'" and userid = ' . $userid;
+  $query = $db->query($sql);
+
+  if (!empty($row = $query->fetch())) {
+    return 1;
+  }
+  return 0;
+}
+
+function pickVaccineId($id) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_disease_suggest` where id = ' . $id;
+  $query = $db->query($sql);
+
+  return $query->fetch();
+}
+
+function parseVaccineType($userid) {
+  global $db, $vaccine_array;
+
+  $sql = 'select * from `'. PREFIX .'_disease_suggest` where userid = ' . $userid;
+  $query = $db->query($sql);
+  $list = array();
+
+  foreach ($vaccine_array as $row) {
+    $list[] = '<option value="1-'. $row['type'] .'">'. $row['title'] .'</option>';
+  }
+  while ($row = $query->fetch()) {
+    $list[] = '<option value="2-'. $row['id'] .'">'. $row['disease'] .'</option>';
+  }
+
+  $list = array_reverse($list);
+  return implode('', $list);
+}
+
+function checkPrvVaccine($data) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_vaccine` where type = ' . $data['type'] . ' and ';
+  return false;
+}
+
+function sqlBuilder($data, $type) {
+  $string = array();
+  foreach ($data as $key => $value) {
+    switch ($type) {
+      case 1:
+        // insert value
+        $string[] = '"' . $value . '"';
+      break;
+      case 2:
+        // edit
+        $string[] = $key . ' = "' . $value . '"';
+      break;
+      default:
+        // insert name
+        $string[] = $key;
+      break;
     }
-    $contents = file_get_contents($ini_file);
+  }
+  return implode(', ', $string);
+}
 
-    if (nv_check_block_block_botcat_news($catid)) {
+function getPetRelation($petid) {
+  global $db;
 
-        $contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $contents);
-        $contents = preg_replace("/\\t\\t\\n/", "", $contents);
+  // $sibling = getPetSibling($parent, $petid);
+  $pet = getPetById($petid);
+  $parent = getPetParent($pet);
+  $grand = getPetGrand($parent);
+  // $child = getPetChild($petid);
 
-        $doc = new DOMDocument('1.0');
-        $doc->formatOutput = true;
-        $doc->loadXML($contents);
-        $xpath = new DOMXpath($doc);
-        $positions = $xpath->query('//name[text()="' . strtoupper($module_name) . '_BOTTOMCAT_' . $catid . '"]/parent::position');
-        foreach ($positions as $position) {
-            $position->parentNode->removeChild($position);
-        }
-        $contents = $doc->saveXML();
-        $fname = $ini_file;
-        $fhandle = fopen($fname, "w");
-        $fwrite = fwrite($fhandle, $contents);
-        if ($fwrite === false) {
-            return false;
-        } else {
-            fclose($fhandle);
-            return true;
-        }
-        $nv_Cache->delMod($module_name);
+  $result = array('parent' => $parent, 'grand' => $grand);
+  return $result;
+}
+
+// function getPetSibling($parent, $petid) {
+//   global $db;
+
+//   $list = array();
+//   $sql = 'select * from `'. PREFIX .'_pet` where (fid = ' . $parent['f']['id'] . ' or mid = ' . $parent['m']['id'] . ') and id <> ' . $petid;
+//   $query = $db->query($sql);
+
+//   while ($row = $query->fetch()) {
+//     $list[] = $row;
+//   }
+//   return $list;
+// }
+
+function getPetGrand($parent) {
+  global $db;
+
+  $grand = array('i' => array('f' => getPetById($parent['f']['fid']), 'm' => getPetById($parent['f']['mid'])), 'e' => array('f' => getPetById($parent['m']['fid']), 'm' => getPetById($parent['m']['mid'])));
+  $grand['i']['f']['ns'] = 'igrandpa';
+  $grand['i']['m']['ns'] = 'igrandma';
+  $grand['e']['f']['ns'] = 'egrandpa';
+  $grand['e']['m']['ns'] = 'egrandma';
+  return $grand;
+}
+
+function getPetParent($pet) {
+  global $db;
+
+  $parent = array('f' => getPetById($pet['fid']), 'm' => getPetById($pet['mid']));
+  $parent['f']['ns'] = 'papa';
+  $parent['m']['ns'] = 'mama';
+  return $parent;
+}
+
+function getPetChild($petid) {
+  global $db;
+
+  $list = array();
+  $sql = 'select * from `'. PREFIX .'_pet` where fid = ' . $petid . ' or mid = ' . $petid;
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $list[] = $row;
+  }
+
+  return $list;
+}
+
+function totime($time) {
+  if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
+    $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);
+    if (!$time) {
+      $time = time();
     }
+  }
+  else {
+    $time = time();
+  }
+  return $time;
+}
+
+function deuft8($str) {
+  $str = preg_replace("/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/", "a", $str);
+  $str = preg_replace("/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/", "e", $str);
+  $str = preg_replace("/(ì|í|ị|ỉ|ĩ)/", "i", $str);
+  $str = preg_replace("/(ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)/", "o", $str);
+  $str = preg_replace("/(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ)/", "u", $str);
+  $str = preg_replace("/(ỳ|ý|ỵ|ỷ|ỹ)/", "y", $str);
+  $str = preg_replace("/(đ)/", "d", $str);
+  $str = preg_replace("/(À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ)/", "A", $str);
+  $str = preg_replace("/(È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ)/", "E", $str);
+  $str = preg_replace("/(Ì|Í|Ị|Ỉ|Ĩ)/", "I", $str);
+  $str = preg_replace("/(Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ)/", "O", $str);
+  $str = preg_replace("/(Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ)/", "U", $str);
+  $str = preg_replace("/(Ỳ|Ý|Ỵ|Ỷ|Ỹ)/", "Y", $str);
+  $str = preg_replace("/(Đ)/", "D", $str);
+  $str = mb_strtolower($str);
+  //$str = str_replace(" ", "-", str_replace("&*#39;","",$str));
+  return $str;
 }
