@@ -1,6 +1,6 @@
 <!-- BEGIN: main -->
 <div class="container">
-  <a href="/biograph/">
+  <a href="/">
     <img src="/modules/news/src/banner.png" style="width: 200px;">
   </a>
   <form style="width: 60%; float: right;">

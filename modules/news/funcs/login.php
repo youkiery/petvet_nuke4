@@ -19,9 +19,9 @@ $action = $nv_Request->get_string('action', 'post', '');
 $userinfo = getUserInfo();
 if (!empty($userinfo)) {
   if ($userinfo['center']) {
-    header('location: /biograph/center');
+    header('location: /news/center');
   }
-  header('location: /biograph/private');
+  header('location: /news/private');
 }
 
 if (!empty($action)) {
@@ -105,6 +105,6 @@ $xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
-include ("modules/biograph/layout/header.php");
+include ("modules/news//layout/header.php");
 echo $contents;
-include ("modules/biograph/layout/footer.php");
+include ("modules/news//layout/footer.php");

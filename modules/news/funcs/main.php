@@ -30,7 +30,7 @@ else {
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
-include ("modules/biograph/layout/header.php");
+include ("modules/news//layout/header.php");
 echo $contents;
-include ("modules/biograph/layout/footer.php");
+include ("modules/news//layout/footer.php");
 

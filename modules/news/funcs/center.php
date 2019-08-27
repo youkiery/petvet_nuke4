@@ -24,7 +24,7 @@ if (empty($userinfo)) {
 }
 else {
   if (empty($userinfo['center'])) {
-    header('location: /biograph/private');
+    header('location: /news/private');
   }
 }
 
@@ -539,7 +539,6 @@ else {
 	$xtpl->parse('main.log.breeder');
 	$xtpl->parse('main.log.breeder2');
 }
-
 $xtpl->assign('userid', $userinfo['id']);
 $xtpl->assign('fullname', $userinfo['fullname']);
 $xtpl->assign('mobile', $userinfo['mobile']);
@@ -558,6 +557,6 @@ $xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
-include ("modules/biograph/layout/header.php");
+include ("modules/news//layout/header.php");
 echo $contents;
-include ("modules/biograph/layout/footer.php");
+include ("modules/news//layout/footer.php");

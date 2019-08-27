@@ -660,12 +660,12 @@
     </div>
   </div>
 
-  <a href="/biograph/">
+  <a href="/">
     <img src="/modules/news/src/banner.png" style="width: 200px;">
   </a>
 
   <div style="float: right;">
-    <a href="/biograph/logout"> Đăng xuất </a>
+    <a href="/news/logout"> Đăng xuất </a>
   </div>
 
   <h2> Thông tin cá nhân </h2>
@@ -684,8 +684,8 @@
     </button>
   </div>
   <div style="clear: left;"></div>
-  <p> <a href="/biograph/transfer"> Danh sách chuyển nhượng </a> </p>
-  <p> <a href="/biograph/transferq"> Yêu cầu chuyển nhượng </a> </p>
+  <p> <a href="/news/transfer"> Danh sách chuyển nhượng </a> </p>
+  <p> <a href="/news/transferq"> Yêu cầu chuyển nhượng </a> </p>
   <h2> Danh sách thú cưng </h2>
 
   <form onsubmit="filterS(event)">

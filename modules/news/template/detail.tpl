@@ -22,7 +22,7 @@
   }
 </style>
 <div class="container">
-  <a href="/biograph/">
+  <a href="/">
     <img src="/modules/news/src/banner.png" style="width: 200px;">
   </a>
   <a href="#" style="margin: 8px 0px; display: block;" onclick="goback()"> <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>

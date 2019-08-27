@@ -235,12 +235,12 @@ function getUserPetList($userid, $tabber, $filter) {
   global $db;
 
   $list = array();
-  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where id not in ( select id from ((select mid as id from `pet_biograph_pet`) union (select fid as id from `pet_biograph_pet`)) as a) and userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where id not in ( select id from ((select mid as id from `'. PREFIX .'_pet`) union (select fid as id from `'. PREFIX .'_pet`)) as a) and userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $count = $query->fetch();
 
   // $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
-  $sql = 'select * from `'. PREFIX .'_pet` where id not in ( select id from ((select mid as id from `pet_biograph_pet`) union (select fid as id from `pet_biograph_pet`)) as a) and userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_pet` where id not in ( select id from ((select mid as id from `'. PREFIX .'_pet`) union (select fid as id from `'. PREFIX .'_pet`)) as a) and userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   // die($sql);
   $query = $db->query($sql);
 

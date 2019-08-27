@@ -369,7 +369,7 @@
 </div>
 
 <div class="container" style="margin-top: 20px;">
-  <a href="/biograph/">
+  <a href="/">
     <img src="/modules/news/src/banner.png" style="width: 200px;">
   </a>
   <div style="clear: both;"></div>
