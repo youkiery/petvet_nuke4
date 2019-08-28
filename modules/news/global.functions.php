@@ -14,6 +14,22 @@ if (!defined('NV_MAINFILE')) {
 define("PREFIX", $db_config['prefix'] . "_" . $module_name);
 define('PERMISSION_MODULE', 1);
 
+include_once("modules/". $module_name ."/src/Aes.php");
+use PhpAes\Aes;
+$aes = new Aes('abcdefgh01234567', 'CBC', '1234567890abcdef');
+
+function xencrypt($str) {
+  global $aes;
+
+  return base64_encode($aes->encrypt($str));
+}
+
+function xdecrypt($code) {
+  global $aes;
+
+  return $aes->decrypt(base64_decode($code));
+}
+
 $sex_array = array(
   0 => 'Đực', 'Cái'
 );

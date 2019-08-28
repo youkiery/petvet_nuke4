@@ -28,10 +28,21 @@ else {
   $xtpl->parse("main.nolog");
 }
 
+// $sql = 'select * from `'. PREFIX .'_user`';
+// $query = $db->query($sql);
+
+// while ($row = $query->fetch()) {
+//   $mobile = xencrypt($row['mobile']);
+//   $address = xencrypt($row['address']);
+//   $sql = 'update `'. PREFIX .'_user` set mobile = "'. $mobile .'", address = "'. $address .'" where id = ' . $row['id'];
+//   $db->query($sql);
+// }
+// die();
+
 $xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
-include ("modules/". $module_name ."/layout/header.php");
+include ("modules/". $module_file ."/layout/header.php");
 echo $contents;
-include ("modules/". $module_name ."/layout/footer.php");
+include ("modules/". $module_file ."/layout/footer.php");
 
