@@ -51,6 +51,19 @@ $vaccine_array = array(
   )
 );
 
+function parseAgeTime($datetime) {
+  $str = '';
+  $time = time() - $datetime;
+  $year = floor($time / 60 / 60 / 24 / 365.25);
+  $time -= $year * 60 * 60 * 24 * 365.25;
+  $month = round($time / 60 / 60 / 24 / 30);
+  if ($year > 0) {
+    $str .= $year . ' năm ';
+  }
+  $str .= $month . ' tháng';
+  return $str;
+}
+
 function checkObj($obj) {
   $check = true;
   foreach ($obj as $key => $value) {

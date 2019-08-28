@@ -257,6 +257,8 @@ function mainPetList($keyword = '', $page = 1, $filter = 12) {
   $xtpl->assign('count', $count);
   $xtpl->assign('nav', navList($count, $page, $filter));
   $xtpl->parse('main.msg');
+  $time = time();
+  $year = 60 * 60 * 24 * 365.25;
 
   foreach ($data['list'] as $row) {
     // var_dump($row);die();
@@ -265,10 +267,13 @@ function mainPetList($keyword = '', $page = 1, $filter = 12) {
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('owner', $owner['fullname']);
     $xtpl->assign('id', $row['id']);
+    $xtpl->assign('image', $row['image']);
     $xtpl->assign('microchip', $row['microchip']);
-    $xtpl->assign('breed', $row['species']);
+    $xtpl->assign('breed', $row['breed']);
+    $xtpl->assign('species', $row['species']);
     $xtpl->assign('sex', $sex_array[$row['sex']]);
-    $xtpl->assign('dob', cdate($row['dateofbirth']));
+    $xtpl->assign('age', parseAgeTime($row['dateofbirth']));
+    // $xtpl->assign('dob', cdate($row['dateofbirth']));
     $xtpl->parse('main.row');
   }
   $xtpl->parse('main');
