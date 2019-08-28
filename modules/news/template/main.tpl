@@ -8,7 +8,7 @@
           <label class="input-group">
             <input type="text" class="form-control" name="keyword" id="keyword" placeholder="Nhập tên hoặc mã số" autocomplete="off">
             <div class="input-group-btn">
-              <button class="btn btn-info" onclick="search()"> Tìm kiếm </button>
+              <button class="btn btn-info"> Tìm kiếm </button>
             </div>
           </label>
           <!-- BEGIN: nolog -->

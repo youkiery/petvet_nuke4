@@ -5,12 +5,22 @@
 }
 
 @media screen and (max-width:640px) {
+  .transfer.thumbnail {
+    width: 150px !important;
+    height: 150px !important;
+    background: url('/modules/news/src/thumbnail-s.jpg') !important;
+  }
   .pbody {
     width: 50% !important;
   }
 }
 
 @media screen and (max-width:480px) {
+  .transfer.thumbnail {
+    width: 80px !important;
+    height: 80px !important;
+    background: url('/modules/news/src/thumbnail-xs.jpg') !important;
+  }
   .pbody {
     width: 100% !important;
   }

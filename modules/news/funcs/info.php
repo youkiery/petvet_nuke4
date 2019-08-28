@@ -233,7 +233,7 @@ if (!empty($action)) {
 					<div class="xleft">
 					</div>
 					<div class="xright">
-						<p> '. $row['fullname'] .' ('. $row['mobile'] .') </p>
+						<p> '. $row['fullname'] .' </p>
 						<p> '. $row['name'] .' </p>
 					</div>
 				</div>

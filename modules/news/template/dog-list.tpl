@@ -18,6 +18,6 @@
 </a>
 <span style="clear: both;"></span>
 <!-- END: row -->
-<div></div>
+<div style="clear: both;"></div>
 {nav}
 <!-- END: main -->

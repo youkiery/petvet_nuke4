@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="/modules/news/src/bootstrap.min.css">
-<link rel="stylesheet" href="/modules/news/src/style.css?v=<?php echo round(time() / 60); ?>">
+<link rel="stylesheet" href="/modules/news/src/style.css?v=<?php echo round(time() / 5); ?>">
 <link rel="stylesheet" href="/modules/news/src/glyphicons.css">
 <link rel="stylesheet" href="/modules/news/src/jquery-ui.min.css">
 

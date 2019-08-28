@@ -398,6 +398,10 @@
     </button>
   </div>
 
+  <h2>
+    Gia phả
+  </h2>
+
   <div id="wrapper" style="margin: 20px 0px;">
     <span class="label" style="line-height: 40px;"> {name} </span>
     <div class="branch lv1">
@@ -1087,8 +1091,8 @@
   }
 
   function addVaccine(id) {
-    button['vaccine']['edit'].show()
-    button['vaccine']['insert'].hide()
+    button['vaccine']['edit'].hide()
+    button['vaccine']['insert'].show()
     petVaccine.modal('show')
   }
 

@@ -250,12 +250,9 @@ if (!empty($action)) {
 			$html = '';
 			while ($row = $query->fetch()) {
 				$html .= '
-				<div class="suggest_item2" onclick="pickOwner(\''. $row['fullname'] .'\', '. $row['id'] .', '. $row['type'] .')">
+				<div class="suggest_item" onclick="pickOwner(\''. $row['fullname'] .'\', '. $row['id'] .', '. $row['type'] .')">
           <p>
 					'. $row['fullname'] .'
-          </p>
-          <p>
-					'. $row['mobile'] .'
           </p>
 				</div>
 				';

@@ -15,19 +15,19 @@
   <!-- BEGIN: row -->
   <tbody class="{pc}" style="display: {display};">
     <tr>
-      <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {name} </a> </td>
-      <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {microchip} </a> </td>
-      <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {sex} </a> </td>
-      <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {dob} </a> </td>
-      <td> <a href="/index.php?nv=biograph&op=info&id={id}"> {breed} </a> </td>
+      <td> <a href="/news/info/?id={id}"> {name} </a> </td>
+      <td> <a href="/news/info/?id={id}"> {microchip} </a> </td>
+      <td> <a href="/news/info/?id={id}"> {sex} </a> </td>
+      <td> <a href="/news/info/?id={id}"> {dob} </a> </td>
+      <td> <a href="/news/info/?id={id}"> {breed} </a> </td>
     </tr>
     <tr class="right">
       <td colspan="6">
-        <button class="btn btn-{request}" onclick="request({id})">
-          <img src="/modules/news/src/request.png" style="width: 20px; height: 20px;">
-        </button>
         <button class="btn btn-warning" onclick="transfer({id})">
           <img src="/modules/news/src/transfer.png" style="width: 20px; height: 20px;">
+        </button>
+        <button class="btn btn-info" onclick="request({id})">
+          <img src="/modules/news/src/request.png" style="width: 20px; height: 20px;">
         </button>
         <button class="btn btn-info" onclick="addVaccine({id})">
           <img src="/modules/news/src/syringe.png" style="width: 20px; height: 20px;">

@@ -39,14 +39,17 @@ $sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
 $query = $db->query($sql);
 
 if (!empty($row = $query->fetch())) {
+  $owner = getOwnerById($row['userid'], $row['type']);
 	$xtpl->assign('graph', $row['graph']);
 	$xtpl->assign('name', $row['name']);
-	$xtpl->assign('dob', $row['dateofbirth']);
+	$xtpl->assign('dob', date('d/m/Y', $row['dateofbirth']));
 	$xtpl->assign('breed', $row['breed']);
 	$xtpl->assign('species', $row['species']);
   $xtpl->assign('sex', $sex_array[$row['sex']]);
 	$xtpl->assign('color', $row['color']);
 	$xtpl->assign('microchip', $row['microchip']);
+	$xtpl->assign('owner', $owner['fullname']);
+	$xtpl->assign('politic', $owner['politic']);
 	$xtpl->assign('image', $row['image']);
 
   $relation = getPetRelation($id);
