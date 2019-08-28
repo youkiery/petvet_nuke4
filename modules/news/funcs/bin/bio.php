@@ -37,7 +37,7 @@ $xtpl = new XTemplate("bio.tpl", "modules/news/template");
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
-include ("modules/news//layout/header.php");
+include ("/module/". $module_name ."/layout/header.php");
 echo $contents;
-include ("modules/news//layout/footer.php");
+include ("/module/". $module_name ."/layout/footer.php");
 

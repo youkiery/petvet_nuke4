@@ -19,9 +19,9 @@ $action = $nv_Request->get_string('action', 'post', '');
 $userinfo = getUserInfo();
 if (!empty($userinfo)) {
   if ($userinfo['center']) {
-    header('location: /news/center');
+    header('location: /'. $module_name .'/center');
   }
-  header('location: /news/private');
+  header('location: /'. $module_name .'/private');
 }
 
 if (!empty($action)) {
@@ -77,7 +77,7 @@ $id = $nv_Request->get_int('id', 'get', 0);
 $global = array();
 $global['login'] = 0;
 
-$xtpl = new XTemplate("login.tpl", "modules/news/template");
+$xtpl = new XTemplate("login.tpl", "modules/". $module_name ."/template");
 
 if (count($userinfo) > 0) {
 	// logged
@@ -102,9 +102,10 @@ else {
 }
 
 $xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
+$xtpl->assign('module_file', $module_file);
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
-include ("modules/news//layout/header.php");
+include ("modules/". $module_name ."/layout/header.php");
 echo $contents;
-include ("modules/news//layout/footer.php");
+include ("modules/". $module_name ."/layout/footer.php");

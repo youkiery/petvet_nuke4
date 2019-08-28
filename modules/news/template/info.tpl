@@ -370,7 +370,7 @@
 
 <div class="container" style="margin-top: 20px;">
   <a href="/">
-    <img src="/modules/news/src/banner.png" style="width: 200px;">
+    <img src="/modules/{module_file}/src/banner.png" style="width: 200px;">
   </a>
   <div style="clear: both;"></div>
   <a href="#" style="margin: 8px 0px; display: block;" onclick="goback()"> <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
@@ -490,7 +490,7 @@
     </div>
   </div>
 </div>
-<script src="/modules/news/src/ckeditor/ckeditor.js"></script>
+<script src="/modules/{module_file}/src/ckeditor/ckeditor.js"></script>
 <script>
   var global = {
     id: '{id}',

@@ -116,6 +116,7 @@ foreach ($select_array as $name => $value) {
 
 $xtpl->assign('reversal', json_encode($reversal));
 $xtpl->assign('content', remindList());
+$xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 

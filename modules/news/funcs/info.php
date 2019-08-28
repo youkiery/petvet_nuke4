@@ -383,7 +383,7 @@ if (!empty($action)) {
 }
 
 $id = $nv_Request->get_int('id', 'get', 0);
-$xtpl = new XTemplate("info.tpl", "modules/news/template");
+$xtpl = new XTemplate("info.tpl", "modules/". $module_name ."/template");
 
 $sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
 $query = $db->query($sql);
@@ -455,9 +455,10 @@ switch ($_REQUEST['target']) {
   break;
 }
 
+$xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
-include ("modules/news//layout/header.php");
+include ("modules/". $module_name ."/layout/header.php");
 echo $contents;
-include ("modules/news//layout/footer.php");
+include ("modules/". $module_name ."/layout/footer.php");
 

@@ -13,7 +13,7 @@ if (!defined('NV_IS_FORM')) {
 
 $page_title = "Vetvn.com - Nâng niu thú cưng Việt Nam";
 
-$xtpl = new XTemplate("main.tpl", "modules/news/template");
+$xtpl = new XTemplate("main.tpl", "modules/". $module_name ."/template");
 $userinfo = getUserInfo();
 
 if (!empty($userinfo)) {
@@ -28,9 +28,10 @@ else {
   $xtpl->parse("main.nolog");
 }
 
+$xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
-include ("modules/news//layout/header.php");
+include ("modules/". $module_name ."/layout/header.php");
 echo $contents;
-include ("modules/news//layout/footer.php");
+include ("modules/". $module_name ."/layout/footer.php");
 

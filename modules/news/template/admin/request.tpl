@@ -1,7 +1,7 @@
 <!-- BEGIN: main -->
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script> 
-<link rel="stylesheet" href="/modules/news/src/glyphicons.css">
-<link rel="stylesheet" href="/modules/news/src/style.css">
+<link rel="stylesheet" href="/modules/{module_file}/src/glyphicons.css">
+<link rel="stylesheet" href="/modules/{module_file}/src/style.css">
 
 <form onsubmit="filter(event)">
   <div class="row">

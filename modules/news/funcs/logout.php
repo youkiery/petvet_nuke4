@@ -15,4 +15,4 @@ $page_title = "Đăng xuất";
 unset($_SESSION['username']);
 unset($_SESSION['password']);
 
-header('location: /news/login');
+header('location: /'. $module_name .'/login');

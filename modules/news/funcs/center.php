@@ -24,7 +24,7 @@ if (empty($userinfo)) {
 }
 else {
   if (empty($userinfo['center'])) {
-    header('location: /news/private');
+    header('location: /'. $module_name .'/private');
   }
 }
 
@@ -521,20 +521,15 @@ $id = $nv_Request->get_int('id', 'get', 0);
 $global = array();
 $global['login'] = 0;
 
-$xtpl = new XTemplate("center.tpl", "modules/news/template");
+$xtpl = new XTemplate("center.tpl", "modules/". $module_name ."/template");
 
 $tabber = array('0');
 if (!$userinfo['center']) {
-	$xtpl->parse('main.log.center');
   $xtpl->assign('tabber', '0, 1, 2');
   $tabber = array('0', '1', '2');
 }
 else {
   $xtpl->assign('tabber', '0');
-	$xtpl->parse('main.log.xcenter');
-	$xtpl->parse('main.log.tabber');
-	$xtpl->parse('main.log.breeder');
-	$xtpl->parse('main.log.breeder2');
 }
 $xtpl->assign('userid', $userinfo['id']);
 $xtpl->assign('fullname', $userinfo['fullname']);
@@ -548,12 +543,12 @@ $xtpl->assign('v', parseVaccineType($userinfo['id']));
 
 $xtpl->assign('today', date('d/m/Y', time()));
 $xtpl->assign('recall', date('d/m/Y', time() + 60 * 60 * 24 * 21));
-$xtpl->parse('main.log');
 
 $xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
+$xtpl->assign('module_file', $module_file);
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
-include ("modules/news//layout/header.php");
+include ("modules/". $module_name ."/layout/header.php");
 echo $contents;
-include ("modules/news//layout/footer.php");
+include ("modules/". $module_name ."/layout/footer.php");

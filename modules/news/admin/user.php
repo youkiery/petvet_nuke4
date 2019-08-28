@@ -62,6 +62,7 @@ $xtpl = new XTemplate("user.tpl", PATH);
 
 $xtpl->assign('userlist', userRowList());
 // $xtpl->assign('remind', json_encode(getRemind()));
+$xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 

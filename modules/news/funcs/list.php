@@ -35,7 +35,7 @@ if (!empty($action)) {
 	die();
 }
 
-$xtpl = new XTemplate("list.tpl", "modules/news/template");
+$xtpl = new XTemplate("list.tpl", "modules/". $module_name ."/template");
 
 $keyword = $nv_Request->get_string('keyword', 'get', '');
 
@@ -46,10 +46,11 @@ if (!empty($keyword)) {
 
 $xtpl->assign('keyword', $keyword);
 $xtpl->assign('content', mainPetList($keyword));
+$xtpl->assign('module_file', $module_file);
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
-include ("modules/news//layout/header.php");
+include ("modules/". $module_name ."/layout/header.php");
 echo $contents;
-include ("modules/news//layout/footer.php");
+include ("modules/". $module_name ."/layout/footer.php");
 

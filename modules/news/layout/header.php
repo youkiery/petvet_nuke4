@@ -1,13 +1,13 @@
-<link rel="stylesheet" href="/modules/news/src/bootstrap.min.css">
-<link rel="stylesheet" href="/modules/news/src/style.css?v=<?php echo round(time() / 5); ?>">
-<link rel="stylesheet" href="/modules/news/src/glyphicons.css">
-<link rel="stylesheet" href="/modules/news/src/jquery-ui.min.css">
+<link rel="stylesheet" href="/modules/<?php echo $module_file; ?>/src/bootstrap.min.css">
+<link rel="stylesheet" href="/modules/<?php echo $module_file; ?>/src/style.css?v=<?php echo round(time() / 5); ?>">
+<link rel="stylesheet" href="/modules/<?php echo $module_file; ?>/src/glyphicons.css">
+<link rel="stylesheet" href="/modules/<?php echo $module_file; ?>/src/jquery-ui.min.css">
 
-<script type="text/javascript" src="/modules/news/src/jquery.min.js"></script>
-<script type="text/javascript" src="/modules/news/src/bootstrap.min.js"></script>
-<script type="text/javascript" src="/modules/news/src/jquery-ui.min.js"></script> 
-<script type="text/javascript" src="/modules/news/src/jquery.ui.datepicker-vi.js"></script>
-<script type="text/javascript" src="/modules/news/src/script.js"></script>
+<script type="text/javascript" src="/modules/<?php echo $module_file; ?>/src/jquery.min.js"></script>
+<script type="text/javascript" src="/modules/<?php echo $module_file; ?>/src/bootstrap.min.js"></script>
+<script type="text/javascript" src="/modules/<?php echo $module_file; ?>/src/jquery-ui.min.js"></script> 
+<script type="text/javascript" src="/modules/<?php echo $module_file; ?>/src/jquery.ui.datepicker-vi.js"></script>
+<script type="text/javascript" src="/modules/<?php echo $module_file; ?>/src/script.js"></script>
 
 <!DOCTYPE html>
 <html lang="en">

@@ -1,7 +1,7 @@
 <!-- BEGIN: main -->
 <div class="container">
   <a href="/">
-    <img src="/modules/news/src/banner.png" style="width: 200px;">
+    <img src="/modules/{module_file}/src/banner.png" style="width: 200px;">
   </a>
   <form style="width: 60%; float: right;">
     <label class="input-group">

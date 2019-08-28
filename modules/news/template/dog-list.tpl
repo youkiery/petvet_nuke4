@@ -5,7 +5,7 @@
   <!-- END: msg -->
 </p>
 <!-- BEGIN: row -->
-<a href="/news/detail/?id={id}" class="pbody">
+<a href="/{module_file}/detail/?id={id}" class="pbody">
   <div class="pleft">
     <img src="{image}" style="width: 64px; height: 64px;">
   </div>

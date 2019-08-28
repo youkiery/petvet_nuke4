@@ -66,14 +66,15 @@ if (!empty($action)) {
 	die();
 }
 
-$xtpl = new XTemplate("transferq.tpl", "modules/news/template");
+$xtpl = new XTemplate("transferq.tpl", "modules/". $module_name ."/template");
 
 $xtpl->assign('content', transferqList($userinfo['id']));
 $xtpl->assign('url', '/' . $module_name . '/' . $op . '/');
 $xtpl->assign('url', '/' . $module_name . '/' . $op . '/');
 
+$xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
-include ("modules/news//layout/header.php");
+include ("modules/". $module_name ."/layout/header.php");
 echo $contents;
-include ("modules/news//layout/footer.php");
+include ("modules/". $module_name ."/layout/footer.php");

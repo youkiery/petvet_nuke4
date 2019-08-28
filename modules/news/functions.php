@@ -79,9 +79,10 @@ function parseInfo($info) {
 }
 
 function userRowList($filter = array()) {
-  global $db, $user_info;
+  global $db, $user_info, $module_file;
 
   $xtpl = new XTemplate('user-list.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
   $sql = 'select * from `'. PREFIX .'_user` where fullname like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '');
   $query = $db->query($sql);
   $index = 1;
@@ -110,9 +111,10 @@ function userRowList($filter = array()) {
 }
 
 function userDogRow($userid = 0, $filter = array('keyword' => '', ), $limit = array('page' => 0, 'limit' => 10)) {
-  global $db, $user_info;
+  global $db, $user_info, $module_file;
   $index = 1;
   $xtpl = new XTemplate('dog-list.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
 
   $data = getUserPetList($userid, $filter, $limit);
 
@@ -174,11 +176,12 @@ function checkLogin($username, $password = '') {
 // }
 
 function breederList($petid) {
-  global $db;
+  global $db, $module_file;
 
   $sql = 'select * from `'. PREFIX .'_breeder` where petid = '. $petid .' order by time desc';
   $query = $db->query($sql);
   $xtpl = new XTemplate('breeder.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
   $index = 1;
 
   while (!empty($row = $query->fetch())) {
