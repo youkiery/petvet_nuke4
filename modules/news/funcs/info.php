@@ -11,8 +11,6 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
-$page_title = "autoload";
-
 define('BUILDER_INSERT_NAME', 0);
 define('BUILDER_INSERT_VALUE', 1);
 define('BUILDER_EDIT', 2);
@@ -390,7 +388,10 @@ $xtpl = new XTemplate("info.tpl", "modules/news/template");
 $sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
 $query = $db->query($sql);
 
+$page_title = "Quản lý thú cưng";
+
 if (!empty($row = $query->fetch())) {
+  $page_title = $row['name'] . " - Quản lý thú cưng";
 	$xtpl->assign('name', $row['name']);
 	$xtpl->assign('dob', $row['dateofbirth']);
 	$xtpl->assign('breed', $row['breed']);

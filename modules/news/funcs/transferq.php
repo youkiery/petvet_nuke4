@@ -11,7 +11,7 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
-$page_title = "autoload";
+$page_title = "Danh sách yêu cầu";
 
 $action = $nv_Request->get_string('action', 'post', '');
 $userinfo = getUserInfo();

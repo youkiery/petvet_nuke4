@@ -11,8 +11,6 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
-$page_title = "autoload";
-
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
 	$result = array('status' => 0);
@@ -38,7 +36,9 @@ $xtpl = new XTemplate("detail.tpl", "modules/news/template");
 $sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
 $query = $db->query($sql);
 
+$page_title = "Thông tin thú cưng";
 if (!empty($row = $query->fetch())) {
+  $page_title = $row['name'] . " - Thông tin thú cưng";
   $owner = getOwnerById($row['userid'], $row['type']);
 	$xtpl->assign('graph', $row['graph']);
 	$xtpl->assign('name', $row['name']);

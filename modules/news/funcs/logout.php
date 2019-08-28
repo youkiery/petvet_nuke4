@@ -11,6 +11,7 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
+$page_title = "Đăng xuất";
 unset($_SESSION['username']);
 unset($_SESSION['password']);
 

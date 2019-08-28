@@ -11,7 +11,7 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
-$page_title = "autoload";
+$page_title = "Vetvn.com - Nâng niu thú cưng Việt Nam";
 
 $xtpl = new XTemplate("main.tpl", "modules/news/template");
 $userinfo = getUserInfo();

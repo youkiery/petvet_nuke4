@@ -14,7 +14,7 @@ define('BUILDER_INSERT_NAME', 0);
 define('BUILDER_INSERT_VALUE', 1);
 define('BUILDER_EDIT', 2);
 
-$page_title = "autoload";
+$page_title = "Quản lý thú cưng";
 
 $action = $nv_Request->get_string('action', 'post', '');
 $userinfo = getUserInfo();

@@ -13,7 +13,7 @@ if (!defined('NV_IS_FORM')) {
 define('BUILDER_INSERT', 0);
 define('BUILDER_EDIT', 1);
 
-$page_title = "autoload";
+$page_title = "Đăng ký";
 
 $action = $nv_Request->get_string('action', 'post', '');
 $userinfo = getUserInfo();

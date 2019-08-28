@@ -11,8 +11,6 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
-$page_title = "autoload";
-
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
 	$result = array('status' => 0);
@@ -40,6 +38,11 @@ if (!empty($action)) {
 $xtpl = new XTemplate("list.tpl", "modules/news/template");
 
 $keyword = $nv_Request->get_string('keyword', 'get', '');
+
+$page_title = "Danh sách thú cưng";
+if (!empty($keyword)) {
+  $page_title = $keyword . " - Tìm kiếm thú cưng";
+}
 
 $xtpl->assign('keyword', $keyword);
 $xtpl->assign('content', mainPetList($keyword));
