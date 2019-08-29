@@ -7,7 +7,7 @@
 <script type="text/javascript" src="/modules/<?php echo $module_file; ?>/src/bootstrap.min.js"></script>
 <script type="text/javascript" src="/modules/<?php echo $module_file; ?>/src/jquery-ui.min.js"></script> 
 <script type="text/javascript" src="/modules/<?php echo $module_file; ?>/src/jquery.ui.datepicker-vi.js"></script>
-<script type="text/javascript" src="/modules/<?php echo $module_file; ?>/src/script.js"></script>
+<script type="text/javascript" src="/modules/<?php echo $module_file; ?>/src/script.js?v=<?php echo round(time() / 5); ?>"></script>
 
 <!DOCTYPE html>
 <html lang="en">

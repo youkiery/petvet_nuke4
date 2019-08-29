@@ -67,5 +67,6 @@ $xtpl->parse("main");
 $contents = $xtpl->text("main");
 
 include (NV_ROOTDIR . "/includes/header.php");
+include (NV_ROOTDIR . "/modules/". $module_file ."/layout/prefix.php");
 echo nv_admin_theme($contents);
 include (NV_ROOTDIR . "/includes/footer.php");

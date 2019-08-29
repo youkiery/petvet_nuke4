@@ -30,10 +30,10 @@
       {owner}
     </td>
     <td>
-      {mobile}
+      {address}
     </td>
     <td>
-      {address}
+      {mobile}
     </td>
     <td>
       {pet}

@@ -10,6 +10,7 @@
 if (!defined('NV_IS_ADMIN_FORM')) {
 	die('Stop!!!');
 }
+define('BUILDER_EDIT', 2);
 
 $page_title = "Quản lý người dùng";
 
@@ -38,6 +39,8 @@ if (!empty($action)) {
 			$query = $db->query($sql);
 
 			if (!empty($row = $query->fetch())) {
+        $row['address'] = xdecrypt($row['address']);
+        $row['mobile'] = xdecrypt($row['mobile']);
 				$result['data'] = array('fullname' => $row['fullname'], 'mobile' => $row['mobile'], 'address' => $row['address']);
 				$result['image'] = $row['image'];
 				$result['status'] = 1;
@@ -50,6 +53,22 @@ if (!empty($action)) {
 				$result['html'] = userRowList($filter);
 				if ($result['html']) {
 					$result['status'] = 1;
+				}
+			}
+		break;
+		case 'edituser':
+			$id = $nv_Request->get_string('id', 'post', '');
+			$data = $nv_Request->get_array('data', 'post');
+			$image = $nv_Request->get_string('image', 'post');
+
+			if (count($data) > 1 && !empty($id)) {
+        $data['mobile'] = xencrypt($data['mobile']);
+        $data['address'] = xencrypt($data['address']);
+				$sql = 'update `'. PREFIX .'_user` set '. sqlBuilder($data, BUILDER_EDIT) . (strlen(trim($image)) > 0 ? ', image = "'. $image .'"' : '') . ' where id = ' . $id;
+        die($sql);
+				if ($db->query($sql)) {
+					$result['status'] = 1;
+					$result['notify'] = 'Đã chỉnh sửa thú cưng';
 				}
 			}
 		break;
@@ -67,5 +86,6 @@ $xtpl->parse("main");
 $contents = $xtpl->text("main");
 
 include (NV_ROOTDIR . "/includes/header.php");
+include (NV_ROOTDIR . "/modules/". $module_file ."/layout/prefix.php");
 echo nv_admin_theme($contents);
 include (NV_ROOTDIR . "/includes/footer.php");

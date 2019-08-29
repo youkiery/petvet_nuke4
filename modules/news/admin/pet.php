@@ -10,6 +10,7 @@
 if (!defined('NV_IS_ADMIN_FORM')) {
 	die('Stop!!!');
 }
+define('BUILDER_EDIT', 2);
 
 $page_title = "Quản lý thú cưng";
 
@@ -60,7 +61,7 @@ if (!empty($action)) {
 
 			$sql = 'update `'. PREFIX .'_pet` set active = '. $type .' where id = ' . $id;
 			if ($db->query($sql)) {
-				$result['html'] = userDogRowByList($userinfo['id'], $filter);
+				$result['html'] = userDogRow($filter);
 				if ($result['html']) {
 					$result['status'] = 1;
 				}
@@ -72,7 +73,7 @@ if (!empty($action)) {
 			
 			$sql = 'delete from `'. PREFIX .'_pet` where id = ' . $id;
 			if ($db->query($sql)) {
-				$result['html'] = userDogRow($userinfo['id'], $filter);
+				$result['html'] = userDogRow($filter);
 				if ($result['html']) {
 					$result['status'] = 1;
 				}
@@ -80,6 +81,7 @@ if (!empty($action)) {
 		break;
 		case 'insertpet':
 			$data = $nv_Request->get_array('data', 'post');
+			$filter = $nv_Request->get_array('filter', 'post');
 
 			if (count($data) > 1 && !checkPet($data['name'], $userinfo['id'])) {
 				$data['dob'] = totime($data['dob']);
@@ -88,13 +90,14 @@ if (!empty($action)) {
 				if ($db->query($sql)) {
 					$result['status'] = 1;
 					$result['notify'] = 'Đã thêm thú cưng';
-					$result['html'] = userDogRowByList($userinfo['id']);
+					$result['html'] = userDogRow($filter);
 				}
 			}
 		break;
 		case 'editpet':
 			$id = $nv_Request->get_string('id', 'post', '');
 			$data = $nv_Request->get_array('data', 'post');
+			$filter = $nv_Request->get_array('filter', 'post');
 
 			if (count($data) > 1 && !empty($id)) {
 				$data['dateofbirth'] = totime($data['dob']);
@@ -103,7 +106,7 @@ if (!empty($action)) {
 				if ($db->query($sql)) {
 					$result['status'] = 1;
 					$result['notify'] = 'Đã chỉnh sửa thú cưng';
-					$result['html'] = userDogRowByList($userinfo['id']);
+					$result['html'] = userDogRow($filter);
 				}
 			}
 		break;
@@ -119,5 +122,6 @@ $xtpl->parse("main");
 $contents = $xtpl->text("main");
 
 include (NV_ROOTDIR . "/includes/header.php");
+include (NV_ROOTDIR . "/modules/". $module_file ."/layout/prefix.php");
 echo nv_admin_theme($contents);
 include (NV_ROOTDIR . "/includes/footer.php");

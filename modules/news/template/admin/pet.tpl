@@ -159,9 +159,12 @@
   var keyword = $("#keyword")
   var limit = $("#limit")
   var cstatus = $(".status")
+  var insertPet = $("#insert-pet")
   var removetPet = $("#remove-pet")
   var petList = $("#pet-list")
   var tabber = $(".tabber")
+  var ibtn = $("#ibtn")
+  var ebtn = $("#ebtn")
   var maxWidth = 512
   var maxHeight = 512
   var imageType = ["jpeg", "jpg", "png", "bmp", "gif"]
@@ -293,7 +296,7 @@
   function editPetSubmit() {
     $.post(
       global['url'],
-      {action: 'editpet', id: global['id'], data: checkInputSet(pet)},
+      {action: 'editpet', id: global['id'], data: checkInputSet(pet), filter: checkFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
           petList.html(data['html'])

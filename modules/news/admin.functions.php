@@ -112,7 +112,7 @@ function requestList($filter = array('keyword' => '', 'page' => 1, 'limit' => 10
     $filter['atime'] = date('d/m/Y', $time - 60 * 60 * 24 * 30);
   }
   if (empty($filter['ztime'])) {    
-    $filter['atime'] = date('d/m/Y', $time);
+    $filter['ztime'] = date('d/m/Y', $time);
   }
   $filter['atime'] = totime($filter['atime']);
   $filter['ztime'] = totime($filter['ztime']);
@@ -151,6 +151,8 @@ function requestList($filter = array('keyword' => '', 'page' => 1, 'limit' => 10
     // die($sql);
     $query2 = $db->query($sql);
     $remind = $query2->fetch();
+    $row['mobile'] = xdecrypt($row['mobile']);
+    $row['address'] = xdecrypt($row['address']);
 
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('pet', $row['name']);
@@ -197,6 +199,8 @@ function userRowList($filter = array('keyword' => '', 'status' => 0, 'page' => 1
 
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index ++);
+    $row['address'] = xdecrypt($row['address']);
+    $row['mobile'] = xdecrypt($row['mobile']);
     $xtpl->assign('fullname', $row['fullname'] ++);
     $xtpl->assign('address', $row['address']);
     $xtpl->assign('mobile', $row['mobile']);
