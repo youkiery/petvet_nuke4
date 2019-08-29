@@ -52,15 +52,16 @@ function getPetRequest($petid, $type = -1) {
 }
 
 function parseLink($info) {
+  global $module_name;
   if (!empty($info['id'])) {
-    return '<a href="/index.php?nv=biograph&op=detail&id=' . $info['id'] . '">' . $info['name'] . '</a>';
+    return '<a href="/'.$module_name.'/detail/?id=' . $info['id'] . '">' . $info['name'] . '</a>';
   }
   return '-';
 }
 
 function parseLink2($info) {
   if (!empty($info['id'])) {
-    return '<a href="/index.php?nv=biograph&op=info&id=' . $info['id'] . '">' . $info['name'] . '</a>';
+    return '<a href="/'.$module_name.'/info/?id=' . $info['id'] . '">' . $info['name'] . '</a>';
   }
   return '-';
 }

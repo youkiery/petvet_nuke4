@@ -11,7 +11,7 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
-$page_title = "Vetvn.com - Nâng niu thú cưng Việt Nam";
+$page_title = "Veterinary Vietnam";
 
 $xtpl = new XTemplate("main.tpl", "modules/". $module_name ."/template");
 $userinfo = getUserInfo();

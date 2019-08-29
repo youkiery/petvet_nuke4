@@ -67,10 +67,16 @@ if (!empty($row = $query->fetch())) {
       $xtpl->assign('ig' . $lv2['ns'], parseInfo($lv2));
     }
   }
-  foreach ($relation['parent'] as $lv1) {
-    $xtpl->assign($lv1['ns'], parseLink($lv1));
-    $xtpl->assign('ig' . $lv1['ns'], parseInfo($lv1));
-  }
+
+  $xtpl->assign('mama', parseLink($relation['parent']['f']));
+  $xtpl->assign('igmama', parseInfo($relation['parent']['f']));
+  $xtpl->assign('papa', parseLink($relation['parent']['m']));
+  $xtpl->assign('igpapa', parseInfo($relation['parent']['m']));
+
+  // foreach ($relation['parent'] as $lv1) {
+  //   $xtpl->assign($lv1['ns'], parseLink($lv1));
+  //   $xtpl->assign('ig' . $lv1['ns'], parseInfo($lv1));
+  // }
   // if ($row = $relation['grand']['e']['m']) {
   //   $xtpl->assign('egrandpa', '<a href="/index.php?nv=biograph&op=detail&id=' . $row['id'] . '">' . $row['name'] . '</a>');
   //   $xtpl->assign('efgrandpa', parseInfo($row));
