@@ -7,7 +7,7 @@
 <!-- BEGIN: row -->
 <a href="/{module_file}/detail/?id={id}" class="pbody">
   <div class="pleft">
-    <img src="{image}" style="width: 64px; height: 64px;">
+    <img src="{image}" class="sm-thumbnail">
   </div>
   <div class="pright">
     Tên: {name} <br>

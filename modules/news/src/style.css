@@ -26,6 +26,12 @@
   }
 }
 
+.sm-thumbnail {
+  width: 64px !important;
+  height: 64px !important;
+  background: url('/modules/news/src/thumbnail-xxs.jpg') !important;
+}
+
 .pbody {
   padding: 10px;
   width  : 25%;

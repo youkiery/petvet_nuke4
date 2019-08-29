@@ -1,6 +1,6 @@
 <!-- BEGIN: main -->
 <div class="container">
-  <a href="/">
+  <a href="/{module_file}">
     <img src="/modules/{module_file}/src/banner.png" style="width: 200px;">
   </a>
 

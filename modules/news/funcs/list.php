@@ -15,15 +15,6 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
-		case 'search':
-			$keyword = $nv_Request->get_string('keyword', 'post', '');
-			
-			$result['status'] = 1;
-			if (count($list)) {
-				$result['html'] = dogRowByList($keyword);
-			}
-
-		break;
     case 'filter':
       $data = $nv_Request->get_array('data', 'post');
 

@@ -22,7 +22,7 @@
   }
 </style>
 <div class="container">
-  <a href="/">
+  <a href="/{module_file}">
     <img src="/modules/{module_file}/src/banner.png" style="width: 200px;">
   </a>
   <form style="width: 60%; float: right;">
@@ -35,7 +35,9 @@
       </div>
     </label>
   </form>
-  <a href="#" style="margin: 8px 0px; display: block;" onclick="goback()"> <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
+  <a style="margin: 8px 0px; display: block;" href="javascript:history.go(-1)">
+    <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
+  </a>
   <div style="clear: both;"></div>
 
   <div class="row">

@@ -89,6 +89,7 @@ function centerList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '',
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
   while ($row = $query->fetch()) {
+    // $row['mobile'] = xdecr
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('fullname', $row['fullname']);

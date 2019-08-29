@@ -270,6 +270,7 @@ function mainPetList($keyword = '', $page = 1, $filter = 12) {
     // var_dump($row);die();
     $owner = getOwnerById($row['userid'], $row['type']);
     $xtpl->assign('index', $index++);
+    $xtpl->assign('image', $row['image']);
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('owner', $owner['fullname']);
     $xtpl->assign('id', $row['id']);
