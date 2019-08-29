@@ -67,6 +67,33 @@ $vaccine_array = array(
   )
 );
 
+function checkMobile($source, $target) {
+  if (empty($target)) {
+    return true;
+  }
+  $source = xdecrypt($source);
+  if (strpos($source, $target) !== false) {
+    return true;
+  }
+  return false;
+}
+
+function checkMobileExist($mobile) {
+  global $db;
+
+  $check = false;
+  $sql = 'select * from `'. PREFIX .'_user`';
+  $query = $db->query($sql);
+
+  while (!$check && $row = $query->fetch()) {
+    $row['mobile'] = xdecrypt($row['mobile']);
+    if ($row['mobile'] == $mobile) {
+      $check = true;
+    }
+  }
+  return $check;
+}
+
 function parseAgeTime($datetime) {
   $str = '';
   $time = time() - $datetime;
@@ -246,6 +273,9 @@ function insertPet($data) {
 
 function insertUser($data) {
   global $db;
+
+  $data['mobile'] = xencrypt($data['mobile']);
+  $data['address'] = xencrypt($data['address']);
 
   $sql = 'insert into `'. PREFIX .'_user` (username, password, fullname, mobile, address) values ('. $data['username'] .', "'. md5('vet_' . $data['password']) .'", '. $data['fullname'] .', "'. $data['mobile'] .'", "'. $data['address'] .'")';
   if ($db->query($sql)) {

@@ -146,6 +146,8 @@ if (!empty($action)) {
 			$query = $db->query($sql);
 
 			if (!empty($row = $query->fetch())) {
+        $row['mobile'] = xdecrypt($row['mobile']);
+        $row['address'] = xdecrypt($row['address']);
 				$result['data'] = array('fullname' => $row['fullname'], 'mobile' => $row['mobile'], 'address' => $row['address']);
 				$result['image'] = $row['image'];
 				$result['status'] = 1;
@@ -198,6 +200,9 @@ if (!empty($action)) {
         $sql = 'select * from `'. PREFIX .'_contact` where mobile = "'. $data['mobile'] .'"';
         $query = $db->query($sql);
         if (empty($query->fetch)) {
+          $row['mobile'] = xencrypt($row['mobile']);
+          $row['address'] = xencrypt($row['address']);
+
           $sql = 'insert into `'. PREFIX .'_contact` (fullname, address, mobile, userid) values ("'. $data['fullname'] .'", "'. $data['address'] .'", "'. $data['mobile'] .'", '. $userinfo['id'] .')';
 
           if ($db->query($sql)) {
@@ -244,18 +249,23 @@ if (!empty($action)) {
     case 'parent2':
 			$keyword = $nv_Request->get_string('keyword', 'post', '');
 
-			$sql = 'select * from ((select id, fullname, mobile, address, 1 as type from `'. PREFIX .'_user`) union (select id, fullname, mobile, address, 2 as type from `'. PREFIX .'_contact` where userid = '. $userinfo['id'] .')) as a where (mobile like "%'. $keyword .'%" or fullname like "%'. $keyword .'%") limit 10';
+			$sql = 'select * from ((select id, fullname, mobile, address, 1 as type from `'. PREFIX .'_user`) union (select id, fullname, mobile, address, 2 as type from `'. PREFIX .'_contact` where userid = '. $userinfo['id'] .')) as a limit 10';
 			$query = $db->query($sql);
 
 			$html = '';
-			while ($row = $query->fetch()) {
-				$html .= '
-				<div class="suggest_item" onclick="pickOwner(\''. $row['fullname'] .'\', '. $row['id'] .', '. $row['type'] .')">
-          <p>
-					'. $row['fullname'] .'
-          </p>
-				</div>
-				';
+      $count = 0;
+      // checkMobile
+			while (($row = $query->fetch()) && $count < 10) {
+        if (checkMobile($row['mobile'], $keyword)) {
+          $html .= '
+          <div class="suggest_item" onclick="pickOwner(\''. $row['fullname'] .'\', '. $row['id'] .', '. $row['type'] .')">
+            <p>
+            '. $row['fullname'] .'
+            </p>
+          </div>
+          ';
+          $count ++;
+        }
 			}
 
 			if (empty($html)) {
@@ -434,6 +444,8 @@ if (!empty($action)) {
 			$image = $nv_Request->get_string('image', 'post');
 
 			if (count($data) > 1 && !empty($id)) {
+        $data['mobile'] = xencrypt($data['mobile']);
+        $data['address'] = xencrypt($data['address']);
 				$sql = 'update `'. PREFIX .'_user` set '. sqlBuilder($data, BUILDER_EDIT) . (strlen(trim($image)) > 0 ? ', image = "'. $image .'"' : '') . ' where id = ' . $id;
 				if ($db->query($sql)) {
 					$result['status'] = 1;
@@ -468,17 +480,21 @@ if (!empty($action)) {
 		case 'parent':
 			$keyword = $nv_Request->get_string('keyword', 'post', '');
 
-			$sql = 'select a.id, a.name, b.fullname from `'. PREFIX .'_pet` a inner join (select * from ((select id, fullname, mobile, address, 1 as type from `'. PREFIX .'_user`) union (select id, fullname, mobile, address, 2 as type from `'. PREFIX .'_contact` where userid = '. $userinfo['id'] .')) as c) b on a.userid = b.id where (a.name like "%'. $keyword .'%" or b.fullname like "%'. $keyword .'%" or b.mobile like "%'. $keyword .'%") limit 10';
+			$sql = 'select a.id, a.name, b.fullname, b.mobile from `'. PREFIX .'_pet` a inner join (select * from ((select id, fullname, mobile, address, 1 as type from `'. PREFIX .'_user`) union (select id, fullname, mobile, address, 2 as type from `'. PREFIX .'_contact` where userid = '. $userinfo['id'] .')) as c) b on a.userid = b.id where (a.name like "%'. $keyword .'%") limit 10';
 			$query = $db->query($sql);
 
 			$html = '';
-			while ($row = $query->fetch()) {
-				$html .= '
-				<div class="suggest_item2" onclick="pickParent(this, \''. $row['name'] .'\', '. $row['id'] .')">
-					<p> '. $row['fullname'] .' </p>
-					<p> '. $row['name'] .' </p>
-				</div>
-				';
+      $count = 0;
+      // checkMobile
+			while (($row = $query->fetch()) && $count < 10) {
+        if (checkMobile($row['mobile'], $keyword)) {
+          $html .= '
+          <div class="suggest_item2" onclick="pickParent(this, \''. $row['name'] .'\', '. $row['id'] .')">
+            <p> '. $row['fullname'] .' </p>
+            <p> '. $row['name'] .' </p>
+          </div>';
+          $count ++;
+        }
 			}
 
 			if (empty($html)) {
@@ -522,6 +538,9 @@ $global = array();
 $global['login'] = 0;
 
 $xtpl = new XTemplate("center.tpl", "modules/". $module_name ."/template");
+
+$userinfo['mobile'] = xdecrypt($userinfo['mobile']);
+$userinfo['address'] = xdecrypt($userinfo['address']);
 
 $tabber = array('0');
 if (!$userinfo['center']) {

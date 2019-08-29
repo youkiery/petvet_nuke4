@@ -50,24 +50,6 @@ if (!empty($action)) {
         }
 			}
 		break;
-		case 'signup':
-			$data = $nv_Request->get_array('data', 'post');
-
-			if (checkObj($data)) {
-				$data['username'] = strtolower($data['username']);
-				if (!checkLogin($data['username'], $data['password'])) {
-					$sql = 'insert into `'. PREFIX .'_user` (username, password, fullname, mobile, politic, address, active, image) values("'. $data['username'] .'", "'. md5($data['password']) .'", "'. $data['fullname'] .'", "'. $data['phone'] .'", "'. $data['politic'] .'", "'. $data['address'] .'", 1, "")';
-					if ($db->query($sql)) {
-						$_SESSION['username']	 = $data['username'];
-						$_SESSION['password'] = $data['password'];
-						$result['status'] = 1;
-					}
-				}
-        else {
-					$result['error'] = 'Tên đăng nhập hoặc mật khẩu không đúng';
-        }
-			}
-		break;
 	}
 	echo json_encode($result);
 	die();
@@ -81,6 +63,8 @@ $xtpl = new XTemplate("login.tpl", "modules/". $module_name ."/template");
 
 if (count($userinfo) > 0) {
 	// logged
+  $userinfo['mobile'] = xdecrypt($userinfo['mobile']);
+  $userinfo['address'] = xdecrypt($userinfo['address']);
 	$xtpl->assign('fullname', $userinfo['fullname']);
 	$xtpl->assign('mobile', $userinfo['mobile']);
 	$xtpl->assign('address', $userinfo['address']);

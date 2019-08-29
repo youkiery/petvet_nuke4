@@ -88,6 +88,8 @@ function userRowList($filter = array()) {
   $index = 1;
 
   while ($row = $query->fetch()) {
+    $data['mobile'] = xdecrypt($data['mobile']);
+    $data['address'] = xdecrypt($data['address']);
     $xtpl->assign('index', $index ++);
     $xtpl->assign('fullname', $row['fullname'] ++);
     $xtpl->assign('address', $row['address']);

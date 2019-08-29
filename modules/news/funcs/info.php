@@ -213,7 +213,7 @@ if (!empty($action)) {
 			$index = $nv_Request->get_int('index', 'post', -1);
 			$func = $nv_Request->get_string('func', 'post', '');
 
-			$sql = 'select a.id, a.name, b.fullname, b.mobile, b.image from `'. PREFIX .'_pet` a inner join `'. PREFIX .'_user` b on a.userid = b.id where (a.name like "%'. $keyword .'%" or b.fullname like "%'. $keyword .'%" or b.mobile like "%'. $keyword .'%") and userid = ' . $userinfo['id'];
+			$sql = 'select a.id, a.name, b.fullname, b.mobile, b.image from `'. PREFIX .'_pet` a inner join `'. PREFIX .'_user` b on a.userid = b.id where (a.name like "%'. $keyword .'%") and userid = ' . $userinfo['id'];
 			$query = $db->query($sql);
 
 			$html = '';
@@ -225,18 +225,22 @@ if (!empty($action)) {
       else if ($index >= 0) {
         $xtra .= ', 0, ' . $index;
       }
-			while ($row = $query->fetch()) {
-				$html .= '
-				<div class="suggest_item2" onclick="'. $ex .'(\''. $row['name'] .'\', '. $row['id'] . $xtra .')">
-					<div class="xleft">
-					</div>
-					<div class="xright">
-						<p> '. $row['fullname'] .' </p>
-						<p> '. $row['name'] .' </p>
-					</div>
-				</div>
-				';
-			}
+      $count = 0;
+      // checkMobile
+			while (($row = $query->fetch()) && $count < 10) {
+        if (checkMobile($row['mobile'], $keyword)) {
+          $html .= '
+          <div class="suggest_item2" onclick="'. $ex .'(\''. $row['name'] .'\', '. $row['id'] . $xtra .')">
+            <div class="xleft">
+            </div>
+            <div class="xright">
+              <p> '. $row['fullname'] .' </p>
+              <p> '. $row['name'] .' </p>
+            </div>
+          </div>';
+          $count ++;
+        }
+      }
 
 			if (empty($html)) {
 				$html = 'Không có kết quả trùng khớp';
@@ -338,16 +342,20 @@ if (!empty($action)) {
     case 'owner':
 			$keyword = $nv_Request->get_string('keyword', 'post', '');
 
-			$sql = 'select * from ((select id, fullname, mobile, address, 1 as type from `'. PREFIX .'_user`) union (select id, fullname, mobile, address, 2 as type from `'. PREFIX .'_contact` where userid = '. $userinfo['id'] .')) as a where (mobile like "%'. $keyword .'%" or fullname like "%'. $keyword .'%") limit 10';
+			$sql = 'select * from ((select id, fullname, mobile, address, 1 as type from `'. PREFIX .'_user`) union (select id, fullname, mobile, address, 2 as type from `'. PREFIX .'_contact` where userid = '. $userinfo['id'] .')) as a limit 10';
 			$query = $db->query($sql);
 
 			$html = '';
-			while ($row = $query->fetch()) {
-				$html .= '
-				<div class="suggest_item" onclick="pickOwner(\''. $row['fullname'] .'\', '. $row['id'] .', '. $row['type'] .')">
-					'. $row['fullname'] .'
-				</div>
-				';
+      $count = 0;
+      // checkMobile
+			while (($row = $query->fetch()) && $count < 10) {
+        if (checkMobile($row['mobile'], $keyword)) {
+          $html .= '
+          <div class="suggest_item" onclick="pickOwner(\''. $row['fullname'] .'\', '. $row['id'] .', '. $row['type'] .')">
+            '. $row['fullname'] .'
+          </div>';
+          $count ++;
+        }
 			}
 
 			if (empty($html)) {
@@ -363,9 +371,9 @@ if (!empty($action)) {
 
 			if (count($data) > 1 && !empty($userinfo['id'])) {
         // ???
-        $sql = 'select * from `'. PREFIX .'_contact` where mobile = "'. $data['mobile'] .'"';
-        $query = $db->query($sql);
-        if (empty($query->fetch)) {
+        if (!checkMobileExist($data['mobile'])) {
+          $data['mobile'] = xencrypt($data['mobile']);
+          $data['address'] = xencrypt($data['address']);
           $sql = 'insert into `'. PREFIX .'_contact` (fullname, address, mobile, userid) values ("'. $data['fullname'] .'", "'. $data['address'] .'", "'. $data['mobile'] .'", '. $userinfo['id'] .')';
 
           if ($db->query($sql)) {

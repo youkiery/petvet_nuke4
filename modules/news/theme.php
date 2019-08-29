@@ -307,6 +307,8 @@ function transferList($userid, $filter = array('page' => 1, 'limit' => 10)) {
     $target = checkUserinfo($row['targetid'], $row['type']);
     // echo $target['fullname'] . ' ('. $row['type'] .')<br>';
     $pet = getPetById($row['petid']);
+    $target['mobile'] = xdecrypt($target['mobile']);
+    $target['address'] = xdecrypt($target['address']);
 
     $xtpl->assign('index', $index++);
     $xtpl->assign('target', $target['fullname']);

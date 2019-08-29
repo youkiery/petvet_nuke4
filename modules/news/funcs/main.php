@@ -15,6 +15,7 @@ $page_title = "Vetvn.com - Nâng niu thú cưng Việt Nam";
 
 $xtpl = new XTemplate("main.tpl", "modules/". $module_name ."/template");
 $userinfo = getUserInfo();
+$xtpl->assign('module_file', $module_file);
 
 if (!empty($userinfo)) {
   if ($userinfo['center']) {
@@ -39,7 +40,6 @@ else {
 // }
 // die();
 
-$xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 include ("modules/". $module_file ."/layout/header.php");
