@@ -15,6 +15,7 @@ function request(url, param) {
 
 function checkResult(response, status) {
   return new Promise((resolve, reject) => {
+    defreeze()
     if (status === 'success') {
       try {
         data = JSON.parse(response)
@@ -39,6 +40,15 @@ function checkResult(response, status) {
     }
   })
 }
+
+function freeze() {
+  $("#loading").show()
+}
+
+function defreeze() {
+  $("#loading").hide()
+}
+
 
 function paintext(string) {
   var str = string.toLowerCase();

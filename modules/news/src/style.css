@@ -1,30 +1,30 @@
 .main-search {
-  width: 60%;
+  width : 60%;
   margin: auto;
 }
 
 .sm-thumbnail {
-  width: 64px !important;
-  height: 64px !important;
+  width     : 64px !important;
+  height    : 64px !important;
   background: url('/modules/news/src/thumbnail-xxs.jpg') !important;
 }
 
 .pbody {
-  padding: 10px;
-  width  : 25%;
-  float: left;
-  height : 140px;
+  padding      : 10px;
+  width        : 25%;
+  float        : left;
+  height       : 140px;
   border-bottom: 1px solid lightgray;
 }
 
 .pbody:hover {
   border-radius: 10px;
-  background: aliceblue;
+  background   : aliceblue;
 }
 
 .pleft {
   font-size   : 14px;
-  float: left;
+  float       : left;
   width       : 64px;
   overflow    : hidden;
   margin-right: 10px
@@ -281,15 +281,39 @@ hr {
 .xleft {
   width: auto;
 }
+
 .xright {
-  width: auto;
+  width : auto;
   margin: 0px 20px;
 }
+
 .thumb-gallery {
-  min-height: 265px;
-  margin: 20px 0px;
-  overflow: auto;
+  min-height   : 265px;
+  margin       : 20px 0px;
+  overflow     : auto;
   border-bottom: 1px solid lightgray
+}
+
+.black-wag {
+  background: gray;
+  position  : fixed;
+  z-index   : 2;
+  top       : 0;
+  left      : 0;
+  opacity   : .2;
+  width     : -webkit-fill-available;
+  height    : -webkit-fill-available;
+}
+
+.loading {
+  position: fixed;
+  top     : calc(50% - 75px);
+  left    : calc(50% - 75px);
+  z-index : 3;
+}
+
+#loading {
+  display: none;
 }
 
 @media screen and (max-width:980px) {
@@ -302,14 +326,17 @@ hr {
   .start-content {
     padding: 0
   }
+
   .start-content img {
     width: 50%
   }
+
   .transfer.thumbnail {
-    width: 150px !important;
-    height: 150px !important;
+    width     : 150px !important;
+    height    : 150px !important;
     background: url('/modules/news/src/thumbnail-s.jpg') !important;
   }
+
   .pbody {
     width: 50% !important;
   }
@@ -317,17 +344,20 @@ hr {
 
 @media screen and (max-width:480px) {
   .xright {
-    width: auto;
+    width : auto;
     margin: 0px 20px;
   }
+
   .main-search {
     width: 100%;
   }
+
   .transfer.thumbnail {
-    width: 80px !important;
-    height: 80px !important;
+    width     : 80px !important;
+    height    : 80px !important;
     background: url('/modules/news/src/thumbnail-xs.jpg') !important;
   }
+
   .pbody {
     width: 100% !important;
   }

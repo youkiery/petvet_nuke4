@@ -8,6 +8,10 @@
 </style>
 
 <div class="container">
+  <div id="loading">
+    <div class="black-wag"> </div>
+    <img class="loading" src="/modules/{module_file}/src/loading.gif">
+  </div>
   <div id="msgshow"></div>
   <div class="modal" id="pet-vaccine" role="dialog">
     <div class="modal-dialog">
@@ -807,6 +811,7 @@
   }
 
   function transferPetSubmit() {
+    freeze()
     $.post(
       global['url'],
       { action: 'transfer-owner', petid: global['pet'], ownerid: global['owner'], type: global['type'], filter:checkFilter(), tabber: global['tabber'] },
@@ -825,6 +830,7 @@
   }
 
   function insertOwnerSubmit() {
+    freeze()
     $.post(
       global['url'],
       { action: 'insert-owner', data: checkInputSet(owner) },
@@ -916,6 +922,7 @@
   }
 
   function request(id) {
+    freeze()
     $.post(
       global['url'],
       { action: 'get-request', id: id },
@@ -930,6 +937,7 @@
   }
 
   function newRequestSubmit() {
+    freeze()
     $.post(
       global['url'],
       { action: 'new-request', name: $("#request-other").val(), id: global['request'] },
@@ -943,6 +951,7 @@
   }
 
   function center() {
+    freeze()
     $.post(
       global['url'],
       { action: 'center' },
@@ -955,6 +964,7 @@
   }
 
   function requestSubmit(id, value, type) {
+    freeze()
     $.post(
       global['url'],
       { action: 'request', id: id, type: type, value: value },
@@ -967,6 +977,7 @@
   }
 
   function cancelSubmit(id, value, type) {
+    freeze()
     $.post(
       global['url'],
       { action: 'cancel', id: id, type: type, value: value },
@@ -984,6 +995,7 @@
   }
 
   function insertVaccineSubmit() {
+    freeze()
     $.post(
       global['url'],
       { action: 'insert-vaccine', data: checkVaccineData(), id: global['id'] },
@@ -1006,6 +1018,7 @@
   }
 
   function insertParentSubmit() {
+    freeze()
     uploader().then((imageUrl) => {
       $.post(
         global['url'],
@@ -1153,6 +1166,7 @@
   }
 
   function removePetSubmit() {
+    freeze()
     $.post(
       global['url'],
       { action: 'remove', id: global['id'], filter: checkFilter() },
@@ -1167,6 +1181,7 @@
   }
 
   function editPet(id) {
+    freeze()
     $.post(
       global['url'],
       { action: 'get', id: id },
@@ -1199,6 +1214,7 @@
   }
 
   function editPetSubmit() {
+    freeze()
     uploader().then((imageUrl) => {
       $.post(
         global['url'],
@@ -1246,6 +1262,7 @@
   }
 
   function filter() {
+    freeze()
     $.post(
       global['url'],
       { action: 'filter', filter: checkFilter(), tabber: global['tabber'] },
@@ -1275,6 +1292,7 @@
   }
 
   function insertPetSubmit() {
+    freeze()
     $.post(
       global['url'],
       { action: 'insertpet', data: checkPetData(), filter: checkFilter(), tabber: global['tabber'] },
@@ -1324,6 +1342,7 @@
   }
 
   function editUser(id) {
+    freeze()
     $.post(
       global['url'],
       { action: 'getuser', id: id },
@@ -1343,6 +1362,7 @@
   }
 
   function editUserSubmit() {
+    freeze()
     uploader().then((imageUrl) => {
       $.post(
         global['url'],
@@ -1357,6 +1377,7 @@
   }
 
   function insertDiseaseSuggestSubmit() {
+    freeze()
     $.post(
       global['url'],
       { action: 'insert-disease-suggest', disease: $('#disease-suggest').val() },

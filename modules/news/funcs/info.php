@@ -109,35 +109,38 @@ if (!empty($action)) {
       $data['time'] = totime($data['time']);
       $list = array();
 
-      // foreach ($child as $key => $row) {
-      //   if (!empty($row['name'])) { 
-      //     $list[] = $row['id'];
-      //   }
-      // }
-
-      $sql = 'insert into `'. PREFIX .'_breeder` (petid, targetid, child, time, number, note) values('. $id .', '. $data['target'] .', "[]", "'. $data['time'] .'", '. $data['number'] .', "'. $data['note'] .'")';
-      // die($sql);
-      if ($db->query($sql)) {
-        $result['status'] = 1;
-        $result['notify'] = 'Đã thêm danh sách';
-        $result['html'] = breederList($id);
+      if (empty($pet = getPetById($data['target']))) {
+        $result['notify'] = 'Đối tượng không tồn tại';
       }
-
+      else {
+        $sql = 'insert into `'. PREFIX .'_breeder` (petid, targetid, child, time, number, note) values('. $id .', '. $data['target'] .', "[]", "'. $data['time'] .'", '. $data['number'] .', "'. $data['note'] .'")';
+        // die($sql);
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+          $result['notify'] = 'Đã thêm danh sách';
+          $result['html'] = breederList($id);
+        }
+      }
 		break;
 		case 'insert-disease':
 			$id = $nv_Request->get_string('id', 'post', 0);
 			$data = $nv_Request->get_array('data', 'post');
       $result['notify'] = 'Có lỗi xảy ra';
 
-      $data['treat'] = totime($data['treat']);
-      $data['treated'] = totime($data['treated']);
-      checkRemind($data['disease'], 'disease');
+      if (empty($data['disease'])) {
+        $result['notify'] = 'Loại bệnh không được trống';
+      }
+      else {
+        $data['treat'] = totime($data['treat']);
+        $data['treated'] = totime($data['treated']);
+        checkRemind($data['disease'], 'disease');
 
-      $sql = 'insert into `'. PREFIX .'_disease` (petid, treat, treated, disease, note) values('. $id .', '. $data['treat'] .', '. $data['treated'] .', "'. $data['disease'] .'", "'. $data['note'] .'")';
-      if ($db->query($sql)) {
-        $result['status'] = 1;
-        $result['notify'] = 'Đã thêm danh sách';
-        $result['html'] = diseaseList($id);
+        $sql = 'insert into `'. PREFIX .'_disease` (petid, treat, treated, disease, note) values('. $id .', '. $data['treat'] .', '. $data['treated'] .', "'. $data['disease'] .'", "'. $data['note'] .'")';
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+          $result['notify'] = 'Đã thêm danh sách';
+          $result['html'] = diseaseList($id);
+        }
       }
 
 		break;

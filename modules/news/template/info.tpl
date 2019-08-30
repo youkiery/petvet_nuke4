@@ -369,6 +369,11 @@
 </div>
 
 <div class="container" style="margin-top: 20px;">
+  <div id="loading">
+    <div class="black-wag"> </div>
+    <img class="loading" src="/modules/{module_file}/src/loading.gif">
+  </div>
+  
   <a href="/{module_file}">
     <img src="/modules/{module_file}/src/banner.png" style="width: 200px;">
   </a>
@@ -589,6 +594,7 @@
   }
 
   function insertOwnerSubmit() {
+    freeze()
     $.post(
       global['url'],
       { action: 'insert-owner', data: checkInputSet(owner) },
@@ -729,6 +735,7 @@
   }
 
   function insertDiseaseSuggestSubmit() {
+    freeze()
     $.post(
       global['url'],
       { action: 'insert-disease-suggest', disease: $('#disease-suggest').val() },
@@ -787,6 +794,7 @@
   }
 
   function insertPetSubmit() {
+    freeze()
     $.post(
       global['url'],
       { action: 'insertpet', data: checkInputSet(pet) },
@@ -868,6 +876,7 @@
   }
 
   function editDisease(id) {
+    freeze()
     $.post(
       global['url'],
       { action: 'get-disease', id: id },
@@ -885,6 +894,7 @@
   }
 
   function editDiseaseSubmit() {
+    freeze()
     $.post(
       global['url'],
       { action: 'edit-disease', id: global['id'], did: global['disease'], data: checkDiseaseData() },
@@ -900,11 +910,12 @@
 
   function addDisease() {
     button['disease']['insert'].show()
-    button['disease']['edit'].show()
+    button['disease']['edit'].hide()
     insertDisease.modal('show')
   }
 
   function editBreeder(id) {
+    freeze()
     $.post(
       global['url'],
       { action: 'get-breeder', id: id },
@@ -928,6 +939,7 @@
   }
 
   function editBreederSubmit() {
+    freeze()
     $.post(
       global['url'],
       { action: 'edit-breeder', data: checkInputSet(breeder), bid: global['breeder'], id: global['id'] },
@@ -946,6 +958,7 @@
   }
 
   function insertBreederSubmit() {
+    freeze()
     $.post(
       global['url'],
       { action: 'insert-breeder', data: checkInputSet(breeder), id: global['id'] },
@@ -1077,6 +1090,7 @@
   }
 
   function editVaccine(id) {
+    freeze()
     $.post(
       global['url'],
       { action: 'get-vaccine', id: id },
@@ -1099,6 +1113,7 @@
   }
 
   function insertVaccineSubmit() {
+    freeze()
     $.post(
       global['url'],
       { action: 'insert-vaccine', data: checkVaccineData(), id: global['id'] },
@@ -1112,6 +1127,7 @@
   }
 
   function editVaccineSubmit() {
+    freeze()
     $.post(
       global['url'],
       { action: 'edit-vaccine', data: checkVaccineData(), vid: global['vaccine'], id: global['id'] },
@@ -1126,6 +1142,7 @@
 
 
   function insertDiseaseSubmit() {
+    freeze()
     $.post(
       global['url'],
       { action: 'insert-disease', id: global['id'], data: checkDiseaseData() },
@@ -1254,6 +1271,7 @@
   }
 
   function editPetSubmit() {
+    freeze()
     uploader().then((imageUrl) => {
       $.post(
         global['url'],
@@ -1332,6 +1350,7 @@
   }
 
   function saveGraph() {
+    freeze()
     $.post(
       global['url'],
       { action: 'save-graph', id: global['id'], data: CKEDITOR.instances['editor'].getData() },

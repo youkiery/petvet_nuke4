@@ -232,6 +232,7 @@
 
   function signup() {
     if (signupData = checkSignup()) {
+      freeze()
       $.post(
           global['url'],
           {action: 'signup', data: signupData},

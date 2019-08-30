@@ -82,6 +82,7 @@
 
   function login() {
     if (loginData = checkLogin()) {
+      freeze()
       $.post(
         global['url'],
         {action: 'login', data: loginData},
