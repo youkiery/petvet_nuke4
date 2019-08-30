@@ -6,8 +6,8 @@
   </div>
   <div class="xright">
     <p> Tên thú cưng: {name} </p>
-    <p> Loài: {species} </p>
-    <p> Giống: {breeder} </p>
+    <p> Loài: {breed} </p>
+    <p> Giống: {species} </p>
     <p> Chủ sở hữu: {owner} </p>
     <p> Thời gian: {time} </p>
     <button class="btn btn-success" onclick="confirm({id})">

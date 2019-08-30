@@ -1,17 +1,4 @@
 <!-- BEGIN: main -->
-<style>
-.xleft {
-  width: auto;
-}
-.xright {
-  width: auto;
-  margin: 20px;
-}
-.thumb-gallery {
-  min-height: 240px;
-  margin: 20px 0px;
-}
-</style>
 <div class="container">
   <div class="modal" id="modal-cancel" role="dialog">
     <div class="modal-dialog modal-sm">
@@ -50,7 +37,9 @@
     <a href="/{module_file}/logout"> Đăng xuất </a>
   </div>
   <div class="separate"></div>
-  <a href="/{module_file}/login" style="margin: 8px 0px; display: block;"> <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
+  <a style="margin: 8px 0px; display: block;" href="javascript:history.go(-1)">
+    <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
+  </a>
   <div id="content">
     {content}
   </div>

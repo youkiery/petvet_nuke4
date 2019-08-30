@@ -335,9 +335,11 @@
             </div>
           </label>
 
-          <button class="btn btn-danger" onclick="editUserSubmit()">
-            Chỉnh sửa thông tin
-          </button>
+          <div class="text-center">
+            <button class="btn btn-info " onclick="editUserSubmit()">
+              Chỉnh sửa thông tin
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -705,11 +707,14 @@
     <span class="glyphicon glyphicon-plus"> </span>
   </button>
 
+  <div style="clear: both;"></div>
+
   <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#a" onclick="change(0)"> Đực giống </a></li>
     <li><a data-toggle="tab" href="#b" onclick="change(1)"> Cái giống </a></li>
     <li><a data-toggle="tab" href="#c" onclick="change(2)"> Con non </a></li>
   </ul>
+
 
   <div id="pet-list">
     {list}
@@ -1507,7 +1512,7 @@
     uploader().then((imageUrl) => {
       $.post(
         global['url'],
-        { action: 'edituser', data: checkInputSet(user), image: imageUrl, id: global['id'], filter: checkUserFilter() },
+        { action: 'edituser', data: checkInputSet(user), image: imageUrl, id: global['id'] },
         (response, status) => {
           checkResult(response, status).then(data => {
             userList.html(data['html'])

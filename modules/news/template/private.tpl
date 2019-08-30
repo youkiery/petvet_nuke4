@@ -255,9 +255,11 @@
             </div>
           </label>
 
-          <button class="btn btn-danger" onclick="editUserSubmit()">
-            Chỉnh sửa thông tin
-          </button>
+          <div class="text-center">
+            <button class="btn btn-info " onclick="editUserSubmit()">
+              Chỉnh sửa thông tin
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -602,6 +604,9 @@
   <button class="btn btn-success" style="float: right;" onclick="addPet()">
     <span class="glyphicon glyphicon-plus"> </span>
   </button>
+
+  <div style="clear: both;"></div>
+  <div></div>
 
   <div id="pet-list">
     {list}

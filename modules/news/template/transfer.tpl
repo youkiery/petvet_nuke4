@@ -8,7 +8,9 @@
     <a href="/{module_file}/logout"> Đăng xuất </a>
   </div>
   <div class="separate"></div>
-  <a href="/{module_file}/login" style="margin: 8px 0px; display: block;"> <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
+  <a style="margin: 8px 0px; display: block;" href="javascript:history.go(-1)">
+    <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
+  </a>
   <div id="content">
     {content}
   </div>

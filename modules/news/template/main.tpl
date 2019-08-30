@@ -4,7 +4,7 @@
       <img src="/modules/{module_file}/src/banner.png">
       <!-- <p> Nâng niu tình yêu động vật </p> -->
       <form action="/{module_file}/list">
-        <div style="width: 60%; margin: auto;">
+        <div class="main-search">
           <label class="input-group">
             <input type="text" class="form-control" name="keyword" id="keyword" placeholder="Nhập tên hoặc mã số" autocomplete="off">
             <div class="input-group-btn">
