@@ -29,7 +29,7 @@ else {
 }
 
 if (!empty($action)) {
-	$result = array('status' => 0, 'notify' => 'Có lỗi xảy ra');
+	$result = array('status' => 0);
 	switch ($action) {
 		case 'filter':
 			$filter = $nv_Request->get_array('filter', 'post');
@@ -41,6 +41,9 @@ if (!empty($action)) {
 				if ($result['html']) {
 					$result['status'] = 1;
 				}
+        else {
+          $result['notify'] = 'Có lỗi xảy ra';
+        }
 			}
 		break;
     case 'get-request':
@@ -58,6 +61,7 @@ if (!empty($action)) {
       $id = $nv_Request->get_string('id', 'post', 0);
       $type = $nv_Request->get_string('type', 'post', 0);
       $value = $nv_Request->get_string('value', 'post', 0);
+      $result['notify'] = 'Có lỗi xảy ra';
 
       if (!empty($id)) {
         $sql = 'select * from `'. PREFIX .'_request` where type = '. $type .' and value = '. $value .' and petid = ' . $id;
@@ -86,6 +90,7 @@ if (!empty($action)) {
       $id = $nv_Request->get_string('id', 'post', 0);
       $type = $nv_Request->get_string('type', 'post', 0);
       $value = $nv_Request->get_string('value', 'post', 0);
+      $result['notify'] = 'Có lỗi xảy ra';
 
       if (!empty($id)) {
         // if (!empty($request = getPetRequest($id, $value)) && count($request) > 0) {
@@ -106,11 +111,15 @@ if (!empty($action)) {
 				if ($result['html']) {
 					$result['status'] = 1;
 				}
+        else {
+          $result['notify'] = 'Có lỗi xảy ra';
+        }
 			}
 		break;
     case 'insert-vaccine':
     	$id = $nv_Request->get_string('id', 'post', 0);
 			$data = $nv_Request->get_array('data', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
       
       if (!empty($id) && count($data) > 0) {
         $data['time'] = totime($data['time']);
@@ -162,36 +171,11 @@ if (!empty($action)) {
         $result['notify'] = 'Có lỗi xảy ra';
       }
 		break;
-		case 'check':
-			$id = $nv_Request->get_string('id', 'post');
-			$type = $nv_Request->get_string('type', 'post');
-			$filter = $nv_Request->get_array('filter', 'post');
-
-			$sql = 'update `'. PREFIX .'_pet` set active = '. $type .' where id = ' . $id;
-			if ($db->query($sql)) {
-				$result['html'] = userDogRowByList($userinfo['id'], $filter);
-				if ($result['html']) {
-					$result['status'] = 1;
-				}
-			}
-		break;
-		case 'checkuser':
-			$id = $nv_Request->get_string('id', 'post');
-			$type = $nv_Request->get_string('type', 'post');
-			$filter = $nv_Request->get_array('filter', 'post');
-
-			$sql = 'update `'. PREFIX .'_user` set active = '. $type .' where id = ' . $id;
-			if ($db->query($sql)) {
-				$result['html'] = userRowList($filter);
-				if ($result['html']) {
-					$result['status'] = 1;
-				}
-			}
-		break;
 		case 'remove':
 			$id = $nv_Request->get_string('id', 'post');
 			$filter = $nv_Request->get_array('filter', 'post');
 			$tabber = $nv_Request->get_array('tabber', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
 
 			$sql = 'delete from `'. PREFIX .'_pet` where id = ' . $id;
 			if ($db->query($sql)) {
@@ -203,6 +187,7 @@ if (!empty($action)) {
 		break;
 		case 'insert-owner':
 			$data = $nv_Request->get_array('data', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
 
 			if (count($data) > 1 && !checkObj($data)) {
         $result['notify'] = 'Các trường không được bỏ trống';
@@ -226,12 +211,13 @@ if (!empty($action)) {
         }
 			}
 		break;
-    		case 'transfer-owner':
+ 		case 'transfer-owner':
 			$petid = $nv_Request->get_string('petid', 'post', 0);
 			$ownerid = $nv_Request->get_string('ownerid', 'post', 0);
 			$type = $nv_Request->get_string('type', 'post', 2);
       $filter = $nv_Request->get_array('filter', 'post');
 			$tabber = $nv_Request->get_array('tabber', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
 
       $check = 0;
 
@@ -264,7 +250,6 @@ if (!empty($action)) {
         }
 			}
 		break;
-
     case 'parent2':
 			$keyword = $nv_Request->get_string('keyword', 'post', '');
 
@@ -322,6 +307,7 @@ if (!empty($action)) {
 			$data = $nv_Request->get_array('data', 'post');
 			$filter = $nv_Request->get_array('filter', 'post');
 			$tabber = $nv_Request->get_array('tabber', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
 
 			if (count($data) > 1 && !checkPet($data['name'], $userinfo['id'])) {
         // ???
@@ -373,6 +359,7 @@ if (!empty($action)) {
 			$image = $nv_Request->get_string('image', 'post');
 			$filter = $nv_Request->get_array('filter', 'post');
 			$tabber = $nv_Request->get_array('tabber', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
 
 			if (count($data) > 1 && !checkPet($data['name'], $userinfo['id'])) {
         $sex = 0;
@@ -411,6 +398,7 @@ if (!empty($action)) {
 			$data = $nv_Request->get_array('data', 'post');
 			$filter = $nv_Request->get_array('filter', 'post');
 			$tabber = $nv_Request->get_array('tabber', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
 
 			if (count($data) > 1 && !empty($id)) {
 				$data['dateofbirth'] = totime($data['dob']);
@@ -461,6 +449,7 @@ if (!empty($action)) {
 			$data = $nv_Request->get_array('data', 'post');
 			$filter = $nv_Request->get_array('filter', 'post');
 			$image = $nv_Request->get_string('image', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
 
 			if (count($data) > 1 && !empty($id)) {
         $data['mobile'] = xencrypt($data['mobile']);
@@ -468,13 +457,14 @@ if (!empty($action)) {
 				$sql = 'update `'. PREFIX .'_user` set '. sqlBuilder($data, BUILDER_EDIT) . (strlen(trim($image)) > 0 ? ', image = "'. $image .'"' : '') . ' where id = ' . $id;
 				if ($db->query($sql)) {
 					$result['status'] = 1;
-					$result['notify'] = 'Đã chỉnh sửa thú cưng';
+					$result['notify'] = 'Đã chỉnh sửa thông tin';
 				}
 			}
 		break;
     case 'new-request':
       $name = $nv_Request->get_string('name', 'post');
       $id = $nv_Request->get_string('id', 'post', '');
+      $result['notify'] = 'Có lỗi xảy ra';
 
       if (!empty($name) && !empty($id)) {
         $type = checkRemind($name, 'request');
@@ -483,6 +473,7 @@ if (!empty($action)) {
 
         if ($db->query($sql)) {
           $result['status'] = 1;
+          $result['notify'] = 'Đã thêm yêu cầu';
           $result['html'] = requestDetail($id);
         }
       }
@@ -525,6 +516,7 @@ if (!empty($action)) {
 		break;
     case 'insert-disease-suggest':
 			$disease = $nv_Request->get_string('disease', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
 
       $sql = 'select * from `'. PREFIX .'_disease_suggest` where disease = "'. $disease .'"';
       $query = $db->query($sql);
@@ -546,6 +538,7 @@ if (!empty($action)) {
 
       if (!empty($sql) && $db->query($sql)) {
         $result['status'] = 1;
+        $result['notify'] = 'Đã thêm danh sách';
         $result['html'] = parseVaccineType($userinfo['id']);
       }
 		break;
