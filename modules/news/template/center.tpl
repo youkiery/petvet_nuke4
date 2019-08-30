@@ -8,6 +8,7 @@
 </style>
 
 <div class="container">
+  <div id="msgshow"></div>
   <div class="modal" id="pet-vaccine" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">

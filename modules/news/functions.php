@@ -16,6 +16,31 @@ define("PATH", 'modules/' . $module_file . '/template');
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 
+function getUserInfo() {
+  global $db, $_SESSION;
+  $data = array();
+
+  if (!empty($_SESSION['username']) && !empty($_SESSION['password'])) {
+    $username = $_SESSION['username'];
+    $password = $_SESSION['password'];
+    // hash split username, password
+    if (checkLogin($username, $password)) {
+      $sql = 'select * from `'. PREFIX .'_user` where username = "' . $username . '" and password = "' . md5($password) . '"';
+      $query = $db->query($sql);
+      
+      if (!empty($row = $query->fetch())) {
+        return $row;
+      }
+    }
+  }
+
+  return $data;
+}
+
+if (!empty($action = $nv_Request->get_string('action', 'post', '')) && !in_array($action, array('login', 'signup')) && empty($userinfo = getUserInfo())) {
+  die('{"status": -1}');
+}
+
 function checkUsername($user) {
   global $db;
 
@@ -202,27 +227,6 @@ function breederList($petid) {
   }
   $xtpl->parse('main');
   return $xtpl->text();
-}
-
-function getUserInfo() {
-  global $db, $_SESSION;
-  $data = array();
-
-  if (!empty($_SESSION['username']) && !empty($_SESSION['password'])) {
-    $username = $_SESSION['username'];
-    $password = $_SESSION['password'];
-    // hash split username, password
-    if (checkLogin($username, $password)) {
-      $sql = 'select * from `'. PREFIX .'_user` where username = "' . $username . '" and password = "' . md5($password) . '"';
-      $query = $db->query($sql);
-      
-      if (!empty($row = $query->fetch())) {
-        return $row;
-      }
-    }
-  }
-
-  return $data;
 }
 
 function checkTransferRequest($id) {

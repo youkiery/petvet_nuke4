@@ -1,5 +1,6 @@
 <!-- BEGIN: main -->
 <div class="container">
+  <div id="msgshow"></div>
     <div class="text-center start-content">
       <img src="/modules/{module_file}/src/banner.png">
       <!-- <p> Nâng niu tình yêu động vật </p> -->

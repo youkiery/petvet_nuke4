@@ -5,6 +5,7 @@
   }
 </style>
 <div class="container">
+  <div id="msgshow"></div>
   <form>
     <table class="table">
       <tr>

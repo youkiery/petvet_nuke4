@@ -10,6 +10,7 @@
 </style>
 
 <div class="container">
+  <div id="msgshow"></div>
   <div class="text-center start-content" style="max-width: 450px; margin: auto; padding-top: 50px; border: 1px solid lightgray; padding: 15px; border-radius: 20px;">
     <a href="/{module_file}">
       <img src="/modules/{module_file}/src/banner.png" style="width: 200px; margin: 20px 20px;">

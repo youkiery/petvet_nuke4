@@ -9,6 +9,7 @@
 </style>
 
 <div class="container">
+  <div id="msgshow"></div>
   <div id="remove-pet" class="modal fade" role="dialog">
     <div class="modal-dialog modal-sm">
       <div class="modal-content">

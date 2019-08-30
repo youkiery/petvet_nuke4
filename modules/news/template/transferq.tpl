@@ -1,5 +1,6 @@
 <!-- BEGIN: main -->
 <div class="container">
+  <div id="msgshow"></div>
   <div class="modal" id="modal-cancel" role="dialog">
     <div class="modal-dialog modal-sm">
       <div class="modal-content">

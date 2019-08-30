@@ -9,6 +9,7 @@
 </style>
 
 <div class="container">
+  <div id="msgshow"></div>
   <div id="insert-user" class="modal fade" role="dialog">
     <div class="modal-dialog modal-md">
       <div class="modal-content">

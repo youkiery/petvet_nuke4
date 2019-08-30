@@ -286,7 +286,7 @@ hr {
   margin: 0px 20px;
 }
 .thumb-gallery {
-  min-height: 240px;
+  min-height: 265px;
   margin: 20px 0px;
   overflow: auto;
   border-bottom: 1px solid lightgray
@@ -318,7 +318,7 @@ hr {
 @media screen and (max-width:480px) {
   .xright {
     width: auto;
-    margin: 30px 0px 10px 0px;
+    margin: 0px 20px;
   }
   .main-search {
     width: 100%;
