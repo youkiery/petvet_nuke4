@@ -29,7 +29,7 @@ else {
 }
 
 if (!empty($action)) {
-	$result = array('status' => 0);
+	$result = array('status' => 0, 'notify' => 'Có lỗi xảy ra');
 	switch ($action) {
 		case 'filter':
 			$filter = $nv_Request->get_array('filter', 'post');
@@ -49,6 +49,9 @@ if (!empty($action)) {
       if (!empty($id)) {
         $result['status'] = 1;
         $result['html'] = requestDetail($id);
+      }
+      else {
+        $result['notify'] = 'Có lỗi xảy ra';
       }
     break;
     case 'request':
@@ -137,6 +140,9 @@ if (!empty($action)) {
         $result['image'] = $row['image'];
 				$result['status'] = 1;
 			}
+      else {
+        $result['notify'] = 'Có lỗi xảy ra';
+      }
 		break;
 		case 'getuser':
 			$id = $nv_Request->get_string('id', 'post');
@@ -151,6 +157,9 @@ if (!empty($action)) {
 				$result['image'] = $row['image'];
 				$result['status'] = 1;
 			}
+      else {
+        $result['notify'] = 'Có lỗi xảy ra';
+      }
 		break;
 		case 'remove':
 			$id = $nv_Request->get_string('id', 'post');
@@ -168,7 +177,10 @@ if (!empty($action)) {
 		case 'insert-owner':
 			$data = $nv_Request->get_array('data', 'post');
 
-			if (count($data) > 1 && !empty($userinfo['id'])) {
+			if (count($data) > 1 && !checkObj($data)) {
+        $result['notify'] = 'Các trường không được bỏ trống';
+      }
+      else {
         // ???
         $sql = 'select * from `'. PREFIX .'_contact` where mobile = "'. $data['mobile'] .'"';
         $query = $db->query($sql);
@@ -195,8 +207,13 @@ if (!empty($action)) {
 			$tabber = $nv_Request->get_array('tabber', 'post');
 
       $check = 0;
-
-			if (!empty($pet = getPetById($petid)) && !empty($owner = getOwnerById($ownerid, $type))) {
+      if (empty($pet = getPetById($petid))) {
+        $result['notify'] = 'Thú cưng không tồn tại';
+      }
+      else if (empty($owner = getOwnerById($ownerid, $type))) {
+        $result['notify'] = 'Chủ nuôi không tồn tại';
+      }
+      else {
         if ($type == 1) {
           $sql2 = 'insert into `'. PREFIX .'_transfer_request` (userid, petid, time, note) values('. $ownerid .', '. $petid .', '. time() .', "")';
           if ($db->query($sql2)) {
@@ -214,6 +231,7 @@ if (!empty($action)) {
 
         if ($check) {
           $result['status'] = 1;
+          $result['notify'] = 'Đã chuyển nhượng';
     			$result['html'] = userDogRowByList($userinfo['id'], $tabber, $filter);
         }
 			}
@@ -478,9 +496,12 @@ if (!empty($action)) {
       $query = $db->query($sql);
 
       $sql = "";
-      if (!empty($row = $query->fetch())) {
+      if (empty($disease)) {
+        $result['notify'] = 'Các trường không được để trống';
+      }
+      else if (!empty($row = $query->fetch())) {
         if ($row['active'] = 1) {
-          $result['error'] = 'Đã có trong danh sách';
+          $result['notify'] = 'Đã có trong danh sách';
         }
         else {
           $sql = 'update into `'. PREFIX .'_disease_suggest` set rate = rate + 1';
@@ -528,6 +549,7 @@ $xtpl->assign('v', parseVaccineType($userinfo['id']));
 $xtpl->assign('today', date('d/m/Y', time()));
 $xtpl->assign('recall', date('d/m/Y', time() + 60 * 60 * 24 * 21));
 $xtpl->assign('module_file', $module_file);
+$xtpl->assign('module_name', $module_name);
 
 // $xtpl->assign('today', date('d/m/Y', time()));
 // $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userinfo['id'];

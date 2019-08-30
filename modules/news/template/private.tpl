@@ -989,7 +989,7 @@
       { action: 'insert-vaccine', data: checkVaccineData(), id: global['id'] },
       (response, status) => {
         checkResult(response, status).then(data => {
-          window.location.href = '/biograph/info/?id=' + global['id'] + '&target=vaccine'
+          window.location.href = '/{module_name}/info/?id=' + global['id'] + '&target=vaccine'
           petVaccine.modal('hide')
         }, () => { })
       }
