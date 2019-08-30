@@ -395,7 +395,7 @@
 
   <div style="position: relative;">
     <div id="editor"></div>
-    <button class="btn btn-info" style="position: absolute; top: 4px; right: 4px;" onclick="saveGraph()">
+    <button class="btn btn-success" style="position: absolute; top: 4px; right: 4px;" onclick="saveGraph()">
       <span class="glyphicon glyphicon-floppy-disk"></span>
     </button>
   </div>

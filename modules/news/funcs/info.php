@@ -29,18 +29,20 @@ if (!empty($action)) {
     case 'save-graph':
 			$data = $nv_Request->get_string('data', 'post');
 			$id = $nv_Request->get_string('id', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
 
       if (!empty($id)) {
         $sql = 'update `'. PREFIX .'_pet` set graph = "'. $data .'" where id = ' . $id;
         if ($db->query($sql)) {
           $result['status'] = 1;
-          $result['notify'] = 'Đã cập nhật lý lịch trích ngang';
+          $result['notify'] = 'Đã lưu';
         }
       } 
 
     break;
 		case 'insert-disease-suggest':
 			$disease = $nv_Request->get_string('disease', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
 
       $sql = 'select * from `'. PREFIX .'_disease_suggest` where disease = "'. $disease .'"';
       $query = $db->query($sql);
@@ -60,6 +62,7 @@ if (!empty($action)) {
 
       if (!empty($sql) && $db->query($sql)) {
         $result['status'] = 1;
+        $result['notify'] = 'Đã thêm danh sách';
         $result['html'] = parseVaccineType($userinfo['id']);
       }
 		break;
@@ -74,11 +77,15 @@ if (!empty($action)) {
         $result['name'] = $pet['name'];
         $result['status'] = 1;
       }
+      else {
+        $result['notify'] = 'Có lỗi xảy ra';
+      }
     break;
 		case 'edit-breeder':
 			$data = $nv_Request->get_array('data', 'post');
 			$bid = $nv_Request->get_string('bid', 'post', 0);
 			$id = $nv_Request->get_string('id', 'post', 0);
+      $result['notify'] = 'Có lỗi xảy ra';
 
       $data['time'] = totime($data['time']);
       $list = array();
@@ -89,6 +96,7 @@ if (!empty($action)) {
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = breederList($id);
+        $result['notify'] = 'Đã lưu thông tin thú cưng';
       }
 
 		break;
@@ -96,6 +104,7 @@ if (!empty($action)) {
 			$data = $nv_Request->get_array('data', 'post');
 			// $child = $nv_Request->get_array('child', 'post');
 			$id = $nv_Request->get_string('id', 'post', 0);
+      $result['notify'] = 'Có lỗi xảy ra';
 
       $data['time'] = totime($data['time']);
       $list = array();
@@ -110,6 +119,7 @@ if (!empty($action)) {
       // die($sql);
       if ($db->query($sql)) {
         $result['status'] = 1;
+        $result['notify'] = 'Đã thêm danh sách';
         $result['html'] = breederList($id);
       }
 
@@ -117,6 +127,7 @@ if (!empty($action)) {
 		case 'insert-disease':
 			$id = $nv_Request->get_string('id', 'post', 0);
 			$data = $nv_Request->get_array('data', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
 
       $data['treat'] = totime($data['treat']);
       $data['treated'] = totime($data['treated']);
@@ -125,6 +136,7 @@ if (!empty($action)) {
       $sql = 'insert into `'. PREFIX .'_disease` (petid, treat, treated, disease, note) values('. $id .', '. $data['treat'] .', '. $data['treated'] .', "'. $data['disease'] .'", "'. $data['note'] .'")';
       if ($db->query($sql)) {
         $result['status'] = 1;
+        $result['notify'] = 'Đã thêm danh sách';
         $result['html'] = diseaseList($id);
       }
 
@@ -133,6 +145,7 @@ if (!empty($action)) {
 			$did = $nv_Request->get_string('did', 'post', 0);
 			$id = $nv_Request->get_string('id', 'post', 0);
 			$data = $nv_Request->get_array('data', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
 
       $data['treat'] = totime($data['treat']);
       $data['treated'] = totime($data['treated']);
@@ -141,6 +154,7 @@ if (!empty($action)) {
       $sql = 'update `'. PREFIX .'_disease` set ' . sqlBuilder($data, BUILDER_EDIT) . ' where id = ' . $did;
       if ($db->query($sql)) {
         $result['status'] = 1;
+        $result['notify'] = 'Đã lưu thông tin';
         $result['html'] = diseaseList($id);
       }
 
@@ -154,6 +168,9 @@ if (!empty($action)) {
         $result['data'] = array('treat' => date('d/m/Y', $row['treat']), 'treated' => date('d/m/Y', $row['treated']), 'note' => $row['note'], 'disease' => $row['disease']);
         $result['status'] = 1;
       }
+      else {
+        $result['notify'] = 'Có lỗi xảy ra';
+      }
     break;
     case 'get-vaccine':
 			$id = $nv_Request->get_string('id', 'post', 0);
@@ -165,12 +182,16 @@ if (!empty($action)) {
         $result['data'] = array('type' => $row['type'] . '-' . $row['val'], 'time' => date('d/m/Y', $row['time']), 'recall' => date('d/m/Y', $row['recall']));
         $result['status'] = 1;
       }
+      else {
+        $result['notify'] = 'Có lỗi xảy ra';
+      }
     break;
 
     case 'edit-vaccine':
 			$id = $nv_Request->get_string('id', 'post', 0);
 			$vid = $nv_Request->get_string('vid', 'post', 0);
 			$data = $nv_Request->get_array('data', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
       
       if (!empty($id) && count($data) > 0) {
         $data['time'] = totime($data['time']);
@@ -182,12 +203,16 @@ if (!empty($action)) {
           $result['status'] = 1;
           $result['html'] = vaccineList($id);
         }
+        else {
+          $result['notify'] = 'Đã lưu';
+        }
       }
     break;
 
     case 'insert-vaccine':
 			$id = $nv_Request->get_string('id', 'post', 0);
 			$data = $nv_Request->get_array('data', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
       
       if (!empty($id) && count($data) > 0) {
         $data['time'] = totime($data['time']);
@@ -275,6 +300,7 @@ if (!empty($action)) {
 		break;
 		case 'insertpet':
 			$data = $nv_Request->get_array('data', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
 
 			if (count($data) > 1 && !checkPet($data['name'], $userinfo['id'])) {
         // ???
@@ -368,6 +394,7 @@ if (!empty($action)) {
 		break;
 		case 'insert-owner':
 			$data = $nv_Request->get_array('data', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
 
 			if (count($data) > 1 && !empty($userinfo['id'])) {
         // ???
@@ -380,6 +407,7 @@ if (!empty($action)) {
             $result['status'] = 1;
             $result['id'] = $db->lastInsertId();
             $result['name'] = $data['fullname'];
+            $result['notify'] = 'Đã thêm khách';
             // $result['html'] = userDogRowByList($userinfo['id']);
           }
         }
