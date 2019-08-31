@@ -31,7 +31,7 @@
   </div>
 
   <a href="/{module_file}">
-    <img src="/modules/{module_file}/src/banner.png" style="width: 200px;">
+    <img src="/themes/default/images/banner.png" style="width: 200px;">
   </a>
 
   <div style="float: right;">
@@ -89,7 +89,7 @@
   function cancelSubmit() {
     $.post(
       global['url'],
-      {action: 'cancel', id: global[id], filter: checkFilter()},
+      {action: 'cancel', id: global['id'], filter: checkFilter()},
       (result, statatus) => {
         checkResult(result, statatus).then(data => {
           modalCancel.modal('hide')

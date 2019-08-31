@@ -6,7 +6,7 @@
 .sm-thumbnail {
   width     : 64px !important;
   height    : 64px !important;
-  background: url('/modules/news/src/thumbnail-xxs.jpg') !important;
+  background: url('/themes/default/images/thumbnail-xxs.jpg') !important;
 }
 
 .pbody {
@@ -275,7 +275,7 @@ hr {
 .thumbnail {
   width     : 240px;
   height    : 240px;
-  background: url(/modules/news/src/thumbnail.jpg)
+  background: url(/themes/default/images/thumbnail.jpg)
 }
 
 .xleft {
@@ -334,7 +334,7 @@ hr {
   .transfer.thumbnail {
     width     : 150px !important;
     height    : 150px !important;
-    background: url('/modules/news/src/thumbnail-s.jpg') !important;
+    background: url('/themes/default/images/thumbnail-s.jpg') !important;
   }
 
   .pbody {
@@ -344,8 +344,9 @@ hr {
 
 @media screen and (max-width:480px) {
   .xright {
-    width : auto;
-    margin: 0px 20px;
+    width: auto;
+    margin: 20px 0px;
+    clear: both;
   }
 
   .main-search {
@@ -355,7 +356,7 @@ hr {
   .transfer.thumbnail {
     width     : 80px !important;
     height    : 80px !important;
-    background: url('/modules/news/src/thumbnail-xs.jpg') !important;
+    background: url('/themes/default/images/thumbnail-xs.jpg') !important;
   }
 
   .pbody {

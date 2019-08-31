@@ -2,7 +2,7 @@
 <div class="container">
   <div id="msgshow"></div>
     <div class="text-center start-content">
-      <img src="/modules/{module_file}/src/banner.png">
+      <img src="/themes/default/images/banner.png">
       <!-- <p> Nâng niu tình yêu động vật </p> -->
       <form action="/{module_file}/list">
         <div class="main-search">

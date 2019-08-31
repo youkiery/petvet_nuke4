@@ -203,10 +203,11 @@ function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('pa
       }
 
       $xtpl->assign('name', $check['name']);
-      $xtpl->assign('breeder', $check['breeder']);
+      // $xtpl->assign('breeder', $check['breeder']);
       $xtpl->assign('id', $check['id']);
       $xtpl->assign('microchip', $check['microchip']);
-      $xtpl->assign('breed', $check['species']);
+      $xtpl->assign('breed', $check['breed']);
+      $xtpl->assign('species', $check['species']);
       $xtpl->assign('sex', $sex_array[$check['sex']]);
       $xtpl->assign('dob', cdate($check['dateofbirth']));
       $request = getPetRequest($check['id']);

@@ -371,11 +371,11 @@
 <div class="container" style="margin-top: 20px;">
   <div id="loading">
     <div class="black-wag"> </div>
-    <img class="loading" src="/modules/{module_file}/src/loading.gif">
+    <img class="loading" src="/themes/default/images/loading.gif">
   </div>
   
   <a href="/{module_file}">
-    <img src="/modules/{module_file}/src/banner.png" style="width: 200px;">
+    <img src="/themes/default/images/banner.png" style="width: 200px;">
   </a>
   <a style="margin: 8px 0px; display: block;" href="javascript:history.go(-1)">
     <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
@@ -497,7 +497,7 @@
     </div>
   </div>
 </div>
-<script src="/modules/{module_file}/src/ckeditor/ckeditor.js"></script>
+<script src="/themes/default/js/ckeditor/ckeditor.js"></script>
 <script>
   var global = {
     id: '{id}',

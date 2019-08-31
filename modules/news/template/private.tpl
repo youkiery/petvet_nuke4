@@ -1,6 +1,6 @@
 <!-- Cá nhân -->
 <!-- BEGIN: main -->
-<link rel="stylesheet" href="/modules/{module_file}/src/glyphicons.css">
+<link rel="stylesheet" href="/themes/default/images/glyphicons.css">
 <style>
   .modal {
     overflow-y: auto;
@@ -10,7 +10,7 @@
 <div class="container">
   <div id="loading">
     <div class="black-wag"> </div>
-    <img class="loading" src="/modules/{module_file}/src/loading.gif">
+    <img class="loading" src="/themes/default/images/loading.gif">
   </div>
   <div id="msgshow"></div>
   <div class="modal" id="pet-vaccine" role="dialog">
@@ -565,7 +565,7 @@
   </div>
 
   <a href="/{module_file}">
-    <img src="/modules/{module_file}/src/banner.png" style="width: 200px;">
+    <img src="/themes/default/images/banner.png" style="width: 200px;">
   </a>
 
   <div style="float: right;">
@@ -588,7 +588,7 @@
     </button>
   </div>
   <div style="clear: left;"></div>
-  <p> <a href="/{module_file}/transfer"> Danh sách chuy ển nhượng </a> </p>
+  <p> <a href="/{module_file}/transfer"> Danh sách chuyển nhượng </a> </p>
   <p> <a href="/{module_file}/transferq"> Yêu cầu chuyển nhượng </a> </p>
   <h2> Danh sách thú cưng </h2>
 
@@ -733,7 +733,7 @@
   var canvas = document.createElement('canvas')
 
   var thumbnailImage = new Image()
-  thumbnailImage.src = '/modules/{module_file}/src/thumbnail.jpg'
+  thumbnailImage.src = '/themes/default/images/thumbnail.jpg'
   thumbnailImage.onload = (e) => {
     var context = canvas.getContext('2d')
     var width = thumbnailImage.width

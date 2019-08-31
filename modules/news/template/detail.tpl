@@ -24,7 +24,7 @@
 <div class="container">
   <div id="msgshow"></div>
   <a href="/{module_file}">
-    <img src="/modules/{module_file}/src/banner.png" style="width: 200px;">
+    <img src="/themes/default/images/banner.png" style="width: 200px;">
   </a>
   <form style="width: 60%; float: right;">
     <label class="input-group">
