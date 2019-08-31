@@ -188,10 +188,14 @@ function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('pa
     $i = 1;
     // echo json_encode($list); die();
     foreach ($list as $check) {
+      $xtpl->assign('pr', 'disabled');
       if ($ping) {
         $ping = 0;
         $xtpl->assign('display', 'table-row-group');
         $xtpl->assign('pc', '');
+        if (count($parent)) {
+          $xtpl->assign('pr', '');
+        }
       }
       else {
         $xtpl->assign('display', 'none');

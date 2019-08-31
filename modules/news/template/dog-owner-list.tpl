@@ -27,7 +27,7 @@
         <button class="btn btn-info" onclick="editPet({id})">
           <span class="glyphicon glyphicon-edit"></span>
         </button>
-        <button class="btn btn-info" onclick="parentToggle({id})">
+        <button class="btn btn-info" onclick="parentToggle({id})" {pr}>
           <img src="/modules/{module_file}/src/parent.png" style="width: 20px; height: 20px;">
         </button>
         <a href="/{module_name}/info?id={id}"> 
