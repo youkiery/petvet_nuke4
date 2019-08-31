@@ -1027,6 +1027,8 @@
           checkResult(response, status).then(data => {
             petList.html(data['html'])
             clearInputSet(parent)
+            file = false
+            filename = ''
             $("#parent-preview").attr('src', thumbnail)
             remind = JSON.parse(data['remind'])
             insertParent.modal('hide')
@@ -1223,6 +1225,8 @@
           checkResult(response, status).then(data => {
             petList.html(data['html'])
             clearInputSet(pet)
+            file = false
+            filename = ''
             $("#parent-m").val('')
             $("#parent-f").val('')
             petPreview.val('')
@@ -1300,6 +1304,8 @@
         (response, status) => {
           checkResult(response, status).then(data => {
             petList.html(data['html'])
+            file = false
+            filename = ''
             clearInputSet(pet)
             $("#parent-m").val('')
             $("#parent-f").val('')
@@ -1420,15 +1426,11 @@
   }
 
   function uploader() {
-        console.log(1);
     return new Promise(resolve => {
-        console.log(2);
       if (!(file || filename)) {
         resolve('')
       }
       else {
-        console.log(3);
-        
         var uploadTask = storageRef.child('images/' + filename).putString(file, 'base64', metadata);
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
           function (snapshot) {
@@ -1458,9 +1460,6 @@
           }, function () {
             // Upload completed successfully, now we can get the download URL
             uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
-
-              file = false
-              filename = ''
               resolve(downloadURL)
               console.log('File available at', downloadURL);
             });

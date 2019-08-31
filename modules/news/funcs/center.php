@@ -314,9 +314,16 @@ if (!empty($action)) {
 			$data = $nv_Request->get_array('data', 'post');
 			$filter = $nv_Request->get_array('filter', 'post');
 			$tabber = $nv_Request->get_array('tabber', 'post');
+			$image = $nv_Request->get_string('image', 'post');
       $result['notify'] = 'Có lỗi xảy ra';
 
-			if (count($data) > 1 && !checkPet($data['name'], $userinfo['id'])) {
+      if (empty($data['name']) || empty($data['species']) || empty($data['breed'])) {
+        $result['notify'] = 'Các trường bắt buộc không được bỏ trống';
+      }
+      else if (checkPet($data['name'], $userinfo['id'])) {
+        $result['notify'] = 'Tên thú cưng đã tồn tại';
+      }
+      else {
         // ???
         $sex = 0;
         if ($data['sex1']) {
@@ -350,7 +357,7 @@ if (!empty($action)) {
         checkRemind($data['breed'], 'breed');
         checkRemind($data['origin'], 'origin');
 
-				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image, type) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 0, "", 1)';
+				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image, type) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 0, "'. $image .'", 1)';
         // die($sql);
 
 				if ($db->query($sql)) {
@@ -368,7 +375,13 @@ if (!empty($action)) {
 			$tabber = $nv_Request->get_array('tabber', 'post');
       $result['notify'] = 'Có lỗi xảy ra';
 
-			if (count($data) > 1 && !checkPet($data['name'], $userinfo['id'])) {
+      if (empty($data['name']) || empty($data['species']) || empty($data['breed'])) {
+        $result['notify'] = 'Các trường bắt buộc không được bỏ trống';
+      }
+      else if (checkPet($data['name'], $userinfo['id'])) {
+        $result['notify'] = 'Tên thú cưng đã tồn tại';
+      }
+      else {
         $sex = 0;
         if ($data['sex1']) {
           $sex = 1;

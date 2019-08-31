@@ -1144,6 +1144,8 @@
         (response, status) => {
           checkResult(response, status).then(data => {
             petList.html(data['html'])
+            file = false
+            filename = ''
             clearInputSet(parent)
             $("#parent-preview").attr('src', thumbnail)
             remind = JSON.parse(data['remind'])
@@ -1374,6 +1376,8 @@
           checkResult(response, status).then(data => {
             petList.html(data['html'])
             clearInputSet(pet)
+            file = false
+            filename = ''
             $("#parent-m").val('')
             $("#parent-f").val('')
             petPreview.val('')
@@ -1470,6 +1474,8 @@
           checkResult(response, status).then(data => {
             petList.html(data['html'])
             clearInputSet(pet)
+            file = false
+            filename = ''
             $("#parent-m").val('')
             $("#parent-f").val('')
             $("#pet-breeder").prop('checked', true)
@@ -1541,6 +1547,8 @@
         (response, status) => {
           checkResult(response, status).then(data => {
             userList.html(data['html'])
+            file = false
+            filename = ''
             clearInputSet(pet)
             insertUser.modal('hide')
             window.location.reload()
@@ -1626,9 +1634,6 @@
           }, function () {
             // Upload completed successfully, now we can get the download URL
             uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
-
-              file = false
-              filename = ''
               resolve(downloadURL)
               console.log('File available at', downloadURL);
             });
