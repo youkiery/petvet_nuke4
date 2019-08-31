@@ -715,8 +715,8 @@
   <div style="clear: both;"></div>
 
   <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#a" onclick="change(0)"> Cái giống </a></li>
-    <li><a data-toggle="tab" href="#b" onclick="change(1)"> Đực giống </a></li>
+    <li class="active"><a data-toggle="tab" href="#a" onclick="change(0)"> Đực giống </a></li>
+    <li><a data-toggle="tab" href="#b" onclick="change(1)"> Cái giống </a></li>
     <li><a data-toggle="tab" href="#c" onclick="change(2)"> Con non </a></li>
   </ul>
 

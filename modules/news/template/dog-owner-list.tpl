@@ -35,7 +35,6 @@
             Chi tiết
           </button>
         </a>
-        {breeder}
       </td>
     </tr>
   </tbody>
