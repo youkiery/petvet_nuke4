@@ -17,134 +17,135 @@
     </a>
     <div style="margin-top: 20px;"></div>
 
-    <div class="row">
-      <label>
-        <div class="col-sm-4">
-          Tên đăng nhập
-        </div>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="username" autocomplete="off">
-        </div>
-      </label>
-    </div>
+    <form onsubmit="signup(event)">
 
-    <div class="row">
-      <label>
-        <div class="col-sm-4">
-          Mật khẩu
-        </div>
-        <div class="col-sm-8">
-          <input type="password" class="form-control" id="password">
-        </div>
-      </label>
-    </div>
+      <div class="row">
+        <label>
+          <div class="col-sm-4">
+            Tên đăng nhập
+          </div>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="username" autocomplete="off">
+          </div>
+        </label>
+      </div>
 
-    <div class="row">
-      <label>
-        <div class="col-sm-4">
-          Xác nhận mật khẩu
-        </div>
-        <div class="col-sm-8">
-          <input type="password" class="form-control" id="vpassword">
-        </div>
-      </label>
-    </div>
+      <div class="row">
+        <label>
+          <div class="col-sm-4">
+            Mật khẩu
+          </div>
+          <div class="col-sm-8">
+            <input type="password" class="form-control" id="password">
+          </div>
+        </label>
+      </div>
 
-    <div class="row">
-      <label>
-        <div class="col-sm-4">
-          Họ và tên
-        </div>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="fullname" autocomplete="off">
-        </div>
-      </label>
-    </div>
+      <div class="row">
+        <label>
+          <div class="col-sm-4">
+            Xác nhận mật khẩu
+          </div>
+          <div class="col-sm-8">
+            <input type="password" class="form-control" id="vpassword">
+          </div>
+        </label>
+      </div>
 
-    <div class="row">
-      <label>
-        <div class="col-sm-4">
-          Số CMND
-        </div>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="politic" autocomplete="off">
-        </div>
-      </label>
-    </div>
+      <div class="row">
+        <label>
+          <div class="col-sm-4">
+            Họ và tên
+          </div>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="fullname" autocomplete="off">
+          </div>
+        </label>
+      </div>
 
-    <div class="row">
-      <label>
-        <div class="col-sm-4">
-          Điện thoại
-        </div>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="phone" autocomplete="off">
-        </div>
-      </label>
-    </div>
+      <div class="row">
+        <label>
+          <div class="col-sm-4">
+            Số CMND
+          </div>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="politic" autocomplete="off">
+          </div>
+        </label>
+      </div>
 
-    <div class="row">
-      <label>
-        <div class="col-sm-4">
-          Tỉnh
-        </div>
-        <div class="col-sm-8">
-          <select class="form-control" id="al1" onchange="l1(this)">
-            <!-- BEGIN: l1 -->
-            <option value="{l1id}"> {l1name} </option>
-            <!-- END: l1 -->
-          </select>
-        </div>
-      </label>
-    </div>
+      <div class="row">
+        <label>
+          <div class="col-sm-4">
+            Điện thoại
+          </div>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="phone" autocomplete="off">
+          </div>
+        </label>
+      </div>
 
-    <div class="row">
-      <label>
-        <div class="col-sm-4">
-          Quận/Huyện/Thành phố
-        </div>
-        <div class="col-sm-8">
-          <!-- BEGIN: l2 -->
-          <select class="form-control al2" id="al2{l1id}" style="display: {active}">
-            <!-- BEGIN: l2c -->
-            <option value="{l2id}"> {l2name} </option>
-            <!-- END: l2c -->
-          </select>
-          <!-- END: l2 -->
-        </div>
-      </label>
-    </div>
+      <div class="row">
+        <label>
+          <div class="col-sm-4">
+            Tỉnh
+          </div>
+          <div class="col-sm-8">
+            <select class="form-control" id="al1" onchange="l1(this)">
+              <!-- BEGIN: l1 -->
+              <option value="{l1id}"> {l1name} </option>
+              <!-- END: l1 -->
+            </select>
+          </div>
+        </label>
+      </div>
 
-    <div class="row">
-      <label>
-        <div class="col-sm-4">
-          Xã/Phường/Thị trấn
-        </div>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="al3" autocomplete="off">
-        </div>
-      </label>
-    </div>
+      <div class="row">
+        <label>
+          <div class="col-sm-4">
+            Quận/Huyện/Thành phố
+          </div>
+          <div class="col-sm-8">
+            <!-- BEGIN: l2 -->
+            <select class="form-control al2" id="al2{l1id}" style="display: {active}">
+              <!-- BEGIN: l2c -->
+              <option value="{l2id}"> {l2name} </option>
+              <!-- END: l2c -->
+            </select>
+            <!-- END: l2 -->
+          </div>
+        </label>
+      </div>
 
-    <div class="row">
-      <label>
-        <div class="col-sm-4">
-          Địa chỉ
-        </div>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="address" autocomplete="off">
-        </div>
-      </label>
-    </div>
+      <div class="row">
+        <label>
+          <div class="col-sm-4">
+            Xã/Phường/Thị trấn
+          </div>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="al3" autocomplete="off">
+          </div>
+        </label>
+      </div>
 
-    <div class="text-center">
-      <button class="btn btn-info" id="button" onclick="signup()">
-        Đăng ký
-      </button>
-    </div>
-    <div id="error">
+      <div class="row">
+        <label>
+          <div class="col-sm-4">
+            Địa chỉ
+          </div>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="address" autocomplete="off">
+          </div>
+        </label>
+      </div>
 
-    </div>
+      <div class="text-center">
+        <button class="btn btn-info" id="button">
+          Đăng ký
+        </button>
+      </div>
+    </form>
+    <div id="error"></div>
     <br>
     Đã có tài khoản? <a href="/{module_file}/login"> Đăng nhập ngay!</a>
   </div>
@@ -230,7 +231,8 @@
     return false
   }
 
-  function signup() {
+  function signup(e) {
+    e.preventDefault()
     if (signupData = checkSignup()) {
       freeze()
       $.post(

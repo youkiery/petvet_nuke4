@@ -17,33 +17,37 @@
     </a>
 
     <div style="margin-top: 20px;"></div>
-    <div class="row">
-      <label>
-        <div class="col-sm-4">
-          Tên đăng nhập
-        </div>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="username" autocomplete="off">
-        </div>
-      </label>
-    </div>
 
-    <div class="row">
-      <label>
-        <div class="col-sm-4">
-          Mật khẩu
-        </div>
-        <div class="col-sm-8">
-          <input type="password" class="form-control" id="password">
-        </div>
-      </label>
-    </div>
+    <form onsubmit="login(event)">
 
-    <div class="text-center">
-      <button class="btn btn-info" onclick="login()">
-        Đăng nhập
-      </button>
-    </div>
+      <div class="row">
+        <label>
+          <div class="col-sm-4">
+            Tên đăng nhập
+          </div>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="username" autocomplete="off">
+          </div>
+        </label>
+      </div>
+
+      <div class="row">
+        <label>
+          <div class="col-sm-4">
+            Mật khẩu
+          </div>
+          <div class="col-sm-8">
+            <input type="password" class="form-control" id="password">
+          </div>
+        </label>
+      </div>
+
+      <div class="text-center">
+        <button class="btn btn-info" onclick="login()">
+          Đăng nhập
+        </button>
+      </div>
+    </form>
     <div id="error"> </div>
     <br>
     Chưa có tài khoản? <a href="/{module_file}/signup"> Đăng ký ngay!</a>
@@ -80,7 +84,8 @@
     return false
   }
 
-  function login() {
+  function login(e) {
+    e.preventDefault()
     if (loginData = checkLogin()) {
       freeze()
       $.post(
