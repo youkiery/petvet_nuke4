@@ -1,6 +1,4 @@
 <!-- BEGIN: main -->
-<link rel="stylesheet" href="/themes/default/images/glyphicons.css">
-
 <style>
   .modal {
     overflow-y: auto;

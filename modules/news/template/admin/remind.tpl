@@ -1,6 +1,6 @@
 <!-- BEGIN: main -->
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script> 
-<link rel="stylesheet" href="/themes/default/images/glyphicons.css">
+<link rel="stylesheet" href="/themes/default/src/glyphicons.css">
 <style>
   label {
     width: 100%;
@@ -117,7 +117,7 @@
   </div>
 </div>
 
-<script src="/themes/default/images/script.js"></script>
+<script src="/modules/{module_file}/src/script.js"></script>
 <script>
   var global = {
     url: '{origin}',
