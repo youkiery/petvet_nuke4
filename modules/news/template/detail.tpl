@@ -45,6 +45,8 @@
     <div class="col-sm-4 thumbnail" id="avatar" style="width: 240px; height: 240px; overflow: hidden;">
     </div>
     <div class="col-sm-8">
+      <p> Chủ nuôi: {owner} </p>
+      <p> CMND: {politic} </p>
       <p> Tên: {name} </p>
       <p> Ngày sinh: {dob} </p>
       <p> Giống: {species} </p>
@@ -52,8 +54,6 @@
       <p> Giới tính: {sex} </p>
       <p> Màu sắc: {color} </p>
       <p> Microchip: {microchip} </p>
-      <p> Chủ nuôi: {owner} </p>
-      <p> CMND: {politic} </p>
     </div>
   </div>
 

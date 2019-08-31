@@ -432,7 +432,7 @@ $page_title = "Quản lý thú cưng";
 if (!empty($row = $query->fetch())) {
   $page_title = $row['name'] . " - Quản lý thú cưng";
 	$xtpl->assign('name', $row['name']);
-	$xtpl->assign('dob', $row['dateofbirth']);
+	$xtpl->assign('dob', cdate($row['dateofbirth']));
 	$xtpl->assign('breed', $row['breed']);
 	$xtpl->assign('species', $row['species']);
 	$xtpl->assign('sex', $row['sex']);

@@ -601,6 +601,8 @@ $xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
 $xtpl->assign('module_file', $module_file);
 $xtpl->assign('module_name', $module_name);
 
+die("$module_name");
+
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 include ("modules/". $module_file ."/layout/header.php");

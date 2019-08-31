@@ -15,7 +15,6 @@ function transferqList($userid, $filter = array('page' => 1, 'limit' => 10)) {
   global $db, $module_file;
 
   $xtpl = new XTemplate('transferq-list.tpl', PATH);
-  $xtpl->assign('module_file', $module_file);
 
   $sql = 'select count(*) as count from `'. PREFIX .'_transfer_request` where userid = ' . $userid;
   $query = $db->query($sql);
@@ -171,10 +170,11 @@ function requestDetail($petid) {
 }
 
 function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('page' => 1, 'limit' => 10, 'keyword' => '')) {
-  global $db, $user_info, $sex_array, $module_file;
+  global $db, $user_info, $sex_array, $module_file, $module_name;
   $index = 1;
   $xtpl = new XTemplate('dog-owner-list.tpl', PATH);
   $xtpl->assign('module_file', $module_file);
+  $xtpl->assign('module_name', $module_name);
 
   $data = getUserPetList($userid, $tabber, $filter);
 
