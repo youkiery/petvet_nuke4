@@ -29,13 +29,23 @@ else {
   $xtpl->parse("main.nolog");
 }
 
-// $sql = 'select * from `'. PREFIX .'_user`';
+// $sql = 'select * from ((select id, fullname, mobile, address, 1 as type from `'. PREFIX .'_user`) union (select id, fullname, mobile, address, 2 as type from `'. PREFIX .'_contact` where userid = '. $userinfo['id'] .')) as c';
+// $query = $db->query($sql);
+
+// while ($row = $query->fetch()) {
+//   echo "$row[fullname] ($row[type]): ". xdecrypt($row['mobile']) ." <br>";
+// }
+// die();
+
+
+
+// $sql = 'select * from `'. PREFIX .'_contact`';
 // $query = $db->query($sql);
 
 // while ($row = $query->fetch()) {
 //   $mobile = xencrypt($row['mobile']);
 //   $address = xencrypt($row['address']);
-//   $sql = 'update `'. PREFIX .'_user` set mobile = "'. $mobile .'", address = "'. $address .'" where id = ' . $row['id'];
+//   $sql = 'update `'. PREFIX .'_contact` set mobile = "'. $mobile .'", address = "'. $address .'" where id = ' . $row['id'];
 //   $db->query($sql);
 // }
 // die();

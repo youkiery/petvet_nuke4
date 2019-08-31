@@ -260,7 +260,7 @@ if (!empty($action)) {
     case 'parent2':
 			$keyword = $nv_Request->get_string('keyword', 'post', '');
 
-			$sql = 'select * from ((select id, fullname, mobile, address, 1 as type from `'. PREFIX .'_user`) union (select id, fullname, mobile, address, 2 as type from `'. PREFIX .'_contact` where userid = '. $userinfo['id'] .')) as a limit 10';
+			$sql = 'select * from ((select id, fullname, mobile, address, 1 as type from `'. PREFIX .'_user`) union (select id, fullname, mobile, address, 2 as type from `'. PREFIX .'_contact` where userid = '. $userinfo['id'] .')) as a';
 			$query = $db->query($sql);
 
 			$html = '';
@@ -510,7 +510,7 @@ if (!empty($action)) {
 		case 'parent':
 			$keyword = $nv_Request->get_string('keyword', 'post', '');
 
-			$sql = 'select a.id, a.name, b.fullname, b.mobile from `'. PREFIX .'_pet` a inner join (select * from ((select id, fullname, mobile, address, 1 as type from `'. PREFIX .'_user`) union (select id, fullname, mobile, address, 2 as type from `'. PREFIX .'_contact` where userid = '. $userinfo['id'] .')) as c) b on a.userid = b.id where (a.name like "%'. $keyword .'%") limit 10';
+			$sql = 'select a.id, a.name, b.fullname, b.mobile from `'. PREFIX .'_pet` a inner join (select * from ((select id, fullname, mobile, address, 1 as type from `'. PREFIX .'_user`) union (select id, fullname, mobile, address, 2 as type from `'. PREFIX .'_contact` where userid = '. $userinfo['id'] .')) as c) b on a.userid = b.id';
 			$query = $db->query($sql);
 
 			$html = '';

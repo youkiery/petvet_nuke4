@@ -72,7 +72,8 @@ function checkMobile($source, $target) {
     return true;
   }
   $source = xdecrypt($source);
-  if (strpos($source, $target) !== false) {
+  $res = strpos($source, $target);
+  if ($res !== false) {
     return true;
   }
   return false;

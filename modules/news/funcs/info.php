@@ -241,7 +241,7 @@ if (!empty($action)) {
 			$index = $nv_Request->get_int('index', 'post', -1);
 			$func = $nv_Request->get_string('func', 'post', '');
 
-			$sql = 'select a.id, a.name, b.fullname, b.mobile, b.image from `'. PREFIX .'_pet` a inner join `'. PREFIX .'_user` b on a.userid = b.id where (a.name like "%'. $keyword .'%") and userid = ' . $userinfo['id'];
+			$sql = 'select a.id, a.name, b.fullname, b.mobile, b.image from `'. PREFIX .'_pet` a inner join `'. PREFIX .'_user` b on a.userid = b.id where userid = ' . $userinfo['id'];
 			$query = $db->query($sql);
 
 			$html = '';
