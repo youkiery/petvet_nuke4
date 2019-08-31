@@ -61,7 +61,6 @@ if (!empty($action)) {
       $id = $nv_Request->get_string('id', 'post', 0);
       $type = $nv_Request->get_string('type', 'post', 0);
       $value = $nv_Request->get_string('value', 'post', 0);
-      $result['notify'] = 'Có lỗi xảy ra';
 
       if (!empty($id)) {
         $sql = 'select * from `'. PREFIX .'_request` where type = '. $type .' and value = '. $value .' and petid = ' . $id;
@@ -70,6 +69,7 @@ if (!empty($action)) {
         $request = $query->fetch();
         if (!empty($request) && count($request) > 0) {
           $sql = 'update `'. PREFIX .'_request` set time = ' . time() . ', status = 1 where id = ' . $request['id'];
+          // die($sql);
           if ($db->query($sql)) {
             $result['status'] = 1;
             $result['html'] = requestDetail($id);
@@ -83,22 +83,31 @@ if (!empty($action)) {
             $result['html'] = requestDetail($id);
           }
         }
+        if (empty($result['html'])) {
+          $result['notify'] = 'Có lỗi xảy ra';
+        }
+      }
+      else {
+        $result['notify'] = 'Có lỗi xảy ra';
       }
     break;
     case 'cancel':
       $id = $nv_Request->get_string('id', 'post', 0);
       $type = $nv_Request->get_string('type', 'post', 0);
       $value = $nv_Request->get_string('value', 'post', 0);
-      $result['notify'] = 'Có lỗi xảy ra';
 
       if (!empty($id)) {
-        // if (!empty($request = getPetRequest($id, $value)) && count($request) > 0) {
-          $sql = 'update `'. PREFIX .'_request` set time = ' . time() . ', status = 0 where type = '. $type .' and value = '. $value .' and petid = ' . $id;
-          if ($db->query($sql)) {
-            $result['status'] = 1;
-            $result['html'] = requestDetail($id);
-          }
-        // }
+        $sql = 'update `'. PREFIX .'_request` set time = ' . time() . ', status = 0 where type = '. $type .' and value = '. $value .' and petid = ' . $id;
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+          $result['html'] = requestDetail($id);
+        }
+        if (empty($result['html'])) {
+          $result['notify'] = 'Có lỗi xảy ra';
+        }
+      }
+      else {
+        $result['notify'] = 'Có lỗi xảy ra';
       }
     break;
 		case 'filteruser':

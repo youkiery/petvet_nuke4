@@ -26,8 +26,13 @@ if (!empty($action)) {
 		case 'filter':
       $filter = $nv_Request->get_array('filter', 'post');
 
-      $result['status'] = 1;
       $result['html'] = transferList($userinfo['id'], $filter);;
+      if (empty($result['html'])) {
+        $result['notify'] = 'Có lỗi xảy ra';
+      }
+      else {
+        $result['status'] = 1;
+      }
 		break;
 	}
 	echo json_encode($result);

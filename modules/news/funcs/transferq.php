@@ -26,18 +26,25 @@ if (!empty($action)) {
 		case 'filter':
       $filter = $nv_Request->get_array('filter', 'post');
 
-      $result['status'] = 1;
       $result['html'] = transferqList($userinfo['id'], $filter);
+      if (empty($result['html'])) {
+        $result['notify'] = 'Có lỗi xảy ra';
+      }
+      else {
+        $result['status'] = 1;
+      }
 		break;
 		case 'cancel':
       $filter = $nv_Request->get_array('filter', 'post');
       $id = $nv_Request->get_int('id', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
 
       if (count($filter) > 1 && !empty(checkTransferRequest($id))) {
         // zen: change to status
         $sql = 'delete from `'. PREFIX .'_transfer_request` where id = ' . $id;
         if ($db->query($sql)) {
           $result['status'] = 1;
+          $result['notify'] = 'Đã xóa';
           $result['html'] = transferqList($userinfo['id'], $filter);
         }
       }
@@ -46,6 +53,7 @@ if (!empty($action)) {
       $filter = $nv_Request->get_array('filter', 'post');
       $id = $nv_Request->get_int('id', 'post');
       $row = checkTransferRequest($id);
+      $result['notify'] = 'Có lỗi xảy ra';
 
       if (count($filter) > 1 && !empty($row)) {
         // zen: change to status
@@ -57,6 +65,7 @@ if (!empty($action)) {
 
         if ($db->query($sql) && $db->query($sql2) && $db->query($sql3)) {
           $result['status'] = 1;
+          $result['notify'] = 'Đã chuyển nhượng';
           $result['html'] = transferqList($userinfo['id'], $filter);
         }
       }
