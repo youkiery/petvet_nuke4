@@ -16,7 +16,7 @@
       <div class="modal-content">
         <div class="modal-body">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <p>
+          <p class="text-center">
             Thêm lịch tiêm phòng
           </p>
 
@@ -56,10 +56,11 @@
             </div>
           </label>
 
-          <button class="btn btn-success" onclick="insertVaccineSubmit()">
-            Thêm lịch tiêm phòng
-          </button>
-
+          <div class="text-center">
+            <button class="btn btn-success" onclick="insertVaccineSubmit()">
+              Thêm lịch tiêm phòng
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -241,61 +242,12 @@
     </div>
   </div>
 
-  <div id="pet-vaccine" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-body text-center">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <p>
-            Thêm lịch tiêm phòng
-          </p>
-
-          <label class="row">
-            <div class="col-sm-3">
-              Loại tiêm phòng
-            </div>
-            <div class="col-sm-9">
-              <select class="form-control" id="vaccine-type">
-                <option value="0"> Dại </option>
-                <option value="1"> 5 Bệnh </option>
-                <option value="2"> 6 Bệnh </option>
-                <option value="3"> 7 Bệnh </option>
-              </select>
-            </div>
-          </label>
-
-          <label class="row">
-            <div class="col-sm-3">
-              Ngày tiêm phòng
-            </div>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" id="vaccine-time">
-            </div>
-          </label>
-
-          <label class="row">
-            <div class="col-sm-3">
-              Ngày nhắc
-            </div>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" id="vaccine-recall">
-            </div>
-          </label>
-
-          <button class="btn btn-success" onclick="insertVaccineSubmit()">
-            Thêm lịch tiêm phòng
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div id="insert-user" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-body text-center">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <p>
+          <p class="text-center">
             Chỉnh sửa thông tin
           </p>
           <label class="row">
@@ -1113,7 +1065,7 @@
     freeze()
     $.post(
       global['url'],
-      { action: 'insert-vaccine', data: checkInputSet(vaccine), id: global['id'] },
+      { action: 'insert-vaccine', data: checkVaccineData(), id: global['id'] },
       (response, status) => {
         checkResult(response, status).then(data => {
           window.location.href = '/{module_name}/info/?id=' + global['id'] + '&target=vaccine'

@@ -124,7 +124,7 @@ if (!empty($action)) {
 			}
 		break;
     case 'insert-vaccine':
-    	$id = $nv_Request->get_string('id', 'post', 0);
+			$id = $nv_Request->get_string('id', 'post', 0);
 			$data = $nv_Request->get_array('data', 'post');
       $result['notify'] = 'Có lỗi xảy ra';
       
