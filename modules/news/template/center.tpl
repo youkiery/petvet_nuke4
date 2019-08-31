@@ -715,11 +715,10 @@
   <div style="clear: both;"></div>
 
   <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#a" onclick="change(0)"> Đực giống </a></li>
-    <li><a data-toggle="tab" href="#b" onclick="change(1)"> Cái giống </a></li>
+    <li class="active"><a data-toggle="tab" href="#a" onclick="change(0)"> Cái giống </a></li>
+    <li><a data-toggle="tab" href="#b" onclick="change(1)"> Đực giống </a></li>
     <li><a data-toggle="tab" href="#c" onclick="change(2)"> Con non </a></li>
   </ul>
-
 
   <div id="pet-list">
     {list}
@@ -1342,6 +1341,10 @@
         checkResult(response, status).then(data => {
           global['id'] = id
           parseInputSet(data['data'], pet)
+          $("#pet-breeder").prop('checked', false)
+          if (data['more']['breeder'] < 2) {
+            $("#pet-breeder").prop('checked', true)
+          }
           $("#parent-f").val(data['more']['f'])
           $("#parent-m").val(data['more']['m'])
           $("#pet-sex-" + data['more']['sex']).prop('checked', true)
@@ -1363,6 +1366,8 @@
   function checkPetData() {
     var data = checkInputSet(pet)
     data['breeder'] = $("#pet-breeder").prop('checked')
+    data['sex0'] = pet['sex0'].prop('checked')
+    data['sex1'] = pet['sex1'].prop('checked')
     return data
   }
 

@@ -201,7 +201,9 @@ function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('pa
         $xtpl->assign('display', 'none');
         $xtpl->assign('pc', 'i' . $row['id']);
       }
+
       $xtpl->assign('name', $check['name']);
+      $xtpl->assign('breeder', $check['breeder']);
       $xtpl->assign('id', $check['id']);
       $xtpl->assign('microchip', $check['microchip']);
       $xtpl->assign('breed', $check['species']);

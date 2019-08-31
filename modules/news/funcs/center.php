@@ -153,7 +153,7 @@ if (!empty($action)) {
 
 			if (!empty($row = $query->fetch())) {
 				$result['data'] = array('name' => $row['name'], 'dob' => date('d/m/Y', $row['dateofbirth']), 'species' => $row['species'], 'breed' => $row['breed'], 'color' => $row['color'], 'microchip' => $row['microchip'], 'parentf' => $row['fid'], 'parentm' => $row['mid'], 'miear' => $row['miear'], 'origin' => $row['origin']);
-        $result['more'] = array('sex' => intval($row['sex']), 'm' => getPetNameId($row['mid']), 'f' => getPetNameId($row['fid']));
+        $result['more'] = array('breeder' => $row['breeder'],'sex' => intval($row['sex']), 'm' => getPetNameId($row['mid']), 'f' => getPetNameId($row['fid']));
         $result['image'] = $row['image'];
 				$result['status'] = 1;
 			}
@@ -325,9 +325,9 @@ if (!empty($action)) {
       }
       else {
         // ???
-        $sex = 0;
-        if ($data['sex1']) {
-          $sex = 1;
+        $sex = 1;
+        if ($data['sex1'] == 'false') {
+          $sex = 0;
         }
 				$data['dob'] = totime($data['dob']);
 				$data['sex'] = $sex;
@@ -382,9 +382,9 @@ if (!empty($action)) {
         $result['notify'] = 'Tên thú cưng đã tồn tại';
       }
       else {
-        $sex = 0;
-        if ($data['sex1']) {
-          $sex = 1;
+        $sex = 1;
+        if ($data['sex1'] == 'false') {
+          $sex = 0;
         }
 				$data['dateofbirth'] = totime($data['dob']);
 				$data['sex'] = $sex;
@@ -424,14 +424,14 @@ if (!empty($action)) {
 				$data['dateofbirth'] = totime($data['dob']);
 				$data['fid'] = $data['parentf'];
 				$data['mid'] = $data['parentm'];
-        $sex = 0;
-        if ($data['sex1']) {
-          $sex = 1;
+        $sex = 1;
+        if ($data['sex1'] == 'false') {
+          $sex = 0;
         }
+				$data['sex'] = $sex;
 
         unset($data['sex0']);
         unset($data['sex1']);
-				$data['sex'] = $sex;
 
 				unset($data['dob']);
 				unset($data['parentf']);        
@@ -454,7 +454,6 @@ if (!empty($action)) {
         }
 
 				$sql = 'update `'. PREFIX .'_pet` set '. sqlBuilder($data, BUILDER_EDIT) .', image = "'. $image .'" where id = ' . $id;
-        // die($sql);
 
 				if ($db->query($sql)) {
 					$result['status'] = 1;

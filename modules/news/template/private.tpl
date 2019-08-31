@@ -588,7 +588,7 @@
     </button>
   </div>
   <div style="clear: left;"></div>
-  <p> <a href="/{module_file}/transfer"> Danh sách chuyển nhượng </a> </p>
+  <p> <a href="/{module_file}/transfer"> Danh sách chuy ển nhượng </a> </p>
   <p> <a href="/{module_file}/transferq"> Yêu cầu chuyển nhượng </a> </p>
   <h2> Danh sách thú cưng </h2>
 
@@ -1212,6 +1212,8 @@
   function checkPetData() {
     var data = checkInputSet(pet)
     data['breeder'] = $("#pet-breeder").prop('checked')
+    data['sex0'] = pet['sex0'].prop('checked')
+    data['sex1'] = pet['sex1'].prop('checked')
     return data
   }
 

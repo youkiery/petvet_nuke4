@@ -154,7 +154,7 @@ if (!empty($action)) {
 
 			if (!empty($row = $query->fetch())) {
 				$result['data'] = array('name' => $row['name'], 'dob' => date('d/m/Y', $row['dateofbirth']), 'species' => $row['species'], 'breed' => $row['breed'], 'color' => $row['color'], 'microchip' => $row['microchip'], 'parentf' => $row['fid'], 'parentm' => $row['mid'], 'miear' => $row['miear'], 'origin' => $row['origin']);
-        $result['more'] = array('sex' => intval($row['sex']), 'm' => getPetNameId($row['mid']), 'f' => getPetNameId($row['fid']));
+        $result['more'] = array('breeder' => $row['breeder'],'sex' => intval($row['sex']), 'm' => getPetNameId($row['mid']), 'f' => getPetNameId($row['fid']));
         $result['image'] = $row['image'];
 				$result['status'] = 1;
 			}
@@ -323,9 +323,9 @@ if (!empty($action)) {
       }
       else {
         // ???
-        $sex = 0;
-        if ($data['sex1']) {
-          $sex = 1;
+        $sex = 1;
+        if ($data['sex1'] == 'false') {
+          $sex = 0;
         }
 				$data['dob'] = totime($data['dob']);
 				$data['sex'] = $sex;
@@ -378,9 +378,9 @@ if (!empty($action)) {
         $result['notify'] = 'Tên thú cưng đã tồn tại';
       }
       else {
-        $sex = 0;
-        if ($data['sex1']) {
-          $sex = 1;
+        $sex = 1;
+        if ($data['sex1'] == 'false') {
+          $sex = 0;
         }
 				$data['dateofbirth'] = totime($data['dob']);
 				$data['sex'] = $sex;
@@ -420,9 +420,9 @@ if (!empty($action)) {
 				$data['dateofbirth'] = totime($data['dob']);
 				$data['fid'] = $data['parentf'];
 				$data['mid'] = $data['parentm'];
-        $sex = 0;
-        if ($data['sex1']) {
-          $sex = 1;
+        $sex = 1;
+        if ($data['sex1'] == 'false') {
+          $sex = 0;
         }
 
         unset($data['sex0']);
@@ -439,10 +439,10 @@ if (!empty($action)) {
 
         if (!empty($data['breeder'])) {
           if ($data['sex']) {
-            $data['breeder'] = 1;
+            $data['breeder'] = 0;
           }
           else {
-            $data['breeder'] = 0;
+            $data['breeder'] = 1;
           }
         }
         else {
