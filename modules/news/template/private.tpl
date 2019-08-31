@@ -1293,22 +1293,24 @@
 
   function insertPetSubmit() {
     freeze()
-    $.post(
-      global['url'],
-      { action: 'insertpet', data: checkPetData(), filter: checkFilter(), tabber: global['tabber'] },
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          petList.html(data['html'])
-          clearInputSet(pet)
-          $("#parent-m").val('')
-          $("#parent-f").val('')
-          $("#pet-breeder").prop('checked', true)
-          petPreview.val('')
-          remind = JSON.parse(data['remind'])
-          insertPet.modal('hide')
-        }, () => { })
-      }
-    )
+    uploader().then(imageUrl => {
+      $.post(
+        global['url'],
+        { action: 'insertpet', data: checkPetData(), filter: checkFilter(), tabber: global['tabber'], image: imageUrl },
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            petList.html(data['html'])
+            clearInputSet(pet)
+            $("#parent-m").val('')
+            $("#parent-f").val('')
+            $("#pet-breeder").prop('checked', true)
+            petPreview.val('')
+            remind = JSON.parse(data['remind'])
+            insertPet.modal('hide')
+          }, () => { })
+        }
+      )
+    })
   }
 
   function clearInputSet(dataSet) {
@@ -1418,11 +1420,15 @@
   }
 
   function uploader() {
+        console.log(1);
     return new Promise(resolve => {
+        console.log(2);
       if (!(file || filename)) {
         resolve('')
       }
       else {
+        console.log(3);
+        
         var uploadTask = storageRef.child('images/' + filename).putString(file, 'base64', metadata);
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
           function (snapshot) {

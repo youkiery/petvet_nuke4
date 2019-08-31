@@ -1462,22 +1462,24 @@
 
   function insertPetSubmit() {
     freeze()
-    $.post(
-      global['url'],
-      { action: 'insertpet', data: checkPetData(), filter: checkFilter(), tabber: global['tabber'] },
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          petList.html(data['html'])
-          clearInputSet(pet)
-          $("#parent-m").val('')
-          $("#parent-f").val('')
-          $("#pet-breeder").prop('checked', true)
-          petPreview.val('')
-          remind = JSON.parse(data['remind'])
-          insertPet.modal('hide')
-        }, () => { })
-      }
-    )
+    uploader().then(imageUrl => {
+      $.post(
+        global['url'],
+        { action: 'insertpet', data: checkPetData(), filter: checkFilter(), tabber: global['tabber'], image: imageUrl },
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            petList.html(data['html'])
+            clearInputSet(pet)
+            $("#parent-m").val('')
+            $("#parent-f").val('')
+            $("#pet-breeder").prop('checked', true)
+            petPreview.val('')
+            remind = JSON.parse(data['remind'])
+            insertPet.modal('hide')
+          }, () => { })
+        }
+      )
+    })
   }
 
   function clearInputSet(dataSet) {
