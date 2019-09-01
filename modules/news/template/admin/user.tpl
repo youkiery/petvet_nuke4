@@ -114,7 +114,8 @@
     login: 1,
     text: ['Đăng ky', 'Đăng nhập'],
     url: '{origin}',
-    id: -1
+    id: -1,
+    page: 1
   }
   var user = {
     fullname: $("#user-name"),

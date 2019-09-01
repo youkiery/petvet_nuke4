@@ -335,8 +335,9 @@ function transferList($userid, $filter = array('page' => 1, 'limit' => 10)) {
 function diseaseList2() {
   global $db;
 
-  $sql = 'select * from ((select id, disease, 1 as type from `'. PREFIX .'_disease`) union (select id, disease, 2 as type `'. PREFIX .'_disease_suggest`)) as a';
-  die($sql);
+  $sql = 'select * from ((select id, disease, 1 as type from `'. PREFIX .'_disease`) union (select id, disease, 2 as type from `'. PREFIX .'_disease_suggest`)) as a';
+  // die($sql);
+  
   return '';
 }
 

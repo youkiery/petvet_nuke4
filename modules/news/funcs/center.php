@@ -335,12 +335,12 @@ if (!empty($action)) {
         $data['fid'] = $data['parentf'];
 				$data['mid'] = $data['parentm'];
 
-        if (!empty($data['breeder'])) {
+        if ($data['breeder'] == 'true') {
           if ($data['sex']) {
-            $data['breeder'] = 0;
+            $data['breeder'] = 1;
           }
           else {
-            $data['breeder'] = 1;
+            $data['breeder'] = 0;
           }
         }
         else {
@@ -358,7 +358,6 @@ if (!empty($action)) {
         checkRemind($data['origin'], 'origin');
 
 				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image, type) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 0, "'. $image .'", 1)';
-        // die($sql);
 
 				if ($db->query($sql)) {
 					$result['status'] = 1;
@@ -390,6 +389,20 @@ if (!empty($action)) {
 				$data['sex'] = $sex;
         $data['fid'] = $data['parentf'];
 				$data['mid'] = $data['parentm'];
+
+
+        $data['breeder'] = 1;
+        if ($data['breeder'] == 'false') {
+          if ($data['sex']) {
+            $data['breeder'] = 1;
+          }
+          else {
+            $data['breeder'] = 0;
+          }
+        }
+        else {
+          $data['breeder'] = 2;
+        }
 
         unset($data['sex0']);
         unset($data['sex1']);
@@ -441,7 +454,7 @@ if (!empty($action)) {
         checkRemind($data['breed'], 'breed');
         checkRemind($data['origin'], 'origin');
 
-        if (!empty($data['breeder'])) {
+        if ($data['breeder'] == 'false') {
           if ($data['sex']) {
             $data['breeder'] = 1;
           }

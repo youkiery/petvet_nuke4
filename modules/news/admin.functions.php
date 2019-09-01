@@ -229,7 +229,7 @@ function getUserInfo($userid) {
 }
 
 function userDogRow($filter = array('keyword' => '', 'status' => 0, 'page' => 1, 'limit' => 10)) {
-  global $db, $user_info, $module_file;
+  global $db, $user_info, $module_file, $sex_array;
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
   $xtpl = new XTemplate('pet-list.tpl', PATH);
   $xtpl->assign('module_file', $module_file);
@@ -239,7 +239,7 @@ function userDogRow($filter = array('keyword' => '', 'status' => 0, 'page' => 1,
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '') . ' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '') . ' order by active, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   // $data = getUserPetList($filter);
@@ -252,7 +252,7 @@ function userDogRow($filter = array('keyword' => '', 'status' => 0, 'page' => 1,
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('microchip', $row['microchip']);
     $xtpl->assign('breed', $row['breed']);
-    $xtpl->assign('sex', $row['sex']);
+    $xtpl->assign('sex', $sex_array[$row['sex']]);
     $xtpl->assign('dob', cdate($row['dateofbirth']));
     if ($row['active']) {
       $xtpl->parse('main.row.uncheck');

@@ -333,16 +333,11 @@ if (!empty($action)) {
         $data['fid'] = $data['parentf'];
 				$data['mid'] = $data['parentm'];
 
-        if (!empty($data['breeder'])) {
-          if ($data['sex']) {
-            $data['breeder'] = 0;
-          }
-          else {
-            $data['breeder'] = 1;
-          }
+        if ($data['sex']) {
+          $data['breeder'] = 1;
         }
         else {
-          $data['breeder'] = 2;
+          $data['breeder'] = 0;
         }
 
         unset($data['sex0']);
@@ -386,6 +381,14 @@ if (!empty($action)) {
 				$data['sex'] = $sex;
         $data['fid'] = $data['parentf'];
 				$data['mid'] = $data['parentm'];
+
+        $data['breeder'] = 1;
+        if ($data['sex']) {
+          $data['breeder'] = 1;
+        }
+        else {
+          $data['breeder'] = 0;
+        }
 
         unset($data['sex0']);
         unset($data['sex1']);
@@ -437,16 +440,11 @@ if (!empty($action)) {
         checkRemind($data['breed'], 'breed');
         checkRemind($data['origin'], 'origin');
 
-        if (!empty($data['breeder'])) {
-          if ($data['sex']) {
-            $data['breeder'] = 0;
-          }
-          else {
-            $data['breeder'] = 1;
-          }
+        if ($data['sex']) {
+          $data['breeder'] = 1;
         }
         else {
-          $data['breeder'] = 2;
+          $data['breeder'] = 0;
         }
 
 				$sql = 'update `'. PREFIX .'_pet` set '. sqlBuilder($data, BUILDER_EDIT) .', image = "'. $image .'" where id = ' . $id;

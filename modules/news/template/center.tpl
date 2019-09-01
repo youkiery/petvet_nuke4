@@ -706,7 +706,7 @@
     color: $("#pet-color"),
     microchip: $("#pet-microchip"),
     miear: $("#pet-miear"),
-    origin: $("#pet-origin"),
+    origin: $("#origin-pet"),
     parentm: $("#parent-m-s"),
     parentf: $("#parent-f-s")
   }
@@ -718,7 +718,7 @@
     color: $("#parent-color"),
     microchip: $("#parent-microchip"),
     miear: $("#pet-miear"),
-    origin: $("#origin-pet"),
+    // origin: $("#origin-pet"),
     species: $("#species-parent"),
     breed: $("#breed-parent")
   }
@@ -1414,6 +1414,20 @@
     ebtn.hide()
     insertPet.modal('show')
     clearInputSet(pet)
+    switch(global['tabber'][0]) {
+      case 0: 
+        pet['sex0'].prop('checked', true)
+        $("#pet-breeder").prop('checked', true)
+      break;
+      case 1: 
+        pet['sex1'].prop('checked', true)
+        $("#pet-breeder").prop('checked', true)
+      break;
+      case 2: 
+        pet['sex0'].prop('checked', true)
+        $("#pet-breeder").prop('checked', false)
+      break;
+    }
     $("#parent-m").val('')
     $("#parent-f").val('')
     petPreview.attr('src', thumbnail)

@@ -59,16 +59,30 @@ if (!empty($action)) {
 		case 'edituser':
 			$id = $nv_Request->get_string('id', 'post', '');
 			$data = $nv_Request->get_array('data', 'post');
+			$filter = $nv_Request->get_array('filter', 'post');
 			$image = $nv_Request->get_string('image', 'post');
 
 			if (count($data) > 1 && !empty($id)) {
         $data['mobile'] = xencrypt($data['mobile']);
         $data['address'] = xencrypt($data['address']);
 				$sql = 'update `'. PREFIX .'_user` set '. sqlBuilder($data, BUILDER_EDIT) . (strlen(trim($image)) > 0 ? ', image = "'. $image .'"' : '') . ' where id = ' . $id;
-        die($sql);
 				if ($db->query($sql)) {
 					$result['status'] = 1;
-					$result['notify'] = 'Đã chỉnh sửa thú cưng';
+          $result['html'] = userRowList($filter);
+					$result['notify'] = 'Đã chỉnh sửa thông tin';
+				}
+			}
+		break;
+		case 'removeuser':
+			$id = $nv_Request->get_string('id', 'post', '');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+			if (!empty($id)) {
+				$sql = 'delete from `'. PREFIX .'_user` where id = ' . $id;
+				if ($db->query($sql)) {
+					$result['status'] = 1;
+          $result['html'] = userRowList($filter);
+					$result['notify'] = 'Đã xóa người dùng';
 				}
 			}
 		break;
