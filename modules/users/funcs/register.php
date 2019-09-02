@@ -500,6 +500,9 @@ if ($nv_Request->isset_request('get_usage_terms', 'post')) {
 
 $contents = user_register($gfx_chk, $array_register['checkss'], $data_questions, $array_field_config, $custom_fields, $group_id);
 
-include NV_ROOTDIR . '/includes/header.php';
-echo nv_site_theme($contents);
-include NV_ROOTDIR . '/includes/footer.php';
+// include NV_ROOTDIR . '/includes/header.php';
+// echo nv_site_theme($contents);
+// include NV_ROOTDIR . '/includes/footer.php';
+include ("modules/". $module_file ."/layout/header.php");
+echo $contents;
+include ("modules/". $module_file ."/layout/footer.php");

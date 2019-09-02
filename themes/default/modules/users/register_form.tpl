@@ -92,32 +92,6 @@
         </div>
         <!-- END: show_sig -->
 
-        <!-- BEGIN: show_question -->
-        <div class="form-group rel">
-            <div class="input-group">
-                <input type="text" class="form-control {FIELD.required} {FIELD.class}" placeholder="{FIELD.title}" value="{FIELD.value}" name="question" maxlength="{FIELD.max_length}" data-pattern="/^(.){{FIELD.min_length},}$/" onkeypress="validErrorHidden(this);" data-mess="{LANG.your_question_empty}">
-                <span class="input-group-addon pointer" title="{LANG.select_question}" onclick="showQlist(this);"><em class="fa fa-caret-down fa-lg"></em></span>
-            </div>
-            <div class="qlist" data-show="no">
-                <ul>
-                    <!-- BEGIN: frquestion -->
-                    <li>
-                        <a href="#" onclick="addQuestion(this);">{QUESTION}</a>
-                    </li>
-                    <!-- END: frquestion -->
-                </ul>
-            </div>
-        </div>
-        <!-- END: show_question -->
-
-        <!-- BEGIN: show_answer -->
-        <div class="form-group">
-            <div>
-                <input type="text" class="form-control {FIELD.required} {FIELD.class}" placeholder="{FIELD.title}" value="{FIELD.value}" name="answer" maxlength="{FIELD.max_length}" data-pattern="/^(.){{FIELD.min_length},}$/" onkeypress="validErrorHidden(this);" data-mess="{LANG.answer_empty}">
-            </div>
-        </div>
-        <!-- END: show_answer -->
-
         <!-- BEGIN: field -->
         <!-- BEGIN: loop -->
         <!-- BEGIN: textbox -->

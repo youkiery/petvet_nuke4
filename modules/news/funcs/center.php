@@ -17,13 +17,13 @@ define('BUILDER_EDIT', 2);
 $page_title = "Quản lý trang trại";
 
 $action = $nv_Request->get_string('action', 'post', '');
-$userinfo = getUserInfo();
-if (empty($userinfo)) {
-	header('location: /' . $module_name . '/login/');
+
+if (empty($user_info)) {
+	header('location: /users/login/');
 	die();
 }
 else {
-  if (empty($userinfo['center'])) {
+  if (empty($user_info['center'])) {
     header('location: /'. $module_name .'/private');
   }
 }

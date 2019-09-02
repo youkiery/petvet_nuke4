@@ -9,6 +9,7 @@
   </a>
   <div id="msgshow"></div>
   <ul class="nav navbar-nav">
+    <li><a href="/news/private"><em class="fa fa-caret-right margin-right-sm"></em> Quản lý thú cưng </a></li>
       <!-- BEGIN: navbar --><li><a href="{NAVBAR.href}"><em class="fa fa-caret-right margin-right-sm"></em>{NAVBAR.title}</a></li><!-- END: navbar -->
   </ul>
   <div style="clear: both;"></div>

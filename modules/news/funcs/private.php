@@ -17,13 +17,12 @@ define('BUILDER_EDIT', 2);
 $page_title = "Quản lý thú cưng";
 
 $action = $nv_Request->get_string('action', 'post', '');
-$userinfo = getUserInfo();
-if (empty($userinfo)) {
-	header('location: /' . $module_name . '/login/');
-	die();
+
+if (empty($user_info)) {
+	header('location: /users/login/');
 }
 else {
-  if ($userinfo['center']) {
+  if (!empty($user_info['center'])) {
     header('location: /'. $module_name .'/center');
   }
 }
