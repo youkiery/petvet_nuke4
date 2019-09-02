@@ -13,6 +13,56 @@
     <img class="loading" src="/themes/default/images/loading.gif">
   </div>
   <div id="msgshow"></div>
+
+  <div class="modal" id="user-pass" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <p class="text-center">
+            Đổi mật khẩu
+          </p>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Mật khẩu cũ
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="pass-v1" autocomplete="off">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Mật khẩu mới
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="pass-v2" autocomplete="off">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Xác nhận mật khẩu
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="pass-v3" autocomplete="off">
+            </div>
+          </label>
+
+          <div id="pass-error" style="color: red; font-weight: bold;"></div>
+
+          <div class="text-center">
+            <button class="btn btn-info" onclick="changePasswordSubmit()">
+              Đổi mật khẩu
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal" id="pet-vaccine" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -586,6 +636,10 @@
     <button class="btn btn-info" onclick="centerConfirm()">
       Đăng ký trại
     </button>
+    <div></div>
+    <button class="btn btn-info" onclick="changePassword()">
+      Đổi mật khẩu
+    </button>
   </div>
   <div style="clear: left;"></div>
   <p> <a href="/{module_file}/transfer"> Danh sách chuyển nhượng </a> </p>
@@ -791,6 +845,33 @@
     installRemindSpecies('species')
     installRemindSpecies('species-parent')
   })
+
+  function changePassword() {
+    $("#user-pass").modal('show')
+  }
+
+  function changePasswordSubmit() {
+    var pass1 = $("#pass-v1").val().trim(), pass2 = $("#pass-v2").val().trim(), pass3 = $("#pass-v3").val().trim()
+    if (!pass1 || !pass2 || !pass3) {
+      $("#pass-error").text('Các trường không được trống')
+    }
+    else if (pass3!== pass2) {
+      $("#pass-error").text('Mật khẩu không trùng nhau')
+    }
+    else {
+      $("#pass-error").text('')
+      freeze()
+      $.post(
+        global['url'],
+        {action: 'change-pass', opass: pass1, npass: pass3},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            $("#user-pass").modal('hide')
+          }, () => { })
+        }
+      )
+    }
+  }
 
   function centerConfirm() {
     $("#center-confirm").modal('show')

@@ -2,15 +2,18 @@
 <table class="table table-bordered">
   <tr>
     <th> STT </th>
+    <th> Tài khoản </th>
     <th> Họ tên </th>
     <th> Địa chỉ </th>
     <th> Số điện thoại </th>
-    <th>  </th>
   </tr>
   <!-- BEGIN: row -->
   <tr>
     <td>
       {index}
+    </td>
+    <td>
+      {username}
     </td>
     <td>
       {fullname}
@@ -21,7 +24,12 @@
     <td>
       {mobile}
     </td>
-    <td>
+  </tr>
+  <tr>
+    <td colspan="5" style="text-align: right;">
+      <button class="btn btn-info" onclick="changePassword({id})">
+        Đổi mật khẩu
+      </button>
       <button class="btn btn-info" onclick="editUser({id})">
         <span class="glyphicon glyphicon-edit"></span>
       </button>

@@ -11,88 +11,86 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
+define('BUILDER_INSERT', 0);
+define('BUILDER_EDIT', 1);
 
+$page_title = "Đăng nhập";
 
-// define('BUILDER_INSERT', 0);
-// define('BUILDER_EDIT', 1);
+$action = $nv_Request->get_string('action', 'post', '');
+$userinfo = getUserInfo();
+if (!empty($userinfo)) {
+  if ($userinfo['center']) {
+    header('location: /'. $module_name .'/center');
+  }
+  header('location: /'. $module_name .'/private');
+}
 
-// $page_title = "Đăng nhập";
+if (!empty($action)) {
+	$result = array('status' => 0);
+	switch ($action) {
+		case 'login':
+			$data = $nv_Request->get_array('data', 'post');
 
-// $action = $nv_Request->get_string('action', 'post', '');
-// $userinfo = getUserInfo();
-// if (!empty($userinfo)) {
-//   if ($userinfo['center']) {
-//     header('location: /'. $module_name .'/center');
-//   }
-//   header('location: /'. $module_name .'/private');
-// }
+			if (checkObj($data)) {
+				$data['username'] = strtolower($data['username']);
+        if (!checkUsername($data['username'])) {
+  				$result['error'] = 'Tài khoản không tồn tại';
+        }
+        else if (empty($checker = checkLogin($data['username'], $data['password']))) {
+					$result['error'] = 'Mật khẩu không đúng';
+				}
+        else {
+          if ($checker['active'] <= 0) {
+  					$result['error'] = 'Tài khoản chưa được cấp quyền đăng nhập';
+          }
+          else {
+            $_SESSION['username'] = $data['username'];
+            $_SESSION['password'] = $data['password'];
+            $result['status'] = 1;
+          }
+        }
+			}
+		break;
+	}
+	echo json_encode($result);
+	die();
+}
 
-// if (!empty($action)) {
-// 	$result = array('status' => 0);
-// 	switch ($action) {
-// 		case 'login':
-// 			$data = $nv_Request->get_array('data', 'post');
+$id = $nv_Request->get_int('id', 'get', 0);
+$global = array();
+$global['login'] = 0;
 
-// 			if (checkObj($data)) {
-// 				$data['username'] = strtolower($data['username']);
-//         if (!checkUsername($data['username'])) {
-//   				$result['error'] = 'Tài khoản không tồn tại';
-//         }
-//         else if (empty($checker = checkLogin($data['username'], $data['password']))) {
-// 					$result['error'] = 'Mật khẩu không đúng';
-// 				}
-//         else {
-//           if ($checker['active'] <= 0) {
-//   					$result['error'] = 'Tài khoản chưa được cấp quyền đăng nhập';
-//           }
-//           else {
-//             $_SESSION['username'] = $data['username'];
-//             $_SESSION['password'] = $data['password'];
-//             $result['status'] = 1;
-//           }
-//         }
-// 			}
-// 		break;
-// 	}
-// 	echo json_encode($result);
-// 	die();
-// }
+$xtpl = new XTemplate("login.tpl", "modules/". $module_name ."/template");
 
-// $id = $nv_Request->get_int('id', 'get', 0);
-// $global = array();
-// $global['login'] = 0;
+if (count($userinfo) > 0) {
+	// logged
+  $userinfo['mobile'] = xdecrypt($userinfo['mobile']);
+  $userinfo['address'] = xdecrypt($userinfo['address']);
+	$xtpl->assign('fullname', $userinfo['fullname']);
+	$xtpl->assign('mobile', $userinfo['mobile']);
+	$xtpl->assign('address', $userinfo['address']);
+	$xtpl->assign('image', $userinfo['image']);
+	$xtpl->assign('list', userDogRowByList($userinfo['id']));
 
-// $xtpl = new XTemplate("login.tpl", "modules/". $module_name ."/template");
-
-// if (count($userinfo) > 0) {
-// 	// logged
-//   $userinfo['mobile'] = xdecrypt($userinfo['mobile']);
-//   $userinfo['address'] = xdecrypt($userinfo['address']);
-// 	$xtpl->assign('fullname', $userinfo['fullname']);
-// 	$xtpl->assign('mobile', $userinfo['mobile']);
-// 	$xtpl->assign('address', $userinfo['address']);
-// 	$xtpl->assign('image', $userinfo['image']);
-// 	$xtpl->assign('list', userDogRowByList($userinfo['id']));
-
-// 	if (!empty($user_info) && !empty($user_info['userid']) && (in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
-// 		$xtpl->assign('userlist', userRowList());
+	if (!empty($user_info) && !empty($user_info['userid']) && (in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
+		$xtpl->assign('userlist', userRowList());
 	
-// 		$xtpl->parse('main.log.user');
-// 		$xtpl->parse('main.log.mod');
-// 		$xtpl->parse('main.log.mod2');
-// 	}
+		$xtpl->parse('main.log.user');
+		$xtpl->parse('main.log.mod');
+		$xtpl->parse('main.log.mod2');
+	}
 
-// 	$xtpl->parse('main.log');
-// }
-// else {
-// 	$xtpl->parse('main.nolog');
-// }
+	$xtpl->parse('main.log');
+}
+else {
+	$xtpl->parse('main.nolog');
+}
 
-// $xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
-// $xtpl->assign('module_file', $module_file);
+$xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
+$xtpl->assign('module_file', $module_file);
 
-// $xtpl->parse("main");
-// $contents = $xtpl->text("main");
-// include ("modules/". $module_file ."/layout/header.php");
-// echo $contents;
-// include ("modules/". $module_file ."/layout/footer.php");
+$xtpl->parse("main");
+$contents = $xtpl->text("main");
+include ("modules/". $module_file ."/layout/header.php");
+echo $contents;
+include ("modules/". $module_file ."/layout/footer.php");

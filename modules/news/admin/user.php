@@ -19,6 +19,29 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
+    case 'change-pass':
+      $npass = $nv_Request->get_string('npass', 'post', '');
+      $userid = $nv_Request->get_string('userid', 'post', '');
+
+      if (empty($npass)) {
+        $result['notify'] = 'Mật khẩu không được trống';
+      }
+      else {
+        $sql = 'select * from `'. PREFIX .'_user` where id = ' . $userid;
+        $query = $db->query($sql);
+
+        if (empty($query->fetch())) {
+          $result['notify'] = 'Người dùng không tồn tại';
+        }
+        else {
+          $sql = 'update `'. PREFIX .'_user` set password = "'. md5($opass) .'" where id = ' . $userid;
+          if ($db->query($sql)) {
+            $result['status'] = 1;
+            $result['notify'] = 'Đã đổi mật khẩu';
+          }
+        }
+      }
+    break;
 		case 'checkuser':
 			$id = $nv_Request->get_string('id', 'post');
 			$type = $nv_Request->get_string('type', 'post');

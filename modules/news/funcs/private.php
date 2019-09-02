@@ -18,18 +18,43 @@ $page_title = "Quản lý thú cưng";
 
 $action = $nv_Request->get_string('action', 'post', '');
 
-if (empty($user_info)) {
-	header('location: /users/login/');
+$userinfo = getUserinfo();
+if (empty($userinfo)) {
+	header('location: /'. $module_name .'/login/');
+	die();
 }
 else {
-  if (!empty($user_info['center'])) {
-    header('location: /'. $module_name .'/center');
+  if (empty($userinfo['center'])) {
+    header('location: /'. $module_name .'/private');
   }
 }
 
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
+    case 'change-pass':
+      $npass = $nv_Request->get_string('npass', 'post', '');
+      $opass = $nv_Request->get_string('opass', 'post', '');
+
+      if (empty($npass) || empty($opass)) {
+        $result['notify'] = 'Mật khẩu không được trống';
+      }
+      else {
+        $sql = 'select * from `'. PREFIX .'_user` where password = "'. md5($opass) .'" and id = ' . $userinfo['id'];
+        $query = $db->query($sql);
+
+        if (empty($query->fetch())) {
+          $result['notify'] = 'Mật khẩu sai';
+        }
+        else {
+          $sql = 'update `'. PREFIX .'_user` set password = "'. md5($npass) .'" where id = ' . $userinfo['id'];
+          if ($db->query($sql)) {
+            $result['status'] = 1;
+            $result['notify'] = 'Đã đổi mật khẩu';
+          }
+        }
+      }
+    break;
 		case 'filter':
 			$filter = $nv_Request->get_array('filter', 'post');
 			$tabber = $nv_Request->get_array('tabber', 'post');

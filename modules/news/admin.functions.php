@@ -202,6 +202,7 @@ function userRowList($filter = array('keyword' => '', 'status' => 0, 'page' => 1
     $row['address'] = xdecrypt($row['address']);
     $row['mobile'] = xdecrypt($row['mobile']);
     $xtpl->assign('fullname', $row['fullname'] ++);
+    $xtpl->assign('username', $row['username']);
     $xtpl->assign('address', $row['address']);
     $xtpl->assign('mobile', $row['mobile']);
     $xtpl->assign('id', $row['id']);

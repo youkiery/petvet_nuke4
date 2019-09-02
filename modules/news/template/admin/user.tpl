@@ -10,6 +10,48 @@
 
 <div class="container">
   <div id="msgshow"></div>
+
+
+  <div class="modal" id="user-pass" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <p class="text-center">
+            Đổi mật khẩu
+          </p>
+
+          <label class="row">
+            <div class="col-sm-6">
+              Mật khẩu mới
+            </div>
+            <div class="col-sm-18">
+              <input type="text" class="form-control" id="pass-v1" autocomplete="off">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-6">
+              Xác nhận mật khẩu
+            </div>
+            <div class="col-sm-18">
+              <input type="text" class="form-control" id="pass-v2" autocomplete="off">
+            </div>
+          </label>
+
+          <div id="pass-error" style="color: red; font-weight: bold;"></div>
+
+          <div class="text-center">
+            <button class="btn btn-info" onclick="changePasswordSubmit()">
+              Đổi mật khẩu
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="insert-user" class="modal fade" role="dialog">
     <div class="modal-dialog modal-md">
       <div class="modal-content">
@@ -174,6 +216,34 @@
     changeMonth: true,
     changeYear: true
   });
+
+  function changePassword(id) {
+    global['userid'] = id
+    $("#user-pass").modal('show')
+  }
+
+  function changePasswordSubmit() {
+    var pass1 = $("#pass-v1").val().trim(), pass2 = $("#pass-v2").val().trim()
+    if (!pass1 || !pass2) {
+      $("#pass-error").text('Các trường không được trống')
+    }
+    else if (pass1 !== pass2) {
+      $("#pass-error").text('Mật khẩu không trùng nhau')
+    }
+    else {
+      $("#pass-error").text('')
+      freeze()
+      $.post(
+        global['url'],
+        {action: 'change-pass', npass: pass1, userid: global['userid']},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            $("#user-pass").modal('hide')
+          }, () => { })
+        }
+      )
+    }
+  }
 
   function onselected(input) {
     if (input.files && input.files[0]) {
