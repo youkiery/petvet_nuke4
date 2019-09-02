@@ -1,10 +1,15 @@
 <!-- BEGIN: main -->
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script> 
 <link rel="stylesheet" href="/themes/default/src/glyphicons.css">
+<link rel="stylesheet" href="/themes/default/src/jquery-ui.min.css">
+<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script> 
+<script type="text/javascript" src="/themes/default/src/jquery.ui.datepicker-vi.js"></script>
 
 <style>
   label {
     width: 100%;
+  }
+  .btn {
+    min-height: 32px !important;
   }
 </style>
 
@@ -32,6 +37,20 @@
         <div class="modal-body">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <p class="text-center"> <b> Thêm thú cưng </b> </p>
+          <button id="pet-owner" onclick="pickOwner()">
+            Chọn chủ
+          </button>
+          <!-- <label class="row">
+            <div class="col-sm-6">
+              Chủ thú
+            </div>
+            <div class="col-sm-18 relative">
+              <input type="text" class="form-control" id="pet-owner">
+              <input type="hidden" class="form-control" id="pet-ownerid">
+              <div class="suggest" id="pet-owner-suggest"></div>
+            </div>
+          </label> -->
+
           <label class="row">
             <div class="col-sm-6">
               Tên thú cưng
@@ -46,16 +65,17 @@
               Ngày sinh
             </div>
             <div class="col-sm-18">
-              <input type="text" class="form-control" id="pet-dob">
+              <input type="text" class="form-control" id="pet-dob" value="{today}">
             </div>
           </label>
 
           <label class="row">
             <div class="col-sm-6">
-              Giống 
+              Giống
             </div>
-            <div class="col-sm-18">
-              <input type="text" class="form-control" id="pet-species">
+            <div class="col-sm-18 relative">
+              <input type="text" class="form-control" id="species">
+              <div class="suggest" id="species-suggest"></div>
             </div>
           </label>
 
@@ -63,8 +83,9 @@
             <div class="col-sm-6">
               Loài
             </div>
-            <div class="col-sm-18">
-              <input type="text" class="form-control" id="pet-breed">
+            <div class="col-sm-18 relative">
+              <input type="text" class="form-control" id="breed-pet">
+              <div class="suggest" id="breed-suggest-pet"></div>
             </div>
           </label>
 
@@ -73,7 +94,12 @@
               Giới tính
             </div>
             <div class="col-sm-18">
-              <input type="text" class="form-control" id="pet-sex">
+              <label>
+                <input type="radio" name="sex" id="pet-sex-0" checked> Đực
+              </label>
+              <label>
+                <input type="radio" name="sex" id="pet-sex-1"> Cái
+              </label>
             </div>
           </label>
 
@@ -85,13 +111,78 @@
               <input type="text" class="form-control" id="pet-color">
             </div>
           </label>
-          
+
           <label class="row">
             <div class="col-sm-6">
               Microchip
             </div>
             <div class="col-sm-18">
               <input type="text" class="form-control" id="pet-microchip">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-6">
+              Xăm tai
+            </div>
+            <div class="col-sm-18">
+              <input type="text" class="form-control" id="pet-miear">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-6">
+              Xuất xứ
+            </div>
+            <div class="col-sm-18">
+              <input type="text" class="form-control" id="origin-pet">
+            </div>
+          </label>
+
+          <div class="row">
+            <div class="col-sm-12">
+              Chó cha
+              <div class="relative">
+                <div class="input-group">
+                  <input class="form-control" id="parent-m" type="text" autocomplete="off">
+                  <input class="form-control" id="parent-m-s" type="hidden">
+                  <div class="input-group-btn">
+                    <button class="btn btn-success" style="min-height: 32px;" onclick="addParent('m')">
+                      <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                  </div>
+                </div>
+                <div class="suggest" id="parent-suggest-m"></div>
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              Chó mẹ
+              <div class="relative">
+                <div class="input-group">
+                  <input class="form-control" id="parent-f" type="text" autocomplete="off">
+                  <input class="form-control" id="parent-f-s" type="hidden">
+                  <div class="input-group-btn relative">
+                    <button class="btn btn-success" style="min-height: 32px;" onclick="addParent('f')">
+                      <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                  </div>
+                </div>
+                <div class="suggest" id="parent-suggest-f"></div>
+              </div>
+            </div>
+          </div>
+
+          <label class="row">
+            <div class="col-sm-6">
+              Hình ảnh
+            </div>
+            <div class="col-sm-18">
+              <div>
+                <img class="img-responsive" id="pet-preview"
+                  style="display: inline-block; width: 128px; height: 128px; margin: 10px;">
+              </div>
+              <input type="file" class="form-control" id="user-image" onchange="onselected(this, 'pet')">
             </div>
           </label>
 
@@ -102,6 +193,152 @@
             <button class="btn btn-success" id="ebtn" onclick="editPetSubmit()" style="display: none;">
               Chỉnh sửa
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div id="insert-parent" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-body">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <p class="text-center"> <b> Thêm cha mẹ </b> </p>
+          <label class="row">
+            <div class="col-sm-6">
+              Tên thú cưng
+            </div>
+            <div class="col-sm-18">
+              <input type="text" class="form-control" id="parent-name">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-6">
+              Ngày sinh
+            </div>
+            <div class="col-sm-18">
+              <input type="text" class="form-control" id="parent-dob">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-6">
+              Giống
+            </div>
+            <div class="col-sm-18 relative">
+              <input type="text" class="form-control" id="species-parent">
+              <div class="suggest" id="species-parent-suggest"></div>
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-6">
+              Loài
+            </div>
+            <div class="col-sm-18 relative">
+              <input type="text" class="form-control" id="breed-parent">
+              <div class="suggest" id="breed-suggest-parent"></div>
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-6">
+              Giới tính
+            </div>
+            <div class="col-sm-18">
+              <label>
+                <input type="radio" name="psex" id="parent-sex-0" checked> Đực
+              </label>
+              <label>
+                <input type="radio" name="psex" id="parent-sex-1"> Cái
+              </label>
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-6">
+              Màu sắc
+            </div>
+            <div class="col-sm-18">
+              <input type="text" class="form-control" id="parent-color">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-6">
+              Microchip
+            </div>
+            <div class="col-sm-18">
+              <input type="text" class="form-control" id="parent-microchip">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-6">
+              Xăm tai
+            </div>
+            <div class="col-sm-18">
+              <input type="text" class="form-control" id="parent-miear">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-6">
+              Hình ảnh
+            </div>
+            <div class="col-sm-18">
+              <div>
+                <img class="img-responsive" id="parent-preview"
+                  style="display: inline-block; width: 128px; height: 128px; margin: 10px;">
+              </div>
+              <input type="file" class="form-control" id="user-image" onchange="onselected(this, 'parent')">
+            </div>
+          </label>
+
+          <div class="text-center">
+            <button class="btn btn-success" onclick="insertParentSubmit()">
+              Thêm thú cưng
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="pick-owner" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-body">
+          <form onsubmit="filterOwner(event)">
+            <p>
+              <label>
+                Nhập tên, số điện thoại chủ thú cưng
+              </label>
+            </p>
+            <div class="input-group">
+              <input type="text" class="form-control" id="filter-owner-name">
+              <div class="input-group-btn">
+                <button class="btn btn-info">
+                  <span class="glyphicon glyphicon-search"></span>
+                </button>
+              </div>
+            </div>
+          </form>
+          <div style="font-size: 0px;">
+            <p style="font-size: 14px; float: left; width: 50%;">
+              Họ tên: <div id="owner-name"></div>
+            </p>
+            <p style="font-size: 14px; float: left; width: 50%;">
+
+            </p>
+          </div>
+          <div style="clear: both;"></div>
+          <div id="owner-content">
+
           </div>
         </div>
       </div>
@@ -145,18 +382,40 @@
     text: ['Đăng ky', 'Đăng nhập'],
     url: '{origin}',
     page: 1,
-    id: -1
+    parent: 'm',
+    id: -1,
+    userid: -1,
+    owner: {}
   }
   var pet = {
     name: $("#pet-name"),
     dob: $("#pet-dob"),
-    species: $("#pet-species"),
-    breed: $("#pet-breed"),
-    sex: $("#pet-sex"),
+    species: $("#species"),
+    breed: $("#breed-pet"),
+    sex0: $("#pet-sex-0"),
+    sex1: $("#pet-sex-1"),
     color: $("#pet-color"),
     microchip: $("#pet-microchip"),
+    miear: $("#pet-miear"),
+    origin: $("#origin-pet"),
+    parentm: $("#parent-m-s"),
+    parentf: $("#parent-f-s")
+  }
+  var parent = {
+    name: $("#parent-name"),
+    dob: $("#parent-dob"),
+    sex0: $("#parent-sex-0"),
+    sex1: $("#parent-sex-1"),
+    color: $("#parent-color"),
+    microchip: $("#parent-microchip"),
+    miear: $("#pet-miear"),
+    species: $("#species-parent"),
+    breed: $("#breed-parent")
   }
 
+  var remind = JSON.parse('{remind}')
+  var transferOwner = $("#pet-owner")
+  var insertParent = $("#insert-parent")
   var keyword = $("#keyword")
   var limit = $("#limit")
   var cstatus = $(".status")
@@ -166,6 +425,7 @@
   var tabber = $(".tabber")
   var ibtn = $("#ibtn")
   var ebtn = $("#ebtn")
+  var petPreview = $("#pet-preview")
   var maxWidth = 512
   var maxHeight = 512
   var imageType = ["jpeg", "jpg", "png", "bmp", "gif"]
@@ -194,6 +454,40 @@
     changeMonth: true,
     changeYear: true
   });
+
+  var thumbnail
+  var canvas = document.createElement('canvas')
+
+  var thumbnailImage = new Image()
+  thumbnailImage.src = '/themes/default/images/thumbnail.jpg'
+  thumbnailImage.onload = (e) => {
+    var context = canvas.getContext('2d')
+    var width = thumbnailImage.width
+    var height = thumbnailImage.height
+    var x = width
+    if (height > width) {
+      x = height
+    }
+    var rate = 256 / x
+    canvas.width = rate * width
+    canvas.height = rate * height
+
+    context.drawImage(thumbnailImage, 0, 0, width, height, 0, 0, canvas.width, canvas.height)
+    thumbnail = canvas.toDataURL("image/jpeg")
+  }
+
+  $(this).ready(() => {
+    installRemind('m', 'parent')
+    installRemind('f', 'parent')
+    // installRemindv2('pet', 'species')
+    installRemindv2('pet', 'breed')
+    installRemindv2('pet', 'origin')
+    // installRemindv2('parent', 'species')
+    installRemindv2('parent', 'breed')
+    installRemindOwner('pet-owner')
+    installRemindSpecies('species')
+    installRemindSpecies('species-parent')
+  })
 
   function onselected(input) {
     if (input.files && input.files[0]) {
@@ -281,15 +575,27 @@
   function editPet(id) {
     $.post(
       global['url'],
-      {action: 'get', id: id},
+      { action: 'get', id: id },
       (response, status) => {
         checkResult(response, status).then(data => {
           global['id'] = id
+          global['userid'] = data['more']['userid']
           parseInputSet(data['data'], pet)
+          $("#pet-owner").val(data['more']['username'])
+          $("#parent-f").val(data['more']['f'])
+          $("#parent-m").val(data['more']['m'])
+          $("#pet-sex-" + data['more']['sex']).prop('checked', true)
+          var image = new Image()
+          image.src = data['image']
+          petPreview.attr('src', thumbnail)
+          image.addEventListener('load', (e) => {
+            petPreview.attr('src', image.src)
+          })
+
           ibtn.hide()
           ebtn.show()
           insertPet.modal('show')
-        }, () => {})
+        }, () => { })
       }
     )
   }
@@ -297,7 +603,7 @@
   function editPetSubmit() {
     $.post(
       global['url'],
-      {action: 'editpet', id: global['id'], data: checkInputSet(pet), filter: checkFilter()},
+      {action: 'editpet', id: global['id'], userid: global['userid'], type: global['type'], data: checkInputSet(pet), filter: checkFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
           petList.html(data['html'])
@@ -379,20 +685,35 @@
     ibtn.show()
     ebtn.hide()
     insertPet.modal('show')
+    clearInputSet(pet)
+    $("#pet-dob").val(mostly['pet']['dob'])
+    $("#parent-m").val('')
+    $("#parent-f").val('')
+    petPreview.attr('src', thumbnail)
   }
 
   function insertPetSubmit() {
-    $.post(
-      global['url'],
-      {action: 'insertpet', data: checkInputSet(pet)},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          petList.html(data['html'])
-          clearInputSet(pet)
-          insertPet.modal('hide')
-        }, () => {})
-      }
-    )
+    freeze()
+    uploader().then(imageUrl => {
+      $.post(
+        global['url'],
+        { action: 'insertpet', data: checkPetData(), filter: checkFilter(), tabber: global['tabber'], image: imageUrl },
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            petList.html(data['html'])
+            file = false
+            filename = ''
+            clearInputSet(pet)
+            $("#parent-m").val('')
+            $("#parent-f").val('')
+            $("#pet-breeder").prop('checked', true)
+            petPreview.val('')
+            remind = JSON.parse(data['remind'])
+            insertPet.modal('hide')
+          }, () => { })
+        }
+      )
+    })
   }
 
   function clearInputSet(dataSet) {
@@ -493,5 +814,240 @@
   //     }
   //   )
   // }
+
+  function pickOwner() {
+    $("#pick-owner").modal('show')
+  }
+
+  function filterOwner(e) {
+    e.preventDefault()
+    $.post(
+      global['url'],
+      {action: 'filter-owner', keyword: $("#filter-owner-name").val()},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            $("#owner-content").html(data['html'])
+          }, () => {})
+        }
+    )
+  }
+  
+  function insertParentSubmit() {
+    freeze()
+    uploader().then((imageUrl) => {
+      $.post(
+        global['url'],
+        { action: 'insert-parent', id: global['id'], userid: global['userid'], data: checkInputSet(parent), image: imageUrl, filter: checkFilter(), tabber: global['tabber'] },
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            petList.html(data['html'])
+            clearInputSet(parent)
+            file = false
+            filename = ''
+            $("#parent-preview").attr('src', thumbnail)
+            remind = JSON.parse(data['remind'])
+            insertParent.modal('hide')
+            $("#parent-breeder").prop('checked', true)
+            $("#parent-" + global['parent']).val(data['name'])
+            $("#parent-" + global['parent'] + '-s').val(data['id'])
+          }, () => { })
+        }
+      )
+    })
+  }
+
+  function addParent(name) {
+    insertParent.modal('show')
+    global['parent'] = name
+    clearInputSet(parent)
+    petPreview.val('')
+    $("#parent" + global['parent']).val('')
+    $("#parent" + global['parent' + '-s']).val(0)
+  }
+
+
+  function selectRemindv2(name, type, value) {
+    $("#" + type + "-" + name).val(value)
+  }
+
+  function pickParent(e, name, id) {
+    var idp = splipper(e.parentNode.getAttribute('id'), 'parent-suggest')
+    $('#parent-' + idp + '-s').val(id)
+    $('#parent-' + idp).val(name)
+  }
+
+  function pickOwnerSubmit(name, id, type) {
+    if (($("#insert-pet").data('bs.modal') || {}).isShown) {
+      var obj = {
+        id: id,
+        name: name,
+        type: type
+      }
+      if (($("#insert-parent").data('bs.modal') || {}).isShown) {
+        if (global['modal-parent'] == 'm') {
+          // male
+          global['owner']['m'] = obj
+        }
+        else {
+          // female
+          global['owner']['f'] = obj
+        }
+      }
+      else {
+        // pet
+        global['owner']['p'] = obj
+      }
+    }
+
+    transferOwner.val(name)
+    global['userid'] = id
+    global['type'] = type
+  }
+
+  function pickSpecies(name, id) {
+    if (($("#insert-parent").data('bs.modal') || {}).isShown) {
+      $("#species-parent").val(name)
+    }
+    else {
+      $("#species").val(name)
+    }
+  }
+
+  function installRemindOwner(section) {
+    var timeout
+    var input = $("#" + section)
+    var suggest = $("#" + section + "-suggest")
+    console.log("#" + section + "-suggest", suggest);
+
+    input.keyup(() => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        var key = paintext(input.val())
+        var html = ''
+
+        $.post(
+          global['url'],
+          { action: 'parent2', keyword: key },
+          (response, status) => {
+            checkResult(response, status).then(data => {
+              suggest.html(data['html'])
+            }, () => { })
+          }
+        )
+
+        suggest.html(html)
+      }, 200);
+    })
+    input.focus(() => {
+      suggest.show()
+    })
+    input.blur(() => {
+      setTimeout(() => {
+        suggest.hide()
+      }, 200);
+    })
+  }
+
+  function installRemindSpecies(section) {
+    var timeout
+    var input = $("#" + section)
+    var suggest = $("#" + section + "-suggest")    
+
+    input.keyup(() => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        var key = paintext(input.val())
+        var html = ''
+
+        $.post(
+          global['url'],
+          { action: 'species', keyword: key },
+          (response, status) => {
+            checkResult(response, status).then(data => {
+              suggest.html(data['html'])
+            }, () => { })
+          }
+        )
+
+        suggest.html(html)
+      }, 200);
+    })
+    input.focus(() => {
+      suggest.show()
+    })
+    input.blur(() => {
+      setTimeout(() => {
+        suggest.hide()
+      }, 200);
+    })
+  }
+
+  function installRemind(name, type) {
+    var timeout
+    var input = $("#" + type + "-" + name)
+    var suggest = $("#" + type + "-suggest-" + name)
+
+    input.keyup(() => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        var key = paintext(input.val())
+        var html = ''
+
+        $.post(
+          global['url'],
+          { action: 'parent', keyword: key },
+          (response, status) => {
+            checkResult(response, status).then(data => {
+              suggest.html(data['html'])
+            }, () => { })
+          }
+        )
+
+        suggest.html(html)
+      }, 200);
+    })
+    input.focus(() => {
+      suggest.show()
+    })
+    input.blur(() => {
+      setTimeout(() => {
+        suggest.hide()
+      }, 200);
+    })
+  }
+
+  function installRemindv2(name, type) {
+    var timeout
+    var input = $("#" + type + "-" + name)
+    var suggest = $("#" + type + "-suggest-" + name)
+
+    input.keyup(() => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        var key = paintext(input.val())
+        var html = ''
+
+        for (const index in remind[type]) {
+          if (remind[type].hasOwnProperty(index)) {
+            const element = paintext(remind[type][index]['name']);
+
+            if (element.search(key) >= 0) {
+              html += '<div class="suggest_item" onclick="selectRemindv2(\'' + name + '\', \'' + type + '\', \'' + remind[type][index]['name'] + '\')"><p class="right-click">' + remind[type][index]['name'] + '</p></div>'
+            }
+          }
+        }
+        suggest.html(html)
+      }, 200);
+    })
+    input.focus(() => {
+      suggest.show()
+    })
+    input.blur(() => {
+      setTimeout(() => {
+        suggest.hide()
+      }, 200);
+    })
+  }
+
 </script>
 <!-- END: main -->
