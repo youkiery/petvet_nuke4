@@ -374,7 +374,7 @@
     <img class="loading" src="/themes/default/images/loading.gif">
   </div>
   
-  <a href="/{module_file}">
+  <a href="/">
     <img src="/themes/default/images/banner.png" style="width: 200px;">
   </a>
   <a style="margin: 8px 0px; display: block;" href="javascript:history.go(-1)">

@@ -1,7 +1,7 @@
 <!-- BEGIN: main -->
 <div class="container">
   <div id="msgshow"></div>
-  <a href="/{module_file}">
+  <a href="/">
     <img src="/themes/default/images/banner.png" style="width: 200px;">
   </a>
   <form style="width: 60%; float: right;">

@@ -616,7 +616,7 @@
     </div>
   </div>
 
-  <a href="/{module_file}">
+  <a href="/">
     <img src="/themes/default/images/banner.png" style="width: 200px;">
   </a>
 

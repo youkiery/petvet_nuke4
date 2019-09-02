@@ -12,7 +12,7 @@
 <div class="container">
   <div id="msgshow"></div>
   <div class="text-center start-content" style="max-width: 450px; margin: auto; padding-top: 50px; border: 1px solid lightgray; padding: 15px; border-radius: 20px;">
-    <a href="/{module_file}">
+    <a href="/">
       <img src="/themes/default/images/banner.png" style="width: 200px; margin: 20px 20px;">
     </a>
     <div style="margin-top: 20px;"></div>

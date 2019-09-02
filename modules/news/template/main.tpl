@@ -13,7 +13,7 @@
             </div>
           </label>
           <!-- BEGIN: nolog -->
-          <a href="/{module_file}/login"> Đăng nhập </a> |
+          <a href="/users/login"> Đăng nhập </a> |
           <!-- END: nolog -->
           <a href="/{module_file}/private"> Cá nhân </a> | 
           <a href="/{module_file}/center"> Trang trại </a>
