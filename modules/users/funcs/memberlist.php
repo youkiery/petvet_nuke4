@@ -197,6 +197,9 @@ if (isset($array_op[1]) and ! empty($array_op[1])) {
     $contents = nv_memberslist_theme($users_array, $array_order_new, $generate_page);
 }
 
-include NV_ROOTDIR . '/includes/header.php';
-echo nv_site_theme($contents);
-include NV_ROOTDIR . '/includes/footer.php';
+// include NV_ROOTDIR . '/includes/header.php';
+// echo nv_site_theme($contents);
+// include NV_ROOTDIR . '/includes/footer.php';
+include ("modules/". $module_file ."/layout/header.php");
+echo $contents;
+include ("modules/". $module_file ."/layout/footer.php");

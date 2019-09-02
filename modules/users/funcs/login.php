@@ -816,6 +816,9 @@ $contents = user_login();
 
 $full = empty($nv_header);
 
-include NV_ROOTDIR . '/includes/header.php';
-echo nv_site_theme($contents, $full);
-include NV_ROOTDIR . '/includes/footer.php';
+// include NV_ROOTDIR . '/includes/header.php';
+// echo nv_site_theme($contents, $full);
+// include NV_ROOTDIR . '/includes/footer.php';
+include ("modules/". $module_file ."/layout/header.php");
+echo $contents;
+include ("modules/". $module_file ."/layout/footer.php");

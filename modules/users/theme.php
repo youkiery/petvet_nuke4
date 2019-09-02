@@ -588,9 +588,11 @@ function user_lostactivelink($data, $question)
  */
 function user_info($data, $array_field_config, $custom_fields, $types, $data_questions, $data_openid, $groups, $pass_empty)
 {
-    global $module_info, $global_config, $lang_global, $lang_module, $module_name, $op, $global_array_genders;
+    global $module_info, $global_config, $lang_global, $lang_module, $module_name, $module_file, $op, $global_array_genders;
 
     $xtpl = new XTemplate('info.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_info['module_theme']);
+    $xtpl->assign('module_name', $module_name);
+    $xtpl->assign('module_file', $module_file);
 
     if (defined('ACCESS_EDITUS')) {
         $xtpl->assign('EDITINFO_FORM', NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=editinfo/' . $data['group_id'] . '/' . $data['userid']);
@@ -956,9 +958,11 @@ function openid_callback($openid_info)
  */
 function user_welcome()
 {
-    global $module_info, $global_config, $lang_global, $lang_module, $module_name, $user_info, $op;
+    global $module_info, $global_config, $lang_global, $lang_module, $module_name, $module_file, $user_info, $op;
 
     $xtpl = new XTemplate('userinfo.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_info['module_theme']);
+    $xtpl->assign('module_name', $module_name);
+    $xtpl->assign('module_file', $module_file);
     $xtpl->assign('LANG', $lang_module);
     $xtpl->assign('URL_HREF', NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=');
     $xtpl->assign('URL_MODULE', NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name);
@@ -1030,7 +1034,7 @@ function user_welcome()
                 continue;
             }
 
-            $href = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $_alias[$_li['func_name']];
+            $href = NV_BASE_SITEURL . $module_name . '/' . $_alias[$_li['func_name']];
             $li = array(
                 'href' => $href,
                 'title' => $_li['func_name'] == 'main' ? $lang_module['user_info'] : $_li['func_custom_name']
@@ -1182,9 +1186,11 @@ function user_openid_administrator($data)
  */
 function nv_memberslist_theme($users_array, $array_order_new, $generate_page)
 {
-    global $module_info, $module_name, $global_config, $lang_module, $op;
+    global $module_info, $module_name, $module_file, $global_config, $lang_module, $op;
 
     $xtpl = new XTemplate('memberslist.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_info['module_theme']);
+    $xtpl->assign('module_name', $module_name);
+    $xtpl->assign('module_file', $module_file);
     $xtpl->assign('LANG', $lang_module);
 
     foreach ($array_order_new as $key => $link) {
@@ -1216,7 +1222,7 @@ function nv_memberslist_theme($users_array, $array_order_new, $generate_page)
                 continue;
             }
 
-            $href = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $_alias[$_li['func_name']];
+            $href = NV_BASE_SITEURL . $module_name . '/' . $_alias[$_li['func_name']];
             $li = array(
                 'href' => $href,
                 'title' => $_li['func_name'] == 'main' ? $lang_module['user_info'] : $_li['func_custom_name']

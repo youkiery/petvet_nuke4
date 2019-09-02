@@ -37,6 +37,9 @@ if (!defined('NV_IS_ADMIN') and !$global_config['allowuserlogin']) {
     }
 }
 
-include NV_ROOTDIR . '/includes/header.php';
-echo nv_site_theme($contents);
-include NV_ROOTDIR . '/includes/footer.php';
+// include NV_ROOTDIR . '/includes/header.php';
+// echo nv_site_theme($contents);
+// include NV_ROOTDIR . '/includes/footer.php';
+include ("modules/". $module_file ."/layout/header.php");
+echo $contents;
+include ("modules/". $module_file ."/layout/footer.php");

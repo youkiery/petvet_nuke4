@@ -1025,6 +1025,9 @@ $pass_empty = empty($row['password']) ? true : false;
 
 $contents = user_info($array_data, $array_field_config, $custom_fields, $types, $data_questions, $data_openid, $groups, $pass_empty);
 
-include NV_ROOTDIR . '/includes/header.php';
-echo nv_site_theme($contents);
-include NV_ROOTDIR . '/includes/footer.php';
+// include NV_ROOTDIR . '/includes/header.php';
+// echo nv_site_theme($contents);
+// include NV_ROOTDIR . '/includes/footer.php';
+include ("modules/". $module_file ."/layout/header.php");
+echo $contents;
+include ("modules/". $module_file ."/layout/footer.php");

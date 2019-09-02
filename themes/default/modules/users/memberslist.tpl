@@ -1,5 +1,19 @@
 <!-- BEGIN: main -->
-<div class="page">
+<div class="container">
+  <!-- <div id="loading">
+    <div class="black-wag"> </div>
+    <img class="loading" src="/themes/default/images/loading.gif">
+  </div> -->
+  <a href="/">
+    <img src="/themes/default/images/banner.png" style="width: 200px;">
+  </a>
+  <div id="msgshow"></div>
+  <ul class="nav navbar-nav">
+      <!-- BEGIN: navbar --><li><a href="{NAVBAR.href}"><em class="fa fa-caret-right margin-right-sm"></em>{NAVBAR.title}</a></li><!-- END: navbar -->
+  </ul>
+  <div style="clear: both;"></div>
+
+  <div class="page">
     <h2 class="margin-bottom-lg margin-top-lg">{LANG.listusers}</h2>
     <div class="table-responsive">
     	<table class="table table-bordered table-striped">
@@ -32,9 +46,6 @@
     		<!-- END: generate_page -->
     	</table>
     </div>
-    
-    <ul class="nav navbar-nav">
-        <!-- BEGIN: navbar --><li><a href="{NAVBAR.href}"><em class="fa fa-caret-right margin-right-sm"></em>{NAVBAR.title}</a></li><!-- END: navbar -->
-    </ul>
+  </div>
 </div>
 <!-- END: main -->
