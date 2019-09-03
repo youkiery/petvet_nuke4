@@ -102,7 +102,7 @@
   function confirmSubmit() {
     $.post(
       global['url'],
-      {action: 'cancel', id: global['id'], filter: checkFilter()},
+      {action: 'confirm', id: global['id'], filter: checkFilter()},
       (result, statatus) => {
         checkResult(result, statatus).then(data => {
           modalConfirm.modal('hide')

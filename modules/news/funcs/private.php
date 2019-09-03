@@ -426,7 +426,6 @@ if (!empty($action)) {
         $data['fid'] = $data['parentf'];
 				$data['mid'] = $data['parentm'];
 
-        $data['breeder'] = 1;
         if ($data['sex']) {
           $data['breeder'] = 1;
         }

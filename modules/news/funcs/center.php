@@ -67,7 +67,7 @@ if (!empty($action)) {
           $result['notify'] = 'Mật khẩu sai';
         }
         else {
-          $sql = 'update `'. PREFIX .'_user` set password = "'. md5($opass) .'" where id = ' . $userinfo['id'];
+          $sql = 'update `'. PREFIX .'_user` set password = "'. md5($npass) .'" where id = ' . $userinfo['id'];
           if ($db->query($sql)) {
             $result['status'] = 1;
             $result['notify'] = 'Đã đổi mật khẩu';
@@ -373,7 +373,6 @@ if (!empty($action)) {
         if ($data['sex1'] == 'false') {
           $sex = 0;
         }
-				$data['dob'] = totime($data['dob']);
 				$data['sex'] = $sex;
 				$data['dateofbirth'] = totime($data['dob']);
         $data['fid'] = $data['parentf'];
@@ -434,9 +433,7 @@ if (!empty($action)) {
         $data['fid'] = $data['parentf'];
 				$data['mid'] = $data['parentm'];
 
-
-        $data['breeder'] = 1;
-        if ($data['breeder'] == 'false') {
+        if ($data['breeder'] == 'true') {
           if ($data['sex']) {
             $data['breeder'] = 1;
           }
@@ -498,7 +495,7 @@ if (!empty($action)) {
         checkRemind($data['breed'], 'breed');
         checkRemind($data['origin'], 'origin');
 
-        if ($data['breeder'] == 'false') {
+        if ($data['breeder'] == 'true') {
           if ($data['sex']) {
             $data['breeder'] = 1;
           }

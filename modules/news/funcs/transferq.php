@@ -62,6 +62,7 @@ if (!empty($action)) {
         $sql = 'delete from `'. PREFIX .'_transfer_request` where id = ' . $row['id'];
         $sql2 = 'update `'. PREFIX .'_pet` set userid = ' . $userinfo['id'] . ' where id = ' . $pet['id'];
         $sql3 = 'insert into `'. PREFIX .'_transfer` (fromid, targetid, petid, time, type) values('. $pet['userid'] .', '. $userinfo['id'] .', '. $row['petid'] .', '. time() .', 1)';
+        // die($sql3);
 
         if ($db->query($sql) && $db->query($sql2) && $db->query($sql3)) {
           $result['status'] = 1;
