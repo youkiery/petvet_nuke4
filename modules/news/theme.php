@@ -210,6 +210,12 @@ function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('pa
       $xtpl->assign('species', $check['species']);
       $xtpl->assign('sex', $sex_array[$check['sex']]);
       $xtpl->assign('dob', cdate($check['dateofbirth']));
+      if ($row['sell']) {
+        $xtpl->parse('main.row.unsell');
+      }
+      else {
+        $xtpl->parse('main.row.sell');
+      }
       $request = getPetRequest($check['id']);
         // if ($count = count($request) > 0) {
         //   $counter = 0;

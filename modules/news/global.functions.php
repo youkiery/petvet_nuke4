@@ -361,6 +361,18 @@ function getPetActiveList($keyword = '', $page = 1, $limit = 10) {
   return $data;
 }
 
+function checkPetOwner($petid, $userid) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_pet` where id = "'. $petid .'" and userid = ' . $userid;
+  $query = $db->query($sql);
+
+  if (!empty($row = $query->fetch())) {
+    return 1;
+  }
+  return 0;
+}
+
 function checkPet($name, $userid) {
   global $db;
 

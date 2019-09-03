@@ -32,6 +32,32 @@ else {
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
+    case 'sell':
+      $id = $nv_Request->get_string('id', 'post', '0');
+      $tabber = $nv_Request->get_array('tabber', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      if (checkPetOwner($id, $userinfo['id'])) {
+        $sql = 'update `'. PREFIX .'_pet` set sell = 1 where id = ' . $id;
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+					$result['html'] = userDogRowByList($userinfo['id'], $tabber, $filter);
+        }
+      }
+    break;
+    case 'unsell':
+      $id = $nv_Request->get_string('id', 'post', '0');
+      $tabber = $nv_Request->get_array('tabber', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      if (checkPetOwner($id, $userinfo['id'])) {
+        $sql = 'update `'. PREFIX .'_pet` set sell = 0 where id = ' . $id;
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+					$result['html'] = userDogRowByList($userinfo['id'], $tabber, $filter);
+        }
+      }
+    break;
     case 'change-mail':
       $mail = $nv_Request->get_string('mail', 'post', '');
 

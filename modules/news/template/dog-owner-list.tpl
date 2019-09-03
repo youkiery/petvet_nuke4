@@ -15,6 +15,16 @@
     </tr>
     <tr class="right">
       <td colspan="2">
+        <!-- BEGIN: sell -->
+        <button class="btn btn-success" onclick="sell({id})">
+          <span class="glyphicon glyphicon-usd"></span>
+        </button>
+        <!-- END: sell -->
+        <!-- BEGIN: unsell -->
+        <button class="btn btn-warning" onclick="unsell({id})">
+          <span class="glyphicon glyphicon-usd"></span>
+        </button>
+        <!-- END: unsell -->
         <button class="btn btn-warning" onclick="transfer({id})">
           <img src="/themes/default/images/transfer.png" style="width: 20px; height: 20px;">
         </button>

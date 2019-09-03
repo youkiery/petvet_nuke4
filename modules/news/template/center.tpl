@@ -937,6 +937,32 @@
     installRemindSpecies('species-parent')
   })
 
+  function sell(id) {
+    freeze()
+    $.post(
+      global['url'],
+      {action: 'sell', id: id, filter: checkFilter(), tabber: global['tabber']},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          petList.html(data['html'])
+        }, () => {})
+      }
+    )    
+  }
+
+  function unsell(id) {
+    freeze()
+    $.post(
+      global['url'],
+      {action: 'unsell', id: id, filter: checkFilter(), tabber: global['tabber']},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          petList.html(data['html'])
+        }, () => {})
+      }
+    )    
+  }
+
   function changeMail() {
     $("#user-mail").modal('show')
   }
