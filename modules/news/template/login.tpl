@@ -19,7 +19,6 @@
     <div style="margin-top: 20px;"></div>
 
     <form onsubmit="login(event)">
-
       <div class="row">
         <label>
           <div class="col-sm-4">
@@ -50,7 +49,9 @@
     </form>
     <div id="error"> </div>
     <br>
-    Chưa có tài khoản? <a href="/{module_file}/signup"> Đăng ký ngay!</a>
+    Quên mật khẩu? <a href="/{module_name}/losspass"> Lấy lại ngay </a>
+    <br>
+    Chưa có tài khoản? <a href="/{module_name}/signup"> Đăng ký ngay!</a>
   </div>
 </div>
 

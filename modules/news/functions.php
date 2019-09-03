@@ -37,7 +37,7 @@ function getUserInfo() {
   return $data;
 }
 
-if (!empty($action = $nv_Request->get_string('action', 'post', '')) && !in_array($action, array('login', 'signup')) && empty($userinfo = getUserInfo())) {
+if (!empty($action = $nv_Request->get_string('action', 'post', '')) && !in_array($action, array('login', 'signup', 'recover', 'checking-key', 'change-pass')) && empty($userinfo = getUserInfo())) {
   die('{"status": -1}');
 }
 
@@ -278,4 +278,15 @@ function getParentTree($data) {
     $list[] = $mama;
   }
   return $list;
+}
+
+function generateRandomString($length = 8) {
+    // $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $characters = '0123456789';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
 }

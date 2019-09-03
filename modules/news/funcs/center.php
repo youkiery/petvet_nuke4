@@ -39,7 +39,7 @@ if (!empty($action)) {
         $result['error'] = 'Các trường không được trống';
       }
       else {
-        $sql = 'update `'. PREFIX .'_user` set mail = "'. $mail .'" where id = ' . $userinfo['id'];
+        $sql = 'update `'. PREFIX .'_user` set mail = "'. strtolower($mail) .'" where id = ' . $userinfo['id'];
         $query = $db->query($sql);
 
         if ($db->query($sql)) {
