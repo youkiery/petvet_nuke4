@@ -34,7 +34,7 @@ if (!empty($action)) {
           $result['notify'] = 'Người dùng không tồn tại';
         }
         else {
-          $sql = 'update `'. PREFIX .'_user` set password = "'. md5($opass) .'" where id = ' . $userid;
+          $sql = 'update `'. PREFIX .'_user` set password = "'. md5($npass) .'" where id = ' . $userid;
           if ($db->query($sql)) {
             $result['status'] = 1;
             $result['notify'] = 'Đã đổi mật khẩu';

@@ -38,7 +38,7 @@ if (!empty($action)) {
         $result['error'] = 'Mật khẩu sai';
       }
       else {
-        if (!checkMobileExist($data['mobile'])) {
+        if (!checkMobileExist($data['phone'])) {
           $data['phone'] = xencrypt($data['phone']);
           $data['address'] = xencrypt($data['address']);
           $sql = 'insert into `'. PREFIX .'_user` (username, password, fullname, mobile, politic, address, active, image, a1, a2, a3) values("'. $data['username'] .'", "'. md5($data['password']) .'", "'. $data['fullname'] .'", "'. $data['phone'] .'", "'. $data['politic'] .'", "'. $data['address'] .'", 1, "", "'. $data['al1'] .'", "'. $data['al2'] .'", "'. $data['al3'] .'")';

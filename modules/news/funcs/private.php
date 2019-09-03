@@ -24,8 +24,8 @@ if (empty($userinfo)) {
 	die();
 }
 else {
-  if (empty($userinfo['center'])) {
-    header('location: /'. $module_name .'/private');
+  if (!empty($userinfo['center'])) {
+    header('location: /'. $module_name .'/center');
   }
 }
 
