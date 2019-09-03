@@ -32,6 +32,26 @@ else {
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
+    case 'change-mail':
+      $mail = $nv_Request->get_string('mail', 'post', '');
+
+      if (empty($mail)) {
+        $result['error'] = 'Các trường không được trống';
+      }
+      else {
+        $sql = 'update `'. PREFIX .'_user` set mail = "'. $mail .'" where id = ' . $userinfo['id'];
+        $query = $db->query($sql);
+
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+          $result['error'] = '';
+          $result['notify'] = 'Đã lưu email';
+        }
+        else {
+          $result['error'] = 'Có lỗi xảy ra';
+        }
+      }
+    break;
     case 'change-pass':
       $npass = $nv_Request->get_string('npass', 'post', '');
       $opass = $nv_Request->get_string('opass', 'post', '');
@@ -622,6 +642,7 @@ $xtpl->assign('module_name', $module_name);
 // $stat = array('species' => array(), 'breeder' => array(), 'origin' => array());
 
 $xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
+$xtpl->assign('mail', $userinfo['mail']);
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");

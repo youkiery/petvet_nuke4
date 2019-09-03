@@ -14,6 +14,36 @@
   </div>
   <div id="msgshow"></div>
 
+  <div class="modal" id="user-mail" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <p class="text-center">
+            Bổ sung e-mail để lấy lại mật khẩu khi cần
+          </p>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Nhập email:
+            </div>
+            <div class="col-sm-9">
+              <input type="text" value="{mail}" class="form-control" id="imail" autocomplete="off">
+            </div>
+          </label>
+
+          <div id="mail-error" style="color: red; font-weight: bold;"></div>
+
+          <div class="text-center">
+            <button class="btn btn-info" onclick="changeMailSubmit()">
+              Lưu email
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal" id="user-pass" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -640,6 +670,9 @@
     <button class="btn btn-info" onclick="changePassword()">
       Đổi mật khẩu
     </button>
+    <button class="btn btn-info" onclick="changeMail()">
+      Email
+    </button>
   </div>
   <div style="clear: left;"></div>
   <p> <a href="/{module_file}/transfer"> Danh sách chuyển nhượng </a> </p>
@@ -845,6 +878,31 @@
     installRemindSpecies('species')
     installRemindSpecies('species-parent')
   })
+
+  function changeMail() {
+    $("#user-mail").modal('show')
+  }
+
+  function changeMailSubmit() {
+    var mail = $("#imail").val().trim()
+    if (!/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(mail)) {
+      $("#mail-error").text('Không đúng định dạng')
+    }
+    else {
+      $("#mail-error").text('')
+      freeze()
+      $.post(
+        global['url'],
+        {action: 'change-mail', mail: mail},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            $("#mail-error").text(data['error'])
+            $("#user-mail").modal('hide')
+          }, () => { })
+        }
+      )
+    }
+  }
 
   function changePassword() {
     $("#user-pass").modal('show')
