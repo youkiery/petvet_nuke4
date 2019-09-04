@@ -300,6 +300,30 @@ function mainPetList($keyword = '', $page = 1, $filter = 12) {
   return $xtpl->text();
 }
 
+function introList($userid, $filter = array('page' => 1, 'limit' => 10)) {
+  global $db, $module_file;
+
+  $xtpl = new XTemplate('intro-list.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_transfer` where fromid = ' . $userid;
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
+  $sql = 'select * from `'. PREFIX .'_transfer` where fromid = ' . $userid . ' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+
+  $list = array();
+  while ($row = $query->fetch()) {
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function transferList($userid, $filter = array('page' => 1, 'limit' => 10)) {
   global $db, $module_file;
 

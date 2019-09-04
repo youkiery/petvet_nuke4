@@ -766,6 +766,7 @@
   <div style="clear: left;"></div>
   <p> <a href="/{module_file}/transfer"> Danh sách chuyển nhượng </a> </p>
   <p> <a href="/{module_file}/transferq"> Yêu cầu chuyển nhượng </a> </p>
+  <p> <a href="/{module_file}/intro"> Danh sách liên hệ mua, bán, phối </a> </p>
   <h2> Danh sách thú cưng </h2>
 
   <form onsubmit="filterS(event)">

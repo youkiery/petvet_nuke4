@@ -26,12 +26,12 @@ if (!empty($action)) {
 		case 'filter':
       $filter = $nv_Request->get_array('filter', 'post');
 
-      $result['html'] = transferList($userinfo['id'], $filter);
-      if (empty($result['html'])) {
+      if (empty($html = introList($userinfo['id'], $filter))) {
         $result['notify'] = 'Có lỗi xảy ra';
       }
       else {
         $result['status'] = 1;
+        $result['html'] = $html;
       }
 		break;
 	}
@@ -39,9 +39,9 @@ if (!empty($action)) {
 	die();
 }
 
-$xtpl = new XTemplate("transfer.tpl", "modules/". $module_name ."/template");
+$xtpl = new XTemplate("intro.tpl", "modules/". $module_name ."/template");
 
-$xtpl->assign('content', transferList($userinfo['id']));
+$xtpl->assign('content', introList($userinfo['id']));
 $xtpl->assign('url', '/' . $module_name . '/' . $op . '/');
 
 $xtpl->assign('module_file', $module_file);
