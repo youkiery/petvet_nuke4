@@ -9,7 +9,7 @@
     Giống: {species} <br>
     Loài: {breed} <br>
     Giới tính: {sex} <br>
-    <button class="btn btn-info" onclick="sendContact()">
+    <button class="btn btn-info" onclick="sendContact({id})">
       Liên hệ
     </button>
   </div>

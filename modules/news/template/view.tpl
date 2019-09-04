@@ -193,6 +193,7 @@
 
 <script>
   var global = {
+    id: '{id}',
     url: '{url}'
   }
   var avatar = $("#avatar")
@@ -221,7 +222,7 @@
       $("#contact-error").text('')
       $.post(
         global['url'],
-        {action: 'send-contact', data: data},
+        {action: 'send-contact', data: data, id: global['id']},
         (response, status) => {
           checkResult(response, status).then(data => {
             $("#modal-contact").modal('show')

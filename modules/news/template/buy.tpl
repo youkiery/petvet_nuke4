@@ -79,12 +79,14 @@
 </div>
 <script>
   var global = {
+    id: 0,
     'url': '{url}',
     'page': 1
   }
   var content = $("#content")
 
-  function sendContact() {
+  function sendContact(id) {
+    global['id'] = id
     $("#modal-contact").modal('show')
   }
 
@@ -106,7 +108,7 @@
       $("#contact-error").text('')
       $.post(
         global['url'],
-        {action: 'send-contact', data: data},
+        {action: 'send-contact', data: data, id: global['id']},
         (response, status) => {
           checkResult(response, status).then(data => {
             $("#modal-contact").modal('show')

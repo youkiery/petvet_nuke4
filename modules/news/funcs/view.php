@@ -20,10 +20,11 @@ if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
 		case 'send-contact':
+      $id = $nv_Request->get_string('id', 'post', '0');
       $data = $nv_Request->get_array('data', 'post');
       $filter = $nv_Request->get_array('filter', 'post');
 
-      $sql = 'insert into `'. PREFIX .'_info` ('. sqlBuilder($data, BUILDER_INSERT_NAME) .', type) values ('. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 1)';
+      $sql = 'insert into `'. PREFIX .'_info` ('. sqlBuilder($data, BUILDER_INSERT_NAME) .', rid, type) values ('. sqlBuilder($data, BUILDER_INSERT_VALUE) .', '. $id .', 2)';
 
       if ($db->query($sql)) {
         $result['status'] = 1;
@@ -165,6 +166,7 @@ if (!empty($userinfo = getUserinfo())) {
 
 $xtpl->assign('url', '/' . $module_name . '/' . $op . '/');
 $xtpl->assign('module_file', $module_file);
+$xtpl->assign('id', $id);
 $xtpl->parse("main");
 
 $contents = $xtpl->text("main");

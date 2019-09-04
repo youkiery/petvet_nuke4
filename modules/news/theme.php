@@ -454,6 +454,7 @@ function buyList($filter = array('keyword' => '', 'page' => '1', 'limit' => '12'
 
   while($row = $query->fetch()) {
     $owner = getOwnerById($row['userid'], $row['type']);
+    $xtpl->assign('id', $row['id']);
     $xtpl->assign('species', $row['species']);
     $xtpl->assign('breed', $row['breed']);
     $xtpl->assign('age', $row['age']);

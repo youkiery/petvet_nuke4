@@ -25,10 +25,11 @@ if (!empty($action)) {
       }
     break;
 		case 'send-contact':
+      $id = $nv_Request->get_string('id', 'post', '0');
       $data = $nv_Request->get_array('data', 'post');
       $filter = $nv_Request->get_array('filter', 'post');
 
-      $sql = 'insert into `'. PREFIX .'_info` ('. sqlBuilder($data, BUILDER_INSERT_NAME) .', type) values ('. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 2)';
+      $sql = 'insert into `'. PREFIX .'_info` ('. sqlBuilder($data, BUILDER_INSERT_NAME) .', rid, type) values ('. sqlBuilder($data, BUILDER_INSERT_VALUE) .', '. $id .', 2)';
 
       if ($db->query($sql)) {
         $result['status'] = 1;
@@ -43,6 +44,13 @@ if (!empty($action)) {
 $xtpl = new XTemplate("buy.tpl", "modules/". $module_name ."/template");
 
 $xtpl->assign('content', buyList());
+if (!empty($userinfo = getUserinfo())) {
+  $userinfo['address'] = xdecrypt($userinfo['address']);
+  $userinfo['mobile'] = xdecrypt($userinfo['mobile']);
+  $xtpl->assign('fullname', $userinfo['fullname']);
+  $xtpl->assign('address', $userinfo['address']);
+  $xtpl->assign('mobile', $userinfo['mobile']);
+}
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
