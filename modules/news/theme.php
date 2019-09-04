@@ -382,6 +382,62 @@ function sellList($filter = array('keyword' => '', 'page' => '1', 'limit' => '12
   return $xtpl->text();
 }
 
+function getMarketContent($id) {
+  $html = '';
+  if (!empty($pet = getPetById($id))) {
+    $data = array(
+      '1' => array(
+        'act' => 'sellSubmit()',
+        'text' => 'Cần bán',
+        'class' => 'info'
+      ),
+      '2' => array(
+        'act' => 'breedingSubmit()',
+        'text' => 'Cần phối',
+        'class' => 'info'
+      )
+    );
+
+    if ($pet['sell'] == 1) {
+      $data['1'] = array(
+        'act' => 'unsellSubmit()',
+        'text' => 'Hủy',
+        'class' => 'warning'
+      );
+    }
+    if ($pet['breeding'] == 1) {
+      $data['2'] = array(
+        'act' => 'unbreedingSubmit()',
+        'text' => 'Hủy',
+        'class' => 'warning'
+      );
+    }
+
+    $html .= '
+      <label class="row">
+        <div class="col-sm-6">
+          Bán
+        </div>
+        <div class="col-sm-6" style="text-align: right;">
+          <button class="btn btn-'. $data['1']['class'] .'" onclick="'. $data['1']['act'] .'">
+            '. $data['1']['text'] .'
+          </button>
+        </div>
+      </label>
+      <label class="row">
+        <div class="col-sm-6">
+          Phối
+        </div>
+        <div class="col-sm-6" style="text-align: right;">
+          <button class="btn btn-'. $data['2']['class'] .'" onclick="'. $data['2']['act'] .'">
+            '. $data['2']['text'] .'
+          </button>
+        </div>
+      </label>';
+  }
+  return $html;
+}
+
 function navList ($number, $page, $limit) {
   global $lang_global;
   $total_pages = ceil($number / $limit);

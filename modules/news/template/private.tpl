@@ -14,6 +14,30 @@
   </div>
   <div id="msgshow"></div>
 
+  <div class="modal" id="user-market" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+          <div id="market-content"></div>
+          <!-- <label class="row">
+            <div class="col-sm-6">
+              Cần bán
+            </div>
+            <div class="col-sm-6" style="text-align: right;">
+              <button class="btn btn-info">
+                Bán
+              </button>
+            </div>
+          </label> -->
+
+          <div id="market-error" style="color: red; font-weight: bold;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal" id="user-mail" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -883,23 +907,64 @@
     freeze()
     $.post(
       global['url'],
-      {action: 'sell', id: id, filter: checkFilter(), tabber: global['tabber']},
+      {action: 'get-sell', id: id},
       (response, status) => {
         checkResult(response, status).then(data => {
-          petList.html(data['html'])
+          global['id'] = id
+          $("#market-content").html(data['html'])
+          $("#user-market").modal('show')
         }, () => {})
       }
     )    
   }
 
-  function unsell(id) {
+  function sellSubmit() {
     freeze()
     $.post(
       global['url'],
-      {action: 'unsell', id: id, filter: checkFilter(), tabber: global['tabber']},
+      {action: 'sell', id: global['id'], filter: checkFilter(), tabber: global['tabber']},
       (response, status) => {
         checkResult(response, status).then(data => {
-          petList.html(data['html'])
+          $("#market-content").html(data['html'])
+        }, () => {})
+      }
+    )    
+  }
+
+  function unsellSubmit() {
+    freeze()
+    $.post(
+      global['url'],
+      {action: 'unsell', id: global['id'], filter: checkFilter(), tabber: global['tabber']},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#market-content").html(data['html'])
+        }, () => {})
+      }
+    )    
+  }
+
+  function breedingSubmit() {
+    freeze()
+    $.post(
+      global['url'],
+      {action: 'breeding', id: global['id'], filter: checkFilter(), tabber: global['tabber']},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#market-content").html(data['html'])
+        }, () => {})
+      }
+    )    
+  }
+
+  function unbreedingSubmit() {
+    freeze()
+    $.post(
+      global['url'],
+      {action: 'unbreeding', id: global['id'], filter: checkFilter(), tabber: global['tabber']},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#market-content").html(data['html'])
         }, () => {})
       }
     )    
