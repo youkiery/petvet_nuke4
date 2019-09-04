@@ -32,6 +32,16 @@ else {
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
+    case 'buy':
+      $data = $nv_Request->get_array('data', 'post');
+
+      $sql = 'insert into `'. PREFIX .'_buy` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .') values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) . ')';
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['notify'] = 'Đã thêm cần mua';
+      }
+
+    break;
     case 'get-sell':
       $id = $nv_Request->get_string('id', 'post', '0');
 

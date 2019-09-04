@@ -38,6 +38,67 @@
     </div>
   </div>
 
+    <div class="modal" id="user-buy" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Loài
+            </div>
+            <div class="col-sm-9" style="text-align: right;">
+              <input type="text" class="form-control" id="species-buy">
+              <div class="suggest" id="species-suggest-buy" style="text-align: left;"></div>
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Giống
+            </div>
+            <div class="col-sm-9" style="text-align: right;">
+              <input type="text" class="form-control" id="breed-buy">
+              <div class="suggest" id="breed-suggest-buy" style="text-align: left;"></div>
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Giới tính
+            </div>
+            <div class="col-sm-9">
+              <label>
+                <input type="radio" name="sex4" id="buy-sex-0" checked> Đực
+              </label>
+              <label>
+                <input type="radio" name="sex4" id="buy-sex-1"> Cái
+              </label>
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Tuổi
+            </div>
+            <div class="col-sm-9">
+              <input type="number" class="form-control" id="buy-age">
+            </div>
+          </label>
+
+          <div id="buy-error" style="color: red; font-weight: bold;"></div>
+
+          <div class="text-center">
+            <button class="btn btn-info" onclick="buySubmit()">
+              Thêm cần mua
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal" id="user-mail" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -697,6 +758,10 @@
     <button class="btn btn-info" onclick="changeMail()">
       Email
     </button>
+    <div></div>
+    <button class="btn btn-info" onclick="buy()">
+      Cần mua
+    </button>
   </div>
   <div style="clear: left;"></div>
   <p> <a href="/{module_file}/transfer"> Danh sách chuyển nhượng </a> </p>
@@ -894,6 +959,8 @@
     installRemind('m', 'parent')
     installRemind('f', 'parent')
     // installRemindv2('pet', 'species')
+    installRemindv2('buy', 'breed')
+    installRemindv2('buy', 'species')
     installRemindv2('pet', 'breed')
     installRemindv2('pet', 'origin')
     // installRemindv2('parent', 'species')
@@ -902,6 +969,42 @@
     installRemindSpecies('species')
     installRemindSpecies('species-parent')
   })
+
+  function buy() {
+    $("#user-buy").modal('show')
+  }
+
+  function checkBuyData() {
+    var sex0 = $("#buy-sex-0").prop('checked'), sex1 = $("#buy-sex-1").prop('checked')
+    return {
+      species: $("#species-buy").val(),
+      breed: $("#breed-buy").val(),
+      sex: (sex0 ? 1 : 2),
+      age: $("#buy-age").val()
+    }
+  }
+
+  function buySubmit() {
+    data = checkBuyData()
+    if (Number(data['age']) == NaN || data['age'] < 0) {
+      data['age'] = 0
+    }
+    if (!data['species'].length || !data['breed'].length || !data['age'].length) {
+      $("#buy-error").text('Các trường không được để trống')
+    }
+    else {
+      freeze()
+      $.post(
+        global['url'],
+        {action: 'buy', data: data},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            $("#user-buy").modal('hide')
+          }, () => {})
+        }
+      )    
+    }
+  }
 
   function sell(id) {
     freeze()
