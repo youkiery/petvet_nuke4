@@ -1,6 +1,34 @@
 <!-- BEGIN: main -->
 <div class="container">
   <div id="msgshow"></div>
+  <div class="text-center">
+    <a href="/news/sell" style="text-decoration: none;">
+      <button class="btn">
+        Bán thú cưng
+      </button>
+    </a> | 
+    <a href="/news/buy" style="text-decoration: none;"> 
+      <button class="btn" disabled>
+        Mua thú cưng
+      </button>
+    </a> |
+    <a href="/news/breeding" style="text-decoration: none;"> 
+      <button class="btn" disabled>
+        Phối giống
+      </button>
+    </a> |
+    <a href="/news/farm" style="text-decoration: none;"> 
+      <button class="btn" disabled>
+        Trang trại
+      </button>
+    </a> |
+    <a href="/news/doctor" style="text-decoration: none;"> 
+      <button class="btn" disabled>
+        Bác sĩ
+      </button>
+    </a>
+  </div>
+
     <div class="text-center start-content">
       <img src="/themes/default/images/banner.png">
       <!-- <p> Nâng niu tình yêu động vật </p> -->
