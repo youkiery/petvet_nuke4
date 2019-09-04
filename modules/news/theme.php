@@ -412,6 +412,41 @@ function breedingList($filter = array('keyword' => '', 'page' => '1', 'limit' =>
   return $xtpl->text();
 }
 
+function buyList($filter = array('keyword' => '', 'page' => '1', 'limit' => '12')) {
+  global $db, $module_name, $sex_array;
+
+  $xtpl = new XTemplate('buy-list.tpl', PATH);
+  $xtpl->assign('module_name', $module_name);
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_buy`';
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
+  $sql = 'select * from `'. PREFIX .'_buy` limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+
+  while($row = $query->fetch()) {
+    $owner = getOwnerById($row['userid'], $row['type']);
+    $xtpl->assign('species', $row['species']);
+    $xtpl->assign('breed', $row['breed']);
+    $xtpl->assign('age', $row['age']);
+    $xtpl->assign('sex', $sex_array[$row['sex']]);
+    // $xtpl->assign('index', $index++);
+    // $xtpl->assign('name', $row['name']);
+    // $xtpl->assign('owner', $owner['fullname']);
+    // $xtpl->assign('id', $row['id']);
+    // $xtpl->assign('image', $row['image']);
+    // $xtpl->assign('microchip', $row['microchip']);
+    // $xtpl->assign('breed', $row['breed']);
+    // $xtpl->assign('species', $row['species']);
+    // $xtpl->assign('sex', $sex_array[$row['sex']]);
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function getMarketContent($id) {
   $html = '';
   if (!empty($pet = getPetById($id))) {
@@ -446,7 +481,7 @@ function getMarketContent($id) {
     $html .= '
       <label class="row">
         <div class="col-sm-6">
-          Bán
+          Đăng bán
         </div>
         <div class="col-sm-6" style="text-align: right;">
           <button class="btn btn-'. $data['1']['class'] .'" onclick="'. $data['1']['act'] .'">
@@ -456,7 +491,7 @@ function getMarketContent($id) {
       </label>
       <label class="row">
         <div class="col-sm-6">
-          Phối
+          Đăng cho phối
         </div>
         <div class="col-sm-6" style="text-align: right;">
           <button class="btn btn-'. $data['2']['class'] .'" onclick="'. $data['2']['act'] .'">

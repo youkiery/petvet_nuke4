@@ -1,31 +1,31 @@
 <!-- BEGIN: main -->
 <div class="container">
   <div id="msgshow"></div>
-  <div class="text-center">
+  <div style="text-align: right;">
     <a href="/news/sell" style="text-decoration: none;">
-      <button class="btn">
-        Bán thú cưng
-      </button>
+      <!-- <button class="btn"> -->
+        Bán
+      <!-- </button> -->
     </a> | 
     <a href="/news/buy" style="text-decoration: none;"> 
-      <button class="btn" disabled>
-        Mua thú cưng
-      </button>
+      <!-- <button class="btn" disabled> -->
+        Mua
+      <!-- </button> -->
     </a> |
     <a href="/news/breeding" style="text-decoration: none;"> 
-      <button class="btn">
-        Phối giống
-      </button>
+      <!-- <button class="btn"> -->
+        Phối
+      <!-- </button> -->
     </a> |
     <a href="/news/farm" style="text-decoration: none;"> 
-      <button class="btn" disabled>
+      <!-- <button class="btn" disabled> -->
         Trang trại
-      </button>
+      <!-- </button> -->
     </a> |
     <a href="/news/doctor" style="text-decoration: none;"> 
-      <button class="btn" disabled>
+      <!-- <button class="btn" disabled> -->
         Bác sĩ
-      </button>
+      <!-- </button> -->
     </a>
   </div>
 
