@@ -16,9 +16,25 @@ $page_title = "Danh sách chó bán";
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
-		case 'signup':
-      $a = 1;
-		break;
+    case 'filter':
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      if (!empty($html = sellList($filter))) {
+        $result['status'] = 1;
+        $result['html'] = $html;
+      }
+    break;
+		case 'send-contact':
+      $data = $nv_Request->get_array('data', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'insert into `'. PREFIX .'_info` ('. sqlBuilder($data, BUILDER_INSERT_NAME) .', type) values ('. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 2)';
+
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['notify'] = 'Đã gửi thông tin cho người đăng';
+      }
+    break;
 	}
 	echo json_encode($result);
 	die();

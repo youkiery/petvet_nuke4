@@ -11,18 +11,24 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
+define('BUILDER_INSERT_NAME', 0);
+define('BUILDER_INSERT_VALUE', 1);
+define('BUILDER_EDIT', 2);
+
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
-		case 'search':
-			$keyword = $nv_Request->get_string('keyword', 'post', '');
-			
-			$result['status'] = 1;
-			if (count($list)) {
-				$result['html'] = dogRowByList($keyword);
-			}
+		case 'send-contact':
+      $data = $nv_Request->get_array('data', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
 
+      $sql = 'insert into `'. PREFIX .'_info` ('. sqlBuilder($data, BUILDER_INSERT_NAME) .', type) values ('. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 1)';
+
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['notify'] = 'Đã gửi thông tin cho người đăng';
+      }
 		break;
 	}
 	echo json_encode($result);
@@ -149,6 +155,15 @@ else {
 	$xtpl->parse("main.error");
 }
 
+if (!empty($userinfo = getUserinfo())) {
+  $userinfo['address'] = xdecrypt($userinfo['address']);
+  $userinfo['mobile'] = xdecrypt($userinfo['mobile']);
+  $xtpl->assign('fullname', $userinfo['fullname']);
+  $xtpl->assign('address', $userinfo['address']);
+  $xtpl->assign('mobile', $userinfo['mobile']);
+}
+
+$xtpl->assign('url', '/' . $module_name . '/' . $op . '/');
 $xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");
 

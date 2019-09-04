@@ -37,7 +37,7 @@ function getUserInfo() {
   return $data;
 }
 
-if (!empty($action = $nv_Request->get_string('action', 'post', '')) && !in_array($action, array('login', 'signup', 'recover', 'checking-key', 'change-pass')) && empty($userinfo = getUserInfo())) {
+if (!empty($action = $nv_Request->get_string('action', 'post', '')) && !in_array($action, array('login', 'signup', 'recover', 'checking-key', 'change-pass', 'send-contact', 'filter')) && empty($userinfo = getUserInfo())) {
   die('{"status": -1}');
 }
 

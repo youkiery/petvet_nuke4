@@ -16,9 +16,14 @@ $page_title = "Danh sách chó bán";
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
-		case 'signup':
-      $a = 1;
-		break;
+    case 'filter':
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      if (!empty($html = sellList($filter))) {
+        $result['status'] = 1;
+        $result['html'] = $html;
+      }
+    break;
 	}
 	echo json_encode($result);
 	die();

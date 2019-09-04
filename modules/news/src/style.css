@@ -15,6 +15,7 @@
   float        : left;
   height       : 140px;
   border-bottom: 1px solid lightgray;
+  overflow: hidden;
 }
 
 .pbody:hover {

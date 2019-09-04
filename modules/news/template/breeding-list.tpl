@@ -8,7 +8,7 @@
     Tên: {name} <br>
     Tuổi: {age} <br>
     Giống: {species} <br>
-    Loài: {breed}
+    Loài: {breed} <br>
   </div>
 </a>
 <span style="clear: both;"></span>

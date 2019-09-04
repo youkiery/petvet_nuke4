@@ -8,7 +8,10 @@
     Tuổi: {age} <br>
     Giống: {species} <br>
     Loài: {breed} <br>
-    Giới tính: {sex}
+    Giới tính: {sex} <br>
+    <button class="btn btn-info" onclick="sendContact()">
+      Liên hệ
+    </button>
   </div>
 </div>
 <span style="clear: both;"></span>
