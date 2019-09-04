@@ -374,8 +374,38 @@ function sellList($filter = array('keyword' => '', 'page' => '1', 'limit' => '12
     $xtpl->assign('breed', $row['breed']);
     $xtpl->assign('species', $row['species']);
     $xtpl->assign('sex', $sex_array[$row['sex']]);
-    // $xtpl->assign('age', parseAgeTime($row['dateofbirth']));
-    // $xtpl->assign('dob', cdate($row['dateofbirth']));
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function breedingList($filter = array('keyword' => '', 'page' => '1', 'limit' => '12')) {
+  global $db, $module_name;
+
+  $xtpl = new XTemplate('breeding-list.tpl', PATH);
+  $xtpl->assign('module_name', $module_name);
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breeding = 1';
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
+  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and sell = 1 limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+
+  while($row = $query->fetch()) {
+    $owner = getOwnerById($row['userid'], $row['type']);
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('image', $row['image']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('owner', $owner['fullname']);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('image', $row['image']);
+    $xtpl->assign('microchip', $row['microchip']);
+    $xtpl->assign('breed', $row['breed']);
+    $xtpl->assign('species', $row['species']);
+    $xtpl->assign('sex', $sex_array[$row['sex']]);
     $xtpl->parse('main.row');
   }
   $xtpl->parse('main');

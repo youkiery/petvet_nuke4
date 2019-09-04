@@ -13,7 +13,7 @@
       </button>
     </a> |
     <a href="/news/breeding" style="text-decoration: none;"> 
-      <button class="btn" disabled>
+      <button class="btn">
         Phối giống
       </button>
     </a> |

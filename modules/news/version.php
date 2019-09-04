@@ -13,8 +13,8 @@ if (!defined('NV_ADMIN') or !defined('NV_MAINFILE')) {
 
 $module_version = array(
     'name' => 'Quản lý chíp',
-    'modfuncs' => 'main, detail, bio, logout, list, login, signup, private, center, info, transfer, transferq, losspass, sell, view',
-    'submenu' => 'main, detail, bio, logout, list, login, signup, private, center, info, transfer, transferq, losspass, sell, view',
+    'modfuncs' => 'main, detail, bio, logout, list, login, signup, private, center, info, transfer, transferq, losspass, sell, view, breeding',
+    'submenu' => 'main, detail, bio, logout, list, login, signup, private, center, info, transfer, transferq, losspass, sell, view, breeding',
     'is_sysmod' => 1,
     'virtual' => 1,
     'version' => '4.3.04',
