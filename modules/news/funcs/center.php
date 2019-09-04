@@ -32,6 +32,40 @@ else {
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
+    case 'get-sell':
+      $id = $nv_Request->get_string('id', 'post', '0');
+
+      if (!empty($html = getMarketContent($id))) {
+        $result['status'] = 1;
+        $result['html'] = $html;
+      }
+    break;
+    case 'breeding':
+      $id = $nv_Request->get_string('id', 'post', '0');
+      $tabber = $nv_Request->get_array('tabber', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      if (checkPetOwner($id, $userinfo['id'])) {
+        $sql = 'update `'. PREFIX .'_pet` set breeding = 1 where id = ' . $id;
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+          $result['html'] = getMarketContent($id);
+        }
+      }
+    break;
+    case 'unbreeding':
+      $id = $nv_Request->get_string('id', 'post', '0');
+      $tabber = $nv_Request->get_array('tabber', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      if (checkPetOwner($id, $userinfo['id'])) {
+        $sql = 'update `'. PREFIX .'_pet` set breeding = 0 where id = ' . $id;
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+          $result['html'] = getMarketContent($id);
+        }
+      }
+    break;
     case 'sell':
       $id = $nv_Request->get_string('id', 'post', '0');
       $tabber = $nv_Request->get_array('tabber', 'post');
@@ -41,7 +75,7 @@ if (!empty($action)) {
         $sql = 'update `'. PREFIX .'_pet` set sell = 1 where id = ' . $id;
         if ($db->query($sql)) {
           $result['status'] = 1;
-					$result['html'] = userDogRowByList($userinfo['id'], $tabber, $filter);
+          $result['html'] = getMarketContent($id);
         }
       }
     break;
@@ -54,7 +88,7 @@ if (!empty($action)) {
         $sql = 'update `'. PREFIX .'_pet` set sell = 0 where id = ' . $id;
         if ($db->query($sql)) {
           $result['status'] = 1;
-					$result['html'] = userDogRowByList($userinfo['id'], $tabber, $filter);
+          $result['html'] = getMarketContent($id);
         }
       }
     break;
