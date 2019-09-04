@@ -306,17 +306,28 @@ function introList($userid, $filter = array('page' => 1, 'limit' => 10)) {
   $xtpl = new XTemplate('intro-list.tpl', PATH);
   $xtpl->assign('module_file', $module_file);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_transfer` where fromid = ' . $userid;
+  $sql = 'select count(*) as count from ((select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where a.type = 1 and b.userid = '. $userid . ') union (select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2 and b.userid = '. $userid . ')) as c';
+
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_transfer` where fromid = ' . $userid . ' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from ((select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where a.type = 1 and b.userid = '. $userid . ') union (select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2 and b.userid = '. $userid . ') order by id desc) as c limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
   $list = array();
   while ($row = $query->fetch()) {
+    $owner = getOwnerById($row['userid']);
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('target', $row['fullname']);
+    $xtpl->assign('address', $row['address']);
+    $xtpl->assign('mobile', $row['mobile']);
+    $xtpl->assign('note', $row['note']);
+    $xtpl->assign('type', 'Cần bán, phối');
+    if ($row['type'] == 2) {
+      $xtpl->assign('type', 'Cần mua');
+    }
     $xtpl->parse('main.row');
   }
 

@@ -24,7 +24,7 @@ if (!empty($action)) {
       $data = $nv_Request->get_array('data', 'post');
       $filter = $nv_Request->get_array('filter', 'post');
 
-      $sql = 'insert into `'. PREFIX .'_info` ('. sqlBuilder($data, BUILDER_INSERT_NAME) .', rid, type) values ('. sqlBuilder($data, BUILDER_INSERT_VALUE) .', '. $id .', 2)';
+      $sql = 'insert into `'. PREFIX .'_info` ('. sqlBuilder($data, BUILDER_INSERT_NAME) .', rid, type) values ('. sqlBuilder($data, BUILDER_INSERT_VALUE) .', '. $id .', 1)';
 
       if ($db->query($sql)) {
         $result['status'] = 1;

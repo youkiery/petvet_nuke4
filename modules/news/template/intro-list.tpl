@@ -14,10 +14,7 @@
       Số điện thoại
     </th>
     <th>
-      Tên thú cưng
-    </th>
-    <th>
-      
+      Chuyên mục
     </th>
   </tr>
   <!-- BEGIN: row -->
@@ -26,8 +23,17 @@
     <td> {target} </td>
     <td> {address} </td>
     <td> {mobile} </td>
-    <td> <a href="/{module_file}/detail/?id={id}"> {pet} </a> </td>
-    <td> {time} </td>
+    <td> {type} </td>
+  </tr>
+  <tr>
+    <td colspan="5">
+      <div style="width: 50%;">
+        Ghi chú: {note}
+      </div>
+      <div style="width: 50%;">
+
+      </div>
+    </td>
   </tr>
   <!-- END: row -->
 </table>
