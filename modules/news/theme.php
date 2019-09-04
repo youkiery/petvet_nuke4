@@ -479,6 +479,7 @@ function getMarketContent($id) {
     }
 
     $html .= '
+      <hr>
       <label class="row">
         <div class="col-sm-6">
           Đăng bán
@@ -489,6 +490,7 @@ function getMarketContent($id) {
           </button>
         </div>
       </label>
+      <hr>
       <label class="row">
         <div class="col-sm-6">
           Đăng cho phối

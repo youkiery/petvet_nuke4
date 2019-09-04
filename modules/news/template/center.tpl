@@ -12,30 +12,6 @@
     <img class="loading" src="/themes/default/images/loading.gif">
   </div>
 
-  <div class="modal" id="user-market" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-body">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-
-          <div id="market-content"></div>
-          <!-- <label class="row">
-            <div class="col-sm-6">
-              Cần bán
-            </div>
-            <div class="col-sm-6" style="text-align: right;">
-              <button class="btn btn-info">
-                Bán
-              </button>
-            </div>
-          </label> -->
-
-          <div id="market-error" style="color: red; font-weight: bold;"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="modal" id="user-buy" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -320,14 +296,14 @@
                 Chuyển nhượng
                 <!-- <span class="glyphicon glyphicon-plus"></span> -->
               </button>
-              <br>
               <button class="btn btn-success" style="height: 34px;" onclick="addOwner()">
-                Thêm khách hàng mới
+                Thêm khách hàng
                 <!-- <span class="glyphicon glyphicon-plus"></span> -->
               </button>
             </div>
-
           </div>
+          <div id="market-content"></div>
+
         </div>
       </div>
     </div>
@@ -1065,18 +1041,6 @@
   }
 
   function sell(id) {
-    freeze()
-    $.post(
-      global['url'],
-      {action: 'get-sell', id: id},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          global['id'] = id
-          $("#market-content").html(data['html'])
-          $("#user-market").modal('show')
-        }, () => {})
-      }
-    )    
   }
 
   function sellSubmit() {
@@ -1197,8 +1161,20 @@
   }
 
   function transfer(id) {
-    global['pet'] = id
-    transferPet.modal('show')
+    freeze()
+    $.post(
+      global['url'],
+      {action: 'get-sell', id: id},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          global['id'] = id
+          $("#market-content").html(data['html'])
+          $("#user-market").modal('show')
+          transferPet.modal('show')
+        }, () => {})
+      }
+    )    
+
   }
 
   function transferPetSubmit() {
