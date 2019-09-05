@@ -61,6 +61,9 @@
   <a href="/">
     <img src="/themes/default/images/banner.png" style="width: 200px;">
   </a>
+  <div style="float: right;">
+    {FILE "heading.tpl"}
+  </div>
   <!-- <form style="width: 60%; float: right;">
     <label class="input-group">
       <input type="hidden" name="nv" value="biograph">

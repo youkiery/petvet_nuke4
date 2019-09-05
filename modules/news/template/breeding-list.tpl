@@ -1,6 +1,6 @@
 <!-- BEGIN: main -->
 <!-- BEGIN: row -->
-<a href="/{module_name}/view/?id={id}" class="pbody">
+<a href="/{module_name}/view2/?id={id}" class="pbody">
   <div class="pleft">
     <img src="{image}" class="sm-thumbnail">
   </div>
