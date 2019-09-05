@@ -394,6 +394,30 @@ function pickVaccineId($id) {
   return $query->fetch();
 }
 
+function getDiseaseById($id) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX.'_disease_suggest` where id = ' . $id;
+  $query = $db->query($sql);
+
+  if (empty($row = $query->fetch())) {
+    $row = array('disease' => '');
+  }
+
+  return $row;
+}
+
+function checkDisease($userid, $value) {
+  global $db;
+
+  $disease = getDiseaseById($value);
+  $sql = 'update `'. PREFIX .'_disease_suggest` set rate = rate + 1 where disease = "'. $disease['disease'] .'"';
+  if ($db->query($sql)) {
+    return true;
+  }
+  return false;
+}
+
 function parseVaccineType($userid) {
   global $db;
 

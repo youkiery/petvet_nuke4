@@ -45,7 +45,6 @@
     </div>
   </div>
 
-
   <form onsubmit="filterE(event)">
     <div class="row">
       <div class="col-sm-8">
@@ -171,7 +170,7 @@
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])
-          modalRemove.modal('hide')
+          modalEdit.modal('hide')
         }, () => {})
       }
     )

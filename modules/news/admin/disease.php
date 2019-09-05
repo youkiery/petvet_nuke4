@@ -22,7 +22,8 @@ if (!empty($action)) {
 			$id = $nv_Request->get_string('id', 'post');
 			$filter = $nv_Request->get_array('filter', 'post');
 
-			$sql = 'update `'. PREFIX .'_disease_suggest` set active = 1 where id = ' . $id;
+      $disease = getDiseaseById($id);
+			$sql = 'update `'. PREFIX .'_disease_suggest` set active = 1 where disease = "' . $disease['disease'] . '"';
 			if ($db->query($sql)) {
 				$result['html'] = diseaseList2($filter);
 				if ($result['html']) {
@@ -34,7 +35,8 @@ if (!empty($action)) {
 			$id = $nv_Request->get_string('id', 'post');
 			$filter = $nv_Request->get_array('filter', 'post');
 
-			$sql = 'update `'. PREFIX .'_disease_suggest` set active = 0 where id = ' . $id;
+      $disease = getDiseaseById($id);
+			$sql = 'update `'. PREFIX .'_disease_suggest` set active = 0 where disease = "' . $disease['disease'] . '"';
 			if ($db->query($sql)) {
 				$result['html'] = diseaseList2($filter);
 				if ($result['html']) {
@@ -56,7 +58,8 @@ if (!empty($action)) {
 			$id = $nv_Request->get_int('id', 'post', 0);
 
       if (!empty($id)) {
-        $sql = 'delete from `'. PREFIX .'_disease_suggest` where id = ' . $id;
+        $disease = getDiseaseById($id);
+        $sql = 'delete from `'. PREFIX .'_disease_suggest` where disease = "' . $disease['disease'] . '"';
         // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;
@@ -71,7 +74,8 @@ if (!empty($action)) {
 			$name = $nv_Request->get_string('name', 'post', '');
 
       if (!empty($id) && !empty($name)) {
-        $sql = 'update `'. PREFIX .'_disease_suggest` set disease = "'. $name .'" where id = ' . $id;
+        $disease = getDiseaseById($id);
+        $sql = 'update `'. PREFIX .'_disease_suggest` set disease = "'. $name .'" where disease = "' . $disease['disease'] . '"';
         // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;

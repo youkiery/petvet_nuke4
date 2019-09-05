@@ -251,6 +251,8 @@ if (!empty($action)) {
           die($sql);
         }
         else {
+          checkDisease($userinfo['id'], $data['val']);
+          
           $sql = 'insert into `'. PREFIX .'_vaccine` (petid, time, recall, type, val, status) values ("'. $id .'", "'. $data['time'] .'", "'. $data['recall'] .'", "'. $data['type'] .'",  "'. $data['val'] .'", 0)';
           if ($db->query($sql)) {
             $result['status'] = 1;
