@@ -269,8 +269,6 @@ if (!empty($action)) {
     case 'editpet':
       $id = $nv_Request->get_string('id', 'post', '');
       $image = $nv_Request->get_string('image', 'post');
-      $userid = $nv_Request->get_string('userid', 'post');
-      $type = $nv_Request->get_string('type', 'post');
       $data = $nv_Request->get_array('data', 'post');
       $filter = $nv_Request->get_array('filter', 'post');
       $tabber = $nv_Request->get_array('tabber', 'post');
@@ -303,7 +301,7 @@ if (!empty($action)) {
           $data['breeder'] = 0;
         }
 
-        $sql = 'update `' . PREFIX . '_pet` set userid = '. $userid .', type = '. $type .', ' . sqlBuilder($data, BUILDER_EDIT) . ', image = "' . $image . '" where id = ' . $id;
+        $sql = 'update `' . PREFIX . '_pet` set ' . sqlBuilder($data, BUILDER_EDIT) . ', image = "' . $image . '" where id = ' . $id;
 
         if ($db->query($sql)) {
           $result['status'] = 1;

@@ -37,9 +37,9 @@
         <div class="modal-body">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <p class="text-center"> <b> Thêm thú cưng </b> </p>
-          <button id="pet-owner" onclick="pickOwner()">
+          <!-- <button id="pet-owner" onclick="pickOwner()">
             Chọn chủ
-          </button>
+          </button> -->
           <!-- <label class="row">
             <div class="col-sm-6">
               Chủ thú
@@ -579,7 +579,6 @@
       (response, status) => {
         checkResult(response, status).then(data => {
           global['id'] = id
-          global['userid'] = data['more']['userid']
           parseInputSet(data['data'], pet)
           $("#pet-owner").val(data['more']['username'])
           $("#parent-f").val(data['more']['f'])
@@ -603,7 +602,7 @@
   function editPetSubmit() {
     $.post(
       global['url'],
-      {action: 'editpet', id: global['id'], userid: global['userid'], type: global['type'], data: checkInputSet(pet), filter: checkFilter()},
+      {action: 'editpet', id: global['id'], data: checkInputSet(pet), filter: checkFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
           petList.html(data['html'])
