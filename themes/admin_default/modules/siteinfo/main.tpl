@@ -93,9 +93,4 @@
 </div>
 <!-- END: inf -->
 <!-- END: version -->
-<script type="text/javascript">
-	$(function () {
-	    $("img.imgstatnkv").attr("src","//static.nukeviet.vn/img.jpg");
-	});
-</script>
 <!-- END: main -->
