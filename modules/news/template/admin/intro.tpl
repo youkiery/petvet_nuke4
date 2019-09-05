@@ -148,57 +148,57 @@
     )
   }
 
-  function checkData() {
-    return {
-      name: $("#edit-name").val(),
-      value: $("#edit-value").val()
-    }
-  }
+  // function checkData() {
+  //   return {
+  //     name: $("#edit-name").val(),
+  //     value: $("#edit-value").val()
+  //   }
+  // }
 
-  function insert() {
-    btnInsert.show()
-    btnEdit.hide()
-    modalEdit.modal('show')
-  }
+  // function insert() {
+  //   btnInsert.show()
+  //   btnEdit.hide()
+  //   modalEdit.modal('show')
+  // }
 
-  function insertSubmit() {
-    $.post(
-      global['url'],
-      {action: 'insert', filter: checkFilter(), data: checkData()},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          content.html(data['html'])
-          $("#edit-name").val('')
-          $("#edit-value").val('')
-          modalEdit.modal('hide')
-        }, () => {})
-      }
-    )
-  }
+  // function insertSubmit() {
+  //   $.post(
+  //     global['url'],
+  //     {action: 'insert', filter: checkFilter(), data: checkData()},
+  //     (response, status) => {
+  //       checkResult(response, status).then(data => {
+  //         content.html(data['html'])
+  //         $("#edit-name").val('')
+  //         $("#edit-value").val('')
+  //         modalEdit.modal('hide')
+  //       }, () => {})
+  //     }
+  //   )
+  // }
 
-  function edit(id) {
-    global['id'] = id
-    $("#edit-name").val($("#name-" + id).text())
-    $("#edit-value").val(reversal[trim($("#value-" + id).text())])
-    btnInsert.hide()
-    btnEdit.show()
-    modalEdit.modal('show')
-  }
+  // function edit(id) {
+  //   global['id'] = id
+  //   $("#edit-name").val($("#name-" + id).text())
+  //   $("#edit-value").val(reversal[trim($("#value-" + id).text())])
+  //   btnInsert.hide()
+  //   btnEdit.show()
+  //   modalEdit.modal('show')
+  // }
 
-  function editSubmit() {
-    $.post(
-      global['url'],
-      {action: 'edit', id: global['id'], filter: checkFilter(), data: checkData()},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          content.html(data['html'])
-          $("#edit-name").val('')
-          $("#edit-value").val('')
-          modalEdit.modal('hide')
-        }, () => {})
-      }
-    )
-  }
+  // function editSubmit() {
+  //   $.post(
+  //     global['url'],
+  //     {action: 'edit', id: global['id'], filter: checkFilter(), data: checkData()},
+  //     (response, status) => {
+  //       checkResult(response, status).then(data => {
+  //         content.html(data['html'])
+  //         $("#edit-name").val('')
+  //         $("#edit-value").val('')
+  //         modalEdit.modal('hide')
+  //       }, () => {})
+  //     }
+  //   )
+  // }
 
   function goPage(page) {
     global['page'] = page
@@ -212,6 +212,7 @@
   }
 
   function filter() {
+    global['page'] = 1
     $.post(
       global['url'],
       {action: 'filter', filter: checkFilter()},
@@ -255,7 +256,7 @@
   function uncheck(id) {
     $.post(
       global['url'],
-      {action: 'no-check', id: id, filter: checkFilter()},
+      {action: 'uncheck', id: id, filter: checkFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])

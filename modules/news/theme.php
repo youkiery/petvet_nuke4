@@ -306,13 +306,13 @@ function introList($userid, $filter = array('page' => 1, 'limit' => 10)) {
   $xtpl = new XTemplate('intro-list.tpl', PATH);
   $xtpl->assign('module_file', $module_file);
 
-  $sql = 'select count(*) as count from ((select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3) and b.userid = '. $userid . ') union (select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2 and b.userid = '. $userid . ')) as c';
+  $sql = 'select count(*) as count from ((select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3) and b.userid = '. $userid . ' and status = 1) union (select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2 and b.userid = '. $userid . ' and status = 1)) as c';
 
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from ((select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3) and b.userid = '. $userid . ') union (select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2 and b.userid = '. $userid . ') order by id desc) as c limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from ((select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3) and b.userid = '. $userid . ' and status = 1) union (select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2 and b.userid = '. $userid . ' and status = 1) order by id desc) as c limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
@@ -323,12 +323,6 @@ function introList($userid, $filter = array('page' => 1, 'limit' => 10)) {
     $xtpl->assign('address', $row['address']);
     $xtpl->assign('mobile', $row['mobile']);
     $xtpl->assign('note', $row['note']);
-    if ($row['status'] == 1) {
-      $xtpl->parse('main.row.yes');
-    }
-    else {
-      $xtpl->parse('main.row.no');
-    }
     switch ($row['type']) {
       case 1:
         $xtpl->assign('type', 'Cần bán');

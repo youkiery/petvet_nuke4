@@ -79,23 +79,31 @@ function infoList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', '
     $filter['status'] = $filter['status'] - 1;
   }
 
-  $sql = 'select count(*) as count from ((select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3)) union (select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2)) as c';
+  $sql = 'select count(*) as count from ((select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3) and status in (0, 1)) union (select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2 and status in (0, 1))) as c';
 
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from ((select a.*, b.userid from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3)) union (select a.*, b.userid from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2) order by id desc) as c limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from ((select a.*, b.userid from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3) and status in (0, 1)) union (select a.*, b.userid from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2 and status in (0, 1)) order by id desc) as c limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
   while ($row = $query->fetch()) {
     $owner = getOwnerById($row['userid']);
     $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
     $xtpl->assign('target', $row['fullname']);
     $xtpl->assign('address', $row['address']);
     $xtpl->assign('mobile', $row['mobile']);
     $xtpl->assign('note', $row['note']);
+    if ($row['status']) {
+      $xtpl->parse('main.row.no');
+    }
+    else {
+      $xtpl->parse('main.row.yes');
+    }
+
     switch ($row['type']) {
       case 1:
         $xtpl->assign('type', 'Cần bán');

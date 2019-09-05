@@ -23,42 +23,30 @@ if (!empty($action)) {
 			$id = $nv_Request->get_int('id', 'post', 0);
 
       if (!empty($id)) {
-        $sql = 'delete from `'. PREFIX .'_remind` where id = ' . $id;
+        $sql = 'delete from `'. PREFIX .'_info` where id = ' . $id;
         // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;
-          $result['html'] = remindList($filter);
+          $result['notify'] = 'Đã xóa';
+          $result['html'] = infoList($filter);
         }
       }
     break;
-    case 'edit':
-			$filter = $nv_Request->get_array('filter', 'post');
-			$data = $nv_Request->get_array('data', 'post');
-			$id = $nv_Request->get_int('id', 'post', 0);
+    // case 'insert':
+		// 	$filter = $nv_Request->get_array('filter', 'post');
+		// 	$data = $nv_Request->get_array('data', 'post');
 
-      if (!empty($id)) {
-        $sql = 'update `'. PREFIX .'_remind` set name = "'. $data['name'] .'", type = "'. $data['value'] .'" where id = ' . $id;
-        if ($db->query($sql)) {
-          $result['status'] = 1;
-          $result['html'] = remindList($filter);
-        }
-      }
-    break;
-    case 'insert':
-			$filter = $nv_Request->get_array('filter', 'post');
-			$data = $nv_Request->get_array('data', 'post');
-
-      $sql = 'insert into `'. PREFIX .'_remind` (name, type, rate, visible, xid) values("'.$data['name'].'", "'.$data['value'].'", 0, 1, 0)';
-      if ($db->query($sql)) {
-        $result['status'] = 1;
-        $result['html'] = remindList($filter);
-      }
+    //   $sql = 'insert into `'. PREFIX .'_info` (name, type, rate, status, xid) values("'.$data['name'].'", "'.$data['value'].'", 0, 1, 0)';
+    //   if ($db->query($sql)) {
+    //     $result['status'] = 1;
+    //     $result['html'] = infoList($filter);
+    //   }
     break;
     case 'filter':
 			$filter = $nv_Request->get_array('filter', 'post');
 
 			if ($db->query($sql)) {
-				$result['html'] = remindList($filter);
+				$result['html'] = infoList($filter);
 				if ($result['html']) {
 					$result['status'] = 1;
 				}
@@ -68,21 +56,21 @@ if (!empty($action)) {
 			$id = $nv_Request->get_string('id', 'post');
 			$filter = $nv_Request->get_array('filter', 'post');
 
-			$sql = 'update `'. PREFIX .'_remind` set visible = 1 where id = ' . $id;
+			$sql = 'update `'. PREFIX .'_info` set status = 1 where id = ' . $id;
 			if ($db->query($sql)) {
-				$result['html'] = remindList($filter);
+				$result['html'] = infoList($filter);
 				if ($result['html']) {
 					$result['status'] = 1;
 				}
 			}
 		break;
-		case 'un-check':
+		case 'uncheck':
 			$id = $nv_Request->get_string('id', 'post');
 			$filter = $nv_Request->get_array('filter', 'post');
 
-			$sql = 'update `'. PREFIX .'_remind` set visible = 0 where id = ' . $id;
+			$sql = 'update `'. PREFIX .'_info` set status = 0 where id = ' . $id;
 			if ($db->query($sql)) {
-				$result['html'] = remindList($filter);
+				$result['html'] = infoList($filter);
 				if ($result['html']) {
 					$result['status'] = 1;
 				}
