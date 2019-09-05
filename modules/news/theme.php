@@ -316,7 +316,6 @@ function introList($userid, $filter = array('page' => 1, 'limit' => 10)) {
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
-  $list = array();
   while ($row = $query->fetch()) {
     $owner = getOwnerById($row['userid']);
     $xtpl->assign('index', $index++);
@@ -324,6 +323,12 @@ function introList($userid, $filter = array('page' => 1, 'limit' => 10)) {
     $xtpl->assign('address', $row['address']);
     $xtpl->assign('mobile', $row['mobile']);
     $xtpl->assign('note', $row['note']);
+    if ($row['status'] == 1) {
+      $xtpl->parse('main.row.yes');
+    }
+    else {
+      $xtpl->parse('main.row.no');
+    }
     switch ($row['type']) {
       case 1:
         $xtpl->assign('type', 'Cần bán');

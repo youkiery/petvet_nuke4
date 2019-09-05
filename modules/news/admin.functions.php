@@ -65,6 +65,54 @@ function remindList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '',
   return $xtpl->text();
 }
 
+function infoList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', 'status' => 0)) {
+  global $db, $module_file;
+
+  $xtpl = new XTemplate('intro-list.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
+
+  $filter['status'] = intval($filter['status']);
+  if (empty($filter['status'])) {
+    $filter['status'] = '0, 1';
+  }
+  else {
+    $filter['status'] = $filter['status'] - 1;
+  }
+
+  $sql = 'select count(*) as count from ((select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3)) union (select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2)) as c';
+
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
+  $sql = 'select * from ((select a.*, b.userid from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3)) union (select a.*, b.userid from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2) order by id desc) as c limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+
+  while ($row = $query->fetch()) {
+    $owner = getOwnerById($row['userid']);
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('target', $row['fullname']);
+    $xtpl->assign('address', $row['address']);
+    $xtpl->assign('mobile', $row['mobile']);
+    $xtpl->assign('note', $row['note']);
+    switch ($row['type']) {
+      case 1:
+        $xtpl->assign('type', 'Cần bán');
+      break;
+      case 2:
+        $xtpl->assign('type', 'Cần mua');
+      break;
+      default:
+      $xtpl->assign('type', 'Cần phối');
+    }
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function centerList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', 'status' => 0)) {
   global $db, $module_file;
 
