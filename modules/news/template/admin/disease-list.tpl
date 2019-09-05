@@ -5,29 +5,36 @@
       STT
     </th>
     <th>
-      Tên khách
+      Loại tiêm phòng
     </th>
     <th>
-      Địa chỉ
+      Tỉ lệ sử dụng      
     </th>
-    <th>
-      Số điện thoại
-    </th>
-    <th>
-      Tên thú cưng
-    </th>
-    <th>
-      Ngày chuyển
-    </th>
+    <th></th>
   </tr>
   <!-- BEGIN: row -->
   <tr>
     <td> {index} </td>
-    <td> {target} </td>
-    <td> {address} </td>
-    <td> {mobile} </td>
-    <td> <a href="/{module_file}/detail/?id={id}"> {pet} </a> </td>
-    <td> {time} </td>
+    <td id="name-{id}"> {disease} </td>
+    <td> {rate} </td>
+    <td style="text-align: right;">
+      <!-- BEGIN: yes -->
+      <button class="btn btn-success" onclick="check({id})">
+        <span class="glyphicon glyphicon-unchecked"></span>
+      </button>
+      <!-- END: yes -->
+      <!-- BEGIN: no -->
+      <button class="btn btn-warning" onclick="uncheck({id})">
+        <span class="glyphicon glyphicon-check"></span>
+      </button>
+      <!-- END: no -->
+      <button class="btn btn-info" onclick="edit({id})">
+        <span class="glyphicon glyphicon-edit"></span>
+      </button>
+      <button class="btn btn-danger" onclick="remove({id})">
+        <span class="glyphicon glyphicon-remove"></span>
+      </button>
+    </td>    
   </tr>
   <!-- END: row -->
 </table>

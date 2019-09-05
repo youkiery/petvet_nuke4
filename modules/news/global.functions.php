@@ -395,15 +395,12 @@ function pickVaccineId($id) {
 }
 
 function parseVaccineType($userid) {
-  global $db, $vaccine_array;
+  global $db;
 
-  $sql = 'select * from `'. PREFIX .'_disease_suggest` where userid = ' . $userid;
+  $sql = 'select * from `'. PREFIX .'_disease_suggest` where active = 1 or userid = ' . $userid . ' group by disease order by active desc, id desc';
   $query = $db->query($sql);
   $list = array();
 
-  foreach ($vaccine_array as $row) {
-    $list[] = '<option value="1-'. $row['type'] .'">'. $row['title'] .'</option>';
-  }
   while ($row = $query->fetch()) {
     $list[] = '<option value="2-'. $row['id'] .'">'. $row['disease'] .'</option>';
   }
