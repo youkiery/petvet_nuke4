@@ -65,6 +65,49 @@ function remindList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '',
   return $xtpl->text();
 }
 
+function diseaseList2($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', 'status' => 0)) {
+  global $db;
+
+  $xtpl = new XTemplate('disease-list.tpl', PATH);
+  $sql = 'select count(*) as count from ((select id, disease, 1 as type from `'. PREFIX .'_disease`) union (select id, disease, 2 as type from `'. PREFIX .'_disease_suggest`)) as a';
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
+  $sql = 'select * from ((select id, disease, 1 as type from `'. PREFIX .'_disease`) union (select id, disease, 2 as type from `'. PREFIX .'_disease_suggest`)) as a';
+  $query = $db->query($sql);
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+
+  while ($row = $query->fetch()) {
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('target', $row['fullname']);
+    $xtpl->assign('address', $row['address']);
+    $xtpl->assign('mobile', $row['mobile']);
+    $xtpl->assign('note', $row['note']);
+    if ($row['status']) {
+      $xtpl->parse('main.row.no');
+    }
+    else {
+      $xtpl->parse('main.row.yes');
+    }
+
+    switch ($row['type']) {
+      case 1:
+        $xtpl->assign('type', 'Cần bán');
+      break;
+      case 2:
+        $xtpl->assign('type', 'Cần mua');
+      break;
+      default:
+      $xtpl->assign('type', 'Cần phối');
+    }
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function infoList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', 'status' => 0)) {
   global $db, $module_file;
 
@@ -80,7 +123,6 @@ function infoList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', '
   }
 
   $sql = 'select count(*) as count from ((select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3) and status in (0, 1)) union (select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2 and status in (0, 1))) as c';
-
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));

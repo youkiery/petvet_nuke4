@@ -378,16 +378,6 @@ function transferList($userid, $filter = array('page' => 1, 'limit' => 10)) {
   return $xtpl->text();
 }
 
-function diseaseList2() {
-  global $db;
-
-  $sql = 'select * from ((select id, disease, 1 as type from `'. PREFIX .'_disease`) union (select id, disease, 2 as type from `'. PREFIX .'_disease_suggest`)) as a';
-  $xtpl = new XTemplate('transfer-list.tpl', PATH);
-  // die($sql);
-  
-  return '';
-}
-
 function sellList($filter = array('keyword' => '', 'page' => '1', 'limit' => '12')) {
   global $db, $module_name;
 
