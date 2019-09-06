@@ -13,12 +13,26 @@ if (!defined('NV_IS_ADMIN_FORM')) {
 
 $page_title = "Quản lý chíp";
 
-$xtpl = new XTemplate("main.tpl", PATH);
-
 $step = $nv_Request->get_int('s', 'get', 1);
 
-// $xtpl->assign('remind', json_encode(getRemind()));
+$xtpl = new XTemplate("main.tpl", PATH);
 $xtpl->assign('module_file', $module_file);
+
+$last_month = time() - 60 * 60 * 24 * 30;
+// new member
+$sql = 'select count(*) as count from `'. PREFIX .'_user` where time > ' . $last_month;
+$count = $db->query($sql)->fetch();
+$xtpl->assign('user_new', $count['count']);
+// active member
+$sql = 'select count(*) as count from `'. PREFIX .'_user` where active = 1';
+$count = $db->query($sql)->fetch();
+$xtpl->assign('user_active', $count['count']);
+// total member
+$sql = 'select count(*) as count from `'. PREFIX .'_user`';
+$count = $db->query($sql)->fetch();
+$xtpl->assign('user_total', $count['count']);
+
+// $xtpl->assign('remind', json_encode(getRemind()));
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 

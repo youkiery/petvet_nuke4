@@ -1394,12 +1394,20 @@
     $("#parent" + global['parent' + '-s']).val(0)
   }
 
+  function checkParentData() {
+    var data = checkInputSet(parent)
+    data['breeder'] = $("#parent-breeder").prop('checked')
+    data['sex0'] = parent['sex0'].prop('checked')
+    data['sex1'] = parent['sex1'].prop('checked')
+    return data
+  }
+
   function insertParentSubmit() {
     freeze()
     uploader().then((imageUrl) => {
       $.post(
         global['url'],
-        { action: 'insert-parent', id: global['id'], data: checkInputSet(parent), image: imageUrl, filter: checkFilter(), tabber: global['tabber'] },
+        { action: 'insert-parent', id: global['id'], data: checkParentData(), image: imageUrl, filter: checkFilter(), tabber: global['tabber'] },
         (response, status) => {
           checkResult(response, status).then(data => {
             petList.html(data['html'])

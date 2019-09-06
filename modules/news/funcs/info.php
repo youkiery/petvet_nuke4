@@ -335,7 +335,7 @@ if (!empty($action)) {
         checkRemind($data['species'], 'species');
         checkRemind($data['breed'], 'breed');
 
-				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image, fid, mid) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 0, "", 0, 0)';
+				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image, fid, mid, time) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 0, "", 0, 0, '. time() .')';
         // die($sql);
 
 				if ($db->query($sql)) {

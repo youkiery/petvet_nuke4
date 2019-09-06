@@ -262,29 +262,6 @@ function getPetNameId($id) {
   return '';
 }
 
-function insertPet($data) {
-  global $db;
-
-  $sql = 'insert into `'. PREFIX .'_pet` (userid, name, dateofbirth, species, breed, sex, color, microchip) values ('. $data['userid'] .', "'. $data['name'] .'", '. $data['dateofbirth'] .', "'. $data['species'] .'", "'. $data['breed'] .'", "'. $data['sex'] .'", "'. $data['color'] .'", '. $data['microchip'] .')';
-  if ($db->query($sql)) {
-    return trueWx;
-  }
-  return false;
-}
-
-function insertUser($data) {
-  global $db;
-
-  $data['mobile'] = xencrypt($data['mobile']);
-  $data['address'] = xencrypt($data['address']);
-
-  $sql = 'insert into `'. PREFIX .'_user` (username, password, fullname, mobile, address) values ('. $data['username'] .', "'. md5('vet_' . $data['password']) .'", '. $data['fullname'] .', "'. $data['mobile'] .'", "'. $data['address'] .'")';
-  if ($db->query($sql)) {
-    return true;
-  }
-  return false;
-}
-
 function updatePet($data, $id) {
   global $db;
   $sql_part = array();
