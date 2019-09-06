@@ -721,6 +721,20 @@ $xtpl->assign('v', parseVaccineType($userinfo['id']));
 
 $xtpl->assign('today', date('d/m/Y', time()));
 $xtpl->assign('recall', date('d/m/Y', time() + 60 * 60 * 24 * 21));
+$xtpl->assign('transfer_count', '');
+$xtpl->assign('intro_count', '');
+
+$sql = 'select count(*) as count from ((select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3) and b.userid = '. $userinfo['id'] . ' and status = 1) union (select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2 and b.userid = '. $userinfo['id'] . ' and status = 1)) as c';
+$query = $db->query($sql);
+if (!empty($row = $query->fetch()) && $row['count'] > 0) {
+  $xtpl->assign('intro_count', '('. $row['count'] .')');
+}
+
+$sql = 'select count(*) as count from `'. PREFIX .'_transfer_request` where userid = ' . $userinfo['id'];
+$query = $db->query($sql);
+if (!empty($row = $query->fetch()) && $row['count'] > 0) {
+  $xtpl->assign('transfer_count', '('. $row['count'] .')');
+}
 
 $xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
 $xtpl->assign('module_file', $module_file);
