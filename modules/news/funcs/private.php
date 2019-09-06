@@ -464,7 +464,7 @@ if (!empty($action)) {
         checkRemind($data['species'], 'species');
         checkRemind($data['breed'], 'breed');
 
-				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image, type, time) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 0, "'. $image .'", 1, '. time() .')';
+				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image, type, time) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 1, "'. $image .'", 1, '. time() .')';
 
 				if ($db->query($sql)) {
 					$result['status'] = 1;
@@ -513,7 +513,7 @@ if (!empty($action)) {
         checkRemind($data['species'], 'species');
         checkRemind($data['breed'], 'breed');
 
-				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image, type, origin, graph, time) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 0, "", 1, "", "", '. time() .')';
+				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image, type, origin, graph, time) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 1, "", 1, "", "", '. time() .')';
 
 				if ($db->query($sql)) {
 					$result['status'] = 1;

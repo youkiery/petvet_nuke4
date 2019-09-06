@@ -384,12 +384,12 @@ function sellList($filter = array('species' => '', 'breed' => '', 'keyword' => '
   $xtpl = new XTemplate('sell-list.tpl', PATH);
   $xtpl->assign('module_name', $module_name);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" and sell = 1';
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" and sell = 1 order by id desc';
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" and sell = 1 limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" and sell = 1 order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   while($row = $query->fetch()) {
@@ -417,12 +417,12 @@ function breedingList($filter = array('species' => '', 'breed' => '', 'keyword' 
   $xtpl = new XTemplate('breeding-list.tpl', PATH);
   $xtpl->assign('module_name', $module_name);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" and breeding = 1';
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" and breeding = 1 order by id desc';
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" and breeding = 1 limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" and breeding = 1 order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   while($row = $query->fetch()) {
@@ -450,12 +450,12 @@ function buyList($filter = array('species' => '', 'breed' => '', 'page' => '1', 
   $xtpl = new XTemplate('buy-list.tpl', PATH);
   $xtpl->assign('module_name', $module_name);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_buy` where breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%"';
+  $sql = 'select count(*) as count from `'. PREFIX .'_buy` where breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" order by id desc';
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_buy` where breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_buy` where breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   while($row = $query->fetch()) {

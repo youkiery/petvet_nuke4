@@ -68,14 +68,14 @@
   <form onsubmit="filter(event)" style="width: 60%; float: right;">
     <div class="row">
       <div class="col-sm-5">
-        <input type="text" class="form-control" id="species" placeholder="Loài">
+        <input type="text" class="form-control" id="species" placeholder="Loài: chó, mèo,...">
         <!-- <select name="species" class="form-control" id="species">
           {species}
         </select> -->
       </div>
       <div class="col-sm-6">
         <div class="input-group">
-          <input type="text" class="form-control" id="breed" placeholder="Giống">
+          <input type="text" class="form-control" id="breed" placeholder="Giống: husky, alaska,...">
           <div class="input-group-btn">
             <button class="btn btn-info"> Tìm kiếm </button>
           </div>
