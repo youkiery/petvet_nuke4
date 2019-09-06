@@ -19,7 +19,7 @@ if (!empty($action)) {
     case 'filter':
       $filter = $nv_Request->get_array('filter', 'post');
 
-      if (!empty($html = sellList($filter))) {
+      if (!empty($html = breedingList($filter))) {
         $result['status'] = 1;
         $result['html'] = $html;
       }

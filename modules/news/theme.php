@@ -378,18 +378,18 @@ function transferList($userid, $filter = array('page' => 1, 'limit' => 10)) {
   return $xtpl->text();
 }
 
-function sellList($filter = array('keyword' => '', 'page' => '1', 'limit' => '12')) {
+function sellList($filter = array('species' => '', 'breed' => '', 'keyword' => '', 'page' => '1', 'limit' => '12')) {
   global $db, $module_name;
 
   $xtpl = new XTemplate('sell-list.tpl', PATH);
   $xtpl->assign('module_name', $module_name);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and sell = 1';
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" and sell = 1';
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and sell = 1 limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" and sell = 1 limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   while($row = $query->fetch()) {
@@ -411,18 +411,18 @@ function sellList($filter = array('keyword' => '', 'page' => '1', 'limit' => '12
   return $xtpl->text();
 }
 
-function breedingList($filter = array('keyword' => '', 'page' => '1', 'limit' => '12')) {
+function breedingList($filter = array('species' => '', 'breed' => '', 'keyword' => '', 'page' => '1', 'limit' => '12')) {
   global $db, $module_name;
 
   $xtpl = new XTemplate('breeding-list.tpl', PATH);
   $xtpl->assign('module_name', $module_name);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breeding = 1';
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" and breeding = 1';
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breeding = 1 limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" and breeding = 1 limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   while($row = $query->fetch()) {
@@ -444,18 +444,18 @@ function breedingList($filter = array('keyword' => '', 'page' => '1', 'limit' =>
   return $xtpl->text();
 }
 
-function buyList($filter = array('keyword' => '', 'page' => '1', 'limit' => '12')) {
+function buyList($filter = array('species' => '', 'breed' => '', 'page' => '1', 'limit' => '12')) {
   global $db, $module_name, $sex_array;
 
   $xtpl = new XTemplate('buy-list.tpl', PATH);
   $xtpl->assign('module_name', $module_name);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_buy`';
+  $sql = 'select count(*) as count from `'. PREFIX .'_buy` where breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%"';
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_buy` limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_buy` where breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   while($row = $query->fetch()) {

@@ -2,21 +2,34 @@
 <div class="container">
   <div id="msgshow"></div>
   <a href="/">
-    <img src="/themes/default/images/banner.png" style="width: 200px;">
+    <img src="/themes/default/images/banner.png" style="float: left; width: 200px;">
   </a>
   <div style="float: right;">
     {FILE "heading.tpl"}
   </div>
-  <!-- <form style="width: 60%; float: right;">
+  <div style="clear: right;"></div>
+  <form onsubmit="filter(event)" style="width: 60%; float: right;">
+    <div class="row">
+      <div class="col-sm-6">
+        <input type="text" class="form-control" id="species" placeholder="Loài">
+        <!-- <select name="species" class="form-control" id="species">
+          {species}
+        </select> -->
+      </div>
+      <div class="col-sm-6">
+      <input type="text" class="form-control" id="breed" placeholder="Giống">
+        <!-- <select name="breed" class="form-control" id="breed">
+          {breed}
+        </select> -->
+      </div>
+    </div>
     <label class="input-group">
-      <input type="hidden" name="nv" value="biograph">
-      <input type="hidden" name="op" value="list">
       <input type="text" class="form-control" name="keyword" value="{keyword}" id="keyword" placeholder="Nhập tên hoặc mã số">
       <div class="input-group-btn">
         <button class="btn btn-info"> Tìm kiếm </button>
       </div>
     </label>
-  </form> -->
+  </form>
   <div style="clear: both;"></div>
 
   <div id="content">
@@ -32,10 +45,17 @@
 
   function checkFilter() {
     return {
+      species: $("#species").val(),
+      breed: $("#breed").val(),
       page: global['page'],
       limit: 12,
-      keyword: ''
+      keyword: $("#keyword").val()
     }
+  }
+
+  function filter(e) {
+    e.preventDefault()
+    goPage(1)
   }
 
   function goPage(page) {

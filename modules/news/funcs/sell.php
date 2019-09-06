@@ -32,7 +32,6 @@ if (!empty($action)) {
 $xtpl = new XTemplate("sell.tpl", "modules/". $module_name ."/template");
 
 $xtpl->assign('content', sellList());
-
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 include ("modules/". $module_file ."/layout/header.php");
