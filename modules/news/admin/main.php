@@ -31,6 +31,50 @@ $xtpl->assign('user_active', $count['count']);
 $sql = 'select count(*) as count from `'. PREFIX .'_user`';
 $count = $db->query($sql)->fetch();
 $xtpl->assign('user_total', $count['count']);
+// new pet
+$sql = 'select count(*) as count from `'. PREFIX .'_pet` where time > ' . $last_month;
+$count = $db->query($sql)->fetch();
+$xtpl->assign('pet_new', $count['count']);
+// new pet
+$sql = 'select count(*) as count from `'. PREFIX .'_pet` where active = 1';
+$count = $db->query($sql)->fetch();
+$xtpl->assign('pet_active', $count['count']);
+// new total
+$sql = 'select count(*) as count from `'. PREFIX .'_pet`';
+$count = $db->query($sql)->fetch();
+$xtpl->assign('pet_total', $count['count']);
+// new request
+$sql = 'select count(*) as count from `'. PREFIX .'_request` where status = 1';
+$count = $db->query($sql)->fetch();
+$xtpl->assign('request_new', $count['count']);
+// recent request
+$sql = 'select count(*) as count from `'. PREFIX .'_request` where time > ' . $last_month;
+$count = $db->query($sql)->fetch();
+$xtpl->assign('request_recent', $count['count']);
+// remind new
+$sql = 'select count(*) as count from `'. PREFIX .'_remind` where visible = 0';
+$count = $db->query($sql)->fetch();
+$xtpl->assign('remind_new', $count['count']);
+// remind recent
+// $sql = 'select count(*) as count from `'. PREFIX .'_remind` where time > ' . $last_month;
+// $count = $db->query($sql)->fetch();
+// $xtpl->assign('remind_recent', $count['count']);
+// vaccine suggest new
+$sql = 'select count(*) as count from `'. PREFIX .'_disease_suggest` where active = 0';
+$count = $db->query($sql)->fetch();
+$xtpl->assign('vaccine_new', $count['count']);
+// transfer total
+$sql = 'select count(*) as count from `'. PREFIX .'_transfer`';
+$count = $db->query($sql)->fetch();
+$xtpl->assign('transfer_count', $count['count']);
+// sell total
+$sql = 'select count(*) as count from `'. PREFIX .'_pet` where sell = 1';
+$count = $db->query($sql)->fetch();
+$xtpl->assign('sell_count', $count['count']);
+// breeding total
+$sql = 'select count(*) as count from `'. PREFIX .'_pet` where breeding = 1';
+$count = $db->query($sql)->fetch();
+$xtpl->assign('breeding_count', $count['count']);
 
 // $xtpl->assign('remind', json_encode(getRemind()));
 $xtpl->parse("main");

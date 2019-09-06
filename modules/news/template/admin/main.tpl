@@ -24,31 +24,31 @@ Thống kê thành viên
 Thống kê thú cưng
 <ul>
   <li class="li">
-    Thú cưng mới: 10 <button class="btn btn-info btn-sm"> xem </button>
+    Thú cưng mới: {pet_new} <button class="btn btn-info btn-sm"> xem </button>
   </li>
   <li class="li">
-    Thú cưng đã duyệt: 10 <button class="btn btn-info btn-sm"> xem </button>
+    Thú cưng đã duyệt: {pet_active} <button class="btn btn-info btn-sm"> xem </button>
   </li>
   <li class="li">
-    Tổng số thú cưng: 10 <button class="btn btn-info btn-sm"> xem </button>
+    Tổng số thú cưng: {pet_total} <button class="btn btn-info btn-sm"> xem </button>
   </li>
 </ul>
 <div class="li">
-  Yêu cầu tiêm phòng: 10 <button class="btn btn-info btn-sm btn-sm"> xem </button>
+  Yêu cầu tiêm phòng: {request_new} <button class="btn btn-info btn-sm btn-sm"> xem </button>
 </div>
 <div class="li">
-  Yêu cầu gợi nhớ: 10 <button class="btn btn-info btn-sm btn-sm"> xem </button>
+  Gợi nhớ: {remind_new} <button class="btn btn-info btn-sm btn-sm"> xem </button>
 </div>
 <div class="li">
-  Yêu cầu gợi nhớ tiêm phòng: 10 <button class="btn btn-info btn-sm btn-sm"> xem </button>
+  Yêu cầu gợi nhớ tiêm phòng: {vaccine_new} <button class="btn btn-info btn-sm btn-sm"> xem </button>
 </div>
 <div class="li">
-  Số lượt chuyển nhượng: 10 <button class="btn btn-info btn-sm btn-sm"> xem </button>
+  Số lượt chuyển nhượng: {transfer_count} <button class="btn btn-info btn-sm btn-sm"> xem </button>
 </div>
 <div class="li">
-  Số lượt đăng bán thú cưng: 10 <button class="btn btn-info btn-sm btn-sm"> xem </button>
+  Số lượt đăng bán thú cưng: {sell_count} <button class="btn btn-info btn-sm btn-sm"> xem </button>
 </div>
 <div class="li">
-  Số lượt đăng phối thú cưng: 10 <button class="btn btn-info btn-sm btn-sm"> xem </button>
+  Số lượt đăng phối thú cưng: {breeding_count} <button class="btn btn-info btn-sm btn-sm"> xem </button>
 </div>
 <!-- END: main -->
