@@ -1,4 +1,10 @@
 <!-- BEGIN: main -->
+<style>
+  .btn-sm {
+    padding: 2px !important;
+    min-height: 12px !important;
+  }
+</style>
 <div class="container">
   <div id="msgshow"></div>
   <a href="/">
@@ -35,6 +41,19 @@
     $.post(
       global['url'],
       {action: 'filter', filter: checkFilter()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          content.html(data['html'])
+        }, () => {})
+      }
+    )
+  }
+
+  function hideIntro(id) {
+    // freeze()
+    $.post(
+      global['url'],
+      {action: 'hide', id: id, filter: checkFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])

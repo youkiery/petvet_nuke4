@@ -319,6 +319,7 @@ function introList($userid, $filter = array('page' => 1, 'limit' => 10)) {
   while ($row = $query->fetch()) {
     $owner = getOwnerById($row['userid']);
     $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
     $xtpl->assign('target', $row['fullname']);
     $xtpl->assign('address', $row['address']);
     $xtpl->assign('mobile', $row['mobile']);

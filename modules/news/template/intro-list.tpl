@@ -27,12 +27,14 @@
   </tr>
   <tr>
     <td colspan="5">
-      <div style="width: 50%;">
+      <div style="width: 50%; float: left;">
         Ghi chú: {note}
       </div>
-      <div style="width: 50%;">
-
-      </div>
+      <div style="width: 50%; float: left; text-align: right">
+        <button class="btn btn-info btn-sm" onclick="hideIntro({id})">
+          Ẩn thông tin này
+        </button>
+      </div> 
     </td>
   </tr>
   <!-- END: row -->
