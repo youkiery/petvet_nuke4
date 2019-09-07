@@ -1173,14 +1173,13 @@
         }, () => {})
       }
     )    
-
   }
 
   function transferPetSubmit() {
     freeze()
     $.post(
       global['url'],
-      { action: 'transfer-owner', petid: global['pet'], ownerid: global['owner'], type: global['type'], filter: checkFilter(), tabber: global['tabber'] },
+      { action: 'transfer-owner', petid: global['id'], ownerid: global['owner'], type: global['type'], filter: checkFilter(), tabber: global['tabber'] },
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#transfer-owner").val('')

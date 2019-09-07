@@ -1126,15 +1126,26 @@
   }
 
   function transfer(id) {
-    global['pet'] = id
-    transferPet.modal('show')
+    freeze()
+    $.post(
+      global['url'],
+      {action: 'get-sell', id: id},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          global['id'] = id
+          $("#market-content").html(data['html'])
+          $("#user-market").modal('show')
+          transferPet.modal('show')
+        }, () => {})
+      }
+    )    
   }
 
   function transferPetSubmit() {
     freeze()
     $.post(
       global['url'],
-      { action: 'transfer-owner', petid: global['pet'], ownerid: global['owner'], type: global['type'], filter:checkFilter(), tabber: global['tabber'] },
+      { action: 'transfer-owner', petid: global['id'], ownerid: global['owner'], type: global['type'], filter: checkFilter(), tabber: global['tabber'] },
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#transfer-owner").val('')

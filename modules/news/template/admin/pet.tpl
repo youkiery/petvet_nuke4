@@ -36,7 +36,7 @@
       <div class="modal-content">
         <div class="modal-body">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <p class="text-center"> <b> Thêm thú cưng </b> </p>
+          <p class="text-center"> <b>  </b> </p>
           <!-- <button id="pet-owner" onclick="pickOwner()">
             Chọn chủ
           </button> -->
@@ -521,7 +521,6 @@
             cctx.fillRect(0, 0, cc.width, cc.height);
             cctx.drawImage(c, 0, 0, c.width, c.height, 0, 0, cc.width, cc.height);
             file = cc.toDataURL("image/jpeg")
-            userPreview.attr('src', file)
             file = file.substr(file.indexOf(',') + 1);
           }
         };

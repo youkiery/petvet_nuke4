@@ -41,6 +41,13 @@ if (!empty($action)) {
         $result['notify'] = 'Đã thêm cần mua';
       }
     break;
+    case 'get-sell':
+      $id = $nv_Request->get_string('id', 'post', '0');
+      if (!empty($html = getMarketContent($id))) {
+        $result['status'] = 1;
+        $result['html'] = $html;
+      }
+    break;
     case 'breeding':
       $id = $nv_Request->get_string('id', 'post', '0');
 

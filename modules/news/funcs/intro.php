@@ -27,7 +27,7 @@ if (!empty($action)) {
       $id = $nv_Request->get_int('id', 'post', '0');
       $filter = $nv_Request->get_array('filter', 'post');
 
-      $sql = 'select * from (((select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3) and b.userid = '. $userinfo['id'] . ' and status = 1) union (select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2 and b.userid = '. $userinfo['id'] . ' and status = 1)) as c) where id = ' . $id;
+      $sql = 'select * from (((select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3) and b.userid = '. $userinfo['id'] . ' and status = 1) union (select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2 and b.userid = '. $userinfo['id'] . ' and a.status = 1)) as c) where id = ' . $id;
       $query = $db->query($sql);
       if (empty($row = $query->fetch())) {
         $result['notify'] = 'Có lỗi xảy ra';
