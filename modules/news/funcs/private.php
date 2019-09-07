@@ -19,7 +19,7 @@ $page_title = "Quản lý thú cưng";
 $action = $nv_Request->get_string('action', 'post', '');
 
 $userinfo = getUserinfo();
-if (empty($userinfo)) {
+if (empty($userinfo) || $userinfo['active'] == 0) {
 	header('location: /'. $module_name .'/login/');
 	die();
 }
@@ -708,7 +708,7 @@ $xtpl->assign('module_name', $module_name);
 $xtpl->assign('transfer_count', '');
 $xtpl->assign('intro_count', '');
 
-$sql = 'select count(*) as count from ((select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3) and b.userid = '. $userinfo['id'] . ' and status = 1) union (select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2 and b.userid = '. $userinfo['id'] . ' and status = 1)) as c';
+$sql = 'select count(*) as count from ((select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3) and b.userid = '. $userinfo['id'] . ' and a.status = 1) union (select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2 and b.userid = '. $userinfo['id'] . ' and a.status = 1)) as c';
 $query = $db->query($sql);
 if (!empty($row = $query->fetch()) && $row['count'] > 0) {
   $xtpl->assign('intro_count', '('. $row['count'] .')');

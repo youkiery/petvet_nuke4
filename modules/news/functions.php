@@ -15,6 +15,12 @@ define('NV_IS_FORM', true);
 define("PATH", 'modules/' . $module_file . '/template');
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
+$sql = 'select * from `'. PREFIX .'_config`';
+$query = $db->query($sql);
+
+while ($row = $query->fetch()) {
+  $config[$row['name']] = $row['value'];
+}
 
 function getUserInfo() {
   global $db, $_SESSION;

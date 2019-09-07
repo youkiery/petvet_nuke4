@@ -18,7 +18,8 @@ $page_title = "Đăng nhập";
 
 $action = $nv_Request->get_string('action', 'post', '');
 $userinfo = getUserInfo();
-if (!empty($userinfo)) {
+
+if (!empty($userinfo) && $userinfo['active'] == 1) {
   if ($userinfo['center']) {
     header('location: /'. $module_name .'/center');
   }
@@ -88,6 +89,7 @@ else {
 $xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
 $xtpl->assign('module_file', $module_file);
 $xtpl->assign('module_name', $module_name);
+$xtpl->assign('error', 'Tài khoản chưa có quyền truy cập');
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");

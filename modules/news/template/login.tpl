@@ -47,7 +47,7 @@
         </button>
       </div>
     </form>
-    <div id="error"> </div>
+    <div id="error"> {error} </div>
     <br>
     Quên mật khẩu? <a href="/{module_name}/losspass"> Lấy lại ngay </a>
     <br>

@@ -19,7 +19,7 @@ $page_title = "Quản lý trang trại";
 $action = $nv_Request->get_string('action', 'post', '');
 
 $userinfo = getUserinfo();
-if (empty($userinfo)) {
+if (empty($userinfo) || $userinfo['active'] == 0) {
 	header('location: /'. $module_name .'/login/');
 	die();
 }
