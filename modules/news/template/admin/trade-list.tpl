@@ -52,12 +52,12 @@
   <tr>
     <td colspan="3" style="text-align: right;">
       <!-- BEGIN: yes -->
-      <button class="btn btn-info" onclick="check({id})">
+      <button class="btn btn-success" onclick="uncheck({id})">
         <span class="glyphicon glyphicon-check"></span>
       </button>
       <!-- END: yes -->
       <!-- BEGIN: no -->
-      <button class="btn btn-warning" onclick="uncheck({id})">
+      <button class="btn btn-warning" onclick="check({id})">
         <span class="glyphicon glyphicon-unchecked"></span>
       </button>
       <!-- END: no -->

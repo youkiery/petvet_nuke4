@@ -44,27 +44,13 @@
     }
     return {
       page: global['page'],
-      limit: limit.val(),
-      keyword: keyword.val(),
-      atime: atime.val(),
-      ztime: ztime.val(),
-      status: value
+      limit: 10,
     }
   }
 
   function filter(e) {
     e.preventDefault()
-    global['page'] = 1
-    $.post(
-      strHref,
-      {action: 'filter', filter: checkFilter()},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          global['page'] = page
-          content.html(data['html'])
-        }, () => {})
-      }
-    )
+    goPage(1)
   }
 
   function goPage(page) {
@@ -84,6 +70,18 @@
     $.post(
       strHref,
       {action: 'check', id: id, filter: checkFilter()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          content.html(data['html'])
+        }, () => {})
+      }
+    )
+  } 
+
+  function uncheck(id) {
+    $.post(
+      strHref,
+      {action: 'uncheck', id: id, filter: checkFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])

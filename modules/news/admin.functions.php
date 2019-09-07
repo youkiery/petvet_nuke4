@@ -17,47 +17,47 @@ define("PATH", NV_ROOTDIR . "/modules/" . $module_file . '/template/admin/');
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';
 $select_array = array('breed' => 'Loài', 'disease' => 'Bệnh', 'origin' => 'Nguồn gốc', 'request' => 'Yêu cầu', 'species' => 'Giống');
+$trade_array = array('1' => 'Cần bán', '2' => 'Cần phối');
 
 function tradeList($filter = array('page' => 1, 'limit' => 10)) {
-  global $db, $module_file, $sex_array;
+  global $db, $module_file, $sex_array, $trade_array;
 
   $xtpl = new XTemplate('trade-list.tpl', PATH);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where sell = 1 or breeding = 1';
+  $sql = 'select count(*) as count from `'. PREFIX .'_trade`';
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_pet` where sell = 1 or breeding = 1 limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_trade` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
   while ($row = $query->fetch()) {
-    $owner = checkUserinfo($row['userid'], $row['type']);
-    $type = [];
-    if ($row['sell']) $type[] = 'Cho bán';
-    if ($row['breeding']) $type[] = 'Cho phối';
-    if (count($type)) {
-      $type = implode(', ', $type);
-    }
-    else {
-      $type = '';
-    }
+    $pet = getPetById($row['petid']);
+    $owner = checkUserinfo($pet['userid'], $pet['type']);
+    $type = $trade_array[$row['type']];
+
     $owner['mobile'] = xdecrypt($owner['mobile']);
     $owner['address'] = xdecrypt($owner['address']);
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
     // $xtpl->assign('image', $row['image']);
-    $xtpl->assign('species', $row['species']);
-    $xtpl->assign('breed', $row['breed']);
-    $xtpl->assign('petname', $row['name']);
-    $xtpl->assign('breed', $row['breed']);
+    $xtpl->assign('species', $pet['species']);
+    $xtpl->assign('breed', $pet['breed']);
+    $xtpl->assign('petname', $pet['name']);
+    $xtpl->assign('breed', $pet['breed']);
     $xtpl->assign('sex', $sex_array[$row['sex']]);
     $xtpl->assign('owner', $owner['fullname']);
     $xtpl->assign('address', $owner['address']);
     $xtpl->assign('mobile', $owner['mobile']);
     $xtpl->assign('type', $type);
-    $xtpl->assign('time', date('d/m/Y', $row['time']));
+    if ($row['status'] == 1) {
+      $xtpl->parse('main.row.yes');
+    }
+    else {
+      $xtpl->parse('main.row.no');
+    }
     $xtpl->parse('main.row');
   }
 

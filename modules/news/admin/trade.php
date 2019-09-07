@@ -20,6 +20,52 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
+    case 'filter':
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      if (count($filter) > 1) {
+        $result['html'] = tradeList($filter);
+        if ($result['html']) {
+          $result['status'] = 1;
+        }
+      }
+    break;
+    case 'check':
+      $id = $nv_Request->get_string('id', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'update `' . PREFIX . '_trade` set status = 1 where id = ' . $id;
+      if ($db->query($sql)) {
+        $result['html'] = tradeList($filter);
+        if ($result['html']) {
+          $result['status'] = 1;
+        }
+      }
+    break;
+    case 'uncheck':
+      $id = $nv_Request->get_string('id', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'update `' . PREFIX . '_trade` set status = 0 where id = ' . $id;
+      if ($db->query($sql)) {
+        $result['html'] = tradeList($filter);
+        if ($result['html']) {
+          $result['status'] = 1;
+        }
+      }
+    break;
+    case 'remove':
+      $id = $nv_Request->get_string('id', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'delete from `' . PREFIX . '_trade` where id = ' . $id;
+      if ($db->query($sql)) {
+        $result['html'] = tradeList($filter);
+        if ($result['html']) {
+          $result['status'] = 1;
+        }
+      }
+    break;
     // case 'insert-parent':
     //   $data = $nv_Request->get_array('data', 'post');
     //   $userid = $nv_Request->get_string('userid', 'post');
@@ -168,16 +214,6 @@ if (!empty($action)) {
     //   }
     //   break;
 
-    // case 'filter':
-    //   $filter = $nv_Request->get_array('filter', 'post');
-
-    //   if (count($filter) > 1) {
-    //     $result['html'] = userDogRow($filter);
-    //     if ($result['html']) {
-    //       $result['status'] = 1;
-    //     }
-    //   }
-    //   break;
     // case 'get':
     //   $id = $nv_Request->get_string('id', 'post', 0);
 
@@ -191,31 +227,6 @@ if (!empty($action)) {
     //     $result['status'] = 1;
     //   } else {
     //     $result['notify'] = 'Có lỗi xảy ra';
-    //   }
-    //   break;
-    // case 'check':
-    //   $id = $nv_Request->get_string('id', 'post');
-    //   $type = $nv_Request->get_string('type', 'post');
-    //   $filter = $nv_Request->get_array('filter', 'post');
-
-    //   $sql = 'update `' . PREFIX . '_pet` set active = ' . $type . ' where id = ' . $id;
-    //   if ($db->query($sql)) {
-    //     $result['html'] = userDogRow($filter);
-    //     if ($result['html']) {
-    //       $result['status'] = 1;
-    //     }
-    //   }
-    //   break;
-    // case 'remove':
-    //   $id = $nv_Request->get_string('id', 'post');
-    //   $filter = $nv_Request->get_array('filter', 'post');
-
-    //   $sql = 'delete from `' . PREFIX . '_pet` where id = ' . $id;
-    //   if ($db->query($sql)) {
-    //     $result['html'] = userDogRow($filter);
-    //     if ($result['html']) {
-    //       $result['status'] = 1;
-    //     }
     //   }
     //   break;
     // case 'insertpet':
