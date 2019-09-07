@@ -24,12 +24,12 @@ function tradeList($filter = array('page' => 1, 'limit' => 10)) {
 
   $xtpl = new XTemplate('trade-list.tpl', PATH);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_trade`';
+  $sql = 'select count(*) as count from `'. PREFIX .'_trade` where status < 2';
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_trade` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_trade` where status < 2 order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 

@@ -736,6 +736,15 @@ if (!empty($row = $query->fetch()) && $row['count'] > 0) {
   $xtpl->assign('transfer_count', '('. $row['count'] .')');
 }
 
+$petid_list = selectPetidOfOwner($userinfo['id']);
+if (!empty($petid_list)) {
+  $sql = 'select count(*) as count from `'. PREFIX .'_trade` where status = 2 and petid in ('. $petid_list .')';
+  $query = $db->query($sql);
+  if (!empty($row = $query->fetch()) && $row['count'] > 0) {
+    $xtpl->assign('trade_count', '('. $row['count'] .')');
+  }
+}
+
 $xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
 $xtpl->assign('module_file', $module_file);
 $xtpl->assign('module_name', $module_name);

@@ -54,7 +54,7 @@ if (!empty($action)) {
         }
       }
     break;
-    case 'send-back':
+    case 'sendback':
       $id = $nv_Request->get_string('id', 'post');
       $note = $nv_Request->get_string('note', 'post');
       $filter = $nv_Request->get_array('filter', 'post');

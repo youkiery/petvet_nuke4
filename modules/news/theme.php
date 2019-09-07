@@ -482,6 +482,36 @@ function buyList($filter = array('species' => '', 'breed' => '', 'page' => '1', 
   return $xtpl->text();
 }
 
+function sendbackList($userid, $filter = array('page' => '1', 'limit' => '10')) {
+  global $db;
+
+  $xtpl = new XTemplate('sendback-list.tpl', PATH);
+  $petid_list = selectPetidOfOwner($userid);
+
+  if (!empty($petid_list)) {
+    $sql = 'select count(*) as count from `'. PREFIX .'_trade` where status = 2 and petid in ('. $petid_list .')';
+    $query = $db->query($sql);
+    $count = $query->fetch()['count'];
+    $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
+    $sql = 'select * from `'. PREFIX .'_trade` where status = 2 and petid in ('. $petid_list .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+    $query = $db->query($sql);
+
+    while($row = $query->fetch()) {
+      $pet = getPetById($row['petid']);
+      $xtpl->assign('id', $row['id']);
+      $xtpl->assign('name', $pet['name']);
+      $xtpl->assign('species', $pet['species']);
+      $xtpl->assign('breed', $pet['breed']);
+      $xtpl->assign('image', $pet['image']);
+      $xtpl->assign('note', $row['note']);
+      $xtpl->parse('main.row');
+    }
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function getMarketContent($id) {
   $html = '';
   $pet = getTradeById($id);

@@ -74,6 +74,20 @@ while ($row = $query->fetch()) {
   $config[$row['name']] = $row['value'];
 }
 
+function selectPetidOfOwner($userid) {
+  global $db;
+
+  $list = array();
+  $sql = 'select id from `'. PREFIX .'_pet` where userid = ' . $userid;
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $list[] = $row['id'];
+  }
+
+  return implode(', ', $list);
+}
+
 function getTradeById($id) {
   global $db;
 
