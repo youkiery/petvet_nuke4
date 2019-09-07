@@ -18,6 +18,53 @@ require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';
 $select_array = array('breed' => 'Loài', 'disease' => 'Bệnh', 'origin' => 'Nguồn gốc', 'request' => 'Yêu cầu', 'species' => 'Giống');
 
+function tradeList($filter = array('page' => 1, 'limit' => 10)) {
+  global $db, $module_file, $sex_array;
+
+  $xtpl = new XTemplate('trade-list.tpl', PATH);
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where sell = 1 or breeding = 1';
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
+  $sql = 'select * from `'. PREFIX .'_pet` where sell = 1 or breeding = 1 limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+
+  while ($row = $query->fetch()) {
+    $owner = checkUserinfo($row['userid'], $row['type']);
+    $type = [];
+    if ($row['sell']) $type[] = 'Cho bán';
+    if ($row['breeding']) $type[] = 'Cho phối';
+    if (count($type)) {
+      $type = implode(', ', $type);
+    }
+    else {
+      $type = '';
+    }
+    $owner['mobile'] = xdecrypt($owner['mobile']);
+    $owner['address'] = xdecrypt($owner['address']);
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    // $xtpl->assign('image', $row['image']);
+    $xtpl->assign('species', $row['species']);
+    $xtpl->assign('breed', $row['breed']);
+    $xtpl->assign('petname', $row['name']);
+    $xtpl->assign('breed', $row['breed']);
+    $xtpl->assign('sex', $sex_array[$row['sex']]);
+    $xtpl->assign('owner', $owner['fullname']);
+    $xtpl->assign('address', $owner['address']);
+    $xtpl->assign('mobile', $owner['mobile']);
+    $xtpl->assign('type', $type);
+    $xtpl->assign('time', date('d/m/Y', $row['time']));
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function remindList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', 'status' => 0, 'type' => '')) {
   global $db, $select_array, $module_file;
 
