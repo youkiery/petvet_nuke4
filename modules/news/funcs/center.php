@@ -51,8 +51,6 @@ if (!empty($action)) {
     break;
     case 'breeding':
       $id = $nv_Request->get_string('id', 'post', '0');
-      $tabber = $nv_Request->get_array('tabber', 'post');
-      $filter = $nv_Request->get_array('filter', 'post');
 
       if (checkPetOwner($id, $userinfo['id'])) {
         $sql = 'insert into `'. PREFIX .'_trade` (petid, type, status, time) values ('. $id .', 2, '. $config['trade'] .', '. time() .')';
@@ -64,8 +62,6 @@ if (!empty($action)) {
     break;
     case 'unbreeding':
       $id = $nv_Request->get_string('id', 'post', '0');
-      $tabber = $nv_Request->get_array('tabber', 'post');
-      $filter = $nv_Request->get_array('filter', 'post');
 
       if (checkPetOwner($id, $userinfo['id'])) {
         $sql = 'delete from `'. PREFIX .'_trade` where type = 2 and petid = ' . $id;
@@ -78,8 +74,6 @@ if (!empty($action)) {
     break;
     case 'sell':
       $id = $nv_Request->get_string('id', 'post', '0');
-      $tabber = $nv_Request->get_array('tabber', 'post');
-      $filter = $nv_Request->get_array('filter', 'post');
 
       if (checkPetOwner($id, $userinfo['id'])) {
         $sql = 'insert into `'. PREFIX .'_trade` (petid, type, status, time) values ('. $id .', 1, '. $config['trade'] .', '. time() .')';
@@ -91,8 +85,6 @@ if (!empty($action)) {
     break;
     case 'unsell':
       $id = $nv_Request->get_string('id', 'post', '0');
-      $tabber = $nv_Request->get_array('tabber', 'post');
-      $filter = $nv_Request->get_array('filter', 'post');
 
       if (checkPetOwner($id, $userinfo['id'])) {
         $sql = 'delete from `'. PREFIX .'_trade` where type = 1 and petid = ' . $id;

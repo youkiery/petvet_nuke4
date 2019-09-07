@@ -70,7 +70,7 @@ if (!empty($action)) {
           $result['notify'] = 'Đã thêm thú cưng';
           $result['id'] = $db->lastInsertId();
           $result['remind'] = json_encode(getRemind());
-          $result['html'] = userDogRow();
+          $result['html'] = userDogRow($filter);
         }
       }
       break;
@@ -262,7 +262,7 @@ if (!empty($action)) {
           $result['status'] = 1;
           $result['notify'] = 'Đã thêm thú cưng';
           $result['remind'] = json_encode(getRemind());
-          $result['html'] = userDogRow();
+          $result['html'] = userDogRow($filter);
         }
       }
       break;
@@ -307,7 +307,7 @@ if (!empty($action)) {
           $result['status'] = 1;
           $result['notify'] = 'Đã chỉnh sửa thú cưng';
           $result['remind'] = json_encode(getRemind());
-          $result['html'] = userDogRow();
+          $result['html'] = userDogRow($filter);
         }
       }
       break;

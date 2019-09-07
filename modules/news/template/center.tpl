@@ -1042,14 +1042,11 @@
     }
   }
 
-  function sell(id) {
-  }
-
   function sellSubmit() {
     freeze()
     $.post(
       global['url'],
-      {action: 'sell', id: global['id'], filter: checkFilter(), tabber: global['tabber']},
+      {action: 'sell', id: global['id']},
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#market-content").html(data['html'])
@@ -1062,7 +1059,7 @@
     freeze()
     $.post(
       global['url'],
-      {action: 'unsell', id: global['id'], filter: checkFilter(), tabber: global['tabber']},
+      {action: 'unsell', id: global['id']},
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#market-content").html(data['html'])
@@ -1075,7 +1072,7 @@
     freeze()
     $.post(
       global['url'],
-      {action: 'breeding', id: global['id'], filter: checkFilter(), tabber: global['tabber']},
+      {action: 'breeding', id: global['id']},
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#market-content").html(data['html'])
@@ -1088,7 +1085,7 @@
     freeze()
     $.post(
       global['url'],
-      {action: 'unbreeding', id: global['id'], filter: checkFilter(), tabber: global['tabber']},
+      {action: 'unbreeding', id: global['id']},
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#market-content").html(data['html'])

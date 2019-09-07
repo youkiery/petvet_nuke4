@@ -515,32 +515,55 @@ function sendbackList($userid, $filter = array('page' => '1', 'limit' => '10')) 
 function getMarketContent($id) {
   $html = '';
   $pet = getTradeById($id);
-  $data = array(
-    '1' => array(
+
+  if (empty($pet['1']) && $pet['1'] != '0') {
+    $data['1'] = array(
       'act' => 'sellSubmit()',
       'text' => 'Cần bán',
       'class' => 'info'
-    ),
-    '2' => array(
-      'act' => 'breedingSubmit()',
-      'text' => 'Cần phối',
-      'class' => 'info'
-    )
-  );
-
-  if ($pet['1'] == 1) {
-    $data['1'] = array(
-      'act' => 'unsellSubmit()',
-      'text' => 'Hủy',
-      'class' => 'warning'
     );
   }
-  if ($pet['2'] == 1) {
+  else {
+    switch ($pet['1']) {
+      case 1:
+        $data['1'] = array(
+          'act' => 'unsellSubmit()',
+          'text' => 'Hủy',
+          'class' => 'danger'
+        );
+      break;
+      default:
+        $data['1'] = array(
+          'act' => 'unsellSubmit()',
+          'text' => 'Hủy',
+          'class' => 'warning'
+        );
+    }
+  }
+
+  if (empty($pet['2']) && $pet['2'] != '0') {
     $data['2'] = array(
-      'act' => 'unbreedingSubmit()',
-      'text' => 'Hủy',
-      'class' => 'warning'
+      'act' => 'breedingSubmit()',
+      'text' => 'Cần Phối',
+      'class' => 'info'
     );
+  }
+  else {
+    switch ($pet['2']) {
+      case 1:
+        $data['2'] = array(
+          'act' => 'unbreedingSubmit()',
+          'text' => 'Hủy',
+          'class' => 'danger'
+        );
+      break;
+      default:
+        $data['2'] = array(
+          'act' => 'unbreedingSubmit()',
+          'text' => 'Hủy',
+          'class' => 'warning'
+        );
+    }
   }
 
   $html .= '

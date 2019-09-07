@@ -93,10 +93,9 @@ function getTradeById($id) {
 
   $sql = 'select * from `'. PREFIX .'_trade` where petid = ' . $id;
   $query = $db->query($sql);
-  $list = array();
 
   while ($row = $query->fetch()) {
-    $list[$row['type']] = 1;
+    $list[$row['type']] = $row['status'];
   }
   return $list;
 }
