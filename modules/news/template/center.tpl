@@ -796,7 +796,7 @@
   <p> <a href="/{module_file}/transferq"> Yêu cầu chuyển nhượng </a> <span style="font-weight: bold; color: red;">{transfer_count}</span> </p>
   <p> <a href="/{module_file}/intro"> Danh sách liên hệ mua, bán, phối</a> <span style="font-weight: bold; color: red;">{intro_count}</span></p>
   <p> <a href="/{module_file}/sendback"> Danh sách trả về </a> <span style="font-weight: bold; color: red;">{sendback_count}</span></p>
-  <h2> Danh sách thú cưng </h2>
+  <h2> Danh sách thú cưng  </h2>
 
   <form onsubmit="filterS(event)">
     <input type="text" class="form-control" id="search-keyword" style="display: inline-block; width: 30%;"

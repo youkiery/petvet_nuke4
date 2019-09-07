@@ -41,14 +41,6 @@ if (!empty($action)) {
         $result['notify'] = 'Đã thêm cần mua';
       }
     break;
-    case 'get-sell':
-      $id = $nv_Request->get_string('id', 'post', '0');
-
-      if (!empty($html = getMarketContent($id))) {
-        $result['status'] = 1;
-        $result['html'] = $html;
-      }
-    break;
     case 'breeding':
       $id = $nv_Request->get_string('id', 'post', '0');
 
@@ -733,7 +725,7 @@ if (!empty($petid_list)) {
   $sql = 'select count(*) as count from `'. PREFIX .'_trade` where status = 2 and petid in ('. $petid_list .')';
   $query = $db->query($sql);
   if (!empty($row = $query->fetch()) && $row['count'] > 0) {
-    $xtpl->assign('trade_count', '('. $row['count'] .')');
+    $xtpl->assign('sendback_count', '('. $row['count'] .')');
   }
 }
 

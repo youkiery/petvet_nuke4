@@ -40,20 +40,9 @@ if (!empty($action)) {
         $result['status'] = 1;
         $result['notify'] = 'Đã thêm cần mua';
       }
-
-    break;
-    case 'get-sell':
-      $id = $nv_Request->get_string('id', 'post', '0');
-
-      if (!empty($html = getMarketContent($id))) {
-        $result['status'] = 1;
-        $result['html'] = $html;
-      }
     break;
     case 'breeding':
       $id = $nv_Request->get_string('id', 'post', '0');
-      $tabber = $nv_Request->get_array('tabber', 'post');
-      $filter = $nv_Request->get_array('filter', 'post');
 
       if (checkPetOwner($id, $userinfo['id'])) {
         $sql = 'insert into `'. PREFIX .'_trade` (petid, type, status, time) values ('. $id .', 2, '. $config['trade'] .', '. time() .')';
@@ -65,8 +54,6 @@ if (!empty($action)) {
     break;
     case 'unbreeding':
       $id = $nv_Request->get_string('id', 'post', '0');
-      $tabber = $nv_Request->get_array('tabber', 'post');
-      $filter = $nv_Request->get_array('filter', 'post');
 
       if (checkPetOwner($id, $userinfo['id'])) {
         $sql = 'delete from `'. PREFIX .'_trade` where type = 2 and petid = ' . $id;
@@ -79,8 +66,6 @@ if (!empty($action)) {
     break;
     case 'sell':
       $id = $nv_Request->get_string('id', 'post', '0');
-      $tabber = $nv_Request->get_array('tabber', 'post');
-      $filter = $nv_Request->get_array('filter', 'post');
 
       if (checkPetOwner($id, $userinfo['id'])) {
         $sql = 'insert into `'. PREFIX .'_trade` (petid, type, status, time) values ('. $id .', 1, '. $config['trade'] .', '. time() .')';
@@ -92,8 +77,6 @@ if (!empty($action)) {
     break;
     case 'unsell':
       $id = $nv_Request->get_string('id', 'post', '0');
-      $tabber = $nv_Request->get_array('tabber', 'post');
-      $filter = $nv_Request->get_array('filter', 'post');
 
       if (checkPetOwner($id, $userinfo['id'])) {
         $sql = 'delete from `'. PREFIX .'_trade` where type = 1 and petid = ' . $id;
@@ -103,6 +86,7 @@ if (!empty($action)) {
           $result['html'] = getMarketContent($id);
         }
       }
+    break;
     case 'change-mail':
       $mail = $nv_Request->get_string('mail', 'post', '');
 
@@ -726,6 +710,15 @@ if (!empty($petid_list)) {
   $query = $db->query($sql);
   if (!empty($row = $query->fetch()) && $row['count'] > 0) {
     $xtpl->assign('trade_count', '('. $row['count'] .')');
+  }
+}
+
+$petid_list = selectPetidOfOwner($userinfo['id']);
+if (!empty($petid_list)) {
+  $sql = 'select count(*) as count from `'. PREFIX .'_trade` where status = 2 and petid in ('. $petid_list .')';
+  $query = $db->query($sql);
+  if (!empty($row = $query->fetch()) && $row['count'] > 0) {
+    $xtpl->assign('sendback_count', '('. $row['count'] .')');
   }
 }
 
