@@ -65,6 +65,47 @@ function tradeList($filter = array('page' => 1, 'limit' => 10)) {
   return $xtpl->text();
 }
 
+function buyList2($filter = array('page' => 1, 'limit' => 10)) {
+  global $db, $module_file, $sex_array, $trade_array;
+
+  $xtpl = new XTemplate('buy-list.tpl', PATH);
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_buy`';
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
+  $sql = 'select * from `'. PREFIX .'_buy` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+
+  while ($row = $query->fetch()) {
+    $owner = getOwnerById($row['userid']);
+
+    $owner['mobile'] = xdecrypt($owner['mobile']);
+    $owner['address'] = xdecrypt($owner['address']);
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    // $xtpl->assign('image', $row['image']);
+    $xtpl->assign('species', $row['species']);
+    $xtpl->assign('breed', $row['breed']);
+    $xtpl->assign('sex', $sex_array[$row['sex']]);
+    $xtpl->assign('owner', $owner['fullname']);
+    $xtpl->assign('address', $owner['address']);
+    $xtpl->assign('mobile', $owner['mobile']);
+    if ($row['status'] == 1) {
+      $xtpl->parse('main.row.yes');
+    }
+    else {
+      $xtpl->parse('main.row.no');
+    }
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function remindList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', 'status' => 0, 'type' => '')) {
   global $db, $select_array, $module_file;
 
