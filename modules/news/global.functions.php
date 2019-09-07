@@ -67,6 +67,19 @@ $vaccine_array = array(
   )
 );
 
+function getTradeById($id) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_trade` where petid = ' . $id;
+  $query = $db->query($sql);
+  $list = array();
+
+  while ($row = $query->fetch()) {
+    $list[$row['type']] = 1;
+  }
+  return $list;
+}
+
 function checkMobile($source, $target) {
   if (empty($target)) {
     return true;

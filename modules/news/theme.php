@@ -483,59 +483,58 @@ function buyList($filter = array('species' => '', 'breed' => '', 'page' => '1', 
 
 function getMarketContent($id) {
   $html = '';
-  if (!empty($pet = getPetById($id))) {
-    $data = array(
-      '1' => array(
-        'act' => 'sellSubmit()',
-        'text' => 'Cần bán',
-        'class' => 'info'
-      ),
-      '2' => array(
-        'act' => 'breedingSubmit()',
-        'text' => 'Cần phối',
-        'class' => 'info'
-      )
+  $pet = getTradeById($id);
+  $data = array(
+    '1' => array(
+      'act' => 'sellSubmit()',
+      'text' => 'Cần bán',
+      'class' => 'info'
+    ),
+    '2' => array(
+      'act' => 'breedingSubmit()',
+      'text' => 'Cần phối',
+      'class' => 'info'
+    )
+  );
+
+  if ($pet['1'] == 1) {
+    $data['1'] = array(
+      'act' => 'unsellSubmit()',
+      'text' => 'Hủy',
+      'class' => 'warning'
     );
-
-    if ($pet['sell'] == 1) {
-      $data['1'] = array(
-        'act' => 'unsellSubmit()',
-        'text' => 'Hủy',
-        'class' => 'warning'
-      );
-    }
-    if ($pet['breeding'] == 1) {
-      $data['2'] = array(
-        'act' => 'unbreedingSubmit()',
-        'text' => 'Hủy',
-        'class' => 'warning'
-      );
-    }
-
-    $html .= '
-      <hr>
-      <label class="row">
-        <div class="col-sm-6">
-          Đăng bán
-        </div>
-        <div class="col-sm-6" style="text-align: right;">
-          <button class="btn btn-'. $data['1']['class'] .'" onclick="'. $data['1']['act'] .'">
-            '. $data['1']['text'] .'
-          </button>
-        </div>
-      </label>
-      <hr>
-      <label class="row">
-        <div class="col-sm-6">
-          Đăng cho phối
-        </div>
-        <div class="col-sm-6" style="text-align: right;">
-          <button class="btn btn-'. $data['2']['class'] .'" onclick="'. $data['2']['act'] .'">
-            '. $data['2']['text'] .'
-          </button>
-        </div>
-      </label>';
   }
+  if ($pet['2'] == 1) {
+    $data['2'] = array(
+      'act' => 'unbreedingSubmit()',
+      'text' => 'Hủy',
+      'class' => 'warning'
+    );
+  }
+
+  $html .= '
+    <hr>
+    <label class="row">
+      <div class="col-sm-6">
+        Đăng bán
+      </div>
+      <div class="col-sm-6" style="text-align: right;">
+        <button class="btn btn-'. $data['1']['class'] .'" onclick="'. $data['1']['act'] .'">
+          '. $data['1']['text'] .'
+        </button>
+      </div>
+    </label>
+    <hr>
+    <label class="row">
+      <div class="col-sm-6">
+        Đăng cho phối
+      </div>
+      <div class="col-sm-6" style="text-align: right;">
+        <button class="btn btn-'. $data['2']['class'] .'" onclick="'. $data['2']['act'] .'">
+          '. $data['2']['text'] .'
+        </button>
+      </div>
+    </label>';
   return $html;
 }
 

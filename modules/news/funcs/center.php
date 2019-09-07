@@ -56,7 +56,7 @@ if (!empty($action)) {
       $filter = $nv_Request->get_array('filter', 'post');
 
       if (checkPetOwner($id, $userinfo['id'])) {
-        $sql = 'update `'. PREFIX .'_pet` set breeding = 1 where id = ' . $id;
+        $sql = 'insert into `'. PREFIX .'_trade` (petid, type, status, time) values ('. $id .', 2, 1, '. time() .')';
         if ($db->query($sql)) {
           $result['status'] = 1;
           $result['html'] = getMarketContent($id);
@@ -69,7 +69,8 @@ if (!empty($action)) {
       $filter = $nv_Request->get_array('filter', 'post');
 
       if (checkPetOwner($id, $userinfo['id'])) {
-        $sql = 'update `'. PREFIX .'_pet` set breeding = 0 where id = ' . $id;
+        $sql = 'delete from `'. PREFIX .'_trade` where type = 2 and petid = ' . $id;
+        // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;
           $result['html'] = getMarketContent($id);
@@ -82,7 +83,7 @@ if (!empty($action)) {
       $filter = $nv_Request->get_array('filter', 'post');
 
       if (checkPetOwner($id, $userinfo['id'])) {
-        $sql = 'update `'. PREFIX .'_pet` set sell = 1 where id = ' . $id;
+        $sql = 'insert into `'. PREFIX .'_trade` (petid, type, status, time) values ('. $id .', 1, 1, '. time() .')';
         if ($db->query($sql)) {
           $result['status'] = 1;
           $result['html'] = getMarketContent($id);
@@ -95,7 +96,8 @@ if (!empty($action)) {
       $filter = $nv_Request->get_array('filter', 'post');
 
       if (checkPetOwner($id, $userinfo['id'])) {
-        $sql = 'update `'. PREFIX .'_pet` set sell = 0 where id = ' . $id;
+        $sql = 'delete from `'. PREFIX .'_trade` where type = 1 and petid = ' . $id;
+        // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;
           $result['html'] = getMarketContent($id);
