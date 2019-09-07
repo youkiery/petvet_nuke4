@@ -35,7 +35,7 @@ if (!empty($action)) {
     case 'buy':
       $data = $nv_Request->get_array('data', 'post');
 
-      $sql = 'insert into `'. PREFIX .'_buy` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .') values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) . ')';
+      $sql = 'insert into `'. PREFIX .'_buy` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', status) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) . ', 1)';
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['notify'] = 'Đã thêm cần mua';
@@ -718,7 +718,6 @@ $xtpl->assign('address', $userinfo['address']);
 $xtpl->assign('image', $userinfo['image']);
 $xtpl->assign('remind', json_encode(getRemind()));
 $xtpl->assign('list', userDogRowByList($userinfo['id'], $tabber));
-
 $xtpl->assign('v', parseVaccineType($userinfo['id']));
 
 $xtpl->assign('today', date('d/m/Y', time()));
@@ -726,7 +725,7 @@ $xtpl->assign('recall', date('d/m/Y', time() + 60 * 60 * 24 * 21));
 $xtpl->assign('transfer_count', '');
 $xtpl->assign('intro_count', '');
 
-$sql = 'select count(*) as count from ((select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3) and b.userid = '. $userinfo['id'] . ' and status = 1) union (select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2 and b.userid = '. $userinfo['id'] . ' and status = 1)) as c';
+$sql = 'select count(*) as count from ((select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3) and b.userid = '. $userinfo['id'] . ' and a.status = 1) union (select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2 and b.userid = '. $userinfo['id'] . ' and a.status = 1)) as c';
 $query = $db->query($sql);
 if (!empty($row = $query->fetch()) && $row['count'] > 0) {
   $xtpl->assign('intro_count', '('. $row['count'] .')');

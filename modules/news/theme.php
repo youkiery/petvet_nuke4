@@ -385,12 +385,13 @@ function sellList($filter = array('species' => '', 'breed' => '', 'keyword' => '
   $xtpl = new XTemplate('sell-list.tpl', PATH);
   $xtpl->assign('module_name', $module_name);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" and sell = 1 order by id desc';
+  // ??
+  $sql = 'select count(*) as count from `'. PREFIX .'_trade` a inner join `'. PREFIX .'_pet` b on a.petid = b.id where a.status = 1 and a.type = 1 and b.name like "%'. $filter['keyword'] .'%" and b.breed like "%'. $filter['species'] .'%" and b.species like "%'. $filter['breed'] .'%"';
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" and sell = 1 order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_trade` a inner join `'. PREFIX .'_pet` b on a.petid = b.id where a.status = 1 and a.type = 1 and b.name like "%'. $filter['keyword'] .'%" and b.breed like "%'. $filter['species'] .'%" and b.species like "%'. $filter['breed'] .'%" order by a.id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   while($row = $query->fetch()) {
@@ -418,12 +419,12 @@ function breedingList($filter = array('species' => '', 'breed' => '', 'keyword' 
   $xtpl = new XTemplate('breeding-list.tpl', PATH);
   $xtpl->assign('module_name', $module_name);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" and breeding = 1 order by id desc';
+  $sql = 'select count(*) as count from `'. PREFIX .'_trade` a inner join `'. PREFIX .'_pet` b on a.petid = b.id where a.status = 1 and a.type = 2 and b.name like "%'. $filter['keyword'] .'%" and b.breed like "%'. $filter['species'] .'%" and b.species like "%'. $filter['breed'] .'%"';
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" and breeding = 1 order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_trade` a inner join `'. PREFIX .'_pet` b on a.petid = b.id where a.status = 1 and a.type = 2 and b.name like "%'. $filter['keyword'] .'%" and b.breed like "%'. $filter['species'] .'%" and b.species like "%'. $filter['breed'] .'%" order by a.id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   while($row = $query->fetch()) {
@@ -451,12 +452,12 @@ function buyList($filter = array('species' => '', 'breed' => '', 'page' => '1', 
   $xtpl = new XTemplate('buy-list.tpl', PATH);
   $xtpl->assign('module_name', $module_name);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_buy` where breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" order by id desc';
+  $sql = 'select count(*) as count from `'. PREFIX .'_buy` where status = 1 and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" order by id desc';
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_buy` where breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_buy` where status = 1 and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   while($row = $query->fetch()) {
