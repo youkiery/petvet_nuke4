@@ -1,6 +1,6 @@
 <!-- BEGIN: main -->
 <table class="table table-bordered">
-  <!-- <tr>
+  <tr>
     <th>
       STT
     </th>
@@ -11,46 +11,32 @@
       Địa chỉ
     </th>
     <th>
-      Số điện thoại
-    </th>
-    <th>
-      Thú cưng
+      Giống
     </th>
     <th>
       Loại yêu cầu
     </th>
-    <th></th>
-  </tr> -->
+  </tr>
   <!-- BEGIN: row -->
   <tr class="{color}">
-    <td rowspan="4" class="cell-center">
+    <td rowspan="2" class="cell-center">
       {index}
     </td>
     <td>
-      Tên chủ: {owner}
+      {owner}
     </td>
     <td>
-      Loài: {breed}
-    </td>
-  </tr>
-  <tr>
-    <td>
-      Địa chỉ: {address}
+      {address}
     </td>
     <td>
-      Giống: {species}
-    </td>
-  </tr>
-  <tr>
-    <td>
-      SĐT: {mobile}
+      {species}
     </td>
     <td>
       {type}
     </td>
   </tr>
   <tr>
-    <td colspan="3" style="text-align: right;">
+    <td colspan="5" style="text-align: right;">
       <!-- BEGIN: yes -->
       <button class="btn btn-success" onclick="uncheck({id})">
         <span class="glyphicon glyphicon-check"></span>
@@ -61,8 +47,11 @@
         <span class="glyphicon glyphicon-unchecked"></span>
       </button>
       <!-- END: no -->
-      <button class="btn btn-info" onclick="edit({id})">
+      <button class="btn btn-info" onclick="edit({petid})">
         <span class="glyphicon glyphicon-edit"></span>
+      </button>
+      <button class="btn btn-warning" onclick="sendback({id})">
+        <span class="glyphicon glyphicon-share-alt"></span>
       </button>
       <button class="btn btn-danger" onclick="remove({id})">
         <span class="glyphicon glyphicon-remove"></span>

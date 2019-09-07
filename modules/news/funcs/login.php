@@ -89,7 +89,10 @@ else {
 $xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
 $xtpl->assign('module_file', $module_file);
 $xtpl->assign('module_name', $module_name);
-$xtpl->assign('error', 'Tài khoản chưa có quyền truy cập');
+
+if (!empty($userinfo) && $userinfo['active'] == 0) {
+  $xtpl->assign('error', 'Tài khoản chưa có quyền truy cập');
+}
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");

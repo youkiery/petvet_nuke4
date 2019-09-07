@@ -40,7 +40,6 @@ if (!empty($action)) {
         $result['status'] = 1;
         $result['notify'] = 'Đã thêm cần mua';
       }
-
     break;
     case 'get-sell':
       $id = $nv_Request->get_string('id', 'post', '0');

@@ -20,6 +20,30 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
+    case 'get-buy':
+      $id = $nv_Request->get_string('id', 'post');
+
+      $sql = 'select * from `'. PREFIX .'_buy` where id = ' . $id;
+      $query = $db->query($sql);
+      if (!empty($row = $query->fetch())) {
+        $result['data'] = $row;
+        $result['status'] = 1;
+      }
+    break;
+    case 'buy':
+      $id = $nv_Request->get_string('id', 'post');
+      $data = $nv_Request->get_array('data', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      $data['sex'] --;
+
+      $sql = 'update `'. PREFIX .'_buy` set '. sqlBuilder($data, BUILDER_EDIT) .' where id = ' . $id;
+      $result['html'] = buyList2($filter);
+      if ($db->query($sql) && $result['html']) {
+        $result['status'] = 1;
+        $result['notify'] = 'Đã thêm cần mua';
+      }
+    break;
     case 'filter':
       $filter = $nv_Request->get_array('filter', 'post');
 
