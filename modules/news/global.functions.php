@@ -67,6 +67,13 @@ $vaccine_array = array(
   )
 );
 
+$sql = 'select * from `'. PREFIX .'_config`';
+$query = $db->query($sql);
+
+while ($row = $query->fetch()) {
+  $config[$row['name']] = $row['value'];
+}
+
 function getTradeById($id) {
   global $db;
 

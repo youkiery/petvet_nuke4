@@ -35,7 +35,7 @@ if (!empty($action)) {
     case 'buy':
       $data = $nv_Request->get_array('data', 'post');
 
-      $sql = 'insert into `'. PREFIX .'_buy` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', status) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) . ', 1)';
+      $sql = 'insert into `'. PREFIX .'_buy` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', status) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) . ', '. $config['trade'] .')';
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['notify'] = 'Đã thêm cần mua';
@@ -56,7 +56,7 @@ if (!empty($action)) {
       $filter = $nv_Request->get_array('filter', 'post');
 
       if (checkPetOwner($id, $userinfo['id'])) {
-        $sql = 'insert into `'. PREFIX .'_trade` (petid, type, status, time) values ('. $id .', 2, 1, '. time() .')';
+        $sql = 'insert into `'. PREFIX .'_trade` (petid, type, status, time) values ('. $id .', 2, '. $config['trade'] .', '. time() .')';
         if ($db->query($sql)) {
           $result['status'] = 1;
           $result['html'] = getMarketContent($id);
@@ -83,7 +83,7 @@ if (!empty($action)) {
       $filter = $nv_Request->get_array('filter', 'post');
 
       if (checkPetOwner($id, $userinfo['id'])) {
-        $sql = 'insert into `'. PREFIX .'_trade` (petid, type, status, time) values ('. $id .', 1, 1, '. time() .')';
+        $sql = 'insert into `'. PREFIX .'_trade` (petid, type, status, time) values ('. $id .', 1, '. $config['trade'] .', '. time() .')';
         if ($db->query($sql)) {
           $result['status'] = 1;
           $result['html'] = getMarketContent($id);
@@ -474,7 +474,7 @@ if (!empty($action)) {
         checkRemind($data['breed'], 'breed');
         checkRemind($data['origin'], 'origin');
 
-				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image, type, time) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 1, "'. $image .'", 1, '. time() .')';
+				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image, type, time) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', '. $config['pet'] .', "'. $image .'", 1, '. time() .')';
 
 				if ($db->query($sql)) {
 					$result['status'] = 1;
@@ -528,7 +528,7 @@ if (!empty($action)) {
         checkRemind($data['species'], 'species');
         checkRemind($data['breed'], 'breed');
 
-				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image, type, time) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', 1, "", 1, '. time() .')';
+				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image, type, time) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', '. $config['pet'] .', "", 1, '. time() .')';
 
 				if ($db->query($sql)) {
 					$result['status'] = 1;
