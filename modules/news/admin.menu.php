@@ -19,6 +19,7 @@ $submenu['disease'] = "Gợi nhớ loại tiêm phòng";
 $submenu['intro'] = "Duyệt liên hệ";
 $submenu['trade'] = "Duyệt bán, phôi";
 $submenu['buy'] = "Duyệt mua";
+$submenu['config'] = "Cấu hình";
 // $submenu['center'] = "Quản lý yêu cầu trang trại";
 
-$allow_func = array('main', 'user', 'pet', 'request', 'remind', 'disease', 'intro', 'trade', 'buy'); 
+$allow_func = array('main', 'user', 'pet', 'request', 'remind', 'disease', 'intro', 'trade', 'buy', 'config'); 
