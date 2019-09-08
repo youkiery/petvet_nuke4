@@ -705,7 +705,7 @@ if (!empty($row = $query->fetch()) && $row['count'] > 0) {
   $xtpl->assign('intro_count', '('. $row['count'] .')');
 }
 
-$sql = 'select count(*) as count from `'. PREFIX .'_transfer_request` where userid = ' . $userinfo['id'];
+$sql = 'select count(*) as count from `'. PREFIX .'_transfer_request` a inner join `'. PREFIX .'_pet` b on a.petid = b.id inner join `'. PREFIX .'_pet` c on b.userid = c.id where a.userid = ' . $userinfo['id'];
 $query = $db->query($sql);
 if (!empty($row = $query->fetch()) && $row['count'] > 0) {
   $xtpl->assign('transfer_count', '('. $row['count'] .')');

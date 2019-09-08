@@ -253,7 +253,9 @@ function getPetById($id) {
   if (intval($id)) {
     $sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
     $query = $db->query($sql);
-    return $query->fetch();
+    if (!empty($row = $query->fetch())) {
+        return $row;
+    }
   }
   return false;
 }

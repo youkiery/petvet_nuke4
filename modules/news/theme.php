@@ -16,28 +16,27 @@ function transferqList($userid, $filter = array('page' => 1, 'limit' => 10)) {
 
   $xtpl = new XTemplate('transferq-list.tpl', PATH);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_transfer_request` where userid = ' . $userid;
+  $sql = 'select count(*) as count from `'. PREFIX .'_transfer_request` a inner join `'. PREFIX .'_pet` b on a.petid = b.id inner join `'. PREFIX .'_pet` c on b.userid = c.id where a.userid = ' . $userid;
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_transfer_request` where userid = ' . $userid . ' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_transfer_request` a inner join `'. PREFIX .'_pet` b on a.petid = b.id inner join `'. PREFIX .'_pet` c on b.userid = c.id where a.userid = ' . $userid . ' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
   while ($row = $query->fetch()) {
-    $pet = getPetById($row['petid']);
-    $owner = checkUserinfo($pet['userid'], $pet['type']);
-
-    // $xtpl->assign('index', $index++);
-    $xtpl->assign('id', $row['id']);
-    $xtpl->assign('image', $pet['image']);
-    $xtpl->assign('species', $pet['species']);
-    $xtpl->assign('name', $pet['name']);
-    $xtpl->assign('breeder', $pet['breeder']);
-    $xtpl->assign('owner', $owner['fullname']);
-    $xtpl->assign('time', date('d/m/Y', $row['time']));
-    $xtpl->parse('main.row');
+    if(!empty($pet = getPetById($row['petid'])) && !empty($owner = checkUserinfo($pet['userid'], $pet['type']))) {
+      // $xtpl->assign('index', $index++);
+      $xtpl->assign('id', $row['id']);
+      $xtpl->assign('image', $pet['image']);
+      $xtpl->assign('species', $pet['species']);
+      $xtpl->assign('name', $pet['name']);
+      $xtpl->assign('breeder', $pet['breeder']);
+      $xtpl->assign('owner', $owner['fullname']);
+      $xtpl->assign('time', date('d/m/Y', $row['time']));
+      $xtpl->parse('main.row');
+    }
   }
 
   $xtpl->parse('main');
@@ -347,12 +346,12 @@ function transferList($userid, $filter = array('page' => 1, 'limit' => 10)) {
   $xtpl = new XTemplate('transfer-list.tpl', PATH);
   $xtpl->assign('module_file', $module_file);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_transfer` where fromid = ' . $userid;
+  $sql = 'select count(*) as count from `pet_news_transfer` a inner join `pet_news_pet` b on a.petid = b.id inner join `pet_news_user` c on b.userid = c.id where fromid = ' . $userid;
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_transfer` where fromid = ' . $userid . ' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `pet_news_transfer` a inner join `pet_news_pet` b on a.petid = b.id inner join `pet_news_user` c on b.userid = c.id where fromid = ' . $userid . ' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 

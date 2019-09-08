@@ -489,14 +489,14 @@
     installRemindSpecies('species-parent')
   })
 
-  function onselected(input) {
+  function onselected(input, previewname) {
     if (input.files && input.files[0]) {
       var reader = new FileReader();
       var fullname = input.files[0].name
       var name = Math.round(new Date().getTime() / 1000) + '_' + fullname.substr(0, fullname.lastIndexOf('.'))
       var extension = fullname.substr(fullname.lastIndexOf('.') + 1)
       filename = name + '.' + extension
-      
+
       reader.onload = function (e) {
         var type = e.target["result"].split('/')[1].split(";")[0];
         if (["jpeg", "jpg", "png", "bmp", "gif"].indexOf(type) >= 0) {
@@ -506,9 +506,9 @@
             var c = document.createElement("canvas")
             var ctx = c.getContext("2d");
             var ratio = 1;
-            if(image.width > maxWidth)
+            if (image.width > maxWidth)
               ratio = maxWidth / image.width;
-            else if(image.height > maxHeight)
+            else if (image.height > maxHeight)
               ratio = maxHeight / image.height;
             c.width = image["width"];
             c.height = image["height"];
@@ -521,6 +521,7 @@
             cctx.fillRect(0, 0, cc.width, cc.height);
             cctx.drawImage(c, 0, 0, c.width, c.height, 0, 0, cc.width, cc.height);
             file = cc.toDataURL("image/jpeg")
+            $("#" + previewname + "-preview").attr('src', file)
             file = file.substr(file.indexOf(',') + 1);
           }
         };
@@ -528,27 +529,6 @@
 
       if (imageType.indexOf(extension) >= 0) {
         reader.readAsDataURL(input.files[0]);
-      }
-    }
-	}
-
-
-  function preview() {
-    var file = userImage[0]['files']
-    if (file && file[0]) {
-      var reader = new FileReader();
-      reader.readAsDataURL(file[0]);  
-      reader.onload = (e) => {
-        var type = e.target["result"].split('/')[1].split(";")[0];
-        if (["jpeg", "jpg", "png", "bmp", "gif"].indexOf(type) >= 0) {
-          cc.width = image.width * ratio;
-          cc.height = image.height * ratio;
-          cctx.fillStyle = "#fff";
-          cctx.fillRect(0, 0, cc.width, cc.height);
-          cctx.drawImage(c, 0, 0, c.width, c.height, 0, 0, cc.width, cc.height);
-          var base64Image = cc.toDataURL("image/jpeg");
-          this.post.image.push(base64Image)
-        }
       }
     }
   }
@@ -599,17 +579,34 @@
   }
 
   function editPetSubmit() {
-    $.post(
-      global['url'],
-      {action: 'editpet', id: global['id'], data: checkInputSet(pet), filter: checkFilter()},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          petList.html(data['html'])
-          clearInputSet(pet)
-          insertPet.modal('hide')
-        }, () => {})
-      }
-    )
+    freeze()
+    uploader().then((imageUrl) => {
+      $.post(
+        global['url'],
+        { action: 'editpet', id: global['id'], data: checkPetData(), image: imageUrl, filter: checkFilter(), tabber: global['tabber'] },
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            petList.html(data['html'])
+            clearInputSet(pet)
+            file = false
+            filename = ''
+            $("#parent-m").val('')
+            $("#parent-f").val('')
+            petPreview.val('')
+            remind = JSON.parse(data['remind'])
+            insertPet.modal('hide')
+          }, () => { })
+        }
+      )
+    })
+  }
+
+  function checkPetData() {
+    var data = checkInputSet(pet)
+    data['breeder'] = $("#pet-breeder").prop('checked')
+    data['sex0'] = pet['sex0'].prop('checked')
+    data['sex1'] = pet['sex1'].prop('checked')
+    return data
   }
 
   function splipper(text, part) {

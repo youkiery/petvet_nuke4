@@ -436,7 +436,7 @@ if (!empty($row = $query->fetch())) {
 	$xtpl->assign('dob', cdate($row['dateofbirth']));
 	$xtpl->assign('breed', $row['breed']);
 	$xtpl->assign('species', $row['species']);
-	$xtpl->assign('sex', $row['sex']);
+	$xtpl->assign('sex', $sex_array[$row['sex']]);
 	$xtpl->assign('color', $row['color']);
 	$xtpl->assign('microchip', $row['microchip']);
 	$xtpl->assign('image', $row['image']);
