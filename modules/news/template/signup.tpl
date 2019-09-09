@@ -201,16 +201,28 @@
   function checkSignup() {
     var check = true
     var data = {
-      username: username.val(),
-      password: password.val(),
-      vpassword: vpassword.val(),
-      fullname: fullname.val(),
-      phone: phone.val(),
-      politic: politic.val(),
-      address: address.val(),
+      username: username.val().trim(),
+      password: password.val().trim(),
+      vpassword: vpassword.val().trim(),
+      fullname: fullname.val().trim(),
+      phone: phone.val().trim(),
+      politic: politic.val().trim(),
+      address: address.val().trim(),
     }
 
-    if (data['password'] == data['vpassword']) {
+    if (!/^[A-Za-z0-9_]{3,16}$/.test(data['username'])) {
+      displayError('Tên người dùng phải từ 3 - 16 ký tự chứa chữ, số, hoặc dấu gạch dưới')
+      return false
+    }
+    else if (data['password'].length < 6) {
+      displayError('Mật khẩu không được ngắn hơn 6 ký tự')
+      return false
+    }
+    else if (!(data['password'] == data['vpassword'])) {
+      displayError('Mật khẩu không trùng nhau')
+      return false
+    }
+    else {
       for (const key in data) {
         if (data.hasOwnProperty(key)) {
           const element = data[key];
@@ -228,6 +240,7 @@
     if (check) {
       return data
     }
+    displayError('Chưa điền đủ các thông tin')
     return false
   }
 
@@ -246,8 +259,6 @@
         })
       }
       )
-    } else {
-      displayError('Chưa điền đủ thông tin, kiểm tra các trường và mật khẩu')
     }
   }
 
