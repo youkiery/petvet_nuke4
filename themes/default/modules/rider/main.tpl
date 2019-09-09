@@ -434,7 +434,7 @@
       $(".btn, .form-control").attr("disabled", true)
       $.post(
         strHref,
-        {action: "collect-insert", page: page, limit: limit, startDate: startDate.val(), endDate: endDate.val(), collectDriver: rider, collectDoctor: collectDoctor.val(), collectPrice: collectPrice.val(), collectStart: collectStart.val(), collectEnd: collectEnd.val(), collectCustomer: customerId, collectDestination: collectDestination.val(), collectNote: collectNote.val()},
+        {action: "collect-insert", page: page, limit: limit, startDate: startDate.val(), endDate: endDate.val(), collectDriver: rider, collectDoctor: collectDoctor.val(), collectPrice: collectPrice.val().replace(',', ''), collectStart: collectStart.val(), collectEnd: collectEnd.val(), collectCustomer: customerId, collectDestination: collectDestination.val(), collectNote: collectNote.val()},
         (response, status) => {
           checkResult(response, status).then((data) => {
             customerId = 0

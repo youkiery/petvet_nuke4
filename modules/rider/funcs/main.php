@@ -47,7 +47,7 @@ if (!empty($action)) {
       $collectEnd = $nv_Request->get_string("collectEnd", "get/post", "");
       $collectNote = $nv_Request->get_string("collectNote", "get/post", "");
       $collectDestination = $nv_Request->get_string("collectDestination", "get/post", "");
-      $price = $nv_Request->get_string("price", "get/post", "");
+      $price = $nv_Request->get_int("collectPrice", "get/post", 0);
 
       if (!(empty($startDate) || empty($endDate) || empty($collectDriver) || empty($collectDoctor) || empty($collectStart) || empty($collectEnd))) {
         if (!checkUser($collectDriver)) {
@@ -61,7 +61,7 @@ if (!empty($action)) {
             $collectCustomer = 0;
           }
           $sql = "insert into `" . PREFIX . "_row` (type, driver_id, doctor_id, customer_id, amount, clock_from, clock_to, price, destination, note, time) values (0, $collectDriver, $collectDoctor, $collectCustomer, 0, $collectStart, $collectEnd, '$price', '$collectDestination', '$collectNote', " . time() . ")";
-          // die($sql);
+          die($sql);
           if ($db->query($sql)) {
             checkinRemind($collectDestination);
             checkinClock($collectEnd);
