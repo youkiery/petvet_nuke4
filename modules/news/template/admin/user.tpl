@@ -60,49 +60,112 @@
           <p>
             Chỉnh sửa thông tin
           </p>
+          <form onsubmit="editUserSubmit(event)">
+            <div class="row">
+              <label>
+                <div class="col-sm-8">
+                  Tên đăng nhập
+                </div>
+                <div class="col-sm-16">
+                  <input type="text" class="form-control" id="username" autocomplete="off">
+                </div>
+              </label>
+            </div>
 
-          <label class="row">
-            <div class="col-sm-6">
-              Tên
+            <div class="row">
+              <label>
+                <div class="col-sm-8">
+                  Họ và tên
+                </div>
+                <div class="col-sm-16">
+                  <input type="text" class="form-control" id="fullname" autocomplete="off">
+                </div>
+              </label>
             </div>
-            <div class="col-sm-18">
-              <input type="text" class="form-control" id="user-name">
-            </div>
-          </label>
 
-          <label class="row">
-            <div class="col-sm-6">
-              Số điện thoại
+            <div class="row">
+              <label>
+                <div class="col-sm-8">
+                  Số CMND
+                </div>
+                <div class="col-sm-16">
+                  <input type="text" class="form-control" id="politic" autocomplete="off">
+                </div>
+              </label>
             </div>
-            <div class="col-sm-18">
-              <input type="text" class="form-control" id="user-mobile">
-            </div>
-          </label>
 
-          <label class="row">
-            <div class="col-sm-6">
-              Địa chỉ
+            <div class="row">
+              <label>
+                <div class="col-sm-8">
+                  Điện thoại
+                </div>
+                <div class="col-sm-16">
+                  <input type="text" class="form-control" id="phone" autocomplete="off">
+                </div>
+              </label>
             </div>
-            <div class="col-sm-18">
-              <input type="text" class="form-control" id="user-address">
-            </div>
-          </label>
 
-          <label class="row">
-            <div class="col-sm-6">
-              Hình ảnh
+            <div class="row">
+              <label>
+                <div class="col-sm-8">
+                  Tỉnh
+                </div>
+                <div class="col-sm-16">
+                  <select class="form-control" id="al1" onchange="l1(this)">
+                    <!-- BEGIN: l1 -->
+                    <option value="{l1id}"> {l1name} </option>
+                    <!-- END: l1 -->
+                  </select>
+                </div>
+              </label>
             </div>
-            <div class="col-sm-18">
-              <div>
-                <img class="img-responsive" id="user-preview" style="display: inline-block; height: 128px; margin: 10px;">
-              </div>
-              <input type="file" class="form-control" id="user-image" onchange="onselected(this)">
-            </div>
-          </label>
 
-          <button class="btn btn-danger" onclick="editUserSubmit()">
-            Chỉnh sửa thông tin
-          </button>
+            <div class="row">
+              <label>
+                <div class="col-sm-8">
+                  Quận/Huyện/Thành phố
+                </div>
+                <div class="col-sm-16">
+                  <!-- BEGIN: l2 -->
+                  <select class="form-control al2" id="al2{l1id}" style="display: {active}">
+                    <!-- BEGIN: l2c -->
+                    <option value="{l2id}"> {l2name} </option>
+                    <!-- END: l2c -->
+                  </select>
+                  <!-- END: l2 -->
+                </div>
+              </label>
+            </div>
+
+            <div class="row">
+              <label>
+                <div class="col-sm-8">
+                  Xã/Phường/Thị trấn
+                </div>
+                <div class="col-sm-16">
+                  <input type="text" class="form-control" id="al3" autocomplete="off">
+                </div>
+              </label>
+            </div>
+
+            <div class="row">
+              <label>
+                <div class="col-sm-8">
+                  Địa chỉ
+                </div>
+                <div class="col-sm-16">
+                  <input type="text" class="form-control" id="address" autocomplete="off">
+                </div>
+              </label>
+            </div>
+
+            <div class="text-center">
+              <button class="btn btn-info" id="button">
+                Đăng ký
+              </button>
+            </div>
+          </form>
+
         </div>
       </div>
     </div>
@@ -160,9 +223,14 @@
     page: 1
   }
   var user = {
-    fullname: $("#user-name"),
-    mobile: $("#user-mobile"),
-    address: $("#user-address")
+    username: $("#username"),
+    fullname: $("#fullname"),
+    politic: $("#politic"),
+    al1: $("#al1"),
+    al2: $("#al2"),
+    al3: $("#al3"),
+    mobile: $("#phone"),
+    address: $("#address")
   }
   var userImage = $("#user-image")
   var userPreview = $("#user-preview")
@@ -176,6 +244,15 @@
   var button = $("#button")
   var ibtn = $("#ibtn")
   var ebtn = $("#ebtn")
+
+  var politic = $("#politic")
+  var error = $("#error")
+
+  var al1 = $("#al1")
+  var al2 = $("#al2")
+  var al3 = $("#al3")
+
+  var position = JSON.parse('{position}')
 
   var insertUser = $("#insert-user")
   var removetUser = $("#remove-user")
@@ -216,6 +293,36 @@
     changeMonth: true,
     changeYear: true
   });
+
+  function searchPosition(area = '') {
+    result = 0
+    position.forEach((item, index) => {
+      if (item['name'] == area) {
+        result = index
+      }
+    })
+    return result
+  }
+
+  function searchPosition2(areaname, district = '') {
+    if (areaname < 0) {
+      areaname = 0
+    }
+    result = 0
+    position[areaname]['district'].forEach((item, index) => {
+      if (item == district) {
+        result = index
+      }
+    })
+    return result
+  }
+
+  function l1(e) {
+    var value = e.value
+
+    $(".al2").hide()
+    $("#al2" + value).show()
+  }
 
   function changePassword(id) {
     global['userid'] = id
@@ -331,6 +438,20 @@
     }
   }
 
+  function checkEdit() {
+    var check = true
+    var data = checkInputSet(user)
+
+    data['a1'] = position[user['al1'].val()]['name']
+    data['a2'] = position[user['al1'].val()]['district'][$("#al2" + user['al1'].val()).val()]
+    data['a3'] = al3.val()
+    delete data['al1']
+    delete data['al2']
+    delete data['al3']
+
+    return data
+  }
+
   function editUser(id) {
     $.post(
       global['url'],
@@ -339,6 +460,10 @@
         checkResult(response, status).then(data => {
           global['id'] = id
           parseInputSet(data['data'], user)
+          var index = searchPosition(data['data']['al1'])
+          var index2 = searchPosition2(index, data['data']['al2'])
+          $("#al1").val(index)
+          $("#al2" + index).val(index2)
           var image = new Image()
           image.src = data['image']
           image.addEventListener('load', (e) => {
@@ -350,11 +475,12 @@
     )
   }
 
-  function editUserSubmit() {
+  function editUserSubmit(e) {
+    e.preventDefault()
     uploader().then((imageUrl) => {
       $.post(
         global['url'],
-        {action: 'edituser', data: checkInputSet(user), image: imageUrl, id: global['id'], filter: checkUserFilter()},
+        {action: 'edituser', data: checkEdit(), image: imageUrl, id: global['id'], filter: checkUserFilter()},
         (response, status) => {
           checkResult(response, status).then(data => {
             userList.html(data['html'])
