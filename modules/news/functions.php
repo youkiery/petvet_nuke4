@@ -109,7 +109,7 @@ function userRowList($filter = array()) {
 
   $xtpl = new XTemplate('user-list.tpl', PATH);
   $xtpl->assign('module_file', $module_file);
-  $sql = 'select * from `'. PREFIX .'_user` where fullname like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '');
+  $sql = 'select * from `'. PREFIX .'_user` where fullname like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '') . ' order by id desc';
   $query = $db->query($sql);
   $index = 1;
 

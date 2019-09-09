@@ -40,7 +40,7 @@ $id = $nv_Request->get_int('id', 'get', 0);
 
 $xtpl = new XTemplate("view2.tpl", "modules/". $module_name ."/template");
 
-$sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
+$sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id . ' order by id desc';
 $query = $db->query($sql);
 
 $page_title = "Thông tin thú cưng";

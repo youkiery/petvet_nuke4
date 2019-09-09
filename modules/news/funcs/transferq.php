@@ -39,7 +39,7 @@ if (!empty($action)) {
       $id = $nv_Request->get_int('id', 'post');
       $result['notify'] = 'Có lỗi xảy ra';
 
-      if (count($filter) > 1 && !empty(checkTransferRequest($id))) {
+      if (!empty(checkTransferRequest($id))) {
         // zen: change to status
         $sql = 'delete from `'. PREFIX .'_transfer_request` where id = ' . $id;
         if ($db->query($sql)) {
