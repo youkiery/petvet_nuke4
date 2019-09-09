@@ -11,6 +11,35 @@ if (!defined('PREFIX')) {
   die('Stop!!!');
 }
 
+function reserveList($userid, $filter = array('page' => 1, 'limit' => 10)) {
+  global $db, $module_file;
+
+  $xtpl = new XTemplate('reserve-list.tpl', PATH);
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where userid = ' . $userid . ' and sell = 1';
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
+  $owner = getOwnerById($userid);
+  $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userid . ' and sell = 1 order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+
+  while ($row = $query->fetch()) {
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('image', $row['image']);
+    $xtpl->assign('species', $row['species']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('breeder', $row['breeder']);
+    $xtpl->assign('owner', $owner['fullname']);
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function transferqList($userid, $filter = array('page' => 1, 'limit' => 10)) {
   global $db, $module_file;
 

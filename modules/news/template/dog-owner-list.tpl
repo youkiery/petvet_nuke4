@@ -11,7 +11,7 @@
       <td> Loài: {breed} </td>
     </tr>
     <tr>
-      <td> Giống: {species} </td>
+      <td> Giống: {species} </td> 
     </tr>
     <tr class="right">
       <td colspan="2">

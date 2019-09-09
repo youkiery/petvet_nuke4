@@ -14,30 +14,6 @@
   </div>
   <div id="msgshow"></div>
 
-  <div class="modal" id="user-market" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-body">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-
-          <div id="market-content"></div>
-          <!-- <label class="row">
-            <div class="col-sm-6">
-              Cần bán
-            </div>
-            <div class="col-sm-6" style="text-align: right;">
-              <button class="btn btn-info">
-                Bán
-              </button>
-            </div>
-          </label> -->
-
-          <div id="market-error" style="color: red; font-weight: bold;"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="modal" id="user-buy" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -321,14 +297,26 @@
                 Chuyển nhượng
                 <!-- <span class="glyphicon glyphicon-plus"></span> -->
               </button>
-              <br>
               <button class="btn btn-success" style="height: 34px;" onclick="addOwner()">
-                Thêm khách hàng mới
+                Thêm khách hàng
                 <!-- <span class="glyphicon glyphicon-plus"></span> -->
               </button>
             </div>
-
           </div>
+          <div>
+            <label class="row">
+              <div class="col-sm-10">
+                Nếu thú cưng đã bán/mất nhấn vào đây
+              </div>
+              <div class="col-sm-2" style="text-align: right;">
+                <button class="btn btn-info" onclick="doneSubmit()">
+                  <span class="glyphicon glyphicon-check"></span>
+                </button>
+              </div>
+            </label>
+          </div>
+          <div id="market-content"></div>
+
         </div>
       </div>
     </div>
@@ -768,6 +756,7 @@
   <p> <a href="/{module_file}/transferq"> Yêu cầu chuyển nhượng </a> <span style="font-weight: bold; color: red;">{transfer_count}</span> </p>
   <p> <a href="/{module_file}/intro"> Danh sách liên hệ mua, bán, phối</a> <span style="font-weight: bold; color: red;">{intro_count}</span></p>
   <p> <a href="/{module_file}/sendback"> Danh sách trả về </a> <span style="font-weight: bold; color: red;">{sendback_count}</span></p>
+  <p> <a href="/{module_file}/reserve"> Danh sách dự trữ </a> </p>
   <h2> Danh sách thú cưng </h2>
 
   <form onsubmit="filterS(event)">
@@ -972,6 +961,20 @@
     installRemindSpecies('species-parent')
   })
 
+  function doneSubmit() {
+    freeze()
+    $.post(
+      global['url'],
+      {action: 'done', id: global['id'], filter: checkFilter(), tabber: global['tabber']},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          petList.html(data['html'])
+          $("#transfer-pet").modal('hide')
+        }, () => {})
+      }
+    )    
+  }
+
   function buy() {
     $("#user-buy").modal('show')
   }
@@ -1134,7 +1137,6 @@
         checkResult(response, status).then(data => {
           global['id'] = id
           $("#market-content").html(data['html'])
-          $("#user-market").modal('show')
           transferPet.modal('show')
         }, () => {})
       }

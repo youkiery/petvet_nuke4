@@ -32,6 +32,21 @@ else {
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
+    case 'done':
+      $id = $nv_Request->get_int('id', 'post', 0);
+			$filter = $nv_Request->get_array('filter', 'post');
+			$tabber = $nv_Request->get_array('tabber', 'post');
+      $result['notify'] = 'Có lỗi xảy ra';
+
+      if (checkPetOwner($id, $userinfo['id'])) {
+        $sql = 'update `'. PREFIX .'_pet` set sell = 1 where id = ' . $id;
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+          $result['html'] = userDogRowByList($userinfo['id'], $tabber, $filter);
+          $result['notify'] = 'Đã đưa vào lưu trữ';
+        }
+      }
+    break;
     case 'buy':
       $data = $nv_Request->get_array('data', 'post');
 
