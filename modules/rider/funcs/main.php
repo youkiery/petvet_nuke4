@@ -28,7 +28,7 @@ if (!empty($action)) {
         if ($db->query($sql)) {
           $result["status"] = 1;
           $result["notify"] = "Đã xóa bản ghi";
-          if ($type) {
+          if ($type == 2) {
             $result["html"] = payList($startDate, $endDate);
           }
           else {
@@ -61,7 +61,6 @@ if (!empty($action)) {
             $collectCustomer = 0;
           }
           $sql = "insert into `" . PREFIX . "_row` (type, driver_id, doctor_id, customer_id, amount, clock_from, clock_to, price, destination, note, time) values (0, $collectDriver, $collectDoctor, $collectCustomer, 0, $collectStart, $collectEnd, '$price', '$collectDestination', '$collectNote', " . time() . ")";
-          die($sql);
           if ($db->query($sql)) {
             checkinRemind($collectDestination);
             checkinClock($collectEnd);
