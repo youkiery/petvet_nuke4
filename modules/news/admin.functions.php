@@ -29,7 +29,7 @@ function tradeList($filter = array('page' => 1, 'limit' => 10)) {
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_trade` where status < 2 order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_trade` where status < 2 order by status, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
@@ -76,7 +76,7 @@ function buyList2($filter = array('page' => 1, 'limit' => 10)) {
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_buy` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_buy` order by status desc, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 

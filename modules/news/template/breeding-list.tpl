@@ -9,6 +9,9 @@
     Tuổi: {age} <br>
     Giống: {species} <br>
     Loài: {breed} <br>
+    <!-- BEGIN: sell -->
+    <span style="color: red"> Đã bán </span>
+    <!-- END: sell -->
   </div>
 </a>
 <span style="clear: both;"></span>

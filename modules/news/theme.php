@@ -31,7 +31,7 @@ function reserveList($userid, $filter = array('page' => 1, 'limit' => 10)) {
     $xtpl->assign('image', $row['image']);
     $xtpl->assign('species', $row['species']);
     $xtpl->assign('name', $row['name']);
-    $xtpl->assign('breeder', $row['breeder']);
+    $xtpl->assign('breed', $row['breed']);
     $xtpl->assign('owner', $owner['fullname']);
     $xtpl->parse('main.row');
   }
@@ -61,7 +61,7 @@ function transferqList($userid, $filter = array('page' => 1, 'limit' => 10)) {
       $xtpl->assign('image', $pet['image']);
       $xtpl->assign('species', $pet['species']);
       $xtpl->assign('name', $pet['name']);
-      $xtpl->assign('breeder', $pet['breeder']);
+      $xtpl->assign('breed', $pet['breed']);
       $xtpl->assign('owner', $owner['fullname']);
       $xtpl->assign('time', date('d/m/Y', $row['time']));
       $xtpl->parse('main.row');
@@ -435,6 +435,9 @@ function sellList($filter = array('species' => '', 'breed' => '', 'keyword' => '
     $xtpl->assign('breed', $row['breed']);
     $xtpl->assign('species', $row['species']);
     $xtpl->assign('sex', $sex_array[$row['sex']]);
+    if ($row['sell'] == 1) {
+      $xtpl->parse('main.row.sell');
+    }
     $xtpl->parse('main.row');
   }
   $xtpl->parse('main');
@@ -468,6 +471,9 @@ function breedingList($filter = array('species' => '', 'breed' => '', 'keyword' 
     $xtpl->assign('breed', $row['breed']);
     $xtpl->assign('species', $row['species']);
     $xtpl->assign('sex', $sex_array[$row['sex']]);
+    if ($row['sell'] == 1) {
+      $xtpl->parse('main.row.sell');
+    }
     $xtpl->parse('main.row');
   }
   $xtpl->parse('main');
@@ -480,7 +486,7 @@ function buyList($filter = array('species' => '', 'breed' => '', 'page' => '1', 
   $xtpl = new XTemplate('buy-list.tpl', PATH);
   $xtpl->assign('module_name', $module_name);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_buy` where status = 1 and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" order by id desc';
+  $sql = 'select count(*) as count from `'. PREFIX .'_buy` where status = 1 and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%"';
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));

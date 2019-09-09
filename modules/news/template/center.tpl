@@ -308,8 +308,8 @@
                 Nếu thú cưng đã bán/mất nhấn vào đây
               </div>
               <div class="col-sm-2" style="text-align: right;">
-                <button class="btn btn-info" onclick="doneSubmit()">
-                  <span class="glyphicon glyphicon-check"></span>
+                <button class="btn btn-warning" onclick="doneSubmit()">
+                  <span class="glyphicon glyphicon-usd"></span>
                 </button>
               </div>
             </label>
