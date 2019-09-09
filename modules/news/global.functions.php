@@ -106,6 +106,7 @@ function checkMobile($source, $target) {
   }
   $source = xdecrypt($source);
   $res = strpos($source, $target);
+  // echo "$source, $target (". var_dump($res) .")<br>";
   if ($res !== false) {
     return true;
   }

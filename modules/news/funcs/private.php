@@ -609,20 +609,25 @@ if (!empty($action)) {
 		case 'parent':
 			$keyword = $nv_Request->get_string('keyword', 'post', '');
 
-			$sql = 'select a.id, a.name, b.fullname, b.mobile from `'. PREFIX .'_pet` a inner join (select * from ((select id, fullname, mobile, address, 1 as type from `'. PREFIX .'_user`) union (select id, fullname, mobile, address, 2 as type from `'. PREFIX .'_contact` where userid = '. $userinfo['id'] .')) as c) b on a.userid = b.id and a.type = b.type';
+			$sql = 'select * from ((select id, fullname, mobile, address, 1 as type from `'. PREFIX .'_user`) union (select id, fullname, mobile, address, 2 as type from `'. PREFIX .'_contact` where userid = '. $userinfo['id'] .')) as c';
 			$query = $db->query($sql);
 
 			$html = '';
       $count = 0;
       // checkMobile
-			while (($row = $query->fetch()) && $count < 10) {
+			while (($row = $query->fetch()) && $count < 20) {
         if (checkMobile($row['mobile'], $keyword)) {
-          $html .= '
-          <div class="suggest_item2" onclick="pickParent(this, \''. $row['name'] .'\', '. $row['id'] .')">
-            <p> '. $row['fullname'] .' </p>
-            <p> '. $row['name'] .' </p>
-          </div>';
-          $count ++;
+          $sql2 = 'select * from `'. PREFIX .'_pet` where active = 1 and userid = ' . $row['id'];
+          $query2 = $db->query($sql2);
+
+          while ($row2 = $query2->fetch()) {
+            $html .= '
+            <div class="suggest_item2" onclick="pickParent(this, \''. $row2['name'] .'\', '. $row2['id'] .')">
+              <p> '. $row['fullname'] .' </p>
+              <p> '. $row2['name'] .' </p>
+            </div>';
+            $count ++;
+          }
         }
 			}
 
