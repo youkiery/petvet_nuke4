@@ -62,6 +62,10 @@
           <input class="form-control" id="collect-end" type="text" value="{clock}">
         </div>
         <div class="form-group">
+          <label> Giá tiền </label>
+          <input class="form-control" id="collect-price" type="text">
+        </div>
+        <div class="form-group">
           <label> Khách hàng <span id="collect-customer-info"></span> </label>
           <div class="relative">
             <input class="form-control" id="collect-customer" type="text">
@@ -168,6 +172,7 @@
   var collectCustomer = $("#collect-customer")
   var collectStart = $("#collect-start")
   var collectEnd = $("#collect-end")
+  var collectPrice = $("#collect-price")
   var collectDestination = $("#collect-destination")
   var collectDestinationSuggest = $("#collect-destination-suggest")
   var collectNote = $("#collect-note")
@@ -227,6 +232,16 @@
     
     value = formatter.format(value).replace(/ ₫/g, "").replace(/\./g, ",");
     payMoney.val(value)
+  })
+
+  collectPrice.keyup(() => {
+    var value = Number((collectPrice.val()).replace(/\,/g, ""));
+    if (Number.isFinite(value)) {
+      money = value
+    }
+    
+    value = formatter.format(value).replace(/ ₫/g, "").replace(/\./g, ",");
+    collectPrice.val(value)
   })
 
   dateType.change(() => {
@@ -306,6 +321,16 @@
     val = val.join("")
     
     current.value = val
+
+    var start = Number(collectStart.val().trim())
+    var end = Number(collectEnd.val().trim())
+    
+    var space = Math.floor(end - start) * 10000
+    
+    if (space >= 10000) {
+      value = formatter.format(space).replace(/ ₫/g, "").replace(/\./g, ",");
+      collectPrice.val(value)
+    }
   })
 
   collectCustomer.keyup(() => {
@@ -409,13 +434,14 @@
       $(".btn, .form-control").attr("disabled", true)
       $.post(
         strHref,
-        {action: "collect-insert", page: page, limit: limit, startDate: startDate.val(), endDate: endDate.val(), collectDriver: rider, collectDoctor: collectDoctor.val(), collectStart: collectStart.val(), collectEnd: collectEnd.val(), collectCustomer: customerId, collectDestination: collectDestination.val(), collectNote: collectNote.val()},
+        {action: "collect-insert", page: page, limit: limit, startDate: startDate.val(), endDate: endDate.val(), collectDriver: rider, collectDoctor: collectDoctor.val(), collectPrice: collectPrice.val(), collectStart: collectStart.val(), collectEnd: collectEnd.val(), collectCustomer: customerId, collectDestination: collectDestination.val(), collectNote: collectNote.val()},
         (response, status) => {
           checkResult(response, status).then((data) => {
             customerId = 0
             collectStart.val(collectEnd.val())
             collectCustomer.val("")
             collectCustomerInfo.text("")
+            collectPrice.val("")
             collectDestination.val("")
             collectNote.val("")
             content.html(data["html"])

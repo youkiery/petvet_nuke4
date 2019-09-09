@@ -203,8 +203,8 @@
   var removeStatus = false
   var rowId = 0
   var rowType = 0
-  var page = {page}
-  var limit = {limit}
+  var page = '{page}'
+  var limit = '{limit}'
 
   type.change(() => {    
     filterData()
