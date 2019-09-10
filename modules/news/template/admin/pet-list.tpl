@@ -33,6 +33,17 @@
         <button class="btn btn-warning" onclick="checkPet({id}, 0)">
           <span class="glyphicon glyphicon-check"></span>
         </button>
+        <!-- BEGIN: yes -->
+        <button class="btn btn-warning" onclick="ceti({id}, 0)">
+          <img src="/themes/default/images/cetificate.png">
+        </button>
+        <!-- END: yes -->
+        <!-- BEGIN: no -->
+        <button class="btn btn-success" onclick="ceti({id}, 1)">
+          <img src="/themes/default/images/cetificate.png">
+        </button>
+        <!-- END: no -->
+        
         <!-- END: uncheck -->
         <!-- BEGIN: check -->
         <button class="btn btn-success" onclick="checkPet({id}, 1)">

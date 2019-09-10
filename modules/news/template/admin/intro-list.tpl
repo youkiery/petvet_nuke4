@@ -18,7 +18,7 @@
     </th>
   </tr>
   <!-- BEGIN: row -->
-  <tbody style="border: 2px dotted black;">
+  <tbody>
     <tr>
       <td> {index} </td>
       <td> {target} </td>

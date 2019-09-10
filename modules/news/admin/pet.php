@@ -166,6 +166,19 @@ if (!empty($action)) {
           $result['status'] = 1;
         }
       }
+    break;
+    case 'ceti':
+      $id = $nv_Request->get_string('id', 'post');
+      $type = $nv_Request->get_string('type', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'update `' . PREFIX . '_pet` set ceti = ' . $type . ' where id = ' . $id;
+      if ($db->query($sql)) {
+        $result['html'] = userDogRow($filter);
+        if ($result['html']) {
+          $result['status'] = 1;
+        }
+      }
       break;
 
     case 'filter':

@@ -796,6 +796,18 @@
     )
   }
 
+  function ceti(id, type) {
+    $.post(
+      global['url'],
+      {action: 'ceti', id: id, type: type, filter: checkFilter()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          petList.html(data['html'])
+        }, () => {})
+      }
+    )
+  }
+
   // function editPetSubmit() {
   //   $.post(
   //     global['url'],
