@@ -34,6 +34,51 @@ if (!empty($action)) {
         $result['status'] = 1;
       }
 		break;
+		case 'filter1':
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      $result['html'] = transferedList($userinfo['id'], $filter);
+      if (empty($result['html'])) {
+        $result['notify'] = 'Có lỗi xảy ra';
+      }
+      else {
+        $result['status'] = 1;
+      }
+		break;
+		case 'filter2':
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      $result['html'] = transferqList($userinfo['id'], $filter);
+      if (empty($result['html'])) {
+        $result['notify'] = 'Có lỗi xảy ra';
+      }
+      else {
+        $result['status'] = 1;
+      }
+		break;
+    
+		case 'confirm':
+      $filter = $nv_Request->get_array('filter', 'post');
+      $id = $nv_Request->get_int('id', 'post');
+      $row = checkTransferRequest($id);
+      $result['notify'] = 'Có lỗi xảy ra';
+
+      if (count($filter) > 1 && !empty($row)) {
+        // zen: change to status
+        $pet = getPetById($row['petid']);
+
+        $sql = 'delete from `'. PREFIX .'_transfer_request` where id = ' . $row['id'];
+        $sql2 = 'update `'. PREFIX .'_pet` set userid = ' . $userinfo['id'] . ' where id = ' . $pet['id'];
+        $sql3 = 'insert into `'. PREFIX .'_transfer` (fromid, targetid, petid, time, type) values('. $pet['userid'] .', '. $userinfo['id'] .', '. $row['petid'] .', '. time() .', 1)';
+        // die($sql3);
+
+        if ($db->query($sql) && $db->query($sql2) && $db->query($sql3)) {
+          $result['status'] = 1;
+          $result['notify'] = 'Đã chuyển nhượng';
+          $result['html'] = transferqList($userinfo['id'], $filter);
+        }
+      }
+    break;
 	}
 	echo json_encode($result);
 	die();
@@ -42,6 +87,8 @@ if (!empty($action)) {
 $xtpl = new XTemplate("transfer.tpl", "modules/". $module_name ."/template");
 
 $xtpl->assign('content', transferList($userinfo['id']));
+$xtpl->assign('content1', transferedList($userinfo['id']));
+$xtpl->assign('content2', transferqList($userinfo['id']));
 $xtpl->assign('url', '/' . $module_name . '/' . $op . '/');
 
 $xtpl->assign('module_file', $module_file);

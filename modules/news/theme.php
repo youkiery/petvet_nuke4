@@ -40,7 +40,7 @@ function reserveList($userid, $filter = array('page' => 1, 'limit' => 10)) {
   return $xtpl->text();
 }
 
-function transferqList($userid, $filter = array('page' => 1, 'limit' => 10)) {
+function transferqList($userid, $filter = array('page' => 1, 'limit' => 10, 'type' => 'goPage2')) {
   global $db, $module_file;
 
   $xtpl = new XTemplate('transferq-list.tpl', PATH);
@@ -48,7 +48,7 @@ function transferqList($userid, $filter = array('page' => 1, 'limit' => 10)) {
   $sql = 'select count(*) as count from `'. PREFIX .'_transfer_request` a inner join `'. PREFIX .'_pet` b on a.petid = b.id inner join `'. PREFIX .'_pet` c on b.userid = c.id where a.userid = ' . $userid;
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
-  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+  $xtpl->assign('nav', navList2($count, $filter['page'], $filter['limit'], $filter['type']));
 
   $sql = 'select a.* from `'. PREFIX .'_transfer_request` a inner join `'. PREFIX .'_pet` b on a.petid = b.id inner join `'. PREFIX .'_pet` c on b.userid = c.id where a.userid = ' . $userid . ' order by a.id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
@@ -363,7 +363,7 @@ function introList($userid, $filter = array('page' => 1, 'limit' => 10)) {
   return $xtpl->text();
 }
 
-function transferList($userid, $filter = array('page' => 1, 'limit' => 10)) {
+function transferList($userid, $filter = array('page' => 1, 'limit' => 10, 'type' => 'goPage')) {
   global $db, $module_file;
 
   $xtpl = new XTemplate('transfer-list.tpl', PATH);
@@ -372,15 +372,52 @@ function transferList($userid, $filter = array('page' => 1, 'limit' => 10)) {
   $sql = 'select count(*) as count from `pet_news_transfer` a inner join `pet_news_pet` b on a.petid = b.id inner join `pet_news_user` c on b.userid = c.id where fromid = ' . $userid;
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
-  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+  $xtpl->assign('nav', navList2($count, $filter['page'], $filter['limit'], $filter['type']));
 
-  $sql = 'select * from `pet_news_transfer` a inner join `pet_news_pet` b on a.petid = b.id inner join `pet_news_user` c on b.userid = c.id where fromid = ' . $userid . ' order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `pet_news_transfer` a inner join `pet_news_pet` b on a.petid = b.id inner join `pet_news_user` c on b.userid = c.id where fromid = ' . $userid . ' order by a.id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
   $list = array();
   while ($row = $query->fetch()) {
     $target = checkUserinfo($row['targetid'], $row['type']);
+    // echo $target['fullname'] . ' ('. $row['type'] .')<br>';
+    $pet = getPetById($row['petid']);
+    $target['mobile'] = xdecrypt($target['mobile']);
+    $target['address'] = xdecrypt($target['address']);
+
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('target', $target['fullname']);
+    $xtpl->assign('address', $target['address']);
+    $xtpl->assign('mobile', $target['mobile']);
+    $xtpl->assign('id', $pet['id']);
+    $xtpl->assign('pet', $pet['name']);
+    $xtpl->assign('time', date('d/m/Y', $row['time']));
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function transferedList($userid, $filter = array('page' => 1, 'limit' => 10, 'type' => 'goPage')) {
+  global $db, $module_file;
+
+  $xtpl = new XTemplate('transfered-list.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
+
+  $sql = 'select count(*) as count from `pet_news_transfer` a inner join `pet_news_pet` b on a.petid = b.id inner join `pet_news_user` c on b.userid = c.id where targetid = ' . $userid;
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList2($count, $filter['page'], $filter['limit'], $filter['type']));
+
+  $sql = 'select * from `pet_news_transfer` a inner join `pet_news_pet` b on a.petid = b.id inner join `pet_news_user` c on b.userid = c.id where targetid = ' . $userid . ' order by a.id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+
+  $list = array();
+  while ($row = $query->fetch()) {
+    $target = checkUserinfo($row['fromid'], $row['type']);
     // echo $target['fullname'] . ' ('. $row['type'] .')<br>';
     $pet = getPetById($row['petid']);
     $target['mobile'] = xdecrypt($target['mobile']);
@@ -661,6 +698,53 @@ function navList ($number, $page, $limit) {
     if ($total_pages) {
       for ($i = 1; $i < $total_pages + 1; $i ++) {
         $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="goPage('.$i.')">' . $i . '</button>';
+        if ($i < $total_pages) $page_string .= " ";
+      }
+    }
+    else {
+      $page_string .= '<div class="btn">' . 1 . "</div>";
+    }
+  }
+  return $page_string;
+}
+
+function navList2($number, $page, $limit, $type) {
+  global $lang_global;
+  $total_pages = ceil($number / $limit);
+
+  $on_page = $page;
+  $page_string = "";
+  if ($total_pages > 10) {
+    $init_page_max = ($total_pages > 3) ? 3 : $total_pages;
+    for ($i = 1; $i <= $init_page_max; $i ++) {
+      $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="'. $type .'('.$i.')">' . $i . '</button>';
+      if ($i < $init_page_max) $page_string .= " ";
+    }
+    if ($total_pages > 3) {
+      if ($on_page > 1 && $on_page < $total_pages) {
+        $page_string .= ($on_page > 5) ? " ... " : ", ";
+        $init_page_min = ($on_page > 4) ? $on_page : 5;
+        $init_page_max = ($on_page < $total_pages - 4) ? $on_page : $total_pages - 4;
+        for ($i = $init_page_min - 1; $i < $init_page_max + 2; $i ++) {
+          $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="'. $type .'('.$i.')">' . $i . '</button>';
+          if ($i < $init_page_max + 1)  $page_string .= " ";
+        }
+        $page_string .= ($on_page < $total_pages - 4) ? " ... " : ", ";
+      }
+      else {
+        $page_string .= " ... ";
+      }
+      
+      for ($i = $total_pages - 2; $i < $total_pages + 1; $i ++) {
+        $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="'. $type .'('.$i.')">' . $i . '</button>';
+        if ($i < $total_pages) $page_string .= " ";
+      }
+    }
+  }
+  else {
+    if ($total_pages) {
+      for ($i = 1; $i < $total_pages + 1; $i ++) {
+        $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="'. $type .'('.$i.')">' . $i . '</button>';
         if ($i < $total_pages) $page_string .= " ";
       }
     }
