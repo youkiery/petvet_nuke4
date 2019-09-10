@@ -67,8 +67,9 @@ if (!empty($action)) {
       $id = $nv_Request->get_string('id', 'post', '0');
 
       if (checkPetOwner($id, $userinfo['id'])) {
-        $sql = 'insert into `'. PREFIX .'_trade` (petid, type, status, time) values ('. $id .', 2, '. $config['trade'] .', '. time() .')';
-        if ($db->query($sql)) {
+        $sql = 'insert into `'. PREFIX .'_trade` (petid, type, status, time, note) values ('. $id .', 2, '. $config['trade'] .', '. time() .', "")';
+        $sql2 = 'delete from `'. PREFIX .'_trade` where status = 2 and type = 2 and petid = ' . $id;
+        if ($db->query($sql) && $db->query($sql2)) {
           $result['status'] = 1;
           $result['html'] = getMarketContent($id);
         }
@@ -79,7 +80,6 @@ if (!empty($action)) {
 
       if (checkPetOwner($id, $userinfo['id'])) {
         $sql = 'delete from `'. PREFIX .'_trade` where type = 2 and petid = ' . $id;
-        // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;
           $result['html'] = getMarketContent($id);
@@ -90,8 +90,9 @@ if (!empty($action)) {
       $id = $nv_Request->get_string('id', 'post', '0');
 
       if (checkPetOwner($id, $userinfo['id'])) {
-        $sql = 'insert into `'. PREFIX .'_trade` (petid, type, status, time) values ('. $id .', 1, '. $config['trade'] .', '. time() .')';
-        if ($db->query($sql)) {
+        $sql = 'insert into `'. PREFIX .'_trade` (petid, type, status, time, note) values ('. $id .', 1, '. $config['trade'] .', '. time() .', "")';
+        $sql2 = 'delete from `'. PREFIX .'_trade` where status = 2 and type = 1 and petid = ' . $id;
+        if ($db->query($sql) && $db->query($sql2)) {
           $result['status'] = 1;
           $result['html'] = getMarketContent($id);
         }
@@ -102,7 +103,6 @@ if (!empty($action)) {
 
       if (checkPetOwner($id, $userinfo['id'])) {
         $sql = 'delete from `'. PREFIX .'_trade` where type = 1 and petid = ' . $id;
-        // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;
           $result['html'] = getMarketContent($id);
@@ -190,7 +190,6 @@ if (!empty($action)) {
         $request = $query->fetch();
         if (!empty($request) && count($request) > 0) {
           $sql = 'update `'. PREFIX .'_request` set time = ' . time() . ', status = 1 where id = ' . $request['id'];
-          // die($sql);
           if ($db->query($sql)) {
             $result['status'] = 1;
             $result['html'] = requestDetail($id);
@@ -198,7 +197,6 @@ if (!empty($action)) {
         }
         else {
           $sql = 'insert into `'. PREFIX .'_request` (petid, type, value, status, time) values('. $id .', '. $type .', '. $value .', 1, '. time() .')';
-          // die($sql);
           if ($db->query($sql)) {
             $result['status'] = 1;
             $result['html'] = requestDetail($id);
@@ -255,7 +253,6 @@ if (!empty($action)) {
         if (!empty($row = checkPrvVaccine($data))) {
           // 
           $sql = 'update `'. PREFIX .'_vaccine` set status =  1 where id = ' . $row['id'];
-          die($sql);
         }
         else {
           checkDisease($userinfo['id'], $data['val']);
@@ -569,7 +566,6 @@ if (!empty($action)) {
         }
 
 				$sql = 'update `'. PREFIX .'_pet` set '. sqlBuilder($data, BUILDER_EDIT) .', image = "'. $image .'" where id = ' . $id;
-        // die($sql);
 
 				if ($db->query($sql)) {
 					$result['status'] = 1;

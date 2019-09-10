@@ -83,7 +83,6 @@ function vaccineList($petid) {
   $today = time(); 
   while ($row = $query->fetch()) {
     $pet = getPetById($petid);
-    // var_dump($pet);die();
     $xtpl->assign('index', $index ++);
     $xtpl->assign('pet', $pet['name']);
     $xtpl->assign('id', $row['id']);
@@ -118,7 +117,6 @@ function DiseaseList($petid) {
   $index = 1;
   while ($row = $query->fetch()) {
     $pet = getPetById($petid);
-    // var_dump($pet);die();
     $xtpl->assign('index', $index ++);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('pet', $pet['name']);
@@ -170,7 +168,6 @@ function requestDetail($petid) {
   }
 
   $sql = 'select * from `'. PREFIX .'_request` where type = 2 and petid = ' . $petid . ' and status <> 2';
-  // die($sql);
   $query = $db->query($sql);
 
   while ($row = $query->fetch()) {
@@ -214,7 +211,6 @@ function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('pa
     $list = array_merge($list, $parent);
     $ping = 1;
     $i = 1;
-    // echo json_encode($list); die();
     foreach ($list as $check) {
       $xtpl->assign('pr', 'disabled');
       if ($ping) {
@@ -279,7 +275,6 @@ function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('pa
       $xtpl->parse('main.row');
     }
   }
-  // echo json_encode($data);die();
 
   $xtpl->assign('nav', navList($data['count'], $filter['page'], $filter['limit']));
   $xtpl->parse('main');
@@ -308,7 +303,6 @@ function mainPetList($keyword = '', $page = 1, $filter = 12) {
   $year = 60 * 60 * 24 * 365.25;
 
   foreach ($data['list'] as $row) {
-    // var_dump($row);die();
     $owner = getOwnerById($row['userid'], $row['type']);
     $xtpl->assign('index', $index++);
     $xtpl->assign('image', $row['image']);
@@ -401,7 +395,6 @@ function transferList($userid, $filter = array('page' => 1, 'limit' => 10)) {
     $xtpl->assign('time', date('d/m/Y', $row['time']));
     $xtpl->parse('main.row');
   }
-  // die(implode(', ', $list));
 
   $xtpl->parse('main');
   return $xtpl->text();
@@ -550,54 +543,53 @@ function getMarketContent($id) {
   $html = '';
   $pet = getTradeById($id);
 
-  if (empty($pet['1']) && $pet['1'] != '0') {
-    $data['1'] = array(
-      'act' => 'sellSubmit()',
-      'text' => 'Cần bán',
-      'class' => 'info'
-    );
-  }
-  else {
-    switch ($pet['1']) {
-      case 1:
-        $data['1'] = array(
-          'act' => 'unsellSubmit()',
-          'text' => 'Hủy',
-          'class' => 'danger'
-        );
-      break;
-      default:
-        $data['1'] = array(
-          'act' => 'unsellSubmit()',
-          'text' => 'Hủy',
-          'class' => 'warning'
-        );
+  $data['1'] = array(
+    'act' => 'sellSubmit()',
+    'text' => 'Cần bán',
+    'class' => 'info',
+    'note' => ''
+  );
+  $data['2'] = array(
+    'act' => 'breedingSubmit()',
+    'text' => 'Cần Phối',
+    'class' => 'info',
+    'note' => ''
+  );
+
+  if (!empty($pet['1'])) {
+    if ($pet['1']['status'] == 0) {
+      $data['1'] = array(
+        'act' => 'unsellSubmit()',
+        'text' => 'Hủy',
+        'class' => 'warning'
+      );
     }
+    else if ($pet['1']['status'] == 1) {
+      $data['1'] = array(
+        'act' => 'unsellSubmit()',
+        'text' => 'Hủy',
+        'class' => 'danger'
+      );
+    }
+    $data['1']['note'] = $pet['1']['note'];
   }
 
-  if (empty($pet['2']) && $pet['2'] != '0') {
-    $data['2'] = array(
-      'act' => 'breedingSubmit()',
-      'text' => 'Cần Phối',
-      'class' => 'info'
-    );
-  }
-  else {
-    switch ($pet['2']) {
-      case 1:
-        $data['2'] = array(
-          'act' => 'unbreedingSubmit()',
-          'text' => 'Hủy',
-          'class' => 'danger'
-        );
-      break;
-      default:
-        $data['2'] = array(
-          'act' => 'unbreedingSubmit()',
-          'text' => 'Hủy',
-          'class' => 'warning'
-        );
+  if (!empty($pet['2'])) {
+    if ($pet['2']['status'] == 0) {
+      $data['2'] = array(
+        'act' => 'unbreedingSubmit()',
+        'text' => 'Hủy',
+        'class' => 'warning'
+      );
     }
+    else if ($pet['2']['status'] == 1) {
+      $data['2'] = array(
+        'act' => 'unbreedingSubmit()',
+        'text' => 'Hủy',
+        'class' => 'danger'
+      );
+    }
+    $data['2']['note'] = $pet['2']['note'];
   }
 
   $html .= '
@@ -605,6 +597,9 @@ function getMarketContent($id) {
     <label class="row">
       <div class="col-sm-6">
         Đăng bán
+        <p>
+          '. $data['1']['note'] .'
+        </p>
       </div>
       <div class="col-sm-6" style="text-align: right;">
         <button class="btn btn-'. $data['1']['class'] .'" onclick="'. $data['1']['act'] .'">
@@ -616,6 +611,9 @@ function getMarketContent($id) {
     <label class="row">
       <div class="col-sm-6">
         Đăng cho phối
+        <p>
+          '. $data['2']['note'] .'
+        </p>
       </div>
       <div class="col-sm-6" style="text-align: right;">
         <button class="btn btn-'. $data['2']['class'] .'" onclick="'. $data['2']['act'] .'">

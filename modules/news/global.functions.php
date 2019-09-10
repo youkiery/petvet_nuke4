@@ -95,7 +95,7 @@ function getTradeById($id) {
   $query = $db->query($sql);
 
   while ($row = $query->fetch()) {
-    $list[$row['type']] = $row['status'];
+    $list[$row['type']] = $row;
   }
   return $list;
 }
