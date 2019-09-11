@@ -31,6 +31,40 @@
     </div>
   </div>
 
+  <div id="modal-parent" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <label> <input type="radio" name="type" class="form-control" id="parent-type-1" checked> Người dùng </label>
+          <label> <input type="radio" name="type" class="form-control" id="parent-type-2"> Danh sách kèm theo </label>
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="input-group">
+                <input type="text" class="form-control" id="parent-key" placeholder="Người dùng theo số điện thoại">
+                <div class="input-group-btn">
+                  <button class="btn btn-info" onclick="parentFilter()">
+                    Tìm kiếm
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <div class="input-group">
+                <input type="text" class="form-control" id="parent-key" placeholder="Danh sách đi kèm theo số điện thoại">
+                <div class="input-group-btn">
+                  <button class="btn btn-info" onclick="contactFilter()">
+                    Tìm kiếm
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="insert-pet" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -531,6 +565,18 @@
         reader.readAsDataURL(input.files[0]);
       }
     }
+  }
+
+  function parentFilter() {
+    $.post(
+      global['url'],
+      {action: 'filter-parent', key: $("#parent-key").val(), type: ($("#parent-type-1").prop('checked') ? 1 : 2)},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#parent-list").html(data['html'])
+        }, () => {})
+      }
+    )
   }
 
   function deletePet(id) {

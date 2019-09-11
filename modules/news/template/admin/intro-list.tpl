@@ -20,11 +20,25 @@
   <!-- BEGIN: row -->
   <tbody>
     <tr>
-      <td> {index} </td>
+      <td rowspan="2"> {index} </td>
       <td> {target} </td>
       <td> {address} </td>
       <td> {mobile} </td>
       <td> {type} </td>
+    </tr>
+    <tr>
+      <td>
+        {from}
+      </td>
+      <td>
+        {fullname}
+      </td>
+      <td>
+        {petname}
+      </td>
+      <tr>
+        {breed}
+      </tr>
     </tr>
     <tr>
       <td colspan="5">

@@ -74,33 +74,69 @@ if (!empty($action)) {
         }
       }
       break;
-    case 'parent':
-      $keyword = $nv_Request->get_string('keyword', 'post', '');
+    // case 'filter-parent':
+    //   $key = $nv_Request->get_string('key', 'post', '');
+    //   $type = $nv_Request->get_int('type', 'post', 1);
+   	// 	$html = '';
+    //   $count = 0;
 
-      $sql = 'select a.id, a.name, b.fullname, b.mobile from `' . PREFIX . '_pet` a inner join (select * from ((select id, fullname, mobile, address, 1 as type from `' . PREFIX . '_user`) union (select id, fullname, mobile, address, 2 as type from `' . PREFIX . '_contact` where userid = ' . $userinfo['id'] . ')) as c) b on a.userid = b.id and a.type = b.type';
-      $query = $db->query($sql);
+    //   if ($type == 1) {
+    //     $sql = 'select * from `'. PREFIX .'_user`';
+    //     $query = $db->query($sql);
+    //     while (($row = $query->fetch()) && $count < 20) {
+    //       if (checkMobile($row['mobile'], $key)) {
+    //         $count ++;
+    //         $html .= '';
+    //       }
+    //     }
+    //   }
+    //   else if ($type == 2) {
+    //     $sql = 'select * from `'. PREFIX .'_contact`';
+    //     $query = $db->query($sql);
+    //     while (($row = $query->fetch()) && $count < 20) {
+    //       if (checkMobile($row['mobile'], $key)) {
+    //         $count ++;
+    //         $html .= '
+    //           <div>
 
-      $html = '';
+    //           </div>
+    //         ';
+    //       }
+    //     }
+    //   }
+    // break;
+		case 'parent':
+			$keyword = $nv_Request->get_string('keyword', 'post', '');
+
+			$sql = 'select * from ((select id, fullname, mobile, address, 1 as type from `'. PREFIX .'_user`) union (select id, fullname, mobile, address, 2 as type from `'. PREFIX .'_contact`)) as c';
+			$query = $db->query($sql);
+
+			$html = '';
       $count = 0;
       // checkMobile
-      while (($row = $query->fetch()) && $count < 10) {
+			while (($row = $query->fetch()) && $count < 20) {
         if (checkMobile($row['mobile'], $keyword)) {
-          $html .= '
-      <div class="suggest_item2" onclick="pickParent(this, \'' . $row['name'] . '\', ' . $row['id'] . ')">
-      <p> ' . $row['fullname'] . ' </p>
-      <p> ' . $row['name'] . ' </p>
-      </div>';
-          $count ++;
+          $sql2 = 'select * from `'. PREFIX .'_pet` where active = 1 and userid = ' . $row['id'];
+          $query2 = $db->query($sql2);
+
+          while ($row2 = $query2->fetch()) {
+            $html .= '
+            <div class="suggest_item2" onclick="pickParent(this, \''. $row2['name'] .'\', '. $row2['id'] .')">
+              <p> '. $row['fullname'] .' </p>
+              <p> '. $row2['name'] .' </p>
+            </div>';
+            $count ++;
+          }
         }
-      }
+			}
 
-      if (empty($html)) {
-        $html = 'Không có kết quả trùng khớp';
-      }
+			if (empty($html)) {
+				$html = 'Không có kết quả trùng khớp';
+			}
 
-      $result['status'] = 1;
-      $result['html'] = $html;
-      break;
+			$result['status'] = 1;
+			$result['html'] = $html;
+		break;
     case 'species':
       $keyword = $nv_Request->get_string('keyword', 'post', '');
 
