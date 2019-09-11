@@ -1,44 +1,27 @@
 <!-- BEGIN: main -->
 <table class="table table-bordered">
-  <tr>
-    <th>
-      STT
-    </th>
-    <th>
-      Tên khách
-    </th>
-    <th>
-      Địa chỉ
-    </th>
-    <th>
-      Số điện thoại
-    </th>
-    <th>
-      Chuyên mục
-    </th>
-  </tr>
   <!-- BEGIN: row -->
   <tbody>
     <tr>
       <td rowspan="2"> {index} </td>
-      <td> {target} </td>
-      <td> {address} </td>
-      <td> {mobile} </td>
-      <td> {type} </td>
+      <td> Tên khách: {target} </td>
+      <td> Địa chỉ: {address} </td>
+      <td> Số điện thoại: {mobile} </td>
+      <td> Chuyên mục: {type} </td>
     </tr>
     <tr>
       <td>
-        {from}
+        Chủ đăng: {from}
       </td>
       <td>
-        {fullname}
+        Số điện thoại: {mobile2}
       </td>
       <td>
-        {petname}
+        Tên: {petname}
       </td>
-      <tr>
-        {breed}
-      </tr>
+      <td>
+        Loài: {breed}
+      </td>
     </tr>
     <tr>
       <td colspan="5">

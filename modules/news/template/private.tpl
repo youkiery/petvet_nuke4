@@ -752,9 +752,9 @@
     </button>
   </div>
   <div style="clear: left;"></div>
-  <p> <a href="/{module_file}/transfer"> Danh sách chuyển nhượng {transfer_count} </a> </p>
+  <p> <a href="/{module_file}/transfer"> Danh sách chuyển nhượng <span style="font-weight: bold; color: red;">{transfer_count}</span> </a> </p>
   <p> <a href="/{module_file}/intro"> Danh sách liên hệ mua, bán, phối</a> <span style="font-weight: bold; color: red;">{intro_count}</span></p>
-  <p> <a href="/{module_file}/reserve"> Danh sách dự trữ </a> </p>
+  <p> <a href="/{module_file}/reserve"> Danh sách bán, mất</a> </p>
   <h2> Danh sách thú cưng </h2>
 
   <form onsubmit="filterS(event)">

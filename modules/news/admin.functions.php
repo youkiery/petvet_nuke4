@@ -225,6 +225,26 @@ function infoList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', '
     $xtpl->assign('address', $row['address']);
     $xtpl->assign('mobile', $row['mobile']);
     $xtpl->assign('note', $row['note']);
+    if ($row['type'] == 2) {
+      $sql = 'select * from `'. PREFIX .'_buy` where id = ' . $row['rid'];
+      $query = $db->query($sql);
+      $row2 = $query->fetch();
+      $owner2 = getOwnerById($row2['userid']);
+      $owner2['mobile'] = xdecrypt($owner2['mobile']);
+      $xtpl->assign('from', $owner2['fullname']);
+      $xtpl->assign('mobile2', $owner2['mobile']);
+      $xtpl->assign('petname', '');
+      $xtpl->assign('breed', $row2['breed']);
+    }
+    else {
+      $pet = getPetById($row['rid']);
+      $owner2 = getOwnerById($pet['userid']);
+      $owner2['mobile'] = xdecrypt($owner2['mobile']);
+      $xtpl->assign('from', $owner2['fullname']);
+      $xtpl->assign('mobile2', $owner2['mobile']);
+      $xtpl->assign('petname', $pet['name']);
+      $xtpl->assign('breed', $pet['breed']);
+    }
     if ($row['status']) {
       $xtpl->parse('main.row.no');
     }
