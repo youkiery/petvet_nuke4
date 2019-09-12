@@ -204,18 +204,33 @@ if (!empty($action)) {
       }
     break;
     case 'ceti':
-      $id = $nv_Request->get_string('id', 'post');
-      $type = $nv_Request->get_string('type', 'post');
+      $petid = $nv_Request->get_string('petid', 'post');
+      $price = $nv_Request->get_int('price', 'post', 0);
       $filter = $nv_Request->get_array('filter', 'post');
 
-      $sql = 'update `' . PREFIX . '_pet` set ceti = ' . $type . ' where id = ' . $id;
+      $sql = 'update `' . PREFIX . '_pet` set ceti = 1, price = '. $price .' where id = ' . $petid;
       if ($db->query($sql)) {
         $result['html'] = userDogRow($filter);
         if ($result['html']) {
+          $result['notify'] = 'Đã lưu';
           $result['status'] = 1;
         }
       }
-      break;
+    break;
+    case 'remove-ceti':
+      $petid = $nv_Request->get_string('petid', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'update `' . PREFIX . '_pet` set ceti = 0, price = 0 where id = ' . $petid;
+      
+      if ($db->query($sql)) {
+        $result['html'] = userDogRow($filter);
+        if ($result['html']) {
+          $result['notify'] = 'Đã xóa';
+          $result['status'] = 1;
+        }
+      }
+    break;
 
     case 'filter':
       $filter = $nv_Request->get_array('filter', 'post');

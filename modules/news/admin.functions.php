@@ -444,7 +444,7 @@ function userDogRow($filter = array('keyword' => '', 'status' => 0, 'page' => 1,
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '') . ' order by active, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '') . ' order by active, ceti, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   // $data = getUserPetList($filter);
@@ -452,6 +452,8 @@ function userDogRow($filter = array('keyword' => '', 'status' => 0, 'page' => 1,
   while ($row = $query->fetch()) {
     $owner = getUserInfo($row['userid']);
     $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('price', $row['price']);
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('owner', $owner['fullname']);
     $xtpl->assign('id', $row['id']);
@@ -460,7 +462,7 @@ function userDogRow($filter = array('keyword' => '', 'status' => 0, 'page' => 1,
     $xtpl->assign('sex', $sex_array[$row['sex']]);
     $xtpl->assign('dob', cdate($row['dateofbirth']));
     if ($row['active']) {
-      if ($row['ceti']) {
+      if ($row['ceti'] == 1) {
         $xtpl->parse('main.row.uncheck.yes');
       }
       else {

@@ -34,12 +34,12 @@
           <span class="glyphicon glyphicon-check"></span>
         </button>
         <!-- BEGIN: yes -->
-        <button class="btn btn-warning" onclick="ceti({id}, 0)">
+        <button class="btn btn-warning" onclick="ceti({id}, {price})">
           <img src="/themes/default/images/cetificate.png">
         </button>
         <!-- END: yes -->
         <!-- BEGIN: no -->
-        <button class="btn btn-success" onclick="ceti({id}, 1)">
+        <button class="btn btn-success" onclick="ceti({id}, {price})">
           <img src="/themes/default/images/cetificate.png">
         </button>
         <!-- END: no -->

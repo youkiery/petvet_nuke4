@@ -31,6 +31,26 @@
     </div>
   </div>
 
+  <div id="modal-ceti" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-body text-center">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <p>
+            Nhập số tiền thu?
+          </p>
+          <input type="text" class="form-control" id="ceti-price">
+          <button class="btn btn-info" onclick="cetiSubmit()">
+            Lưu
+          </button>
+          <button class="btn btn-danger" onclick="removeCetiSubmit()">
+            Xóa
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="modal-parent" class="modal fade" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -419,7 +439,8 @@
     parent: 'm',
     id: -1,
     userid: -1,
-    owner: {}
+    owner: {},
+    petid: 0
   }
   var pet = {
     name: $("#pet-name"),
@@ -842,18 +863,6 @@
     )
   }
 
-  function ceti(id, type) {
-    $.post(
-      global['url'],
-      {action: 'ceti', id: id, type: type, filter: checkFilter()},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          petList.html(data['html'])
-        }, () => {})
-      }
-    )
-  }
-
   // function editPetSubmit() {
   //   $.post(
   //     global['url'],
@@ -1033,6 +1042,38 @@
         suggest.hide()
       }, 200);
     })
+  }
+
+  function ceti(petid, price) {
+    global['petid'] = petid
+    $("#ceti-price").val(price)
+    $("#modal-ceti").modal('show')
+  }
+
+  function cetiSubmit() {
+    $.post(
+      global['url'],
+      { action: 'ceti', price: $("#ceti-price").val(), petid: global['petid'], filter: checkFilter() },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          petList.html(data['html'])
+          $("#modal-ceti").modal('hide')
+        }, () => { })
+      }
+    )
+  }
+
+  function removeCetiSubmit() {
+    $.post(
+      global['url'],
+      { action: 'remove-ceti', petid: global['petid'], filter: checkFilter() },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          petList.html(data['html'])
+          $("#modal-ceti").modal('hide')
+        }, () => { })
+      }
+    )
   }
 
   function installRemind(name, type) {
