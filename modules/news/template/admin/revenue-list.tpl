@@ -26,32 +26,8 @@
       <td> <a href="/news/detail/?id={id}"> {dob} </a> </td>
       <td> <a href="/news/detail/?id={id}"> {breed} </a> </td>
       <td>
-        <button class="btn btn-info" onclick="editPet({id})">
-          <span class="glyphicon glyphicon-edit"></span>
-        </button>
-        <!-- BEGIN: uncheck -->
-        <button class="btn btn-warning" onclick="checkPet({id}, 0)">
-          <span class="glyphicon glyphicon-check"></span>
-        </button>
-        <!-- BEGIN: yes -->
         <button class="btn btn-warning" onclick="ceti({id}, {price})">
           <img src="/themes/default/images/cetificate.png">
-        </button>
-        <!-- END: yes -->
-        <!-- BEGIN: no -->
-        <button class="btn btn-success" onclick="ceti({id}, {price})">
-          <img src="/themes/default/images/cetificate.png">
-        </button>
-        <!-- END: no -->
-        
-        <!-- END: uncheck -->
-        <!-- BEGIN: check -->
-        <button class="btn btn-success" onclick="checkPet({id}, 1)">
-          <span class="glyphicon glyphicon-unchecked"></span>
-        </button>
-        <!-- END: check -->
-        <button class="btn btn-danger" onclick="deletePet({id})">
-          <span class="glyphicon glyphicon-remove"></span>
         </button>
       </td>
     </tr>

@@ -433,6 +433,39 @@ function getUserInfo($userid) {
   return $query->fetch();
 }
 
+function revenue($filter = array('page' => 1, 'limit' => 10)) {
+  global $db, $sex_array;
+
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+  $xtpl = new XTemplate('revenue-list.tpl', PATH);
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where ceti = 1';
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
+  $sql = 'select * from `'. PREFIX .'_pet` where ceti = 1 order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+  // $data = getUserPetList($filter);
+
+  while ($row = $query->fetch()) {
+    $owner = getUserInfo($row['userid']);
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('price', $row['price']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('owner', $owner['fullname']);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('microchip', $row['microchip']);
+    $xtpl->assign('breed', $row['breed']);
+    $xtpl->assign('sex', $sex_array[$row['sex']]);
+    $xtpl->assign('dob', cdate($row['dateofbirth']));
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function userDogRow($filter = array('keyword' => '', 'status' => 0, 'page' => 1, 'limit' => 10)) {
   global $db, $user_info, $module_file, $sex_array;
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;

@@ -19,9 +19,60 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
-    case 'a':
-      $x = 1;
-		break;
+    case 'ceti':
+      $petid = $nv_Request->get_string('petid', 'post');
+      $price = $nv_Request->get_int('price', 'post', 0);
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'update `' . PREFIX . '_pet` set ceti = 1, price = '. $price .' where id = ' . $petid;
+      if ($db->query($sql)) {
+        $result['html'] = revenue($filter);
+        if ($result['html']) {
+          $result['notify'] = 'Đã lưu';
+          $result['status'] = 1;
+        }
+      }
+    break;
+    case 'remove-ceti':
+      $petid = $nv_Request->get_string('petid', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'update `' . PREFIX . '_pet` set ceti = 0, price = 0 where id = ' . $petid;
+      
+      if ($db->query($sql)) {
+        $result['html'] = revenue($filter);
+        if ($result['html']) {
+          $result['notify'] = 'Đã xóa';
+          $result['status'] = 1;
+        }
+      }
+    break;
+
+    case 'filter':
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      if (count($filter) > 1) {
+        $result['html'] = revenue($filter);
+        if ($result['html']) {
+          $result['status'] = 1;
+        }
+      }
+      break;
+    case 'get':
+      $id = $nv_Request->get_string('id', 'post', 0);
+
+      $sql = 'select * from `' . PREFIX . '_pet` where id = ' . $id;
+      $query = $db->query($sql);
+
+      if (!empty($row = $query->fetch())) {
+        $result['data'] = array('name' => $row['name'], 'dob' => date('d/m/Y', $row['dateofbirth']), 'species' => $row['species'], 'breed' => $row['breed'], 'color' => $row['color'], 'microchip' => $row['microchip'], 'parentf' => $row['fid'], 'parentm' => $row['mid'], 'miear' => $row['miear'], 'origin' => $row['origin']);
+        $result['more'] = array('breeder' => $row['breeder'], 'sex' => intval($row['sex']), 'm' => getPetNameId($row['mid']), 'f' => getPetNameId($row['fid']), 'userid' => $row['userid'], 'username' => getOwnerById($row['userid'], $row['type'])['fullname']);
+        $result['image'] = $row['image'];
+        $result['status'] = 1;
+      } else {
+        $result['notify'] = 'Có lỗi xảy ra';
+      }
+      break;
     case 'pet':
       $userid = $nv_Request->get_string('userid', 'post', '');
 			$keyword = $nv_Request->get_string('keyword', 'post', '');
@@ -90,9 +141,7 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("revenue.tpl", PATH);
 
-// $xtpl->assign('content', revenue());
-// $xtpl->assign('remind', json_encode(getRemind()));
-$xtpl->assign('module_file', $module_file);
+$xtpl->assign('content', revenue());
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 
