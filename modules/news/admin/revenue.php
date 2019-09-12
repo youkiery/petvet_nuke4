@@ -33,6 +33,19 @@ if (!empty($action)) {
         }
       }
     break;
+    case 'pay':
+      $filter = $nv_Request->get_array('filter', 'post');
+      $data = $nv_Request->get_array('data', 'post');
+
+      $sql = 'insert into `'. PREFIX .'_pay` (price, userid, content, time) values('. $data['price'] .', '. $data['userid'] .', "'. $data['content'] .'", '. time() .')';
+      if ($db->query($sql)) {
+        $result['html'] = paylist($filter);
+        if ($result['html']) {
+          $result['notify'] = 'Đã lưu';
+          $result['status'] = 1;
+        }
+      }
+    break;
     case 'remove-ceti':
       $petid = $nv_Request->get_string('petid', 'post');
       $filter = $nv_Request->get_array('filter', 'post');
@@ -47,17 +60,35 @@ if (!empty($action)) {
         }
       }
     break;
+    case 'remove-pay':
+      $id = $nv_Request->get_string('id', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
 
+      $sql = 'delete from `' . PREFIX . '_pay` where id = ' . $id;
+      
+      if ($db->query($sql)) {
+        $result['html'] = paylist($filter);
+        if ($result['html']) {
+          $result['notify'] = 'Đã xóa';
+          $result['status'] = 1;
+        }
+      }
+    break;
     case 'filter':
       $filter = $nv_Request->get_array('filter', 'post');
 
-      if (count($filter) > 1) {
-        $result['html'] = revenue($filter);
+      if ($db->query($sql)) {
+        if ($filter['type'] == 1) {
+          $result['html'] = revenue($filter);
+        } 
+        else {
+          $result['html'] = paylist($filter);
+        }
         if ($result['html']) {
           $result['status'] = 1;
         }
       }
-      break;
+    break;
     case 'get':
       $id = $nv_Request->get_string('id', 'post', 0);
 
@@ -142,6 +173,16 @@ if (!empty($action)) {
 $xtpl = new XTemplate("revenue.tpl", PATH);
 
 $xtpl->assign('content', revenue());
+
+$sql = 'select * from `'. PREFIX .'_user`';
+$query = $db->query($sql);
+
+while ($row = $query->fetch()) {
+  $xtpl->assign('userid', $row['id']);
+  $xtpl->assign('username', $row['fullname']);
+  $xtpl->parse('main.user');
+}
+
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 
