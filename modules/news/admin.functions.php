@@ -485,9 +485,43 @@ function paylist($filter = array('page' => 1, 'limit' => 10)) {
     $owner = getUserInfo($row['userid']);
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
-    $xtpl->assign('price', $row['price']);
+    $xtpl->assign('price', number_format($row['price'], 0, '', ','));
     $xtpl->assign('content', $row['content']);
     $xtpl->assign('name', $owner['fullname']);
+    $xtpl->assign('time', date('d/m/Y', ($row['time'])));
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function managerList($filter = array('page' => 1, 'limit' => 10)) {
+  global $db;
+
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+  $xtpl = new XTemplate('manager-list.tpl', PATH);
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_user` where view = 1 or manager = 1';
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList2($count, $filter['page'], $filter['limit'], 'goPage2'));
+
+  $sql = 'select * from `'. PREFIX .'_user` where view = 1 or manager = 1 order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+  // $data = getUserPetList($filter);
+
+  while ($row = $query->fetch()) {
+    $row['mobile'] = xdecrypt($row['mobile']);
+    $row['address'] = xdecrypt($row['address']);
+    $allow = array();
+    if ($row['view'] == 1) $allow[] = 'Nội bộ';
+    if ($row['manager'] == 1) $allow[] = 'Quản lý';
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('allow', implode(', ', $allow));
+    $xtpl->assign('name', $row['fullname']);
+    $xtpl->assign('mobile', $row['mobile']);
+    $xtpl->assign('address', $row['address']);
     $xtpl->assign('time', ctime($row['time']));
     $xtpl->parse('main.row');
   }
