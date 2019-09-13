@@ -174,7 +174,7 @@ $xtpl = new XTemplate("revenue.tpl", PATH);
 
 $xtpl->assign('content', revenue());
 
-$sql = 'select * from `'. PREFIX .'_user`';
+$sql = 'select * from `'. PREFIX .'_user` where view = 1';
 $query = $db->query($sql);
 
 while ($row = $query->fetch()) {

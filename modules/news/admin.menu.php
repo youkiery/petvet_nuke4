@@ -21,7 +21,8 @@ $submenu['trade'] = "Duyệt bán, phôi";
 $submenu['buy'] = "Duyệt mua";
 $submenu['revenue'] = "Quản lý thu chi";
 $submenu['manager'] = "Danh sách quản lý";
+$submenu['statistic'] = "Thống kê";
 $submenu['config'] = "Cấu hình";
 // $submenu['center'] = "Quản lý yêu cầu trang trại";
 
-$allow_func = array('main', 'user', 'pet', 'request', 'remind', 'disease', 'intro', 'trade', 'buy', 'config', 'revenue', 'manager'); 
+$allow_func = array('main', 'user', 'pet', 'request', 'remind', 'disease', 'intro', 'trade', 'buy', 'config', 'revenue', 'manager', 'statistic'); 
