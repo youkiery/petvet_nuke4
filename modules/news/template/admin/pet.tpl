@@ -69,15 +69,21 @@
                   </button>
                 </div>
               </div>
+              <div id="parent-list" style="max-height: 400px; overflow-y: scroll;">
+
+              </div>
             </div>
             <div class="col-sm-12">
               <div class="input-group">
-                <input type="text" class="form-control" id="parent-key" placeholder="Danh sách đi kèm theo số điện thoại">
+                <input type="text" class="form-control" id="pet-key" placeholder="Tên, giống loài thú cưng">
                 <div class="input-group-btn">
-                  <button class="btn btn-info" onclick="contactFilter()">
+                  <button class="btn btn-info" onclick="petFilter()">
                     Tìm kiếm
                   </button>
                 </div>
+              </div>
+              <div id="pet-list" style="max-height: 400px; overflow-y: scroll;">
+
               </div>
             </div>
           </div>
@@ -441,7 +447,8 @@
     id: -1,
     userid: -1,
     owner: {},
-    petid: 0
+    petid: 0,
+    parentid: 0
   }
   var pet = {
     name: $("#pet-name"),
@@ -600,6 +607,29 @@
         }, () => {})
       }
     )
+  }
+
+  function thisOwner(id) {
+    global['parentid'] = id
+    petFilter()
+  }
+
+  function petFilter() {
+    if (global['parentid']) {
+      $.post(
+        global['url'],
+        {action: 'filter-pet', key: $("#pet-key").val(), parentid: global['parentid']},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            $("#pet-list").html(data['html'])
+          }, () => {})
+        }
+      )
+    }
+  }
+
+  function thisPet(id, name) {
+    
   }
 
   function deletePet(id) {
