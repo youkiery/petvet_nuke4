@@ -365,59 +365,133 @@
     </div>
   </div>
 
-  <div id="insert-user" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
+    <div id="insert-user" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-md">
       <div class="modal-content">
         <div class="modal-body text-center">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <p>
             Chỉnh sửa thông tin
           </p>
+          <form onsubmit="editUserSubmit(event)">
+            <div class="row">
+              <label>
+                <div class="col-sm-4">
+                  Tên đăng nhập
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="username" autocomplete="off">
+                </div>
+              </label>
+            </div>
 
-          <label class="row">
-            <div class="col-sm-3">
-              Tên
+            <div class="row">
+              <label>
+                <div class="col-sm-4">
+                  Họ và tên
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="fullname" autocomplete="off">
+                </div>
+              </label>
             </div>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" id="user-name">
-            </div>
-          </label>
 
-          <label class="row">
-            <div class="col-sm-3">
-              Số điện thoại
+            <div class="row">
+              <label>
+                <div class="col-sm-4">
+                  Số CMND
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="politic" autocomplete="off">
+                </div>
+              </label>
             </div>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" id="user-mobile">
-            </div>
-          </label>
 
-          <label class="row">
-            <div class="col-sm-3">
-              Địa chỉ
+            <div class="row">
+              <label>
+                <div class="col-sm-4">
+                  Điện thoại
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="phone" autocomplete="off">
+                </div>
+              </label>
             </div>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" id="user-address">
-            </div>
-          </label>
 
-          <label class="row">
-            <div class="col-sm-3">
-              Hình ảnh
+            <div class="row">
+              <label>
+                <div class="col-sm-4">
+                  Tỉnh
+                </div>
+                <div class="col-sm-8">
+                  <select class="form-control" id="al1" onchange="l1(this)">
+                    <!-- BEGIN: l1 -->
+                    <option value="{l1id}"> {l1name} </option>
+                    <!-- END: l1 -->
+                  </select>
+                </div>
+              </label>
             </div>
-            <div class="col-sm-9">
-              <div>
-                <img class="img-responsive" id="user-preview" style="display: inline-block; width: 128px; height: 128px; margin: 10px;">
+
+            <div class="row">
+              <label>
+                <div class="col-sm-4">
+                  Quận/Huyện/Thành phố
+                </div>
+                <div class="col-sm-8">
+                  <!-- BEGIN: l2 -->
+                  <select class="form-control al2" id="al2{l1id}" style="display: {active}">
+                    <!-- BEGIN: l2c -->
+                    <option value="{l2id}"> {l2name} </option>
+                    <!-- END: l2c -->
+                  </select>
+                  <!-- END: l2 -->
+                </div>
+              </label>
+            </div>
+
+            <div class="row">
+              <label>
+                <div class="col-sm-4">
+                  Xã/Phường/Thị trấn
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="al3" autocomplete="off">
+                </div>
+              </label>
+            </div>
+
+            <div class="row">
+              <label>
+                <div class="col-sm-4">
+                  Địa chỉ
+                </div>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="address" autocomplete="off">
+                </div>
+              </label>
+            </div>
+
+            <label class="row">
+              <div class="col-sm-3">
+                Hình ảnh
               </div>
-              <input type="file" class="form-control" id="user-image" onchange="onselected(this, 'user')">
-            </div>
-          </label>
+              <div class="col-sm-9">
+                <div>
+                  <img class="img-responsive" id="user-preview"
+                    style="display: inline-block; width: 128px; height: 128px; margin: 10px;">
+                </div>
+                <input type="file" class="form-control" id="user-image" onchange="onselected(this, 'user')">
+              </div>
+            </label>
 
-          <div class="text-center">
-            <button class="btn btn-info " onclick="editUserSubmit()">
-              Chỉnh sửa thông tin
-            </button>
-          </div>
+            <div class="text-center">
+              <button class="btn btn-info" id="button">
+                Chỉnh sửa thông tin
+              </button>
+            </div>
+          </form>
+
         </div>
       </div>
     </div>
@@ -833,10 +907,19 @@
     breed: $("#breed-parent")
   }
   var user = {
-    fullname: $("#user-name"),
-    mobile: $("#user-mobile"),
-    address: $("#user-address")
+    username: $("#username"),
+    fullname: $("#fullname"),
+    politic: $("#politic"),
+    al1: $("#al1"),
+    al2: $("#al2"),
+    al3: $("#al3"),
+    mobile: $("#phone"),
+    address: $("#address")
   }
+  var position = JSON.parse('{position}')
+  var al1 = $("#al1")
+  var al2 = $("#al2")
+  var al3 = $("#al3")
   var owner = {
     fullname: $("#owner-name"),
     mobile: $("#owner-mobile"),
@@ -1697,35 +1780,79 @@
     freeze()
     $.post(
       global['url'],
-      { action: 'getuser', id: id },
+      {action: 'getuser', id: id},
       (response, status) => {
         checkResult(response, status).then(data => {
           global['id'] = id
           parseInputSet(data['data'], user)
+          var index = searchPosition(data['data']['al1'])
+          var index2 = searchPosition2(index, data['data']['al2'])
+          $("#al1").val(index)
+          $("#al2" + index).val(index2)
           var image = new Image()
           image.src = data['image']
           image.addEventListener('load', (e) => {
             userPreview.attr('src', image.src)
           })
           insertUser.modal('show')
-        }, () => { })
+        }, () => {})
       }
     )
   }
 
-  function editUserSubmit() {
+  function editUserSubmit(e) {
+    e.preventDefault()
     freeze()
     uploader().then((imageUrl) => {
       $.post(
         global['url'],
-        { action: 'edituser', data: checkInputSet(user), image: imageUrl, id: global['id'] },
+        {action: 'edituser', data: checkEdit(), image: imageUrl, id: global['id']},
         (response, status) => {
           checkResult(response, status).then(data => {
-            window.location.reload()
-          }, () => { })
+            userList.html(data['html'])
+            clearInputSet(user)
+            insertUser.modal('hide')
+          }, () => {})
         }
       )
     })
+  }
+
+  function searchPosition(area = '') {
+    result = 0
+    position.forEach((item, index) => {
+      if (item['name'] == area) {
+        result = index
+      }
+    })
+    return result
+  }
+
+  function searchPosition2(areaname, district = '') {
+    if (areaname < 0) {
+      areaname = 0
+    }
+    result = 0
+    position[areaname]['district'].forEach((item, index) => {
+      if (item == district) {
+        result = index
+      }
+    })
+    return result
+  }
+
+  function checkEdit() {
+    var check = true
+    var data = checkInputSet(user)
+
+    data['a1'] = position[user['al1'].val()]['name']
+    data['a2'] = position[user['al1'].val()]['district'][$("#al2" + user['al1'].val()).val()]
+    data['a3'] = al3.val()
+    delete data['al1']
+    delete data['al2']
+    delete data['al3']
+
+    return data
   }
 
   function insertDiseaseSuggestSubmit() {

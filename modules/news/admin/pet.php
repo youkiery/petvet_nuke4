@@ -121,6 +121,51 @@ if (!empty($action)) {
       //   }
       // }
     break;
+    case 'change-owner':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $userid = $nv_Request->get_int('userid', 'post', 0);
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'update `'. PREFIX .'_pet` set userid = ' . $userid . ' where id = ' . $id;
+      if ($db->query($sql)) {
+        $result['html'] = userDogRow($filter);
+        if ($result['html']) {
+          $result['notify'] = 'Đã lưu';
+          $result['status'] = 1;
+        }
+      }
+    break;
+    case 'filter-owner':
+      $key = $nv_Request->get_string('key', 'post', '');
+   		$html = '';
+      $count = 0;
+
+      $sql = 'select * from `'. PREFIX .'_user`';
+      $query = $db->query($sql);
+      while (($row = $query->fetch()) && $count < 20) {
+        if (checkMobile($row['mobile'], $key)) {
+          $count ++;
+          $row['mobile'] = xdecrypt($row['mobile']);
+          $html .= '
+            <div style="overflow: auto;">
+              '. $row['fullname'] .'<br>
+              '. $row['mobile'] .'
+              <button class="btn btn-info" style="float: right;" onclick="thisOwner('. $row['id'] .')">
+                Chọn
+              </button>
+            </div>
+            <hr>
+          ';
+        }
+      }
+      $result['status'] = 1;
+      if (empty($html)) {
+        $result['html'] = 'Không có mục nào trùng';
+      }
+      else {
+        $result['html'] = $html;
+      }
+    break;
     case 'filter-pet':
       $key = $nv_Request->get_string('key', 'post', '');
       $parentid = $nv_Request->get_int('parentid', 'post', 0);

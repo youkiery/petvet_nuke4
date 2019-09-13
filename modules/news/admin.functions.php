@@ -485,11 +485,14 @@ function userDogRow($filter = array('keyword' => '', 'status' => 0, 'page' => 1,
 
   while ($row = $query->fetch()) {
     $owner = getUserInfo($row['userid']);
+    $owner['mobile'] = xdecrypt($owner['mobile']);
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('price', $row['price']);
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('owner', $owner['fullname']);
+    $xtpl->assign('mobile', $owner['mobile']);
+    $xtpl->assign('userid', $row['userid']);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('microchip', $row['microchip']);
     $xtpl->assign('breed', $row['breed']);

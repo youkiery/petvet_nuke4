@@ -51,13 +51,34 @@
     </div>
   </div>
 
-  <div id="modal-parent" class="modal fade" role="dialog">
+  <div id="modal-owner" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-body">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <div class="text-center">
+            <p>
+              Chọn chủ cho thú cưng
+            </p>
+            <input type="text" class="form-control" id="owner-key" placeholder="Số điện thoại">
+
+            <button class="btn btn-info" onclick="filterOwner()">
+              Tìm kiếm
+            </button>
+          </div>
+          <div id="owner-list" style="max-height: 400px; overflow-y: scroll;">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div id="modal-parent" class="modal fade" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-body">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <!-- <label> <input type="radio" name="type" class="form-control" id="parent-type-1" checked> Người dùng </label>
-          <label> <input type="radio" name="type" class="form-control" id="parent-type-2"> Danh sách kèm theo </label> -->
           <div style="clear: both;"></div>
           <div class="row">
             <div class="col-sm-12">
@@ -90,7 +111,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <div id="insert-pet" class="modal fade" role="dialog">
     <div class="modal-dialog modal-lg">
@@ -98,19 +119,6 @@
         <div class="modal-body">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <p class="text-center"> <b>  </b> </p>
-          <!-- <button id="pet-owner" onclick="pickOwner()">
-            Chọn chủ
-          </button> -->
-          <!-- <label class="row">
-            <div class="col-sm-6">
-              Chủ thú
-            </div>
-            <div class="col-sm-18 relative">
-              <input type="text" class="form-control" id="pet-owner">
-              <input type="hidden" class="form-control" id="pet-ownerid">
-              <div class="suggest" id="pet-owner-suggest"></div>
-            </div>
-          </label> -->
 
           <label class="row">
             <div class="col-sm-6">
@@ -369,43 +377,6 @@
     </div>
   </div>
 
-
-  <div id="pick-owner" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-body">
-          <form onsubmit="filterOwner(event)">
-            <p>
-              <label>
-                Nhập tên, số điện thoại chủ thú cưng
-              </label>
-            </p>
-            <div class="input-group">
-              <input type="text" class="form-control" id="filter-owner-name">
-              <div class="input-group-btn">
-                <button class="btn btn-info">
-                  <span class="glyphicon glyphicon-search"></span>
-                </button>
-              </div>
-            </div>
-          </form>
-          <div style="font-size: 0px;">
-            <p style="font-size: 14px; float: left; width: 50%;">
-              Họ tên: <div id="owner-name"></div>
-            </p>
-            <p style="font-size: 14px; float: left; width: 50%;">
-
-            </p>
-          </div>
-          <div style="clear: both;"></div>
-          <div id="owner-content">
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- <button class="btn btn-success" onclick="addPet()">
     <span class="glyphicon glyphicon-plus">  </span>
   </button> -->
@@ -552,6 +523,39 @@
     installRemindSpecies('species-parent')
   })
 
+  function pickOwner(id, userid, mobile) {
+    global['petid'] = id
+    global['userid'] = userid
+    $("#owner-key").val(mobile)
+    $("#modal-owner").modal('show')
+  }
+
+  function filterOwner() {
+    $.post(
+      global['url'],
+      {action: 'filter-owner', key: $("#owner-key").val()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#owner-list").html(data['html'])
+        }, () => {})
+      }
+    )
+  }  
+
+  function thisOwner(id) {
+    $.post(
+      global['url'],
+      {action: 'change-owner', userid: id, id: global['petid'], filter: checkFilter()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          petList.html(data['html'])
+          $("#modal-owner").modal('hide')
+          // $("#owner-list").html(data['html'])
+        }, () => {})
+      }
+    )
+  }
+
   function onselected(input, previewname) {
     if (input.files && input.files[0]) {
       var reader = new FileReader();
@@ -596,41 +600,41 @@
     }
   }
 
-  function parentFilter() {
-    $.post(
-      global['url'],
-      // {action: 'filter-parent', key: $("#parent-key").val(), type: ($("#parent-type-1").prop('checked') ? 1 : 2)},
-      {action: 'filter-parent', key: $("#parent-key").val()},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          $("#parent-list").html(data['html'])
-        }, () => {})
-      }
-    )
-  }
+  // function parentFilter() {
+  //   $.post(
+  //     global['url'],
+  //     // {action: 'filter-parent', key: $("#parent-key").val(), type: ($("#parent-type-1").prop('checked') ? 1 : 2)},
+  //     {action: 'filter-parent', key: $("#parent-key").val()},
+  //     (response, status) => {
+  //       checkResult(response, status).then(data => {
+  //         $("#parent-list").html(data['html'])
+  //       }, () => {})
+  //     }
+  //   )
+  // }
 
-  function thisOwner(id) {
-    global['parentid'] = id
-    petFilter()
-  }
+  // function thisOwner(id) {
+  //   global['parentid'] = id
+  //   petFilter()
+  // }
 
-  function petFilter() {
-    if (global['parentid']) {
-      $.post(
-        global['url'],
-        {action: 'filter-pet', key: $("#pet-key").val(), parentid: global['parentid']},
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            $("#pet-list").html(data['html'])
-          }, () => {})
-        }
-      )
-    }
-  }
+  // function petFilter() {
+  //   if (global['parentid']) {
+  //     $.post(
+  //       global['url'],
+  //       {action: 'filter-pet', key: $("#pet-key").val(), parentid: global['parentid']},
+  //       (response, status) => {
+  //         checkResult(response, status).then(data => {
+  //           $("#pet-list").html(data['html'])
+  //         }, () => {})
+  //       }
+  //     )
+  //   }
+  // }
 
-  function thisPet(id, name) {
+  // function thisPet(id, name) {
     
-  }
+  // }
 
   function deletePet(id) {
     global['id'] = id
@@ -908,23 +912,6 @@
   //     }
   //   )
   // }
-
-  function pickOwner() {
-    $("#pick-owner").modal('show')
-  }
-
-  function filterOwner(e) {
-    e.preventDefault()
-    $.post(
-      global['url'],
-      {action: 'filter-owner', keyword: $("#filter-owner-name").val()},
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            $("#owner-content").html(data['html'])
-          }, () => {})
-        }
-    )
-  }
   
   function insertParentSubmit() {
     freeze()
@@ -968,34 +955,6 @@
     var idp = splipper(e.parentNode.getAttribute('id'), 'parent-suggest')
     $('#parent-' + idp + '-s').val(id)
     $('#parent-' + idp).val(name)
-  }
-
-  function pickOwnerSubmit(name, id, type) {
-    if (($("#insert-pet").data('bs.modal') || {}).isShown) {
-      var obj = {
-        id: id,
-        name: name,
-        type: type
-      }
-      if (($("#insert-parent").data('bs.modal') || {}).isShown) {
-        if (global['modal-parent'] == 'm') {
-          // male
-          global['owner']['m'] = obj
-        }
-        else {
-          // female
-          global['owner']['f'] = obj
-        }
-      }
-      else {
-        // pet
-        global['owner']['p'] = obj
-      }
-    }
-
-    transferOwner.val(name)
-    global['userid'] = id
-    global['type'] = type
   }
 
   function pickSpecies(name, id) {

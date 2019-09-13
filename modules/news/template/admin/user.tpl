@@ -161,7 +161,7 @@
 
             <div class="text-center">
               <button class="btn btn-info" id="button">
-                Đăng ký
+                Chỉnh sửa thông tin
               </button>
             </div>
           </form>

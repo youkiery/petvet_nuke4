@@ -18,6 +18,11 @@
     <a href="/{module_file}/logout"> Đăng xuất </a>
   </div>
 
+  <div class="separate"></div>
+  <a style="margin: 8px 0px; display: block;" href="javascript:history.go(-1)">
+    <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
+  </a>
+
   <div id="modal-ceti" class="modal fade" role="dialog">
     <div class="modal-dialog modal-sm">
       <div class="modal-content">

@@ -50,6 +50,9 @@
           <span class="glyphicon glyphicon-unchecked"></span>
         </button>
         <!-- END: check -->
+        <button class="btn btn-success" onclick="pickOwner({id}, {userid}, '{mobile}')">
+          <span class="glyphicon glyphicon-user"></span>
+        </button>
         <button class="btn btn-danger" onclick="deletePet({id})">
           <span class="glyphicon glyphicon-remove"></span>
         </button>
