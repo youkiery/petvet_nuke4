@@ -286,7 +286,7 @@ if (!empty($action)) {
       $type = $nv_Request->get_string('type', 'post');
       $filter = $nv_Request->get_array('filter', 'post');
 
-      $sql = 'update `' . PREFIX . '_pet` set active = ' . $type . ' where id = ' . $id;
+      $sql = 'update `' . PREFIX . '_pet` set active = ' . $type . ', time = '. time().' where id = ' . $id;
       if ($db->query($sql)) {
         $result['html'] = userDogRow($filter);
         if ($result['html']) {
@@ -346,19 +346,6 @@ if (!empty($action)) {
         $result['status'] = 1;
       } else {
         $result['notify'] = 'Có lỗi xảy ra';
-      }
-      break;
-    case 'check':
-      $id = $nv_Request->get_string('id', 'post');
-      $type = $nv_Request->get_string('type', 'post');
-      $filter = $nv_Request->get_array('filter', 'post');
-
-      $sql = 'update `' . PREFIX . '_pet` set active = ' . $type . ' where id = ' . $id;
-      if ($db->query($sql)) {
-        $result['html'] = userDogRow($filter);
-        if ($result['html']) {
-          $result['status'] = 1;
-        }
       }
       break;
     case 'remove':

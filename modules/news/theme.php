@@ -354,7 +354,7 @@ function mainPetList($keyword = '', $page = 1, $filter = 12) {
   $data['count'] = $query->fetch()['count'];
   $count = $data['count'];
   
-  $sql = 'select * from `'. PREFIX .'_pet` where active > 0 and (name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%") order by id desc limit ' . $filter . ' offset ' . (($page - 1) * $filter);
+  $sql = 'select * from `'. PREFIX .'_pet` where active > 0 and (name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%") order by time desc limit ' . $filter . ' offset ' . (($page - 1) * $filter);
   $query = $db->query($sql);
 
   if (strlen(trim($keyword)) > 0) {
