@@ -290,7 +290,8 @@ if (!empty($action)) {
 			if (!empty($row = $query->fetch())) {
         $row['address'] = xdecrypt($row['address']);
         $row['mobile'] = xdecrypt($row['mobile']);
-				$result['data'] = array('fullname' => $row['fullname'], 'mobile' => $row['mobile'], 'address' => $row['address'], 'username' => $row['username'], 'politic' => $row['politic'], 'al1' => $row['a1'], 'al2' => $row['a2'], 'al3' => $row['a3']);
+				$result['data'] = array('fullname' => $row['fullname'], 'mobile' => $row['mobile'], 'address' => $row['address'], 'username' => $row['username'], 'politic' => $row['politic']);
+				$result['more'] = array('al1' => $row['a1'], 'al2' => $row['a2'], 'al3' => $row['a3']);
 				$result['image'] = $row['image'];
 				$result['status'] = 1;
 			}
@@ -527,7 +528,7 @@ if (!empty($action)) {
         checkRemind($data['species'], 'species');
         checkRemind($data['breed'], 'breed');
 
-				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image, type, time) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', '. $config['pet'] .', "", 1, '. time() .')';
+				$sql = 'insert into `'. PREFIX .'_pet` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', active, image, type, origin, graph, time) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) .', '. $config['pet'] .', "", 1, "", "", '. time() .')';
 
 				if ($db->query($sql)) {
 					$result['status'] = 1;

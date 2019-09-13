@@ -398,16 +398,16 @@
     <div id="insert-user" class="modal fade" role="dialog">
     <div class="modal-dialog modal-md">
       <div class="modal-content">
-        <div class="modal-body text-center">
+        <div class="modal-body">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <p>
+          <p class="text-center">
             Chỉnh sửa thông tin
           </p>
           <form onsubmit="editUserSubmit(event)">
             <div class="row">
               <label>
                 <div class="col-sm-4">
-                  Tên đăng nhập
+                  Tên đăng nhập <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
                 </div>
                 <div class="col-sm-8">
                   <input type="text" class="form-control" id="username" autocomplete="off">
@@ -418,7 +418,7 @@
             <div class="row">
               <label>
                 <div class="col-sm-4">
-                  Họ và tên
+                  Họ và tên <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
                 </div>
                 <div class="col-sm-8">
                   <input type="text" class="form-control" id="fullname" autocomplete="off">
@@ -429,7 +429,7 @@
             <div class="row">
               <label>
                 <div class="col-sm-4">
-                  Số CMND
+                  Số CMND <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
                 </div>
                 <div class="col-sm-8">
                   <input type="text" class="form-control" id="politic" autocomplete="off">
@@ -440,7 +440,7 @@
             <div class="row">
               <label>
                 <div class="col-sm-4">
-                  Điện thoại
+                  Điện thoại <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
                 </div>
                 <div class="col-sm-8">
                   <input type="text" class="form-control" id="phone" autocomplete="off">
@@ -494,7 +494,7 @@
             <div class="row">
               <label>
                 <div class="col-sm-4">
-                  Địa chỉ
+                  Địa chỉ <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
                 </div>
                 <div class="col-sm-8">
                   <input type="text" class="form-control" id="address" autocomplete="off">
@@ -515,13 +515,14 @@
               </div>
             </label>
 
+            <div style="color: red; font-size: 1.2em; font-weight: bold;" class="text-center" id="user-error"> </div>
+
             <div class="text-center">
               <button class="btn btn-info" id="button">
                 Chỉnh sửa thông tin
               </button>
             </div>
           </form>
-
         </div>
       </div>
     </div>
@@ -965,9 +966,6 @@
     username: $("#username"),
     fullname: $("#fullname"),
     politic: $("#politic"),
-    al1: $("#al1"),
-    al2: $("#al2"),
-    al3: $("#al3"),
     mobile: $("#phone"),
     address: $("#address")
   }
@@ -1919,8 +1917,8 @@
         checkResult(response, status).then(data => {
           global['id'] = id
           parseInputSet(data['data'], user)
-          var index = searchPosition(data['data']['al1'])
-          var index2 = searchPosition2(index, data['data']['al2'])
+          var index = searchPosition(data['more']['al1'])
+          var index2 = searchPosition2(index, data['more']['al2'])
           $("#al1").val(index)
           $("#al2" + index).val(index2)
           var image = new Image()
@@ -1935,21 +1933,23 @@
   }
 
   function editUserSubmit(e) {
-    freeze()
     e.preventDefault()
-    uploader().then((imageUrl) => {
-      $.post(
-        global['url'],
-        {action: 'edituser', data: checkEdit(), image: imageUrl, id: global['id']},
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            userList.html(data['html'])
-            clearInputSet(user)
-            insertUser.modal('hide')
-          }, () => {})
-        }
-      )
-    })
+    freeze()
+    if (data = checkEdit()) {
+      uploader().then((imageUrl) => {
+        $.post(
+          global['url'],
+          {action: 'edituser', data: data, image: imageUrl, id: global['id']},
+          (response, status) => {
+            checkResult(response, status).then(data => {
+              userList.html(data['html'])
+              clearInputSet(user)
+              insertUser.modal('hide')
+            }, () => {})
+          }
+        )
+      })
+    }
   }
 
   function searchPosition(area = '') {
@@ -1976,15 +1976,22 @@
   }
 
   function checkEdit() {
+    $("#user-error").text('')
     var check = true
     var data = checkInputSet(user)
+    for (const row in data) {
+      if (data.hasOwnProperty(row)) {
+        if (!data[row].trim().length) {
+          $("#user-error").text('Các trường không được bỏ trống')
+          defreeze()
+          return false
+        }
+      }
+    }
 
-    data['a1'] = position[user['al1'].val()]['name']
-    data['a2'] = position[user['al1'].val()]['district'][$("#al2" + user['al1'].val()).val()]
+    data['a1'] = position[al1.val()]['name']
+    data['a2'] = position[al1.val()]['district'][$("#al2" + al1.val()).val()]
     data['a3'] = al3.val()
-    delete data['al1']
-    delete data['al2']
-    delete data['al3']
 
     return data
   }

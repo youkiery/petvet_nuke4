@@ -22,7 +22,7 @@
       <div class="row">
         <label>
           <div class="col-sm-4">
-            Tên đăng nhập
+            Tên đăng nhập <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
           </div>
           <div class="col-sm-8">
             <input type="text" class="form-control" id="username" autocomplete="off">
@@ -33,7 +33,7 @@
       <div class="row">
         <label>
           <div class="col-sm-4">
-            Mật khẩu
+            Mật khẩu <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
           </div>
           <div class="col-sm-8">
             <input type="password" class="form-control" id="password">
@@ -44,7 +44,7 @@
       <div class="row">
         <label>
           <div class="col-sm-4">
-            Xác nhận mật khẩu
+            Xác nhận mật khẩu <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
           </div>
           <div class="col-sm-8">
             <input type="password" class="form-control" id="vpassword">
@@ -55,7 +55,7 @@
       <div class="row">
         <label>
           <div class="col-sm-4">
-            Họ và tên
+            Họ và tên <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
           </div>
           <div class="col-sm-8">
             <input type="text" class="form-control" id="fullname" autocomplete="off">
@@ -66,7 +66,7 @@
       <div class="row">
         <label>
           <div class="col-sm-4">
-            Số CMND
+            Số CMND <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
           </div>
           <div class="col-sm-8">
             <input type="text" class="form-control" id="politic" autocomplete="off">
@@ -77,7 +77,7 @@
       <div class="row">
         <label>
           <div class="col-sm-4">
-            Điện thoại
+            Điện thoại <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
           </div>
           <div class="col-sm-8">
             <input type="text" class="form-control" id="phone" autocomplete="off">
@@ -120,7 +120,7 @@
       <div class="row">
         <label>
           <div class="col-sm-4">
-            Xã/Phường/Thị trấn
+            Xã/Phường/Thị trấn 
           </div>
           <div class="col-sm-8">
             <input type="text" class="form-control" id="al3" autocomplete="off">
@@ -131,7 +131,7 @@
       <div class="row">
         <label>
           <div class="col-sm-4">
-            Địa chỉ
+            Địa chỉ <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
           </div>
           <div class="col-sm-8">
             <input type="text" class="form-control" id="address" autocomplete="off">

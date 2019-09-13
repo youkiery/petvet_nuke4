@@ -368,16 +368,16 @@
     <div id="insert-user" class="modal fade" role="dialog">
     <div class="modal-dialog modal-md">
       <div class="modal-content">
-        <div class="modal-body text-center">
+        <div class="modal-body">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <p>
+          <p class="text-center">
             Chỉnh sửa thông tin
           </p>
           <form onsubmit="editUserSubmit(event)">
             <div class="row">
               <label>
                 <div class="col-sm-4">
-                  Tên đăng nhập
+                  Tên đăng nhập <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
                 </div>
                 <div class="col-sm-8">
                   <input type="text" class="form-control" id="username" autocomplete="off">
@@ -388,7 +388,7 @@
             <div class="row">
               <label>
                 <div class="col-sm-4">
-                  Họ và tên
+                  Họ và tên <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
                 </div>
                 <div class="col-sm-8">
                   <input type="text" class="form-control" id="fullname" autocomplete="off">
@@ -399,7 +399,7 @@
             <div class="row">
               <label>
                 <div class="col-sm-4">
-                  Số CMND
+                  Số CMND <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
                 </div>
                 <div class="col-sm-8">
                   <input type="text" class="form-control" id="politic" autocomplete="off">
@@ -410,7 +410,7 @@
             <div class="row">
               <label>
                 <div class="col-sm-4">
-                  Điện thoại
+                  Điện thoại <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
                 </div>
                 <div class="col-sm-8">
                   <input type="text" class="form-control" id="phone" autocomplete="off">
@@ -464,7 +464,7 @@
             <div class="row">
               <label>
                 <div class="col-sm-4">
-                  Địa chỉ
+                  Địa chỉ <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
                 </div>
                 <div class="col-sm-8">
                   <input type="text" class="form-control" id="address" autocomplete="off">
@@ -484,6 +484,8 @@
                 <input type="file" class="form-control" id="user-image" onchange="onselected(this, 'user')">
               </div>
             </label>
+
+            <div style="color: red; font-size: 1.2em; font-weight: bold;" class="text-center" id="user-error"> </div>
 
             <div class="text-center">
               <button class="btn btn-info" id="button">
@@ -537,7 +539,7 @@
           <p class="text-center"> <b> Thêm thú cưng </b> </p>
           <label class="row">
             <div class="col-sm-3">
-              Tên thú cưng
+              Tên thú cưng <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
             </div>
             <div class="col-sm-9">
               <input type="text" class="form-control" id="pet-name">
@@ -546,7 +548,7 @@
 
           <label class="row">
             <div class="col-sm-3">
-              Ngày sinh
+              Ngày sinh <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
             </div>
             <div class="col-sm-9">
               <input type="text" class="form-control" id="pet-dob" value="{today}">
@@ -555,7 +557,7 @@
 
           <label class="row">
             <div class="col-sm-3">
-              Giống
+              Giống <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
             </div>
             <div class="col-sm-9 relative">
               <input type="text" class="form-control" id="species">
@@ -565,7 +567,7 @@
 
           <label class="row">
             <div class="col-sm-3">
-              Loài
+              Loài <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
             </div>
             <div class="col-sm-9 relative">
               <input type="text" class="form-control" id="breed-pet">
@@ -670,6 +672,8 @@
             </div>
           </label>
 
+          <div style="color: red; font-size: 1.2em; font-weight: bold;" class="text-center" id="pet-error"> </div>
+
           <div class="text-center">
             <button class="btn btn-success" id="ibtn" onclick="insertPetSubmit()">
               Thêm thú cưng
@@ -691,7 +695,7 @@
           <p class="text-center"> <b> Thêm cha mẹ </b> </p>
           <label class="row">
             <div class="col-sm-3">
-              Tên thú cưng
+              Tên thú cưng <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
             </div>
             <div class="col-sm-9">
               <input type="text" class="form-control" id="parent-name">
@@ -700,7 +704,7 @@
 
           <label class="row">
             <div class="col-sm-3">
-              Ngày sinh
+              Ngày sinh <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
             </div>
             <div class="col-sm-9">
               <input type="text" class="form-control" id="parent-dob">
@@ -709,7 +713,7 @@
 
           <label class="row">
             <div class="col-sm-3">
-              Giống
+              Giống <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
             </div>
             <div class="col-sm-9 relative">
               <input type="text" class="form-control" id="species-parent">
@@ -719,7 +723,7 @@
 
           <label class="row">
             <div class="col-sm-3">
-              Loài
+              Loài <span style="color: red;" class="glyphicon glyphicon-afterisk"> * </span>
             </div>
             <div class="col-sm-9 relative">
               <input type="text" class="form-control" id="breed-parent">
@@ -780,6 +784,8 @@
               <input type="file" class="form-control" id="user-image" onchange="onselected(this, 'parent')">
             </div>
           </label>
+
+          <div style="color: red; font-size: 1.2em; font-weight: bold;" class="text-center" id="parent-error"> </div>
 
           <div class="text-center">
             <button class="btn btn-success" onclick="insertParentSubmit()">
@@ -910,9 +916,6 @@
     username: $("#username"),
     fullname: $("#fullname"),
     politic: $("#politic"),
-    al1: $("#al1"),
-    al2: $("#al2"),
-    al3: $("#al3"),
     mobile: $("#phone"),
     address: $("#address")
   }
@@ -1435,27 +1438,29 @@
   }
 
   function insertParentSubmit() {
-    freeze()
-    uploader().then((imageUrl) => {
-      $.post(
-        global['url'],
-        { action: 'insert-parent', id: global['id'], data: checkParentData(), image: imageUrl, filter: checkFilter(), tabber: global['tabber'] },
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            petList.html(data['html'])
-            clearInputSet(parent)
-            file = false
-            filename = ''
-            $("#parent-preview").attr('src', thumbnail)
-            remind = JSON.parse(data['remind'])
-            insertParent.modal('hide')
-            $("#parent-breeder").prop('checked', true)
-            $("#parent-" + global['parent']).val(data['name'])
-            $("#parent-" + global['parent'] + '-s').val(data['id'])
-          }, () => { })
-        }
-      )
-    })
+    if (data = checkParentData()) {
+      freeze()
+      uploader().then((imageUrl) => {
+        $.post(
+          global['url'],
+          { action: 'insert-parent', id: global['id'], data: data, image: imageUrl, filter: checkFilter(), tabber: global['tabber'] },
+          (response, status) => {
+            checkResult(response, status).then(data => {
+              petList.html(data['html'])
+              clearInputSet(parent)
+              file = false
+              filename = ''
+              $("#parent-preview").attr('src', thumbnail)
+              remind = JSON.parse(data['remind'])
+              insertParent.modal('hide')
+              $("#parent-breeder").prop('checked', true)
+              $("#parent-" + global['parent']).val(data['name'])
+              $("#parent-" + global['parent'] + '-s').val(data['id'])
+            }, () => { })
+          }
+        )
+      })
+    }
   }
 
   function pickParent(e, name, id) {
@@ -1631,6 +1636,12 @@
     data['breeder'] = $("#pet-breeder").prop('checked')
     data['sex0'] = pet['sex0'].prop('checked')
     data['sex1'] = pet['sex1'].prop('checked')
+    if (!data['name'].trim().length || !data['dob'].trim().length || !data['species'].trim().length || !data['breed'].trim().length) {
+      $("#pet-error").text('Các trường không được để trống')
+      defreeze()
+      return false
+    }
+
     return data
   }
 
@@ -1639,30 +1650,37 @@
     data['breeder'] = $("#parent-breeder").prop('checked')
     data['sex0'] = parent['sex0'].prop('checked')
     data['sex1'] = parent['sex1'].prop('checked')
+    if (!data['name'].trim().length || !data['dob'].trim().length || !data['species'].trim().length || !data['breed'].trim().length) {
+      $("#parent-error").text('Các trường không được để trống')
+      defreeze()
+      return false
+    }
     return data
   }
 
   function editPetSubmit() {
-    freeze()
-    uploader().then((imageUrl) => {
-      $.post(
-        global['url'],
-        { action: 'editpet', id: global['id'], data: checkPetData(), image: imageUrl, filter: checkFilter(), tabber: global['tabber'] },
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            petList.html(data['html'])
-            clearInputSet(pet)
-            file = false
-            filename = ''
-            $("#parent-m").val('')
-            $("#parent-f").val('')
-            petPreview.val('')
-            remind = JSON.parse(data['remind'])
-            insertPet.modal('hide')
-          }, () => { })
-        }
-      )
-    })
+    if (data = checkPetData()) {
+      freeze()
+      uploader().then((imageUrl) => {
+        $.post(
+          global['url'],
+          { action: 'editpet', id: global['id'], data: data, image: imageUrl, filter: checkFilter(), tabber: global['tabber'] },
+          (response, status) => {
+            checkResult(response, status).then(data => {
+              petList.html(data['html'])
+              clearInputSet(pet)
+              file = false
+              filename = ''
+              $("#parent-m").val('')
+              $("#parent-f").val('')
+              petPreview.val('')
+              remind = JSON.parse(data['remind'])
+              insertPet.modal('hide')
+            }, () => { })
+          }
+        )
+      })
+    }
   }
 
   function splipper(text, part) {
@@ -1785,8 +1803,8 @@
         checkResult(response, status).then(data => {
           global['id'] = id
           parseInputSet(data['data'], user)
-          var index = searchPosition(data['data']['al1'])
-          var index2 = searchPosition2(index, data['data']['al2'])
+          var index = searchPosition(data['more']['al1'])
+          var index2 = searchPosition2(index, data['more']['al2'])
           $("#al1").val(index)
           $("#al2" + index).val(index2)
           var image = new Image()
@@ -1803,19 +1821,21 @@
   function editUserSubmit(e) {
     e.preventDefault()
     freeze()
-    uploader().then((imageUrl) => {
-      $.post(
-        global['url'],
-        {action: 'edituser', data: checkEdit(), image: imageUrl, id: global['id']},
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            userList.html(data['html'])
-            clearInputSet(user)
-            insertUser.modal('hide')
-          }, () => {})
-        }
-      )
-    })
+    if (data = checkEdit()) {
+      uploader().then((imageUrl) => {
+        $.post(
+          global['url'],
+          {action: 'edituser', data: data, image: imageUrl, id: global['id']},
+          (response, status) => {
+            checkResult(response, status).then(data => {
+              userList.html(data['html'])
+              clearInputSet(user)
+              insertUser.modal('hide')
+            }, () => {})
+          }
+        )
+      })
+    }
   }
 
   function searchPosition(area = '') {
@@ -1842,15 +1862,22 @@
   }
 
   function checkEdit() {
+    $("#user-error").text('')
     var check = true
     var data = checkInputSet(user)
+    for (const row in data) {
+      if (data.hasOwnProperty(row)) {
+        if (!data[row].trim().length) {
+          $("#user-error").text('Các trường không được bỏ trống')
+          defreeze()
+          return false
+        }
+      }
+    }
 
-    data['a1'] = position[user['al1'].val()]['name']
-    data['a2'] = position[user['al1'].val()]['district'][$("#al2" + user['al1'].val()).val()]
+    data['a1'] = position[al1.val()]['name']
+    data['a2'] = position[al1.val()]['district'][$("#al2" + al1.val()).val()]
     data['a3'] = al3.val()
-    delete data['al1']
-    delete data['al2']
-    delete data['al3']
 
     return data
   }
