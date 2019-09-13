@@ -74,37 +74,40 @@ if (!empty($action)) {
         }
       }
       break;
-    // case 'filter-parent':
-    //   $key = $nv_Request->get_string('key', 'post', '');
-    //   $type = $nv_Request->get_int('type', 'post', 1);
-   	// 	$html = '';
-    //   $count = 0;
+    case 'filter-parent':
+      $key = $nv_Request->get_string('key', 'post', '');
+   		$html = '';
+      $count = 0;
 
-    //   if ($type == 1) {
-    //     $sql = 'select * from `'. PREFIX .'_user`';
-    //     $query = $db->query($sql);
-    //     while (($row = $query->fetch()) && $count < 20) {
-    //       if (checkMobile($row['mobile'], $key)) {
-    //         $count ++;
-    //         $html .= '';
-    //       }
-    //     }
-    //   }
-    //   else if ($type == 2) {
-    //     $sql = 'select * from `'. PREFIX .'_contact`';
-    //     $query = $db->query($sql);
-    //     while (($row = $query->fetch()) && $count < 20) {
-    //       if (checkMobile($row['mobile'], $key)) {
-    //         $count ++;
-    //         $html .= '
-    //           <div>
+      // if ($type == 1) {
+        $sql = 'select * from `'. PREFIX .'_user`';
+        $query = $db->query($sql);
+        while (($row = $query->fetch()) && $count < 20) {
+          if (checkMobile($row['mobile'], $key)) {
+            $count ++;
+            $html .= '
+              <div>
+                
+              </div>
+            ';
+          }
+        }
+      // }
+      // else if ($type == 2) {
+      //   $sql = 'select * from `'. PREFIX .'_contact`';
+      //   $query = $db->query($sql);
+      //   while (($row = $query->fetch()) && $count < 20) {
+      //     if (checkMobile($row['mobile'], $key)) {
+      //       $count ++;
+      //       $html .= '
+      //         <div>
 
-    //           </div>
-    //         ';
-    //       }
-    //     }
-    //   }
-    // break;
+      //         </div>
+      //       ';
+      //     }
+      //   }
+      // }
+    break;
 		case 'parent':
 			$keyword = $nv_Request->get_string('keyword', 'post', '');
 

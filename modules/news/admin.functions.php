@@ -610,7 +610,7 @@ function statistic($filter = array('from' => '', 'to' => '')) {
   }
 
   $p1 = 0;
-  $sql = 'select sum(price) as p from `'. PREFIX .'_pet` ' . $xtra;
+  $sql = 'select sum(price) as p, ctime as time from `'. PREFIX .'_pet` ' . $xtra;
   $query = $db->query($sql);
   if ($row = $query->fetch()) {
     $p1 = $row['p'];

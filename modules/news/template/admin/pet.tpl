@@ -56,8 +56,9 @@
       <div class="modal-content">
         <div class="modal-body">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <label> <input type="radio" name="type" class="form-control" id="parent-type-1" checked> Người dùng </label>
-          <label> <input type="radio" name="type" class="form-control" id="parent-type-2"> Danh sách kèm theo </label>
+          <!-- <label> <input type="radio" name="type" class="form-control" id="parent-type-1" checked> Người dùng </label>
+          <label> <input type="radio" name="type" class="form-control" id="parent-type-2"> Danh sách kèm theo </label> -->
+          <div style="clear: both;"></div>
           <div class="row">
             <div class="col-sm-12">
               <div class="input-group">
@@ -591,7 +592,8 @@
   function parentFilter() {
     $.post(
       global['url'],
-      {action: 'filter-parent', key: $("#parent-key").val(), type: ($("#parent-type-1").prop('checked') ? 1 : 2)},
+      // {action: 'filter-parent', key: $("#parent-key").val(), type: ($("#parent-type-1").prop('checked') ? 1 : 2)},
+      {action: 'filter-parent', key: $("#parent-key").val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#parent-list").html(data['html'])

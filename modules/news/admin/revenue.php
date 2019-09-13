@@ -24,7 +24,7 @@ if (!empty($action)) {
       $price = $nv_Request->get_int('price', 'post', 0);
       $filter = $nv_Request->get_array('filter', 'post');
 
-      $sql = 'update `' . PREFIX . '_pet` set ceti = 1, price = '. $price .' where id = ' . $petid;
+      $sql = 'update `' . PREFIX . '_pet` set ceti = 1, price = '. $price .', ctime = '. time() .' where id = ' . $petid;
       if ($db->query($sql)) {
         $result['html'] = revenue($filter);
         if ($result['html']) {
