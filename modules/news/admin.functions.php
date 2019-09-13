@@ -433,68 +433,6 @@ function getUserInfo($userid) {
   return $query->fetch();
 }
 
-function revenue($filter = array('page' => 1, 'limit' => 10)) {
-  global $db, $sex_array;
-
-  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
-  $xtpl = new XTemplate('revenue-list.tpl', PATH);
-
-  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where ceti = 1';
-  $query = $db->query($sql);
-  $count = $query->fetch()['count'];
-  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit'], 'goPage'));
-
-  $sql = 'select * from `'. PREFIX .'_pet` where ceti = 1 order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
-  $query = $db->query($sql);
-  // $data = getUserPetList($filter);
-
-  while ($row = $query->fetch()) {
-    $owner = getUserInfo($row['userid']);
-    $xtpl->assign('index', $index++);
-    $xtpl->assign('id', $row['id']);
-    $xtpl->assign('price', $row['price']);
-    $xtpl->assign('name', $row['name']);
-    $xtpl->assign('owner', $owner['fullname']);
-    $xtpl->assign('id', $row['id']);
-    $xtpl->assign('microchip', $row['microchip']);
-    $xtpl->assign('breed', $row['breed']);
-    $xtpl->assign('sex', $sex_array[$row['sex']]);
-    $xtpl->assign('price', $row['price']);
-    $xtpl->parse('main.row');
-  }
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
-
-function paylist($filter = array('page' => 1, 'limit' => 10)) {
-  global $db, $sex_array;
-
-  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
-  $xtpl = new XTemplate('pay-list.tpl', PATH);
-
-  $sql = 'select count(*) as count from `'. PREFIX .'_pay`';
-  $query = $db->query($sql);
-  $count = $query->fetch()['count'];
-  $xtpl->assign('nav', navList2($count, $filter['page'], $filter['limit'], 'goPage2'));
-
-  $sql = 'select * from `'. PREFIX .'_pay` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
-  $query = $db->query($sql);
-  // $data = getUserPetList($filter);
-
-  while ($row = $query->fetch()) {
-    $owner = getUserInfo($row['userid']);
-    $xtpl->assign('index', $index++);
-    $xtpl->assign('id', $row['id']);
-    $xtpl->assign('price', number_format($row['price'], 0, '', ','));
-    $xtpl->assign('content', $row['content']);
-    $xtpl->assign('name', $owner['fullname']);
-    $xtpl->assign('time', date('d/m/Y', ($row['time'])));
-    $xtpl->parse('main.row');
-  }
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
-
 function managerList($filter = array('page' => 1, 'limit' => 10)) {
   global $db;
 

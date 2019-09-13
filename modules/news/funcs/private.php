@@ -745,6 +745,12 @@ if (!empty($petid_list)) {
   }
 }
 
+$sql = 'select * from `'. PREFIX .'_user` where manager = 1 and id = ' . $userinfo['id'];
+$query = $db->query($sql);
+if (!empty($sql)) {
+  $xtpl->parse('main.xter');
+}
+
 // $xtpl->assign('today', date('d/m/Y', time()));
 // $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userinfo['id'];
 // $query = $db->query($sql);
