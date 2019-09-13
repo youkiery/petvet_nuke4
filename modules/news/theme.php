@@ -349,12 +349,17 @@ function mainPetList($keyword = '', $page = 1, $filter = 12) {
   $xtpl = new XTemplate('dog-list.tpl', PATH);
   $xtpl->assign('module_file', $module_file);
 
-  $data = getPetActiveList($keyword, $page, $filter);
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where active > 0 and (name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%")';
+  $query = $db->query($sql);
+  $data['count'] = $query->fetch()['count'];
+  $count = $data['count'];
+  
+  $sql = 'select * from `'. PREFIX .'_pet` where active > 0 and (name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%") order by id desc limit ' . $filter . ' offset ' . (($page - 1) * $filter);
+  $query = $db->query($sql);
 
   if (strlen(trim($keyword)) > 0) {
     $xtpl->assign('keyword', ' "' . $keyword . '",');
   }
-  $count = $data['count'];
 
   $xtpl->assign('from', ($page - 1) * $filter + 1);
   $xtpl->assign('end', ($count + $filter >= ($page * $filter) ? $count : $page * $filter));
@@ -364,7 +369,7 @@ function mainPetList($keyword = '', $page = 1, $filter = 12) {
   $time = time();
   $year = 60 * 60 * 24 * 365.25;
 
-  foreach ($data['list'] as $row) {
+  while ($row = $query->fetch()) {
     $owner = getOwnerById($row['userid'], $row['type']);
     $xtpl->assign('index', $index++);
     $xtpl->assign('image', $row['image']);
@@ -511,7 +516,7 @@ function sellList($filter = array('species' => '', 'breed' => '', 'keyword' => '
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_trade` a inner join `'. PREFIX .'_pet` b on a.petid = b.id where a.status = 1 and a.type = 1 and b.name like "%'. $filter['keyword'] .'%" and b.breed like "%'. $filter['species'] .'%" and b.species like "%'. $filter['breed'] .'%" order by a.id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_trade` a inner join `'. PREFIX .'_pet` b on a.petid = b.id where a.status = 1 and a.type = 1 and b.name like "%'. $filter['keyword'] .'%" and b.breed like "%'. $filter['species'] .'%" and b.species like "%'. $filter['breed'] .'%" order by a.time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   while($row = $query->fetch()) {
@@ -547,7 +552,7 @@ function breedingList($filter = array('species' => '', 'breed' => '', 'keyword' 
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_trade` a inner join `'. PREFIX .'_pet` b on a.petid = b.id where a.status = 1 and a.type = 2 and b.name like "%'. $filter['keyword'] .'%" and b.breed like "%'. $filter['species'] .'%" and b.species like "%'. $filter['breed'] .'%" order by a.id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_trade` a inner join `'. PREFIX .'_pet` b on a.petid = b.id where a.status = 1 and a.type = 2 and b.name like "%'. $filter['keyword'] .'%" and b.breed like "%'. $filter['species'] .'%" and b.species like "%'. $filter['breed'] .'%" order by a.time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   while($row = $query->fetch()) {
@@ -583,7 +588,7 @@ function buyList($filter = array('species' => '', 'breed' => '', 'page' => '1', 
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_buy` where status = 1 and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_buy` where status = 1 and breed like "%'. $filter['species'] .'%" and species like "%'. $filter['breed'] .'%" order by time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   while($row = $query->fetch()) {

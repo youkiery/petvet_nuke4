@@ -58,7 +58,7 @@ if (!empty($action)) {
       $id = $nv_Request->get_string('id', 'post');
       $filter = $nv_Request->get_array('filter', 'post');
 
-      $sql = 'update `' . PREFIX . '_buy` set status = 1 where id = ' . $id;
+      $sql = 'update `' . PREFIX . '_buy` set status = 1, time = '. time() .' where id = ' . $id;
       if ($db->query($sql)) {
         $result['html'] = buyList2($filter);
         if ($result['html']) {
