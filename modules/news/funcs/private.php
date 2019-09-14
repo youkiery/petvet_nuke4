@@ -768,7 +768,7 @@ if (!empty($petid_list)) {
 
 $sql = 'select * from `'. PREFIX .'_user` where manager = 1 and id = ' . $userinfo['id'];
 $query = $db->query($sql);
-if (!empty($sql)) {
+if (!empty($query->fetch())) {
   $xtpl->parse('main.xter');
 }
 

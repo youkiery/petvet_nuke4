@@ -726,6 +726,12 @@ foreach ($position as $l1i => $l1) {
 
 $xtpl->assign('position', json_encode($position));
 
+$sql = 'select * from `'. PREFIX .'_user` where manager = 1 and id = ' . $userinfo['id'];
+$query = $db->query($sql);
+if (!empty($query->fetch())) {
+  $xtpl->parse('main.xter');
+}
+
 $userinfo['mobile'] = xdecrypt($userinfo['mobile']);
 $userinfo['address'] = xdecrypt($userinfo['address']);
 
