@@ -6,6 +6,10 @@
   label {
     width: 100%;
   }
+  .select {
+    background: pink;
+    opacity: 0.85;
+  }
 </style>
 
 <div class="container">
@@ -220,7 +224,8 @@
     text: ['Đăng ky', 'Đăng nhập'],
     url: '{origin}',
     id: -1,
-    page: 1
+    page: 1,
+    select: false
   }
   var user = {
     username: $("#username"),
@@ -293,6 +298,48 @@
     changeMonth: true,
     changeYear: true
   });
+
+  $("tbody").click((e) => {
+    var current = e.currentTarget
+    if (global['select']) {
+      if (current.className == 'select') {
+        global['select'].forEach((element, index) => {
+          if (element == current) {
+            global['select'].splice(index, 1)
+          }
+        });
+        current.className = ''
+      }
+      else {
+        global['select'].push(current)
+        current.className = 'select'
+      }
+    }
+  })
+
+  function selectRow() {
+    if (global['select']) global['select'] = false
+    else global['select'] = []
+  }
+
+  function removeUserList() {
+    if (global['select'].length) {
+      var list = []
+      global['select'].forEach((item, index) => {
+        list.push(item.getAttribute('id'))
+      })
+      freeze()
+      $.post(
+        global['url'],
+        {action: 'remove-user-list', list: list.join(', ')},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            user
+          }, () => {})
+        }
+      )
+    }    
+  }
 
   function searchPosition(area = '') {
     result = 0
