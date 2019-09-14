@@ -60,7 +60,12 @@
             <p>
               Chọn chủ cho thú cưng
             </p>
-            <input type="text" class="form-control" id="owner-key" placeholder="Số điện thoại">
+            <div class="input-group">
+              <input type="text" class="form-control" id="owner-key" placeholder="Số điện thoại">
+              <div class="input-group-btn">
+                <button class="btn btn-success" onclick="insertUser()"> <span class="glyphicon glyphicon-plus">  </span> </button>
+              </div>
+            </div>
 
             <button class="btn btn-info" onclick="filterOwner()">
               Tìm kiếm
@@ -69,6 +74,125 @@
           <div id="owner-list" style="max-height: 400px; overflow-y: scroll;">
 
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div id="insert-user" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-body text-center">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <p>
+            Chỉnh sửa thông tin
+          </p>
+          <form onsubmit="insertUserSubmit(event)">
+            <div class="row">
+              <label>
+                <div class="col-sm-8">
+                  Tên đăng nhập
+                </div>
+                <div class="col-sm-16">
+                  <input type="text" class="form-control" id="username" autocomplete="off">
+                </div>
+              </label>
+            </div>
+
+            <div class="row">
+              <label>
+                <div class="col-sm-8">
+                  Họ và tên
+                </div>
+                <div class="col-sm-16">
+                  <input type="text" class="form-control" id="fullname" autocomplete="off">
+                </div>
+              </label>
+            </div>
+
+            <div class="row">
+              <label>
+                <div class="col-sm-8">
+                  Số CMND
+                </div>
+                <div class="col-sm-16">
+                  <input type="text" class="form-control" id="politic" autocomplete="off">
+                </div>
+              </label>
+            </div>
+
+            <div class="row">
+              <label>
+                <div class="col-sm-8">
+                  Điện thoại
+                </div>
+                <div class="col-sm-16">
+                  <input type="text" class="form-control" id="phone" autocomplete="off">
+                </div>
+              </label>
+            </div>
+
+            <div class="row">
+              <label>
+                <div class="col-sm-8">
+                  Tỉnh
+                </div>
+                <div class="col-sm-16">
+                  <select class="form-control" id="al1" onchange="l1(this)">
+                    <!-- BEGIN: l1 -->
+                    <option value="{l1id}"> {l1name} </option>
+                    <!-- END: l1 -->
+                  </select>
+                </div>
+              </label>
+            </div>
+
+            <div class="row">
+              <label>
+                <div class="col-sm-8">
+                  Quận/Huyện/Thành phố
+                </div>
+                <div class="col-sm-16">
+                  <!-- BEGIN: l2 -->
+                  <select class="form-control al2" id="al2{l1id}" style="display: {active}">
+                    <!-- BEGIN: l2c -->
+                    <option value="{l2id}"> {l2name} </option>
+                    <!-- END: l2c -->
+                  </select>
+                  <!-- END: l2 -->
+                </div>
+              </label>
+            </div>
+
+            <div class="row">
+              <label>
+                <div class="col-sm-8">
+                  Xã/Phường/Thị trấn
+                </div>
+                <div class="col-sm-16">
+                  <input type="text" class="form-control" id="al3" autocomplete="off">
+                </div>
+              </label>
+            </div>
+
+            <div class="row">
+              <label>
+                <div class="col-sm-8">
+                  Địa chỉ
+                </div>
+                <div class="col-sm-16">
+                  <input type="text" class="form-control" id="address" autocomplete="off">
+                </div>
+              </label>
+            </div>
+
+            <div class="text-center">
+              <button class="btn btn-info" id="button">
+                Chỉnh sửa thông tin
+              </button>
+            </div>
+          </form>
+
         </div>
       </div>
     </div>
@@ -377,9 +501,9 @@
     </div>
   </div>
 
-  <!-- <button class="btn btn-success" onclick="addPet()">
+  <button class="btn btn-success" style="float: right;" onclick="addPet()">
     <span class="glyphicon glyphicon-plus">  </span>
-  </button> -->
+  </button>
       
   <div class="row">
     <div class="col-sm-8">
@@ -421,6 +545,17 @@
     petid: 0,
     parentid: 0
   }
+  var user = {
+    username: $("#username"),
+    fullname: $("#fullname"),
+    politic: $("#politic"),
+    al1: $("#al1"),
+    al2: $("#al2"),
+    al3: $("#al3"),
+    mobile: $("#phone"),
+    address: $("#address")
+  }
+
   var pet = {
     name: $("#pet-name"),
     dob: $("#pet-dob"),
@@ -446,6 +581,15 @@
     species: $("#species-parent"),
     breed: $("#breed-parent")
   }
+
+  var politic = $("#politic")
+  var error = $("#error")
+
+  var al1 = $("#al1")
+  var al2 = $("#al2")
+  var al3 = $("#al3")
+
+  var position = JSON.parse('{position}')
 
   var remind = JSON.parse('{remind}')
   var transferOwner = $("#pet-owner")
@@ -784,7 +928,7 @@
     ebtn.hide()
     insertPet.modal('show')
     clearInputSet(pet)
-    $("#pet-dob").val(mostly['pet']['dob'])
+    // $("#pet-dob").val(mostly['pet']['dob'])
     $("#parent-m").val('')
     $("#parent-f").val('')
     petPreview.attr('src', thumbnail)
@@ -808,6 +952,7 @@
             petPreview.val('')
             remind = JSON.parse(data['remind'])
             insertPet.modal('hide')
+            pickOwner(data['id'], 0, '')
           }, () => { })
         }
       )
@@ -1132,6 +1277,72 @@
         suggest.hide()
       }, 200);
     })
+  }
+
+  function insertUser() {
+    $("#insert-user").modal('show')
+  }
+
+  function insertUserSubmit(e) {
+    e.preventDefault()
+    uploader().then((imageUrl) => {
+      $.post(
+        global['url'],
+        {action: 'insert-user', data: checkEdit(), image: imageUrl},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            clearInputSet(user)
+            $("#owner-key").val(data['mobile'])
+            $("#insert-user").modal('hide')
+            thisOwner(data['id'])
+          }, () => {})
+        }
+      )
+    })
+  }
+
+  function checkEdit() {
+    var check = true
+    var data = checkInputSet(user)
+
+    data['a1'] = position[user['al1'].val()]['name']
+    data['a2'] = position[user['al1'].val()]['district'][$("#al2" + user['al1'].val()).val()]
+    data['a3'] = al3.val()
+    delete data['al1']
+    delete data['al2']
+    delete data['al3']
+
+    return data
+  }
+
+    function searchPosition(area = '') {
+    result = 0
+    position.forEach((item, index) => {
+      if (item['name'] == area) {
+        result = index
+      }
+    })
+    return result
+  }
+
+  function searchPosition2(areaname, district = '') {
+    if (areaname < 0) {
+      areaname = 0
+    }
+    result = 0
+    position[areaname]['district'].forEach((item, index) => {
+      if (item == district) {
+        result = index
+      }
+    })
+    return result
+  }
+
+  function l1(e) {
+    var value = e.value
+
+    $(".al2").hide()
+    $("#al2" + value).show()
   }
 
 </script>

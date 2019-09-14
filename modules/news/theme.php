@@ -27,7 +27,8 @@ function revenue($filter = array('page' => 1, 'limit' => 10)) {
   // $data = getUserPetList($filter);
 
   while ($row = $query->fetch()) {
-    $owner = getUserInfo($row['userid']);
+    // echo ($row['userid'] . '<br>');
+    $owner = getOwnerById($row['userid']);
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('price', $row['price']);

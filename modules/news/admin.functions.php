@@ -478,7 +478,7 @@ function userDogRow($filter = array('keyword' => '', 'status' => 0, 'page' => 1,
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '') . ' order by active, ceti, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '') . ' order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   // $data = getUserPetList($filter);
@@ -584,4 +584,28 @@ function getUserPetList($filter, $limit) {
   }
 
   return $list;
+}
+
+function checkUsername($user) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'_user` where username = "'. $user . '"';
+  $query = $db->query($sql);
+
+  if (!empty($query->fetch())) {
+    return true;
+  }
+  return false;
+}
+
+function checkLogin($username, $password = '') {
+  global $db;
+
+  $sql = 'select * from ' . PREFIX . '_user where username = "' . $username . '" and password = "' . md5($password) . '"';
+  $query = $db->query($sql);
+
+  if (!empty($checker = $query->fetch())) {
+    return $checker;
+  }
+  return false;
 }

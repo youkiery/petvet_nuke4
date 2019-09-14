@@ -53,6 +53,7 @@ while ($row = $query->fetch()) {
 }
 
 $xtpl->assign('url', '/' . $module_name . '/' . $op . '/');
+$xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 
