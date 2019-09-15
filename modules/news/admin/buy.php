@@ -37,7 +37,7 @@ if (!empty($action)) {
 
       $data['sex'] --;
 
-      $sql = 'update `'. PREFIX .'_buy` set '. sqlBuilder($data, BUILDER_EDIT) .' where id = ' . $id;
+      $sql = 'update `'. PREFIX .'_buy` set '. sqlBuilder($data, BUILDER_EDIT) .', time = '. time() .' where id = ' . $id;
       $result['html'] = buyList2($filter);
       if ($db->query($sql) && $result['html']) {
         $result['status'] = 1;

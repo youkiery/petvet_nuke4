@@ -207,7 +207,7 @@ if (!empty($action)) {
       // checkMobile
 			while (($row = $query->fetch()) && $count < 20) {
         if (checkMobile($row['mobile'], $keyword)) {
-          $sql2 = 'select * from `'. PREFIX .'_pet` where active = 1 and userid = ' . $row['id'];
+          $sql2 = 'select * from `'. PREFIX .'_pet` where userid = ' . $row['id'];
           $query2 = $db->query($sql2);
 
           while ($row2 = $query2->fetch()) {

@@ -165,6 +165,67 @@ if (!empty($action)) {
 			$result['status'] = 1;
 			$result['html'] = $html;
 		break;
+    case 'filter-parent':
+      $key = $nv_Request->get_string('key', 'post', '');
+   		$html = '';
+      $count = 0;
+
+      $sql = 'select * from `'. PREFIX .'_user`';
+      $query = $db->query($sql);
+      while (($row = $query->fetch()) && $count < 20) {
+        if (checkMobile($row['mobile'], $key)) {
+          $count ++;
+          $row['mobile'] = xdecrypt($row['mobile']);
+          $html .= '
+            <div style="overflow: auto;">
+              '. $row['fullname'] .'<br>
+              '. $row['mobile'] .'
+              <button class="btn btn-info" style="float: right;" onclick="thisOwner('. $row['id'] .')">
+                Chọn
+              </button>
+            </div>
+            <hr>
+          ';
+        }
+      }
+      $result['status'] = 1;
+      if (empty($html)) {
+        $result['html'] = 'Không có mục nào trùng';
+      }
+      else {
+        $result['html'] = $html;
+      }
+    break;
+    case 'filter-pet':
+      $key = $nv_Request->get_string('key', 'post', '');
+      $parentid = $nv_Request->get_int('parentid', 'post', 0);
+      
+   		$html = '';
+
+      if (!empty($owner = getOwnerById($parentid))) {
+        $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $parentid . ' and (name like "%'. $key .'%" or breed like "%'. $key .'%" or species like "%'. $key .'%") limit 20';
+        $query = $db->query($sql);
+        while (($row = $query->fetch())) {
+          $html .= '
+            <div style="overflow: auto;">
+              '. $row['name'] .'<br>
+              '. $row['breed'] .'
+              <button class="btn btn-info" style="float: right;" onclick="thisPet('. $row['id'] .', \''. $row['name'] .'\')">
+                Chọn
+              </button>
+            </div>
+            <hr>
+          ';
+        }
+        $result['status'] = 1;
+        if (empty($html)) {
+          $result['html'] = 'Không có mục nào trùng';
+        }
+        else {
+          $result['html'] = $html;
+        }
+      }
+    break;
 	}
 	echo json_encode($result);
 	die();

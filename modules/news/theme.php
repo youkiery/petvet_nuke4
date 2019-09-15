@@ -22,7 +22,7 @@ function revenue($filter = array('page' => 1, 'limit' => 10)) {
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit'], 'goPage'));
 
-  $sql = 'select * from `'. PREFIX .'_pet` where ceti = 1 order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_pet` where ceti = 1 order by ctime desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   // $data = getUserPetList($filter);
 

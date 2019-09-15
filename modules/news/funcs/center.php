@@ -50,7 +50,7 @@ if (!empty($action)) {
     case 'buy':
       $data = $nv_Request->get_array('data', 'post');
 
-      $sql = 'insert into `'. PREFIX .'_buy` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', status) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) . ', '. $config['trade'] .')';
+      $sql = 'insert into `'. PREFIX .'_buy` (userid, '. sqlBuilder($data, BUILDER_INSERT_NAME) .', status, time) values('. $userinfo['id'] .', '. sqlBuilder($data, BUILDER_INSERT_VALUE) . ', '. $config['trade'] .', '. time() .')';
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['notify'] = 'Đã thêm cần mua';
