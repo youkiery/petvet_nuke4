@@ -49,6 +49,7 @@ function collectList($startDate, $endDate) {
     $xtpl->assign("km", number_format($row["clock_to"] - $row["clock_from"], 1, ".", ","));
     $xtpl->assign("date", date("d/m H:i", $row["time"]));
     $xtpl->assign("start", $row["clock_from"]);
+    $xtpl->assign("price", number_format($row["price"], 0, '', ','));
     $xtpl->assign("end", $row["clock_to"]);
     $xtpl->assign("destination", $row["destination"]);
     $xtpl->parse("main.row");
