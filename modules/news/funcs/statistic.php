@@ -34,6 +34,15 @@ if (!empty($action)) {
         }
       }
     break;
+    case 'statistic':
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      $html = statistic($filter);
+      if (!empty($html)) {
+        $result['status'] = 1;
+        $result['html'] = $html;
+      }
+		break;
 	}
 	echo json_encode($result);
 	die();
@@ -52,6 +61,7 @@ while ($row = $query->fetch()) {
   $xtpl->parse('main.user');
 }
 
+$xtpl->assign('statistic', statistic());
 $xtpl->assign('url', '/' . $module_name . '/' . $op . '/');
 $xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");

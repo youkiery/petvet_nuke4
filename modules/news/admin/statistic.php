@@ -37,7 +37,6 @@ $xtpl = new XTemplate("statistic.tpl", PATH);
 
 $xtpl->assign('content', statistic());
 
-
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 

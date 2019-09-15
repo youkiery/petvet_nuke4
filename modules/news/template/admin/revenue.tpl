@@ -1,5 +1,6 @@
 <!-- BEGIN: main -->
 <link rel="stylesheet" href="/themes/default/src/glyphicons.css">
+<link rel="stylesheet" href="/themes/default/src/jquery-ui.min.css">
 <script type="text/javascript" src="/themes/default/src/jquery-ui.min.js"></script> 
 <script type="text/javascript" src="/themes/default/src/jquery.ui.datepicker-vi.js"></script>
 
@@ -59,6 +60,31 @@
   </div>
 </div>
 
+<div id="modal-statistic" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body text-center">
+        <form class="row">
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="filter-from">
+          </div>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="filter-end">
+          </div>
+          <button class="btn btn-info" onclick="viewStatistic(event)">
+            Lọc theo thời gian
+          </button>
+        </form>
+
+        <div id="content">
+          {statistic}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="modal-remove-pay" class="modal fade" role="dialog">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -99,15 +125,21 @@
 </div>
 
 <label>
-  <input type="radio" name="type" id="filter-type-1" checked> Danh sách thu
+  <input type="radio" name="type" id="filter-type-1" onclick="t1()" checked> Danh sách thu
 </label>
 <label>
-  <input type="radio" name="type" id="filter-type-2"> Danh sách chi
+  <input type="radio" name="type" id="filter-type-2" onclick="t2()"> Danh sách chi
 </label>
 <button class="btn btn-info" onclick="filter()">
   Lọc
 </button>
-<button class="btn btn-success" style="float: right;" onclick="pay()">
+<button class="btn btn-info" style="float: right;" onclick="showStatistic()">
+  Thống kê
+</button>
+<button class="btn btn-success" style="float: right;" id="nceti" onclick="newCeti()">
+  <span class="glyphicon glyphicon-plus"></span>
+</button>
+<button class="btn btn-success" style="float: right; display: none;" id="npay" onclick="pay()">
   <span class="glyphicon glyphicon-plus"></span>
 </button>
 <div style="clear: both;"></div>
@@ -123,6 +155,41 @@
     page: 1,
     page2: 1,
     parentid: 0
+  }
+
+  $(this).ready(() => {
+    $("#filter-from, #filter-end").datepicker({
+      format: 'dd/mm/yyyy',
+      changeMonth: true,
+      changeYear: true
+    });
+  })
+
+  function t1() {
+    $("#nceti").show()
+    $("#npay").hide()
+  }
+
+  function t2() {
+    $("#nceti").hide()
+    $("#npay").show()
+  }
+
+  function showStatistic() {
+    $("#modal-statistic").modal('show')
+  }
+
+  function viewStatistic(e) {
+    e.preventDefault()
+    $.post(
+      strHref,
+      {action: 'statistic', filter: {from: $("#filter-from").val(), end: $("#filter-end").val()}},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          content.html(data['html'])
+        })
+      }
+    )
   }
 
   function filter() {
@@ -223,6 +290,10 @@
         }, () => { })
       }
     )
+  }
+
+  function newCeti() {
+    $("#modal-parent").modal('show')
   }
 
   function ceti(petid, price) {

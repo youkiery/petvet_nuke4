@@ -578,6 +578,62 @@ function breedingList($filter = array('species' => '', 'breed' => '', 'keyword' 
   return $xtpl->text();
 }
 
+function statistic($filter = array('from' => '', 'to' => '')) {
+  global $db;
+
+  $xtpl = new XTemplate('statistic-content.tpl', PATH);
+
+  $check = 0;
+  if (empty($filter['from'])) {
+    $check += 1;
+  }
+  if (empty($filter['end'])) {
+    $check += 2;
+  }
+
+  $xtra = '';
+  switch ($check) {
+    case 1:
+      $filter['end'] = totime($filter['end']);
+      $xtra = 'where time < ' . $filter['end'];
+      $xtpl->assign('đến ngày ' . date($filter['end']));
+      break;
+    case 2:
+      $filter['from'] = totime($filter['from']);
+      $xtra = 'where time > ' . $filter['from'];
+      $xtpl->assign('từ ngày ' . date($filter['end']));
+      break;
+    case 0:
+      $filter['from'] = totime($filter['from']);
+      $filter['end'] = totime($filter['end']);
+      $xtpl->assign('từ ngày ' . date($filter['end']));
+      $xtpl->assign('đến ngày ' . date($filter['end']));
+      $xtra = 'where time between ' . $filter['from'] . ' and ' . $filter['end'];
+      break;
+  }
+
+  $p1 = 0;
+  $sql = 'select sum(price) as p, ctime as time from `'. PREFIX .'_pet` ' . $xtra;
+  $query = $db->query($sql);
+  if ($row = $query->fetch()) {
+    $p1 = $row['p'];
+  }
+  
+  $p2 = 0;
+  $sql2 = 'select sum(price) as p from `'. PREFIX .'_pay` ' . $xtra;
+  $query = $db->query($sql2);
+  if ($row = $query->fetch()) {
+    $p2 = $row['p'];
+  }
+
+  $xtpl->assign('total_revenue', number_format($p1, 0, '', ','));
+  $xtpl->assign('total_pay', number_format($p2, 0, '', ','));
+  $xtpl->assign('sum', number_format($p1 - $p2, 0, '', ','));
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function buyList($filter = array('species' => '', 'breed' => '', 'page' => '1', 'limit' => '12')) {
   global $db, $module_name, $sex_array;
 

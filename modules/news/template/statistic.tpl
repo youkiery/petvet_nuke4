@@ -23,6 +23,30 @@
     <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
   </a>
 
+  <div id="modal-statistic" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body text-center">
+          <form class="row">
+            <div class="col-sm-6">
+              <input type="text" class="form-control" id="filter-from">
+            </div>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" id="filter-end">
+            </div>
+            <button class="btn btn-info" onclick="viewStatistic(event)">
+              Lọc theo thời gian
+            </button>
+          </form>
+
+          <div id="content">
+            {statistic}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <label>
     <input type="radio" name="type" id="filter-type-1" checked> Danh sách thu
   </label>
@@ -31,6 +55,9 @@
   </label>
   <button class="btn btn-info" onclick="filter()">
     Lọc
+  </button>
+  <button class="btn btn-info" style="float: right;" onclick="showStatistic()">
+    Thống kê
   </button>
   <div style="clear: both;"></div>
   <div id="content">
@@ -46,6 +73,14 @@
     page: 1,
     page2: 1
   }
+
+  $(this).ready(() => {
+    $("#filter-from, #filter-end").datepicker({
+      format: 'dd/mm/yyyy',
+      changeMonth: true,
+      changeYear: true
+    });
+  })
 
   function filter() {
     if ($("#filter-type-1").prop('checked')) {
@@ -98,6 +133,23 @@
       limit: 10,
       type: ($("#filter-type-1").prop('checked') ? 1 : 2)
     }
+  }
+
+  function showStatistic() {
+    $("#modal-statistic").modal('show')
+  }
+
+  function viewStatistic(e) {
+    e.preventDefault()
+    $.post(
+      global['url'],
+      {action: 'statistic', filter: {from: $("#filter-from").val(), end: $("#filter-end").val()}},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          content.html(data['html'])
+        })
+      }
+    )
   }
 
 </script>

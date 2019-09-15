@@ -131,9 +131,17 @@ if (!empty($action)) {
         $html = 'Chưa chọn chủ thú cưng';
       }
 
-
 			$result['status'] = 1;
 			$result['html'] = $html;
+		break;
+    case 'statistic':
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      $html = statistic($filter);
+      if (!empty($html)) {
+        $result['status'] = 1;
+        $result['html'] = $html;
+      }
 		break;
     case 'parent':
 			$keyword = $nv_Request->get_string('keyword', 'post', '');
@@ -244,6 +252,7 @@ while ($row = $query->fetch()) {
   $xtpl->parse('main.user');
 }
 
+$xtpl->assign('statistic', statistic());
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 
