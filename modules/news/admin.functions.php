@@ -473,6 +473,11 @@ function userDogRow($filter = array('keyword' => '', 'status' => 0, 'page' => 1,
   $xtpl = new XTemplate('pet-list.tpl', PATH);
   $xtpl->assign('module_file', $module_file);
 
+  $x = $_SERVER['HTTP_REFERER'];
+  $y = substr($x, 0, strpos($x, '/', 8));
+
+  $xtpl->assign('url', $y);
+
   $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '');
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
@@ -488,7 +493,7 @@ function userDogRow($filter = array('keyword' => '', 'status' => 0, 'page' => 1,
     $owner['mobile'] = xdecrypt($owner['mobile']);
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
-    $xtpl->assign('price', $row['price']);
+    $xtpl->assign('price', number_format($row['price'], 0, '', ','));
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('owner', $owner['fullname']);
     $xtpl->assign('mobile', $owner['mobile']);

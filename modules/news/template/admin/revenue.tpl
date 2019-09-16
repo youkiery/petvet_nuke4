@@ -76,7 +76,7 @@
           </button>
         </form>
 
-        <div id="content">
+        <div id="statistic">
           {statistic}
         </div>
 
@@ -156,6 +156,10 @@
     page2: 1,
     parentid: 0
   }
+  const formatter = new Intl.NumberFormat('vi-VI', {
+    style: 'currency',
+    currency: 'VND'
+  })
 
   $(this).ready(() => {
     $("#filter-from, #filter-end").datepicker({
@@ -163,6 +167,16 @@
       changeMonth: true,
       changeYear: true
     });
+    $("#pay-price, #ceti-price").keyup((e) => {
+      var current = e.currentTarget
+      var val = Number(current['value'].replace(/\,/g, ""));
+      if (Number.isFinite(val)) {
+        money = val
+      }
+      
+      val = formatter.format(val).replace(/ ₫/g, "").replace(/\./g, ",");
+      current.value = val
+    })
   })
 
   function t1() {
@@ -186,7 +200,7 @@
       {action: 'statistic', filter: {from: $("#filter-from").val(), end: $("#filter-end").val()}},
       (response, status) => {
         checkResult(response, status).then(data => {
-          content.html(data['html'])
+          $("#statistic").html(data['html'])
         })
       }
     )
@@ -270,7 +284,7 @@
   function checkPay() {
     return {
       userid: $("#pay-user").val(),
-      price: $("#pay-price").val(),
+      price: Number($("#pay-price").val().replace(/\,/g, "")),
       content: $("#pay-content").val()
     }
   }
@@ -305,7 +319,7 @@
   function cetiSubmit() {
     $.post(
       strHref,
-      { action: 'ceti', price: $("#ceti-price").val(), petid: global['petid'], filter: checkFilter() },
+      { action: 'ceti', price: Number($("#ceti-price").val().replace(/\,/g, "")), petid: global['petid'], filter: checkFilter() },
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])

@@ -40,7 +40,7 @@
         <!-- END: yes -->
         <!-- BEGIN: no -->
         <button class="btn btn-success" onclick="ceti({id}, {price})">
-          <img src="/themes/default/images/cetificate.png">
+          <img src="{url}//themes/default/images/cetificate.png">
         </button>
         <!-- END: no -->
         

@@ -31,14 +31,13 @@ function revenue($filter = array('page' => 1, 'limit' => 10)) {
     $owner = getOwnerById($row['userid']);
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
-    $xtpl->assign('price', $row['price']);
+    $xtpl->assign('price', number_format($row['price'], 0, '', ','));
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('owner', $owner['fullname']);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('microchip', $row['microchip']);
     $xtpl->assign('breed', $row['breed']);
     $xtpl->assign('sex', $sex_array[$row['sex']]);
-    $xtpl->assign('price', $row['price']);
     $xtpl->parse('main.row');
   }
   $xtpl->parse('main');
@@ -594,20 +593,20 @@ function statistic($filter = array('from' => '', 'to' => '')) {
   $xtra = '';
   switch ($check) {
     case 1:
-      $filter['end'] = totime($filter['end']);
+      $filter['end'] = totime($filter['end']) + 60 * 60 * 24 - 1;
       $xtra = 'where time < ' . $filter['end'];
-      $xtpl->assign('đến ngày ' . date($filter['end']));
+      $xtpl->assign('to', 'đến ngày ' . date('d/m/Y', $filter['end']));
       break;
     case 2:
       $filter['from'] = totime($filter['from']);
       $xtra = 'where time > ' . $filter['from'];
-      $xtpl->assign('từ ngày ' . date($filter['end']));
+      $xtpl->assign('from', 'từ ngày ' . date('d/m/Y', $filter['from']));
       break;
     case 0:
       $filter['from'] = totime($filter['from']);
-      $filter['end'] = totime($filter['end']);
-      $xtpl->assign('từ ngày ' . date($filter['end']));
-      $xtpl->assign('đến ngày ' . date($filter['end']));
+      $filter['end'] = totime($filter['end']) + 60 * 60 * 24 - 1;
+      $xtpl->assign('from', 'từ ngày ' . date('d/m/Y', $filter['from']));
+      $xtpl->assign('to', 'đến ngày ' . date('d/m/Y', $filter['end']));
       $xtra = 'where time between ' . $filter['from'] . ' and ' . $filter['end'];
       break;
   }
