@@ -7,8 +7,8 @@
     width: 100%;
   }
   .select {
-    background: pink;
-    opacity: 0.85;
+    background: rgb(223, 223, 223);
+    border: 2px solid deepskyblue;
   }
 </style>
 
@@ -211,6 +211,18 @@
   <button class="btn btn-info" onclick="filterUser()">
     <span class="glyphicon glyphicon-filter"></span>
   </button>
+  <button class="btn btn-info" style="float: right;" onclick="selectRow(this)">
+    <span class="glyphicon glyphicon-unchecked"></span>
+  </button>
+  <button class="btn btn-danger select-button" style="float: right;" onclick="removeUserList()" disabled>
+    <span class="glyphicon glyphicon-trash"></span>
+  </button>
+  <button class="btn btn-warning select-button" style="float: right;" onclick="deactiveUserList()" disabled>
+    <span class="glyphicon glyphicon-arrow-down"></span>
+  </button>
+  <button class="btn btn-info select-button" style="float: right;" onclick="activeUserList()" disabled>
+    <span class="glyphicon glyphicon-arrow-up"></span>
+  </button>
   <div id="user-list">
     {userlist}
   </div>
@@ -317,9 +329,20 @@
     }
   })
 
-  function selectRow() {
-    if (global['select']) global['select'] = false
-    else global['select'] = []
+  function selectRow(button) {
+    if (global['select']) {
+      button.children[0].className = 'glyphicon glyphicon-unchecked'
+      $(".select-button").prop('disabled', true)
+      global['select'].forEach(item => {
+        item.className = ''
+      })
+      global['select'] = false
+    }
+    else {
+      button.children[0].className = 'glyphicon glyphicon-check'
+      $(".select-button").prop('disabled', false)
+      global['select'] = []
+    }
   }
 
   function removeUserList() {
@@ -331,10 +354,48 @@
       freeze()
       $.post(
         global['url'],
-        {action: 'remove-user-list', list: list.join(', ')},
+        {action: 'remove-user-list', list: list.join(', '), filter: checkUserFilter()},
         (response, status) => {
           checkResult(response, status).then(data => {
-            user
+            userList.html(data['html'])
+          }, () => {})
+        }
+      )
+    }    
+  }
+
+  function activeUserList() {
+    if (global['select'].length) {
+      var list = []
+      global['select'].forEach((item, index) => {
+        list.push(item.getAttribute('id'))
+      })
+      freeze()
+      $.post(
+        global['url'],
+        {action: 'active-user-list', list: list.join(', '), filter: checkUserFilter()},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            userList.html(data['html'])
+          }, () => {})
+        }
+      )
+    }    
+  }
+
+  function deactiveUserList() {
+    if (global['select'].length) {
+      var list = []
+      global['select'].forEach((item, index) => {
+        list.push(item.getAttribute('id'))
+      })
+      freeze()
+      $.post(
+        global['url'],
+        {action: 'deactive-user-list', list: list.join(', '), filter: checkUserFilter()},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            userList.html(data['html'])
           }, () => {})
         }
       )

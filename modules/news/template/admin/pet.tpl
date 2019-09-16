@@ -11,6 +11,10 @@
   .btn {
     min-height: 32px !important;
   }
+  .select {
+    background: rgb(223, 223, 223);
+    border: 2px solid deepskyblue;
+  }
 </style>
 
 <div class="container">
@@ -504,6 +508,18 @@
   <button class="btn btn-success" style="float: right;" onclick="addPet()">
     <span class="glyphicon glyphicon-plus">  </span>
   </button>
+  <button class="btn btn-info" style="float: right;" onclick="selectRow(this)">
+    <span class="glyphicon glyphicon-unchecked"></span>
+  </button>
+  <button class="btn btn-danger select-button" style="float: right;" onclick="removeUserList()" disabled>
+    <span class="glyphicon glyphicon-trash"></span>
+  </button>
+  <button class="btn btn-warning select-button" style="float: right;" onclick="deactiveUserList()" disabled>
+    <span class="glyphicon glyphicon-arrow-down"></span>
+  </button>
+  <button class="btn btn-info select-button" style="float: right;" onclick="activeUserList()" disabled>
+    <span class="glyphicon glyphicon-arrow-up"></span>
+  </button>
       
   <div class="row">
     <div class="col-sm-8">
@@ -666,6 +682,97 @@
     installRemindSpecies('species')
     installRemindSpecies('species-parent')
   })
+
+  $("tbody").click((e) => {
+    var current = e.currentTarget
+    if (global['select']) {
+      if (current.className == 'select') {
+        global['select'].forEach((element, index) => {
+          if (element == current) {
+            global['select'].splice(index, 1)
+          }
+        });
+        current.className = ''
+      }
+      else {
+        global['select'].push(current)
+        current.className = 'select'
+      }
+    }
+  })
+
+  function selectRow(button) {
+    if (global['select']) {
+      button.children[0].className = 'glyphicon glyphicon-unchecked'
+      $(".select-button").prop('disabled', true)
+      global['select'].forEach(item => {
+        item.className = ''
+      })
+      global['select'] = false
+    }
+    else {
+      button.children[0].className = 'glyphicon glyphicon-check'
+      $(".select-button").prop('disabled', false)
+      global['select'] = []
+    }
+  }
+
+  function removeUserList() {
+    if (global['select'].length) {
+      var list = []
+      global['select'].forEach((item, index) => {
+        list.push(item.getAttribute('id'))
+      })
+      freeze()
+      $.post(
+        global['url'],
+        {action: 'remove-user-list', list: list.join(', '), filter: checkFilter()},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            petList.html(data['html'])
+          }, () => {})
+        }
+      )
+    }    
+  }
+
+  function activeUserList() {
+    if (global['select'].length) {
+      var list = []
+      global['select'].forEach((item, index) => {
+        list.push(item.getAttribute('id'))
+      })
+      freeze()
+      $.post(
+        global['url'],
+        {action: 'active-user-list', list: list.join(', '), filter: checkFilter()},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            petList.html(data['html'])
+          }, () => {})
+        }
+      )
+    }    
+  }
+
+  function deactiveUserList() {
+    if (global['select'].length) {
+      var list = []
+      global['select'].forEach((item, index) => {
+        list.push(item.getAttribute('id'))
+      })
+      freeze()
+      $.post(
+        global['url'],
+        {action: 'deactive-user-list', list: list.join(', '), filter: checkFilter()},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            petList.html(data['html'])
+          }, () => {})
+        }
+      )
+    }    
+  }
 
   function pickOwner(id, userid, mobile) {
     global['petid'] = id

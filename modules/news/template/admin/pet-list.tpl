@@ -16,7 +16,7 @@
     <th></th>
   </tr>
   <!-- BEGIN: row -->
-  <tbody>
+  <tbody id="{id}">
     <tr class="clickable-row" data-href=''>
       <td> <a href="/news/detail/?id={id}"> {index} </a> </td>
       <td> <a href="/news/detail/?id={id}"> {name} </a> </td>

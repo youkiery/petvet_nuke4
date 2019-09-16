@@ -20,6 +20,45 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
+    case 'remove-user-list':
+      $list = $nv_Request->get_string('list', 'post', '');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'delete from `'. PREFIX .'_pet` where id in ('. $list .')' ;
+      if ($db->query($sql)) {
+        $result['html'] = userDogRow($filter);
+				if ($result['html']) {
+					$result['notify'] = 'Đã xóa';
+					$result['status'] = 1;
+				}
+      }
+    break;
+    case 'active-user-list':
+      $list = $nv_Request->get_string('list', 'post', '');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'update `'. PREFIX .'_pet` set active = 1 where id in ('. $list .')' ;
+      if ($db->query($sql)) {
+        $result['html'] = userDogRow($filter);
+				if ($result['html']) {
+					$result['notify'] = 'Đã lưu';
+					$result['status'] = 1;
+				}
+      }
+    break;
+    case 'deactive-user-list':
+      $list = $nv_Request->get_string('list', 'post', '');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'update `'. PREFIX .'_pet` set active = 0 where id in ('. $list .')' ;
+      if ($db->query($sql)) {
+        $result['html'] = userDogRow($filter);
+				if ($result['html']) {
+					$result['notify'] = 'Đã lưu';
+					$result['status'] = 1;
+				}
+      }
+    break;
     case 'insert-parent':
       $data = $nv_Request->get_array('data', 'post');
       $userid = $nv_Request->get_string('userid', 'post');
