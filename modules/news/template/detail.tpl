@@ -126,8 +126,13 @@
   <div style="margin: 20px;"></div>
 
   <div class="panel panel-primary">
-    <div class="panel-heading"> Sơ yếu lý lịch </div>
-    <div class="panel-body"> {graph} </div>
+    <div class="panel-heading" style="position: relative;">
+      <img src="/assets/ddc.png" class="right-corner">
+      Sơ yếu lý lịch
+    </div>
+    <div class="panel-body">
+      {graph}
+    </div>
   </div>
 
 

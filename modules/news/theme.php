@@ -382,6 +382,9 @@ function mainPetList($keyword = '', $page = 1, $filter = 12) {
     $xtpl->assign('species', $row['species']);
     $xtpl->assign('sex', $sex_array[$row['sex']]);
     $xtpl->assign('age', parseAgeTime($row['dateofbirth']));
+    if ($row['ceti'] == 1) {
+      $xtpl->parse('main.row.ddc');
+    }
     // $xtpl->assign('dob', cdate($row['dateofbirth']));
     $xtpl->parse('main.row');
   }

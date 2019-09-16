@@ -6,6 +6,9 @@
 </p>
 <!-- BEGIN: row -->
 <a href="/{module_file}/detail/?id={id}" class="pbody">
+  <!-- BEGIN: ddc -->
+  <img src="/assets/ddc.png" class="right-corner" style="width: 20px; height: 20px;">
+  <!-- END: ddc -->
   <div class="pleft">
     <img src="{image}" class="sm-thumbnail">
   </div>
