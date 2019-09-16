@@ -19,28 +19,30 @@
     <th></th>
   </tr>
   <!-- BEGIN: row -->
-  <tr class="{color}">
-    <td>
-      {index}
-    </td>
-    <td>
-      {name}
-    </td>
-    <td>
-      {address}
-    </td>
-    <td>
-      {mobile}
-    </td>
-    <td>
-      {allow}
-    </td>
-    <td>
-      <button class="btn btn-danger" onclick="remove({id})">
-        <span class="glyphicon glyphicon-remove"></span>
-      </button>
-    </td>
-  </tr>
+  <tbody id="{id}">
+    <tr class="{color}">
+      <td>
+        {index}
+      </td>
+      <td>
+        {name}
+      </td>
+      <td>
+        {address}
+      </td>
+      <td>
+        {mobile}
+      </td>
+      <td>
+        {allow}
+      </td>
+      <td>
+        <button class="btn btn-danger" onclick="remove({id})">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+      </td>
+    </tr>
+  </tbody>
   <!-- END: row -->
 </table>
 {nav}

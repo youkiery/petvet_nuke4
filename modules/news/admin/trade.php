@@ -20,6 +20,59 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
+    case 'remove-list':
+      $list = $nv_Request->get_string('list', 'post', '');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'delete from `'. PREFIX .'_trade` where id in ('. $list .')' ;
+      if ($db->query($sql)) {
+        $result['html'] = tradeList($filter);
+  			if ($result['html']) {
+					$result['notify'] = 'Đã xóa';
+					$result['status'] = 1;
+				}
+      }
+    break;
+    case 'active-list':
+      $list = $nv_Request->get_string('list', 'post', '');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'update `'. PREFIX .'_trade` set status = 1 where id in ('. $list .')' ;
+      if ($db->query($sql)) {
+        $result['html'] = tradeList($filter);
+				if ($result['html']) {
+					$result['notify'] = 'Đã lưu';
+					$result['status'] = 1;
+				}
+      }
+    break;
+    case 'deactive-list':
+      $list = $nv_Request->get_string('list', 'post', '');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'update `'. PREFIX .'_trade` set status = 0 where id in ('. $list .')' ;
+      if ($db->query($sql)) {
+        $result['html'] = tradeList($filter);
+				if ($result['html']) {
+					$result['notify'] = 'Đã lưu';
+					$result['status'] = 1;
+				}
+      }
+    break;
+    case 'sendback-list':
+      $list = $nv_Request->get_string('list', 'post', '');
+      $note = $nv_Request->get_string('note', 'post', '');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'update `'. PREFIX .'_trade` set status = 2, note = "'. $note .'" where id in ('. $list .')' ;
+      if ($db->query($sql)) {
+        $result['html'] = tradeList($filter);
+				if ($result['html']) {
+					$result['notify'] = 'Đã lưu';
+					$result['status'] = 1;
+				}
+      }
+    break;
     case 'filter':
       $filter = $nv_Request->get_array('filter', 'post');
 

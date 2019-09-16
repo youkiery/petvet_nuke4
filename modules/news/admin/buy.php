@@ -20,6 +20,45 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
+    case 'remove-list':
+      $list = $nv_Request->get_string('list', 'post', '');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'delete from `'. PREFIX .'_buy` where id in ('. $list .')' ;
+      if ($db->query($sql)) {
+        $result['html'] = buyList2($filter);
+  			if ($result['html']) {
+					$result['notify'] = 'Đã xóa';
+					$result['status'] = 1;
+				}
+      }
+    break;
+    case 'active-list':
+      $list = $nv_Request->get_string('list', 'post', '');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'update `'. PREFIX .'_buy` set status = 1 where id in ('. $list .')' ;
+      if ($db->query($sql)) {
+        $result['html'] = buyList2($filter);
+				if ($result['html']) {
+					$result['notify'] = 'Đã lưu';
+					$result['status'] = 1;
+				}
+      }
+    break;
+    case 'deactive-list':
+      $list = $nv_Request->get_string('list', 'post', '');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'update `'. PREFIX .'_buy` set status = 0 where id in ('. $list .')' ;
+      if ($db->query($sql)) {
+        $result['html'] = buyList2($filter);
+				if ($result['html']) {
+					$result['notify'] = 'Đã lưu';
+					$result['status'] = 1;
+				}
+      }
+    break;
     case 'get-buy':
       $id = $nv_Request->get_string('id', 'post');
 

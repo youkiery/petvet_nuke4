@@ -19,6 +19,19 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
+    case 'deactive-list':
+      $list = $nv_Request->get_string('list', 'post', '');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'update `'. PREFIX .'_remind` set view = 0, manager = 1 where id in ('. $list .')' ;
+      if ($db->query($sql)) {
+        $result['html'] = remindList($filter);
+				if ($result['html']) {
+					$result['notify'] = 'Đã lưu';
+					$result['status'] = 1;
+				}
+      }
+    break;
     case 'filter':
       $filter = $nv_Request->get_array('filter', 'post');
 
