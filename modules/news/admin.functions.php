@@ -48,7 +48,6 @@ function tradeList($filter = array('page' => 1, 'limit' => 10)) {
     $xtpl->assign('breed', $pet['breed']);
     $xtpl->assign('petname', $pet['name']);
     $xtpl->assign('breed', $pet['breed']);
-    $xtpl->assign('sex', $sex_array[$row['sex']]);
     $xtpl->assign('owner', $owner['fullname']);
     $xtpl->assign('address', $owner['address']);
     $xtpl->assign('mobile', $owner['mobile']);

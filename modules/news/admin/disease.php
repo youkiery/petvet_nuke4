@@ -18,6 +18,45 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
+        case 'remove-list':
+      $list = $nv_Request->get_string('list', 'post', '');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'delete from `'. PREFIX .'_disease_suggest` where id in ('. $list .')' ;
+      if ($db->query($sql)) {
+				$result['html'] = diseaseList2($filter);
+  			if ($result['html']) {
+					$result['notify'] = 'Đã xóa';
+					$result['status'] = 1;
+				}
+      }
+    break;
+    case 'active-list':
+      $list = $nv_Request->get_string('list', 'post', '');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'update `'. PREFIX .'_disease_suggest` set active = 1 where id in ('. $list .')' ;
+      if ($db->query($sql)) {
+				$result['html'] = diseaseList2($filter);
+				if ($result['html']) {
+					$result['notify'] = 'Đã lưu';
+					$result['status'] = 1;
+				}
+      }
+    break;
+    case 'deactive-list':
+      $list = $nv_Request->get_string('list', 'post', '');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'update `'. PREFIX .'_disease_suggest` set active = 0 where id in ('. $list .')' ;
+      if ($db->query($sql)) {
+				$result['html'] = diseaseList2($filter);
+				if ($result['html']) {
+					$result['notify'] = 'Đã lưu';
+					$result['status'] = 1;
+				}
+      }
+    break;
 		case 'check':
 			$id = $nv_Request->get_string('id', 'post');
 			$filter = $nv_Request->get_array('filter', 'post');

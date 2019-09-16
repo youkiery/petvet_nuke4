@@ -1,7 +1,7 @@
 <!-- BEGIN: main -->
 <table class="table table-bordered">
   <!-- BEGIN: row -->
-  <tbody>
+  <tbody id="{id}">
     <tr>
       <td rowspan="2"> {index} </td>
       <td> Tên khách: {target} </td>
