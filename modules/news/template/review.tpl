@@ -59,10 +59,11 @@
     e.preventDefault()
     $.post(
       '/news/review/',
-      {action: 'send-review', username: $("#review-name").val(), content: $("#review-content").val()},
+      {action: 'send-review', username: $("#review-username").val(), content: $("#review-content").val()},
       (response, status) => {
         checkResult(response, status).then(data => {
-          console.log('success');
+          $("#review-username").val('')
+          $("#review-content").val('')
         }, () => {})
       }
     )

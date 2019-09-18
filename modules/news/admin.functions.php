@@ -520,6 +520,36 @@ function userDogRow($filter = array('keyword' => '', 'status' => 0, 'page' => 1,
   return $xtpl->text();
 }
 
+function reviewList($filter = array('page' => 1, 'limit' => 10)) {
+  global $db;
+
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+  $xtpl = new XTemplate('review-list.tpl', PATH);
+
+  $sql = 'select count(*) as count from `'. PREFIX .'_review`';
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
+  $sql = 'select * from `'. PREFIX .'_review` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $xtpl->assign('username', $row['username']);
+    if ($row['userid'] > 0) {
+      $owner = getUserInfo($row['userid']);
+      $xtpl->assign('username', $owner['username']);
+    }
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('content', $row['content']);
+    $xtpl->assign('time', date('d/m/Y H:i:s', $row['time']));
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function getUserPetList($filter, $limit) {
   global $db;
 
