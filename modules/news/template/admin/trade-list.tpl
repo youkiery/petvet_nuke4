@@ -38,6 +38,9 @@
     </tr>
     <tr>
       <td colspan="5" style="text-align: right;">
+        <button class="btn btn-info" onclick="push({id})">
+          <span class="glyphicon glyphicon-upload"></span>
+        </button>
         <!-- BEGIN: yes -->
         <button class="btn btn-success" onclick="uncheck({id})">
           <span class="glyphicon glyphicon-check"></span>

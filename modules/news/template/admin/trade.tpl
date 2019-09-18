@@ -11,7 +11,7 @@
   }
 </style>
 
-<div class="msgshow"></div>
+<div id="msgshow"></div>
 
 <div id="send-back" class="modal fade" role="dialog">
   <div class="modal-dialog modal-sm">
@@ -280,7 +280,7 @@
     return result
   }
 
-    $("tbody").click((e) => {
+  $("tbody").click((e) => {
     var current = e.currentTarget
     if (global['select']) {
       if (current.className == 'select') {
@@ -297,6 +297,18 @@
       }
     }
   })
+
+  function push(id) {
+    $.post(
+      global['url'],
+      {action: 'push', id: id},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          console.log('success');
+        }, () => {})
+      }
+    )
+  }
 
   function selectRow(button) {
     if (global['select']) {

@@ -20,6 +20,15 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
+    case 'push':
+      $id = $nv_Request->get_string('id', 'post', '0');
+
+      $sql = 'update `'. PREFIX .'_buy` set time = '. time() .' where id = ' . $id;
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['notify'] = 'Đã đưa lên đầu trang';
+      }
+    break;
     case 'remove-list':
       $list = $nv_Request->get_string('list', 'post', '');
 			$filter = $nv_Request->get_array('filter', 'post');

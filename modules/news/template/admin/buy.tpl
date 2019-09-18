@@ -11,6 +11,7 @@
   }
 </style>
 
+<div id="msgshow"></div>
 <div class="modal" id="user-buy" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -117,6 +118,19 @@
       }
     }
   })
+
+  function push(id) {
+    $.post(
+      global['url'],
+      {action: 'push', id: id},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          console.log('success');
+          
+        }, () => {})
+      }
+    )
+  }
 
   function selectRow(button) {
     if (global['select']) {
