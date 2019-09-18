@@ -13,7 +13,6 @@
     <th> Giới tính </th>
     <th> Ngày sinh </th>
     <th> Giống </th>
-    <th></th>
   </tr>
   <!-- BEGIN: row -->
   <tbody id="{id}">
@@ -25,7 +24,12 @@
       <td> <a href="/news/detail/?id={id}"> {sex} </a> </td>
       <td> <a href="/news/detail/?id={id}"> {dob} </a> </td>
       <td> <a href="/news/detail/?id={id}"> {breed} </a> </td>
-      <td>
+    </tr>
+    <tr>
+      <td colspan="7" style="text-align: right;">
+        <button class="btn btn-info" onclick="push({id})">
+          <span class="glyphicon glyphicon-upload"></span>
+        </button>
         <button class="btn btn-info" onclick="editPet({id})">
           <span class="glyphicon glyphicon-edit"></span>
         </button>
@@ -35,7 +39,7 @@
         </button>
         <!-- BEGIN: yes -->
         <button class="btn btn-warning" onclick="ceti({id}, {price})">
-          <img src="/themes/default/images/cetificate.png">
+          <img src="{url}//themes/default/images/cetificate.png">
         </button>
         <!-- END: yes -->
         <!-- BEGIN: no -->

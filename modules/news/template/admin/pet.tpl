@@ -774,6 +774,19 @@
     }    
   }
 
+  function push(id) {
+    $.post(
+      global['url'],
+      {action: 'push', id: id},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          console.log('success');
+          
+        }, () => {})
+      }
+    )
+  }
+
   function pickOwner(id, userid, mobile) {
     global['petid'] = id
     global['userid'] = userid
