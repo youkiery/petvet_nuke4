@@ -123,11 +123,9 @@
         global['url'],
         {action: 'recover', keyword: keyword},
         (response, status) => {
-          checkResult(response, status).then(data => {
-            $("#recover").text(data['error'])
-          }, (data) => {
-            $("#recover").text(data['error'])
-          })
+          if (status == 'success') {
+            window.location.reload()
+          }
         }
       )
     }
@@ -151,9 +149,7 @@
         global['url'],
         {action: 'change-pass', npass: pass1},
         (response, status) => {
-          checkResult(response, status).then(data => {
-            $("#user-pass").modal('hide')
-          }, () => { })
+          window.location.reload()
         }
       )
     }
@@ -161,6 +157,7 @@
 
   function checkingSubmit() {
     // e.preventDefault()
+    $("#checking-error").text("")
     var keyword = $("#checking-key").val().trim()
     if (keyword.length) {
       freeze()
@@ -169,9 +166,10 @@
         { action: 'checking-key', keyword: keyword },
         (response, status) => {
           checkResult(response, status).then(data => {
-            console.log(1);
-            
-          }, () => {})
+            window.location.reload()            
+          }, () => {
+            $("#checking-error").text("Mã xác nhận sai");
+          })
         }
       )
     }

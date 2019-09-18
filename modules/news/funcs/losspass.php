@@ -111,10 +111,14 @@ if (!empty($action)) {
     case 'checking-key':
 			$keyword = $nv_Request->get_string('keyword', 'post', '');
 
-      if ($keyword !== $_SESSION['rkey']) {
+      if ($keyword == $_SESSION['rkey']) {
         $_SESSION['rkey'] = '';
         $_SESSION['rtime'] = 0;
         $_SESSION['passing'] = 1;
+        $result['status'] = 1;
+      }
+      else {
+
       }
     break;
     case 'change-pass':
@@ -151,16 +155,17 @@ $xtpl = new XTemplate("losspass.tpl", "modules/". $module_name ."/template");
 $xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
 $xtpl->assign('module_file', $module_file);
 
-if (empty($rkey) || empty($rtime) || $rtime < $time || empty($owner = getOwnerById($userid))) {
+if (!empty($passing)) {
+  $xtpl->parse('main.checked');
+  $xtpl->parse('main.nonchecked');
+}
+else if (empty($rkey) || empty($rtime) || $rtime < $time || empty($owner = getOwnerById($userid))) {
   $xtpl->parse('main.nonchecked');
   $xtpl->parse('main.end');
 }
 else {
   $xtpl->parse('main.nonchecked');
   $xtpl->parse('main.checking');
-}
-if (!empty($passing)) {
-  $xtpl->parse('main.checked');
 }
 
 $xtpl->parse("main");
