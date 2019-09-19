@@ -138,6 +138,12 @@ function parseAgeTime($datetime) {
   if ($year > 0) {
     $str .= $year . ' năm ';
   }
+  if ($year > 0 && $month == 0) {
+    $str .= '';
+  }
+  else if ($year == 0 && $month == 0) {
+    $month = 1;
+  }
   $str .= $month . ' tháng';
   return $str;
 }

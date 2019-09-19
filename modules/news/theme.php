@@ -525,7 +525,7 @@ function sellList($filter = array('species' => '', 'breed' => '', 'keyword' => '
   while($row = $query->fetch()) {
     $owner = getOwnerById($row['userid'], $row['type']);
     $xtpl->assign('index', $index++);
-    $xtpl->assign('age', floor((time() - $row['dateofbirth']) / 60 / 60 / 24 / 365.25));
+    $xtpl->assign('age', parseAgeTime($row['dateofbirth']));
     $xtpl->assign('image', $row['image']);
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('owner', $owner['fullname']);
@@ -561,7 +561,7 @@ function breedingList($filter = array('species' => '', 'breed' => '', 'keyword' 
   while($row = $query->fetch()) {
     $owner = getOwnerById($row['userid'], $row['type']);
     $xtpl->assign('index', $index++);
-    $xtpl->assign('age', floor((time() - $row['dateofbirth']) / 60 / 60 / 24 / 365.25));
+    $xtpl->assign('age', parseAgeTime($row['dateofbirth']));
     $xtpl->assign('image', $row['image']);
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('owner', $owner['fullname']);
