@@ -22,7 +22,8 @@ $allow_func = array(
     'cat',
     'add_document',
     'signer',
-    'type'
+    'type',
+    'excel'
 );
 global $arr_status;
 $arr_status = array(

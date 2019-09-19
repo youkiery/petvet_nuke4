@@ -15,5 +15,6 @@ $submenu['cat'] = $lang_module['cat'];
 $submenu['type'] = $lang_module['type'];
 $submenu['signer'] = $lang_module['signer'];
 $submenu['departments'] = $lang_module['departments'];
+$submenu['excel'] = 'Nhập danh sách qua Excel';
 
 ?>
