@@ -502,6 +502,14 @@ function userDogRow($filter = array('keyword' => '', 'status' => 0, 'page' => 1,
     $xtpl->assign('breed', $row['breed']);
     $xtpl->assign('sex', $sex_array[$row['sex']]);
     $xtpl->assign('dob', cdate($row['dateofbirth']));
+    $sql = 'select * from `'. PREFIX .'_lock` where petid = ' . $row['id'];
+    $query2 = $db->query($sql);
+    if (!empty($query2->fetch())) {
+      $xtpl->parse('main.row.unlock');
+    }
+    else {
+      $xtpl->parse('main.row.lock');
+    }
     if ($row['active']) {
       if ($row['ceti'] == 1) {
         $xtpl->parse('main.row.uncheck.yes');

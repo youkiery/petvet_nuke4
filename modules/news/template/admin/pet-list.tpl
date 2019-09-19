@@ -33,6 +33,16 @@
         <button class="btn btn-info" onclick="editPet({id})">
           <span class="glyphicon glyphicon-edit"></span>
         </button>
+        <!-- BEGIN: lock -->
+        <button class="btn btn-info" onclick="lock({id}, 1)">
+          <span class="glyphicon glyphicon-lock"></span>
+        </button>
+        <!-- END: lock -->
+        <!-- BEGIN: unlock -->
+        <button class="btn btn-warning" onclick="lock({id}, 0)">
+          <span class="glyphicon glyphicon-lock"></span>
+        </button>
+        <!-- END: unlock -->
         <!-- BEGIN: uncheck -->
         <button class="btn btn-warning" onclick="checkPet({id}, 0)">
           <span class="glyphicon glyphicon-check"></span>

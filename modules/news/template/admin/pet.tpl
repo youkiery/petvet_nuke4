@@ -701,6 +701,18 @@
     }
   })
 
+  function lock(id, type) {
+    $.post(
+      global['url'],
+      {action: 'lock', id: id, type: type, filter: checkFilter()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          petList.html(data['html'])
+        }, () => {})
+      }
+    )
+  }
+
   function selectRow(button) {
     if (global['select']) {
       button.children[0].className = 'glyphicon glyphicon-unchecked'
@@ -863,42 +875,6 @@
       }
     }
   }
-
-  // function parentFilter() {
-  //   $.post(
-  //     global['url'],
-  //     // {action: 'filter-parent', key: $("#parent-key").val(), type: ($("#parent-type-1").prop('checked') ? 1 : 2)},
-  //     {action: 'filter-parent', key: $("#parent-key").val()},
-  //     (response, status) => {
-  //       checkResult(response, status).then(data => {
-  //         $("#parent-list").html(data['html'])
-  //       }, () => {})
-  //     }
-  //   )
-  // }
-
-  // function thisOwner(id) {
-  //   global['parentid'] = id
-  //   petFilter()
-  // }
-
-  // function petFilter() {
-  //   if (global['parentid']) {
-  //     $.post(
-  //       global['url'],
-  //       {action: 'filter-pet', key: $("#pet-key").val(), parentid: global['parentid']},
-  //       (response, status) => {
-  //         checkResult(response, status).then(data => {
-  //           $("#pet-list").html(data['html'])
-  //         }, () => {})
-  //       }
-  //     )
-  //   }
-  // }
-
-  // function thisPet(id, name) {
-    
-  // }
 
   function deletePet(id) {
     global['id'] = id
@@ -1435,7 +1411,7 @@
     return data
   }
 
-    function searchPosition(area = '') {
+  function searchPosition(area = '') {
     result = 0
     position.forEach((item, index) => {
       if (item['name'] == area) {

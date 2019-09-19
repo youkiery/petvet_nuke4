@@ -20,6 +20,25 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
+    case 'lock':
+      $id = $nv_Request->get_string('id', 'post', '0');
+      $type = $nv_Request->get_string('type', 'post', '0');
+			$filter = $nv_Request->get_array('filter', 'post');
+
+      if ($type == '1') {
+        $sql = 'insert into `'. PREFIX .'_lock` (petid) values('. $id .')';
+      }
+      else {
+        $sql = 'delete from `'. PREFIX .'_lock` where petid = ' . $id;
+      }
+
+      if ($db->query($sql)) {
+        $result['html'] = userDogRow($filter);
+				if ($result['html']) {
+					$result['status'] = 1;
+				}
+      }
+    break;
     case 'push':
       $id = $nv_Request->get_string('id', 'post', '0');
 
