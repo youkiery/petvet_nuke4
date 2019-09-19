@@ -268,17 +268,24 @@ if (!empty($action)) {
 		case 'get':
 			$id = $nv_Request->get_string('id', 'post', 0);
 			
-			$sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
-			$query = $db->query($sql);
+      $sql = 'select * from `'. PREFIX .'_lock` where petid = ' . $id;
+      $query = $db->query($sql);
+      if (empty($query->fetch())) {
+        $sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
+        $query = $db->query($sql);
 
-			if (!empty($row = $query->fetch())) {
-				$result['data'] = array('name' => $row['name'], 'dob' => date('d/m/Y', $row['dateofbirth']), 'species' => $row['species'], 'breed' => $row['breed'], 'color' => $row['color'], 'microchip' => $row['microchip'], 'parentf' => $row['fid'], 'parentm' => $row['mid'], 'miear' => $row['miear'], 'origin' => $row['origin']);
-        $result['more'] = array('breeder' => $row['breeder'],'sex' => intval($row['sex']), 'm' => getPetNameId($row['mid']), 'f' => getPetNameId($row['fid']));
-        $result['image'] = $row['image'];
-				$result['status'] = 1;
-			}
+        if (!empty($row = $query->fetch())) {
+          $result['data'] = array('name' => $row['name'], 'dob' => date('d/m/Y', $row['dateofbirth']), 'species' => $row['species'], 'breed' => $row['breed'], 'color' => $row['color'], 'microchip' => $row['microchip'], 'parentf' => $row['fid'], 'parentm' => $row['mid'], 'miear' => $row['miear'], 'origin' => $row['origin']);
+          $result['more'] = array('breeder' => $row['breeder'],'sex' => intval($row['sex']), 'm' => getPetNameId($row['mid']), 'f' => getPetNameId($row['fid']));
+          $result['image'] = $row['image'];
+          $result['status'] = 1;
+        }
+        else {
+          $result['notify'] = 'Có lỗi xảy ra';
+        }
+      }
       else {
-        $result['notify'] = 'Có lỗi xảy ra';
+        $result['notify'] = 'Thú cưng đã bị khóa, không thể chỉnh sửa';
       }
 		break;
 		case 'getuser':
