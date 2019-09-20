@@ -197,7 +197,14 @@ if (!empty($action)) {
           $data['breeder'] = 2;
         }
 
-				$sql = 'update `'. PREFIX .'_pet` set '. sqlBuilder($data, BUILDER_EDIT) .', image = "'. $image .'" where id = ' . $id;
+        $xtra = '';
+        if (!empty($image)) {
+          $pet = getPetById($id);
+          $result['image'] = $pet['image'];
+          $xtra = ',image = "'. $image .'"';
+        }
+
+        $sql = 'update `' . PREFIX . '_pet` set ' . sqlBuilder($data, BUILDER_EDIT) . ' '. $xtra .' where id = ' . $id;
 
 				if ($db->query($sql)) {
 					$result['status'] = 1;

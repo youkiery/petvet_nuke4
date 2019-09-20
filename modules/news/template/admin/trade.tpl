@@ -570,6 +570,22 @@
     return data
   }
 
+  function deleteImage(url) {
+    return new Promise((resolve) => {
+      if (!url) {
+        resolve()
+      }
+      url = url.substr(0, url.search(/\?alt=/))
+      var xref = storage.refFromURL(url);
+
+      xref.delete().then(function() {
+        resolve()        
+      }).catch(function(error) {
+        resolve()        
+      });
+    })
+  }
+
   function editPetSubmit() {
     freeze()
     uploader().then((imageUrl) => {
@@ -578,16 +594,17 @@
         { action: 'editpet', id: global['id'], data: checkPetData(), image: imageUrl, filter: checkFilter() },
         (response, status) => {
           checkResult(response, status).then(data => {
-            content.html(data['html'])
-            clearInputSet(pet)
-            file = false
-            filename = ''
-            $("#parent-m").val('')
-            $("#parent-f").val('')
-            petPreview.val('')
-            remind = JSON.parse(data['remind'])
-            
-            insertPet.modal('hide')
+            deleteImage(data['image']).then(() => {
+              content.html(data['html'])
+              clearInputSet(pet)
+              file = false
+              filename = ''
+              $("#parent-m").val('')
+              $("#parent-f").val('')
+              petPreview.val('')
+              remind = JSON.parse(data['remind'])
+              insertPet.modal('hide')
+            })
           }, () => { })
         }
       )

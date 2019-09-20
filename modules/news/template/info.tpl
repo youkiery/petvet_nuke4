@@ -1272,28 +1272,6 @@
     }
   }
 
-  function editPetSubmit() {
-    freeze()
-    uploader().then((imageUrl) => {
-      $.post(
-        global['url'],
-        { action: 'editpet', id: global['id'], data: checkInputSet(pet), image: imageUrl },
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            petList.html(data['html'])
-            clearInputSet(pet)
-            $("#parent-m").val('')
-            $("#parent-f").val('')
-            petPreview.val('')
-            remind = JSON.parse(data['remind'])
-            insertPet.modal('hide')
-          }, () => {
-          })
-        }
-      )
-    })
-  }
-
   function uploader() {
     return new Promise(resolve => {
       if (uploadedUrl) {

@@ -125,9 +125,16 @@ if (!empty($action)) {
 			$image = $nv_Request->get_string('image', 'post');
 
 			if (count($data) > 1 && !empty($id)) {
+        $xtra = '';
+        if (!empty($image)) {
+          $owner = getOwnerById($id);
+          $result['image'] = $owner['image'];
+          $xtra = ',image = "'. $image .'"';
+        }
+
         $data['mobile'] = xencrypt($data['mobile']);
         $data['address'] = xencrypt($data['address']);
-				$sql = 'update `'. PREFIX .'_user` set '. sqlBuilder($data, BUILDER_EDIT) . (strlen(trim($image)) > 0 ? ', image = "'. $image .'"' : '') . ' where id = ' . $id;
+				$sql = 'update `'. PREFIX .'_user` set '. sqlBuilder($data, BUILDER_EDIT) . ' '. $xtra .' where id = ' . $id;
 				if ($db->query($sql)) {
 					$result['status'] = 1;
           $result['html'] = userRowList($filter);

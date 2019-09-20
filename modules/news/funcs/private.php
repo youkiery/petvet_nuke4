@@ -570,7 +570,14 @@ if (!empty($action)) {
           $data['breeder'] = 0;
         }
 
-				$sql = 'update `'. PREFIX .'_pet` set '. sqlBuilder($data, BUILDER_EDIT) .', image = "'. $image .'" where id = ' . $id;
+        $xtra = '';
+        if (!empty($image)) {
+          $pet = getPetById($id);
+          $result['image'] = $pet['image'];
+          $xtra = ',image = "'. $image .'"';
+        }
+
+        $sql = 'update `' . PREFIX . '_pet` set ' . sqlBuilder($data, BUILDER_EDIT) . ' ' . $xtra .' where id = ' . $id;
 
 				if ($db->query($sql)) {
 					$result['status'] = 1;
@@ -589,7 +596,14 @@ if (!empty($action)) {
 			if (count($data) > 1 && !empty($id)) {
         $data['mobile'] = xencrypt($data['mobile']);
         $data['address'] = xencrypt($data['address']);
-				$sql = 'update `'. PREFIX .'_user` set '. sqlBuilder($data, BUILDER_EDIT) . (strlen(trim($image)) > 0 ? ', image = "'. $image .'"' : '') . ' where id = ' . $id;
+        $xtra = '';
+        if (!empty($image)) {
+          $owner = getOwnerById($id);
+          $result['image'] = $owner['image'];
+          $xtra = ',image = "'. $image .'"';
+        }
+
+				$sql = 'update `'. PREFIX .'_user` set '. sqlBuilder($data, BUILDER_EDIT) . ' '. $xtra .' where id = ' . $id;
 				if ($db->query($sql)) {
 					$result['status'] = 1;
 					$result['notify'] = 'Đã chỉnh sửa thông tin cá nhân';

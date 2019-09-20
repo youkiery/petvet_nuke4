@@ -312,6 +312,21 @@
   var storage = firebase.storage();
   var storageRef = firebase.storage().ref();
 
+  function deleteImage(url) {
+    return new Promise((resolve) => {
+      if (!url) {
+        resolve()
+      }
+      url = url.substr(0, url.search(/\?alt=/))
+      var xref = storage.refFromURL(url);
+
+      xref.delete().then(function() {
+        resolve()        
+      }).catch(function(error) {
+        resolve()        
+      });
+    })
+  }
 
   tabber.click((e) => {
     var className = e.currentTarget.getAttribute('class')
@@ -615,9 +630,11 @@
         {action: 'edituser', data: checkEdit(), image: imageUrl, id: global['id'], filter: checkUserFilter()},
         (response, status) => {
           checkResult(response, status).then(data => {
-            userList.html(data['html'])
-            clearInputSet(user)
-            insertUser.modal('hide')
+            deleteImage(data['image']).then(() => {
+              userList.html(data['html'])
+              clearInputSet(user)
+              insertUser.modal('hide')
+            }, () => {})
           }, () => {})
         }
       )

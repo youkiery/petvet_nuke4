@@ -1661,6 +1661,25 @@
     return data
   }
 
+  function deleteImage(url) {
+    return new Promise((resolve) => {
+      if (!url) {
+        resolve()
+      }
+      url = url.substr(0, url.search(/\?alt=/))
+      var xref = storage.refFromURL(url);
+      console.log(xref);
+      
+      resolve()
+
+      // xref.delete().then(function() {
+      //   resolve()        
+      // }).catch(function(error) {
+      //   resolve()        
+      // });
+    })
+  }
+
   function editPetSubmit() {
     if (data = checkPetData()) {
       freeze()
@@ -1670,15 +1689,17 @@
           { action: 'editpet', id: global['id'], data: data, image: imageUrl, filter: checkFilter(), tabber: global['tabber'] },
           (response, status) => {
             checkResult(response, status).then(data => {
-              petList.html(data['html'])
-              clearInputSet(pet)
-              file = false
-              filename = ''
-              $("#parent-m").val('')
-              $("#parent-f").val('')
-              petPreview.val('')
-              remind = JSON.parse(data['remind'])
-              insertPet.modal('hide')
+              deleteImage(data['image']).then(() => {
+                petList.html(data['html'])
+                clearInputSet(pet)
+                file = false
+                filename = ''
+                $("#parent-m").val('')
+                $("#parent-f").val('')
+                petPreview.val('')
+                remind = JSON.parse(data['remind'])
+                insertPet.modal('hide')
+              })
             }, () => { })
           }
         )
@@ -1831,9 +1852,11 @@
           {action: 'edituser', data: data, image: imageUrl, id: global['id']},
           (response, status) => {
             checkResult(response, status).then(data => {
-              userList.html(data['html'])
-              clearInputSet(user)
-              insertUser.modal('hide')
+              deleteImage(data['image']).then(() => {
+                userList.html(data['html'])
+                clearInputSet(user)
+                insertUser.modal('hide')
+              })
             }, () => {})
           }
         )
