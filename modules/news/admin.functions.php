@@ -387,40 +387,49 @@ function requestList($filter = array('keyword' => '', 'page' => 1, 'limit' => 10
   return $xtpl->text();
 }
 
-function userRowList($filter = array('keyword' => '', 'status' => 0, 'page' => 1, 'limit' => 10)) {
+function userRowList($filter = array('username' => '', 'fullname' => '', 'mobile' => '', 'address' => '', 'status' => 0, 'page' => 1, 'limit' => 10)) {
   global $db, $user_info, $module_file;
 
   $xtpl = new XTemplate('user-list.tpl', PATH);
   $xtpl->assign('module_file', $module_file);
-  $sql = 'select count(*) as count from `'. PREFIX .'_user` where fullname like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '');
-  $query = $db->query($sql);
-  $count = $query->fetch()['count'];
-  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_user` where fullname like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '') . ' order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
-  // die($sql);
+  $sql = 'select id, username, fullname, address, mobile from `'. PREFIX .'_user` where fullname like "%'. $filter['fullname'] .'%" and username like "%'. $filter['username'] .'%" ' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '');
   $query = $db->query($sql);
-  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+  // $count = $query->fetch()['count'];
+  // $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
+  // $sql = 'select * from `'. PREFIX .'_user` where fullname like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '') . ' order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  // die($sql);
+  // $query = $db->query($sql);
+  $from = ($filter['page'] - 1) * $filter['limit'];
+  $end = $from + $filter['limit'] + 1;
+  $count = 0;
 
   while ($row = $query->fetch()) {
-    $xtpl->assign('index', $index ++);
     $row['address'] = xdecrypt($row['address']);
     $row['mobile'] = xdecrypt($row['mobile']);
-    $xtpl->assign('fullname', $row['fullname'] ++);
-    $xtpl->assign('username', $row['username']);
-    $xtpl->assign('address', $row['address']);
-    $xtpl->assign('mobile', $row['mobile']);
-    $xtpl->assign('id', $row['id']);
+    if (((mb_strpos($row['mobile'], $filter['mobile']) !== false) || empty($filter['mobile'])) && ((mb_strpos($row['address'], $filter['address']) !== false) || empty($filter['address']))) {
+      $count ++;
 
-    if ($row['active']) {
-      $xtpl->parse('main.row.uncheck');
+      if ($count > $from && $count < $end) {
+        $xtpl->assign('index', $count);
+        $xtpl->assign('fullname', $row['fullname']);
+        $xtpl->assign('username', $row['username']);
+        $xtpl->assign('address', $row['address']);
+        $xtpl->assign('mobile', $row['mobile']);
+        $xtpl->assign('id', $row['id']);
+
+        if ($row['active']) {
+          $xtpl->parse('main.row.uncheck');
+        }
+        else {
+          $xtpl->parse('main.row.check');
+        }
+        $xtpl->parse('main.row');
+      }
     }
-    else {
-      $xtpl->parse('main.row.check');
-    }
-    $xtpl->parse('main.row');
   }
-
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
   $xtpl->parse('main');
   return $xtpl->text();
 }

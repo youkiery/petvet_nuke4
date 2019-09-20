@@ -204,26 +204,37 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-sm-8">
-      <input type="text" class="form-control" id="user-keyword" placeholder="Nhập từ khóa">
+  <form onsubmit="filterE(event)">
+    <div>
+      <div style="float: right; width: 30%;">
+        <select class="form-control" id="user-limit">
+          <option value="10"> 10 </option>
+          <option value="20"> 20 </option>
+          <option value="50"> 50 </option>
+          <option value="75"> 75 </option>
+          <option value="100"> 100 </option>
+        </select>
+        <br>
+        <label> <input type="radio" name="user-status" class="user-status" id="user-status-0" checked> Toàn bộ </label>
+        <label> <input type="radio" name="user-status" class="user-status" id="user-status-1"> Chưa xác nhận </label>
+        <label> <input type="radio" name="user-status" class="user-status" id="user-status-2"> Đã xác nhận </label>
+      </div>
+
+      <div style="float: left; width: 60%;">
+        <input type="text" class="form-control" id="user-username" placeholder="Tên tài khoản">
+        <input type="text" class="form-control" id="user-fullname" placeholder="Họ và tên">
+        <input type="text" class="form-control" id="user-address" placeholder="Địa chỉ">
+        <input type="text" class="form-control" id="user-mobile" placeholder="Số điện thoại">
+      </div>
     </div>
-    <div class="col-sm-4">
-      <select class="form-control" id="user-limit">
-        <option value="10"> 10 </option>
-        <option value="20"> 20 </option>
-        <option value="50"> 50 </option>
-        <option value="75"> 75 </option>
-        <option value="100"> 100 </option>
-      </select>
+    <div class="text-center" style="clear: both;">
+    <button class="btn btn-info" onclick="filterUser()">
+      Lọc danh sách người dùng
+    </button>
     </div>
-  </div>
-  <label> <input type="radio" name="user-status" class="user-status" id="user-status-0" checked> Toàn bộ </label>
-  <label> <input type="radio" name="user-status" class="user-status" id="user-status-1"> Chưa xác nhận </label>
-  <label> <input type="radio" name="user-status" class="user-status" id="user-status-2"> Đã xác nhận </label>
-  <button class="btn btn-info" onclick="filterUser()">
-    <span class="glyphicon glyphicon-filter"></span>
-  </button>
+  </form>
+  <div style="clear: both;"></div>
+
   <button class="btn btn-info" style="float: right;" onclick="selectRow(this)">
     <span class="glyphicon glyphicon-unchecked"></span>
   </button>
@@ -697,7 +708,10 @@
       value = splipper(temp[0].getAttribute('id'), 'user-status')
     }
     var data = {
-      keyword: $("#user-keyword").val(),
+      username: $("#user-username").val(),
+      fullname: $("#user-fullname").val(),
+      address: $("#user-address").val(),
+      mobile: $("#user-mobile").val(),
       limit: $("#user-limit").val(),
       page: global['page'],
       status: value
@@ -746,6 +760,11 @@
         }, () => {})
       }
     )
+  }
+
+  function filterE(e) {
+    e.preventDefault()
+    filterUser()
   }
 
   function filterUser() {
