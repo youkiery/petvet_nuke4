@@ -228,7 +228,7 @@
       </div>
     </div>
     <div class="text-center" style="clear: both;">
-    <button class="btn btn-info" onclick="filterUser()">
+    <button class="btn btn-info">
       Lọc danh sách người dùng
     </button>
     </div>

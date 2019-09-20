@@ -200,6 +200,43 @@
   </div>
 </div>
 
+<form onsubmit="filterE(event)">
+  <div>
+    <div style="float: right; width: 30%;">
+      <select class="form-control" id="limit">
+        <option value="10"> 10 </option>
+        <option value="20"> 20 </option>
+        <option value="50"> 50 </option>
+        <option value="75"> 75 </option>
+        <option value="100"> 100 </option>
+      </select>
+      <br>
+      <label> <input type="radio" name="status" class="status" id="status-0" checked> Toàn bộ </label>
+      <label> <input type="radio" name="status" class="status" id="status-1"> Chưa xác nhận </label>
+      <label> <input type="radio" name="status" class="status" id="status-2"> Đã xác nhận </label>
+      <br>
+      <br>
+      <label> <input type="radio" name="type" class="type" id="type-0" checked> Toàn bộ </label>
+      <label> <input type="radio" name="type" class="type" id="type-1"> Cần bán </label>
+      <label> <input type="radio" name="type" class="type" id="type-2"> Cần phối </label>
+    </div>
+    <div style="float: left; width: 60%;">
+      <input type="text" class="form-control" id="filter-owner" placeholder="Tên chủ">
+      <input type="text" class="form-control" id="filter-mobile" placeholder="Số điện thoại">
+      <input type="text" class="form-control" id="filter-mobile" placeholder="Địa chỉ">
+      <input type="text" class="form-control" id="filter-name" placeholder="Tên thú cưng">
+      <input type="text" class="form-control" id="filter-species" placeholder="Giống">
+      <input type="text" class="form-control" id="filter-breed" placeholder="Loài">
+    </div>
+  </div>
+  <div class="text-center" style="clear: both;">
+  <button class="btn btn-info">
+    Lọc danh sách thú cưng
+  </button>
+  </div>
+</form>
+<div style="clear: both;"></div>
+
 <button class="btn btn-info" style="float: right;" onclick="selectRow(this)">
   <span class="glyphicon glyphicon-unchecked"></span>
 </button>
@@ -436,21 +473,34 @@
     }    
   }
 
-  function checkFilter() {
-    var temp = cstatus.filter((index, item) => {
+  function getChecked(name) {
+    var temp = $("." + name).filter((index, item) => {
       return item.checked
     })
     var value = 0
     if (temp[0]) {
-      value = splipper(temp[0].getAttribute('id'), 'user-status')
+      value = splipper(temp[0].getAttribute('id'), name)
     }
+
+    return value    
+  }
+
+  function checkFilter() {
     return {
+      owner: $("#filter-owner").val(),
+      mobile: $("#filter-mobile").val(),
+      mobile: $("#filter-mobile").val(),
+      name: $("#filter-name").val(),
+      species: $("#filter-species").val(),
+      breed: $("#filter-breed").val(),
       page: global['page'],
       limit: 10,
+      status: getChecked('status'),
+      type: getChecked('type')
     }
   }
 
-  function filter(e) {
+  function filterE(e) {
     e.preventDefault()
     goPage(1)
   }
@@ -459,7 +509,7 @@
     global['page'] = page
     $.post(
       strHref,
-      { action: 'gopage', filter: checkFilter() },
+      { action: 'filter', filter: checkFilter() },
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data['html'])

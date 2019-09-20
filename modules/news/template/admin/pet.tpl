@@ -505,6 +505,40 @@
     </div>
   </div>
 
+  <form onsubmit="filterE(event)">
+    <div>
+      <div style="float: right; width: 30%;">
+        <select class="form-control" id="limit">
+          <option value="10"> 10 </option>
+          <option value="20"> 20 </option>
+          <option value="50"> 50 </option>
+          <option value="75"> 75 </option>
+          <option value="100"> 100 </option>
+        </select>
+        <br>
+        <label> <input type="radio" name="status" class="status" id="status-0" checked> Toàn bộ </label>
+        <label> <input type="radio" name="status" class="status" id="status-1"> Chưa xác nhận </label>
+        <label> <input type="radio" name="status" class="status" id="status-2"> Đã xác nhận </label>
+      </div>
+
+      <div style="float: left; width: 60%;">
+        <input type="text" class="form-control" id="filter-owner" placeholder="Tên chủ">
+        <input type="text" class="form-control" id="filter-mobile" placeholder="Số điện thoại">
+        <input type="text" class="form-control" id="filter-name" placeholder="Tên thú cưng">
+        <input type="text" class="form-control" id="filter-species" placeholder="Giống">
+        <input type="text" class="form-control" id="filter-breed" placeholder="Loài">
+        <input type="text" class="form-control" id="filter-micro" placeholder="Microchip">
+        <input type="text" class="form-control" id="filter-miear" placeholder="Xăm tai">
+      </div>
+    </div>
+    <div class="text-center" style="clear: both;">
+    <button class="btn btn-info">
+      Lọc danh sách thú cưng
+    </button>
+    </div>
+  </form>
+  <div style="clear: both;"></div>
+
   <button class="btn btn-success" style="float: right;" onclick="addPet()">
     <span class="glyphicon glyphicon-plus">  </span>
   </button>
@@ -521,26 +555,6 @@
     <span class="glyphicon glyphicon-arrow-up"></span>
   </button>
       
-  <div class="row">
-    <div class="col-sm-8">
-      <input type="text" class="form-control" id="keyword" placeholder="Nhập từ khóa">
-    </div>
-    <div class="col-sm-4">
-      <select class="form-control" id="limit">
-        <option value="10"> 10 </option>
-        <option value="20"> 20 </option>
-        <option value="50"> 50 </option>
-        <option value="75"> 75 </option>
-        <option value="100"> 100 </option>
-      </select>
-    </div>
-  </div>
-  <label> <input type="radio" name="status" class="status" id="status-0" checked> Toàn bộ </label>
-  <label> <input type="radio" name="status" class="status" id="status-1"> Chưa xác nhận </label>
-  <label> <input type="radio" name="status" class="status" id="status-2"> Đã xác nhận </label>
-  <button class="btn btn-info" onclick="filter()">
-    <span class="glyphicon glyphicon-filter"></span>
-  </button>
   <div id="pet-list">
     {list}
   </div>
@@ -998,7 +1012,13 @@
       value = splipper(temp[0].getAttribute('id'), 'status')
     }
     var data = {
-      keyword: keyword.val(),
+      owner: $("#filter-owner").val(),
+      mobile: $("#filter-mobile").val(),
+      name: $("#filter-name").val(),
+      species: $("#filter-species").val(),
+      breed: $("#filter-breed").val(),
+      micro: $("#filter-micro").val(),
+      miear: $("#filter-miear").val(),
       page: global['page'],
       limit: limit.val(),
       status: value
@@ -1019,17 +1039,9 @@
     )
   }
 
-  function filter() {
-    global['page'] = 1
-    $.post(
-      global['url'],
-      {action: 'filter', filter: checkFilter()},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          petList.html(data['html'])
-        }, () => {})
-      }
-    )
+  function filterE(e) {
+    e.preventDefault()
+    goPage(1)
   }
 
   function check(id, type) {

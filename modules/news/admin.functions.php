@@ -19,88 +19,102 @@ require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';
 $select_array = array('breed' => 'Loài', 'disease' => 'Bệnh', 'origin' => 'Nguồn gốc', 'request' => 'Yêu cầu', 'species' => 'Giống');
 $trade_array = array('1' => 'Cần bán', '2' => 'Cần phối');
 
-function tradeList($filter = array('page' => 1, 'limit' => 10)) {
+function tradeList($filter = array('owner' => '', 'mobile' => '', 'address' => '', 'name' => '', 'species' => '', 'breed' => '', 'status' => 0 , 'type' => 0, 'page' => 1, 'limit' => 10)) {
   global $db, $module_file, $sex_array, $trade_array;
 
   $xtpl = new XTemplate('trade-list.tpl', PATH);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_trade` where status < 2';
+  $sql = 'select c.mobile, c.address, a.type, a.status, a.petid, a.id, b.species, b.breed, b.name, c.fullname from `'. PREFIX .'_trade` a inner join `'. PREFIX .'_pet` b on a.petid = b.id and b.type = 1 inner join `'. PREFIX .'_user` c on b.userid = c.id where c.fullname like "%'. $filter['owner'] .'%" and b.name like "%'. $filter['name'] .'%" and species like "%'. $filter['species'] .'%" and breed like "%'. $filter['breed'] .'%" '. ($filter['type'] > 0 ? ' and a.type = ' . ($filter['type']) : '') .' '. ($filter['status'] > 0 ? ' and a.status = ' . ($filter['status'] - 1) : '');
   $query = $db->query($sql);
-  $count = $query->fetch()['count'];
-  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+  // $count = $query->fetch()['count'];
+  // $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_trade` where status < 2 order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
-  $query = $db->query($sql);
-  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+  // $sql = 'select * from `'. PREFIX .'_trade` where status < 2 order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  // $query = $db->query($sql);
+  // $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+  $from = ($filter['page'] - 1) * $filter['limit'];
+  $end = $from + $filter['limit'] + 1;
+  $count = 0;
 
   while ($row = $query->fetch()) {
-    $pet = getPetById($row['petid']);
-    $owner = checkUserinfo($pet['userid'], $pet['type']);
-    $type = $trade_array[$row['type']];
+    $row['mobile'] = xdecrypt($row['mobile']);
+    $row['address'] = xdecrypt($row['address']);
+    if ((empty($filter['mobile'] || (mb_strpos($row['mobile'], $filter['mobile']) !== false))) && empty($filter['address'] || (mb_strpos($row['address'], $filter['address']) !== false))) {
+      $count ++;
 
-    $owner['mobile'] = xdecrypt($owner['mobile']);
-    $owner['address'] = xdecrypt($owner['address']);
-    $xtpl->assign('index', $index++);
-    $xtpl->assign('id', $row['id']);
-    $xtpl->assign('petid', $row['petid']);
-    // $xtpl->assign('image', $row['image']);
-    $xtpl->assign('species', $pet['species']);
-    $xtpl->assign('breed', $pet['breed']);
-    $xtpl->assign('petname', $pet['name']);
-    $xtpl->assign('breed', $pet['breed']);
-    $xtpl->assign('owner', $owner['fullname']);
-    $xtpl->assign('address', $owner['address']);
-    $xtpl->assign('mobile', $owner['mobile']);
-    $xtpl->assign('type', $type);
-    if ($row['status'] == 1) {
-      $xtpl->parse('main.row.yes');
+      if ($count > $from && $count < $end) {
+        $type = $trade_array[$row['type']];
+        $xtpl->assign('index', $count);
+        $xtpl->assign('id', $row['id']);
+        $xtpl->assign('petid', $row['petid']);
+        // $xtpl->assign('image', $row['image']);
+        $xtpl->assign('species', $row['species']);
+        $xtpl->assign('breed', $row['breed']);
+        $xtpl->assign('petname', $row['name']);
+        $xtpl->assign('breed', $row['breed']);
+        $xtpl->assign('owner', $row['fullname']);
+        $xtpl->assign('address', $row['address']);
+        $xtpl->assign('mobile', $row['mobile']);
+        $xtpl->assign('type', $type);
+        if ($row['status'] == 1) {
+          $xtpl->parse('main.row.yes');
+        }
+        else {
+          $xtpl->parse('main.row.no');
+        }
+        $xtpl->parse('main.row');
+      }
     }
-    else {
-      $xtpl->parse('main.row.no');
-    }
-    $xtpl->parse('main.row');
   }
 
   $xtpl->parse('main');
   return $xtpl->text();
 }
 
-function buyList2($filter = array('page' => 1, 'limit' => 10)) {
+function buyList2($filter = array('owner' => '', 'mobile' => '', 'address' => '', 'species' => '', 'breed' => '', 'status' => 0 , 'page' => 1, 'limit' => 10)) {
   global $db, $module_file, $sex_array, $trade_array;
 
   $xtpl = new XTemplate('buy-list.tpl', PATH);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_buy`';
+  $sql = 'select a.*, c.mobile, c.address, c.fullname from `'. PREFIX .'_buy` a inner join `'. PREFIX .'_user` c on a.userid = c.id where c.fullname like "%'. $filter['owner'] .'%" and species like "%'. $filter['species'] .'%" and breed like "%'. $filter['breed'] .'%" '. ($filter['status'] > 0 ? ' and a.status = ' . ($filter['status'] - 1) : '');
   $query = $db->query($sql);
-  $count = $query->fetch()['count'];
-  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+  // $count = $query->fetch()['count'];
+  // $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from `'. PREFIX .'_buy` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
-  $query = $db->query($sql);
-  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+  // $sql = 'select * from `'. PREFIX .'_buy` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  // $query = $db->query($sql);
+  // $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+  $from = ($filter['page'] - 1) * $filter['limit'];
+  $end = $from + $filter['limit'] + 1;
+  $count = 0;
 
   while ($row = $query->fetch()) {
-    $owner = getOwnerById($row['userid']);
+    $row['mobile'] = xdecrypt($row['mobile']);
+    $row['address'] = xdecrypt($row['address']);
+    if ((empty($filter['mobile'] || (mb_strpos($row['mobile'], $filter['mobile']) !== false))) && empty($filter['address'] || (mb_strpos($row['address'], $filter['address']) !== false))) {
+      $count ++;
 
-    $owner['mobile'] = xdecrypt($owner['mobile']);
-    $owner['address'] = xdecrypt($owner['address']);
-    $xtpl->assign('index', $index++);
-    $xtpl->assign('id', $row['id']);
-    // $xtpl->assign('image', $row['image']);
-    $xtpl->assign('species', $row['species']);
-    $xtpl->assign('breed', $row['breed']);
-    $xtpl->assign('sex', $sex_array[$row['sex']]);
-    $xtpl->assign('owner', $owner['fullname']);
-    $xtpl->assign('address', $owner['address']);
-    $xtpl->assign('mobile', $owner['mobile']);
-    if ($row['status'] == 1) {
-      $xtpl->parse('main.row.yes');
+      if ($count > $from && $count < $end) {
+        $xtpl->assign('index', $count);
+        $xtpl->assign('id', $row['id']);
+        // $xtpl->assign('image', $row['image']);
+        $xtpl->assign('species', $row['species']);
+        $xtpl->assign('breed', $row['breed']);
+        $xtpl->assign('sex', $sex_array[$row['sex']]);
+        $xtpl->assign('owner', $row['fullname']);
+        $xtpl->assign('address', $row['address']);
+        $xtpl->assign('mobile', $row['mobile']);
+        if ($row['status'] == 1) {
+          $xtpl->parse('main.row.yes');
+        }
+        else {
+          $xtpl->parse('main.row.no');
+        }
+        $xtpl->parse('main.row');
+      }
     }
-    else {
-      $xtpl->parse('main.row.no');
-    }
-    $xtpl->parse('main.row');
   }
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
   $xtpl->parse('main');
   return $xtpl->text();
@@ -408,7 +422,7 @@ function userRowList($filter = array('username' => '', 'fullname' => '', 'mobile
   while ($row = $query->fetch()) {
     $row['address'] = xdecrypt($row['address']);
     $row['mobile'] = xdecrypt($row['mobile']);
-    if (((mb_strpos($row['mobile'], $filter['mobile']) !== false) || empty($filter['mobile'])) && ((mb_strpos($row['address'], $filter['address']) !== false) || empty($filter['address']))) {
+    if ((empty($filter['mobile'] || (mb_strpos($row['mobile'], $filter['mobile']) !== false))) && (empty($filter['address'] || (mb_strpos($row['address'], $filter['address']) !== false)))) {
       $count ++;
 
       if ($count > $from && $count < $end) {
@@ -477,7 +491,7 @@ function managerList($filter = array('page' => 1, 'limit' => 10)) {
   return $xtpl->text();
 }
 
-function userDogRow($filter = array('keyword' => '', 'status' => 0, 'page' => 1, 'limit' => 10)) {
+function userDogRow($filter = array('owner' => '', 'mobile' => '', 'name' => '', 'species' => '', 'breed' => '', 'micro' => '', 'miear' => '', 'status' => 0, 'page' => 1, 'limit' => 10)) {
   global $db, $user_info, $module_file, $sex_array;
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
   $xtpl = new XTemplate('pet-list.tpl', PATH);
@@ -488,53 +502,63 @@ function userDogRow($filter = array('keyword' => '', 'status' => 0, 'page' => 1,
 
   $xtpl->assign('url', $y);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '');
+  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['name'] .'%" and species like "%'. $filter['species'] .'%" and breed like "%'. $filter['breed'] .'%" and microchip like "%'. $filter['micro'] .'%" and miear like "%'. $filter['miear'] .'%" ' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '') . ' order by id desc';
   $query = $db->query($sql);
-  $count = $query->fetch()['count'];
-  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+  // $count = $query->fetch()['count'];
 
-  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '') . ' order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
-  $query = $db->query($sql);
+  // $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '') . ' order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  // $query = $db->query($sql);
 
   // $data = getUserPetList($filter);
+  $from = ($filter['page'] - 1) * $filter['limit'];
+  $end = $from + $filter['limit'] + 1;
+  $count = 0;
 
   while ($row = $query->fetch()) {
     $owner = getUserInfo($row['userid']);
     $owner['mobile'] = xdecrypt($owner['mobile']);
-    $xtpl->assign('index', $index++);
-    $xtpl->assign('id', $row['id']);
-    $xtpl->assign('price', number_format($row['price'], 0, '', ','));
-    $xtpl->assign('name', $row['name']);
-    $xtpl->assign('owner', $owner['fullname']);
-    $xtpl->assign('mobile', $owner['mobile']);
-    $xtpl->assign('userid', $row['userid']);
-    $xtpl->assign('id', $row['id']);
-    $xtpl->assign('microchip', $row['microchip']);
-    $xtpl->assign('breed', $row['breed']);
-    $xtpl->assign('sex', $sex_array[$row['sex']]);
-    $xtpl->assign('dob', cdate($row['dateofbirth']));
-    $sql = 'select * from `'. PREFIX .'_lock` where petid = ' . $row['id'];
-    $query2 = $db->query($sql);
-    if (!empty($query2->fetch())) {
-      $xtpl->parse('main.row.unlock');
-    }
-    else {
-      $xtpl->parse('main.row.lock');
-    }
-    if ($row['active']) {
-      if ($row['ceti'] == 1) {
-        $xtpl->parse('main.row.uncheck.yes');
+    if (empty($filter['mobile'] || (mb_strpos($owner['mobile'], $filter['mobile']) !== false))) {
+      $count ++;
+
+      if ($count > $from && $count < $end) {
+        $xtpl->assign('index', $count);
+        $xtpl->assign('id', $row['id']);
+        $xtpl->assign('price', number_format($row['price'], 0, '', ','));
+        $xtpl->assign('name', $row['name']);
+        $xtpl->assign('owner', $owner['fullname']);
+        $xtpl->assign('mobile', $owner['mobile']);
+        $xtpl->assign('userid', $row['userid']);
+        $xtpl->assign('id', $row['id']);
+        $xtpl->assign('microchip', $row['microchip']);
+        $xtpl->assign('breed', $row['breed']);
+        $xtpl->assign('sex', $sex_array[$row['sex']]);
+        $xtpl->assign('dob', cdate($row['dateofbirth']));
+        $sql = 'select * from `'. PREFIX .'_lock` where petid = ' . $row['id'];
+        $query2 = $db->query($sql);
+        if (!empty($query2->fetch())) {
+          $xtpl->parse('main.row.unlock');
+        }
+        else {
+          $xtpl->parse('main.row.lock');
+        }
+        if ($row['active']) {
+          if ($row['ceti'] == 1) {
+            $xtpl->parse('main.row.uncheck.yes');
+          }
+          else {
+            $xtpl->parse('main.row.uncheck.no');
+          }
+          $xtpl->parse('main.row.uncheck');
+        }
+        else {
+          $xtpl->parse('main.row.check');
+        }
+        $xtpl->parse('main.row');
       }
-      else {
-        $xtpl->parse('main.row.uncheck.no');
-      }
-      $xtpl->parse('main.row.uncheck');
     }
-    else {
-      $xtpl->parse('main.row.check');
-    }
-    $xtpl->parse('main.row');
   }
+  $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
+
   $xtpl->parse('main');
   return $xtpl->text();
 }
