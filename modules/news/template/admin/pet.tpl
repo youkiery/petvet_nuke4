@@ -627,6 +627,7 @@
     contentType: 'image/jpeg',
   };
   var file, filename
+  var uploadedUrl = ''
 
   var firebaseConfig = {
     apiKey: "AIzaSyAgxaMbHnlYbUorxXuDqr7LwVUJYdL2lZo",
@@ -843,6 +844,7 @@
       var fullname = input.files[0].name
       var name = Math.round(new Date().getTime() / 1000) + '_' + fullname.substr(0, fullname.lastIndexOf('.'))
       var extension = fullname.substr(fullname.lastIndexOf('.') + 1)
+      uploadedUrl = ''
       filename = name + '.' + extension
 
       reader.onload = function (e) {
@@ -1092,7 +1094,10 @@
 
   function uploader() {
     return new Promise(resolve => {
-      if (!(file || filename)) {
+      if (uploadedUrl) {
+        resolve(uploadedUrl)
+      }
+      else if (!(file || filename)) {
         resolve('')
       }
       else {
@@ -1125,6 +1130,7 @@
           }, function() {
             // Upload completed successfully, now we can get the download URL
             uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+            uploadedUrl = downloadURL
             resolve(downloadURL)
             console.log('File available at', downloadURL);
           });

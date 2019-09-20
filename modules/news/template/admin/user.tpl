@@ -163,6 +163,19 @@
               </label>
             </div>
 
+            <label class="row">
+              <div class="col-sm-6">
+                Hình ảnh
+              </div>
+              <div class="col-sm-18">
+                <div>
+                  <img class="img-responsive" id="user-preview"
+                    style="display: inline-block; width: 128px; height: 128px; margin: 10px;">
+                </div>
+                <input type="file" class="form-control" id="user-image" onchange="onselected(this, 'user')">
+              </div>
+            </label>
+
             <div class="text-center">
               <button class="btn btn-info" id="button">
                 Chỉnh sửa thông tin
@@ -249,6 +262,7 @@
     mobile: $("#phone"),
     address: $("#address")
   }
+  var uploadedUrl = ''
   var userImage = $("#user-image")
   var userPreview = $("#user-preview")
   var username = $("#username")
@@ -475,6 +489,7 @@
       var fullname = input.files[0].name
       var name = Math.round(new Date().getTime() / 1000) + '_' + fullname.substr(0, fullname.lastIndexOf('.'))
       var extension = fullname.substr(fullname.lastIndexOf('.') + 1)
+      uploadedUrl = ''
       filename = name + '.' + extension
       
       reader.onload = function (e) {
@@ -611,7 +626,10 @@
 
   function uploader() {
     return new Promise(resolve => {
-      if (!(file || filename)) {
+      if (uploadedUrl) {
+        resolve(uploadedUrl)
+      }
+      else if (!(file || filename)) {
         resolve('')
       }
       else {
@@ -644,6 +662,7 @@
           }, function() {
             // Upload completed successfully, now we can get the download URL
             uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+            uploadedUrl = downloadURL
             resolve(downloadURL)
             console.log('File available at', downloadURL);
           });

@@ -558,6 +558,7 @@
     }
   }
 
+  var uploadedUrl = ''
   var modalTarget = $("#modal-target")
   var modalOwner = $("#modal-owner")
 
@@ -1232,6 +1233,7 @@
       var name = Math.round(new Date().getTime() / 1000) + '_' + fullname.substr(0, fullname.lastIndexOf('.'))
       var extension = fullname.substr(fullname.lastIndexOf('.') + 1)
       filename = name + '.' + extension
+      uploadedUrl = ''
 
       reader.onload = function (e) {
         var type = e.target["result"].split('/')[1].split(";")[0];
@@ -1294,12 +1296,16 @@
 
   function uploader() {
     return new Promise(resolve => {
-      if (!(file || filename)) {
+      if (uploadedUrl) {
+        resolve(uploadedUrl)
+      }
+      else if (!(file || filename)) {
         resolve('')
-      } else {
+      }
+      else {
         var uploadTask = storageRef.child('images/' + filename).putString(file, 'base64', metadata);
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
-          function (snapshot) {
+          function(snapshot) {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log('Upload is ' + progress + '% done');
             switch (snapshot.state) {
@@ -1310,31 +1316,30 @@
                 console.log('Upload is running');
                 break;
             }
-          }, function (error) {
+          }, function(error) {
             resolve('')
             switch (error.code) {
               case 'storage/unauthorized':
                 // User doesn't have permission to access the object
-                break;
+              break;
               case 'storage/canceled':
                 // User canceled the upload
-                break;
+              break;
               case 'storage/unknown':
                 // Unknown error occurred, inspect error.serverResponse
-                break;
+              break;
             }
-          }, function () {
+          }, function() {
             // Upload completed successfully, now we can get the download URL
-            uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
-
-              file = false
-              resolve(downloadURL)
-              console.log('File available at', downloadURL);
-            });
+            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+            uploadedUrl = downloadURL
+            resolve(downloadURL)
+            console.log('File available at', downloadURL);
           });
+        });
       }
     })
-  }
+	}
 
   function toggleX(name) {
     var target = $("#" + name)

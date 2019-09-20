@@ -220,6 +220,8 @@
   {content}
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/6.0.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-storage.js"></script>
 <script>
   var content = $("#content")
   var keyword = $("#keyword")
@@ -244,6 +246,13 @@
     parentm: $("#parent-m-s"),
     parentf: $("#parent-f-s")
   }
+  var imageType = ["jpeg", "jpg", "png", "bmp", "gif"]
+  var metadata = {
+    contentType: 'image/jpeg',
+  };
+  var uploadedUrl = ''
+  var maxWidth = 512
+  var maxHeight = 512
   var petPreview = $("#pet-preview")
   var file, filename
   var remind = JSON.parse('{remind}')
@@ -267,6 +276,21 @@
     context.drawImage(thumbnailImage, 0, 0, width, height, 0, 0, canvas.width, canvas.height)
     thumbnail = canvas.toDataURL("image/jpeg")
   }
+
+  var firebaseConfig = {
+    apiKey: "AIzaSyAgxaMbHnlYbUorxXuDqr7LwVUJYdL2lZo",
+    authDomain: "petcoffee-a3cbc.firebaseapp.com",
+    databaseURL: "https://petcoffee-a3cbc.firebaseio.com",
+    projectId: "petcoffee-a3cbc",
+    storageBucket: "petcoffee-a3cbc.appspot.com",
+    messagingSenderId: "351569277407",
+    appId: "1:351569277407:web:8ef565047997e013"
+  };
+  
+  firebase.initializeApp(firebaseConfig);
+
+  var storage = firebase.storage();
+  var storageRef = firebase.storage().ref();
 
   function splipper(text, part) {
     var pos = text.search(part + '-')
@@ -600,15 +624,63 @@
     }
   }
 
+    function onselected(input, previewname) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+      var fullname = input.files[0].name
+      var name = Math.round(new Date().getTime() / 1000) + '_' + fullname.substr(0, fullname.lastIndexOf('.'))
+      var extension = fullname.substr(fullname.lastIndexOf('.') + 1)
+      uploadedUrl = ''
+      filename = name + '.' + extension
+
+      reader.onload = function (e) {
+        var type = e.target["result"].split('/')[1].split(";")[0];
+        if (["jpeg", "jpg", "png", "bmp", "gif"].indexOf(type) >= 0) {
+          var image = new Image();
+          image.src = e.target["result"];
+          image.onload = (e2) => {
+            var c = document.createElement("canvas")
+            var ctx = c.getContext("2d");
+            var ratio = 1;
+            if (image.width > maxWidth)
+              ratio = maxWidth / image.width;
+            else if (image.height > maxHeight)
+              ratio = maxHeight / image.height;
+            c.width = image["width"];
+            c.height = image["height"];
+            ctx.drawImage(image, 0, 0);
+            var cc = document.createElement("canvas")
+            var cctx = cc.getContext("2d");
+            cc.width = image.width * ratio;
+            cc.height = image.height * ratio;
+            cctx.fillStyle = "#fff";
+            cctx.fillRect(0, 0, cc.width, cc.height);
+            cctx.drawImage(c, 0, 0, c.width, c.height, 0, 0, cc.width, cc.height);
+            file = cc.toDataURL("image/jpeg")
+            $("#" + previewname + "-preview").attr('src', file)
+            file = file.substr(file.indexOf(',') + 1);
+          }
+        };
+      };
+
+      if (imageType.indexOf(extension) >= 0) {
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+  }
+
   function uploader() {
     return new Promise(resolve => {
-      if (!(file || filename)) {
+      if (uploadedUrl) {
+        resolve(uploadedUrl)
+      }
+      else if (!(file || filename)) {
         resolve('')
       }
       else {
         var uploadTask = storageRef.child('images/' + filename).putString(file, 'base64', metadata);
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
-          function (snapshot) {
+          function(snapshot) {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log('Upload is ' + progress + '% done');
             switch (snapshot.state) {
@@ -619,28 +691,29 @@
                 console.log('Upload is running');
                 break;
             }
-          }, function (error) {
+          }, function(error) {
             resolve('')
             switch (error.code) {
               case 'storage/unauthorized':
                 // User doesn't have permission to access the object
-                break;
+              break;
               case 'storage/canceled':
                 // User canceled the upload
-                break;
+              break;
               case 'storage/unknown':
                 // Unknown error occurred, inspect error.serverResponse
-                break;
+              break;
             }
-          }, function () {
+          }, function() {
             // Upload completed successfully, now we can get the download URL
-            uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
-              resolve(downloadURL)
-              console.log('File available at', downloadURL);
-            });
+            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+            uploadedUrl = downloadURL
+            resolve(downloadURL)
+            console.log('File available at', downloadURL);
           });
+        });
       }
     })
-  }
+	}
 </script>
 <!-- END: main -->
