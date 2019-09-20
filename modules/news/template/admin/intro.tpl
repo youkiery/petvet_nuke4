@@ -85,11 +85,8 @@
   </div>
 
   <form onsubmit="filterE(event)">
-    <div class="row">
-      <div class="col-sm-8">
-        <input type="text" class="form-control" id="keyword" placeholder="Nhập từ khóa">
-      </div>
-      <div class="col-sm-4">
+    <div>
+      <div style="float: right; width: 30%;">
         <select class="form-control" id="limit">
           <option value="10"> 10 </option>
           <option value="20"> 20 </option>
@@ -97,15 +94,28 @@
           <option value="75"> 75 </option>
           <option value="100"> 100 </option>
         </select>
+        <br>
+        <label> <input type="radio" name="status" class="status" id="status-0" checked> Toàn bộ </label>
+        <label> <input type="radio" name="status" class="status" id="status-1"> Chưa xác nhận </label>
+        <label> <input type="radio" name="status" class="status" id="status-2"> Đã xác nhận </label>
+      </div>
+
+      <div style="float: left; width: 60%;">
+        <input type="text" class="form-control" id="keyword-customer" placeholder="Tên khách">
+        <input type="text" class="form-control" id="keyword-address" placeholder="Địa chỉ">
+        <input type="text" class="form-control" id="keyword-mobile" placeholder="Số điện thoại">
+        <input type="text" class="form-control" id="keyword-owner" placeholder="Chủ đăng">
+        <input type="text" class="form-control" id="keyword-species" placeholder="Giống">
+        <input type="text" class="form-control" id="keyword-breed" placeholder="Loài">
       </div>
     </div>
-    <label> <input type="radio" name="status" class="status" id="status-0" checked> Toàn bộ </label>
-    <label> <input type="radio" name="status" class="status" id="status-1"> Chưa xác nhận </label>
-    <label> <input type="radio" name="status" class="status" id="status-2"> Đã xác nhận </label>
-    <button class="btn btn-info">
-      Lọc
-    </button>
+    <div class="text-center" style="clear: both;">
+      <button class="btn btn-info">
+        Lọc danh sách
+      </button>
+    </div>
   </form>
+  <div style="clear: both;"></div>
   <button class="btn btn-success" onclick="insert()">
     <span class="glyphicon glyphicon-plus"></span>
   </button>
@@ -351,7 +361,12 @@
       value = splipper(temp[0].getAttribute('id'), 'user-status')
     }
     return {
-      keyword: keyword.val(),
+      customer: $("#keyword-customer").val(),
+      address: $("#keyword-address").val(),
+      mobile: $("#keyword-mobile").val(),
+      owner: $("#keyword-owner").val(),
+      species: $("#keyword-species").val(),
+      breed: $("#keyword-breed").val(),
       page: global['page'],
       limit: limit.val(),
       // type: type.val(),

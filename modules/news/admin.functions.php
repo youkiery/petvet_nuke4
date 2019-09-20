@@ -193,7 +193,7 @@ function diseaseList2($filter = array('page' => 1, 'limit' => 10, 'keyword' => '
   return $xtpl->text();
 }
 
-function infoList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', 'status' => 0)) {
+function infoList($filter = array('customer' => '', 'mobile' => '', 'address' => '', 'owner' => '', 'species' => '', 'breed' => '', 'page' => 1, 'limit' => 10, 'keyword' => '', 'status' => 0)) {
   global $db, $module_file;
 
   $xtpl = new XTemplate('intro-list.tpl', PATH);
@@ -207,12 +207,14 @@ function infoList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', '
     $filter['status'] = $filter['status'] - 1;
   }
 
-  $sql = 'select count(*) as count from ((select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3) and a.status in ('. $filter['status'] .')) union (select a.* from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2 and a.status in ('. $filter['status'] .'))) as c';
+  $xtra = ' a.fullname like "%'. $filter['customer'] .'%" and a.mobile like "%'. $filter['mobile'] .'%" and a.address like "%'. $filter['address'] .'%" and b.species like "%'. $filter['species'] .'%" and b.breed like "%'. $filter['breed'] .'%" and c.fullname like "%'. $filter['owner'] .'%"';
+
+  $sql = 'select count(*) as count from ((select a.*, b.userid from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id inner join `'. PREFIX .'_user` c on b.userid = c.id where (a.type = 1 or a.type = 3) and a.status in ('. $filter['status'] .') and '. $xtra .') union (select a.*, b.userid from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id inner join `'. PREFIX .'_user` c on b.userid = c.id where a.type = 2 and a.status in ('. $filter['status'] .') and '. $xtra .')) as c';
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit']));
 
-  $sql = 'select * from ((select a.*, b.userid from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id where (a.type = 1 or a.type = 3) and a.status in ('. $filter['status'] .')) union (select a.*, b.userid from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id where a.type = 2 and a.status in ('. $filter['status'] .')) order by id desc) as c limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from ((select a.*, b.userid from `'. PREFIX .'_info` a inner join `'. PREFIX .'_pet` b on a.rid = b.id inner join `'. PREFIX .'_user` c on b.userid = c.id where (a.type = 1 or a.type = 3) and a.status in ('. $filter['status'] .') and '. $xtra .') union (select a.*, b.userid from `'. PREFIX .'_info` a inner join `'. PREFIX .'_buy` b on a.rid = b.id inner join `'. PREFIX .'_user` c on b.userid = c.id where a.type = 2 and a.status in ('. $filter['status'] .') and '. $xtra .') order by id desc) as c limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
