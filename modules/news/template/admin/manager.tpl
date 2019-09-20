@@ -81,25 +81,28 @@
 
   $(this).ready(() => {
     installRemind('insert-user')
+    installSelect()
   })
 
+  function installSelect() {
     $("tbody").click((e) => {
-    var current = e.currentTarget
-    if (global['select']) {
-      if (current.className == 'select') {
-        global['select'].forEach((element, index) => {
-          if (element == current) {
-            global['select'].splice(index, 1)
-          }
-        });
-        current.className = ''
+      var current = e.currentTarget
+      if (global['select']) {
+        if (current.className == 'select') {
+          global['select'].forEach((element, index) => {
+            if (element == current) {
+              global['select'].splice(index, 1)
+            }
+          });
+          current.className = ''
+        }
+        else {
+          global['select'].push(current)
+          current.className = 'select'
+        }
       }
-      else {
-        global['select'].push(current)
-        current.className = 'select'
-      }
-    }
-  })
+    })
+  }
 
   function selectRow(button) {
     if (global['select']) {
@@ -129,6 +132,7 @@
         {action: 'deactive-list', list: list.join(', '), filter: checkFilter()},
         (response, status) => {
           checkResult(response, status).then(data => {
+            installSelect()
             content.html(data['html'])
           }, () => {})
         }

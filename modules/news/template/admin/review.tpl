@@ -29,23 +29,29 @@
     page: 1
   }
 
-  $("tbody").click((e) => {
-    var current = e.currentTarget
-    if (global['select']) {
-      if (current.className == 'select') {
-        global['select'].forEach((element, index) => {
-          if (element == current) {
-            global['select'].splice(index, 1)
-          }
-        });
-        current.className = ''
-      }
-      else {
-        global['select'].push(current)
-        current.className = 'select'
-      }
-    }
+  $(this).ready(() => {
+    installSelect()
   })
+
+  function installSelect() {
+    $("tbody").click((e) => {
+      var current = e.currentTarget
+      if (global['select']) {
+        if (current.className == 'select') {
+          global['select'].forEach((element, index) => {
+            if (element == current) {
+              global['select'].splice(index, 1)
+            }
+          });
+          current.className = ''
+        }
+        else {
+          global['select'].push(current)
+          current.className = 'select'
+        }
+      }
+    })
+  }
 
   function selectRow(button) {
     if (global['select']) {
@@ -75,6 +81,7 @@
         {action: 'remove-list', list: list.join(', '), filter: checkFilter()},
         (response, status) => {
           checkResult(response, status).then(data => {
+            installSelect()
             content.html(data['html'])
           }, () => {})
         }
