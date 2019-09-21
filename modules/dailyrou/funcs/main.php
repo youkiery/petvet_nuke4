@@ -83,22 +83,7 @@ if (!empty($action)) {
           $query = $db->query($sql);
           if ($user = $query->fetch()) {
             if ($row["color"] == "yellow") {
-              $forbid = 0;
-              $userid = 0;
-
-              if ($user_info['userid']) {
-                $userid = $user_info['userid'];
-              }
-
-              $sql = "select a.*, b.permission from `" . $db_config["prefix"] . "_users` a inner join `" . $db_config["prefix"] . "_rider_user` b on user_id = $userid and type = 1 and a.userid = b.user_id";
-              $query = $db->query($sql);
-              $userData = $query->fetch();
-              
-              if (!empty($userData) && $userData['permission'] && $date <= $today) {
-                $forbid = 1;
-              }
-
-              $sql = "insert into `" . PREFIX . "_row` (type, user_id, time, forbid) values ($row[type], $user[userid], $time, $forbid)";
+              $sql = "insert into `" . PREFIX . "_row` (type, user_id, time) values ($row[type], $user[userid], $time)";
             }
             else {
               $sql = "delete from `" . PREFIX . "_row` where type = $row[type] and user_id = $user[userid] and time = $time";
@@ -148,9 +133,7 @@ if (!empty($action)) {
         $user = $query->fetch();
         foreach ($itemList as $itemData) {
           $date = totime($itemData["date"]);
-          // change check limit
-          // if (($user["permission"] || $date > $today) && (checkLimit($doctorId, $date, $itemData['type'] - 2) || $itemData['color'] == 'purple')) {
-          if (($user["permission"] || $date > $today)) {
+          if (($user["permission"] || $date >= $today) && (checkLimit($doctorId, $date, $itemData['type'] - 2) || $itemData['color'] == 'purple')) {
             if ($itemData["color"] == "purple") {
               $sql = "delete from `". PREFIX ."_row` where user_id = $doctorId and (time between $date and " . ($date + A_DAY - 1) . ") and type = " . ($itemData["type"] - 2);
             }
@@ -184,9 +167,13 @@ if (!empty($action)) {
       $daily = array();
       
       while ($row = $query->fetch()) {
-        $daily[] = array("userid" => $row["user_id"], "date" => date("d/m/Y", $row["time"]), "type" => $row["type"], "userid" => $row["user_id"]);
+        $use = 0;
+        if ($row["user"] == $user_info["userid"]) {
+          $use = 1;
+        }
+        $daily[] = array("date" => date("d/m/Y", $row["time"]), "type" => $row["type"], "use" => $use);
       }
-            
+      
       $result["json"] = json_encode($daily);
     break;
     case 'filter_data':
@@ -207,7 +194,7 @@ if (!empty($action)) {
         if ($row["user"] == $user_id) {
           $use = 1;
         }
-        $daily[] = array("userid" => $row["user_id"], "date" => date("d/m/Y", $row["time"]), "type" => $row["type"], "userid" => $row["user_id"]);
+        $daily[] = array("date" => date("d/m/Y", $row["time"]), "type" => $row["type"], "use" => $use);
       }
       
       $result["json"] = json_encode($daily);
@@ -267,7 +254,11 @@ $query = $db->query($sql);
 $daily = array();
 
 while ($row = $query->fetch()) {
-  $daily[] = array("userid" => $row["user_id"], "date" => date("d/m/Y", $row["time"]), "type" => $row["type"], "userid" => $row["user_id"]);
+  $use = 0;
+  if ($row["user_id"] == $user_id) {
+    $use = 1;
+  }
+  $daily[] = array("userid" => $row["user_id"], "date" => date("d/m/Y", $row["time"]), "type" => $row["type"], "use" => $use);
 }
 
 $sql = "select * from `" . $db_config["prefix"] . "_users` where userid in (select id from `" . $db_config["prefix"] . "_rider_user` where type = 1 and user_id <> $user_info[userid])";
@@ -275,7 +266,6 @@ $sql = "select * from `" . $db_config["prefix"] . "_users` where userid in (sele
 $query = $db->query($sql);
 while($row = $query->fetch()) {
   $xtpl->assign("doctor_value", $row["userid"]);
-  $xtpl->assign("doctor_name", $row["last_name"] . " " . $row["first_name"]);
   $xtpl->assign("doctor_name", $row["last_name"] . " " . $row["first_name"]);
 }
 
@@ -285,18 +275,6 @@ $except = array();
 while($row = $query->fetch()) {
   $except[] = $row['first_name'];
 }
-
-$xtpl->assign('user_position', 0);
-if (!empty($user_info['userid'])) {
-  $sql = 'select position from `'. PREFIX .'_user_position` where userid = ' . $user_info['userid'];
-  $query = $db->query($sql);
-  $row = $query->fetch();
-  if (!empty($row) && !empty($row['position'])) {
-    $xtpl->assign('user_position', $row['position']);
-  }
-}
-
-$time = time();
 
 if (date('N', $time) < 23) {
 	$time = time() - A_DAY * 23;
@@ -308,7 +286,7 @@ $xtpl->assign("endDate", date('d/m/Y', $endDate));
 
 $xtpl->assign("except", json_encode($except));
 $xtpl->assign("data", json_encode($daily));
-$xtpl->assign("position", json_encode(doctorByPositionList()));
+// $xtpl->assign("user_name", $user_name);
 $xtpl->assign("username", $user_name);
 $xtpl->assign("doctorId", $user_id);
 $time = time();
