@@ -819,7 +819,7 @@
         var thisDate = new Date(thisDateVal[2], parseInt(thisDateVal[1]) - 1, thisDateVal[0])
         var thisColor = that.getAttribute("class")
         var thisValue = trim(that.innerText)
-        var thisDay = new Date(today).getDay()
+        var thisDay = thisDate.getDay()
         
         if (admin || (thisDate >= today)) {
           switch (thisColor) {
@@ -831,7 +831,10 @@
                 var limit = 1
               }
 
-              if (except.join('').search(username) >= 0) {
+              if (thisValue.search(username) > 0) {
+                that.setAttribute("class", "purple")
+              }
+              else if (except.join('').search(username) >= 0) {
                 that.setAttribute("class", "blue")
               }
               else {
@@ -840,7 +843,7 @@
                     x.splice(m, 1)
                   }
                 })
-                
+
                 if (x.length < limit) {
                   that.setAttribute("class", "blue")
                 }                
