@@ -7,7 +7,9 @@
     <tr>
       <th> STT </th>
       <th> Họ và tên</th>
-      <th class="text-center"> Tổng số ngày nghỉ </th>
+      <th class="text-center"> Ngày nghỉ </th>
+      <th class="text-center"> Nghỉ phạt </th>
+      <th class="text-center"> Tổng </th>
       <th class="text-center"> Quá ngày </th>
     </tr>
   </thead>
@@ -19,6 +21,12 @@
       </td>
       <td>
         {username}
+      </td>
+      <td class="text-center">
+        {rest}
+      </td>
+      <td class="text-center">
+        {overflow}
       </td>
       <td class="text-center">
         {total}

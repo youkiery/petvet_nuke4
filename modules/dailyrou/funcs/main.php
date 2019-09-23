@@ -14,6 +14,9 @@ if (!defined('NV_IS_DAILY')) {
 $page_title = "Đăng ký lịch nghỉ/trực";
 preCheckUser();
 
+$date = strtotime(date('Y/m/d'));
+$itemData["type"] = 3;
+
 $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
 	$result = array("status" => 0);
@@ -79,23 +82,40 @@ if (!empty($action)) {
       if ($data) {       
         foreach ($data as $row) {
           $time = strtotime(date("Y-m-d", $row["date"]));
+
           $sql = "select userid from `" . $db_config["prefix"] . "_users` where first_name = '$row[name]'";
           $query = $db->query($sql);
           if ($user = $query->fetch()) {
             if ($row["color"] == "yellow") {
               $sql = "insert into `" . PREFIX . "_row` (type, user_id, time) values ($row[type], $user[userid], $time)";
+              if ($db->query($sql) && $row['type'] > 1) {
+                $sql = "select count(*) as count from `". PREFIX ."_row` where user_id not in (select user_id from `". $db_config['prefix'] ."_rider_user` where type = 1 and except = 1) and (time between $time and " . ($time + A_DAY - 1) . ") and type = " . ($row["type"]);
+                $query = $db->query($sql);
+                $count = $query->fetch()['count'];
+                $limit = 2;
+                if ($day == 0 || $day == 6) {
+                  $limit = 1;
+                }
+
+                if ($count > $limit) {
+                  $sql = 'insert into `'. PREFIX .'_penety` (userid, time, type) values('. $user['userid'] .', '. $time .', ' . ($row["type"]) . ')';
+                  $db->query($sql);
+                }
+              }
             }
             else {
               $sql = "delete from `" . PREFIX . "_row` where type = $row[type] and user_id = $user[userid] and time = $time";
-            }
-            if ($db->query($sql)) {
-              $userList = doctorList();
-              $result["status"] = 1;
-              $result["notify"] = "Đã cập nhật lịch đăng ký";
-              $result["html"] = wconfirm($startDate, current($userList)["userid"], $userList);
+              if ($db->query($sql)) {
+                $sql = 'delete from `'. PREFIX .'_penety` where userid = '. $user['userid'] .' and (time between '. $time .' and ' . ($time + A_DAY - 1) . ') and type = ' . ($row["type"]);
+                  $db->query($sql);
+              }
             }
           }
         }
+        $userList = doctorList();
+        $result["status"] = 1;
+        $result["notify"] = "Đã cập nhật lịch đăng ký";
+        $result["html"] = wconfirm($startDate, current($userList)["userid"], $userList);
       }
     break;
 
@@ -133,14 +153,31 @@ if (!empty($action)) {
         $user = $query->fetch();
         foreach ($itemList as $itemData) {
           $date = totime($itemData["date"]);
+          $day = date('w', $date);
           if (($user["permission"] || $date >= $today) && (checkLimit($doctorId, $date, $itemData['type'] - 2) || $itemData['color'] == 'purple')) {
             if ($itemData["color"] == "purple") {
-              $sql = "delete from `". PREFIX ."_row` where user_id = $doctorId and (time between $date and " . ($date + A_DAY - 1) . ") and type = " . ($itemData["type"] - 2);
+              $sql = "delete from `". PREFIX ."_row` where user_id = $doctorId and (time between $date and " . ($date + A_DAY - 1) . ") and type = " . ($itemData["type"]);
+              if ($db->query($sql)) {
+                $sql = 'delete from `'. PREFIX .'_penety` where userid = '. $doctorId .' and (time between '. $date .' and ' . ($date + A_DAY - 1) . ') and type = ' . ($itemData["type"]);
+              }
             }
             else {
-              $sql = "insert into `". PREFIX ."_row` (type, user_id, time) values(" . ($itemData["type"] - 2) . ", $doctorId, $date)";
+              $sql = "insert into `". PREFIX ."_row` (type, user_id, time) values(" . ($itemData["type"]) . ", $doctorId, $date)";
+              if ($db->query($sql) && $row['type'] > 1) {
+                $sql = "select count(*) as count from `". PREFIX ."_row` where user_id not in (select user_id from `". $db_config['prefix'] ."_rider_user` where type = 1 and except = 1) and (time between $date and " . ($date + A_DAY - 1) . ") and type = " . ($itemData["type"] - 2);
+                $query = $db->query($sql);
+                $count = $query->fetch()['count'];
+                $limit = 2;
+                if ($day == 0 || $day == 6) {
+                  $limit = 1;
+                }
+
+                if ($count > $limit) {
+                  $sql = 'insert into from `'. PREFIX .'_penety` (userid, time, type) values('. $doctorId .', '. $date .', ' . ($itemData["type"]) . ')';
+                  $query->fetch();
+                }
+              }
             }
-            $db->query($sql);
           }
           else {
             // push unuse and notify

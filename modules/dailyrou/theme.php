@@ -283,11 +283,17 @@ function adminSummary($startDate = 0, $endDate = 0) {
     $xtpl->assign("index", $index++);
     $xtpl->assign("username", $row["last_name"] . " " . $row["first_name"]);
 
-    $sql = "select count(*) as num from `" . PREFIX . "_row` where time between $startDate and ".($endDate + A_DAY - 1)." and user_id = $row[userid] and type > 1 order by time, type asc";
+    $sql = "select count(*) as num from `" . PREFIX . "_row` where time between $startDate and ".($endDate + A_DAY - 1)." and user_id = $row[userid] and type > 1";
     $query2 = $db->query($sql);
     $count = $query2->fetch();
+    $sql = "select count(*) as num from `" . PREFIX . "_penety` where time between $startDate and ".($endDate + A_DAY - 1)." and userid = $row[userid]";
+    $query2 = $db->query($sql);
+    $count2 = $query2->fetch();
+    // $count['num'] += $count2['num'];
 
-    $total = round(($count["num"] / 2), 1);
+    $total = round(($count2['num'] + $count['num']) / 2, 1);
+    $xtpl->assign("rest", round($count['num'] / 2, 1));
+    $xtpl->assign("overflow", round($count2['num'] / 2, 1));
     $xtpl->assign("total", $total);
     $xtpl->assign("exceed", $total > 4 ? $total - 4 : 0);
     $xtpl->parse("main.row");
@@ -337,4 +343,51 @@ function exceptUserList() {
     $xtpl->parse("main");
   }
   return $xtpl->text();
+}
+
+function navList ($number, $page, $limit) {
+  global $lang_global;
+  $total_pages = ceil($number / $limit);
+
+  $on_page = $page;
+  $page_string = "";
+  if ($total_pages > 10) {
+    $init_page_max = ($total_pages > 3) ? 3 : $total_pages;
+    for ($i = 1; $i <= $init_page_max; $i ++) {
+      $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="goPage('.$i.')">' . $i . '</button>';
+      if ($i < $init_page_max) $page_string .= " ";
+    }
+    if ($total_pages > 3) {
+      if ($on_page > 1 && $on_page < $total_pages) {
+        $page_string .= ($on_page > 5) ? " ... " : ", ";
+        $init_page_min = ($on_page > 4) ? $on_page : 5;
+        $init_page_max = ($on_page < $total_pages - 4) ? $on_page : $total_pages - 4;
+        for ($i = $init_page_min - 1; $i < $init_page_max + 2; $i ++) {
+          $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="goPage('.$i.')">' . $i . '</button>';
+          if ($i < $init_page_max + 1)  $page_string .= " ";
+        }
+        $page_string .= ($on_page < $total_pages - 4) ? " ... " : ", ";
+      }
+      else {
+        $page_string .= " ... ";
+      }
+      
+      for ($i = $total_pages - 2; $i < $total_pages + 1; $i ++) {
+        $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="goPage('.$i.')">' . $i . '</button>';
+        if ($i < $total_pages) $page_string .= " ";
+      }
+    }
+  }
+  else {
+    if ($total_pages) {
+      for ($i = 1; $i < $total_pages + 1; $i ++) {
+        $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="goPage('.$i.')">' . $i . '</button>';
+        if ($i < $total_pages) $page_string .= " ";
+      }
+    }
+    else {
+      $page_string .= '<div class="btn">' . 1 . "</div>";
+    }
+  }
+  return $page_string;
 }
