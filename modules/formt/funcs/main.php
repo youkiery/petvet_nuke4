@@ -224,6 +224,27 @@ if (!empty($action)) {
 		// 	$result['status'] = 1;
 		// 	$result['html'] = $xtpl->text();
 		// break;
+    case 'print-x':
+      $list = $nv_Request->get_array('list', 'post');
+      $page = $nv_Request->get_int('page', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      $xtpl = new XTemplate("print-x.tpl", PATH);
+
+      $sql = 'select * from `'. PREFIX .'_row` where id in ('. implode(', ', $list) .')';
+      $query = $db->query($sql);
+
+      while ($row = $query->fetch()) {
+        $xtpl->assign('customer', $row['sender']);
+        $xtpl->assign('address', $row['address']);
+        $xtpl->assign('mobile', $row['mobile']);
+        $xtpl->parse('main.block');
+      }
+      $xtpl->parse('main');
+      $result['html'] = $xtpl->text();
+      $result['status'] = 1;
+
+    break;
     case 'change-pay':
       $list = $nv_Request->get_array('list', 'post');
       $type = $nv_Request->get_int('type', 'post');

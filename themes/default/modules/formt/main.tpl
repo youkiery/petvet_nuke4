@@ -944,6 +944,10 @@
     <button class="btn btn-warning select-button" style="float: right;" onclick="changePay(0)" disabled>
       Chưa thanh toán
     </button>
+    <button class="btn btn-info" onclick="printX()">
+      <span class="glyphicon glyphicon-print"></span>
+    </button>  
+
     <div style="clear: both;"></div>
 
     <div id="secretary-list">
@@ -1574,6 +1578,32 @@
             secretaryList.html(data['html'])
             installSelect()
             global['select'] = []
+          }, () => {})
+        }
+      )
+    }    
+  }
+
+  function printX() {
+    if (global['select'].length) {
+      var list = []
+      global['select'].forEach((item, index) => {
+        list.push(item.getAttribute('id'))
+      })
+      freeze()
+      $.post(
+        global['url'],
+        {action: 'print-x', list: list, page: global['secretary']['page'], filter: getSecretaryFilter()},
+        (response, status) => {
+          checkResult(response, status).then(data => {  
+            var winPrint = window.open(origin, '_blank', 'left=0,top=0,width=800,height=600');
+            winPrint.focus()
+            winPrint.document.write(data['html']);
+            setTimeout(() => {
+              winPrint.print()
+              winPrint.close()
+            }, 300)
+
           }, () => {})
         }
       )
@@ -3319,6 +3349,12 @@
           global['secretary']['page'] = 1
           secretaryList.html(data['html'])
           installSelect()
+          if (global['select']) {
+            $(".select-button").prop('disabled', false)
+          }
+          else {
+            $(".select-button").prop('disabled', true)
+          }
         }, () => {})
       }
     )
@@ -3529,7 +3565,7 @@
           case 4:
             if (typeof(data['xcode']) == 'string') {
               data['xcode'] = data['xcode'].split(',')
-            }
+            } 
 
             html = html.replace('(xexam-signer)', Number(data['signer']['xexam']) ? '<img src="'+ global['signer'][data['signer']['xexam']]['url'] +'">' : '<br><br><br>')
             html = html.replace('(xresender-signer)', Number(data['signer']['xresender']) ? '<img src="'+ global['signer'][data['signer']['xresender']]['url'] +'">' : '<br><br><br>')
