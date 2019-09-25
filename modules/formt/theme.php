@@ -180,6 +180,12 @@ function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '
         // if (checkIsMod($user_info['userid'])) {
         $xtpl->parse('main.row.mod');
       }
+      if ($row['pay']) {
+        $xtpl->parse('main.row.yes');
+      }
+      else {
+        $xtpl->parse('main.row.no');
+      }
       $xtpl->parse('main.row');
   }
   $xtpl->assign('from', $from);

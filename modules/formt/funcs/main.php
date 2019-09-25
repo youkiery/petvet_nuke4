@@ -224,6 +224,50 @@ if (!empty($action)) {
 		// 	$result['status'] = 1;
 		// 	$result['html'] = $xtpl->text();
 		// break;
+    case 'change-pay':
+      $list = $nv_Request->get_array('list', 'post');
+      $type = $nv_Request->get_int('type', 'post');
+      $page = $nv_Request->get_int('page', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      foreach ($list as $id) {
+        $sql = 'select * from `'. PREFIX .'_secretary` where rid = ' . $id;
+        $query = $db->query($sql);
+        $row = $query->fetch();
+
+        if (empty($row)) {
+          $sql = 'select * from `'. PREFIX .'_row` where id = ' . $id;
+          $query = $db->query($sql);
+          $row2 = $query->fetch();
+
+        	$ig = json_decode($row2['ig']);
+					foreach ($ig as $sample) {
+						foreach ($sample->{'mainer'} as $mainer) {
+							foreach ($mainer->{'note'} as $note) {
+								if (empty($tempData[$note->{'note'}])) {
+									$tempData[$note->{'note'}] = 0;
+								}
+								$tempData[$note->{'note'}] += $sample->{'number'};
+							}
+						}
+					}
+					$ig = json_encode($tempData);
+
+          $sql = 'insert into `'. PREFIX .'_secretary` (date, org, address, phone, fax, mail, content, type, sample, xcode, ig, mcode, reformer, rid, pay) values('. $row2['xresend'] .', "'. $row2['sender'] .'", "'. $row2['xaddress'] .'", "'. $row2['ownerphone'] .'", "'. $row2['fax'] .'", "'. $row2['ownermail'] .'", "'. $row2['target'] .'", '. $row2['typeindex'] .', "'. $row2['sample'] .'", "'. $row2['xcode'] .'", \''. $ig .'\', "", "'. $row2['reformer'] .'", '. $id .', '. $type .')';
+        }
+        else {
+          $sql = 'update `'. PREFIX .'_secretary` set pay = '. $type . ' where id in (' . $list . ')';
+        }
+        // die($sql);
+        $db->query($sql);
+      }
+
+      if ($html = secretaryList($page, $filter)) {
+        $result['status'] = 1;
+        $result['notify'] = 'Cập nhật thành công';
+        $result['html'] = $html;
+      }
+    break;
 		case 'editSecret':
 			$id = $nv_Request->get_string('id', 'get/post', 0);
 

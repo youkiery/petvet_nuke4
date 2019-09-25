@@ -10,19 +10,21 @@
       <th> Trạng thái </th>
     </tr>
     <!-- BEGIN: row -->
-    <tr>
-      <td> {notice} </td>
-      <td> {noticetime} </td>
-      <td> {xcode} </td>
-      <td> {unit} </td>
-      <td> {number} </td>
-      <td> {state} </td>
-      <td>
-        <button class="btn btn-info" onclick="editSecret({id})">
-          <span class="glyphicon glyphicon-edit"></span>
-        </button>  
-      </td>
-    </tr>
+    <tbody id="{id}">
+      <tr>
+        <td> {notice} </td>
+        <td> {noticetime} </td>
+        <td> {xcode} </td>
+        <td> {unit} </td>
+        <td> {number} </td>
+        <td> {state} </td>
+        <td>
+          <button class="btn btn-info" onclick="editSecret({id})">
+            <span class="glyphicon glyphicon-edit"></span>
+          </button>  
+        </td>
+      </tr>
+    </tbody>
     <!-- END: row -->
   </table>
   {nav}

@@ -31,6 +31,10 @@
     text-align: center;
     color: red;
   }
+  .select {
+    background: rgb(223, 223, 223);
+    border: 2px solid deepskyblue;
+  }
 </style>
 
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
@@ -931,6 +935,17 @@
       </div>
     </form>
 
+    <button class="btn btn-info" style="float: right;" onclick="selectRow(this)">
+      <span class="glyphicon glyphicon-unchecked"></span>
+    </button>
+    <button class="btn btn-info select-button" style="float: right;" onclick="changePay(1)" disabled>
+      Thanh toán
+    </button>
+    <button class="btn btn-warning select-button" style="float: right;" onclick="changePay(0)" disabled>
+      Chưa thanh toán
+    </button>
+    <div style="clear: both;"></div>
+
     <div id="secretary-list">
       {secretary}
     </div>
@@ -1436,6 +1451,7 @@
     exam: ['']
   }]
   var global = {
+    select: false,
     signer: JSON.parse('{signer}'),
     secretary: {
       page: 1
@@ -1469,7 +1485,7 @@
     ]
   }
 
-  $(document).ready(() => {
+  $(this).ready(() => {
     htmlInfo = formInsertInfo.html()
     addInfo(1)
     // addInfo(3)
@@ -1506,6 +1522,63 @@
     changeMonth: true,
     changeYear: true
   });
+
+  function installSelect() {
+    $("tbody").click((e) => {
+      var current = e.currentTarget
+      if (global['select']) {
+        if (current.className == 'select') {
+          global['select'].forEach((element, index) => {
+            if (element == current) {
+              global['select'].splice(index, 1)
+            }
+          });
+          current.className = ''
+        }
+        else {
+          global['select'].push(current)
+          current.className = 'select'
+        }
+      }
+    })
+  }
+
+  function selectRow(button) {
+    if (global['select']) {
+      button.children[0].className = 'glyphicon glyphicon-unchecked'
+      $(".select-button").prop('disabled', true)
+      global['select'].forEach(item => {
+        item.className = ''
+      })
+      global['select'] = false
+    }
+    else {
+      button.children[0].className = 'glyphicon glyphicon-check'
+      $(".select-button").prop('disabled', false)
+      global['select'] = []
+    }
+  }
+
+  function changePay(status) {
+    if (global['select'].length) {
+      var list = []
+      global['select'].forEach((item, index) => {
+        list.push(item.getAttribute('id'))
+      })
+      freeze()
+      $.post(
+        global['url'],
+        {action: 'change-pay', list: list, type: status, page: global['secretary']['page'], filter: getSecretaryFilter()},
+        (response, status) => {
+          checkResult(response, status).then(data => {  
+            secretaryList.html(data['html'])
+            installSelect()
+            global['select'] = []
+          }, () => {})
+        }
+      )
+    }    
+  }
 
   function installSigner(id, selectid = 0) {
     var html = ''
@@ -3245,6 +3318,7 @@
         checkResult(response, status).then(data => {
           global['secretary']['page'] = 1
           secretaryList.html(data['html'])
+          installSelect()
         }, () => {})
       }
     )
