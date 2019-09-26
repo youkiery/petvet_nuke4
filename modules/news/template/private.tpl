@@ -984,6 +984,7 @@
     contentType: 'image/jpeg',
   };
   var file, filename
+  var uploaded = {}
   remind = JSON.parse('{remind}')
   var thumbnail
   var canvas = document.createElement('canvas')
@@ -1442,12 +1443,13 @@
   function insertParentSubmit() {
     if (data = checkParentData()) {
       freeze()
-      uploader().then((imageUrl) => {
+      uploader('parent').then((imageUrl) => {
         $.post(
           global['url'],
           { action: 'insert-parent', id: global['id'], data: data, image: imageUrl, filter: checkFilter(), tabber: global['tabber'] },
           (response, status) => {
             checkResult(response, status).then(data => {
+              uploaded['parent'] = {}
               petList.html(data['html'])
               clearInputSet(parent)
               file = false
@@ -1549,8 +1551,8 @@
       var fullname = input.files[0].name
       var name = Math.round(new Date().getTime() / 1000) + '_' + fullname.substr(0, fullname.lastIndexOf('.'))
       var extension = fullname.substr(fullname.lastIndexOf('.') + 1)
+      uploaded[previewname] = {}
       filename = name + '.' + extension
-      uploadedUrl = ''
 
       reader.onload = function (e) {
         var type = e.target["result"].split('/')[1].split(";")[0];
@@ -1578,6 +1580,11 @@
             file = cc.toDataURL("image/jpeg")
             $("#" + previewname + "-preview").attr('src', file)
             file = file.substr(file.indexOf(',') + 1);
+            uploaded[previewname] = {
+              url: '',
+              file: file,
+              name: filename              
+            }
           }
         };
       };
@@ -1684,13 +1691,14 @@
   function editPetSubmit() {
     if (data = checkPetData()) {
       freeze()
-      uploader().then((imageUrl) => {
+      uploader('pet').then((imageUrl) => {
         $.post(
           global['url'],
           { action: 'editpet', id: global['id'], data: data, image: imageUrl, filter: checkFilter(), tabber: global['tabber'] },
           (response, status) => {
             checkResult(response, status).then(data => {
               deleteImage(data['image']).then(() => {
+                uploaded['pet'] = {}
                 petList.html(data['html'])
                 clearInputSet(pet)
                 file = false
@@ -1768,12 +1776,13 @@
 
   function insertPetSubmit() {
     freeze()
-    uploader().then(imageUrl => {
+    uploader('pet').then(imageUrl => {
       $.post(
         global['url'],
         { action: 'insertpet', data: checkPetData(), filter: checkFilter(), tabber: global['tabber'], image: imageUrl },
         (response, status) => {
           checkResult(response, status).then(data => {
+            uploaded['pet'] = {}
             petList.html(data['html'])
             file = false
             filename = ''
@@ -1849,12 +1858,13 @@
     e.preventDefault()
     freeze()
     if (data = checkEdit()) {
-      uploader().then((imageUrl) => {
+      uploader('user').then((imageUrl) => {
         $.post(
           global['url'],
           {action: 'edituser', data: data, image: imageUrl, id: global['id']},
           (response, status) => {
             checkResult(response, status).then(data => {
+              uploaded['user'] = {}
               deleteImage(data['image']).then(() => {
                 userList.html(data['html'])
                 clearInputSet(user)
@@ -1952,16 +1962,16 @@
     $(".i" + id).fadeToggle()
   }
 
-  function uploader() {
+  function uploader(name) {
     return new Promise(resolve => {
-      if (uploadedUrl) {
-        resolve(uploadedUrl)
-      }
-      else if (!(file || filename)) {
+      if (!uploaded[name] || !uploaded[name]['file']) {
         resolve('')
       }
+      else if (uploaded[name]['url']) {
+        resolve(uploaded[name]['url'])
+      }
       else {
-        var uploadTask = storageRef.child('images/' + filename).putString(file, 'base64', metadata);
+        var uploadTask = storageRef.child('images/' + uploaded[name]['filename'] + '?t=' + new Date().getTime() / 1000).putString(uploaded[name]['file'], 'base64', metadata);
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
           function(snapshot) {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -1990,7 +2000,7 @@
           }, function() {
             // Upload completed successfully, now we can get the download URL
             uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-            uploadedUrl = downloadURL
+            uploaded[name]['url'] = downloadURL
             resolve(downloadURL)
             console.log('File available at', downloadURL);
           });
