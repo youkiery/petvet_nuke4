@@ -27,9 +27,10 @@
   }
 </style>
 <div id="review" style="display: none;">
-  <div style="position: absolute; top: 0px; left: 0px; width: -webkit-fill-available; height: 20px; background: cornflowerblue; border-top-left-radius: 20px;" onclick="hideReview()"></div>
+  <div style="position: absolute; top: 0px; left: 0px; width: -webkit-fill-available; height: 20px; background: cornflowerblue; border-top-left-radius: 20px; color: white; text-align: right; background-color: cornflowerblue; font-weight: bold; font-size: 1.2em; padding-right: 4px;" onclick="hideReview()">
+    &times;
+  </div>
   <form onsubmit="sendReview(event)" style="margin-top: 10px;">
-
     <input type="text" class="form-control" id="review-username" placeholder="Tên hiển thị">
     <div class="text-center">
       Nội dung
@@ -42,6 +43,8 @@
 </div>
 <div id="review-bar" class="text-center" style="color: white; font-weight: bold; line-height: 30px;" onclick="showReview()">
   Góp ý
+  <span class="glyphicon glyphicon-hand-up">
+  </span>
 </div>
 
 <script>

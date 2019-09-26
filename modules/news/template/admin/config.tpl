@@ -19,6 +19,10 @@
   Tự động duyệt mua:
   <input type="checkbox" class="form-control" id="buy" {buy}>
 </div>
+<div class="form-group">
+  Tự động duyệt liên hệ:
+  <input type="checkbox" class="form-control" id="info" {info}>
+</div>
 <button class="btn btn-info" onclick="save()">
   Lưu cấu hình
 </button>
@@ -33,6 +37,7 @@
       pet: checkBool($("#pet").prop('checked')),
       trade: checkBool($("#trade").prop('checked')),
       buy: checkBool($("#buy").prop('checked')),
+      info: checkBool($("#info").prop('checked'))
     }
   }
 

@@ -45,7 +45,7 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("config.tpl", PATH);
 // $xtpl->assign('content', buyList2());
-$array = array('user', 'pet', 'trade', 'buy');
+$array = array('user', 'pet', 'trade', 'buy', 'info');
 
 foreach ($array as $value) {
   $sql = 'select * from `'. PREFIX .'_config` where name = "'. $value .'"';

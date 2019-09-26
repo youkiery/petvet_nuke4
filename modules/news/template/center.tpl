@@ -44,20 +44,26 @@
             </div>
             <div class="col-sm-9">
               <label>
-                <input type="radio" name="sex4" id="buy-sex-0" checked> Đực
+                <input type="radio" name="sex4" id="buy-sex-0" checked> Sao cũng được
               </label>
               <label>
-                <input type="radio" name="sex4" id="buy-sex-1"> Cái
+                <input type="radio" name="sex4" id="buy-sex-1" checked> Đực
+              </label>
+              <label>
+                <input type="radio" name="sex4" id="buy-sex-2"> Cái
               </label>
             </div>
           </label>
 
+          <label>
+            <input type="radio" name="age" id="buy-age" checked> Sao cũng được
+          </label>
           <label class="row">
             <div class="col-sm-3">
               Tuổi
             </div>
             <div class="col-sm-9">
-              <input type="number" class="form-control" id="buy-age">
+              <input type="number" class="form-control" id="buy-age" placeholder="tháng">
             </div>
           </label>
 
