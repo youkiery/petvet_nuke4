@@ -336,7 +336,7 @@
             </div>
           </label>
 
-          <div class="row">
+          <div class="row" id="pet-parent-m">
             <div class="col-sm-12">
               Chó cha
               <div class="relative">
@@ -353,7 +353,7 @@
               </div>
             </div>
 
-            <div class="col-sm-12">
+            <div class="col-sm-12" id="pet-parent-f">
               Chó mẹ
               <div class="relative">
                 <div class="input-group">
@@ -573,7 +573,8 @@
     userid: -1,
     owner: {},
     petid: 0,
-    parentid: 0
+    parentid: 0,
+    user_parent: 0
   }
   var user = {
     username: $("#username"),
@@ -658,7 +659,7 @@
   var storage = firebase.storage();
   var storageRef = firebase.storage().ref();
 
-  $("#pet-dob").datepicker({
+  $("#pet-dob, #parent-dob").datepicker({
     format: 'dd/mm/yyyy',
     changeMonth: true,
     changeYear: true
@@ -927,6 +928,16 @@
           $("#parent-f").val(data['more']['f'])
           $("#parent-m").val(data['more']['m'])
           $("#pet-sex-" + data['more']['sex']).prop('checked', true)
+          if (data['more']['userid']) {
+            global['user_parent'] = data['more']['userid']
+            $("#pet-parent-m").show()
+            $("#pet-parent-f").show()
+          }
+          else {
+            global['user_parent'] = 0
+            $("#pet-parent-m").hide()
+            $("#pet-parent-f").hide()
+          }
           var image = new Image()
           image.src = data['image']
           petPreview.attr('src', thumbnail)
@@ -1062,6 +1073,8 @@
     insertPet.modal('show')
     clearInputSet(pet)
     // $("#pet-dob").val(mostly['pet']['dob'])
+    $("#pet-parent-m").hide()
+    $("#pet-parent-f").hide()
     $("#parent-m").val('')
     $("#parent-f").val('')
     petPreview.attr('src', thumbnail)
@@ -1122,10 +1135,10 @@
     }
   }
 
-  function uploader() {
+  function uploader(name) {
     return new Promise(resolve => {
-      if (uploadedUrl) {
-        resolve(uploadedUrl)
+      if (uploaded[name]) {
+        resolve(uploaded[name])
       }
       else if (!(file || filename)) {
         resolve('')
@@ -1160,7 +1173,7 @@
           }, function() {
             // Upload completed successfully, now we can get the download URL
             uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-            uploadedUrl = downloadURL
+            uploaded[name] = downloadURL
             resolve(downloadURL)
             console.log('File available at', downloadURL);
           });
@@ -1200,7 +1213,7 @@
     uploader().then((imageUrl) => {
       $.post(
         global['url'],
-        { action: 'insert-parent', id: global['id'], userid: global['userid'], data: checkInputSet(parent), image: imageUrl, filter: checkFilter(), tabber: global['tabber'] },
+        { action: 'insert-parent', id: global['id'], userid: global['user_parent'], data: checkInputSet(parent), image: imageUrl, filter: checkFilter(), tabber: global['tabber'] },
         (response, status) => {
           checkResult(response, status).then(data => {
             petList.html(data['html'])
