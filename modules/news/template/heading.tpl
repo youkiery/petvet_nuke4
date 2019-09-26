@@ -1,3 +1,6 @@
+<a href="/" style="text-decoration: none;">
+  Trang chủ
+</a> | 
 <a href="/news/sell" style="text-decoration: none;">
   <!-- <button class="btn"> -->
   Bán

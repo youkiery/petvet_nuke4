@@ -1455,6 +1455,7 @@
               $("#parent-preview").attr('src', thumbnail)
               remind = JSON.parse(data['remind'])
               insertParent.modal('hide')
+              $("#parent-error").text('')
               $("#parent-breeder").prop('checked', true)
               $("#parent-" + global['parent']).val(data['name'])
               $("#parent-" + global['parent'] + '-s').val(data['id'])
@@ -1696,6 +1697,7 @@
                 filename = ''
                 $("#parent-m").val('')
                 $("#parent-f").val('')
+                $("#pet-error").text('')
                 petPreview.val('')
                 remind = JSON.parse(data['remind'])
                 insertPet.modal('hide')
@@ -1779,6 +1781,7 @@
             $("#parent-m").val('')
             $("#parent-f").val('')
             $("#pet-breeder").prop('checked', true)
+            $("#pet-error").text('')
             petPreview.val('')
             remind = JSON.parse(data['remind'])
             insertPet.modal('hide')
