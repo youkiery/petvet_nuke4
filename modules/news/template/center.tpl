@@ -221,7 +221,7 @@
 
           <div class="text-center">
             <button class="btn btn-success" onclick="insertDiseaseSuggestSubmit()">
-              Thêm lịch sử bệnh
+              Thêm lịch loại tiêm phòng
             </button>
           </div>
         </div>

@@ -288,7 +288,7 @@ if (!empty($action)) {
 			while ($row = $query->fetch()) {
 				$html .= '
 				<div class="suggest_item" onclick="pickDisease(\''. $row['name'] .'\')">
-					<div class="xright">
+					<div>
 						<p> '. $row['name'] .' </p>
 					</div>
 				</div>

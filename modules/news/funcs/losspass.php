@@ -154,6 +154,7 @@ if (!empty($action)) {
 $xtpl = new XTemplate("losspass.tpl", "modules/". $module_name ."/template");
 $xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
 $xtpl->assign('module_file', $module_file);
+// var_dump($_SESSION);die();
 
 if (!empty($passing)) {
   $xtpl->parse('main.checked');

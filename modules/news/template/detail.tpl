@@ -24,8 +24,12 @@
 <div class="container">
   <div id="msgshow"></div>
   <a href="/">
-    <img src="/themes/default/images/banner.png" style="width: 200px;">
+    <img src="/themes/default/images/banner.png" style="float: left; width: 200px;">
   </a>
+  <div style="float: right;">
+    {FILE "heading.tpl"}
+  </div>
+  <div style="clear: right;"></div>
   <form style="width: 60%; float: right;">
     <label class="input-group">
       <input type="hidden" name="nv" value="{module_file}">
@@ -36,6 +40,7 @@
       </div>
     </label>
   </form>
+  <div style="clear: both;"></div>
   <a style="margin: 8px 0px; display: block;" href="javascript:history.go(-1)">
     <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
   </a>

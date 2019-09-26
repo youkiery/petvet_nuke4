@@ -150,7 +150,7 @@ function vaccineList($petid) {
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('time', date('d/m/Y', $row['time']));
     $xtpl->assign('recall', date('d/m/Y', $row['recall']));
-    if ($time >= $row['recall'] && $row['status'] == 0) {
+    if ($today >= $row['recall'] && $row['status'] == 0) {
       $xtpl->assign('color', 'red');
     }
     else {

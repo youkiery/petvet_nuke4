@@ -85,6 +85,7 @@ function parseLink($info) {
 }
 
 function parseLink2($info) {
+  global $module_name;
   if (!empty($info['id'])) {
     return '<a href="/'.$module_name.'/info/?id=' . $info['id'] . '">' . $info['name'] . '</a>';
   }

@@ -398,6 +398,12 @@
     </div>
   </div>
 
+  <p class="text-center">
+    <b>
+      Lược sử
+    </b>
+  </p>
+
   <div style="position: relative;">
     <div id="editor"></div>
     <button class="btn btn-success" style="position: absolute; top: 4px; right: 4px;" onclick="saveGraph()">
