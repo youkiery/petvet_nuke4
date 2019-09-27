@@ -291,9 +291,18 @@ function adminSummary($startDate = 0, $endDate = 0) {
     $count2 = $query2->fetch();
     // $count['num'] += $count2['num'];
 
+    $sql2 = 'select time, type from `' . PREFIX . '_penety` where time between '. $startDate .' and '.($endDate + A_DAY - 1).' and userid = ' . $row['userid'];
+    $query2 = $db->query($sql2);
+    $list = array();
+    while ($row2 = $query2->fetch()) {
+      $list[] = $row2;
+    }
+
     $total = round(($count2['num'] + $count['num']) / 2, 1);
     $xtpl->assign("rest", round($count['num'] / 2, 1));
     $xtpl->assign("overflow", round($count2['num'] / 2, 1));
+    $xtpl->assign("data", json_encode($list));
+
     $xtpl->assign("total", $total);
     $xtpl->assign("exceed", $total > 4 ? $total - 4 : 0);
     $xtpl->parse("main.row");

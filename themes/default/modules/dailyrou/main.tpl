@@ -41,6 +41,15 @@
   </div>
 </div>
 
+<div id="modal-overflow" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body" id="overflow-content">
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="regist_confirm" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -265,6 +274,12 @@
   var exType = -1
   var wconfirmData = []
   var manager = 0
+  var global = {
+    rest: {
+      2: 'sáng',
+      3: 'chiều'
+    }
+  }
 
   setEvent()
 
@@ -451,6 +466,27 @@
     }
   })
 
+  function viewOverflow(data) {
+    try {
+      data = JSON.parse(data)
+      html = ''
+      data.forEach(item => {
+        date = new Date(item['time'] * 1000)
+        
+        html += `
+          <div>
+            Nghỉ buổi `+ global['rest'][item['type']] +` ngày `+ (date.getDate() < 10 ? '0' : '') + date.getDate() +`/`+ (((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1)) + `/` + date.getFullYear() +`
+          </div>
+          <hr>
+        `
+      })
+      $("#overflow-content").html(html)
+      $("#modal-overflow").modal('show')
+    }
+    catch (e) {
+      console.log(e);
+    }
+  }
 
   function showSummary() {
     summary.modal("show")

@@ -26,7 +26,7 @@
         {rest}
       </td>
       <td class="text-center">
-        {overflow}
+        {overflow} <button class="btn btn-info" style="padding: 2px 4px;" onclick='viewOverflow(`{data}`)'> xem </button>
       </td>
       <td class="text-center">
         {total}
