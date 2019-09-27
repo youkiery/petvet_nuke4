@@ -1,13 +1,13 @@
 <!-- BEGIN: main -->
 <div class="container">
   <div id="msgshow"></div>
-  <a href="/">
-    <img src="/themes/default/images/banner.png" style="float: left; width: 200px;">
-  </a>
   <div style="float: right;">
     {FILE "heading.tpl"}
   </div>
   <div style="clear: right;"></div>
+  <a href="/">
+    <img src="/themes/default/images/banner.png" style="float: left; width: 200px;">
+  </a>
   <form style="width: 60%; float: right;">
     <label class="input-group">
       <input type="hidden" name="nv" value="biograph">

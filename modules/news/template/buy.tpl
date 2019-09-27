@@ -58,13 +58,13 @@
   </div>
 
   <div id="msgshow"></div>
-  <a href="/">
-    <img src="/themes/default/images/banner.png" style="float: left; width: 200px;">
-  </a>
   <div style="float: right;">
     {FILE "heading.tpl"}
   </div>
   <div style="clear: right;"></div>
+  <a href="/">
+    <img src="/themes/default/images/banner.png" style="float: left; width: 200px;">
+  </a>
   <form onsubmit="filter(event)" style="width: 60%; float: right;">
     <div class="row">
       <div class="col-sm-5">
