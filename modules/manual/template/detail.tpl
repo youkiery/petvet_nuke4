@@ -13,7 +13,7 @@
   <div class="row">
     <div class="col-sm-3">
       <!-- BEGIN: menu -->
-      <a href="/{module_name}/{cat}/{alias}-{id}.html"> {title} </a>
+      <a href="/{module_name}/{cat}/{alias}-{id}.html#content"> {title} </a>
       <hr>
       <!-- END: menu -->
     </div>
