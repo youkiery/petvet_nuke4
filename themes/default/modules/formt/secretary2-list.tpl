@@ -9,7 +9,6 @@
         <th> Tên đơn vị </th>
         <th> Số lượng mẫu </th>
         <th> Trạng thái </th>
-        <th></th>
       </tr>
     </thead>
     <!-- BEGIN: row -->
@@ -21,11 +20,6 @@
         <td> {unit} </td>
         <td> {number} </td>
         <td> {state} </td>
-        <td>
-          <button class="btn btn-info" onclick="editSecret({id})">
-            <span class="glyphicon glyphicon-edit"></span>
-          </button>  
-        </td>
       </tr>
     </tbody>
     <!-- END: row -->

@@ -483,7 +483,6 @@
         checkResult(response, status).then(data => {
           wconfirmAlert.modal("hide")
           content.html(data["html"])
-          doctorId = data["doctorId"]
           wconfirmInitiaze()
         }, () => {})
       }
@@ -497,7 +496,6 @@
       (response, status) => {
         checkResult(response, status).then(data => {
           content.html(data["html"])
-          doctorId = data["doctorId"]
           wconfirmInitiaze()
         }, () => {})
       }

@@ -137,6 +137,9 @@
   <!-- BEGIN: secretary -->
   <li class="{secretary_active}"><a data-toggle="tab" href="#menu3"> Kế toán </a></li>
   <!-- END: secretary -->
+  <!-- BEGIN: printx -->
+  <li><a data-toggle="tab" href="#menu4"> Văn thư </a></li>
+  <!-- END: printx -->
 </ul>
 
 <div class="tab-content">
@@ -944,9 +947,6 @@
     <button class="btn btn-warning select-button" style="float: right;" onclick="changePay(0)" disabled>
       Chưa thanh toán
     </button>
-    <button class="btn btn-info" onclick="printX()">
-      <span class="glyphicon glyphicon-print"></span>
-    </button>  
 
     <div style="clear: both;"></div>
 
@@ -963,6 +963,83 @@
       Lưu
     </button>
     <div id="secretary"></div>
+  </div>
+  <!-- END: secretary2 -->
+
+  <!-- BEGIN: printx2 -->
+  <div id="menu4" class="tab-pane">
+    <form onsubmit="secretaryFilter2(event)">
+      <div class="row form-group">
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="sfilter2-keyword" placeholder="Số thông báo" autocomplete="off">
+        </div>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="sfilter2-xcode" placeholder="Số ĐKXN" autocomplete="off">
+        </div>
+        <div class="col-sm-4">
+          <select class="form-control" id="sfilter2-limit">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="75">75</option>
+            <option value="100">100</option>
+          </select>
+        </div>
+        <div class="col-sm-4">
+          <select class="form-control" id="sfilter2-pay">
+            <option value="0">
+              Toàn bộ
+            </option>
+            <option value="1">
+              Chưa trả
+            </option>
+            <option value="2">
+              Đã trả
+            </option>
+          </select>
+        </div>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="sfilter2-unit" placeholder="Đơn vị">
+        </div>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="sfilter2-exam" placeholder="Kết quả xét nghiệm">
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="sfilter2-owner" placeholder="Chủ hộ">
+        </div>
+
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="sfilter2-sample" placeholder="Loại động vật">
+        </div>
+
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="sfilter2-from" value="{last_week}">
+        </div>
+
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="sfilter2-end" value="{today}">
+        </div>
+      </div>
+
+      <div class="text-center">
+        <button class="btn btn-info"><span class="glyphicon glyphicon-search"></span></button>
+      </div>
+    </form>
+
+    <button class="btn btn-info" style="float: right;" onclick="selectRow(this)">
+      <span class="glyphicon glyphicon-unchecked"></span>
+    </button>
+    <button class="btn btn-info" style="float: right;" onclick="printX()">
+      <span class="glyphicon glyphicon-print"></span>
+    </button>  
+
+    <div style="clear: both;"></div>
+
+    <div id="secretary2-list">
+      {printx}
+    </div>
   </div>
   <!-- END: secretary2 -->
 
@@ -1273,6 +1350,7 @@
   var content = $("#content")
   var secretary = $("#secretary")
   var secretaryList = $("#secretary-list")
+  var secretaryList2 = $("#secretary2-list")
   var formRemove = $("#form-remove")
 
   var formInsertSenderEmploy = $("#sender-employ-0")
@@ -1400,6 +1478,17 @@
   var sfilterFrom = $("#sfilter-from")
   var sfilterEnd = $("#sfilter-end")
 
+  var sfilter2Keyword = $("#sfilter2-keyword")
+  var sfilter2Xcode = $("#sfilter2-xcode")
+  var sfilter2Limit = $("#sfilter2-limit")
+  var sfilter2Unit = $("#sfilter2-unit")
+  var sfilter2Exam = $("#sfilter2-exam")
+  var sfilter2Sample = $("#sfilter2-sample")
+  var sfilter2Pay = $("#sfilter2-pay")
+  var sfilter2Owner = $("#sfilter2-owner")
+  var sfilter2From = $("#sfilter2-from")
+  var sfilter2End = $("#sfilter2-end")
+
   var global_html = {}
   var global_form = 1
   var global_saved = 0
@@ -1458,6 +1547,9 @@
     select: false,
     signer: JSON.parse('{signer}'),
     secretary: {
+      page: 1
+    },
+    secretary2: {
       page: 1
     },
     signdata: [
@@ -1521,7 +1613,7 @@
     parseSaved()
   })
 
-  $("#form-insert-receive, #form-insert-resend, #form-insert-ireceive, #form-insert-iresend, #form-insert-sample-receive, #form-insert-sample-time, #form-insert-exam-date, #form-summary-from, #form-summary-end, #form-insert-notice-time, #form-insert-xresend, #form-insert-xreceive, #form-insert-xsend, #excelf, #excelt, #filter-from, #filter-end, #sfilter-from, #sfilter-end").datepicker({
+  $("#form-insert-receive, #form-insert-resend, #form-insert-ireceive, #form-insert-iresend, #form-insert-sample-receive, #form-insert-sample-time, #form-insert-exam-date, #form-summary-from, #form-summary-end, #form-insert-notice-time, #form-insert-xresend, #form-insert-xreceive, #form-insert-xsend, #excelf, #excelt, #filter-from, #filter-end, #sfilter-from, #sfilter-end, #sfilter2-from, #sfilter2-end").datepicker({
     format: 'dd/mm/yyyy',
     changeMonth: true,
     changeYear: true
@@ -3339,6 +3431,23 @@
     return data
   }
 
+  function getSecretaryFilter2() {
+    var data = {
+      page: global['secretary2']['page'],
+      keyword: sfilter2Keyword.val(),
+      xcode: sfilter2Xcode.val(),
+      limit: sfilter2Limit.val(),
+      unit: sfilter2Unit.val(),
+      exam: sfilter2Exam.val(),
+      sample: sfilter2Sample.val(),
+      pay: sfilter2Pay.val(),
+      from: sfilter2From.val(),
+      end: sfilter2End.val(),
+      owner: sfilter2Owner.val()
+    }
+    return data
+  }
+
   function secretaryFilter(e) {
     e.preventDefault()
     $.post(
@@ -3360,6 +3469,11 @@
     )
   }
 
+  function secretaryFilter2(e) {
+    e.preventDefault()
+    goPage(1)
+  }
+
   function goPage(page) {
     var secret_tab = trim($('.nav-tabs .active').text()).toLowerCase()
     if (secret_tab == 'kế toán') {
@@ -3370,6 +3484,20 @@
           checkResult(response, status).then(data => {
             global['secretary']['page'] = page
             secretaryList.html(data['html'])
+            installSelect()
+          }, () => {})
+        }
+      )
+    }
+    else if (secret_tab == 'văn thư') {
+      $.post(
+        strHref,
+        {action: 'secretaryfilter2', filter: getSecretaryFilter2()},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            global['secretary2']['page'] = page
+            secretaryList2.html(data['html'])
+            installSelect()
           }, () => {})
         }
       )

@@ -107,7 +107,7 @@ if (!empty($action)) {
               $sql = "delete from `" . PREFIX . "_row` where type = $row[type] and user_id = $user[userid] and time = $time";
               if ($db->query($sql)) {
                 $sql = 'delete from `'. PREFIX .'_penety` where userid = '. $user['userid'] .' and (time between '. $time .' and ' . ($time + A_DAY - 1) . ') and type = ' . ($row["type"]);
-                  $db->query($sql);
+                $db->query($sql);
               }
             }
           }
@@ -154,29 +154,17 @@ if (!empty($action)) {
         foreach ($itemList as $itemData) {
           $date = totime($itemData["date"]);
           $day = date('w', $date);
-          if (($user["permission"] || $date >= $today) && (checkLimit($doctorId, $date, $itemData['type'] - 2) || $itemData['color'] == 'purple')) {
+          if (($user["permission"] || $date >= $today) || $itemData['color'] == 'purple') {
             if ($itemData["color"] == "purple") {
-              $sql = "delete from `". PREFIX ."_row` where user_id = $doctorId and (time between $date and " . ($date + A_DAY - 1) . ") and type = " . ($itemData["type"]);
+              $sql = "delete from `". PREFIX ."_row` where user_id = $doctorId and (time between $date and " . ($date + A_DAY - 1) . ") and type = " . ($itemData["type"] - 2);
               if ($db->query($sql)) {
-                $sql = 'delete from `'. PREFIX .'_penety` where userid = '. $doctorId .' and (time between '. $date .' and ' . ($date + A_DAY - 1) . ') and type = ' . ($itemData["type"]);
+                $sql = 'delete from `'. PREFIX .'_penety` where userid = '. $doctorId .' and (time between '. $date .' and ' . ($date + A_DAY - 1) . ') and type = ' . ($itemData["type"] - 2);
+                $db->query($sql);
               }
             }
             else {
-              $sql = "insert into `". PREFIX ."_row` (type, user_id, time) values(" . ($itemData["type"]) . ", $doctorId, $date)";
-              if ($db->query($sql) && $row['type'] > 1) {
-                $sql = "select count(*) as count from `". PREFIX ."_row` where user_id not in (select user_id from `". $db_config['prefix'] ."_rider_user` where type = 1 and except = 1) and (time between $date and " . ($date + A_DAY - 1) . ") and type = " . ($itemData["type"] - 2);
-                $query = $db->query($sql);
-                $count = $query->fetch()['count'];
-                $limit = 2;
-                if ($day == 0 || $day == 6) {
-                  $limit = 1;
-                }
-
-                if ($count > $limit) {
-                  $sql = 'insert into from `'. PREFIX .'_penety` (userid, time, type) values('. $doctorId .', '. $date .', ' . ($itemData["type"]) . ')';
-                  $query->fetch();
-                }
-              }
+              $sql = "insert into `". PREFIX ."_row` (type, user_id, time) values(" . ($itemData["type"] - 2) . ", $doctorId, $date)";
+              $db->query($sql);
             }
           }
           else {

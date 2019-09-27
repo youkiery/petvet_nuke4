@@ -196,6 +196,90 @@ function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '
   return $xtpl->text();
 }
 
+function secretaryList2($filter = array('page' => 1, 'keyword' => '', 'sample' => '', 'unit' => '', 'exam' => '', 'xcode' => '', 'pay' => '0', 'limit' => 10, 'owner' => '')) {
+  global $db, $user_info;
+  $xtpl = new XTemplate("secretary2-list.tpl", PATH);
+
+  $today = time();
+  if (empty($filter['end'])) {
+    $filter['end'] = date('d/m/Y', $today);
+  }
+
+  if (empty($filter['from'])) {
+    $filter['from'] = date('d/m/Y', $today - 60 * 60 * 24 * 30);
+  }
+
+  $filter['from'] = totime($filter['from']);
+  $filter['end'] = totime($filter['end'] + 60 * 60 * 24 * - 1);
+
+  $exsql = '';
+  if ($filter['pay'] > 0) {
+    $filter['pay'] --;
+
+    if ($filter['pay'] > 0) {
+      $exsql .= ' and id in (select rid from `'. PREFIX .'_secretary` where pay = 1)';
+    }
+    else {
+      $exsql .= ' and id not in (select rid from `'. PREFIX .'_secretary` where pay = 1)';
+    }
+  }
+
+  $sqlCount = 'select count(*) as count from `'. PREFIX .'_row` where mcode like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and owner like "%'. $filter['owner'] .'%" and printer = 5 and (time between '. $filter['from'] .' and '. $filter['end'] .') ' . $exsql;
+
+  $query = $db->query($sqlCount);
+  $count = $query->fetch();
+
+  $sql = 'select * from `'. PREFIX .'_row` where mcode like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and owner like "%'. $filter['owner'] .'%" and printer = 5 and (time between '. $filter['from'] .' and '. $filter['end'] .') '. $exsql .' order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+
+  $index = 1;
+  $from = ($filter['page'] - 1) * $filter['limit'] + 1;
+  $end = $from - 1;
+  while ($row = $query->fetch()) {
+      $sql = 'select * from `'. PREFIX .'_secretary` where rid = ' . $row['id'];
+      $squery = $db->query($sql);
+      $secretary = $squery->fetch();
+      $xtpl->assign('state', 'Chưa trả');
+      if (!empty($secretary) && !empty($secretary['pay'])) {
+        $xtpl->assign('state', 'Đã trả');
+      }
+      
+      $end ++;
+      $xtpl->assign('index', $index++);
+      $xtpl->assign('id', $row['id']);
+      $xcode = str_replace(', ', '/', $row['xcode']);
+      $xcode = str_replace(',', '/', $xcode);
+      $xtpl->assign('xcode', $xcode);
+      $xtpl->assign('notice', $row['mcode']);
+      $xtpl->assign('noticetime', date('d/m/Y', $row['noticetime']));
+      $xtpl->assign('number', $row['number']);
+      $xtpl->assign('printer', $row['printer']);
+      for ($i = 1; $i <= $row['printer']; $i++) { 
+        $xtpl->assign('printercount', $i);
+        $xtpl->parse('main.row.printer');
+      }
+      $xtpl->assign('unit', $row['sender']);
+
+      if (getUserType($user_info['userid']) > 1) {
+        // if (checkIsMod($user_info['userid'])) {
+        $xtpl->parse('main.row.mod');
+      }
+      if ($row['pay']) {
+        $xtpl->parse('main.row.yes');
+      }
+      else {
+        $xtpl->parse('main.row.no');
+      }
+      $xtpl->parse('main.row');
+  }
+  $xtpl->assign('from', $from);
+  $xtpl->assign('end', $end);
+  $xtpl->assign('total', $count['count']);
+  $xtpl->assign('nav', navList($count['count'], $filter['page'], $filter['limit']));
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = array('exam' => '', 'unit' => '', 'sample' => ''), $xcode = '', $owner = '') {
   global $db, $sampleType, $user_info;
   $xtpl = new XTemplate("list.tpl", PATH);

@@ -277,12 +277,11 @@ if (!empty($action)) {
           $sql = 'insert into `'. PREFIX .'_secretary` (date, org, address, phone, fax, mail, content, type, sample, xcode, ig, mcode, reformer, rid, pay) values('. $row2['xresend'] .', "'. $row2['sender'] .'", "'. $row2['xaddress'] .'", "'. $row2['ownerphone'] .'", "'. $row2['fax'] .'", "'. $row2['ownermail'] .'", "'. $row2['target'] .'", '. $row2['typeindex'] .', "'. $row2['sample'] .'", "'. $row2['xcode'] .'", \''. $ig .'\', "", "'. $row2['reformer'] .'", '. $id .', '. $type .')';
         }
         else {
-          $sql = 'update `'. PREFIX .'_secretary` set pay = '. $type . ' where id in (' . $list . ')';
+          $sql = 'update `'. PREFIX .'_secretary` set pay = '. $type . ' where rid = ' . $id;
         }
-        // die($sql);
         $db->query($sql);
       }
-
+      
       if ($html = secretaryList($page, $filter)) {
         $result['status'] = 1;
         $result['notify'] = 'Cập nhật thành công';
@@ -505,6 +504,12 @@ if (!empty($action)) {
 
 			$result['status'] = 1;
 			$result['html'] = secretaryList($page, $filter);
+		break;
+		case 'secretaryfilter2':
+			$filter = $nv_Request->get_array('filter', 'get/post');
+
+			$result['status'] = 1;
+			$result['html'] = secretaryList2($filter);
 		break;
 		case 'preview':
 		case 'getForm':
@@ -1019,6 +1024,9 @@ switch ($permission) {
 		$xtpl->assign('secretary', secretaryList());
 		$xtpl->parse('main.secretary2');
 		$xtpl->parse('main.secretary');
+		$xtpl->assign('printx', secretaryList2());
+		$xtpl->parse('main.printx2');
+		$xtpl->parse('main.printx');
 	break;
 	case 5: 
 		$method = getMethod();
@@ -1061,6 +1069,9 @@ switch ($permission) {
 		$xtpl->assign('secretary', secretaryList());
 		$xtpl->parse('main.secretary2');
 		$xtpl->parse('main.secretary');
+		$xtpl->assign('printx', secretaryList2());
+		$xtpl->parse('main.printx2');
+		$xtpl->parse('main.printx');
 	break;
 }
 
