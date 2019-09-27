@@ -7,8 +7,8 @@
   <div class="pright">
     Tên: {name} <br>
     Tuổi: {age} <br>
-    Giống: {species} <br>
     Loài: {breed} <br>
+    Giống: {species} <br>
     <!-- BEGIN: sell -->
     <span style="color: red"> Đã bán </span>
     <!-- END: sell -->

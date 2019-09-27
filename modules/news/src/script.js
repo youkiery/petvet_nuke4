@@ -65,6 +65,13 @@ function paintext(string) {
   return str;
 }
 
+function parseCurrency(number) {
+  if (number = Number(number)) {
+    return formatter.format(number).replace(/ ₫/g, "").replace(/\./g, ",");
+  }
+  return 0
+}
+
   function splipper(text, part) {
     var pos = text.search(part + '-')
     var overleft = text.slice(pos)

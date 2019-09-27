@@ -11,6 +11,8 @@ if (!defined('PREFIX')) {
   die('Stop!!!');
 }
 
+$buy_sex = array('Sao cũng được', 'Đực', 'Cái');
+
 function revenue($filter = array('page' => 1, 'limit' => 10)) {
   global $db, $sex_array;
 
@@ -637,7 +639,7 @@ function statistic($filter = array('from' => '', 'to' => '')) {
 }
 
 function buyList($filter = array('species' => '', 'breed' => '', 'page' => '1', 'limit' => '12')) {
-  global $db, $module_name, $sex_array;
+  global $db, $module_name, $buy_sex;
 
   $xtpl = new XTemplate('buy-list.tpl', PATH);
   $xtpl->assign('module_name', $module_name);
@@ -653,10 +655,16 @@ function buyList($filter = array('species' => '', 'breed' => '', 'page' => '1', 
   while($row = $query->fetch()) {
     $owner = getOwnerById($row['userid'], $row['type']);
     $xtpl->assign('id', $row['id']);
-    $xtpl->assign('species', $row['species']);
-    $xtpl->assign('breed', $row['breed']);
-    $xtpl->assign('age', $row['age']);
-    $xtpl->assign('sex', $sex_array[$row['sex']]);
+    $xtpl->assign('species', ($row['species'] ? $row['species'] : 'Sao cũng được'));
+    $xtpl->assign('breed', ($row['breed'] ? $row['breed'] : 'Sao cũng được'));
+    $xtpl->assign('age', ($row['age'] ? parseMonth($row['age']) : 'Sao cũng được'));
+    $xtpl->assign('sex', $buy_sex[$row['sex']]);
+    if (count($price = explode('-', $row['price'])) == 2) {
+      $xtpl->assign('price', number_format($price['0'] * 10000)  . ' đến ' . number_format($price['1'] * 100000));
+    }
+    else {
+      $xtpl->assign('price', 'liên hệ');
+    }
     // $xtpl->assign('index', $index++);
     // $xtpl->assign('name', $row['name']);
     // $xtpl->assign('owner', $owner['fullname']);

@@ -16,6 +16,15 @@ define("PATH", 'modules/' . $module_file . '/template');
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 
+function parseMonth($number) {
+  $year = round($number / 12);
+  $month = round($number - $year * 12);
+  if ($year > 0) {
+    return 'khoảng ' . $year . ' năm ' . $month . ' tháng';
+  }
+  return 'khoảng ' . $month . ' tháng';
+}
+
 function getUserInfo() {
   global $db, $_SESSION;
   $data = array();

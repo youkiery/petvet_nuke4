@@ -47,7 +47,7 @@
                 <input type="radio" name="sex4" id="buy-sex-0" checked> Sao cũng được
               </label>
               <label>
-                <input type="radio" name="sex4" id="buy-sex-1" checked> Đực
+                <input type="radio" name="sex4" id="buy-sex-1"> Đực
               </label>
               <label>
                 <input type="radio" name="sex4" id="buy-sex-2"> Cái
@@ -56,15 +56,27 @@
           </label>
 
           <label>
-            <input type="radio" name="age" id="buy-age" checked> Sao cũng được
+            <input type="checkbox" name="age" id="buy-age-check" checked> Sao cũng được
           </label>
           <label class="row">
             <div class="col-sm-3">
               Tuổi
             </div>
             <div class="col-sm-9">
-              <input type="number" class="form-control" id="buy-age" placeholder="tháng">
+              <input type="number" class="form-control" id="buy-age" placeholder="tháng" disabled>
             </div>
+          </label>
+
+          <label>
+            <input type="checkbox" name="age" id="buy-price-check" checked> Liên hệ
+          </label>
+          <label for="customRange2">Khoảng giá <span id="buy-price"></span></label>
+          <input type="range" class="buy-form" min="0" max="100" id="buy-price-from" disabled>
+          <input type="range" class="buy-form" min="0" max="100" id="buy-price-end" disabled>
+
+          <label>
+            Yêu cầu thêm
+            <textarea class="form-control" id="buy-note" rows="5"></textarea>
           </label>
 
           <div id="buy-error" style="color: red; font-weight: bold;"></div>
@@ -1048,6 +1060,11 @@
   var thumbnail
   var canvas = document.createElement('canvas')
 
+  const formatter = new Intl.NumberFormat('vi-VI', {
+    style: 'currency',
+    currency: 'VND'
+  })
+
   var thumbnailImage = new Image()
   thumbnailImage.src = '/themes/default/images/thumbnail.jpg'
   thumbnailImage.onload = (e) => {
@@ -1125,39 +1142,91 @@
   }
 
   function buy() {
+    $("#buy-sex-0").prop('checked', true)
+    $("#buy-age-check").prop('checked', true)
+    $("#buy-age").prop('disabled', true)
     $("#user-buy").modal('show')
   }
 
+  $("#buy-age-check").change(() => {
+    if ($("#buy-age-check").prop('checked')) {
+      $("#buy-age").prop('disabled', true)
+      $("#buy-age").val('')
+    }
+    else {
+      $("#buy-age").prop('disabled', false)
+      $("#buy-age").val('1')
+    }
+  })
+
+  $("#buy-price-check").change(() => {
+    if ($("#buy-price-check").prop('checked')) {
+      $("#buy-price-from").prop('disabled', true)
+      $("#buy-price-end").prop('disabled', true)
+      $("#buy-price").text('')
+    }
+    else {
+      $("#buy-price-from").prop('disabled', false)
+      $("#buy-price-end").prop('disabled', false)
+      $("#buy-price").text(checkPrice())
+    }
+  })
+
+  $("#buy-price-from, #buy-price-end").change(() => {
+    $("#buy-price").text(checkPrice())
+  })
+
+  function checkPrice() {
+    var from = $("#buy-price-from").val()
+    var end = $("#buy-price-end").val()
+
+    if (end - from < 0) {
+      $("#buy-price-from").val(end)
+      $("#buy-price-end").val(from)
+      temp = from
+      from = end
+      end = temp
+    }
+
+    return 'Từ ' + parseCurrency(from * 100000) + ' đến ' + parseCurrency(end * 100000)
+  }
+
   function checkBuyData() {
-    var sex0 = $("#buy-sex-0").prop('checked'), sex1 = $("#buy-sex-1").prop('checked')
+    var sex = splipper($("[name=sex4]:checked").attr('id'), 'buy-sex-')
+    sex.length ? '' : sex = 0
+    var age = $("#buy-age").val()
+    if ($("#buy-age-check").prop('checked')) {
+      age = 0
+    }
+    var price = $("#buy-price-check").prop('checked')
+    if (!price) {
+      var from = $("#buy-price-from").val()
+      var end = $("#buy-price-end").val()
+      price = from + '-' + end
+    }
+    else price = 0
     return {
       species: $("#species-buy").val(),
       breed: $("#breed-buy").val(),
-      sex: (sex0 ? 1 : 2),
-      age: $("#buy-age").val()
+      sex: sex,
+      age: age,
+      price: price,
+      note: $("#buy-note").val()
     }
   }
 
   function buySubmit() {
     data = checkBuyData()
-    if (Number(data['age']) == NaN || data['age'] < 0) {
-      data['age'] = 0
-    }
-    if (!data['species'].length || !data['breed'].length || !data['age'].length) {
-      $("#buy-error").text('Các trường không được để trống')
-    }
-    else {
-      freeze()
-      $.post(
-        global['url'],
-        {action: 'buy', data: data},
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            $("#user-buy").modal('hide')
-          }, () => {})
-        }
-      )    
-    }
+    freeze()
+    $.post(
+      global['url'],
+      {action: 'buy', data: data},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#user-buy").modal('hide')
+        }, () => {})
+      }
+    )    
   }
 
   function sellSubmit() {
@@ -1983,9 +2052,7 @@
             checkResult(response, status).then(data => {
               uploaded['user']
               deleteImage(data['image']).then(() => {
-                userList.html(data['html'])
-                clearInputSet(user)
-                insertUser.modal('hide')
+                window.location.reload()
               })
             }, () => {})
           }

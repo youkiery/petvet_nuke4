@@ -15,8 +15,8 @@
   <div class="pright">
     Tên: {name} <br>
     Tuổi: {age} <br>
-    Giống: {species} <br>
-    Loài: {breed}
+    Loài: {breed} <br>
+    Giống: {species}
   </div>
 </a>
 <span style="clear: both;"></span>
