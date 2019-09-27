@@ -1605,7 +1605,7 @@
     installRemindv2('0', 'owner');
     installRemindv2('0', 'sample-place');
     installRemindv2('0', 'receive-leader');
-
+    installSelect()
     // installExamRemind()
     parseField(global_field)
     parseExam(global_exam)        

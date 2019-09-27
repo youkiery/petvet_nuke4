@@ -8,7 +8,6 @@
         <th> Số ĐKXN </th>
         <th> Tên đơn vị </th>
         <th> Số lượng mẫu </th>
-        <th> Trạng thái </th>
       </tr>
     </thead>
     <!-- BEGIN: row -->
@@ -19,7 +18,6 @@
         <td> {xcode} </td>
         <td> {unit} </td>
         <td> {number} </td>
-        <td> {state} </td>
       </tr>
     </tbody>
     <!-- END: row -->
