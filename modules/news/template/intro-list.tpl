@@ -19,14 +19,28 @@
   </tr>
   <!-- BEGIN: row -->
   <tr>
-    <td> {index} </td>
+    <td rowspan="3"> {index} </td>
     <td> {target} </td>
     <td> {address} </td>
     <td> {mobile} </td>
     <td> {type} </td>
   </tr>
   <tr>
-    <td colspan="5">
+    <td>
+      {name}
+    </td>
+    <td>
+      {breed}
+    </td>
+    <td>
+      {species}
+    </td>
+    <td>
+      <a href="/news/detail/?id={pid}"> Chi tiết </a>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="4">
       <div style="width: 50%; float: left;">
         Ghi chú: {note}
       </div>

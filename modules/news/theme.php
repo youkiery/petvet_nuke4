@@ -412,12 +412,18 @@ function introList($userid, $filter = array('page' => 1, 'limit' => 10)) {
 
   while ($row = $query->fetch()) {
     $owner = getOwnerById($row['userid']);
+    $pet = getPetById($row['rid']);
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('target', $row['fullname']);
     $xtpl->assign('address', $row['address']);
     $xtpl->assign('mobile', $row['mobile']);
     $xtpl->assign('note', $row['note']);
+    $xtpl->assign('name', $pet['name']);
+    $xtpl->assign('breed', $pet['breed']);
+    $xtpl->assign('species', $pet['species']);
+    $xtpl->assign('pid', $pet['id']);
+
     switch ($row['type']) {
       case 1:
         $xtpl->assign('type', 'Cần bán');
