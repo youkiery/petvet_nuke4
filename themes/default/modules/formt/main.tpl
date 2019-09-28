@@ -44,6 +44,23 @@
 
 <div class="msgshow" id="msgshow"></div>
 
+<div id="modal-print" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <button class="btn btn-info" onclick="savePrint()">
+          <span class="glyphicon glyphicon-floppy-disk"></span>
+        </button>
+        <button class="btn btn-info" onclick="printXSubmit()">
+          <span class="glyphicon glyphicon-print"></span>
+        </button>
+        <div id="print-content"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="form-summary" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -1685,7 +1702,27 @@
       freeze()
       $.post(
         global['url'],
-        {action: 'print-x', list: list, page: global['secretary']['page'], filter: getSecretaryFilter()},
+        {action: 'print-x-list', list: list},
+        (response, status) => {
+          checkResult(response, status).then(data => {  
+            $("#print-content").html(data['html'])
+            $("#modal-print").modal('show')
+          }, () => {})
+        }
+      )
+    }    
+  }
+
+  function printXSubmit() {
+    if (global['select'].length) {
+      var list = []
+      global['select'].forEach((item, index) => {
+        list.push(item.getAttribute('id'))
+      })
+      freeze()
+      $.post(
+        global['url'],
+        {action: 'print-x', list: list},
         (response, status) => {
           checkResult(response, status).then(data => {  
             var winPrint = window.open(origin, '_blank', 'left=0,top=0,width=800,height=600');
@@ -1695,11 +1732,40 @@
               winPrint.print()
               winPrint.close()
             }, 300)
-
           }, () => {})
         }
       )
-    }    
+    }
+  }
+
+  function savePrint() {
+    if (global['select'].length) {
+      var list = []
+      var data = {}
+      global['select'].forEach((item, index) => {
+        data[item.getAttribute('id')] = getSavePrintData(item.getAttribute('id'))
+      })
+      freeze()
+      $.post(
+        global['url'],
+        {action: 'save-print', data: data},
+        (response, status) => {
+          checkResult(response, status).then(data => {  
+            alert_msg('Đã lưu')
+          }, () => {})
+        }
+      )
+    }
+  }
+
+  function getSavePrintData(id) {
+    return {
+      customer: $("#print-customer-" + id).val(),
+      address: $("#print-address-" + id).val(),
+      mobile: $("#print-mobile-" + id).val(),
+      fax: $("#print-fax-" + id).val(),
+      mail: $("#print-mail-" + id).val()
+    }
   }
 
   function installSigner(id, selectid = 0) {

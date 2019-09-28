@@ -224,26 +224,96 @@ if (!empty($action)) {
 		// 	$result['status'] = 1;
 		// 	$result['html'] = $xtpl->text();
 		// break;
-    case 'print-x':
+    case 'print-x-list':
       $list = $nv_Request->get_array('list', 'post');
       $page = $nv_Request->get_int('page', 'post');
       $filter = $nv_Request->get_array('filter', 'post');
 
+      $xtpl = new XTemplate("print-x-list.tpl", PATH);
+
+      foreach ($list as $id) {
+        $sql = 'select * from `'. PREFIX .'_print` where rid = ' . $id;
+        $query = $db->query($sql);
+
+        if (!empty($print = $query->fetch())) {
+          $xtpl->assign('id', $id);
+          $xtpl->assign('customer', $print['customer']);
+          $xtpl->assign('address', $print['address']);
+          $xtpl->assign('mobile', $print['mobile']);
+          $xtpl->assign('fax', $print['fax']);
+          $xtpl->assign('mail', $print['mail']);
+          $xtpl->parse('main');
+        }
+        else {
+          $sql = 'select sender, xaddress, ownerphone, fax, ownermail from `'. PREFIX .'_row` where id = ' . $id;
+          $query = $db->query($sql);
+
+          if (!empty($print = $query->fetch())) {
+            $xtpl->assign('id', $id);
+            $xtpl->assign('customer', $print['sender']);
+            $xtpl->assign('address', $print['xaddress']);
+            $xtpl->assign('mobile', $print['ownerphone']);
+            $xtpl->assign('fax', $print['fax']);
+            $xtpl->assign('mail', $print['ownermail']);
+            $xtpl->parse('main');
+          }
+        }
+      }      
+      $result['html'] = $xtpl->text();
+      $result['status'] = 1;
+    break;
+    case 'print-x':
+      $list = $nv_Request->get_array('list', 'post');
+
       $xtpl = new XTemplate("print-x.tpl", PATH);
 
-      $sql = 'select * from `'. PREFIX .'_row` where id in ('. implode(', ', $list) .')';
-      $query = $db->query($sql);
+      foreach ($list as $id) {
+        $sql = 'select * from `'. PREFIX .'_print` where rid = ' . $id;
+        $query = $db->query($sql);
 
-      while ($row = $query->fetch()) {
-        $xtpl->assign('customer', $row['sender']);
-        $xtpl->assign('address', $row['address']);
-        $xtpl->assign('mobile', $row['mobile']);
-        $xtpl->parse('main.block');
-      }
+        if (!empty($print = $query->fetch())) {
+          $xtpl->assign('customer', $print['customer']);
+          $xtpl->assign('address', $print['address']);
+          $xtpl->assign('mobile', $print['mobile']);
+          $xtpl->assign('fax', $print['fax']);
+          $xtpl->assign('mail', $print['mail']);
+          $xtpl->parse('main.block');
+        }
+        else {
+          $sql = 'select sender, xaddress, ownerphone, fax, ownermail from `'. PREFIX .'_row` where id = ' . $id;
+          $query = $db->query($sql);
+
+          if (!empty($print = $query->fetch())) {
+            $xtpl->assign('customer', $print['sender']);
+            $xtpl->assign('address', $print['xaddress']);
+            $xtpl->assign('mobile', $print['ownerphone']);
+            $xtpl->assign('fax', $print['fax']);
+            $xtpl->assign('mail', $print['ownermail']);
+            $xtpl->parse('main.block');
+          }
+        }
+      }      
       $xtpl->parse('main');
       $result['html'] = $xtpl->text();
       $result['status'] = 1;
+    break;
+    case 'save-print':
+      $data = $nv_Request->get_array('data', 'post');
 
+      foreach ($data as $id => $row) {
+        $sql = 'select * from `'. PREFIX .'_print` where rid = ' . $id;
+        $query = $db->query($sql);
+
+        if (empty($query->fetch())) {
+          $sql = 'insert into `'. PREFIX .'_print` (rid, customer, address, mobile, fax, mail) values('. $id .', "'. $row['customer'] .'", "'. $row['address'] .'", "'. $row['mobile'] .'", "'. $row['fax'] .'", "'. $row['mail'] .'")';
+          $db->query($sql);
+        }
+        else {
+          $sql = 'update  `'. PREFIX .'_print` set customer = "'. $row['customer'] .'", address = "'. $row['address'] .'", mobile = "'. $row['mobile'] .'", fax = "'. $row['fax'] .'", mail = "'. $row['mail'] .'" where rid = ' . $id;
+          $db->query($sql);
+        }
+      }
+      $result['status'] = 1;
     break;
     case 'change-pay':
       $list = $nv_Request->get_array('list', 'post');
