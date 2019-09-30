@@ -12,13 +12,5 @@
     Số điện thoại
     <input class="form-control" type="text" id="print-mobile-{id}" value="{mobile}">
   </label>
-  <label>
-    Fax
-    <input class="form-control" type="text" id="print-fax-{id}" value="{fax}">
-  </label>
-  <label>
-    Email
-    <input class="form-control" type="text" id="print-mail-{id}" value="{mail}">
-  </label>
 </div>
 <!-- END: main -->

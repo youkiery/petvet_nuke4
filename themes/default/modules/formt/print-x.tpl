@@ -23,12 +23,6 @@
   <p>
     Số điện thoại: {mobile}
   </p>
-  <p>
-    Fax: {fax}
-  </p>
-  <p>
-    Email: {mail}
-  </p>
 </div>
 <!-- END: block -->
 

@@ -14,7 +14,7 @@ if (!defined('NV_IS_FORM')) {
 $page_title = "Nhập hồ sơ một cửa";
 $sampleType = array(0 => 'Nguyên con', 'Huyết thanh', 'Máu', 'Phủ tạng', 'Swab');
 $xco = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
-$yco = array('index' => 'STT','set' => 'Kết quả xét nghiệm','code' => 'Số phiếu','sender' => 'Tên đơn vị','receive' => 'Ngày nhận mẫu','resend' => 'Ngày hẹn trả kết quả','status' => 'Hình thức nhận','ireceiver' => 'Người nhận hồ sơ','ireceive' => 'Ngày nhận hồ sơ','iresend' => 'Ngay trả hồ sơ','number' => 'Số lượng mẫu','sampletype' => 'Loại mẫu','sample' => 'Loài vật lấy mẫu','xcode' => 'Số ĐKXN','isenderunit' => 'Bộ phận giao mẫu','ireceiverunit' => 'Bộ phận nhận mẫu','examdate' => 'Ngày phân tích','xresender' => 'Người phụ trách bộ phận xét nghiệm','xexam' => 'Bộ phận xét nghiệm','examsample' => 'Lượng mẫu xét nghiệm','receiver' => 'Người lấy mẫu','samplereceive' => 'Thời gian lấy mẫu','senderemploy' => 'Khách hàng','xaddress' => 'Địa chỉ','ownermail' => 'Email','ownerphone' => 'Điện thoại','owner' => 'Chủ hộ','sampleplace' => 'Nơi lấy mẫu','target' => 'Mục đích','receivedis' => 'Nơi nhận','receiveleader' => 'Người phụ trách');
+$yco = array('index' => 'STT','set' => 'Kết quả xét nghiệm','code' => 'Số phiếu','sender' => 'Tên đơn vị','receive' => 'Ngày nhận mẫu','resend' => 'Ngày hẹn trả kết quả','status' => 'Hình thức nhận','ireceiver' => 'Người nhận hồ sơ','ireceive' => 'Ngày nhận hồ sơ','iresend' => 'Ngay trả hồ sơ','number' => 'Số lượng mẫu','sampletype' => 'Loại mẫu','sample' => 'Loài vật lấy mẫu','xcode' => 'Số ĐKXN','isenderunit' => 'Bộ phận giao mẫu','ireceiverunit' => 'Bộ phận nhận mẫu','examdate' => 'Ngày phân tích','xresender' => 'Người phụ trách bộ phận xét nghiệm','xexam' => 'Bộ phận xét nghiệm','examsample' => 'Lượng mẫu xét nghiệm','receiver' => 'Người lấy mẫu','samplereceive' => 'Thời gian lấy mẫu','senderemploy' => 'Khách hàng','xaddress' => 'Địa chỉ','ownermail' => 'Email','ownerphone' => 'Điện thoại','owner' => 'Chủ hộ','sampleplace' => 'Nơi lấy mẫu','target' => 'Mục đích','receivedis' => 'Nơi nhận','receiveleader' => 'Người phụ trách', 'ownaddress' => 'Địa chỉ', 'ownmobile' => 'Số điện thoại');
 
 // $sql = "select * from `". PREFIX ."_row`";
 // $query = $db->query($sql);
@@ -375,6 +375,9 @@ if (!empty($action)) {
 					$xtpl->assign('content', $row['content']);
 					$xtpl->assign('type', $row['type']);
 					$xtpl->assign('pay' . $row['pay'], 'checked');
+					$xtpl->assign('owner', $row['owner']);
+					$xtpl->assign('ownaddress', $row['ownaddress']);
+					$xtpl->assign('ownphone', $row['ownphone']);
 					$result['ig'] = $row['ig'];
 				}
 				else {
@@ -387,6 +390,9 @@ if (!empty($action)) {
 					$xtpl->assign('phone', $row['ownerphone']);
 					$xtpl->assign('mail', $row['ownermail']);
 					$xtpl->assign('content', $row['target']);
+					$xtpl->assign('owner', $row['owner']);
+					$xtpl->assign('ownaddress', $row['sampleplace']);
+					$xtpl->assign('ownmobile', '');
 					$xtpl->assign('type', (!empty($sampleType[$row['typeindex']] ? $sampleType[$row['typeindex']] : $row['typevalue'])));
 					$xtpl->assign('pay0', 'checked');
 					$tempData = array();
@@ -481,6 +487,7 @@ if (!empty($action)) {
 					}
 					$sql = 'insert `'. PREFIX .'_secretary` ('. implode(', ', $temp) .', rid) values (' . implode(', ', $temp2) . ', '. $id .')';
 				}
+        // die($sql);
 				if ($db->query($sql)) {
 					$result['notify'] = 'Đã cập nhật thành công';
 					$result['remind'] = json_encode(getRemindv2());

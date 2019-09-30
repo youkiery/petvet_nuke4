@@ -2337,7 +2337,10 @@
       mcode: $('#smcode').val(),
       reformer: $('#reformer-0').val(),
       pay: ($("#pay1").prop('checked') ? 1 : 0),
-      ig: temp
+      ig: temp,
+      owner: $("#sowner").val(),
+      ownphone: $("#sownphone").val(),
+      ownaddress: $("#sownaddress").val()
     }
     return data
   }

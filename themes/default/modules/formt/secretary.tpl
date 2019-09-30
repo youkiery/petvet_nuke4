@@ -42,6 +42,27 @@
   </div>
 
   <div class="row form-group">
+    <label class="col-sm-6"> Chủ hộ </label>
+    <div class="col-sm-12">
+      <input type="text" value="{owner}" class="form-control" id="sowner" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <label class="col-sm-6"> Địa chỉ </label>
+    <div class="col-sm-12">
+      <input type="text" value="{ownaddress}" class="form-control" id="sownaddress" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <label class="col-sm-6"> Số điện thoại </label>
+    <div class="col-sm-12">
+      <input type="text" value="{ownphone}" class="form-control" id="sownphone" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="row form-group">
     <label class="col-sm-6"> Nội dung công việc </label>
     <div class="col-sm-12">
       <input type="text" value="{content}" class="form-control" id="scontent" autocomplete="off">
