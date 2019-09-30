@@ -801,6 +801,93 @@ function getMarketContent($id) {
   return $html;
 }
 
+function trading($filter = array('page' => 1, 'limit' => 10, 'breed' => '', 'species' => '', 'status' => array(0 => 1, 1, 1), 'type' => array(0 => 1, 1, 1))) {
+  global $db, $buy_sex, $userinfo;
+  $status_name = array('Đang chờ duyệt', 'Đã duyệt', 'Đã hủy');
+
+  $xtpl = new XTemplate('trading.tpl', PATH . '/list');
+  $x = array();
+  $status = array();
+
+  foreach ($filter['status'] as $id => $value) {
+    if ($value) {
+      $status[] = $id;
+    }
+  }
+
+  if ($filter['type'][0]) {
+    $x[] = 'select id, time, 1 as type from `'. PREFIX .'_buy` where userid = '. $userinfo['id'] .' and status in ('. implode(', ', $status) . ') and breed like "%'. $filter['breed'] .'%" and species like "%'. $filter['species'] .'%"';
+  }
+  if ($filter['type'][1] || $filter['type']['2']) {
+    $tick = array();
+    if ($filter['type'][1]) $tick[] = 1;
+    if ($filter['type'][2]) $tick[] = 2;
+    $x[] = 'select a.id, a.time, 2 as type from `'. PREFIX .'_trade` a inner join `'. PREFIX .'_pet` b on a.petid = b.id where b.userid = '. $userinfo['id'] .' and a.type in ('. implode(', ', $tick) .') and a.status in ('. implode(', ', $status) .') and b.breed like "%'. $filter['breed'] .'%" and b.species like "%'. $filter['species'] .'%"';
+  }
+
+  if (count($x) > 0) {
+    if ($filter['type'][0] && ($filter['type'][1] || $filter['type'][2])) {
+      $sql = 'select count(*) as count from (('. $x[0] .') union ('. $x[1] .')) as a';
+      $sql2 = '('. $x[0] .') union ('. $x[1] .') order by time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+    } 
+    else {
+      $sql = 'select count(*) as count from ('. $x[0] .') as a';
+      $sql2 = $x[0] .' order by time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+    }
+
+    $query = $db->query($sql);
+    $count = $query->fetch()['count'];
+    $xtpl->assign('nav', navList($count, $page, $limit));
+
+    $query = $db->query($sql2);
+
+    while ($bank = $query->fetch()) {
+      $xtpl->assign('id', $bank['id']);
+      $xtpl->assign('type', $bank['type']);
+      if ($bank['type'] == 1) {
+        $sql = 'select * from `'. PREFIX .'_buy` where id = ' . $bank['id'];
+        $query2 = $db->query($sql);
+        $row = $query2->fetch();
+
+        $xtpl->assign('name', '--');
+        $xtpl->assign('breed', $row['breed']);
+        $xtpl->assign('species', $row['species']);
+        if (empty($row['breed'])) $xtpl->assign('breed', '--');
+        if (empty($row['species'])) $xtpl->assign('species', '--');
+        $xtpl->assign('cat', 'Cần mua');
+      }
+        else {
+        $sql = 'select a.status, a.type, a.petid, b.name, b.breed, b.species from `'. PREFIX .'_trade` a inner join `'. PREFIX .'_pet` b on a.petid = b.id where a.id = ' . $bank['id'];
+        $query2 = $db->query($sql);
+        $row = $query2->fetch();
+
+        $xtpl->parse('main.row.link');
+        $xtpl->assign('name', $row['name']);
+        $xtpl->assign('breed', $row['breed']);
+        $xtpl->assign('species', $row['species']);
+        $xtpl->assign('cat', 'Cần phối');
+        if ($row['type'] == 1) {
+          $xtpl->assign('cat', 'Cần bán');
+        }
+      }
+      if ($row['status'] < 2) {
+        $xtpl->parse('main.row.cancel');
+      }
+      else {
+        $xtpl->parse('main.row.request');
+      }
+      $xtpl->assign('status', $status_name[$row['status']]);
+      $xtpl->parse('main.row');
+    }
+  }
+  else {
+
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function navList ($number, $page, $limit) {
   global $lang_global;
   $total_pages = ceil($number / $limit);
@@ -848,7 +935,7 @@ function navList ($number, $page, $limit) {
   return $page_string;
 }
 
-function navList2($number, $page, $limit, $type) {
+function navList2 ($number, $page, $limit, $nv, $op) {
   global $lang_global;
   $total_pages = ceil($number / $limit);
 
@@ -857,7 +944,7 @@ function navList2($number, $page, $limit, $type) {
   if ($total_pages > 10) {
     $init_page_max = ($total_pages > 3) ? 3 : $total_pages;
     for ($i = 1; $i <= $init_page_max; $i ++) {
-      $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="'. $type .'('.$i.')">' . $i . '</button>';
+      $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<a href="/'. $nv .'/'. $op .'/?id='. $i .'">'. $i .'</a>';
       if ($i < $init_page_max) $page_string .= " ";
     }
     if ($total_pages > 3) {
@@ -866,7 +953,7 @@ function navList2($number, $page, $limit, $type) {
         $init_page_min = ($on_page > 4) ? $on_page : 5;
         $init_page_max = ($on_page < $total_pages - 4) ? $on_page : $total_pages - 4;
         for ($i = $init_page_min - 1; $i < $init_page_max + 2; $i ++) {
-          $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="'. $type .'('.$i.')">' . $i . '</button>';
+          $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<a href="/'. $nv .'/'. $op .'/?id='. $i .'">'. $i .'</a>';
           if ($i < $init_page_max + 1)  $page_string .= " ";
         }
         $page_string .= ($on_page < $total_pages - 4) ? " ... " : ", ";
@@ -876,7 +963,7 @@ function navList2($number, $page, $limit, $type) {
       }
       
       for ($i = $total_pages - 2; $i < $total_pages + 1; $i ++) {
-        $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="'. $type .'('.$i.')">' . $i . '</button>';
+        $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<a href="/'. $nv .'/'. $op .'/?id='. $i .'">'. $i .'</a>';
         if ($i < $total_pages) $page_string .= " ";
       }
     }
@@ -884,7 +971,7 @@ function navList2($number, $page, $limit, $type) {
   else {
     if ($total_pages) {
       for ($i = 1; $i < $total_pages + 1; $i ++) {
-        $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="'. $type .'('.$i.')">' . $i . '</button>';
+        $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<a href="/'. $nv .'/'. $op .'/?id='. $i .'">'. $i .'</a>';
         if ($i < $total_pages) $page_string .= " ";
       }
     }
@@ -894,3 +981,4 @@ function navList2($number, $page, $limit, $type) {
   }
   return $page_string;
 }
+
