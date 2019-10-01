@@ -897,8 +897,8 @@
     </button>
   </div>
   <div style="clear: left;"></div>
+  <p> <a href="/{module_file}/trading"> Quản lý mua, bán, phối</a> <span style="font-weight: bold; color: red;">{intro_count}</span></p>
   <p> <a href="/{module_file}/transfer"> Danh sách chuyển nhượng <span style="font-weight: bold; color: red;">{transfer_count}</span> </a> </p>
-  <p> <a href="/{module_file}/intro"> Danh sách liên hệ mua, bán, phối</a> <span style="font-weight: bold; color: red;">{intro_count}</span></p>
   <p> <a href="/{module_file}/reserve"> Danh sách bán, mất</a> </p>
   <p> <a href="/{module_file}/contact"> Danh sách khách hàng </a> </p>
   <!-- BEGIN: xter -->

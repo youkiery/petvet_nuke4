@@ -164,6 +164,11 @@
     <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
   </a>
 
+  <div style="padding: 0px 15px;">
+    <span class="glyphicon glyphicon-arrow-right" style="color: red;"></span>
+    <a href="/news/intro"> Danh sách liên hệ mua, bán, phối </a>
+  </div>
+
   <form onsubmit="filterE(event)">
     <div class="row" style="margin: 10px 0px;">
       <div class="col-sm-6">
