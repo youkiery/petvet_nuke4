@@ -834,7 +834,7 @@ function filterPet($filter = array('keyword', 'breed' => '', 'species' => '')) {
   return $xtpl->text();
 }
 
-function trading($filter = array('page' => 1, 'limit' => 10, 'breed' => '', 'species' => '', 'status' => array(0 => 1, 1, 1), 'type' => array(0 => 1, 1, 1))) {
+function trading($filter = array('page' => 1, 'limit' => 10, 'breed' => '', 'species' => '', 'status' => array(0 => 1, 1, 1), 'type' => array(0 => 1, 1, 1), 'contact' => array(0 => 1, 1))) {
   global $db, $buy_sex, $userinfo;
   $status_name = array('Đang chờ duyệt', 'Đã duyệt', 'Đã hủy');
 
@@ -851,7 +851,7 @@ function trading($filter = array('page' => 1, 'limit' => 10, 'breed' => '', 'spe
   if ($filter['type'][0]) {
     $x[] = 'select id, time, 1 as type from `'. PREFIX .'_buy` where userid = '. $userinfo['id'] .' and status in ('. implode(', ', $status) . ') and breed like "%'. $filter['breed'] .'%" and species like "%'. $filter['species'] .'%"';
   }
-  if ($filter['type'][1] || $filter['type']['2']) {
+  if ($filter['type'][1] || $filter['type'][2]) {
     $tick = array();
     if ($filter['type'][1]) $tick[] = 1;
     if ($filter['type'][2]) $tick[] = 2;

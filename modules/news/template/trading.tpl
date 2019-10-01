@@ -191,6 +191,15 @@
         <label style="width: auto; margin-right: 10px;"> <input type="checkbox" value="2" id="filter-type-2" checked> Cần phối </label>
       </div>
     </div>
+
+    <!-- <div class="row" style="margin: 10px 0px;">
+      <div class="col-sm-12 form-inline">
+        <b style="margin-right: 10px;"> Liên hệ </b>
+        <label style="width: auto; margin-right: 10px;"> <input type="checkbox" value="0" id="filter-contact-0" checked> Có </label>
+        <label style="width: auto; margin-right: 10px;"> <input type="checkbox" value="1" id="filter-contact-1" checked> Không </label>
+      </div>
+    </div> -->
+    
     <div class="text-center">
       <button class="btn btn-info">
         Lọc danh sách
@@ -384,6 +393,11 @@
         Number($("#filter-type-1").prop('checked')),
         Number($("#filter-type-2").prop('checked'))
       ]
+      // ,
+      // contact: [
+      //   Number($("#filter-contact-0").prop('checked')),
+      //   Number($("#filter-contact-1").prop('checked')),
+      // ]
     }
   }
 
