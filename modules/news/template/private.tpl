@@ -1007,11 +1007,6 @@
   var thumbnail
   var canvas = document.createElement('canvas')
 
-  const formatter = new Intl.NumberFormat('vi-VI', {
-    style: 'currency',
-    currency: 'VND'
-  })
-
   var thumbnailImage = new Image()
   thumbnailImage.src = '/themes/default/images/thumbnail.jpg'
   thumbnailImage.onload = (e) => {

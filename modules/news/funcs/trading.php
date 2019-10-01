@@ -32,6 +32,14 @@ if (!empty($action)) {
         $result['html'] = $html;
       }
     break;
+    case 'filter-pet':
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      if ($html = filterPet($filter)) {
+        $result['status'] = 1;
+        $result['html'] = $html;
+      }
+    break;
     case 'cancel':
       $id = $nv_Request->get_int('id', 'post');
       $type = $nv_Request->get_int('type', 'post');
@@ -65,6 +73,53 @@ if (!empty($action)) {
         $result['status'] = 1;
         $result['html'] = $html;
       }
+    break;
+    case 'breeding':
+      $id = $nv_Request->get_string('id', 'post', '0');
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      if (checkPetOwner($id, $userinfo['id'])) {
+        $sql2 = 'delete from `'. PREFIX .'_trade` where status = 2 and type = 2 and petid = ' . $id;
+        $sql = 'insert into `'. PREFIX .'_trade` (petid, type, status, time, note) values ('. $id .', 2, '. $config['trade'] .', '. time() .', "")';
+        if ($db->query($sql) && $db->query($sql2) && $html = filterPet($filter)) {
+          $result['status'] = 1;
+          $result['html'] = $html;
+        }
+      }
+    break;
+    case 'sell':
+      $id = $nv_Request->get_string('id', 'post', '0');
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      if (checkPetOwner($id, $userinfo['id'])) {
+        $sql2 = 'delete from `'. PREFIX .'_trade` where status = 2 and type = 1 and petid = ' . $id;
+        $sql = 'insert into `'. PREFIX .'_trade` (petid, type, status, time, note) values ('. $id .', 1, '. $config['trade'] .', '. time() .', "")';
+        if ($db->query($sql) && $db->query($sql2) && $html = filterPet($filter)) {
+          $result['status'] = 1;
+          $result['html'] = $html;
+        }
+      }
+    break;
+    case 'info':
+      $pid = $nv_Request->get_string('pid', 'post', '0');
+
+      $sql = 'select * from `'. PREFIX .'_info` where rid = ' . $pid . ' order by time desc';
+      $query = $db->query($sql);
+      $html = '';
+      while ($row = $query->fetch()) {
+        $html .= '
+          <div>
+          Tên khách: '. $row['fullname'] .' <br>
+          Địa chỉ: '. $row['address'] .' <br>
+          Số điện thoại: '. $row['mobile'] .' <br>
+          Lúc: '. date('H:i d/m/Y', $row['time']) .'         
+          </div>
+          <hr>
+        ';
+      }
+
+      $result['status'] = 1;
+      $result['html'] = $html;
     break;
 	}
   echo json_encode($result);

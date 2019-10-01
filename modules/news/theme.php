@@ -801,6 +801,39 @@ function getMarketContent($id) {
   return $html;
 }
 
+function filterPet($filter = array('keyword', 'breed' => '', 'species' => '')) {
+  global $db, $userinfo;
+
+  $xtpl = new XTemplate('pet.tpl', PATH . '/list');
+  $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%" and microchip like "%'. $filter['keyword'] .'%" and miear like "%'. $filter['keyword'] .'%" and breed like "%'. $filter['breed'] .'%" and species like "%'. $filter['species'] .'%" and userid = ' . $userinfo['id'];
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $sql = 'select * from `'. PREFIX .'_trade` where petid = ' . $row['id'];
+    $query2 = $db->query($sql);
+    
+    $x = array(1 => 1, 2);
+    while ($trade = $query2->fetch()) {
+      unset($x[$trade['type']]);
+    }
+
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('breed', $row['breed']);
+    $xtpl->assign('species', $row['species']);
+    $xtpl->assign('micro', $row['microchip']);
+    $xtpl->assign('miear', $row['miear']);
+    if (empty($row['microchip'])) $xtpl->assign('micro', '--');
+    if (empty($row['miear'])) $xtpl->assign('miear', '--');
+    if (in_array(1, $x)) $xtpl->parse('main.row.sell');
+    if (in_array(2, $x)) $xtpl->parse('main.row.breed');
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function trading($filter = array('page' => 1, 'limit' => 10, 'breed' => '', 'species' => '', 'status' => array(0 => 1, 1, 1), 'type' => array(0 => 1, 1, 1))) {
   global $db, $buy_sex, $userinfo;
   $status_name = array('Đang chờ duyệt', 'Đã duyệt', 'Đã hủy');
@@ -844,10 +877,21 @@ function trading($filter = array('page' => 1, 'limit' => 10, 'breed' => '', 'spe
     while ($bank = $query->fetch()) {
       $xtpl->assign('id', $bank['id']);
       $xtpl->assign('type', $bank['type']);
+      $query2 = $db->query($sql);
+      if (!empty($query2->fetch())) {
+        $xtpl->parse('main.info');
+      }
+      
       if ($bank['type'] == 1) {
         $sql = 'select * from `'. PREFIX .'_buy` where id = ' . $bank['id'];
         $query2 = $db->query($sql);
         $row = $query2->fetch();
+        // buy
+        $sql = 'select * from `'. PREFIX .'_info` where rid = ' . $bank['id'];
+        $query2 = $db->query($sql);
+        $info = $query2->fetch();
+        $xtpl->assign('pid', $bank['id']);
+        if (!empty($info)) $xtpl->parse('main.row.info');
 
         $xtpl->assign('name', '--');
         $xtpl->assign('breed', $row['breed']);
@@ -856,10 +900,17 @@ function trading($filter = array('page' => 1, 'limit' => 10, 'breed' => '', 'spe
         if (empty($row['species'])) $xtpl->assign('species', '--');
         $xtpl->assign('cat', 'Cần mua');
       }
-        else {
+      else {
         $sql = 'select a.status, a.type, a.petid, b.name, b.breed, b.species from `'. PREFIX .'_trade` a inner join `'. PREFIX .'_pet` b on a.petid = b.id where a.id = ' . $bank['id'];
         $query2 = $db->query($sql);
         $row = $query2->fetch();
+        // buy
+        $sql = 'select * from `'. PREFIX .'_info` where rid = ' . $row['petid'];
+        // echo $sql . "<br>";
+        $query2 = $db->query($sql);
+        $info = $query2->fetch();
+        $xtpl->assign('pid', $row['petid']);
+        if (!empty($info)) $xtpl->parse('main.row.info');
 
         $xtpl->parse('main.row.link');
         $xtpl->assign('name', $row['name']);
@@ -883,6 +934,7 @@ function trading($filter = array('page' => 1, 'limit' => 10, 'breed' => '', 'spe
   else {
 
   }
+  // die();
 
   $xtpl->parse('main');
   return $xtpl->text();

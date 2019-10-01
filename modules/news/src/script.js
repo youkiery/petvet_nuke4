@@ -1,3 +1,8 @@
+const formatter = new Intl.NumberFormat('vi-VI', {
+  style: 'currency',
+  currency: 'VND'
+})
+
 function alert_msg(msg) {
   $('#msgshow').html(msg); 
 	$('#msgshow').show('slide').delay(2000).hide('slow'); 

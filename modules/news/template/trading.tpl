@@ -15,17 +15,31 @@
     <img class="loading" src="/themes/default/images/loading.gif">
   </div>
 
-  <div class="modal" id="user-insert" role="dialog">
+  <div class="modal" id="modal-info" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-body">
+          <button class="close" data-dismiss="modal">&times;</button>
+
+          <div id="info-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-insert" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <button class="close" data-dismiss="modal">&times;</button>
+
           <ul class="nav nav-pills">
             <li class="active"><a data-toggle="pill" href="#buy"> Mua </a></li>
             <li><a data-toggle="pill" href="#trade"> Bán, phối </a></li>
           </ul>
 
           <div class="tab-content">
-            <div id="home" class="tab-pane fade in active">
+            <div id="buy" class="tab-pane fade in active">
               <label class="row">
                 <div class="col-sm-3">
                   Loài
@@ -96,7 +110,41 @@
               </div>
             </div>
             <div id="trade" class="tab-pane fade">
-                            
+              <label class="row">
+                <div class="col-sm-3">
+                  Tên, microchip
+                </div>
+                <div class="col-sm-9" style="text-align: right;">
+                  <input type="text" class="form-control" id="keyword-trade">
+                </div>
+              </label>
+
+              <label class="row">
+                <div class="col-sm-3">
+                  Loài
+                </div>
+                <div class="col-sm-9" style="text-align: right;">
+                  <input type="text" class="form-control" id="species-trade">
+                  <div class="suggest" id="species-suggest-trade" style="text-align: left;"></div>
+                </div>
+              </label>
+
+              <label class="row">
+                <div class="col-sm-3">
+                  Giống
+                </div>
+                <div class="col-sm-9" style="text-align: right;">
+                  <input type="text" class="form-control" id="breed-trade">
+                  <div class="suggest" id="breed-suggest-trade" style="text-align: left;"></div>
+                </div>
+              </label>
+              <div class="text-center">
+                <button class="btn btn-info" onclick="filterPet()">
+                  Lọc thú cưng
+                </button>
+              </div>
+
+              <div id="trade-list"></div>
             </div>
           </div>
         </div>
@@ -128,19 +176,19 @@
 
     <div class="row" style="margin: 10px 0px;">
       <div class="col-sm-12 form-inline">
-        <b style="margin-right: 50px;"> Trạng thái </b>
-        <label style="width: auto;"> <input type="checkbox" value="0" id="filter-status-0" checked> Đang chờ duyệt </label>
-        <label style="width: auto;"> <input type="checkbox" value="1" id="filter-status-1" checked> Đã duyệt </label>
-        <label style="width: auto;"> <input type="checkbox" value="2" id="filter-status-2" checked> Đã hủy </label>
+        <b style="margin-right: 10px;"> Trạng thái </b>
+        <label style="width: auto; margin-right: 10px;"> <input type="checkbox" value="0" id="filter-status-0" checked> Chờ duyệt </label>
+        <label style="width: auto; margin-right: 10px;"> <input type="checkbox" value="1" id="filter-status-1" checked> Đã duyệt </label>
+        <label style="width: auto; margin-right: 10px;"> <input type="checkbox" value="2" id="filter-status-2" checked> Đã hủy </label>
       </div>
     </div>
 
     <div class="row" style="margin: 10px 0px;">
       <div class="col-sm-12 form-inline">
-        <b style="margin-right: 50px;">Chủ đề</b>
-        <label style="width: auto;"> <input type="checkbox" value="0" id="filter-type-0" checked> Cần mua </label>
-        <label style="width: auto;"> <input type="checkbox" value="1" id="filter-type-1" checked> Cần bán </label>
-        <label style="width: auto;"> <input type="checkbox" value="2" id="filter-type-2" checked> Cần phối </label>
+        <b style="margin-right: 10px;">Chủ đề</b>
+        <label style="width: auto; margin-right: 10px;"> <input type="checkbox" value="0" id="filter-type-0" checked> Cần mua </label>
+        <label style="width: auto; margin-right: 10px;"> <input type="checkbox" value="1" id="filter-type-1" checked> Cần bán </label>
+        <label style="width: auto; margin-right: 10px;"> <input type="checkbox" value="2" id="filter-type-2" checked> Cần phối </label>
       </div>
     </div>
     <div class="text-center">
@@ -149,6 +197,11 @@
       </button>
     </div>
   </form>
+
+  <button class="btn btn-success" onclick="$('#modal-insert').modal('show')" style="float: right;">
+    Thêm    
+  </button>
+  <div style="clear: both;"></div>
 
   <div id="content">
     {content}
@@ -159,6 +212,155 @@
   var global = {
     url: '{url}',
     page: 1
+  }
+
+  $("#buy-age-check").change(() => {
+    if ($("#buy-age-check").prop('checked')) {
+      $("#buy-age").prop('disabled', true)
+      $("#buy-age").val('')
+    }
+    else {
+      $("#buy-age").prop('disabled', false)
+      $("#buy-age").val('1')
+    }
+  })
+
+  $("#buy-price-check").change(() => {
+    if ($("#buy-price-check").prop('checked')) {
+      $("#buy-price-from").prop('disabled', true)
+      $("#buy-price-end").prop('disabled', true)
+      $("#buy-price").text('')
+    }
+    else {
+      $("#buy-price-from").prop('disabled', false)
+      $("#buy-price-end").prop('disabled', false)
+      $("#buy-price").text(checkPrice())
+    }
+  })
+
+  $("#buy-price-from, #buy-price-end").change(() => {
+    $("#buy-price").text(checkPrice())
+  })
+
+  function buy() {
+    $("#buy-sex-0").prop('checked', true)
+    $("#buy-age-check").prop('checked', true)
+    $("#buy-age").prop('disabled', true)
+    $("#user-buy").modal('show')
+  }
+
+  function checkPrice() {
+    var from = $("#buy-price-from").val()
+    var end = $("#buy-price-end").val()
+
+    if (end - from < 0) {
+      $("#buy-price-from").val(end)
+      $("#buy-price-end").val(from)
+      temp = from
+      from = end
+      end = temp
+    }
+
+    return 'Từ ' + parseCurrency(from * 100000) + ' đến ' + parseCurrency(end * 100000)
+  }
+
+  function checkBuyData() {
+    var sex = splipper($("[name=sex4]:checked").attr('id'), 'buy-sex-')
+    sex.length ? '' : sex = 0
+    var age = $("#buy-age").val()
+    if ($("#buy-age-check").prop('checked')) {
+      age = 0
+    }
+    var price = $("#buy-price-check").prop('checked')
+    if (!price) {
+      var from = $("#buy-price-from").val()
+      var end = $("#buy-price-end").val()
+      price = from + '-' + end
+    }
+    else price = 0
+    return {
+      species: $("#species-buy").val(),
+      breed: $("#breed-buy").val(),
+      sex: sex,
+      age: age,
+      price: price,
+      note: $("#buy-note").val()
+    }
+  }
+
+  function buySubmit() {
+    data = checkBuyData()
+    freeze()
+    $.post(
+      global['url'],
+      {action: 'buy', data: data},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#user-buy").modal('hide')
+        }, () => {})
+      }
+    )    
+  }
+
+  function checkPetFilter() {
+    return {
+      breed: $("#breed-trade").val(),
+      species: $("#species-trade").val(),
+      keyword: $("#keyword-trade").val()
+    }
+  }
+
+  function filterPet() {
+    freeze()
+    $.post(
+      global['url'],
+      {action: 'filter-pet', filter: checkPetFilter()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#trade-list").html(data['html'])
+        }, () => {})
+      }
+    )    
+  }
+
+  function sellSubmit(id) {
+    freeze()
+    $.post(
+      global['url'],
+      {action: 'sell', id: id, filter: checkPetFilter()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#trade-list").html(data['html'])
+        }, () => {})
+      }
+    )    
+  }
+
+  function breedingSubmit(id) {
+    freeze()
+    $.post(
+      global['url'],
+      {action: 'breeding', id: id, filter: checkPetFilter()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#trade-list").html(data['html'])
+        }, () => {})
+      }
+    )    
+  }
+
+  function info(pid) {
+    freeze()
+    $.post(
+      global['url'],
+      {action: 'info', pid: pid},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#info-list").html(data['html'])
+          $("#modal-info").modal('show')
+        }, () => {})
+      }
+    )    
   }
 
   function filterE(e) {

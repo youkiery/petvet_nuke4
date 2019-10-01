@@ -35,7 +35,11 @@
         {status}
       </td>
       <td>
-        {cat}
+        <!-- BEGIN: info -->
+        <button class="btn btn-info" onclick="info({pid})" style="float: right;">
+          Xem liên hệ
+        </button>
+        <!-- END: info -->
         <!-- BEGIN: link -->
         <a href="/news/info/?id={id}"> Chi tiết </a>
         <!-- END: link -->
