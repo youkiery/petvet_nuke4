@@ -3157,7 +3157,8 @@
         sampleplace: formInsertSamplePlace.val(),
         owner: formInsertOwner.val(),
         ownerphone: formInsertOwnerPhone.val(),
-        ownermail: formInsertOwnerMail.val()
+        ownermail: formInsertOwnerMail.val(),
+        xsign: $("#signer_xsign").prop('checked') ? 1 : 0
       }
     }
     return data
