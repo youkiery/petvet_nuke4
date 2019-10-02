@@ -3436,7 +3436,7 @@
       formInsertReceiveDis.val(data['form']['receivedis'])
       formInsertExamSample.val(data['form']['examsample'])
       formInsertMcode.val(data['form']['mcode'])
-      $("#signer_xsign").prop('checked', data['form']['xsign'])
+      $("#signer_xsign").prop('checked', Number(data['form']['xsign']))
     }
   }
 
