@@ -665,6 +665,12 @@
         <div class="col-sm-12 relative" id="signer_receiveleader">
         </div>
       </div>
+      <div class="row form-group">
+        <label class="col-sm-6"> Người ký thay </label>
+        <div class="col-sm-12 relative">
+          <input type="checkbox" id="signer_xsign">
+        </div>
+      </div>
     </div>
 
 
@@ -1358,7 +1364,7 @@
         <p class="p14"> <i> &emsp;&emsp;(Chi tiết xem phiếu kết quả xét nghiệm số: xcode-0/xcode-1/xcode-2.CĐXN của trạm chẩn đoán xét nghiệm bệnh động vật)./. </i></p>
         <div style="width: 60%; float: left;"><b class="p12"> <b> <i> Nơi nhận: </i> </b> </b> <p class="p11"> receivedis </p></div>
         <div style="width: 40%; float: left;" class="text-center p14">
-          <b> CHI CỤC TRƯỞNG <br>(receiveleader-signer)<br> receiveleader </b>
+          <b> (xsigner)(receiveleader-signer)<br> receiveleader </b>
         </div>`,
   }
   
@@ -2924,6 +2930,7 @@
     parseInputs({form: {form: defaultData['remind']['form']}}, 'form')
     $(".type").prop('checked', false)
     $(".state").prop('checked', false)
+    $("#signer_xsign").prop('checked', false)
 
     $("#typed-0").prop('checked', true)
     $("#state-0").prop('checked', true)
@@ -3279,7 +3286,8 @@
             numberword: formInsertNumberWord.val(),
             type: getCheckbox('type', formInsertTypeOther),
             samplereceive: formInsertSampleReceive.val(),
-            signer: checkSigner()
+            signer: checkSigner(),
+            xsign: $("#signer_xsign").prop('checked') ? 1 : 0
           }
         }
       break;
@@ -3428,6 +3436,7 @@
       formInsertReceiveDis.val(data['form']['receivedis'])
       formInsertExamSample.val(data['form']['examsample'])
       formInsertMcode.val(data['form']['mcode'])
+      $("#signer_xsign").prop('checked', data['form']['xsign'])
     }
   }
 
@@ -3932,6 +3941,12 @@
                 notes.push('<i>' + item + '</i>')
               })
               noteString += '<div class="p14"> <i> <b style="float: left; width: 80px;">Ghi chú:</b> </i> <span style="float: left; width: calc(100% - 80px);">' + notes.join('<br>') + '</span></div>'
+            }
+            if (data['xsign']) {
+              html = html.replace('(xsigner)', 'KT CHI CỤC TRƯỞNG<br>PHÓ CHI CỤC TRƯỞNG<br>')
+            }
+            else {
+              html = html.replace('(xsigner)', 'CHI CỤC TRƯỞNG <br>')
             }
             html = html.replace('note', noteString)
             html = html.replace('receivedis', data['receivedis'].replace(/\n/g, '<br>'))
