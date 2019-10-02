@@ -435,10 +435,14 @@ function parseVaccineType($userid) {
   return implode('', $list);
 }
 
-function checkPrvVaccine($data) {
+function checkPrvVaccine($data, $id) {
   global $db;
 
-  $sql = 'select * from `'. PREFIX .'_vaccine` where type = ' . $data['type'] . ' and ';
+  $sql = 'select * from `'. PREFIX .'_vaccine` where type = ' . $data['type'] . ' and petid = ' . $id;
+  $query = $db->query($sql);
+  if (!empty($row = $query->fetch())) {
+    return $row['id'];
+  }
   return false;
 }
 

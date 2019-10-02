@@ -70,6 +70,9 @@
         <button class="btn btn-success" id="btn-vaccine-edit" onclick="editVaccineSubmit()">
           Sửa lịch tiêm phòng
         </button>
+        <button class="btn btn-success" id="btn-vaccine-recall" onclick="recallSubmit()">
+          Nhắc lại
+        </button>
       </div>
     </div>
   </div>
@@ -559,6 +562,7 @@
       edit: $("#btn-breeder-edit")
     },
     vaccine: {
+      recall: $("#btn-vaccine-recall"),
       insert: $("#btn-vaccine-insert"),
       edit: $("#btn-vaccine-edit")
     }
@@ -1106,6 +1110,7 @@
           global['vaccine'] = id
           button['vaccine']['edit'].show()
           button['vaccine']['insert'].hide()
+          button['vaccine']['recall'].hide()
           parseInputSet(data['data'], vaccine)
           petVaccine.modal('show')
         }, () => { })
@@ -1114,6 +1119,7 @@
   }
 
   function addVaccine(id) {
+    button['vaccine']['recall'].hide()
     button['vaccine']['edit'].hide()
     button['vaccine']['insert'].show()
     petVaccine.modal('show')
@@ -1147,22 +1153,27 @@
     )
   }
 
-  function recall(id, type) {
+  function recall(type) {
     today = new Date()
-    $("#recall-type").val(type)
-    $("#recall-from").val()
-    $("#recall-from")
+    button['vaccine']['recall'].show()
+    button['vaccine']['edit'].hide()
+    button['vaccine']['insert'].hide()
+    $("#vaccine-type").val(type)
+    $("#vaccine-time").val(parseDate(today))
+    today.setDate(today.getDate() + 21)
+    $("#vaccine-recall").val(parseDate(today))
+    $("#pet-vaccine").modal('show')
   }
 
   function recallSubmit() {
     freeze()
     $.post(
       global['url'],
-      { action: 'edit-vaccine', data: checkVaccineData(), vid: global['vaccine'], id: global['id'] },
+      { action: 'insert-vaccine', data: checkVaccineData(), id: global['id'] },
       (response, status) => {
         checkResult(response, status).then(data => {
           vaccineContent.html(data['html'])
-          petVaccine.modal('hide')
+          $("#pet-vaccine").modal('hide')
         }, () => { })
       }
     )    
@@ -1172,7 +1183,7 @@
     freeze()
     $.post(
       global['url'],
-      { action: 'donevac', id: id },
+      { action: 'donevac', pid: id, id: global['id'] },
       (response, status) => {
         checkResult(response, status).then(data => {
           vaccineContent.html(data['html'])

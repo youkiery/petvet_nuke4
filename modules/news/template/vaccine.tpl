@@ -25,7 +25,7 @@
       </div>
       <div class="col-sm-6" style="text-align: right;">
         <!-- BEGIN: recall -->
-        <button class="btn btn-info" onclick="recall({id}, {type})">
+        <button class="btn btn-info" onclick="recall('2-{typeid}')">
           Tái chủng
         </button>
         <button class="btn btn-info" onclick="donevac({id})">

@@ -152,6 +152,13 @@ function vaccineList($petid) {
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('time', date('d/m/Y', $row['time']));
     $xtpl->assign('recall', date('d/m/Y', $row['recall']));
+    if ($row['type'] == 1) {
+      $xtpl->assign('type', $vaccine_array[$row['val']]['title']);
+    }
+    else {
+      $xtpl->assign('typeid', pickVaccineId($row['val'])['id']);
+      $xtpl->assign('type', pickVaccineId($row['val'])['disease']);
+    }
     if ($row['status'] == 0) {
       $xtpl->parse('main.row.recall');
       if ($today >= $row['recall']) {
@@ -160,12 +167,6 @@ function vaccineList($petid) {
       else {
         $xtpl->assign('color', '');
       }
-    }
-    if ($row['type'] == 1) {
-      $xtpl->assign('type', $vaccine_array[$row['val']]['title']);
-    }
-    else {
-      $xtpl->assign('type', pickVaccineId($row['val'])['disease']);
     }
     $xtpl->parse('main.row');
   }
