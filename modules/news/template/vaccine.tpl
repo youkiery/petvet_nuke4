@@ -12,18 +12,26 @@
   </tr>
   <!-- BEGIN: row -->
   <tr class="{color}">
-    <td> {index} </td>
+    <td rowspan="2"> {index} </td>
     <td> {pet} </td>
     <td> {time} </td>
     <td> {recall} </td>
     <td> {type} </td>
   </tr>
-  <tr>
-    <td colspan="5">
+  <tr class="{color}">
+    <td colspan="4">
       <div class="col-sm-6">
         {note}
       </div>
       <div class="col-sm-6" style="text-align: right;">
+        <!-- BEGIN: recall -->
+        <button class="btn btn-info" onclick="recall({id}, {type})">
+          Tái chủng
+        </button>
+        <button class="btn btn-info" onclick="donevac({id})">
+          <span class="glyphicon glyphicon-check"></span>
+        </button>
+        <!-- END: recall -->
         <button class="btn btn-info" onclick="editVaccine({id})">
           <span class="glyphicon glyphicon-edit"></span>
         </button>

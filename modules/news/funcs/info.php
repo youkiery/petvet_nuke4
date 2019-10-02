@@ -175,6 +175,14 @@ if (!empty($action)) {
         $result['notify'] = 'Có lỗi xảy ra';
       }
     break;
+    case 'donevac':
+			$id = $nv_Request->get_string('id', 'post', 0);
+			$data = $nv_Request->get_array('data', 'post');
+
+      $html = vaccineList($id);
+      
+
+    break;
     case 'get-vaccine':
 			$id = $nv_Request->get_string('id', 'post', 0);
 
@@ -189,7 +197,6 @@ if (!empty($action)) {
         $result['notify'] = 'Có lỗi xảy ra';
       }
     break;
-
     case 'edit-vaccine':
 			$id = $nv_Request->get_string('id', 'post', 0);
 			$vid = $nv_Request->get_string('vid', 'post', 0);

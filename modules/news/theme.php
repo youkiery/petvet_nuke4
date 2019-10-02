@@ -152,11 +152,14 @@ function vaccineList($petid) {
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('time', date('d/m/Y', $row['time']));
     $xtpl->assign('recall', date('d/m/Y', $row['recall']));
-    if ($today >= $row['recall'] && $row['status'] == 0) {
-      $xtpl->assign('color', 'red');
-    }
-    else {
-      $xtpl->assign('color', '');
+    if ($row['status'] == 0) {
+      $xtpl->parse('main.row.recall');
+      if ($today >= $row['recall']) {
+        $xtpl->assign('color', 'red');
+      }
+      else {
+        $xtpl->assign('color', '');
+      }
     }
     if ($row['type'] == 1) {
       $xtpl->assign('type', $vaccine_array[$row['val']]['title']);
@@ -887,7 +890,7 @@ function trading($filter = array('page' => 1, 'limit' => 10, 'breed' => '', 'spe
         $query2 = $db->query($sql);
         $row = $query2->fetch();
         // buy
-        $sql = 'select * from `'. PREFIX .'_info` where rid = ' . $bank['id'];
+        $sql = 'select * from `'. PREFIX .'_info` where status = 1 and rid = ' . $bank['id'];
         $query2 = $db->query($sql);
         $info = $query2->fetch();
         $xtpl->assign('pid', $bank['id']);
@@ -905,7 +908,7 @@ function trading($filter = array('page' => 1, 'limit' => 10, 'breed' => '', 'spe
         $query2 = $db->query($sql);
         $row = $query2->fetch();
         // buy
-        $sql = 'select * from `'. PREFIX .'_info` where rid = ' . $row['petid'];
+        $sql = 'select * from `'. PREFIX .'_info` where status = 1 and rid = ' . $row['petid'];
         // echo $sql . "<br>";
         $query2 = $db->query($sql);
         $info = $query2->fetch();

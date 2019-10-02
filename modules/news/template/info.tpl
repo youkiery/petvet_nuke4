@@ -1147,6 +1147,40 @@
     )
   }
 
+  function recall(id, type) {
+    today = new Date()
+    $("#recall-type").val(type)
+    $("#recall-from").val()
+    $("#recall-from")
+  }
+
+  function recallSubmit() {
+    freeze()
+    $.post(
+      global['url'],
+      { action: 'edit-vaccine', data: checkVaccineData(), vid: global['vaccine'], id: global['id'] },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          vaccineContent.html(data['html'])
+          petVaccine.modal('hide')
+        }, () => { })
+      }
+    )    
+  }
+
+  function donevac(id) {
+    freeze()
+    $.post(
+      global['url'],
+      { action: 'donevac', id: id },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          vaccineContent.html(data['html'])
+        }, () => { })
+      }
+    )
+  }
+
 
   function insertDiseaseSubmit() {
     freeze()
