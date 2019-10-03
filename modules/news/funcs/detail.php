@@ -149,6 +149,34 @@ else {
 	$xtpl->parse("main.error");
 }
 
+$pet = getPetById($id);
+try {
+  $youtube = json_decode($pet['youtube']);
+  foreach ($youtube as $url) {
+    $rx = '~
+      ^(?:https?://)?
+      (?:www[.])?
+      (?:youtube[.]com/watch[?]v=|youtu[.]be/)
+      ([^&]{11})
+        ~x';
+    $has_match = preg_match($rx, $url);
+    // $has_match = true;
+
+    if (!empty($url) && $has_match) {
+      $http_check = strpos($url, 'http://');
+      // var_dump($http_check);die();
+      if ($http_check == false) {
+        $url = 'http://' . $url;
+      }
+      $xtpl->assign('youtube', str_replace('watch?v=', 'embed/', $url));
+      $xtpl->parse('main.youtube');
+    }
+  }
+}
+catch (Exception $e) {
+  // echo 'Caught exception: ',  $e->getMessage(), "\n";
+}
+
 $xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");
 

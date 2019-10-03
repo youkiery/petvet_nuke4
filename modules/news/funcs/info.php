@@ -26,6 +26,15 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
 	$result = array('status' => 0);
 	switch ($action) {
+    case 'youtube':
+			$id = $nv_Request->get_string('id', 'post');
+			$data = $nv_Request->get_array('data', 'post');
+      $sql = 'update `'. PREFIX .'_pet` set youtube = \''. json_encode($data) .'\' where id = ' . $id;
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['notify'] = 'Đã lưu';
+      }
+    break;
     case 'save-graph':
 			$data = $nv_Request->get_string('data', 'post');
 			$id = $nv_Request->get_string('id', 'post');
@@ -501,6 +510,15 @@ switch ($_REQUEST['target']) {
     $xtpl->assign('al1', 'in active');
   break;
 }
+
+$pet = getPetById($id);
+try {
+  json_encode($pet['youtube']);
+}
+catch(Exception $e) {
+  $pet['youtube'] = '[""]';
+}
+$xtpl->assign('youtube', $pet['youtube']);
 
 $xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");

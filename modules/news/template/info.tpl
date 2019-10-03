@@ -414,6 +414,19 @@
     </button>
   </div>
 
+  <fieldset id="youtube" style="margin: 5px 0px; padding: 5px; border-radius: 10px; border: 1px solid lightgray;">
+    <p class="text-center"> <b> Thêm video youtube </b> </p>
+    <button class="btn btn-success" style="float: right; margin-bottom: 10px;" onclick="youtube.add()">
+      thêm
+    </button>
+    <button class="btn btn-success" style="float: right; margin-bottom: 10px;" onclick="youtube.save()">
+      Lưu
+    </button>
+    <div id="youtube-content" style="clear: right;">
+
+    </div>
+  </fieldset>
+
   <h2>
     Gia phả
   </h2>
@@ -599,6 +612,76 @@
     changeMonth: true,
     changeYear: true
   });
+
+  youtube = new youtube('youtube')
+  youtube.install('{youtube}')
+
+  function youtube(id) {
+    this.id = id
+    this.body = $('#' + id)
+    this.content = $('#' + id + '-content')
+    this.list = ['']
+    this.add = () => {
+      this.getContent()
+      this.list.push('')
+      this.parse()
+    }
+    this.getContent = () =>  {
+      this.list = []
+      $("." + id + '-item').each((index, item) => {
+        this.list.push(item.value)
+      })
+      return this.list
+    }
+    this.parse = () => {
+      html = ''
+      this.list.forEach((item, index) => {
+        html += `
+        <div class="input-group" style="margin: 10px 0px;">
+          <input class="`+ this.id +`-item form-control" value="`+ item +`">
+          <div class="input-group-btn">
+            <button class="btn btn-danger" onclick="youtube.remove(`+ index +`)">
+              <span class="glyphicon glyphicon-remove"> </span>
+            </button>
+          </div>
+        </div>
+        `
+      })
+      this.content.html(html)
+    }
+    this.remove = (remove_index) => {
+      this.getContent()
+      this.list = this.list.filter((item, index) => {
+        return index !== remove_index
+      })
+      if (!this.list.length) this.list.push('')
+      this.parse()
+    }
+    this.install = (data) => {
+      try {
+        if (typeof(data) == 'string') {
+          data = JSON.parse(data)
+        }
+        this.list = data
+        this.parse()
+      }
+      catch(e) {
+        console.log(e);
+      }
+    }
+    this.save = () => {
+      freeze()
+      $.post(
+        global['url'],
+        { action: 'youtube', data: this.getContent(), id: global['id'] },
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            console.log(data);
+          })
+        }
+      )
+    }
+  }
 
   function addOwner() {
     modalOwner.modal('show')
