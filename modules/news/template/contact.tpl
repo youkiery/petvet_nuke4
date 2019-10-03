@@ -22,6 +22,58 @@
   </a>
   <div style="clear: both;"></div>
 
+  <div id="modal-owner" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-body text-center">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <p> Điền thông tin chủ trại </p>
+          <label class="row">
+            <div class="col-sm-3">
+              Tên
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="owner-name">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Số điện thoại
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="owner-mobile">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              Địa chỉ
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="owner-address">
+            </div>
+          </label>
+
+          <label class="row">
+            <div class="col-sm-3">
+              CMND
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="owner-politic">
+            </div>
+          </label>
+
+          <div class="text-center">
+            <button class="btn btn-success" onclick="editSubmit()">
+              Thêm khách hàng
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal" id="modal-contact" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -38,7 +90,6 @@
       </div>
     </div>
   </div>
-
 
   <div id="content">
     {content}
@@ -121,6 +172,45 @@
         checkResult(response, status).then(data => {
           $("#contact-content").html(data['html'])
         }, () => { })
+      }
+    )
+  }
+
+  function edit(id) {
+    $.post(
+      global['url'],
+      {action: 'get-owner', id: id},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          global['id'] = id
+          $("#owner-name").val(data['data']['name'])
+          $("#owner-address").val(data['data']['address'])
+          $("#owner-mobile").val(data['data']['mobile'])
+          $("#owner-politic").val(data['data']['politic'])
+          $("#modal-owner").modal('show')
+        })
+      }
+    )
+  }
+
+  function checkOwnerData() {
+    return {
+      name: $("#owner-name").val(),
+      address: $("#owner-address").val(),
+      mobile: $("#owner-mobile").val(),
+      politic: $("#owner-politic").val()
+    }
+  }
+  
+  function editSubmit() {
+    $.post(
+      global['url'],
+      {action: 'update-owner', id: global['id'], data: checkOwnerData(), filter: checkFilter()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          content.html(data['html'])
+          $("#modal-owner").modal('hide')
+        })
       }
     )
   }

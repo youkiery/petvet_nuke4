@@ -10,6 +10,7 @@
 if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
+define('BUILDER_EDIT', 2);
 
 $page_title = "Danh sách khách hàng";
 
@@ -47,7 +48,7 @@ if (!empty($action)) {
     case 'filter':
       $filter = $nv_Request->get_array('filter', 'post');
 
-      if (!empty($html = contactList($filter))) {
+      if (!empty($html = contactList($userinfo['id'], $filter))) {
         $result['status'] = 1;
         $result['html'] = $html;
       }
@@ -58,6 +59,34 @@ if (!empty($action)) {
 
       if (!empty($html = contactContent($id, $filter))) {
         $result['status'] = 1;
+        $result['html'] = $html;
+      }
+    break;
+    case 'get-owner':
+      $id = $nv_Request->get_string('id', 'post');
+
+      $sql = 'select * from `'. PREFIX .'_contact` where id = ' . $id;
+      $query = $db->query($sql);
+
+      if ($row = $query->fetch()) {
+        $result['status'] = 1;
+        $result['data'] = array('name' => $row['fullname'], 'mobile' => xdecrypt($row['mobile']), 'address' => xdecrypt($row['address']), 'politic' => $row['politic']);
+      }
+    break;
+    case 'update-owner':
+      $id = $nv_Request->get_string('id', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
+      $data = $nv_Request->get_array('data', 'post');
+
+      $data['fullname'] = $data['name'];
+      $data['mobile'] = xencrypt($data['mobile']);
+      $data['address'] = xencrypt($data['address']);
+      unset($data['name']);
+
+      $sql = 'update `'. PREFIX .'_contact` set '. sqlBuilder($data, BUILDER_EDIT) .' where id = ' . $id;
+      if ($db->query($sql) && $html = contactList($userinfo['id'], $filter)) {
+        $result['status'] = 1;
+        $result['notify'] = 'Đã lưu';
         $result['html'] = $html;
       }
     break;

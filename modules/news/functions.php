@@ -312,6 +312,7 @@ function contactList($userid, $filter = array('page' => 1, 'limit' => 10)) {
     $xtpl->assign('fullname', $row['fullname']);
     $xtpl->assign('mobile', $row['mobile']);
     $xtpl->assign('address', $row['address']);
+    $xtpl->assign('politic', $row['politic']);
     $xtpl->parse('main.row');
   }
 

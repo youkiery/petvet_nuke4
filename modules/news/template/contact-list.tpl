@@ -5,6 +5,7 @@
     <th> Tên chủ </th>
     <th> Địa chỉ </th>
     <th> SĐT </th>
+    <th> CMND </th>
     <th>  </th>
   </tr>
   <!-- BEGIN: row -->
@@ -22,7 +23,13 @@
       <td>
         {mobile}
       </td>
+      <td>
+        {politic}
+      </td>
       <td style="text-align: right;">
+        <button class="btn btn-info" onclick="edit({id})">
+          <span class="glyphicon glyphicon-edit"></span>
+        </button>
         <button class="btn btn-info" onclick="view({id})">
           <span class="glyphicon glyphicon-eye-open"></span>
         </button>

@@ -332,7 +332,7 @@ if (!empty($action)) {
           $data['mobile'] = xencrypt($data['mobile']);
           $data['address'] = xencrypt($data['address']);
 
-          $sql = 'insert into `'. PREFIX .'_contact` (fullname, address, mobile, userid) values ("'. $data['fullname'] .'", "'. $data['address'] .'", "'. $data['mobile'] .'", '. $userinfo['id'] .')';
+          $sql = 'insert into `'. PREFIX .'_contact` (fullname, address, mobile, politic, userid) values ("'. $data['fullname'] .'", "'. $data['address'] .'", "'. $data['mobile'] .'", "'. $data['politic'] .'", '. $userinfo['id'] .')';
 
           if ($db->query($sql)) {
             $result['status'] = 1;

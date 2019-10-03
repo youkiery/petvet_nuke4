@@ -373,6 +373,15 @@
             </div>
           </label>
 
+          <label class="row">
+            <div class="col-sm-3">
+              CMND
+            </div>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="owner-politic">
+            </div>
+          </label>
+
           <div class="text-center">
             <button class="btn btn-success" onclick="insertOwnerSubmit()">
               Thêm khách hàng
@@ -945,7 +954,8 @@
   var owner = {
     fullname: $("#owner-name"),
     mobile: $("#owner-mobile"),
-    address: $("#owner-address")
+    address: $("#owner-address"),
+    politic: $("#owner-politic")
   }
   var mostly = {
     pet: {
