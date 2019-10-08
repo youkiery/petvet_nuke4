@@ -986,6 +986,7 @@ if (!empty($action)) {
 }
 
 $xtpl = new XTemplate("main.tpl", PATH);
+$xtpl->assign('module_name', $module_name);
 
 $today = time();
 

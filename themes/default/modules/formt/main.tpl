@@ -145,17 +145,17 @@
 
 <ul class="nav nav-tabs">
   <!-- BEGIN: user -->
-  <li class="active"><a data-toggle="tab" href="#home"> Danh sách </a></li>
+  <li class="active xmenu" id="xhome"><a data-toggle="tab" href="#home"> Danh sách </a></li>
   <!-- END: user -->
   <!-- BEGIN: super_user -->
-  <li><a data-toggle="tab" href="#menu1"> Thêm văn bản </a></li>
+  <li class="xmenu" id="xmenu1"><a data-toggle="tab" href="#menu1"> Thêm văn bản </a></li>
   <!-- END: super_user -->
-  <li><a data-toggle="tab" href="#menu2"> Xuất ra excel </a></li>
+  <li class="{secretary_active} xmenu" id="xmenu2"><a data-toggle="tab" href="#menu2"> Xuất ra excel </a></li>
   <!-- BEGIN: secretary -->
-  <li class="{secretary_active}"><a data-toggle="tab" href="#menu3"> Kế toán </a></li>
+  <li><a href="/{module_name}/lp1"> Kế toán </a></li>
   <!-- END: secretary -->
   <!-- BEGIN: printx -->
-  <li><a data-toggle="tab" href="#menu4"> Văn thư </a></li>
+  <li class="xmenu" id="xmenu4"><a data-toggle="tab" href="#menu4"> Văn thư </a></li>
   <!-- END: printx -->
 </ul>
 
@@ -847,7 +847,7 @@
     </button>
   </div>
   <!-- END: super_user3 -->
-  <div id="menu2" class="tab-pane">
+  <div id="menu2" class="tab-pane {secretary_active}">
     <label class="row" style="width: 100%;">
       <div class="col-sm-6">Ngày bắt đầu</div>
       <div class="col-sm-12">
@@ -900,7 +900,7 @@
     </div>
   </div>
   <!-- BEGIN: secretary2 -->
-  <div id="menu3" class="tab-pane {secretary_active}">
+  <!-- <div id="menu3" class="tab-pane {secretary_active}">
     <form onsubmit="secretaryFilter(event)">
       <div class="row form-group">
         <div class="col-sm-4">
@@ -986,7 +986,7 @@
       Lưu
     </button>
     <div id="secretary"></div>
-  </div>
+  </div> -->
   <!-- END: secretary2 -->
 
   <!-- BEGIN: printx2 -->
@@ -1606,6 +1606,10 @@
 
   $(this).ready(() => {
     htmlInfo = formInsertInfo.html()
+    var x = strHref.split("#")[1]
+    $(".xmenu").removeClass('active')
+    $("#x" + x).addClass('active')
+
     addInfo(1)
     // addInfo(3)
     installRemindv2('0', 'xsender');

@@ -112,7 +112,7 @@ function summaryContent($from, $end, $exam = '', $unit = '', $sample = '') {
   return $xtpl->text();
 }
 
-function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '', 'unit' => '', 'exam' => '', 'xcode' => '', 'pay' => '0', 'limit' => 10, 'owner' => '')) {
+function secretaryList($filter = array('page' => 1, 'keyword' => '', 'sample' => '', 'unit' => '', 'exam' => '', 'xcode' => '', 'pay' => '0', 'limit' => 10, 'owner' => '')) {
   global $db, $user_info;
   $xtpl = new XTemplate("secretary-list.tpl", PATH);
 
@@ -145,11 +145,11 @@ function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '
   $query = $db->query($sqlCount);
   $count = $query->fetch();
 
-  $sql = 'select * from `'. PREFIX .'_row` where mcode like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and owner like "%'. $filter['owner'] .'%" and printer = 5 and (time between '. $filter['from'] .' and '. $filter['end'] .') '. $exsql .' order by id desc limit ' . $filter['limit'] . ' offset ' . ($page - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_row` where mcode like "%'. $filter['keyword'] .'%" and sample like "%'. $filter['sample'] .'%" and sender like "%'. $filter['unit'] .'%" and exam like "%'. $filter['exam'] .'%" and xcode like "%'. $filter['xcode'] .'%" and owner like "%'. $filter['owner'] .'%" and printer = 5 and (time between '. $filter['from'] .' and '. $filter['end'] .') '. $exsql .' order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
 
   $index = 1;
-  $from = ($page - 1) * $filter['limit'] + 1;
+  $from = ($filter['page'] - 1) * $filter['limit'] + 1;
   $end = $from - 1;
   while ($row = $query->fetch()) {
       $sql = 'select * from `'. PREFIX .'_secretary` where rid = ' . $row['id'];
@@ -191,7 +191,7 @@ function secretaryList($page = 1, $filter = array('keyword' => '', 'sample' => '
   $xtpl->assign('from', $from);
   $xtpl->assign('end', $end);
   $xtpl->assign('total', $count['count']);
-  $xtpl->assign('nav', navList($count['count'], $page, $filter['limit']));
+  $xtpl->assign('nav', navList($count['count'], $filter['page'], $filter['limit']));
   $xtpl->parse('main');
   return $xtpl->text();
 }
