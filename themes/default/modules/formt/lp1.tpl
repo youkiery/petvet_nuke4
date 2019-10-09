@@ -35,6 +35,9 @@
     background: rgb(223, 223, 223);
     border: 2px solid deepskyblue;
   }
+  .modal-lg {
+    width: 90%;
+  }
 </style>
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
@@ -205,6 +208,24 @@
     installSelect()
   })
 
+  $("#sfilter-from, #sfilter-end").datepicker({
+    format: 'dd/mm/yyyy',
+    changeMonth: true,
+    changeYear: true
+  });
+
+  function excelSubmit() {
+    $.post(
+      global['url'],
+      {action: 'excel', data: checkData()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          var winPrint = window.open('/excel/thong-bao-out-'+ data['time'] +'.xlsx');
+        })
+      }
+    )
+  }
+
   function add(id) {
     var time = new Date().getTime()
     var html = `
@@ -251,24 +272,21 @@
 
   function checkData() {
     var data = {}
-    var more = {}
+    var datetime = {}
     global['select'].forEach(id => {
       data[id] = []
-      more[id] = {
-        code: $("#code-" + id).val(),
-        date: $("#date-" + id).val()
-      }
+      datetime[id] = $("#datetime-" + id).val(),
       $(".print-result-" + id).each((index, item) => {
         var index = item.getAttribute('index')
         data[id].push({
           result: $(".print-result-" + id + '[index='+ index +']').val(),
-          price: $(".print-price-" + id + '[index='+ index +']').val(),
+          price: $(".print-price-" + id + '[index='+ index +']').val().replace(',', ''),
           number: $(".print-number-" + id + '[index='+ index +']').val(),
           serotype: $(".print-serotype-" + id + '[index='+ index +']').val()
         })
       })
     })
-    return {data: data, more: more}
+    return {data: data, datetime: datetime}
   }
 
   function parseCurrency(number) {
@@ -286,6 +304,7 @@
       
       var number = $(".print-number-" + id + "[index="+ index +"]").val()
       var price = $(".print-price-" + id + "[index="+ index +"]").val().replace(/,/g, '')
+      
       $(".print-price-" + id + "[index="+ index +"]").val(parseCurrency(price))
       $(".print-total-" + id + "[index="+ index +"]").val(parseCurrency(Number(number) * Number(price)))
     })

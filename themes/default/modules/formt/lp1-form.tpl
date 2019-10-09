@@ -1,42 +1,24 @@
 <!-- BEGIN: main -->
-<div style="border: 2px solid black; margin: 5mm; padding: 0mm 5mm; overflow: auto;">
-  <div style="margin: 5px">
-    Số thông báo: <input type="text" class="form-control" id="code-{id}" value="{code}" style="width: 20%; display: inline-block;"> /THVY-5 ngày <input type="text" class="form-control" id="date-{id}" value="{date}" style="width: 20%; display: inline-block; margin-right: 2px;"> 
-    <button class="btn btn-info" style="float: right" onclick="add({id}, {index})"> Thêm </button>
-  </div>
-  <div style="padding-left: 10px;" id="{id}">
-    <!-- BEGIN: row -->
-    <div id="{id}-{index}">
-      <label style="width: 100%;">
-        Nội dung thu
-        <div class="input-group">
-          <input class="form-control print-result-{id}" type="text" index="{index}"  rel="{id}" value="{result}">
-          <div class="input-group-btn">
-            <button class="btn btn-danger" onclick="remove({id}, {index})"> Xóa </button>
-          </div>
-        </div>
-      </label>
-      <label style="width: 24%; float: left; margin-right: 2px;">
-        Giá
-        <input class="form-control price print-price-{id}" type="text" index="{index}"  rel="{id}" value="{price}">
-      </label>
-      <label style="width: 24%; float: left; margin-right: 2px;">
-        serotype
-        <input class="form-control print-serotype-{id}" type="text" index="{index}"  rel="{id}" value="{serotype}">
-      </label>
-      <label style="width: 24%; float: left; margin-right: 2px;">
-        Số lượng
-        <input class="form-control number print-number-{id}" type="number" index="{index}"  rel="{id}" value="{number}">
-      </label>
-      <label style="width: 24%; float: left; margin-right: 2px;">
-        Thành tiền
-        <input class="form-control print-total-{id}" type="text" index="{index}"  rel="{id}" value="{total}" readonly>
-      </label>
-      <div style="clear: both;"></div>
-    </div>
-    <hr>
-    <!-- END: row -->
-    <div id="l-{id}"></div>
-  </div>
-</div>
+<table class="table table-bordered">
+  <tr>
+    <th> STT </th>
+    <th class="text-center" style="width: 20%"> Nội Dung Thu </th>
+    <th class="text-center" style="width: 12%"> Xác định một serotype </th>
+    <th class="text-center" style="width: 15%"> Số lượng mẫu xét nghiệm </th>
+    <th class="text-center" style="width: 25%"> Thu giá dịch vụ theo Thông tư 283/2016/TT-BTC ngày 14/11/2016 & Quyết định số 29 & 29a/QĐ -TYV5 ngày 30/12/2016 </th>
+    <th class="text-center" style="width: 10%"> Thành tiền </th>
+    <th class="text-center" style="width: 15%">  Số và ngày thông báo kết quả xét nghiệm </th>
+  </tr>
+  <!-- BEGIN: row -->
+  <tr>
+    <td colspan="{row}"> {index} </td>
+    <td> <input type="text" class="form-control print-result-{id}" index="{index}" value="{result}"> </td>
+    <td> <input type="text" class="form-control print-serotype-{id}" index="{index}" value="{serotype}"> </td>
+    <td> <input type="text" class="form-control number print-number-{id}" rel="{id}" index="{index}" value="{number}"> </td>
+    <td> <input type="text" class="form-control price print-price-{id}" rel="{id}" index="{index}" value="{price}"> </td>
+    <td> <input type="text" class="form-control print-total-{id}" index="{index}" value="{total}"> </td>
+    <td colspan="{row}"> <input type="text" class="form-control" id="datetime-{id}" value="{datetime}"> </td>
+  </tr>
+  <!-- BEGIN: row -->
+</table>
 <!-- END: main -->

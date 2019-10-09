@@ -1607,8 +1607,10 @@
   $(this).ready(() => {
     htmlInfo = formInsertInfo.html()
     var x = strHref.split("#")[1]
-    $(".xmenu").removeClass('active')
-    $("#x" + x).addClass('active')
+    if (x) {
+      $(".xmenu").removeClass('active')
+      $("#x" + x).addClass('active')
+    }
 
     addInfo(1)
     // addInfo(3)

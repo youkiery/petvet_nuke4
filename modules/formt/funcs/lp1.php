@@ -16,23 +16,6 @@ $sampleType = array(0 => 'Nguyên con', 'Huyết thanh', 'Máu', 'Phủ tạng',
 $xco = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
 $yco = array('index' => 'STT','set' => 'Kết quả xét nghiệm','code' => 'Số phiếu','sender' => 'Tên đơn vị','receive' => 'Ngày nhận mẫu','resend' => 'Ngày hẹn trả kết quả','status' => 'Hình thức nhận','ireceiver' => 'Người nhận hồ sơ','ireceive' => 'Ngày nhận hồ sơ','iresend' => 'Ngay trả hồ sơ','number' => 'Số lượng mẫu','sampletype' => 'Loại mẫu','sample' => 'Loài vật lấy mẫu','xcode' => 'Số ĐKXN','isenderunit' => 'Bộ phận giao mẫu','ireceiverunit' => 'Bộ phận nhận mẫu','examdate' => 'Ngày phân tích','xresender' => 'Người phụ trách bộ phận xét nghiệm','xexam' => 'Bộ phận xét nghiệm','examsample' => 'Lượng mẫu xét nghiệm','receiver' => 'Người lấy mẫu','samplereceive' => 'Thời gian lấy mẫu','senderemploy' => 'Khách hàng','xaddress' => 'Địa chỉ','ownermail' => 'Email','ownerphone' => 'Điện thoại','owner' => 'Chủ hộ','sampleplace' => 'Nơi lấy mẫu','target' => 'Mục đích','receivedis' => 'Nơi nhận','receiveleader' => 'Người phụ trách', 'ownaddress' => 'Địa chỉ', 'ownmobile' => 'Số điện thoại');
 
-// var_dump($_POST);die();
-
-// if (!empty($nv_Request->get_string("excel", "get"))) {
-//   include 'PHPExcel/IOFactory.php';
-//   $fileType = 'Excel2007'; 
-//   $objPHPExcel = PHPExcel_IOFactory::load('excel/thong-bao.xls');
-//   $x = 14;
-//   $objPHPExcel
-//   ->setActiveSheetIndex(0)
-//   ->setCellValue($x, );
-//   $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-//   $objWriter->save('excel/thong-bao-out.xls');
-//   $objPHPExcel->disconnectWorksheets();
-//   unset($objWriter, $objPHPExcel);
-//   header('location: /excel/thong-bao-out.xls');
-// }
-
 $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
 	$teriorname = array('endedcopy' => 'Bản copy', 'endedhour' => 'Giờ kết thúc', 'endedminute' => 'Phút kết thúc', 'code' => 'Mã phiếu', 'sender' => 'Người gửi', 'receive' => 'Người nhận', 'resend' => 'Ngày hẹn trả', 'state' => 'Hình thức nhận', 'receiver' => 'Người nhận', 'ireceive' => 'Ngày nhận', 'iresend' => 'Ngày hẹn trả', 'form' => 'Tên hồ sơ', 'number' => 'Số lượng mẫu', 'sample' => 'Loài được lấy mẫu', 'type' => 'Loại mẫu', 'samplecode' => 'Ký hiệu mẫu', 'exam' => 'Yêu cầu xét nghiệm', 'method' => 'Phương pháp', 'address' => 'Địa chỉ', 'phone' => 'Số điện thoại', 'samplereceive' => 'Ngày lấy mẫu', 'samplereceiver' => 'Người lấy mẫu', 'examdate' => 'Ngày xét nghiệm', 'result' => 'Kết quả', 'xcode' => 'Số ĐKXN', 'page' => 'Số trang', 'no' => 'Liên', 'customer' => 'Khách hàng', 'other' => 'Yêu cầu khác', 'receivehour' => 'Giờ nhận', 'receiveminute' => 'Phút nhận', 'isenderemploy' => 'Người gửi', 'isenderunit' => 'Đơn vị gửi', 'ireceiveremploy' => 'Người nhận', 'ireceiverunit' => 'Đơn vị nhận', 'status' => 'Tình trạng mẫu', 'xstatus' => 'Hình thức bảo quản', 'quality' => 'Chất lượng mẫu', 'ireceiver' => 'Người nhận', 'note' => 'Ghi chú', 'target' => 'Mục đích xét nghiệm', 'receivedis' => 'Nơi nhận', 'receiveleader' => 'Người phụ trách', 'xaddress' => 'Địa chỉ khách hàng', 'sampleplace' => 'Nơi lấy mẫu', 'owner' => 'Chủ hộ', 'xphone' => 'Số điện thoại', 'xnote' => 'Ghi chú', 'numberword' => 'Ghi chú (chữ)', 'fax' => 'Fax', 'xsender' => 'Người giao mẫu', 'xsend' => 'Ngày giao mẫu', 'xreceiver' => 'Người nhận mẫu', 'xreceive' => 'Ngày nhận mẫu', 'xresend' => 'Ngày giao kết quả', 'xresender' => 'Người phụ trách', 'ig' => 'Thông tin mẫu', 'vnote' => 'Ghi chú', 'samplecode5' => 'Ký hiệu mẫu', 'examsample' => 'Số lượng mẫu xét nghiệm', 'ownermail' => 'Email', 'ownerphone' => 'Số điện thoại', 'page2' => 'Số trang', 'page3' => 'Số trang', 'page4' => 'Số trang', 'date' => 'Ngày tháng', 'org' => 'Tên tổ chức', 'address' => 'Địa chỉ', 'phone' => 'Điện thoại', 'mail' => 'email', 'content' => 'Nội dung công việc', 'type' => 'Loại mẫu', 'sample' => 'Loại động vật', 'mcode' => 'Số phiếu', 'reformer' => 'Người đề nghị');
@@ -55,6 +38,41 @@ if (!empty($action)) {
 
 	$result = array("status" => 0);
 	switch ($action) {
+    case 'excel':
+      $data = $nv_Request->get_array('data', 'post');
+
+      include 'PHPExcel/IOFactory.php';
+      $fileType = 'Excel2007'; 
+      $objPHPExcel = PHPExcel_IOFactory::load('excel/thong-bao.xlsx');
+      $x = 2;
+      $index = 1;
+      foreach ($data['data'] as $id => $row) {
+        $objPHPExcel
+        ->setActiveSheetIndex(0)
+        ->setCellValue("A" . $x, $index++);
+        foreach ($row as $val) {
+          $price = intval($val['number']) * intval(str_replace(',', '', $val['price']));
+          $objPHPExcel
+          ->setActiveSheetIndex(0)
+          ->setCellValue("B" . $x, $val['result'])
+          ->setCellValue("C" . $x, $val['serotype'])
+          ->setCellValue("D" . $x, $val['number'])
+          ->setCellValue("E" . $x, $val['price'])
+          ->setCellValue("F" . $x, number_format($price, 0, ',', ''))
+          ->setCellValue("G" . $x, $data['datetime'][$id]);
+          $x++;
+        }
+      }
+
+      $time = time(); 
+      $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+      $objWriter->save('excel/thong-bao-out-'. $time .'.xlsx');
+      $objPHPExcel->disconnectWorksheets();
+      unset($objWriter, $objPHPExcel);
+      $result['status'] = 1;
+      $result['time'] = $time;
+      // header('location: /excel/thong-bao-out.xlsx');
+    break;
     case 'save':
       $data = $nv_Request->get_array('data', 'post');
 
@@ -62,10 +80,10 @@ if (!empty($action)) {
         $sql = 'select * from `'. PREFIX .'_notires` where rid = ' . $id;
         $query = $db->query($sql);
         if (!empty($query->fetch())) {
-          $sql = 'update `'. PREFIX .'_notires` set date = "'. $data['more'][$id]['date'] .'", code = "'. $data['more'][$id]['code'] .'", data = \'' . json_encode($res, JSON_UNESCAPED_UNICODE) . '\' where rid = ' . $id;
+          $sql = 'update `'. PREFIX .'_notires` set datetime = "'. $data['more'][$id]['datetime'] .'", data = \'' . json_encode($res, JSON_UNESCAPED_UNICODE) . '\' where rid = ' . $id;
         }
         else {
-          $sql = 'insert into `'. PREFIX .'_notires` (rid, data, date, code) values('. $id .', \'' . json_encode($res, JSON_UNESCAPED_UNICODE) . '\', "'. $data['more'][$id]['date'] .'", "'. $data['more'][$id]['code'] .'")';
+          $sql = 'insert into `'. PREFIX .'_notires` (rid, data, datetime) values('. $id .', \'' . json_encode($res, JSON_UNESCAPED_UNICODE) . '\', "'. $data['more'][$id]['datetime'] .'")';
         }
         $db->query($sql);
       }
@@ -99,7 +117,7 @@ if (!empty($action)) {
               $xtpl->assign('result', $val->{result});
               $xtpl->assign('serotype', $val->{serotype});
               $xtpl->assign('price', $val->{price});
-              $xtpl->assign('number', $val->{number});
+              $xtpl->assign('number', number_format($val->{number}, 0, ',', ''));
               $xtpl->assign('total', number_format($val->{number} * $val->{price}, 0, ',', ''));
               $xtpl->parse('main.row');
             }
@@ -115,27 +133,37 @@ if (!empty($action)) {
 
   		$xtpl = new XTemplate('lp1-form.tpl', PATH);
 
+      $index = 1;
       foreach ($list as $id) {
         $check = false;
         $sql = 'select * from `'. PREFIX .'_notires` where rid = '. $id;
         $query = $db->query($sql);
 
-        // if (!empty($row = $query->fetch())) {
-        //   $data = json_encode($row['data']);
-        //   $xtpl->assign('code', $row['mcode']);
-        //   $xtpl->assign('date', date('d/m/Y', $row['date']));
-
-        // }
-        // else {
+        if (!empty($row = $query->fetch())) {
+          $data = json_decode($row['data']);
+          $xtpl->assign('id', $row['rid']);
+          $xtpl->assign('datetime', $row['datetime']);
+          $xtpl->assign('index', $index++);
+          foreach ($data as $val) {
+            $check = true;
+            $xtpl->assign('index', $index++);
+            $xtpl->assign('result', $val->{result});
+            $xtpl->assign('price', number_format($val->{price}, 0, '', ','));
+            $xtpl->assign('serotype', $val->{serotype});
+            $xtpl->assign('number', $val->{number});
+            $xtpl->assign('total', number_format($val->{number} * $val->{price}, 0, '', ','));
+            $xtpl->parse('main.row');
+          }
+        }
+        else {
           $sql = 'select * from `'. PREFIX .'_secretary` where rid = '. $id;
           $query = $db->query($sql);
 
           $xtpl->assign('id', $id);
           if (!empty($row = $query->fetch())) {
-            $xtpl->assign('code', $row['mcode']);
-            $xtpl->assign('date', date('d/m/Y', $row['date']));
+            $xtpl->assign('datetime', $row['mcode'] . '/THTY-5 ngày ' . date('d/m/Y', $row['time']));
+            // $xtpl->assign('date', date('d/m/Y', $row['date']));
             $ig = json_decode($row['ig']);
-            $index = 1;
             foreach ($ig as $name => $number) {
               $check = true;
               $price = getPrice($name);
@@ -155,6 +183,7 @@ if (!empty($action)) {
             if (!empty($row = $query->fetch())) {
 
               $ig = json_decode($row['ig']);
+              $tempData = array();
               foreach ($ig as $sample) {
                 foreach ($sample->{'mainer'} as $mainer) {
                   foreach ($mainer->{'note'} as $note) {
@@ -167,8 +196,9 @@ if (!empty($action)) {
               }
               $ig = $tempData;
 
-              $xtpl->assign('code', $row['mcode']);
-              $xtpl->assign('date', date('d/m/Y', $row['xresend']));
+              $xtpl->assign('datetime', $row['mcode'] . '/THTY-5 ngày ' . date('d/m/Y', $row['xresend']));
+              // $xtpl->assign('code', $row['mcode']);
+              // $xtpl->assign('date', date('d/m/Y', $row['xresend']));
               $index = 1;
               foreach ($ig as $name => $number) {
                 $check = true;
@@ -183,8 +213,7 @@ if (!empty($action)) {
                 // $ig_row;
               }
             }
-          // }
-          
+          }
         }
         if ($check) $xtpl->parse('main');
       }
