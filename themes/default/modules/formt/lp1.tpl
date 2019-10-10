@@ -317,6 +317,26 @@
       $(".print-price-" + id + "[index="+ index +"]").val(parseCurrency(price))
       $(".print-total-" + id + "[index="+ index +"]").val(parseCurrency(Number(number) * Number(price)))
     })
+    $(".cashcode").change((e) => {
+      var current = e.currentTarget
+      var val = current.value
+      var id = current.getAttribute('rel')
+      var index = current.getAttribute('index')
+      var number = $(".print-number-" + id + "[index="+ index +"]").val()
+      $(".print-price-" + id + "[index="+ index +"]").val(parseCurrency(val))
+      $(".print-total-" + id + "[index="+ index +"]").val(parseCurrency(Number(number) * Number(val)))
+    })
+    // $(".cashcode").change((e) => {
+    //   var current = e.currentTarget
+    //   var val = current.value
+    //   var id = current.getAttribute('rel')
+    //   $(".print-number-" + id).each((index, item) => {
+    //     var index = item.getAttribute('index')
+    //     var number = $(".print-number-" + id + "[index="+ index +"]").val()
+    //     $(".print-price-" + id + "[index="+ index +"]").val(parseCurrency(val))
+    //     $(".print-total-" + id + "[index="+ index +"]").val(parseCurrency(Number(number) * Number(val)))
+    //   })
+    // })
   }
 
   function print() {
@@ -374,7 +394,7 @@
           }
         }
       }
-      if (count > 1) saveSubmit(perless, count, type)
+      if (count >= 1) saveSubmit(perless, count, type)
       global['saving'] = 0
       global['save'] = total
     }
@@ -523,14 +543,9 @@
 
   function changePay(status) {
     if (global['select'].length) {
-      var list = []
-      global['select'].forEach((item, index) => {
-        list.push(item.getAttribute('id'))
-      })
-      freeze()
       $.post(
         global['url'],
-        {action: 'change-pay', list: list, type: status, filter: getSecretaryFilter()},
+        {action: 'change-pay', list: global['select'], type: status, filter: getSecretaryFilter()},
         (response, status) => {
           checkResult(response, status).then(data => {  
             secretaryList.html(data['html'])
