@@ -39,27 +39,30 @@ if (!empty($action)) {
 	$result = array("status" => 0);
 	switch ($action) {
     case 'excel':
-      $data = $nv_Request->get_array('data', 'post');
+      $list = $nv_Request->get_array('list', 'post');
 
       include 'PHPExcel/IOFactory.php';
       $fileType = 'Excel2007'; 
       $objPHPExcel = PHPExcel_IOFactory::load('excel/thong-bao.xlsx');
       $x = 2;
       $index = 1;
-      foreach ($data['data'] as $id => $row) {
+      $sql = 'select * from `'. PREFIX .'_notires` where rid in ('. implode(', ', $list) .')';
+      $query = $db->query($sql);
+      while ($row = $query->fetch()) {
         $objPHPExcel
         ->setActiveSheetIndex(0)
         ->setCellValue("A" . $x, $index++);
-        foreach ($row as $val) {
-          $price = intval($val['number']) * intval(str_replace(',', '', $val['price']));
+        $irow = json_decode($row['data']);
+        foreach ($irow->{data} as $val) {
+          $total = $val->{number} * $val->{price};
           $objPHPExcel
           ->setActiveSheetIndex(0)
-          ->setCellValue("B" . $x, $val['result'])
-          ->setCellValue("C" . $x, $val['serotype'])
-          ->setCellValue("D" . $x, $val['number'])
-          ->setCellValue("E" . $x, $val['price'])
-          ->setCellValue("F" . $x, number_format($price, 0, ',', ''))
-          ->setCellValue("G" . $x, $data['datetime'][$id]);
+          ->setCellValue("B" . $x, $val->{result})
+          ->setCellValue("C" . $x, $val->{serotype})
+          ->setCellValue("D" . $x, $val->{number})
+          ->setCellValue("E" . $x, number_format($val->{price}, 0, '', ','))
+          ->setCellValue("F" . $x, number_format($total, 0, '', ','))
+          ->setCellValue("G" . $x, $irow->{datetime});
           $x++;
         }
       }
@@ -76,19 +79,18 @@ if (!empty($action)) {
     case 'save':
       $data = $nv_Request->get_array('data', 'post');
 
-      foreach ($data['data'] as $id => $res) {
+      foreach ($data as $id => $res) {
         $sql = 'select * from `'. PREFIX .'_notires` where rid = ' . $id;
         $query = $db->query($sql);
         if (!empty($query->fetch())) {
-          $sql = 'update `'. PREFIX .'_notires` set datetime = "'. $data['more'][$id]['datetime'] .'", data = \'' . json_encode($res, JSON_UNESCAPED_UNICODE) . '\' where rid = ' . $id;
+          $sql = 'update `'. PREFIX .'_notires` set data = \'' . json_encode($res, JSON_UNESCAPED_UNICODE) . '\' where rid = ' . $id;
         }
         else {
-          $sql = 'insert into `'. PREFIX .'_notires` (rid, data, datetime) values('. $id .', \'' . json_encode($res, JSON_UNESCAPED_UNICODE) . '\', "'. $data['more'][$id]['datetime'] .'")';
+          $sql = 'insert into `'. PREFIX .'_notires` (rid, data) values('. $id .', \'' . json_encode($res, JSON_UNESCAPED_UNICODE) . '\')';
         }
         $db->query($sql);
       }
       $result['status'] = 1;
-      $result['notify'] = 'Đã lưu';
     break;
     case 'print-x':
       $list = $nv_Request->get_array('list', 'post');
@@ -110,10 +112,11 @@ if (!empty($action)) {
             $ig = json_decode($row['data']);
             $xtpl->assign('row', count($ig));
             $xtpl->assign('index', $index++);
-            $xtpl->assign('datetime', $row['code'] . '/TYV5-TH ngày ' . $row['date']);
+            $xtpl->assign('type', 1);
+            $xtpl->assign('datetime', $ig['datetime']);
             $xtpl->parse('main.row.index');
             $xtpl->parse('main.row.datetime');
-            foreach ($ig as $val) {
+            foreach ($ig->{data} as $val) {
               $xtpl->assign('result', $val->{result});
               $xtpl->assign('serotype', $val->{serotype});
               $xtpl->assign('price', $val->{price});
@@ -134,19 +137,20 @@ if (!empty($action)) {
   		$xtpl = new XTemplate('lp1-form.tpl', PATH);
 
       $index = 1;
+    //   var_dump($list);die();
       foreach ($list as $id) {
-        $check = false;
         $sql = 'select * from `'. PREFIX .'_notires` where rid = '. $id;
         $query = $db->query($sql);
 
+        $xtpl->assign('id', $id);
         if (!empty($row = $query->fetch())) {
           $data = json_decode($row['data']);
-          $xtpl->assign('id', $row['rid']);
-          $xtpl->assign('datetime', $row['datetime']);
+          $xtpl->assign('datetime', $data->{datetime});
+          $xtpl->assign('row', count($data->{data}));
           $xtpl->assign('index', $index++);
-          foreach ($data as $val) {
-            $check = true;
-            $xtpl->assign('index', $index++);
+          $xtpl->parse('main.row.col');
+          $xtpl->parse('main.row.col2');
+          foreach ($data->{data} as $val) {
             $xtpl->assign('result', $val->{result});
             $xtpl->assign('price', number_format($val->{price}, 0, '', ','));
             $xtpl->assign('serotype', $val->{serotype});
@@ -159,15 +163,16 @@ if (!empty($action)) {
           $sql = 'select * from `'. PREFIX .'_secretary` where rid = '. $id;
           $query = $db->query($sql);
 
-          $xtpl->assign('id', $id);
           if (!empty($row = $query->fetch())) {
+            $ig = json_decode($row['ig']);
+            $xtpl->assign('row', count($ig));
+            $xtpl->assign('index', $index++);
+            $xtpl->parse('main.row.col');
+            $xtpl->parse('main.row.col2');
             $xtpl->assign('datetime', $row['mcode'] . '/THTY-5 ngày ' . date('d/m/Y', $row['time']));
             // $xtpl->assign('date', date('d/m/Y', $row['date']));
-            $ig = json_decode($row['ig']);
             foreach ($ig as $name => $number) {
-              $check = true;
               $price = getPrice($name);
-              $xtpl->assign('index', $index++);
               $xtpl->assign('result', $name);
               $xtpl->assign('price', number_format($price, 0, '', ','));
               $xtpl->assign('serotype', '');
@@ -197,13 +202,13 @@ if (!empty($action)) {
               $ig = $tempData;
 
               $xtpl->assign('datetime', $row['mcode'] . '/THTY-5 ngày ' . date('d/m/Y', $row['xresend']));
-              // $xtpl->assign('code', $row['mcode']);
-              // $xtpl->assign('date', date('d/m/Y', $row['xresend']));
-              $index = 1;
+              
+              $xtpl->assign('row', count($ig));
+              $xtpl->assign('index', $index++);
+              $xtpl->parse('main.row.col');
+              $xtpl->parse('main.row.col2');
               foreach ($ig as $name => $number) {
-                $check = true;
                 $price = getPrice($name);
-                $xtpl->assign('index', $index++);
                 $xtpl->assign('result', $name);
                 $xtpl->assign('price', number_format($price, 0, '', ','));
                 $xtpl->assign('serotype', '');
@@ -215,13 +220,15 @@ if (!empty($action)) {
             }
           }
         }
-        if ($check) $xtpl->parse('main');
       }
-
+      
+      $xtpl->parse('main');
       $result['status'] = 1;
       $result['html'] = $xtpl->text();
     break;
     case 'select-all':
+      $filter = $nv_Request->get_array('filter', 'post');
+
       $today = time();
       if (empty($filter['end'])) {
         $filter['end'] = date('d/m/Y', $today);

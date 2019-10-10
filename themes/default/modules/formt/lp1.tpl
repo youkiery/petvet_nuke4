@@ -38,6 +38,23 @@
   .modal-lg {
     width: 90%;
   }
+  .tableFixHead {
+    overflow-y: auto;
+  }
+  .tableFixHead th {
+    position: sticky;
+    top: 0;
+  }
+  table  {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  th {
+    background: #eee;
+  }
+  td, th {
+    padding: 5px;
+  }
 </style>
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
@@ -57,7 +74,7 @@
         <button class="btn btn-info" onclick="printXSubmit()">
           <span class="glyphicon glyphicon-print"></span>
         </button>
-        <button class="btn btn-info" onclick="excelSubmit()">
+        <button class="btn btn-info" onclick="save(1)">
           <span class="glyphicon glyphicon-download"></span>
         </button>
         <div id="print-content"></div>
@@ -197,7 +214,9 @@
   var global = {
     select: false,
     signer: JSON.parse('{signer}'),
-    page: 1
+    page: 1,
+    save: 0,
+    saving: 0
   }
   const formatter = new Intl.NumberFormat('vi-VI', {
     style: 'currency',
@@ -213,18 +232,6 @@
     changeMonth: true,
     changeYear: true
   });
-
-  function excelSubmit() {
-    $.post(
-      global['url'],
-      {action: 'excel', data: checkData()},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          var winPrint = window.open('/excel/thong-bao-out-'+ data['time'] +'.xlsx');
-        })
-      }
-    )
-  }
 
   function add(id) {
     var time = new Date().getTime()
@@ -274,11 +281,13 @@
     var data = {}
     var datetime = {}
     global['select'].forEach(id => {
-      data[id] = []
-      datetime[id] = $("#datetime-" + id).val(),
+      data[id] = {
+        data: [],
+        datetime: $("#datetime-" + id).val(),
+      }
       $(".print-result-" + id).each((index, item) => {
         var index = item.getAttribute('index')
-        data[id].push({
+        data[id]['data'].push({
           result: $(".print-result-" + id + '[index='+ index +']').val(),
           price: $(".print-price-" + id + '[index='+ index +']').val().replace(',', ''),
           number: $(".print-number-" + id + '[index='+ index +']').val(),
@@ -286,7 +295,7 @@
         })
       })
     })
-    return {data: data, datetime: datetime}
+    return data
   }
 
   function parseCurrency(number) {
@@ -346,18 +355,61 @@
     }
   }
 
-  function save() {
+  function save(type = 0) {
     if (global['select']) {
-      $.post(
-        global['url'],
-        {action: 'save', data: checkData()},
-        (response, status) => {
-          checkResult(response, status).then(data => {  
-
-          }, () => {})
+      data = checkData()
+      perless = {}
+      count = 0
+      total = 0
+      for (const key in data) {
+        if (data.hasOwnProperty(key)) {
+          const element = data[key];
+          perless[key] = element
+          total ++
+          count ++
+          if (count >= 10) {
+            saveSubmit(perless, count, type)
+            perless = {}
+            count = 0
+          }
         }
-      )
+      }
+      if (count > 1) saveSubmit(perless, count, type)
+      global['saving'] = 0
+      global['save'] = total
     }
+  }
+
+  function saveSubmit(data, count, type = 0) {
+    $.post(
+      global['url'],
+      {action: 'save', data: data},
+      (response, status) => {
+        checkResult(response, status).then(data => {  
+          global['saving'] += count
+          console.log(global['saving'] +'/'+ global['save']);
+          
+          if (global['saving'] == global['save']) {
+            console.log('complete');
+            if (type == 1) {
+              excelSubmit()
+            }
+          }
+        }, () => {})
+      }
+    )
+  }
+
+  function excelSubmit() {
+    $.post(
+      global['url'],
+      {action: 'excel', list: global['select']},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          var winPrint = window.open('/excel/thong-bao-out-'+ data['time'] +'.xlsx');
+        })
+      }
+    )
   }
 
   function selectRemindv2(name, type, value) {

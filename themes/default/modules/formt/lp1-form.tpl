@@ -1,5 +1,5 @@
 <!-- BEGIN: main -->
-<table class="table table-bordered">
+<table class="table table-bordered tableFixHead">
   <tr>
     <th> STT </th>
     <th class="text-center" style="width: 20%"> Nội Dung Thu </th>
@@ -11,13 +11,17 @@
   </tr>
   <!-- BEGIN: row -->
   <tr>
-    <td colspan="{row}"> {index} </td>
+    <!-- BEGIN: col -->
+    <td rowspan="{row}"> {index} </td>
+    <!-- END: col -->
     <td> <input type="text" class="form-control print-result-{id}" index="{index}" value="{result}"> </td>
     <td> <input type="text" class="form-control print-serotype-{id}" index="{index}" value="{serotype}"> </td>
     <td> <input type="text" class="form-control number print-number-{id}" rel="{id}" index="{index}" value="{number}"> </td>
     <td> <input type="text" class="form-control price print-price-{id}" rel="{id}" index="{index}" value="{price}"> </td>
     <td> <input type="text" class="form-control print-total-{id}" index="{index}" value="{total}"> </td>
-    <td colspan="{row}"> <input type="text" class="form-control" id="datetime-{id}" value="{datetime}"> </td>
+    <!-- BEGIN: col2 -->
+    <td rowspan="{row}"> <input type="text" class="form-control" id="datetime-{id}" value="{datetime}"> </td>
+    <!-- END: col2 -->
   </tr>
   <!-- BEGIN: row -->
 </table>
