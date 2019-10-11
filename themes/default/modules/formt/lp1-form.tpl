@@ -13,7 +13,7 @@
   <!-- BEGIN: row -->
   <tr>
     <!-- BEGIN: col -->
-    <td rowspan="{row}"> {gindex} </td>
+    <td rowspan="{row}"> {gindex} {data} </td>
     <!-- END: col -->
     <td> <select class="form-control cashcode print-cashcode-{id}" rel="{id}" index="{index}">{select}</select> </td>
     <td> <input type="text" class="form-control print-result-{id}" index="{index}" value="{result}"> </td>

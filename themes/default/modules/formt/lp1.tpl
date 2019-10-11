@@ -212,6 +212,7 @@
   var sfilterEnd = $("#sfilter-end")
   var remindv2 = JSON.parse('{remindv2}')
   var global = {
+    select_data: JSON.parse('{select}'),
     select: false,
     signer: JSON.parse('{signer}'),
     page: 1,
@@ -222,6 +223,10 @@
     style: 'currency',
     currency: 'VND'
   })
+  // const formatter = new Intl.NumberFormat('vi-VI', {
+  //   style: 'currency',
+  //   currency: 'VND'
+  // })
 
   $(this).ready(() => {
     installSelect()
@@ -287,9 +292,10 @@
       }
       $(".print-result-" + id).each((index, item) => {
         var index = item.getAttribute('index')
+        code = $(".print-cashcode-" + id + '[index='+ index +']')[0]
         data[id]['data'].push({
           result: $(".print-result-" + id + '[index='+ index +']').val(),
-          price: $(".print-price-" + id + '[index='+ index +']').val().replace(',', ''),
+          code: trim(code.children[code.selectedIndex].innerText),
           number: $(".print-number-" + id + '[index='+ index +']').val(),
           serotype: $(".print-serotype-" + id + '[index='+ index +']').val()
         })
@@ -319,10 +325,11 @@
     })
     $(".cashcode").change((e) => {
       var current = e.currentTarget
-      var val = current.value
+      var val = current.value.replace(',', '')
       var id = current.getAttribute('rel')
       var index = current.getAttribute('index')
       var number = $(".print-number-" + id + "[index="+ index +"]").val()
+      
       $(".print-price-" + id + "[index="+ index +"]").val(parseCurrency(val))
       $(".print-total-" + id + "[index="+ index +"]").val(parseCurrency(Number(number) * Number(val)))
     })
@@ -411,7 +418,9 @@
           
           if (global['saving'] == global['save']) {
             console.log('complete');
+            alert_msg('Đã lưu')
             if (type == 1) {
+
               excelSubmit()
             }
           }
@@ -581,6 +590,7 @@
           // $("#smsample").html(parseField(JSON.parse(data['ig'])))
           secretary.html(data['html'])
           parseIgSecret(global_ig)
+          installCash()
           $("#sdate").datepicker({
             format: 'dd/mm/yyyy',
             changeMonth: true,
@@ -598,19 +608,28 @@
     for (const key in data) {
       if (data.hasOwnProperty(key)) {
         const element = data[key];
+        select_data = pickCashCode()
         html += `
           <div class="row form-group" style="width: 100%;">
             <button type="button" class="close" data-dismiss="modal" onclick="removeIgSecret('`+ key +`')">&times;</button>
             <label class="col-sm-6">
               Chỉ tiêu:
             </label>
-            <div class="col-sm-12 relative">
+            <div class="col-sm-9 relative">
               <input type="text" class="form-control exam-sx exam-sx-`+index+`" value="`+ key +`" id="examsx-`+ (index) +`" autocomplete="off">
               <div class="suggest" id="examsx-suggest-`+ (index) +`"> </div>
             </div>
-            <div class="col-sm-4">
-              <input type="number" class="form-control number-sx-`+index+`" id="number-sx`+ (index) +`" value="`+ element +`" autocomplete="off">
+            <div class="col-sm-3">
+              <input type="number" class="form-control number-sx-`+index+`" id="number-sx`+ (index) +`" value="`+ element['number'] +`" autocomplete="off">
             </div>
+            <div class="col-sm-3">
+              <select class="form-control cash-sx cash-sx-`+index+`" id="cash-sx`+ (index) +`" index="`+ index +`">
+                `+ select_data['html'] +`
+              </select>
+            </div>
+            <label class="col-sm-2" id="price-sx`+ index +`" style="line-height: 28px">
+              `+ select_data['val'] +`
+            </label>
           </div>
         `
         installer.push({
@@ -624,8 +643,7 @@
     html += `
       <button class="btn btn-info" onclick="insertIgSecret()">
         Thêm
-      </button>
-    `
+      </button>`
     $("#smsample").html(html)
     installer.forEach(item => {
       installRemindv2(item['name'], item['type'])
@@ -633,10 +651,49 @@
     installRemindv2('0', 'reformer');
   }
 
+  function installCash() {
+    $(".cash-sx").change((e) => {
+      current = e.currentTarget
+      val = current.value
+      index = current.getAttribute('index')
+      $("#price-sx"+ index).html(val)
+    })
+  }
+
+  function parseCurrency(number) {
+    if (number = Number(number)) {
+      return formatter.format(number).replace(/ ₫/g, "").replace(/\./g, ",");
+    }
+    return 0
+  }
+
+  function pickCashCode(name) {
+    html = ''
+    val = 0
+    for (const key in global['select_data']) {
+      if (global['select_data'].hasOwnProperty(key)) {
+        xtra = ''
+        if (name == key) {
+          xtra = 'checked'
+          val = global['select_data'][key]
+        }
+        html += `
+          <option value="`+ global['select_data'][key] +`" `+ xtra +`>
+            `+ key +`
+          </option>`
+      }
+    }
+    return {html: html, val: val}
+  }
+
   function removeIgSecret(key) {
     var dat = {}
     $(".exam-sx").each((index, item) => {
-      dat[item.value] = $("#number-sx" + (index + 1)).val()
+      code = $("#cash-sx" + (index + 1))[0]
+      dat[item.value] = {
+        number: $("#number-sx" + (index + 1)).val(),
+        code: trim(code.children[code.selectedIndex].innerText)
+      }
     })
     global_ig = dat
     delete global_ig[key]
@@ -649,9 +706,17 @@
   function insertIgSecret() {
     var dat = {}
     $(".exam-sx").each((index, item) => {
-      dat[item.value] = $("#number-sx" + (index + 1)).val()
+      code = $("#cash-sx" + (index + 1))[0]
+      
+      dat[item.value] = {
+        number: $("#number-sx" + (index + 1)).val(),
+        code: trim(code.children[code.selectedIndex].innerText)
+      }
     })
-    dat[''] = ''
+    dat[''] = {
+      number: 1,
+      code: ''
+    }
     global_ig = dat
     parseIgSecret(global_ig)
   }
@@ -660,7 +725,11 @@
     var temp = {}
     $(".exam-sx").each((index, item) => {
       var idp = item.getAttribute('class').replace('form-control exam-sx exam-sx-', '')
-      temp[$(".exam-sx-" + idp).val()] = $(".number-sx-" + idp).val()
+      code = $("#cash-sx" + idp)[0]
+      temp[$(".exam-sx-" + idp).val()] = {
+        number: $("#number-sx" + idp).val(),
+        code: trim(code.children[code.selectedIndex].innerText)
+      }
     })
     var data = {
       date: $('#sdate').val(),

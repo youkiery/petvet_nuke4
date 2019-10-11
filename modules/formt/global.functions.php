@@ -446,6 +446,30 @@ function checkIsViewer($userid) {
 // 	return 1;
 // }
 
+function cashcodetohtml($checkcode, $select_data) {
+  $html = '';
+  foreach ($select_data as $code => $price) {
+    $xtra = ($checkcode == $code ? 'selected' : '');
+
+    $html .= '<option value="'. $price .'" '. $xtra .'> '. $code .' </option>';
+  }
+  return $html;
+}
+
+function f5igtosec($string_data) {
+  $data = array();
+  $root_data = json_decode($string_data);
+  foreach ($root_data as $root) {
+    foreach ($root->{mainer} as $mainer) {
+      foreach ($mainer->{note} as $note) {
+        if (empty($data[$note->{note}])) $data[$note->{note}] = array('number' => $root->{number}, 'code' => '');
+        $data[$note->{note}]['number'] += $root->{number};
+      }
+    }
+  }
+  return $data;
+}
+
 function deuft8($str) {
   $str = preg_replace("/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/", "a", $str);
   $str = preg_replace("/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/", "e", $str);
