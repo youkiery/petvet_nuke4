@@ -156,10 +156,6 @@
     page2: 1,
     parentid: 0
   }
-  const formatter = new Intl.NumberFormat('vi-VI', {
-    style: 'currency',
-    currency: 'VND'
-  })
 
   $(this).ready(() => {
     $("#filter-from, #filter-end").datepicker({

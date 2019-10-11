@@ -135,7 +135,7 @@
   </div>
 </div>
 
-<script src="/modules/{module_file}/src/script.js"></script>
+<script src="/modules/{module_file}/src/script-a.js"></script>
 <script>
   var global = {
     url: '{origin}',

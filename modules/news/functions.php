@@ -347,6 +347,10 @@ function contactContent($userid, $filter = array('page' => 1, 'limit' => 10)) {
   return $xtpl->text();
 }
 
+function getNoteGroupByUserid() {
+  return 0;
+}
+
 function generateRandomString($length = 8) {
     // $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $characters = '0123456789';
