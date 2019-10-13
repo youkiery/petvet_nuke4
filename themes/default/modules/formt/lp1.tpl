@@ -328,10 +328,25 @@
       var val = current.value.replace(',', '')
       var id = current.getAttribute('rel')
       var index = current.getAttribute('index')
-      var number = $(".print-number-" + id + "[index="+ index +"]").val()
-      
-      $(".print-price-" + id + "[index="+ index +"]").val(parseCurrency(val))
-      $(".print-total-" + id + "[index="+ index +"]").val(parseCurrency(Number(number) * Number(val)))
+      if (index == 1) {
+        code = $(".print-cashcode-" + id + "[index=1]")[0]
+        html = pickCashCode(trim(code.children[code.selectedIndex].innerText), global['select_data'])['html']
+        
+        $(".print-number-" + id).each((index, item) => {
+          var index = item.getAttribute('index')
+          var number = $(".print-number-" + id + "[index="+ index +"]").val()
+          $(".print-cashcode-" + id + "[index="+ index +"]").html(html)
+          $(".print-price-" + id + "[index="+ index +"]").val(parseCurrency(val))
+          $(".print-price-" + id + "[index="+ index +"]").val(parseCurrency(val))
+          $(".print-total-" + id + "[index="+ index +"]").val(parseCurrency(Number(number) * Number(val)))
+        })
+      }
+      else {
+        var number = $(".print-number-" + id + "[index="+ index +"]").val()
+        
+        $(".print-price-" + id + "[index="+ index +"]").val(parseCurrency(val))
+        $(".print-total-" + id + "[index="+ index +"]").val(parseCurrency(Number(number) * Number(val)))
+      }
     })
     // $(".cashcode").change((e) => {
     //   var current = e.currentTarget
@@ -608,7 +623,7 @@
     for (const key in data) {
       if (data.hasOwnProperty(key)) {
         const element = data[key];
-        select_data = pickCashCode()
+        select_data = pickCashCode(element['code'])
         html += `
           <div class="row form-group" style="width: 100%;">
             <button type="button" class="close" data-dismiss="modal" onclick="removeIgSecret('`+ key +`')">&times;</button>
@@ -674,7 +689,7 @@
       if (global['select_data'].hasOwnProperty(key)) {
         xtra = ''
         if (name == key) {
-          xtra = 'checked'
+          xtra = 'selected'
           val = global['select_data'][key]
         }
         html += `

@@ -86,7 +86,7 @@ if (!empty($action)) {
       $objPHPExcel = PHPExcel_IOFactory::load('excel/thong-bao.xlsx');
       $x = 2;
       $index = 1;
-      $sql = 'select * from `'. PREFIX .'_notires` where rid in ('. implode(', ', $list) .')';
+      $sql = 'select * from `'. PREFIX .'_notires` where rid in ('. implode(', ', $list) .') order by rid desc';
       $query = $db->query($sql);
       while ($row = $query->fetch()) {
         $objPHPExcel
@@ -94,13 +94,14 @@ if (!empty($action)) {
         ->setCellValue("A" . $x, $index++);
         $irow = json_decode($row['data']);
         foreach ($irow->{data} as $val) {
-          $total = $val->{number} * $val->{price};
+          $price = getPrice2($val->{code});
+          $total = $val->{number} * $price;
           $objPHPExcel
           ->setActiveSheetIndex(0)
           ->setCellValue("B" . $x, $val->{result})
           ->setCellValue("C" . $x, $val->{serotype})
           ->setCellValue("D" . $x, $val->{number})
-          ->setCellValue("E" . $x, number_format($val->{price}, 0, '', ','))
+          ->setCellValue("E" . $x, number_format($price, 0, '', ','))
           ->setCellValue("F" . $x, number_format($total, 0, '', ','))
           ->setCellValue("G" . $x, $irow->{datetime});
           $x++;
@@ -152,7 +153,7 @@ if (!empty($action)) {
             $ig = json_decode($row['data']);
             $xtpl->assign('row', count($ig));
             $xtpl->assign('index', $index++);
-            $xtpl->assign('type', 1);
+            // $xtpl->assign('type', 1);
             $xtpl->assign('datetime', $ig['datetime']);
             $xtpl->parse('main.row.index');
             $xtpl->parse('main.row.datetime');
@@ -173,6 +174,7 @@ if (!empty($action)) {
     break;
     case 'print':
       $list = $nv_Request->get_array('list', 'post');
+      rsort($list);
 
   		$xtpl = new XTemplate('lp1-form.tpl', PATH);
       $xtpl->assign('select', $select);
@@ -253,6 +255,7 @@ if (!empty($action)) {
               // }
               // $ig = $tempData;
               $ig = f5igtosec($row['ig']);
+              // echo json_encode($ig);die();
 
               $xtpl->assign('datetime', $row['mcode'] . '/THTY-5 ngày ' . date('d/m/Y', $row['xresend']));
               
@@ -262,13 +265,13 @@ if (!empty($action)) {
               $xtpl->parse('main.row.col');
               $xtpl->parse('main.row.col2');
               foreach ($ig as $name => $data) {
-                $price = getPrice2($data->{code});
+                $price = getPrice2($data['code']);
                 $xtpl->assign('index', $index++);
                 $xtpl->assign('result', $name);
                 $xtpl->assign('price', number_format($price, 0, '', ','));
                 $xtpl->assign('serotype', '');
-                $xtpl->assign('number', $data->{number});
-                $xtpl->assign('total', number_format($data->{number} * $price, 0, '', ','));
+                $xtpl->assign('number', $data['number']);
+                $xtpl->assign('total', number_format($data['number'] * $price, 0, '', ','));
                 $xtpl->parse('main.row');
                 // $ig_row;
               }
@@ -411,7 +414,7 @@ if (!empty($action)) {
 					// 	}
 					// }
 					// $result['ig'] = json_encode($tempData);
-					$result['ig'] = json_encode(f5igtosec($row['ig']));
+					$result['ig'] = json_encode(f5igtosec($row['ig']), JSON_UNESCAPED_UNICODE);
 				}
 				$xtpl->assign('sample', $row['sample']);
 				$xcode = explode(',', $row['xcode']);
@@ -482,7 +485,7 @@ if (!empty($action)) {
 							$temp2[] = totime($dataRow);
 						}
 						else if ($dataKey == 'ig') {
-							$temp2[] = '\''. json_encode($dataRow) .'\'';
+							$temp2[] = '\''. json_encode($dataRow, JSON_UNESCAPED_UNICODE) .'\'';
 						}
 						else {
 							$temp2[] = '"'. $dataRow .'"';
@@ -494,7 +497,7 @@ if (!empty($action)) {
         // die($sql);
 				if ($db->query($sql)) {
 					$result['notify'] = 'Đã cập nhật thành công';
-					$result['remind'] = json_encode(getRemindv2());
+					$result['remind'] = json_encode(getRemindv2(), JSON_UNESCAPED_UNICODE);
 					$result['status'] = 1;
 				}
 			}
@@ -506,7 +509,7 @@ if (!empty($action)) {
 			$result['html'] = secretaryList($filter);
 		break;
 	}
-	echo json_encode($result);
+	echo json_encode($result, JSON_UNESCAPED_UNICODE);
 	die();
 }
 
