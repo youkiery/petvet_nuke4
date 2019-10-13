@@ -8,6 +8,7 @@
 /vendor/
 /PHPExcel
 /results_
+/excel
 /composer.json
 /config.php
 /COPYRIGHT.txt
@@ -19,5 +20,6 @@
 /robots.txt
 /web.config
 /PHPExcel.php
+/fun.php
+/test.php
 /.htaccess
-/excel
