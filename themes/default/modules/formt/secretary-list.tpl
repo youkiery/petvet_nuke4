@@ -13,7 +13,7 @@
       </tr>
     </thead>
     <!-- BEGIN: row -->
-    <tbody id="{id}">
+    <tbody class="selectable" id="{id}">
       <tr>
         <td> {notice} </td>
         <td> {noticetime} </td>

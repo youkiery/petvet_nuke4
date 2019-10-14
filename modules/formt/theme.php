@@ -153,6 +153,7 @@ function secretaryList($filter = array('page' => 1, 'keyword' => '', 'sample' =>
   $end = $from - 1;
   while ($row = $query->fetch()) {
       $sql = 'select * from `'. PREFIX .'_secretary` where rid = ' . $row['id'];
+      // die($sql);
       $squery = $db->query($sql);
       $secretary = $squery->fetch();
       $xtpl->assign('state', 'Chưa trả');

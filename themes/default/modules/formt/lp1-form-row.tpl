@@ -1,5 +1,4 @@
 <!-- BEGIN: main -->
-  <tr class="print-{id}">
     <!-- BEGIN: col -->
     <td rowspan="{row}"> {gindex} {data} </td>
     <!-- END: col -->
@@ -13,5 +12,4 @@
     <td rowspan="{row}"> <input type="text" class="form-control" id="datetime-{id}" value="{datetime}"> </td>
     <td rowspan="{row}"> <button class="btn btn-info" onclick="reload({id}, {gindex})"> <span class="glyphicon glyphicon-refresh"></span> </button> </td>
     <!-- END: col2 -->
-  </tr>
 <!-- END: main -->

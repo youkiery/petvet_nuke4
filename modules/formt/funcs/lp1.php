@@ -181,7 +181,6 @@ if (!empty($action)) {
 
       $gindex = 1;
       $index = 1;
-      //   var_dump($list);die();
       foreach ($list as $id) {
         $sql = 'select * from `'. PREFIX .'_notires` where rid = '. $id;
         $query = $db->query($sql);
@@ -189,12 +188,13 @@ if (!empty($action)) {
         $xtpl->assign('id', $id);
         if (!empty($row = $query->fetch())) {
           $data = json_decode($row['data']);
+          // echo json_encode($data->{datetime}) . "<br>";
           $xtpl->assign('datetime', $data->{datetime});
           $xtpl->assign('row', count($data->{data}));
           $xtpl->assign('gindex', $gindex++);
           // $xtpl->assign('data', json_encode($data, JSON_UNESCAPED_UNICODE));
-          $xtpl->parse('main.row.col');
-          $xtpl->parse('main.row.col2');
+          $xtpl->parse('main.col');
+          $xtpl->parse('main.col2');
           foreach ($data->{data} as $val) {
             $price = getPrice2($val->{code});
             $xtpl->assign('index', $index++);
@@ -205,7 +205,7 @@ if (!empty($action)) {
             $xtpl->assign('serotype', $val->{serotype});
             $xtpl->assign('number', $val->{number});
             $xtpl->assign('total', number_format($val->{number} * $price, 0, '', ','));
-            $xtpl->parse('main.row');
+            $xtpl->parse('main');
           }
         }
         else {
@@ -219,10 +219,11 @@ if (!empty($action)) {
             foreach ($ig as $name => $number) {
               $count ++;
             }
+          // $xtpl->assign('data', json_encode($data, JSON_UNESCAPED_UNICODE));
             $xtpl->assign('row', $count);
             $xtpl->assign('gindex', $gindex++);
-            $xtpl->parse('main.row.col');
-            $xtpl->parse('main.row.col2');
+            $xtpl->parse('main.col');
+            $xtpl->parse('main.col2');
             foreach ($ig as $name => $ig_data) {
               $price = getPrice2($ig_data->{code});
               $xtpl->assign('select', cashcodetohtml($ig_data->{code}, $select_data));
@@ -232,7 +233,7 @@ if (!empty($action)) {
               $xtpl->assign('serotype', '');
               $xtpl->assign('number', $ig_data->{number});
               $xtpl->assign('total', number_format($ig_data->{number} * $price, 0, '', ','));
-              $xtpl->parse('main.row');
+              $xtpl->parse('main');
             }
           }
           else {
@@ -262,8 +263,8 @@ if (!empty($action)) {
               $xtpl->assign('row', count($ig));
               $xtpl->assign('gindex', $gindex++);
               // $xtpl->assign('data', json_encode($ig, JSON_UNESCAPED_UNICODE));
-              $xtpl->parse('main.row.col');
-              $xtpl->parse('main.row.col2');
+              $xtpl->parse('main.col');
+              $xtpl->parse('main.col2');
               foreach ($ig as $name => $data) {
                 $price = getPrice2($data['code']);
                 $xtpl->assign('index', $index++);
@@ -272,15 +273,13 @@ if (!empty($action)) {
                 $xtpl->assign('serotype', '');
                 $xtpl->assign('number', $data['number']);
                 $xtpl->assign('total', number_format($data['number'] * $price, 0, '', ','));
-                $xtpl->parse('main.row');
+                $xtpl->parse('main');
                 // $ig_row;
               }
             }
           }
         }
       }
-      
-      $xtpl->parse('main');
       $result['status'] = 1;
       $result['html'] = $xtpl->text();
     break;
@@ -364,11 +363,56 @@ if (!empty($action)) {
         $result['html'] = $html;
       }
     break;
+    case 'reload':
+      // rid => html(table)
+			$id = $nv_Request->get_string('id', 'get/post', 0);
+			$index = $nv_Request->get_string('index', 'get/post', 0);
+
+      if (empty($data = getSerectaryById($id))) {
+        if (empty($data = getF5ById($id))) {
+          $result['status'] = 0;
+        }
+        else {
+          $result['status'] = 1;
+          $result['html'] = rowing(f5todata($data), $id, $index);
+        }
+      }
+      else {
+        $result['status'] = 1;
+        $result['html'] = rowing(sectodata($data), $id, $index);
+      }
+    break;
+    // rid => html(table)
+    case 'reload-all':
+			$list = $nv_Request->get_array('list', 'get/post', 0);
+      $result['html'] = '';      
+      $index = 1;
+
+      foreach ($list as $id) {
+        if (empty($data = getSerectaryById($id))) {
+          if (empty($data = getF5ById($id))) {
+            // do nothing
+          }
+          else {
+            $result['html'] .= rowing(f5todata($data), $id, $index++);
+          }
+        }
+        else {
+          $result['html'] .= rowing(sectodata($data), $id, $index++);
+        }
+      }
+
+      if ($result['html']) {
+        $result['status'] = 1;
+      }
+
+    break;
 		case 'editSecret':
 			$id = $nv_Request->get_string('id', 'get/post', 0);
 
 			if (!empty($id)) {
 				$sql = 'select * from `'. PREFIX .'_secretary` where rid = ' . $id;
+        // die($sql);
 				$query = $db->query($sql);
 				$xtpl = new XTemplate('secretary.tpl', PATH);
 				if (!empty($row = $query->fetch())) {
@@ -388,6 +432,7 @@ if (!empty($action)) {
 				}
 				else {
 					$sql = 'select * from `'. PREFIX .'_row` where id = ' . $id;
+          // die($sql);
 					$query = $db->query($sql);
 					$row = $query->fetch();
 					$xtpl->assign('date', date('d/m/Y', $row['xresend']));

@@ -462,12 +462,76 @@ function f5igtosec($string_data) {
   foreach ($root_data as $root) {
     foreach ($root->{mainer} as $mainer) {
       foreach ($mainer->{note} as $note) {
-        if (empty($data[$note->{note}])) $data[$note->{note}] = array('number' => $root->{number}, 'code' => '');
+        if (empty($data[$note->{note}])) $data[$note->{note}] = array('number' => 0, 'code' => '');
         $data[$note->{note}]['number'] += $root->{number};
       }
     }
   }
   return $data;
+}
+
+// id => array()
+function getSerectaryById($id) {
+  global $db;
+	
+	$query = $db->query('select * from `'. PREFIX .'_secretary` where rid = ' . $id);
+  if (!empty($row = $query->fetch())) {
+    return $row;
+  }
+  return 0;
+}
+
+// id => array()
+function getF5ById($id) {
+  global $db;
+	
+	$query = $db->query('select * from `'. PREFIX .'_row` where id = ' . $id);
+  if (!empty($row = $query->fetch())) {
+    return $row;
+  }
+  return 0;
+}
+
+function f5todata($data) {
+  $tick = f5igtosec($data['ig']);
+  return array('data' => $tick, 'datetime' => $data['mcode'] . '/THTY-5 ngày ' . date('d/m/Y', $data['xresend']));
+}
+
+function sectodata($data) {
+  $tick = json_decode($data['ig']);
+  // var_dump($data);die();
+  $temp = array();
+  foreach ($tick as $name => $row) {
+    $temp[$name] = array('number' => $row->{number}, 'code' => $row->{code});
+  }
+
+  return array('data' => $temp, 'datetime' => $data['mcode'] . '/THTY-5 ngày ' . date('d/m/Y', $data['date']));
+}
+
+function rowing($data, $id, $gindex) {
+  global $select_data;
+  $xtpl = new XTemplate('lp1-form.tpl', PATH);
+  $xtpl->assign('id', $id);
+  $xtpl->assign('datetime', $data['datetime']);
+  // $xtpl->assign('data', json_encode($data));
+  $xtpl->assign('gindex', $gindex);
+  $xtpl->assign('row', count($data['data']));
+  $xtpl->parse('main.col');
+  $xtpl->parse('main.col2');
+  $index = 1;
+
+  foreach ($data['data'] as $name => $row) {
+    $price = getPrice2($row['code']);
+    $xtpl->assign('select', cashcodetohtml($row['code'], $select_data));
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('result', $name);
+    $xtpl->assign('price', number_format($price, 0, '', ','));
+    $xtpl->assign('serotype', '');
+    $xtpl->assign('number', $row['number']);
+    $xtpl->assign('total', number_format($row['number'] * $price, 0, '', ','));
+    $xtpl->parse('main');
+  }
+  return $xtpl->text();
 }
 
 function deuft8($str) {

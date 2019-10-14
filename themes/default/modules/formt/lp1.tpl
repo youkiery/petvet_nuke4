@@ -77,7 +77,26 @@
         <button class="btn btn-info" onclick="save(1)">
           <span class="glyphicon glyphicon-download"></span>
         </button>
-        <div id="print-content"></div>
+        <button class="btn btn-info" onclick="reloadAll()">
+          <span class="glyphicon glyphicon-refresh"></span>
+        </button>
+
+        <table class="table table-bordered tableFixHead">
+          <thead>
+            <tr>
+              <th> STT </th>
+              <th class="text-center" style="width: 10%"> Mã thu phí </th>
+              <th class="text-center" style="width: 20%"> Nội Dung Thu </th>
+              <th class="text-center" style="width: 10%"> Xác định một serotype </th>
+              <th class="text-center" style="width: 10%"> Số lượng mẫu xét nghiệm </th>
+              <th class="text-center" style="width: 25%"> Thu giá dịch vụ theo Thông tư 283/2016/TT-BTC ngày 14/11/2016 & Quyết định số 29 & 29a/QĐ -TYV5 ngày 30/12/2016 </th>
+              <th class="text-center" style="width: 10%"> Thành tiền </th>
+              <th class="text-center" style="width: 10%">  Số và ngày thông báo kết quả xét nghiệm </th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="print-content"></tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -361,6 +380,37 @@
     // })
   }
 
+  function reload(id, index) {
+    $.post(
+      global['url'],
+      {action: 'reload', id: id, index: index},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $(".print-" + id).each((index, item) => {
+            if (index) {
+              item.remove()
+            }
+          })
+          $(".print-" + id).replaceWith(data['html'])
+          installPrice()
+        }, () => {})
+      }
+    )
+  }
+
+  function reloadAll() {
+    $.post(
+      global['url'],
+      {action: 'reload-all', list: global['select']},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#print-content").html(data['html'])
+          installPrice()
+        }, () => {})
+      }
+    )
+  }
+
   function print() {
     if (global['select']) {
       $.post(
@@ -494,7 +544,7 @@
   }
 
   function installSelect() {
-    $("tbody").click((e) => {
+    $("tbody.selectable").click((e) => {
       var current = e.currentTarget
       colorSelected(current)
     })
@@ -664,6 +714,7 @@
       installRemindv2(item['name'], item['type'])
     })
     installRemindv2('0', 'reformer');
+    installCash()
   }
 
   function installCash() {
