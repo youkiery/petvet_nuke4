@@ -1446,7 +1446,7 @@
     e.preventDefault()
     $.post(
       global['url'],
-      {action: 'insert-user', data: checkEdit(), image: imageUrl},
+      {action: 'insert-user', data: checkEdit()},
       (response, status) => {
         checkResult(response, status).then(data => {
           clearInputSet(user)

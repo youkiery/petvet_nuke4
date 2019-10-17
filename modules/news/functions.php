@@ -16,6 +16,18 @@ define("PATH", 'modules/' . $module_file . '/template');
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 
+function getPetListById($userid) {
+  global $db;
+
+  $query = $db->query($sql = 'select id from `'. PREFIX .'_pet` where userid = ' . $userid);
+  $list = array();
+  while ($row = $query->fetch()) {
+    $list[] = $row['id'];
+  }
+  // die(var_dump($row));
+  return implode(', ', $list);
+}
+
 function parseMonth($number) {
   $year = round($number / 12);
   $month = round($number - $year * 12);
@@ -29,7 +41,7 @@ function getUserInfo() {
   global $db, $_SESSION;
   $data = array();
 
-  if (!empty($_SESSION['username']) && !empty($_SESSION['password'])) {
+  if (!empty($_SESSION['username'])) {
     $username = $_SESSION['username'];
     $password = $_SESSION['password'];
     // hash split username, password

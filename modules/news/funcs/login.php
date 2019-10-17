@@ -31,7 +31,7 @@ if (!empty($action)) {
 		case 'login':
 			$data = $nv_Request->get_array('data', 'post');
 
-			if (checkObj($data)) {
+      if (!empty($data['username'])) {
 				$data['username'] = strtolower($data['username']);
         if (!checkUsername($data['username'])) {
   				$result['error'] = 'Tài khoản không tồn tại';

@@ -79,7 +79,7 @@
       password: password.val()
     }
 
-    if (data['username'] && data['password']) {
+    if (data['username']) {
       return data
     }
     return false
