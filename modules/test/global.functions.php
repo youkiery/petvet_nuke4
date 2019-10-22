@@ -1724,7 +1724,8 @@ function vaccine_list($vaclist, $order = 0) {
 
   // display
   $id = $nv_Request->get_int('id', 'post/get', 0);
-//   if (!$id) {
+  $keyword = $nv_Request->get_string('keyword', 'post/get', '');
+  if (empty($keyword)) {
     $today = strtotime(date('Y/m/d'));
     $fromtime = $today - $vacconfigv2['filter'];
     $diseases = getDiseaseData();
@@ -1773,7 +1774,7 @@ function vaccine_list($vaclist, $order = 0) {
       $index++;
       $xtpl->parse("disease.vac_body");
     }
-//   }
+  }
   $xtpl->assign("brickcolor", "");
   
   foreach ($t_list as $key => $value) {
