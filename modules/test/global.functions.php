@@ -386,7 +386,7 @@ function user_redrug() {
   $xtpl = new XTemplate("redrug-list.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
   $today = strtotime(date("Y-m-d"));
   $index = 1;
-  $color = array("red", "orange", "green");
+  $color = array("red", "yellow", "green");
 
   $filter = $vacconfigv2["filter"];
   if (empty($filter)) {
@@ -447,7 +447,7 @@ function admin_redrug() {
   $xtpl = new XTemplate("redrug-list.tpl", NV_ROOTDIR . "/themes/" . $global_config['admin_theme'] . "/modules/" . $module_file);
   $today = strtotime(date("Y-m-d"));
   $index = 1;
-  $color = array("red", "orange", "green");
+  $color = array("red", "yellow", "green");
 
   $filter = $vacconfigv2["filter"];
   if (empty($filter)) {
@@ -818,7 +818,7 @@ function usg_list($list) {
 	$index = 1;
 	// $index = ($page - 1) * $limit + 1;
 	$hex = array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f");
-  $status_color = array("red", "darkorange", "green", "gray");
+  $status_color = array("red", "yellow", "green", "gray");
 	$status_array = array(array(), array(), array(), array()); // [[], [], [], []] from 0 -> 3
 
   // cnote
@@ -1134,7 +1134,7 @@ function user_birth() {
     $xtpl->assign("confirm", $lang_module["confirm_" . $usg_row["vaccine"]]);
     switch ($usg_row["vaccine"]) {
       case '1':
-        $xtpl->assign("color", "orange");
+        $xtpl->assign("color", "yellow");
         break;
       case '2':
         $xtpl->assign("color", "green");
@@ -1550,6 +1550,7 @@ function user_vaccine($keyword = '') {
   }
   
   $sql = "select a.id, a.note, a.recall, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, ctime, a.status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id $where and (c.name like '%$keyword%' or c.phone like '%$keyword%') order by calltime";
+//   die($sql);
   $query = $db->query($sql);
   $list = fetchall($db, $query);
   return vaccine_list($list);
@@ -1723,13 +1724,14 @@ function vaccine_list($vaclist, $order = 0) {
 
   // display
   $id = $nv_Request->get_int('id', 'post/get', 0);
-  if (!$id) {
+//   if (!$id) {
     $today = strtotime(date('Y/m/d'));
     $fromtime = $today - $vacconfigv2['filter'];
     $diseases = getDiseaseData();
   
     // $sql = 'select * from (select * from `'.VAC_PREFIX.'_vaccine` where (calltime < '.$fromtime.') and status = 0 order by calltime desc limit 20) a order by calltime asc';
-    $sql = 'select * from `'.VAC_PREFIX.'_vaccine` where (calltime < '.$fromtime.') and status = 0 order by calltime desc limit 20';
+    $sql = 'select * from `'.VAC_PREFIX.'_vaccine` where (calltime < '.$fromtime.') and status = '.$id.' order by calltime desc limit 20';
+    // die($sql);
     $query = $db->query($sql);
     $index = 1;
     $xtpl->assign("brickcolor", "orange");
@@ -1754,7 +1756,7 @@ function vaccine_list($vaclist, $order = 0) {
       }
       switch ($row["status"]) {
         case '1':
-          $xtpl->assign("color", "orange");
+          $xtpl->assign("color", "yellow");
           break;
         case '2':
           $xtpl->assign("color", "green");
@@ -1771,7 +1773,7 @@ function vaccine_list($vaclist, $order = 0) {
       $index++;
       $xtpl->parse("disease.vac_body");
     }
-  }
+//   }
   $xtpl->assign("brickcolor", "");
   
   foreach ($t_list as $key => $value) {
@@ -1791,7 +1793,7 @@ function vaccine_list($vaclist, $order = 0) {
     }
     switch ($vaclist[$value]["status"]) {
       case '1':
-        $xtpl->assign("color", "orange");
+        $xtpl->assign("color", "yellow");
         break;
       case '2':
         $xtpl->assign("color", "green");

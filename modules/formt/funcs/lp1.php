@@ -11,6 +11,64 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
+// cập nhật chủ hộ thư ký
+// $query = $db->query('select * from `'. PREFIX .'_secretary`');
+// while ($row = $query->fetch()) {
+//   if (empty($row['mcode'])) {
+//     $query2 = $db->query('select * from `'. PREFIX .'_row` where id = ' . $row['rid']);
+//     $f5 = $query2->fetch();
+
+//     if (!empty($f5['mcode'])) {
+//       echo 'update `'. PREFIX .'_secretary` set mcode = "'. $f5['mcode'] .'" where id = '. $row['id'] .'<br>';
+//       $db->query('update `'. PREFIX .'_secretary` set mcode = "'. $f5['mcode'] .'" where id = '. $row['id']);
+//     }
+//   }
+//   if (empty($row['owner'])) {
+//     $query2 = $db->query('select * from `'. PREFIX .'_row` where id = ' . $row['rid']);
+//     $f5 = $query2->fetch();
+
+//     if (!empty($f5['owner'])) {
+//       echo 'update `'. PREFIX .'_secretary` set owner = "'. $f5['owner'] .'" where id = '. $row['id'] .'<br>';
+//       $db->query('update `'. PREFIX .'_secretary` set owner = "'. $f5['owner'] .'" where id = '. $row['id']);
+//     }
+//   }
+//   if (empty($row['ownaddress'])) {
+//     $query2 = $db->query('select * from `'. PREFIX .'_row` where id = ' . $row['rid']);
+//     $f5 = $query2->fetch();
+
+//     if (!empty($f5['sampleplace'])) {
+//       echo 'update `'. PREFIX .'_secretary` set ownaddress = "'. $f5['sampleplace'] .'" where id = '. $row['id'] .'<br>';
+//       $db->query('update `'. PREFIX .'_secretary` set ownaddress = "'. $f5['sampleplace'] .'" where id = '. $row['id']);
+//     }
+//   }
+// }
+// die();
+
+// cập nhật 
+$query = $db->query($sql = 'select * from `'. PREFIX .'_notires`');
+
+while ($row = $query->fetch()) {
+  $data = json_decode($row['data']);
+  $secq = $db->query($secs = 'select * from `'. PREFIX .'_secretary` where rid = ' . $row['rid']);
+  // echo $secs . '<br>';
+  if (!empty($sec = $secq->fetch())) {
+    $data->{datetime} = $sec['mcode'] . '/THTY-5 ngày ' . date('d/m/Y', $sec['date']);
+    echo 'update `'. PREFIX .'_notires` set data = \''. json_encode($data, JSON_UNESCAPED_UNICODE) .'\' where rid = ' . $row['rid'] . '<br>';
+    $db->query('update `'. PREFIX .'_notires` set data = \''. json_encode($data, JSON_UNESCAPED_UNICODE) .'\' where rid = ' . $row['rid']);
+  }
+  else {
+    $f5q = $db->query($f5s = 'select * from `'. PREFIX .'_row` where rid = ' . $row['rid']);
+    // echo $f5s . '<br>';
+    if (!empty($f5 = $f5q->fetch())) {
+      $data->{datetime} = $f5['mcode'] . '/THTY-5 ngày ' . date('d/m/Y', $f5['xresend']);
+      echo 'update `'. PREFIX .'_notires` set data = \''. json_encode($data, JSON_UNESCAPED_UNICODE) .'\' where rid = ' . $row['rid'] . '<br>';
+      $db->query('update `'. PREFIX .'_notires` set data = \''. json_encode($data, JSON_UNESCAPED_UNICODE) .'\' where rid = ' . $row['rid']);
+    }
+  }
+  var_dump($row);
+}
+die();
+
 $page_title = "Nhập hồ sơ một cửa";
 $sampleType = array(0 => 'Nguyên con', 'Huyết thanh', 'Máu', 'Phủ tạng', 'Swab');
 $xco = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
@@ -192,6 +250,7 @@ if (!empty($action)) {
           $xtpl->assign('datetime', $data->{datetime});
           $xtpl->assign('row', count($data->{data}));
           $xtpl->assign('gindex', $gindex++);
+          // $xtpl->assign('data', 1);
           // $xtpl->assign('data', json_encode($data, JSON_UNESCAPED_UNICODE));
           $xtpl->parse('main.col');
           $xtpl->parse('main.col2');
@@ -220,6 +279,7 @@ if (!empty($action)) {
               $count ++;
             }
           // $xtpl->assign('data', json_encode($data, JSON_UNESCAPED_UNICODE));
+            // $xtpl->assign('data', '<span style="color: red;">2</span>');
             $xtpl->assign('row', $count);
             $xtpl->assign('gindex', $gindex++);
             $xtpl->parse('main.col');
@@ -262,6 +322,7 @@ if (!empty($action)) {
               
               $xtpl->assign('row', count($ig));
               $xtpl->assign('gindex', $gindex++);
+              // $xtpl->assign('data', 3);
               // $xtpl->assign('data', json_encode($ig, JSON_UNESCAPED_UNICODE));
               $xtpl->parse('main.col');
               $xtpl->parse('main.col2');
