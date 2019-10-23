@@ -46,10 +46,13 @@ if (!empty($action)) {
           else {
             $_SESSION['username'] = $data['username'];
             $_SESSION['password'] = $data['password'];
-            $result['status'] = 1;
           }
         }
 			}
+      else {
+        $result['error'] = 'Các trường không được để trống';
+      }
+      $result['status'] = 1;
 		break;
 	}
 	echo json_encode($result);

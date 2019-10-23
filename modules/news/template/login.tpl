@@ -94,10 +94,13 @@
         {action: 'login', data: loginData},
         (response, status) => {
           checkResult(response, status).then(data => {
-            window.location.reload() 
-          }, (data) => {
-            displayError(data['error'])
-          })
+            if (data['error']) {
+              displayError(data['error'])
+            }
+            else {
+              window.location.reload() 
+            }
+          }, () => {  })
         }
       )
     }

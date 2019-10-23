@@ -447,7 +447,7 @@ if (!empty($action)) {
         }
         $data['dob'] = totime($data['dob']);
         $data['sex'] = $sex;
-        $data['dateofbirth'] = totime($data['dob']);
+        $data['dateofbirth'] = $data['dob'];
         $data['fid'] = $data['parentf'];
         $data['mid'] = $data['parentm'];
 

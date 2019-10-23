@@ -34,6 +34,51 @@ if (!empty($action)) {
         }
       }
     break;
+    case 'get':
+      $id = $nv_Request->get_string('id', 'post', 0);
+
+      $sql = 'select * from `' . PREFIX . '_pet` where id = ' . $id;
+      $query = $db->query($sql);
+
+      if (!empty($row = $query->fetch())) {
+        $result['data'] = array('name' => $row['name'], 'dob' => date('d/m/Y', $row['dateofbirth']), 'species' => $row['species'], 'breed' => $row['breed'], 'color' => $row['color'], 'microchip' => $row['microchip'], 'parentf' => $row['fid'], 'parentm' => $row['mid'], 'miear' => $row['miear'], 'origin' => $row['origin']);
+        $result['more'] = array('breeder' => $row['breeder'], 'sex' => intval($row['sex']), 'm' => getPetNameId($row['mid']), 'f' => getPetNameId($row['fid']), 'userid' => $row['userid'], 'username' => getOwnerById($row['userid'], $row['type'])['fullname']);
+        $result['image'] = $row['image'];
+        $result['status'] = 1;
+      } else {
+        $result['notify'] = 'Có lỗi xảy ra';
+      }
+      break;
+    case 'pet':
+      $userid = $nv_Request->get_string('userid', 'post', '');
+			$keyword = $nv_Request->get_string('keyword', 'post', '');
+      $html = '';
+
+      if (!empty(getOwnerById($userid))) {
+        $sql = 'select * from `'. PREFIX .'_pet` where name like "%'. $keyword .'%"';
+        $query = $db->query($sql);
+
+        while ($row = $query->fetch()) {
+          $html .= '
+            <div class="suggest_item" onclick="pickPet(\''. $row['name'] .'\', '. $row['id'] .')">
+              <p>
+              '. $row['name'] .'
+              </p>
+            </div>
+          ';
+        }
+
+        if (empty($html)) {
+          $html = 'Không có kết quả trùng khớp';
+        }
+      }
+      else {
+        $html = 'Chưa chọn chủ thú cưng';
+      }
+
+			$result['status'] = 1;
+			$result['html'] = $html;
+		break;
     case 'statistic':
       $filter = $nv_Request->get_array('filter', 'post');
 

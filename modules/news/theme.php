@@ -24,7 +24,7 @@ function revenue($filter = array('page' => 1, 'limit' => 10)) {
   $count = $query->fetch()['count'];
   $xtpl->assign('nav', navList($count, $filter['page'], $filter['limit'], 'goPage'));
 
-  $sql = 'select * from `'. PREFIX .'_pet` where ceti = 1 order by ctime desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_pet` where ceti = 1 order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   // $data = getUserPetList($filter);
 
@@ -991,7 +991,7 @@ function navList ($number, $page, $limit) {
   return $page_string;
 }
 
-function navList2 ($number, $page, $limit, $nv, $op) {
+function navList2 ($number, $page, $limit, $type) {
   global $lang_global;
   $total_pages = ceil($number / $limit);
 
@@ -1000,7 +1000,7 @@ function navList2 ($number, $page, $limit, $nv, $op) {
   if ($total_pages > 10) {
     $init_page_max = ($total_pages > 3) ? 3 : $total_pages;
     for ($i = 1; $i <= $init_page_max; $i ++) {
-      $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<a href="/'. $nv .'/'. $op .'/?id='. $i .'">'. $i .'</a>';
+      $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="'. $type .'('.$i.')">' . $i . '</button>';
       if ($i < $init_page_max) $page_string .= " ";
     }
     if ($total_pages > 3) {
@@ -1009,7 +1009,7 @@ function navList2 ($number, $page, $limit, $nv, $op) {
         $init_page_min = ($on_page > 4) ? $on_page : 5;
         $init_page_max = ($on_page < $total_pages - 4) ? $on_page : $total_pages - 4;
         for ($i = $init_page_min - 1; $i < $init_page_max + 2; $i ++) {
-          $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<a href="/'. $nv .'/'. $op .'/?id='. $i .'">'. $i .'</a>';
+          $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="'. $type .'('.$i.')">' . $i . '</button>';
           if ($i < $init_page_max + 1)  $page_string .= " ";
         }
         $page_string .= ($on_page < $total_pages - 4) ? " ... " : ", ";
@@ -1019,7 +1019,7 @@ function navList2 ($number, $page, $limit, $nv, $op) {
       }
       
       for ($i = $total_pages - 2; $i < $total_pages + 1; $i ++) {
-        $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<a href="/'. $nv .'/'. $op .'/?id='. $i .'">'. $i .'</a>';
+        $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="'. $type .'('.$i.')">' . $i . '</button>';
         if ($i < $total_pages) $page_string .= " ";
       }
     }
@@ -1027,7 +1027,7 @@ function navList2 ($number, $page, $limit, $nv, $op) {
   else {
     if ($total_pages) {
       for ($i = 1; $i < $total_pages + 1; $i ++) {
-        $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<a href="/'. $nv .'/'. $op .'/?id='. $i .'">'. $i .'</a>';
+        $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="'. $type .'('.$i.')">' . $i . '</button>';
         if ($i < $total_pages) $page_string .= " ";
       }
     }
@@ -1037,4 +1037,51 @@ function navList2 ($number, $page, $limit, $nv, $op) {
   }
   return $page_string;
 }
+
+// function navList2 ($number, $page, $limit, $nv, $op) {
+//   global $lang_global;
+//   $total_pages = ceil($number / $limit);
+
+//   $on_page = $page;
+//   $page_string = "";
+//   if ($total_pages > 10) {
+//     $init_page_max = ($total_pages > 3) ? 3 : $total_pages;
+//     for ($i = 1; $i <= $init_page_max; $i ++) {
+//       $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<a href="/'. $nv .'/'. $op .'/?id='. $i .'">'. $i .'</a>';
+//       if ($i < $init_page_max) $page_string .= " ";
+//     }
+//     if ($total_pages > 3) {
+//       if ($on_page > 1 && $on_page < $total_pages) {
+//         $page_string .= ($on_page > 5) ? " ... " : ", ";
+//         $init_page_min = ($on_page > 4) ? $on_page : 5;
+//         $init_page_max = ($on_page < $total_pages - 4) ? $on_page : $total_pages - 4;
+//         for ($i = $init_page_min - 1; $i < $init_page_max + 2; $i ++) {
+//           $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<a href="/'. $nv .'/'. $op .'/?id='. $i .'">'. $i .'</a>';
+//           if ($i < $init_page_max + 1)  $page_string .= " ";
+//         }
+//         $page_string .= ($on_page < $total_pages - 4) ? " ... " : ", ";
+//       }
+//       else {
+//         $page_string .= " ... ";
+//       }
+      
+//       for ($i = $total_pages - 2; $i < $total_pages + 1; $i ++) {
+//         $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<a href="/'. $nv .'/'. $op .'/?id='. $i .'">'. $i .'</a>';
+//         if ($i < $total_pages) $page_string .= " ";
+//       }
+//     }
+//   }
+//   else {
+//     if ($total_pages) {
+//       for ($i = 1; $i < $total_pages + 1; $i ++) {
+//         $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<a href="/'. $nv .'/'. $op .'/?id='. $i .'">'. $i .'</a>';
+//         if ($i < $total_pages) $page_string .= " ";
+//       }
+//     }
+//     else {
+//       $page_string .= '<div class="btn">' . 1 . "</div>";
+//     }
+//   }
+//   return $page_string;
+// }
 

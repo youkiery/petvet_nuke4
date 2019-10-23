@@ -39,7 +39,7 @@
             </button>
           </form>
 
-          <div id="content">
+          <div id="statistic">
             {statistic}
           </div>
         </div>
@@ -80,7 +80,34 @@
       changeMonth: true,
       changeYear: true
     });
+    $("#pay-price, #ceti-price").keyup((e) => {
+      var current = e.currentTarget
+      var val = Number(current['value'].replace(/\,/g, ""));
+      if (Number.isFinite(val)) {
+        money = val
+      }
+      
+      val = formatter.format(val).replace(/ ₫/g, "").replace(/\./g, ",");
+      current.value = val
+    })
   })
+
+  function showStatistic() {
+    $("#modal-statistic").modal('show')
+  }
+
+  function viewStatistic(e) {
+    e.preventDefault()
+    $.post(
+      global['url'],
+      {action: 'statistic', filter: {from: $("#filter-from").val(), end: $("#filter-end").val()}},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#statistic").html(data['html'])
+        })
+      }
+    )
+  }
 
   function filter() {
     if ($("#filter-type-1").prop('checked')) {
@@ -134,23 +161,5 @@
       type: ($("#filter-type-1").prop('checked') ? 1 : 2)
     }
   }
-
-  function showStatistic() {
-    $("#modal-statistic").modal('show')
-  }
-
-  function viewStatistic(e) {
-    e.preventDefault()
-    $.post(
-      global['url'],
-      {action: 'statistic', filter: {from: $("#filter-from").val(), end: $("#filter-end").val()}},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          content.html(data['html'])
-        })
-      }
-    )
-  }
-
 </script>
 <!-- END: main -->
