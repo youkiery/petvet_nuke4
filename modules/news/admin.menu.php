@@ -22,7 +22,8 @@ $submenu['buy'] = "Duyệt mua";
 $submenu['revenue'] = "Quản lý thu chi";
 $submenu['manager'] = "Danh sách quản lý";
 $submenu['review'] = "Danh sách góp ý";
+$submenu['ceti-print'] = "In giấy chứng nhận";
 $submenu['config'] = "Cấu hình";
 // $submenu['center'] = "Quản lý yêu cầu trang trại";
 
-$allow_func = array('main', 'user', 'pet', 'request', 'remind', 'disease', 'intro', 'trade', 'buy', 'config', 'revenue', 'manager', 'review'); 
+$allow_func = array('main', 'user', 'pet', 'request', 'remind', 'disease', 'intro', 'trade', 'buy', 'config', 'revenue', 'manager', 'review', 'ceti-print', 'ceti-detail'); 

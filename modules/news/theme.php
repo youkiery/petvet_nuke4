@@ -13,6 +13,56 @@ if (!defined('PREFIX')) {
 
 $buy_sex = array('Sao cũng được', 'Đực', 'Cái');
 
+function cetiList() {
+  global $db, $module_name, $op, $nv_Request;
+
+  $xtpl = new XTemplate("ceti-list.tpl", "modules/". $module_name ."/template/block");
+  $page = $nv_Request->get_int('page', 'get', '1');
+  // $query = $db->query('select count(*) as number from `'. PREFIX .'_pet` where ceti = 1 order by ctime desc');
+  $query = $db->query('select count(*) as number from `'. PREFIX .'_pet` order by ctime desc');
+  $number = $query->fetch()['number'];
+  // $query = $db->query('select * from `'. PREFIX .'_pet` where ceti = 1 order by ctime desc');
+  $query = $db->query('select * from `'. PREFIX .'_pet` order by ctime desc limit 10 offset ' . ($page - 1) * 10);
+  $xtpl->assign('module_name', $module_name);
+  $xtpl->assign('nav', navListX($number, $page, 10, $module_name . '/' . $op . '/?page='));
+  $index = ($page - 1) * 10 + 1;
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('micro', $row['microchip']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('species', $row['species']);
+    $xtpl->assign('rid', $row['id']);
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function adminCetiList() {
+  global $db, $module_name, $nv_Request;
+
+  $xtpl = new XTemplate("ceti-list.tpl", NV_ROOTDIR . "/modules/". $module_name ."/template/admin/block");
+  $page = $nv_Request->get_int('page', 'get', '1');
+  // $query = $db->query('select count(*) as number from `'. PREFIX .'_pet` where ceti = 1 order by ctime desc');
+  $query = $db->query('select count(*) as number from `'. PREFIX .'_pet` where ceti = 1');
+  $number = $query->fetch()['number'];
+  // $query = $db->query('select * from `'. PREFIX .'_pet` where ceti = 1 order by ctime desc');
+  $query = $db->query('select * from `'. PREFIX .'_pet` where ceti = 1 order by ctime desc limit 10 offset ' . ($page - 1) * 10);
+  $xtpl->assign('module_name', $module_name);
+  $xtpl->assign('nav', navListX($number, $page, 10, 'admin32/index.php?language=vi&nv=' . $module_name . '&op=ceti-print&page='));
+  $index = ($page - 1) * 10 + 1;
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('micro', $row['microchip']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('species', $row['species']);
+    $xtpl->assign('rid', $row['id']);
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function revenue($filter = array('page' => 1, 'limit' => 10)) {
   global $db, $sex_array;
 
@@ -1028,6 +1078,53 @@ function navList2 ($number, $page, $limit, $type) {
     if ($total_pages) {
       for ($i = 1; $i < $total_pages + 1; $i ++) {
         $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<button class="btn btn-info" onclick="'. $type .'('.$i.')">' . $i . '</button>';
+        if ($i < $total_pages) $page_string .= " ";
+      }
+    }
+    else {
+      $page_string .= '<div class="btn">' . 1 . "</div>";
+    }
+  }
+  return $page_string;
+}
+
+function navListX ($number, $page, $limit, $module_name) {
+  global $lang_global, $op;
+  $total_pages = ceil($number / $limit);
+
+  $on_page = $page;
+  $page_string = "";
+  if ($total_pages > 10) {
+    $init_page_max = ($total_pages > 3) ? 3 : $total_pages;
+    for ($i = 1; $i <= $init_page_max; $i ++) {
+      $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<a class="btn btn-info" href="/'. $module_name . $i .'">' . $i . '</a>';
+      if ($i < $init_page_max) $page_string .= " ";
+    }
+    if ($total_pages > 3) {
+      if ($on_page > 1 && $on_page < $total_pages) {
+        $page_string .= ($on_page > 5) ? " ... " : ", ";
+        $init_page_min = ($on_page > 4) ? $on_page : 5;
+        $init_page_max = ($on_page < $total_pages - 4) ? $on_page : $total_pages - 4;
+        for ($i = $init_page_min - 1; $i < $init_page_max + 2; $i ++) {
+          $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<a class="btn btn-info" href="/'. $module_name . $i .'">' . $i . '</a>';
+          if ($i < $init_page_max + 1)  $page_string .= " ";
+        }
+        $page_string .= ($on_page < $total_pages - 4) ? " ... " : ", ";
+      }
+      else {
+        $page_string .= " ... ";
+      }
+      
+      for ($i = $total_pages - 2; $i < $total_pages + 1; $i ++) {
+        $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<a class="btn btn-info" href="/'. $module_name . $i .'">' . $i . '</a>';
+        if ($i < $total_pages) $page_string .= " ";
+      }
+    }
+  }
+  else {
+    if ($total_pages) {
+      for ($i = 1; $i < $total_pages + 1; $i ++) {
+        $page_string .= ($i == $on_page) ? '<div class="btn">' . $i . "</div>" : '<a class="btn btn-info" href="/'. $module_name . $i .'">' . $i . '</a>';
         if ($i < $total_pages) $page_string .= " ";
       }
     }

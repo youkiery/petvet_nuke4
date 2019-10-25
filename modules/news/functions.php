@@ -16,6 +16,10 @@ define("PATH", 'modules/' . $module_file . '/template');
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 
+if (!empty($action = $nv_Request->get_string('action', 'post', '')) && !in_array($action, array('login', 'signup', 'recover', 'checking-key', 'change-pass', 'send-contact', 'filter', 'send-review')) && empty($userinfo = getUserInfo())) {
+  die('{"status": -1}');
+}
+
 function getPetListById($userid) {
   global $db;
 
@@ -56,10 +60,6 @@ function getUserInfo() {
   }
 
   return $data;
-}
-
-if (!empty($action = $nv_Request->get_string('action', 'post', '')) && !in_array($action, array('login', 'signup', 'recover', 'checking-key', 'change-pass', 'send-contact', 'filter', 'send-review')) && empty($userinfo = getUserInfo())) {
-  die('{"status": -1}');
 }
 
 function checkUsername($user) {
