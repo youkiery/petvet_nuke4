@@ -523,7 +523,7 @@ function userDogRow($filter = array('owner' => '', 'mobile' => '', 'name' => '',
       if ($count > $from && $count < $end) {
         $xtpl->assign('index', $count);
         $xtpl->assign('id', $row['id']);
-        $xtpl->assign('price', number_format($row['price'], 0, '', ','));
+        $xtpl->assign('price', $row['price']);
         $xtpl->assign('name', $row['name']);
         $xtpl->assign('owner', $owner['fullname']);
         $xtpl->assign('mobile', $owner['mobile']);

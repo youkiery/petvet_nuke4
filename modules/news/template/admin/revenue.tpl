@@ -308,6 +308,7 @@
 
   function ceti(petid, price) {
     global['petid'] = petid
+    
     $("#ceti-price").val(price)
     $("#modal-ceti").modal('show')
   }

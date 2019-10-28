@@ -26,7 +26,7 @@ if (!empty($action)) {
 
       $sql = 'update `' . PREFIX . '_pet` set ceti = 1, price = '. $price .', ctime = '. time() .' where id = ' . $petid;
       if ($db->query($sql)) {
-        $result['html'] = revenue($filter);
+        $result['html'] = revenue2($filter);
         if ($result['html']) {
           $result['notify'] = 'Đã lưu';
           $result['status'] = 1;
@@ -241,7 +241,7 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("revenue.tpl", PATH);
 
-$xtpl->assign('content', revenue());
+$xtpl->assign('content', revenue2());
 
 $sql = 'select * from `'. PREFIX .'_user` where view = 1';
 $query = $db->query($sql);

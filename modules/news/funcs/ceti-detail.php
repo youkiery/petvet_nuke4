@@ -80,7 +80,7 @@ else {
   $xtpl->assign('owner', $owner['fullname']);
   $xtpl->assign('issue', date('d/m/Y'));
   $parent = getAllParent($row);
-  if 
+  // if 
 
   if (!empty($print)) {
     $xtpl->assign('regno', $print['regno']);
