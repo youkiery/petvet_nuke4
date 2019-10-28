@@ -286,6 +286,35 @@ function getUserPetList($userid, $tabber, $filter) {
   );
 }
 
+function getParent($data) {
+  return array('f' => getPetById($data['fid']), 'm' => getPetById($data['mid']));
+}
+
+function getAllParent($data) {
+  $parent = array();
+  $list = array();
+  $parent['f1'] = array('p' => checkParent(getParent($data)));
+  $parent['f2'] = array (
+    'f21' => checkParent((!empty($parent['f1']['f'])) ? getParent($parent['f1']['f']) : 0),
+    'f22' => checkParent((!empty($parent['f1']['f'])) ? getParent($parent['f1']['m']) : 0)
+  );
+  $parent['f3'] = array (
+    'f31' => checkParent((!empty($parent['f2']['f21']['f'])) ? getParent($parent['f2']['f21']['f']) : 0),
+    'f32' => checkParent((!empty($parent['f2']['f21']['m'])) ? getParent($parent['f2']['f21']['m']) : 0),
+    'f33' => checkParent((!empty($parent['f2']['f22']['f'])) ? getParent($parent['f2']['f22']['f']) : 0),
+    'f34' => checkParent((!empty($parent['f2']['f22']['m'])) ? getParent($parent['f2']['f22']['m']) : 0)
+  );
+
+  return $parent;
+}
+
+function checkParent($data) {
+  if (!empty($data) && (!empty($data['f'] || !empty($data['m'])))) {
+    return $data;
+  }
+  return false;
+}
+
 function getParentTree($data) {
   global $db;
 

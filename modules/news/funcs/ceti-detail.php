@@ -56,12 +56,18 @@ if (empty($row = $query->fetch())) {
   $xtpl->parse("main.A");
 }
 else {
+  $query = $db->query('select * from `'. PREFIX .'_print` order by id desc limit 1');
+  if (empty($regno = $query->fetch())) {
+    $regno = array('regno' => '40070000001');
+  }
+  else {
+    $regno['regno'] += 1;
+  }
   $query = $db->query('select * from `'. PREFIX .'_print` where rid = ' . $id);
   $print = $query->fetch();
   $owner = getOwnerById($row['userid']);
-  // var_dump($owner);die();
   $xtpl->assign('id', $id);
-  $xtpl->assign('regno', '');
+  $xtpl->assign('regno', $regno['regno']);
   $xtpl->assign('micro', $row['microchip']);
   $xtpl->assign('tatto', $row['miear']);
   $xtpl->assign('name', $row['name']);
@@ -73,6 +79,8 @@ else {
   $xtpl->assign('breeder', $row['owner']);
   $xtpl->assign('owner', $owner['fullname']);
   $xtpl->assign('issue', date('d/m/Y'));
+  $parent = getAllParent($row);
+  if 
 
   if (!empty($print)) {
     $xtpl->assign('regno', $print['regno']);
