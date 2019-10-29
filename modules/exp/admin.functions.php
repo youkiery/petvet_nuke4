@@ -33,12 +33,42 @@ function itemList() {
   return $xtpl->text();
 }
 
-function checkItemName($name) {
-  global $db;
+function expList() {
+  global $db, $module_file, $nv_Request;
 
-  $query = $db->query('select * from `'. PREFIX .'item` where name like "%'. $name .'%"');
-  if (!empty($query->fetch())) {
-    return 1;
+  $page = $nv_Request->get_string('page', 'post', 1);
+  $limit = 10;
+
+  $xtpl = new XTemplate("list.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/exp");
+  $query = $db->query('select count(*) as number from `'. PREFIX .'row`');
+  $number = $query->fetch()['number'];
+
+  $query = $db->query('select * from `'. PREFIX .'row` order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit);
+  $index = $limit * ($page - 1) + 1;
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $item = getItemId($row['rid']);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('rid', $row['rid']);
+    $xtpl->assign('name', $item['name']);
+    $xtpl->assign('time', date('d/m/Y', $row['exp_time']));
+    $xtpl->parse('main.row');
   }
-  return 0;
+  $xtpl->assign('nav', navList($number, $page, $limit, 'goPage'));
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function expIdList() {
+  global $db, $module_file, $nv_Request;
+
+  $page = $nv_Request->get_string('page', 'post', 1);
+  $limit = 10;
+
+  $query = $db->query('select id from `'. PREFIX .'row` order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit);
+  $list = array();
+  while ($row = $query->fetch()) {
+    $list[] = $row['id'];
+  }
+  return $list;
 }

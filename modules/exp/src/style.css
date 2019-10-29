@@ -39,3 +39,26 @@
   display: none;
   z-index: 10000;
 }
+
+.relative {
+  position: relative;
+}
+
+.suggest {
+  position: absolute;
+  width: 100%;
+  background: #fff;
+  max-height: 400px;
+  overflow-y: scroll;
+  z-index: 1;
+  display: none;
+}
+
+.suggest-item {
+  border-bottom: 1px solid gray;
+  padding: 10px;
+}
+
+.suggest-item:hover {
+  background: #8f8;
+}

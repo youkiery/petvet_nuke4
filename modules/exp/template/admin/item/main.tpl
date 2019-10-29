@@ -48,7 +48,7 @@
   function insert() {
     $.post(
       '',
-      {action: 'insert', name: $("#insert-name").val(), page: page},
+      {action: 'insert', name: $("#insert-name").val(), page: global['page']},
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#insert-name").val('')
@@ -60,7 +60,18 @@
   function update(id) {
     $.post(
       '',
-      {action: 'update', name: $("#item-" + id).val(), id: id, page: page},
+      {action: 'update', name: $("#item-" + id).val(), id: id},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+
+        }, () => {}) 
+      }
+    )
+  }
+  function remove(id) {
+    $.post(
+      '',
+      {action: 'update', id: id, page: global['page']},
       (response, status) => {
         checkResult(response, status).then(data => {
 
@@ -80,16 +91,5 @@
       }
     )
   }
-  // function update(id) {
-  //   $.post(
-  //     '',
-  //     {action: 'update', name: $("#item-" + id)},
-  //     (response, status) => {
-  //       checkResult(response, status).then(data => {
-
-      //   }, () => {}) 
-      // }
-  //   )
-  // }
 </script>
 <!-- END: main -->

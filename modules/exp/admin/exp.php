@@ -55,17 +55,12 @@ if (!empty($action)) {
     case 'remove':
       $id = $nv_Request->get_int('id', 'post', '');
 
-      if (!checkItemId($id)) {
-        $result['notify'] = 'Hàng hoá không tồn tại';
-      }
-      else {
-        $query = $db->query('delete from `'. PREFIX .'row` where id = ' . $id);
-        if ($query) {
-          $result['status'] = 1;
-          $result['notify'] = 'Đã xóa';
-          $result['list'] = expIdList();
-          $result['html'] = expList();
-        }
+      $query = $db->query('delete from `'. PREFIX .'row` where id = ' . $id);
+      if ($query) {
+        $result['status'] = 1;
+        $result['notify'] = 'Đã xóa';
+        $result['list'] = expIdList();
+        $result['html'] = expList();
       }
     break;
     case 'filter':

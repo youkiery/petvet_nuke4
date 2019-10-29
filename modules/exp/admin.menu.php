@@ -8,6 +8,7 @@
 
 if (!defined('NV_ADMIN')) die('Stop!!!');
 
-// $submenu['add_document'] = $lang_module['add_document'];
+$submenu['item'] = 'Danh sách sản phẩm';
+$submenu['exp'] = 'Quản lý hạn sử dụng';
 
-$allow_func = array('main'); 
+$allow_func = array('main', 'item', 'exp'); 
