@@ -59,6 +59,29 @@ function expList() {
   return $xtpl->text();
 }
 
+function outdateList() {
+  global $db, $module_file, $nv_Request;
+
+  $page = $nv_Request->get_string('page', 'post', 1);
+  $time = $nv_Request->get_string('time', 'post', 7);
+  $limit = 10;
+
+  $xtpl = new XTemplate("list.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/main");
+
+  $query = $db->query('select * from `'. PREFIX .'row` where exp_time > '. (time() - $time * 60 * 60 * 24) .' order by exp_time asc');
+  $index = 1;
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $item = getItemId($row['rid']);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $item['name']);
+    $xtpl->assign('time', date('d/m/Y', $row['exp_time']));
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function expIdList() {
   global $db, $module_file, $nv_Request;
 

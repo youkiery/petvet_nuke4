@@ -2,45 +2,29 @@
 <link rel="stylesheet" href="/modules/exp/src/style.css">
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
-<!-- <div class="modal" id="item" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
 
-        <div class="input-group">
-          <input type="text" class="form-control" id="item-keyword">
-          <div class="input-group-btn">
-            <button class="btn btn-info" onclick="search()"> <span class="glyphicon glyphicon-search"></span> </button>
-          </div>
-        </div>
-        <div id="item-content">
-          {item-content}
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-
+<div id="msgshow"></div>
 
 <div class="row">
   <div class="col-sm-12">
-    <div class="relative">
-      <input type="text" class="form-control" id="insert-name" placeholder="Tìm kiếm hàng hóa">
-      <div class="suggest" id="insert-name-suggest"></div>
-    </div>
-    <p> Đang chọn: <span id="selected-item-name"> Chưa chọn </span> </p>
-    <input type="hidden" id="selected-item-id" value="">
+    <input type="text" class="form-control" id="filter-key">
   </div>
   <div class="col-sm-12">
-    <input type="text" class="form-control" id="insert-date" value="{today}">
+    <select class="form-control" id="filter-time">
+      <option value="7"> Một tuần </option>
+      <option value="30"> Một tháng </option>
+      <option value="90"> Một quý </option>
+      <option value="180"> Nửa năm </option>
+      <option value="365"> Một năm </option>
+      <option value="720"> Hai năm </option>
+    </select>
   </div>
 </div>
 <div class="text-center">
-  <button class="btn btn-info" onclick="insert()"> Thêm hạn sử dụng </button>
+  <button class="btn btn-info" onclick="filter()">
+    <span class="glyphicon glyphicon-filter"></span>
+  </button>
 </div>
-
-<div id="msgshow"></div>
 
 <div id="content">
   {content}
@@ -50,135 +34,16 @@
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <script>
-  var global = {
-    page: 1,
-    item: JSON.parse('{item}'),
-    items: JSON.parse('{items}'),
-    selected: {
-      id: 0, name: ''
-    }
-  }
-
-  $(document).ready(() => {
-    installSuggest('insert-name', 'insert-name-suggest', 'selected-item-id')
-    global['items'].forEach(item => {
-      installSuggest('item-' + item, 'item-' + item + "-suggest", 'item-id-' + item)
-    })
-    $("#insert-date, .date").datepicker({
-      format: 'dd/mm/yyyy',
-      changeMonth: true,
-      changeYear: true
-    });
-  })
-
-  function insert() {
-    id = $("#selected-item-id").val()
-    if (!id) {
-      alert_msg('Chưa chọn sản phẩm')
-    }
-    else {
-      $.post(
-        '',
-        {action: 'insert', id: id, date: $("#insert-date").val(), page: global['page']},
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            $("#content").html(data['html'])
-            data['list'].forEach(item => {
-              installSuggest('item-' + item, 'item-' + item + "-suggest", 'item-id-' + item)
-            })
-            $(".date").datepicker({
-              format: 'dd/mm/yyyy',
-              changeMonth: true,
-              changeYear: true
-            })
-          }, () => {}) 
-        }
-      )
-    }
-  }
-  function update(id) {
+  function filter() {
     $.post(
       '',
-      {action: 'update', name: $("#item-" + id).val(), id: id, rid: $("#item-id-" + id).val()},
+      {action: 'filter', keyword: $("#filter-keyword").val(), time: $("$filter-time").val()},
       (response, status) => {
         checkResult(response, status).then(data => {
-
-        }, () => {}) 
-      }
-    )
-  }
-  function remove(id) {
-    $.post(
-      '',
-      {action: 'remove', id: id, page: global['page']},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          $("#content").html(data['html'])
-            data['list'].forEach(item => {
-              installSuggest('item-' + item, 'item-' + item + "-suggest", 'item-id-' + item)
-            })
-            $(".date").datepicker({
-              format: 'dd/mm/yyyy',
-              changeMonth: true,
-              changeYear: true
-          })
-        }, () => {}) 
-      }
-    )
-  }
-  function goPage(page) {
-    $.post(
-      '',
-      {action: 'filter', page: page},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          global['page'] = page
           $('#content').html(data['html'])
         }, () => {}) 
       }
     )
-  }
-  function selectItem(id, name, input, hidden) {
-    global['selected'] = {
-      id: id,
-      name: name
-    }
-    $("#" + input).val(name)
-    $("#" + hidden).val(id)
-    if (input == 'insert-name') $("#selected-item-name").text(name)
-  }
-  function installSuggest(input, suggest, hidden) {
-    var inputObj = $("#" + input)
-    var suggestObj = $("#" + suggest)
-    inputObj.keyup(e => {
-      key = convert(e.currentTarget.value)
-      
-      list = global['item'].filter(item => {
-        return item['key'].search(key) >= 0
-      })
-      html = ''
-      if (list.length) {
-        list.forEach(item => {
-          html += `
-            <div class="suggest-item" onclick="selectItem(`+ item['id'] +`, '`+ item['name'] +`', '`+ input +`', '`+ hidden +`')">
-              `+ item['name'] +`
-            </div>
-          `
-        })
-      }
-      else {
-        html = 'Không có kết quả'
-      }
-      suggestObj.html(html)
-    })
-    inputObj.focus(() => {
-      suggestObj.show()
-    })
-    inputObj.blur(() => {
-      setTimeout(() => {
-        suggestObj.hide()
-      }, 200);
-    })
   }
 </script>
 <!-- END: main -->

@@ -77,11 +77,8 @@ if (!empty($action)) {
   echo json_encode($result);
   die();
 }
-$xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/exp");
-$xtpl->assign('today', date('d/m/Y'));
-$xtpl->assign('items', json_encode(expIdList()));
-$xtpl->assign('item', getItemList());
-$xtpl->assign('content', expList());
+$xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/main");
+$xtpl->assign('content', outdateList());
 $xtpl->parse('main');
 $contents = $xtpl->text();
 
