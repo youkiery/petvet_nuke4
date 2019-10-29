@@ -7,4 +7,5 @@
  */
 
 if (!defined('NV_SYSTEM')) die('Stop!!!');
+include_once(NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php');
 
