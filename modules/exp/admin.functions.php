@@ -68,7 +68,7 @@ function outdateList() {
 
   $xtpl = new XTemplate("list.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/main");
 
-  $query = $db->query('select * from `'. PREFIX .'row` where exp_time > '. (time() - $time * 60 * 60 * 24) .' order by exp_time asc');
+  $query = $db->query('select * from `'. PREFIX .'row` where exp_time < '. (time() + $time * 60 * 60 * 24) .' order by exp_time desc');
   $index = 1;
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index++);

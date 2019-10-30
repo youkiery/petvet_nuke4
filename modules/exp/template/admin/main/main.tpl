@@ -37,7 +37,7 @@
   function filter() {
     $.post(
       '',
-      {action: 'filter', keyword: $("#filter-keyword").val(), time: $("$filter-time").val()},
+      {action: 'filter', keyword: $("#filter-keyword").val(), time: $("#filter-time").val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           $('#content').html(data['html'])

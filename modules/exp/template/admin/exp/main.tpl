@@ -99,7 +99,7 @@
   function update(id) {
     $.post(
       '',
-      {action: 'update', name: $("#item-" + id).val(), id: id, rid: $("#item-id-" + id).val()},
+      {action: 'update', name: $("#item-" + id).val(), date: $("#item-date-" + id).val(), id: id, rid: $("#item-id-" + id).val()},
       (response, status) => {
         checkResult(response, status).then(data => {
 

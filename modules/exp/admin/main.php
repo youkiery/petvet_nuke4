@@ -12,66 +12,9 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
-    case 'insert':
-      $id = $nv_Request->get_string('id', 'post', '');
-      $date = $nv_Request->get_string('date', 'post', '');
-
-      if (!checkItemId($id)) {
-        $result['notify'] = 'Hàng hoá không tồn tại';
-      }
-      else {
-        $query = $db->query('insert into `'. PREFIX .'row` (rid, exp_time, update_time) values('. $id .', "'. totime($date) .'", "'. time() .'")');
-        if ($query) {
-          $result['status'] = 1;
-          $result['notify'] = 'Đã thêm';
-          $result['list'] = expIdList();
-          $result['html'] = expList();
-        }
-      }
-    break;
-    case 'update':
-      $id = $nv_Request->get_int('id', 'post', '');
-      $rid = $nv_Request->get_int('rid', 'post', '');
-      $name = $nv_Request->get_string('name', 'post', '');
-      $date = $nv_Request->get_string('date', 'post', '');
-
-      if (empty($name)) {
-        $result['notify'] = 'Tên hàng không được để trống';
-      }
-      else if (checkItemName($name, $rid)) {
-        $result['notify'] = 'Trùng tên hàng';
-      }
-      else if (!checkItemId($id)) {
-        $result['notify'] = 'Hàng hoá không tồn tại';
-      }
-      else {
-        $query = $db->query('update `'. PREFIX .'row` set rid = "'. $rid .'", exp_time = "'. totime($date) .'", update_time = '. time() .' where id = ' . $id);
-        if ($query) {
-          $result['status'] = 1;
-          $result['notify'] = 'Đã lưu';
-        }
-      }
-    break;
-    case 'remove':
-      $id = $nv_Request->get_int('id', 'post', '');
-
-      if (!checkItemId($id)) {
-        $result['notify'] = 'Hàng hoá không tồn tại';
-      }
-      else {
-        $query = $db->query('delete from `'. PREFIX .'row` where id = ' . $id);
-        if ($query) {
-          $result['status'] = 1;
-          $result['notify'] = 'Đã xóa';
-          $result['list'] = expIdList();
-          $result['html'] = expList();
-        }
-      }
-    break;
     case 'filter':
       $result['status'] = 1;
-      $result['list'] = expIdList();
-      $result['html'] = expList();
+      $result['html'] = outdateList();
     break;
   }
   echo json_encode($result);

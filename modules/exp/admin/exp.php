@@ -41,7 +41,7 @@ if (!empty($action)) {
       else if (checkItemName($name, $rid)) {
         $result['notify'] = 'Trùng tên hàng';
       }
-      else if (!checkItemId($id)) {
+      else if (!checkItemId($rid)) {
         $result['notify'] = 'Hàng hoá không tồn tại';
       }
       else {
