@@ -24,7 +24,7 @@ label span input {
 }
 </style>
 
-<a href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/dispatch.xlsx"> Tải về tệp mẫu </a>
+<a href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/exp_item.xlsx"> Tải về tệp mẫu </a>
 
 <div style="text-align: center; position: relative;">
   <div style="margin: auto;">
@@ -34,22 +34,12 @@ label span input {
           +
         </div>
         
-        <!-- <img src="/themes/admin_default/images/logo_small.png" alt=""> -->
         <span>
           <input type="file" id="file" onchange="tick(event)">
         </span>
       </label>
   </div>
 </div>
-
-
-<!-- <button class="btn btn-info">
-  Tải lại
-</button>
-
-<button class="btn btn-info" onclick="posted()">
-  Thử lại
-</button> -->
 
 <div id="error" style="color: red; font-weight: bold; font-size: 1.2em;">
 
@@ -58,6 +48,7 @@ label span input {
 
 </div>
 
+<script src="/modules/exp/src/script.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jszip.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/xlsx.js"></script>
 <script>
@@ -81,7 +72,7 @@ label span input {
           pars = JSON.stringify(XL_row_object);
           
           if (pars.length > 100) {
-            global = XL_row_object
+            global = convertobj(XL_row_object)
             console.log(global);
             posted()
           }
@@ -111,6 +102,21 @@ label span input {
     js.parseExcel(selectFile)
   }
 
+  function convertobj(data) {
+    obj = []
+    data.forEach(item => {
+      count = 0
+      pair = {}
+      for (const key in item) {
+        if (item.hasOwnProperty(key)) {
+          pair[count++] = item[key]
+        }
+      }
+      obj.push(pair)
+    });
+    return obj
+  }
+
   function reset() {
     $("#notice").html('')
     $("#error").html('')
@@ -129,24 +135,12 @@ label span input {
       strHref,
       {action: 'check', data: global},
       (response, status) => {
-        var error = 1
-
-        if (status == 'success' && response) {
-          try {
-            data = JSON.parse(response)
-            $("#notice").html(data['html'])
-            if (data['error']) {
-              $("#error").html(data['error'])
-            }
-            error = 0
+        checkResult(response, status).then(data => {
+          $("#notice").html(data['notify'])
+          if (data['error']) {
+            $("#error").html(data['error'])
           }
-          catch (e) {
-            // error
-          }
-        }
-        if (error) {
-          showNotice("Có lỗi xảy ra trên đường truyền")
-        }
+        }, () => {})
       }
     )
   }

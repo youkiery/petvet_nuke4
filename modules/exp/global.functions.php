@@ -31,6 +31,16 @@ function getItemId($id) {
   return array();
 }
 
+function getItemName($name) {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'item` where name = "' . $name . '"');
+  if ($row = $query->fetch()) {
+    return $row;
+  }
+  return array();
+}
+
 function checkItemName($name, $rid = 0) {
   global $db;
 
