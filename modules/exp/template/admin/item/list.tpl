@@ -4,7 +4,6 @@
     <th> Số thứ tự </th>
     <th> Tên hàng </th>
     <th> Hạn sử dụng </th>
-    <th></th>
   </tr>
   <!-- BEGIN: row -->
   <tr>
