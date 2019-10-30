@@ -9,6 +9,7 @@
 if (!defined('NV_ADMIN') or !defined('NV_MAINFILE') or !defined('NV_IS_MODADMIN')) die('Stop!!!');
 define('NV_IS_FILE_ADMIN', true);
 include_once(NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php');
+include_once(NV_ROOTDIR . '/modules/' . $module_file . '/theme.php');
 
 function itemList() {
   global $db, $module_file, $nv_Request;
@@ -62,13 +63,42 @@ function expList() {
 function outdateList() {
   global $db, $module_file, $nv_Request;
 
+  $from = $nv_Request->get_string('from', 'post', '');
+  $to = $nv_Request->get_string('to', 'post', '');
   $page = $nv_Request->get_string('page', 'post', 1);
-  $time = $nv_Request->get_string('time', 'post', 7);
+  $time = $nv_Request->get_string('time', 'post', 90);
   $limit = 10;
 
   $xtpl = new XTemplate("list.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/main");
+  $check = 0;
 
-  $query = $db->query('select * from `'. PREFIX .'row` where exp_time < '. (time() + $time * 60 * 60 * 24) .' order by exp_time desc');
+  if (!empty($from)) {
+    $check += 1;
+  }
+  if (!empty($to)) {
+    $check += 2;
+  }
+  
+  if ($check > 0)  {
+    // filter by time range
+    switch ($check) {
+      case '1':
+        $xtra = ' where exp_time > ' . totime($from);
+      break;
+      case '2':
+        $xtra = ' where exp_time < ' . totime($to);
+      break;
+      case '3':
+        $xtra = ' where (exp_time between '. totime($from) .' and ' . totime($to) . ')';
+      break;
+    }
+  }
+  else {
+    // filter by time amount
+    $xtra = 'where exp_time < '. (time() + $time * 60 * 60 * 24);
+  }
+
+  $query = $db->query('select * from `'. PREFIX .'row` '. $xtra .' order by exp_time desc');
   $index = 1;
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index++);

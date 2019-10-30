@@ -11,8 +11,8 @@ if (!defined('NV_MAINFILE'))
 
 $module_version = array(
     'name' => 'Quản lý hạn sử dụng',
-    'modfuncs' => 'main',
-    'submenu' => 'main',
+    'modfuncs' => 'main, excel',
+    'submenu' => 'main, excel',
     'is_sysmod' => 0,
     'virtual' => 1,
     'version' => '4.3.01',

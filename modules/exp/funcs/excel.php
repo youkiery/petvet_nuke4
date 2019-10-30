@@ -6,7 +6,7 @@
  * @Createdate Mon, 28 Oct 2019 15:00:00 GMT
  */
 
-if (!defined('NV_IS_FILE_ADMIN')) die('Stop!!!');
+if (!defined('NV_IS_MOD_CONGVAN')) die('Stop!!!');
 
 $action = $nv_Request->get_string('action', 'post', '');
 
@@ -60,7 +60,8 @@ if (!empty($action)) {
   die();
 }
 
-$xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/" . $module_file . "/template/admin/excel");
+$xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/" . $module_file . "/template/excel");
+$xtpl->assign('module_name', $module_name);
 
 $xtpl->parse('main');
 $contents = $xtpl->text();
@@ -68,5 +69,5 @@ $contents = $xtpl->text();
 $page_title = $lang_module['add_document'];
 
 include NV_ROOTDIR . '/includes/header.php';
-echo nv_admin_theme($contents);
+echo nv_site_theme($contents);
 include NV_ROOTDIR . '/includes/footer.php';
