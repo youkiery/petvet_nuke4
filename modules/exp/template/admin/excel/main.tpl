@@ -71,7 +71,7 @@ label span input {
           var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[workbook.SheetNames[0]]);
           pars = JSON.stringify(XL_row_object);
           
-          if (pars.length > 100) {
+          if (pars.length > 10) {
             global = convertobj(XL_row_object)
             console.log(global);
             posted()
