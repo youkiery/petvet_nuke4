@@ -66,6 +66,53 @@ function checkItemId($id) {
   return 0;
 }
 
+// check if category exist, if not, insert to table
+// return category id
+function checkCategory($catename) {
+  global $db;
+  $catename = mb_strtolower($catename);
+
+  $query = $db->query('select * from `'. PREFIX .'category` where name = "'. $catename .'"');
+  $cate = $query->fetch();
+  $id = 0; // default id = 0
+  if (empty($cate) || empty($cate['id'])) {
+    $query = $db->query('insert into `'. PREFIX .'category` (name) values("'. $catename .'")');
+    if ($query) {
+      $id = $db->lastInsertId();
+    }
+  } else {
+    $id = $cate['id'];
+  }
+  return $id;
+}
+
+function checkCategoryName($name, $rid = 0) {
+  global $db;
+  $name = mb_strtolower($name);
+
+  if ($rid) {
+    $query = $db->query('select * from `'. PREFIX .'category` where name = "'. $name .'" and id = ' . $rid);
+    if (!empty($query->fetch())) {
+      return 0;
+    }
+  }
+  $query = $db->query('select * from `'. PREFIX .'category` where name = "'. $name .'"');
+  if (!empty($query->fetch())) {
+    return 1;
+  }
+  return 0;
+}
+
+function checkCategoryId($id) {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'category` where id = ' . $id);
+  if (!empty($query->fetch())) {
+    return 1;
+  }
+  return 0;
+}
+
 function totime($time) {
   if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
     $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);

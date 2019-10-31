@@ -25,7 +25,7 @@ label span input {
 </style>
 
 <a href="/{module_name}/"> Danh sách </a> <br>
-<a href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/exp_item.xlsx"> Tải về tệp mẫu </a>
+<a href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/exp.xlsx"> Tải về tệp mẫu </a>
 
 <div style="text-align: center; position: relative;">
   <div style="margin: auto;">

@@ -34,6 +34,25 @@ function itemList() {
   return $xtpl->text();
 }
 
+function categoryList() {
+  global $db, $module_file, $nv_Request;
+
+  $page = $nv_Request->get_string('page', 'post', 1);
+
+  $xtpl = new XTemplate("list.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/category");
+
+  $query = $db->query('select * from `'. PREFIX .'category` order by id desc');
+  $index = $limit * ($page - 1) + 1;
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function expList() {
   global $db, $module_file, $nv_Request;
 

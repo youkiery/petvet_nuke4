@@ -16,17 +16,17 @@ if (!empty($action)) {
       $name = $nv_Request->get_string('name', 'post', '');
 
       if (empty($name)) {
-        $result['notify'] = 'Tên hàng không được để trống';
+        $result['notify'] = 'Loại hàng không được để trống';
       }
-      else if (checkItemName($name)) {
-        $result['notify'] = 'Trùng tên hàng';
+      else if (checkCategoryName($name)) {
+        $result['notify'] = 'Trùng loại hàng';
       }
       else {
-        $query = $db->query('insert into `'. PREFIX .'item` (name, update_time) values("'. $name .'", "'. time() .'")');
+        $query = $db->query('insert into `'. PREFIX .'category` (name, update_time) values("'. $name .'", "'. time() .'")');
         if ($query) {
           $result['status'] = 1;
           $result['notify'] = 'Đã thêm';
-          $result['html'] = itemList();
+          $result['html'] = categoryList();
         }
       }
     break;
@@ -35,45 +35,46 @@ if (!empty($action)) {
       $name = $nv_Request->get_string('name', 'post', '');
 
       if (empty($name)) {
-        $result['notify'] = 'Tên hàng không được để trống';
+        $result['notify'] = 'Loại hàng không được để trống';
       }
-      else if (checkItemName($name)) {
-        $result['notify'] = 'Trùng tên hàng';
+      else if (checkCategoryName($name)) {
+        $result['notify'] = 'Trùng loại hàng';
       }
       else {
-        $query = $db->query('update `'. PREFIX .'item` set name = "'. $name .'", update_time = '. time() .' where id = ' . $id);
+        $query = $db->query('update `'. PREFIX .'category` set name = "'. $name .'", update_time = '. time() .' where id = ' . $id);
         if ($query) {
           $result['status'] = 1;
           $result['notify'] = 'Đã lưu';
-          $result['html'] = itemList();
+          $result['html'] = categoryList();
         }
       }
     break;
     case 'remove':
       $id = $nv_Request->get_int('id', 'post', '');
 
-      if (!checkItemId($id)) {
-        $result['notify'] = 'Hàng hóa không tồn tại';
+      if (!checkCategoryId($id)) {
+        $result['notify'] = 'Loại hàng không tồn tại';
       }
       else {
-        $query = $db->query('delete from `'. PREFIX .'item` id = ' . $id);
+        $query = $db->query('delete from `'. PREFIX .'category` id = ' . $id);
         if ($query) {
           $result['status'] = 1;
           $result['notify'] = 'Đã xóa';
+          $result['html'] = categoryList();
         }
       }
     break;
     case 'filter':
       $result['status'] = 1;
-      $result['html'] = itemList();
+      $result['html'] = categoryList();
     break;
   }
   echo json_encode($result);
   die();
 }
 
-$xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/item");
-$xtpl->assign('content', itemList());
+$xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/category");
+$xtpl->assign('content', categoryList());
 $xtpl->parse('main');
 $contents = $xtpl->text();
 
