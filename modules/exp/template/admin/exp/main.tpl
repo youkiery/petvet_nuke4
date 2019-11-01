@@ -22,12 +22,21 @@
 <div class="text-center">
   <button class="btn btn-info" onclick="insert()"> Thêm hạn sử dụng </button>
 </div>
+<label class="form-inline">
+  Số dòng một trang: <input type="text" class="form-control" id="filter-limit" value="10">
+  <button class="btn btn-info" onclick="goPage(1)">
+    Hiển thị
+  </button>
+</label>
 
 <div id="msgshow"></div>
 
 <div id="content">
   {content}
 </div>
+<button class="btn btn-info">
+  Cập nhật số lượng theo mã
+</button>
 
 <script src="/modules/exp/src/script.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
@@ -52,6 +61,7 @@
       changeMonth: true,
       changeYear: true
     });
+    installCheckAll()
   })
 
   function insert() {
@@ -62,10 +72,11 @@
     else {
       $.post(
         '',
-        {action: 'insert', id: id, number: $("#insert-number").val(), date: $("#insert-date").val(), page: global['page']},
+        {action: 'insert', id: id, number: $("#insert-number").val(), date: $("#insert-date").val(), filter: checkFilter()},
         (response, status) => {
           checkResult(response, status).then(data => {
             $("#content").html(data['html'])
+            installCheckAll()
             data['list'].forEach(item => {
               installSuggest('item-' + item, 'item-' + item + "-suggest", 'item-id-' + item)
             })
@@ -91,37 +102,57 @@
       }
     )
   }
+
   function remove(id) {
     $.post(
       '',
-      {action: 'remove', id: id, page: global['page']},
+      {action: 'remove', id: id, filter: checkFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#content").html(data['html'])
-            data['list'].forEach(item => {
-              installSuggest('item-' + item, 'item-' + item + "-suggest", 'item-id-' + item)
-            })
-            $(".date").datepicker({
-              format: 'dd/mm/yyyy',
-              changeMonth: true,
-              changeYear: true
+          installCheckAll()
+          data['list'].forEach(item => {
+            installSuggest('item-' + item, 'item-' + item + "-suggest", 'item-id-' + item)
+          })
+          $(".date").datepicker({
+            format: 'dd/mm/yyyy',
+            changeMonth: true,
+            changeYear: true
           })
         }, () => {}) 
       }
     )
   }
+
+  function checkFilter() {
+    page = global['page']
+    limit = $("#filter-limit").val()
+    if (Number(page) < 0) {
+      page = 1
+    }
+    if (Number(limit) < 10) {
+      limit = 10
+    }
+    return {
+      page: page,
+      limit: limit
+    }
+  }
+
   function goPage(page) {
     $.post(
       '',
-      {action: 'filter', page: page},
+      {action: 'filter', filter: checkFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
           global['page'] = page
           $('#content').html(data['html'])
+          installCheckAll()
         }, () => {}) 
       }
     )
   }
+
   function selectItem(id, name, input, hidden) {
     global['selected'] = {
       id: id,
@@ -131,6 +162,16 @@
     $("#" + hidden).val(id)
     if (input == 'insert-name') $("#selected-item-name").text(name)
   }
+
+  function installCheckAll() {
+    $("#item-check-all").change((e) => {
+      checked = e.currentTarget.checked 
+      $(".event-checkbox").each((index, item) => {
+        item.checked = checked
+      })
+    })
+  }
+
   function installSuggest(input, suggest, hidden) {
     var inputObj = $("#" + input)
     var suggestObj = $("#" + suggest)

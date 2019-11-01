@@ -56,6 +56,22 @@ function checkItemName($name, $rid = 0) {
   return 0;
 }
 
+function checkItemCode($name, $rid = 0) {
+  global $db;
+
+  if ($rid) {
+    $query = $db->query('select * from `'. PREFIX .'item` where code = "'. $name .'" and id = ' . $rid);
+    if (!empty($query->fetch())) {
+      return 0;
+    }
+  }
+  $query = $db->query('select * from `'. PREFIX .'item` where name = "'. $name .'"');
+  if (!empty($query->fetch())) {
+    return 1;
+  }
+  return 0;
+}
+
 function checkItemId($id) {
   global $db;
 

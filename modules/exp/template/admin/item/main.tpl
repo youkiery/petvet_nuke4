@@ -25,7 +25,8 @@
 
 <div class="row" style="margin-bottom: 10px;">
   <div class="form-inline">
-    <input type="text" class="form-control" id="insert-name" placeholder="Nhập thêm loại hàng">
+    <input type="text" class="form-control" id="insert-name" placeholder="Nhập thêm sản phẩm">
+    <input type="text" class="form-control" id="insert-code" placeholder="Mã sản phẩm">
     <select class="form-control" id="insert-cate">
       <option value="0"> Chưa phân loại </option>
       <!-- BEGIN: category2 -->
@@ -79,7 +80,7 @@
   function insert() {
     $.post(
       '',
-      {action: 'insert', name: $("#insert-name").val(), cate_id: $("#insert-cate").val(), filter: checkFilter()},
+      {action: 'insert', name: $("#insert-name").val(), code: $("#insert-code").val(), cate_id: $("#insert-cate").val(), filter: checkFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#insert-name").val('')
@@ -92,7 +93,7 @@
   function update(id) {
     $.post(
       '',
-      {action: 'update', name: $("#item-" + id).val(), id: id},
+      {action: 'update', name: $("#item-" + id).val(), code: $("#item-code-" + id).val(), id: id},
       (response, status) => {
         checkResult(response, status).then(data => {
 
@@ -147,6 +148,7 @@
       })
     })
   }
+  
   function goPage(page) {
     $.post(
       '',

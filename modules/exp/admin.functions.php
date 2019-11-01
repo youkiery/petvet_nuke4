@@ -32,6 +32,7 @@ function itemList() {
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('name', $row['name']);
+    $xtpl->assign('code', $row['code']);
     $xtpl->assign('category', checkCategoryNameId($row['cate_id']));
     $xtpl->parse('main.row');
   }
@@ -62,15 +63,20 @@ function categoryList() {
 function expList() {
   global $db, $module_file, $nv_Request;
 
-  $page = $nv_Request->get_string('page', 'post', 1);
-  $limit = 10;
+  $filter = $nv_Request->get_array('filter', 'post');
+  if (empty($filter['page']) || $filter['page'] < 1) {
+    $filter['page'] = 1;
+  }
+  if (empty($filter['limit']) || $filter['limit'] < 10) {
+    $filter['limit'] = 10;
+  }
 
   $xtpl = new XTemplate("list.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/exp");
   $query = $db->query('select count(*) as number from `'. PREFIX .'row`');
   $number = $query->fetch()['number'];
 
-  $query = $db->query('select * from `'. PREFIX .'row` order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit);
-  $index = $limit * ($page - 1) + 1;
+  $query = $db->query('select * from `'. PREFIX .'row` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+  $index = $filter['limit'] * ($filter['page'] - 1) + 1;
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index++);
     $item = getItemId($row['rid']);
@@ -81,7 +87,7 @@ function expList() {
     $xtpl->assign('time', date('d/m/Y', $row['exp_time']));
     $xtpl->parse('main.row');
   }
-  $xtpl->assign('nav', navList($number, $page, $limit, 'goPage'));
+  $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
   $xtpl->parse('main');
   return $xtpl->text();
 }

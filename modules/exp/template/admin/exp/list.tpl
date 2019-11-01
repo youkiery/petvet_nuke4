@@ -2,6 +2,7 @@
 <table class="table table-bordered">
   <tr>
     <th> Số thứ tự </th>
+    <th> <input type="checkbox" id="item-check-all"> </th>
     <th> Tên hàng </th>
     <th> Số lượng </th>
     <th> Hạn sử dụng </th>
@@ -11,6 +12,11 @@
   <tr>
     <td>
       {index}
+    </td>
+    <td>
+      <label class="checkbox-inline">
+        <input type="checkbox" class="event-checkbox" id="item-check-{id}">
+      </label>
     </td>
     <td>
       <div class="relative">

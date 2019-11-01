@@ -14,16 +14,23 @@ if (!empty($action)) {
   switch ($action) {
     case 'insert':
       $name = $nv_Request->get_string('name', 'post', '');
+      $code = $nv_Request->get_string('code', 'post', '');
       $cate_id = $nv_Request->get_int('cate_id', 'post', 0);
 
       if (empty($name)) {
         $result['notify'] = 'Tên hàng không được để trống';
       }
+      else if (empty($code)) {
+        $result['notify'] = 'Mã hàng không được để trống';
+      }
       else if (checkItemName($name)) {
         $result['notify'] = 'Trùng tên hàng';
       }
+      else if (checkItemCode($code)) {
+        $result['notify'] = 'Trùng mã hàng';
+      }
       else {
-        $query = $db->query('insert into `'. PREFIX .'item` (name, cate_id, update_time) values("'. $name .'", '. $cate_id .', "'. time() .'")');
+        $query = $db->query('insert into `'. PREFIX .'item` (name, code, cate_id, update_time) values("'. $name .'", "'. $code .'", '. $cate_id .', "'. time() .'")');
         if ($query) {
           $result['status'] = 1;
           $result['notify'] = 'Đã thêm';
@@ -33,16 +40,20 @@ if (!empty($action)) {
     break;
     case 'update':
       $id = $nv_Request->get_int('id', 'post', '');
+      $code = $nv_Request->get_string('code', 'post', '');
       $name = $nv_Request->get_string('name', 'post', '');
 
       if (empty($name)) {
         $result['notify'] = 'Tên hàng không được để trống';
       }
-      else if (checkItemName($name)) {
+      else if (checkItemName($name, $id)) {
         $result['notify'] = 'Trùng tên hàng';
       }
+      else if (checkItemCode($code, $id)) {
+        $result['notify'] = 'Trùng mã hàng';
+      }
       else {
-        $query = $db->query('update `'. PREFIX .'item` set name = "'. $name .'", update_time = '. time() .' where id = ' . $id);
+        $query = $db->query('update `'. PREFIX .'item` set name = "'. $name .'", code = "'. $code .'", update_time = '. time() .' where id = ' . $id);
         if ($query) {
           $result['status'] = 1;
           $result['notify'] = 'Đã lưu';

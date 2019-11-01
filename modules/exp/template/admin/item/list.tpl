@@ -3,6 +3,7 @@
   <tr>
     <th> Số thứ tự </th>
     <th> <input type="checkbox" id="item-check-all"> </th>
+    <th> Mã hàng </th>
     <th> Tên hàng </th>
     <th> Loại hàng </th>
     <th> Hạn sử dụng </th>
@@ -16,6 +17,9 @@
       <label class="checkbox-inline">
         <input type="checkbox" class="event-checkbox" id="item-check-{id}">
       </label>
+    </td>
+    <td>
+      <input type="text" class="form-control" id="item-code-{id}" value="{code}">
     </td>
     <td>
       <input type="text" class="form-control" id="item-{id}" value="{name}">
