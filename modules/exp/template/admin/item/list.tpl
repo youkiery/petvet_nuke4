@@ -5,6 +5,7 @@
     <th> <input type="checkbox" id="item-check-all"> </th>
     <th> Mã hàng </th>
     <th> Tên hàng </th>
+    <th> Số lượng </th>
     <th> Loại hàng </th>
     <th> Hạn sử dụng </th>
   </tr>
@@ -23,6 +24,9 @@
     </td>
     <td>
       <input type="text" class="form-control" id="item-{id}" value="{name}">
+    </td>
+    <td>
+      <input type="text" class="form-control" id="item-number-{id}" value="{number}">
     </td>
     <td> {category} </td>
     <td>

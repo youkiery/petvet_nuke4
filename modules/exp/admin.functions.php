@@ -33,6 +33,7 @@ function itemList() {
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('code', $row['code']);
+    $xtpl->assign('number', $row['number']);
     $xtpl->assign('category', checkCategoryNameId($row['cate_id']));
     $xtpl->parse('main.row');
   }
