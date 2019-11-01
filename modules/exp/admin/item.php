@@ -14,6 +14,7 @@ if (!empty($action)) {
   switch ($action) {
     case 'insert':
       $name = $nv_Request->get_string('name', 'post', '');
+      $cate_id = $nv_Request->get_int('cate_id', 'post', 0);
 
       if (empty($name)) {
         $result['notify'] = 'Tên hàng không được để trống';
@@ -22,7 +23,7 @@ if (!empty($action)) {
         $result['notify'] = 'Trùng tên hàng';
       }
       else {
-        $query = $db->query('insert into `'. PREFIX .'item` (name, update_time) values("'. $name .'", "'. time() .'")');
+        $query = $db->query('insert into `'. PREFIX .'item` (name, cate_id, update_time) values("'. $name .'", '. $cate_id .', "'. time() .'")');
         if ($query) {
           $result['status'] = 1;
           $result['notify'] = 'Đã thêm';
@@ -97,6 +98,7 @@ foreach ($category as $row) {
   $xtpl->assign('id', $row['id']);
   $xtpl->assign('category', $row['name']);
   $xtpl->parse('main.category');
+  $xtpl->parse('main.category2');
 }
 
 $xtpl->assign('content', itemList());

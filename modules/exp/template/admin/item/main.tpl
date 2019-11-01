@@ -23,14 +23,16 @@
 
 </div>
 
-<div class="row">
-  <div class="col-sm-12 col-md-9">
-    <div class="input-group">
-      <input type="text" class="form-control" id="insert-name" placeholder="Nhập thêm loại hàng">
-      <div class="input-group-btn">
-        <button class="btn btn-info" onclick="insert()"> <span class="glyphicon glyphicon-floppy-disk"></span> </button>
-      </div>
-    </div>
+<div class="row" style="margin-bottom: 10px;">
+  <div class="form-inline">
+    <input type="text" class="form-control" id="insert-name" placeholder="Nhập thêm loại hàng">
+    <select class="form-control" id="insert-cate">
+      <option value="0"> Chưa phân loại </option>
+      <!-- BEGIN: category2 -->
+      <option value="{id}"> {category} </option>
+      <!-- END: category2 -->
+    </select>
+    <button class="btn btn-success" onclick="insert()"> Thêm hàng hóa </button>
   </div>
 </div>
 <label class="form-inline">
@@ -77,7 +79,7 @@
   function insert() {
     $.post(
       '',
-      {action: 'insert', name: $("#insert-name").val(), filter: checkFilter()},
+      {action: 'insert', name: $("#insert-name").val(), cate_id: $("#insert-cate").val(), filter: checkFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#insert-name").val('')
