@@ -3,6 +3,7 @@
   <tr>
     <th> Số thứ tự </th>
     <th> Tên hàng </th>
+    <th> Số lượng </th>
     <th> Hạn sử dụng </th>
   </tr>
   <!-- BEGIN: row -->
@@ -12,6 +13,9 @@
     </td>
     <td>
       {name}
+    </td>
+    <td>
+      {number}
     </td>
     <td>
       {time}

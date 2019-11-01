@@ -80,6 +80,7 @@ function outdateList() {
     }
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('name', $item['name']);
+    $xtpl->assign('number', $item['number']);
     $xtpl->assign('time', date('d/m/Y', $row['exp_time']));
     $xtpl->parse('main.row');
   }
