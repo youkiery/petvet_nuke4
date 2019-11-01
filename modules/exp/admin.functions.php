@@ -98,6 +98,7 @@ function outdateList() {
   if (!empty($to)) {
     $check += 2;
   }
+  $today = time();
   
   if ($check > 0)  {
     // filter by time range
@@ -112,17 +113,33 @@ function outdateList() {
         $xtra = ' where (exp_time between '. totime($from) .' and ' . totime($to) . ')';
       break;
     }
+    $to = totime($to);
+    if ($to < $today) $to = $today;
+    $p1 = $today + ($to - $today) / 2;
   }
   else {
     // filter by time amount
-    $xtra = 'where exp_time < '. (time() + $time * 60 * 60 * 24);
+    $to = (time() + $time * 60 * 60 * 24);
+    $xtra = 'where exp_time < '. $to;
+    if ($to < $today) $to = $today;
+    $p1 = $today + ($to - $today) / 2;
   }
 
   $query = $db->query('select * from `'. PREFIX .'row` '. $xtra .' order by exp_time desc');
   $index = 1;
+  // echo date('d/m/Y', $p1);die();
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index++);
     $item = getItemId($row['rid']);
+    if ($row['exp_time'] < $today) {
+      $xtpl->assign('color', 'redbg');
+    }
+    else if ($row['exp_time'] < $p1) {
+      $xtpl->assign('color', 'yellowbg');
+    }
+    else {
+      $xtpl->assign('color', '');
+    }
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('name', $item['name']);
     $xtpl->assign('time', date('d/m/Y', $row['exp_time']));

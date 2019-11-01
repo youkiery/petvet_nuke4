@@ -6,7 +6,7 @@
     <th> Hạn sử dụng </th>
   </tr>
   <!-- BEGIN: row -->
-  <tr>
+  <tr class="{color}">
     <td>
       {index}
     </td>

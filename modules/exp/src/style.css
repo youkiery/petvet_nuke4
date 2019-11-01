@@ -67,3 +67,11 @@ hr {
 .suggest-item:hover {
   background: #8f8;
 }
+
+.redbg {
+  background: lightsalmon;
+}
+
+.yellowbg {
+  background: lightpink;
+}
