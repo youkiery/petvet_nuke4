@@ -4,6 +4,11 @@
   display: table;
 }
 
+hr {
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+}
+
 [class*="col-"] {
   float: left;
   padding: 5px;

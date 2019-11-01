@@ -2,7 +2,9 @@
 <table class="table table-bordered">
   <tr>
     <th> Số thứ tự </th>
+    <th> <input type="checkbox" id="item-check-all"> </th>
     <th> Tên hàng </th>
+    <th> Loại hàng </th>
     <th> Hạn sử dụng </th>
   </tr>
   <!-- BEGIN: row -->
@@ -11,8 +13,14 @@
       {index}
     </td>
     <td>
+      <label class="checkbox-inline">
+        <input type="checkbox" class="event-checkbox" id="item-check-{id}">
+      </label>
+    </td>
+    <td>
       <input type="text" class="form-control" id="item-{id}" value="{name}">
     </td>
+    <td> {category} </td>
     <td>
       <button class="btn btn-info" onclick="update({id})">
         <span class="glyphicon glyphicon-refresh"></span>

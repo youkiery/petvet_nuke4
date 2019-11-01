@@ -113,6 +113,37 @@ function checkCategoryId($id) {
   return 0;
 }
 
+function checkCategoryNameId($id) {
+  global $db;
+
+  if (!empty($id)) {
+    $query = $db->query('select * from `'. PREFIX .'category` where id = ' . $id);
+    if (!empty($row = $query->fetch())) {
+      return $row['name'];
+    }
+  }
+  return 'Chưa phân loại';
+}
+
+function getCategoryList() {
+  global $db;
+
+  $list = array();
+  $query = $db->query('select * from `'. PREFIX .'category` order by name');
+  while ($row = $query->fetch()) {
+    $list[] = $row;
+  }
+  return $list;
+}
+
+function updateCategory($cate_id, $item_id) {
+  global $db;
+    if (checkCategoryId($cate_id) && $db->query('update `'. PREFIX .'item` set cate_id = '. $cate_id .' where id = ' . $item_id)) {
+    return true;
+  }
+  return false;
+}
+
 function totime($time) {
   if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
     $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);

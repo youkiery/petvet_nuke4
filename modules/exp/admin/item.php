@@ -67,12 +67,38 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = itemList();
     break;
+    case 'pick-category':
+      $id = $nv_Request->get_int('id', 'post', '');
+      $list = $nv_Request->get_string('list', 'post', '');
+
+      $list = explode(', ', $list);
+      if (count($list)) {
+        if (count($list) == 1) {
+          updateCategory($id, $list[0]);
+        }
+        else {
+          foreach ($list as $item_id) {
+            updateCategory($id, $item_id);
+          }
+        }
+      }
+      
+      $result['status'] = 1;
+      $result['html'] = itemList();
+    break;
   }
   echo json_encode($result);
   die();
 }
 
 $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/item");
+$category = getCategoryList();
+foreach ($category as $row) {
+  $xtpl->assign('id', $row['id']);
+  $xtpl->assign('category', $row['name']);
+  $xtpl->parse('main.category');
+}
+
 $xtpl->assign('content', itemList());
 $xtpl->parse('main');
 $contents = $xtpl->text();

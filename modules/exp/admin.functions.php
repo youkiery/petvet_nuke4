@@ -27,6 +27,7 @@ function itemList() {
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('name', $row['name']);
+    $xtpl->assign('category', checkCategoryNameId($row['cate_id']));
     $xtpl->parse('main.row');
   }
   $xtpl->assign('nav', navList($number, $page, $limit, 'goPage'));
