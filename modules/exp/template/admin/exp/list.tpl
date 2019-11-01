@@ -3,6 +3,7 @@
   <tr>
     <th> Số thứ tự </th>
     <th> Tên hàng </th>
+    <th> Số lượng </th>
     <th> Hạn sử dụng </th>
     <th></th>
   </tr>
@@ -17,6 +18,9 @@
         <input type="hidden" id="item-id-{id}" value="{rid}">
         <div class="suggest" id="item-{id}-suggest"></div>
       </div>
+    </td>
+    <td>
+      <input type="text" class="form-control" id="item-number-{id}" value="{number}">
     </td>
     <td>
       <input type="text" class="form-control date" id="item-date-{id}" value="{time}">

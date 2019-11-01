@@ -42,8 +42,7 @@ if (!empty($action)) {
           }
           else {
             // echo 'insert into `'. PREFIX .'row` (rid, exp_time, update_time) values("'. $id .'", "'. totime($row[1]) .'", "'. time() .'")<br>';
-            $query = $db->query('insert into `'. PREFIX .'row` (rid, exp_time, update_time) values("'. $id .'", "'. totime($row[2]) .'", "'. time() .'")');
-            $query2 = $db->query('update `'. PREFIX .'item` set number = ' . $row['1'] . ' where id = ')
+            $query = $db->query('insert into `'. PREFIX .'row` (rid, exp_time, number, update_time) values("'. $id .'", "'. totime($row[2]) .'", '. $row[1] .', "'. time() .'")');
             if ($query) {
               $inserted ++;
             }

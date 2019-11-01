@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-sm-8">
     <div class="relative">
       <input type="text" class="form-control" id="insert-name" placeholder="Tìm kiếm hàng hóa">
       <div class="suggest" id="insert-name-suggest"></div>
@@ -12,7 +12,10 @@
     <p> Đang chọn: <span id="selected-item-name"> Chưa chọn </span> </p>
     <input type="hidden" id="selected-item-id" value="">
   </div>
-  <div class="col-sm-12">
+  <div class="col-sm-8">
+    <input type="text" class="form-control" id="insert-number" value="0">
+  </div>
+  <div class="col-sm-8">
     <input type="text" class="form-control" id="insert-date" value="{today}">
   </div>
 </div>
@@ -59,7 +62,7 @@
     else {
       $.post(
         '',
-        {action: 'insert', id: id, date: $("#insert-date").val(), page: global['page']},
+        {action: 'insert', id: id, number: $("#insert-number").val(), date: $("#insert-date").val(), page: global['page']},
         (response, status) => {
           checkResult(response, status).then(data => {
             $("#content").html(data['html'])
@@ -76,10 +79,11 @@
       )
     }
   }
+
   function update(id) {
     $.post(
       '',
-      {action: 'update', name: $("#item-" + id).val(), date: $("#item-date-" + id).val(), id: id, rid: $("#item-id-" + id).val()},
+      {action: 'update', name: $("#item-" + id).val(), number: $("#item-number-" + id).val(), date: $("#item-date-" + id).val(), id: id, rid: $("#item-id-" + id).val()},
       (response, status) => {
         checkResult(response, status).then(data => {
 

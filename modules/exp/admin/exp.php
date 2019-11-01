@@ -14,13 +14,14 @@ if (!empty($action)) {
   switch ($action) {
     case 'insert':
       $id = $nv_Request->get_string('id', 'post', '');
+      $number = $nv_Request->get_int('number', 'post', 1);
       $date = $nv_Request->get_string('date', 'post', '');
 
       if (!checkItemId($id)) {
         $result['notify'] = 'Hàng hoá không tồn tại';
       }
       else {
-        $query = $db->query('insert into `'. PREFIX .'row` (rid, exp_time, update_time) values('. $id .', "'. totime($date) .'", "'. time() .'")');
+        $query = $db->query('insert into `'. PREFIX .'row` (rid, exp_time, number, update_time) values('. $id .', "'. totime($date) .'", '. $number .', "'. time() .'")');
         if ($query) {
           $result['status'] = 1;
           $result['notify'] = 'Đã thêm';
@@ -45,7 +46,7 @@ if (!empty($action)) {
         $result['notify'] = 'Hàng hoá không tồn tại';
       }
       else {
-        $query = $db->query('update `'. PREFIX .'row` set rid = "'. $rid .'", exp_time = "'. totime($date) .'", update_time = '. time() .' where id = ' . $id);
+        $query = $db->query('update `'. PREFIX .'row` set rid = "'. $rid .'", number = '. $number .', exp_time = "'. totime($date) .'", update_time = '. time() .' where id = ' . $id);
         if ($query) {
           $result['status'] = 1;
           $result['notify'] = 'Đã lưu';
