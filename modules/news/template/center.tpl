@@ -912,7 +912,6 @@
   <p> <a href="/{module_file}/contact"> Danh sách khách hàng </a> </p>
   <!-- BEGIN: xter -->
   <p> <a href="/{module_file}/statistic"> Danh sách thu chi</a> </p>
-  <p> <a href="/{module_file}/ceti-print"> In giấy chứng nhận </a> </p>
   <!-- END: xter -->
   <h2> Danh sách thú cưng  </h2>
 

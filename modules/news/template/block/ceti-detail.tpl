@@ -48,11 +48,11 @@
     </button>
   </div>
   <div id="content">
-    <label class="col-2">
+    <label>
       Số đăng ký
       <input type="text" class="form-control" id="regno" value="{regno}">
     </label>
-    <label class="col-2">
+    <label>
       Số chip
       <input type="text" class="form-control" id="micro" value="{micro}">
     </label>
@@ -101,6 +101,92 @@
       Chủ nuôi
       <input type="text" class="form-control" id="owner" value="{owner}">
     </label>
+    <table class="table table-bordered">
+      <tr>
+        <td rowspan="2">
+          <label>
+            Cha
+            <input type="text" class="form-control parent-name" id="pf" value="{pf}">
+          </label>
+        </td>
+        <td>
+          <label>
+            Ông nội
+            <input type="text" class="form-control parent-name" id="f21f" value="{f21f}">
+          </label>
+        </td>
+        <td>
+          <label>
+            Bố của ông nội
+            <input type="text" class="form-control parent-name" id="f31f" value="{f31f}">
+          </label>
+          <label>
+            Mẹ của ông nội
+            <input type="text" class="form-control parent-name" id="f31m" value="{f31m}">
+          </label>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label>
+            Bà nội
+            <input type="text" class="form-control parent-name" id="f21m" value="{f21m}">
+          </label>
+        </td>
+        <td>
+          <label>
+            Bố của bà nội
+            <input type="text" class="form-control parent-name" id="f32f" value="{f32f}">
+          </label>
+          <label>
+            Mẹ của bà nội
+            <input type="text" class="form-control parent-name" id="f32m" value="{f32m}">
+          </label>
+        </td>
+      </tr>
+      <tr>
+        <td rowspan="2">
+          <label>
+            Mẹ
+            <input type="text" class="form-control parent-name" id="pm" value="{pm}">
+          </label>
+        </td>        
+        <td>
+          <label>
+            Ông ngoại
+            <input type="text" class="form-control parent-name" id="f22f" value="{f22f}">
+          </label>
+        </td>
+        <td>
+          <label>
+            Bố của ông ngoại
+            <input type="text" class="form-control parent-name" id="f33f" value="{f33f}">
+          </label>
+          <label>
+            Mẹ của ông ngoại
+            <input type="text" class="form-control parent-name" id="f33m" value="{f33m}">
+          </label>
+        </td>
+      </tr>
+      <tr>
+        <td class="2">
+          <label>
+            Bà ngoại
+            <input type="text" class="form-control parent-name" id="f22m" value="{f22m}">
+          </label>
+        </td>
+        <td>
+          <label>
+            Bố của bà ngoại
+            <input type="text" class="form-control parent-name" id="f34f" value="{f34f}">
+          </label>
+          <label>
+            Mẹ của bà ngoại
+            <input type="text" class="form-control parent-name" id="f34m" value="{f34m}">
+          </label>
+        </td>
+      </tr>
+    </table>
     <label>
       Ngày cấp
       <input type="text" class="form-control" id="issue" value="{issue}">
@@ -126,7 +212,7 @@
         regno
       </div>
       <div style="top: calc(54mm + -t-mm + -t3-mm); left: calc(-4mm + 209mm + -r-mm);">
-        microchip
+        micro
       </div>
       <div style="top: calc(54mm + -t-mm + -t4-mm); left: calc(-4mm + 202mm + -r-mm);">
         tattoo
@@ -147,10 +233,10 @@
         coat
       </div>
       <div style="top: calc(54mm + -t-mm + -t8-mm); left: calc(-4mm + 192mm + -r-mm);">
-        father
+        -pf-
       </div>
       <div style="top: calc(54mm + -t-mm + -t9-mm); left: calc(-4mm + 192mm + -r-mm);">
-        mother
+        -pm-
       </div>
       <div style="top: calc(54mm + -t-mm + -t10-mm); left: calc(-4mm + 219mm + -r-mm);">
         breeder
@@ -205,10 +291,10 @@
       </div>
 
         <div style="top: calc(72mm + -t-mm + -t8-mm); left: calc(-4mm + 48mm + -r-mm);">
-          f
+          -pf-
         </div>
         <div style="top: calc(70mm + -t-mm + -t13-mm); left: calc(-4mm + 48mm + -r-mm);">
-          m
+          -pm-
         </div>
 
         <div style="top: calc(72mm + -t-mm + -t7-mm); left: calc(-4mm + 97mm + -r-mm);">
@@ -219,16 +305,16 @@
         </div>
 
         <div style="top: calc(72mm + -t-mm + -t7-mm); left: calc(-4mm + 102mm + -r-mm);">
-          f1
+          -f21f-
         </div>
         <div style="top: calc(72mm + 2mm + -t-mm + -t9-mm); left: calc(-4mm + 102mm + -r-mm);">
-          m2
+          -f21m-
         </div>
         <div style="top: calc(72mm + -t-mm + -t12-mm); left: calc(-4mm + 102mm + -r-mm);">
-          f2
+          -f22f-
         </div>
         <div style="top: calc(72mm + 2mm + -t-mm + -t14-mm); left: calc(-4mm + 102mm + -r-mm);">
-          m2
+          -f22m-
         </div>
 
         <div style="top: calc(72mm + -t-mm + -t6-mm); left: calc(-4mm + 150mm + -r-mm)">
@@ -245,28 +331,28 @@
         </div>
 
         <div style="top: calc(72mm + 1mm + -t-mm + -t6-mm); left: calc(-4mm + 155mm + -r-mm);">
-          f1f
+          -f31f-
         </div>
         <div style="top: calc(72mm + 2mm + -t-mm + -t7-mm); left: calc(-4mm + 155mm + -r-mm);">
-          f1m
+          -f31m-
         </div>
         <div style="top: calc(72mm + 6mm + -t-mm + -t8-mm); left: calc(-4mm + 155mm + -r-mm);">
-          m1f
+          -f32f-
         </div>
         <div style="top: calc(72mm + 7mm + -t-mm + -t9-mm); left: calc(-4mm + 155mm + -r-mm);">
-          m1m
+          -f32m-
         </div>
         <div style="top: calc(72mm + 1mm + -t-mm + -t11-mm); left: calc(-4mm + 155mm + -r-mm);">
-          f2f
+          -f33f-
         </div>
         <div style="top: calc(72mm + 2mm + -t-mm + -t12-mm); left: calc(-4mm + 155mm + -r-mm);">
-          f2m
+          -f33m-
         </div>
         <div style="top: calc(72mm + 6mm + -t-mm + -t13-mm); left: calc(-4mm + 155mm + -r-mm);">
-          m2f
+          -f34f-
         </div>
         <div style="top: calc(72mm + 7mm + -t-mm + -t14-mm); left: calc(-4mm + 155mm + -r-mm);">
-          m2m
+          -f34m-
         </div>
       
       <div style="top: calc(72mm + 1mm + -t-mm + -t11-mm); left: calc(255mm + -r-mm);">
@@ -293,6 +379,14 @@
           patt = new RegExp('-t'+ i +'-', 'g')
           x = x.replace(patt, global[paper]['line'] * (i - 1))
         }
+        $(".parent-name").each((index, item) => {
+          id = item.getAttribute('id')
+          value = item.value
+          if (!value.length) {
+            value = 'chưa xác định'
+          }
+          x = x.replace(new RegExp('-'+ id +'-', 'g'), value)
+        })
         x = x.replace(new RegExp('-t-', 'g'), m_top)
         x = x.replace(new RegExp('-r-', 'g'), m_left)
         x = x.replace(new RegExp('-font-', 'g'), m_size)
@@ -316,8 +410,6 @@
         text = text.replace(key, element)
       }
     }
-    console.log(text);
-    
     return text
   }
   function save(data) {

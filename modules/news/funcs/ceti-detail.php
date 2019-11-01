@@ -80,6 +80,15 @@ else {
   $xtpl->assign('owner', $owner['fullname']);
   $xtpl->assign('issue', date('d/m/Y'));
   $parent = getAllParent($row);
+  foreach ($parent as $l1) {
+    foreach ($l1 as $n2 => $l2) {
+      if (!empty($l2)) {
+        foreach ($l2 as $n3 => $l3) {
+          $xtpl->assign($n2 . $n3, $l3['name']);
+        }
+      }
+    }
+  }
   // if 
 
   if (!empty($print)) {
