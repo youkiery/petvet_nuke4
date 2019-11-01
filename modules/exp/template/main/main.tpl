@@ -29,6 +29,14 @@
     <input type="text" class="form-control date" id="filter-to" placeholder="...Đến khoảng">
   </div>
 </div>
+<div>
+  <label style="padding: 0px 20px 0px 0px;">
+    <input type="checkbox" id="item-check-all" checked> Tất cả
+  </label>
+  <!-- BEGIN: category -->
+  <label style="padding: 0px 20px 0px 0px;"> <input type="checkbox" class="event-checkbox" id="item-check-{id}" checked> {name} </label>
+  <!-- END: category -->
+</div>
 <div class="text-center">
   <button class="btn btn-info" onclick="filter()">
     <span class="glyphicon glyphicon-filter"></span>
@@ -50,6 +58,12 @@
       changeMonth: true,
       changeYear: true
     });
+    $("#item-check-all").change((e) => {
+      checked = e.currentTarget.checked
+      $(".event-checkbox").each((index, item) => {
+        item.checked = checked
+      })
+    })
     // $("#filter-time").change((e) => {
     //   time = e.currentTarget.value * 60 * 60 * 24 * 1000
     //   from = today - time
@@ -66,9 +80,15 @@
     return (day < 10 ? '0' : '') + day + '/' + (month < 10 ? '0' : '') + month + '/' + time.getFullYear()
   }
   function filter() {
+    list = []
+    $(".event-checkbox:checked").each((index, item) => {
+      if (item.checked) {
+        list.push(item.getAttribute('id').replace('item-check-', ''))
+      }
+    })
     $.post(
       '',
-      {action: 'filter', keyword: $("#filter-keyword").val(), time: $("#filter-time").val(), from: $("#filter-from").val(), to: $("#filter-to").val()},
+      {action: 'filter', keyword: $("#filter-keyword").val(), list: list, time: $("#filter-time").val(), from: $("#filter-from").val(), to: $("#filter-to").val()},
       (response, status) => {
         checkResult(response, status).then(data => {
           $('#content').html(data['html'])

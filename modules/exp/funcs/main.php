@@ -22,6 +22,12 @@ if (!empty($action)) {
 }
 $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/main");
 $xtpl->assign('module_name', $module_name);
+$category = getCategoryList();
+foreach ($category as $row) {
+  $xtpl->assign('id', $row['id']);
+  $xtpl->assign('name', $row['name']);
+  $xtpl->parse('main.category');
+}
 $xtpl->assign('content', outdateList());
 $xtpl->parse('main');
 $contents = $xtpl->text();

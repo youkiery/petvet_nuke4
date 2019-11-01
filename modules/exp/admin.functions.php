@@ -14,15 +14,20 @@ include_once(NV_ROOTDIR . '/modules/' . $module_file . '/theme.php');
 function itemList() {
   global $db, $module_file, $nv_Request;
 
-  $page = $nv_Request->get_string('page', 'post', 1);
-  $limit = 10;
+  $filter = $nv_Request->get_array('filter', 'post');
+  if (empty($filter['page']) || $filter['page'] < 1) {
+    $filter['page'] = 1;
+  }
+  if (empty($filter['limit']) || $filter['limit'] < 10) {
+    $filter['limit'] = 10;
+  }
 
   $xtpl = new XTemplate("list.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/item");
   $query = $db->query('select count(*) as number from `'. PREFIX .'item`');
   $number = $query->fetch()['number'];
 
-  $query = $db->query('select * from `'. PREFIX .'item` order by id desc limit ' . $limit . ' offset ' . ($page - 1) * $limit);
-  $index = $limit * ($page - 1) + 1;
+  $query = $db->query('select * from `'. PREFIX .'item` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+  $index = $filter['limit'] * ($filter['page'] - 1) + 1;
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
@@ -30,7 +35,7 @@ function itemList() {
     $xtpl->assign('category', checkCategoryNameId($row['cate_id']));
     $xtpl->parse('main.row');
   }
-  $xtpl->assign('nav', navList($number, $page, $limit, 'goPage'));
+  $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -83,6 +88,7 @@ function expList() {
 function outdateList() {
   global $db, $module_file, $nv_Request;
 
+  $list = $nv_Request->get_array('list', 'post');
   $from = $nv_Request->get_string('from', 'post', '');
   $to = $nv_Request->get_string('to', 'post', '');
   $page = $nv_Request->get_string('page', 'post', 1);
@@ -125,7 +131,14 @@ function outdateList() {
     $p1 = $today + ($to - $today) / 2;
   }
 
-  $query = $db->query('select * from `'. PREFIX .'row` '. $xtra .' order by exp_time desc');
+  if (count($list)) {
+    $list = implode(', ', $list);
+    $query = $db->query('select * from `'. PREFIX .'row` a inner join `'. PREFIX .'item` b on a.rid = b.id '. $xtra .' and cate_id in ('. $list .') order by exp_time desc');
+  }
+  else {
+    $query = $db->query('select * from `'. PREFIX .'row` '. $xtra .' order by exp_time desc');
+  }
+
   $index = 1;
   // echo date('d/m/Y', $p1);die();
   while ($row = $query->fetch()) {

@@ -13,6 +13,7 @@ include_once(NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php');
 function outdateList() {
   global $db, $module_file, $nv_Request;
 
+  $list = $nv_Request->get_array('list', 'post');
   $from = $nv_Request->get_string('from', 'post', '');
   $to = $nv_Request->get_string('to', 'post', '');
   $page = $nv_Request->get_string('page', 'post', 1);
@@ -55,7 +56,14 @@ function outdateList() {
     $p1 = $today + ($to - $today) / 2;
   }
 
-  $query = $db->query('select * from `'. PREFIX .'row` '. $xtra .' order by exp_time desc');
+  if (count($list)) {
+    $list = implode(', ', $list);
+    $query = $db->query('select * from `'. PREFIX .'row` a inner join `'. PREFIX .'item` b on a.rid = b.id '. $xtra .' and cate_id in ('. $list .') order by exp_time desc');
+  }
+  else {
+    $query = $db->query('select * from `'. PREFIX .'row` '. $xtra .' order by exp_time desc');
+  }
+
   $index = 1;
   // echo date('d/m/Y', $p1);die();
   while ($row = $query->fetch()) {

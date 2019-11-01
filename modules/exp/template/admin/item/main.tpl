@@ -33,6 +33,12 @@
     </div>
   </div>
 </div>
+<label class="form-inline">
+  Số dòng một trang: <input type="text" class="form-control" id="filter-limit" value="10">
+  <button class="btn btn-info" onclick="goPage(1)">
+    Hiển thị
+  </button>
+</label>
 
 <div id="msgshow"></div>
 
@@ -53,11 +59,25 @@
   $(document).ready(() => {
     installCheckAll()
   })
+  function checkFilter() {
+    page = global['page']
+    limit = $("#filter-limit").val()
+    if (Number(page) < 0) {
+      page = 1
+    }
+    if (Number(limit) < 10) {
+      limit = 10
+    }
+    return {
+      page: page,
+      limit: limit
+    }
+  }
 
   function insert() {
     $.post(
       '',
-      {action: 'insert', name: $("#insert-name").val(), page: global['page']},
+      {action: 'insert', name: $("#insert-name").val(), filter: checkFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#insert-name").val('')
@@ -81,7 +101,7 @@
   function remove(id) {
     $.post(
       '',
-      {action: 'update', id: id, page: global['page']},
+      {action: 'update', id: id, filter: checkFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
 
@@ -105,12 +125,13 @@
     }
     $.post(
       '',
-      {action: 'pick-category', id: id, list: global['id']},
+      {action: 'pick-category', id: id, list: global['id'], filter: checkFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
           global['id'] = 0
           $('#content').html(data['html'])
           installCheckAll()
+          $("#modal-checked").modal('hide')
         }, () => {}) 
       }
     )
@@ -127,7 +148,7 @@
   function goPage(page) {
     $.post(
       '',
-      {action: 'filter', page: page},
+      {action: 'filter', filter: checkFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
           global['page'] = page
