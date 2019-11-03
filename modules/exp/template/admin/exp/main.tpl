@@ -3,6 +3,18 @@
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 
+<div class="modal" id="modal-number" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div id="number-content">
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-sm-8">
     <div class="relative">
@@ -34,7 +46,7 @@
 <div id="content">
   {content}
 </div>
-<button class="btn btn-info">
+<button class="btn btn-info" onclick="updateNumber()">
   Cập nhật số lượng theo mã
 </button>
 
@@ -170,6 +182,44 @@
         item.checked = checked
       })
     })
+  }
+
+  function updateNumber() {
+    list = []
+    $('.event-checkbox:checked').each((index, item) => {
+      list.push(item.getAttribute('id').replace('item-check-', ''))
+    })
+    if (list.length) {
+      $.post(
+        '',
+        {action: 'get-update-number', list: list},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            $('#number-content').html(data['html'])
+            $("#modal-number").modal('show')
+            installCheckAll()
+          }, () => {}) 
+        }
+      )
+    }
+  }
+
+  function updateNumberSubmit() {
+    list = {}
+    $(".number").each((index, item) => {
+      list[item.getAttribute('id').replace('number-', '')] = item.value
+    })    
+    $.post(
+      '',
+      {action: 'update-number', list: list, filter: checkFilter()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $('#content').html(data['html'])
+          $("#modal-number").modal('hide')
+          installCheckAll()
+        }, () => {}) 
+      }
+    )
   }
 
   function installSuggest(input, suggest, hidden) {

@@ -69,6 +69,29 @@ if (!empty($action)) {
       $result['list'] = expIdList();
       $result['html'] = expList();
     break;
+    case 'get-update-number':
+      $result['status'] = 1;
+      $result['html'] = expContent();
+    break;
+    case 'update-number':
+      $list = $nv_Request->get_array('list', 'post');
+      $count = 0;
+      $total = 0;
+
+      if (count($list)) {
+        foreach ($list as $id => $number) {
+          $total++;
+          // die('update `'. PREFIX .'row` set number = '. $number .' where id = ' . $id);
+          $query = $db->query('update `'. PREFIX .'row` set number = '. $number .' where id = ' . $id);
+          if ($query) {
+            $count++;
+          }
+        }
+      }
+      $result['status'] = 1;
+      $result['notify'] = 'Đã cập nhật ' . $count . ' trên tổng số ' . $total;
+      $result['html'] = expList();
+    break;
   }
   echo json_encode($result);
   die();

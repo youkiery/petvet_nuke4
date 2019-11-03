@@ -9,6 +9,17 @@
 if (!defined('NV_MAINFILE')) { die('Stop!!!'); }
 define('PREFIX', $db_config['prefix'] . '_' . $module_name . '_');
 
+function getRowId($id) {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'row` where id = ' . $id);
+  if ($row = $query->fetch()) {
+    return $row;
+  }
+  return array();
+}
+
+
 function getItemList() {
   global $db;
 

@@ -171,6 +171,29 @@ function outdateList() {
   return $xtpl->text();
 }
 
+function expContent() {
+  global $nv_Request, $module_file;
+  $list = $nv_Request->get_array('list', 'post');
+  $xtpl = new XTemplate("content.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/exp");
+  $index = 1;
+
+  if (count($list) > 0) {
+    foreach ($list as $id) {
+      $row = getRowId($id);
+      $item = getItemId($row['rid']);
+      $xtpl->assign('index', $index++);
+      $xtpl->assign('id', $row['id']);
+      $xtpl->assign('name', $item['name']);
+      $xtpl->assign('time', date('d/m/Y', $row['exp_time']));
+      $xtpl->assign('number', $row['number']);
+      $xtpl->assign('number2', $item['number']);
+      $xtpl->parse('main.row');
+    }
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function expIdList() {
   global $db, $module_file, $nv_Request;
 
