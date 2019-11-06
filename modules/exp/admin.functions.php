@@ -96,20 +96,16 @@ function expList() {
 function outdateList() {
   global $db, $module_file, $nv_Request;
 
+  $filter = $nv_Request->get_array('filter', 'post');
   $list = $nv_Request->get_array('list', 'post');
-  $from = $nv_Request->get_string('from', 'post', '');
-  $to = $nv_Request->get_string('to', 'post', '');
-  $page = $nv_Request->get_string('page', 'post', 1);
-  $time = $nv_Request->get_string('time', 'post', 90);
-  $limit = 10;
 
   $xtpl = new XTemplate("list.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/main");
   $check = 0;
 
-  if (!empty($from)) {
+  if (!empty($filter['from'])) {
     $check += 1;
   }
-  if (!empty($to)) {
+  if (!empty($filter['to'])) {
     $check += 2;
   }
   $today = time();
@@ -118,25 +114,26 @@ function outdateList() {
     // filter by time range
     switch ($check) {
       case '1':
-        $xtra = ' where exp_time > ' . totime($from);
+        $xtra = ' where exp_time > ' . totime($filter['from']);
       break;
       case '2':
-        $xtra = ' where exp_time < ' . totime($to);
+        $xtra = ' where exp_time < ' . totime($filter['to']);
       break;
       case '3':
-        $xtra = ' where (exp_time between '. totime($from) .' and ' . totime($to) . ')';
+        $xtra = ' where (exp_time between '. totime($filter['from']) .' and ' . totime($filter['to']) . ')';
       break;
     }
-    $to = totime($to);
-    if ($to < $today) $to = $today;
-    $p1 = $today + ($to - $today) / 2;
+    $filter['to'] = totime($filter['to']);
+    if ($filter['to'] < $today) $filter['to'] = $today;
+    $p1 = $today + ($filter['to'] - $today) / 2;
   }
   else {
     // filter by time amount
-    $to = (time() + $time * 60 * 60 * 24);
-    $xtra = 'where exp_time < '. $to;
-    if ($to < $today) $to = $today;
-    $p1 = $today + ($to - $today) / 2;
+    if (empty($filter['time'])) $filter['time'] = 90;
+    $filter['to'] = (time() + $filter['time'] * 60 * 60 * 24);
+    $xtra = 'where exp_time < '. $filter['to'];
+    if ($filter['to'] < $today) $filter['to'] = $today;
+    $p1 = $today + ($filter['to'] - $today) / 2;
   }
 
   if (count($list)) {
@@ -144,8 +141,9 @@ function outdateList() {
     $query = $db->query('select * from `'. PREFIX .'row` a inner join `'. PREFIX .'item` b on a.rid = b.id '. $xtra .' and cate_id in ('. $list .') order by exp_time desc');
   }
   else {
-    $query = $db->query('select * from `'. PREFIX .'row` '. $xtra .' order by exp_time desc');
+    $query = $db->query('select * from `'. PREFIX .'row` '. $xtra .' and number > 0 order by exp_time desc');
   }
+  // var_dump($query);die();
 
   $index = 1;
   // echo date('d/m/Y', $p1);die();
