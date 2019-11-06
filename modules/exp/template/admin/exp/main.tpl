@@ -15,6 +15,37 @@
   </div>
 </div>
 
+<div class="modal" id="modal-excel" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div style="text-align: center; position: relative;">
+          <p> Chọn file .XSLS từ thiết bị </p>
+          <div style="margin: auto;">
+            <div style="position: absolute;"></div>
+              <label class="filebutton">
+                <div style="background: #eee; height: 200px; width: 200px; font-size: 100px; border-radius: 10%; line-height: 200px; color: green;">
+                  +
+                </div>
+                
+                <span>
+                  <input type="file" class="fileinput" id="file" onchange="tick(event)">
+                </span>
+              </label>
+          </div>
+        </div>
+        
+        <div id="error" style="color: red; font-weight: bold; font-size: 1.2em;">
+        
+        </div>
+        <div id="notice" style="color: green; font-weight: bold; font-size: 1.2em;">
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="row">
   <div class="col-sm-8">
     <div class="relative">
@@ -33,6 +64,7 @@
 </div>
 <div class="text-center">
   <button class="btn btn-info" onclick="insert()"> Thêm hạn sử dụng </button>
+  <button class="btn btn-info" onclick="excel()"> Thêm bằng excel </button>
 </div>
 <label class="form-inline">
   Số dòng một trang: <input type="text" class="form-control" id="filter-limit" value="10">
@@ -51,6 +83,8 @@
 </button>
 
 <script src="/modules/exp/src/script.js"></script>
+<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jszip.js"></script>
+<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/xlsx.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <script>
@@ -62,6 +96,9 @@
       id: 0, name: ''
     }
   }
+  var gals = ''
+  var parse = []
+  var selectFile = null
 
   $(document).ready(() => {
     installSuggest('insert-name', 'insert-name-suggest', 'selected-item-id')
@@ -254,6 +291,85 @@
         suggestObj.hide()
       }, 200);
     })
+  }
+
+  function excel() {
+    $("#modal-excel").modal('show')
+  }
+
+  var ExcelToJSON = function() {
+    this.parseExcel = function(file) {
+      reset()
+      var reader = new FileReader();
+
+      reader.onload = function(e) {
+        var data = e.target.result;
+        var workbook = XLSX.read(data, {
+          type: 'binary'
+        });
+
+        // workbook.SheetNames.forEach(function(sheetName) {
+          // Here is your object
+          var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[workbook.SheetNames[0]]);
+          pars = JSON.stringify(XL_row_object);
+          
+          if (pars.length > 10) {
+            gals = convertobj(XL_row_object)
+            posted()
+          }
+        // })
+        document.getElementById('file').value = null;
+      };
+
+      reader.onerror = function(ex) {
+        showNotice("Tệp excel chọn bị lỗi, không thể trích xuất dữ liệu")
+        console.log(ex);
+      };
+
+      if (file) {
+        reader.readAsBinaryString(file);
+      }
+    };
+  };
+  var js = new ExcelToJSON()
+
+  function tick(e) {
+    selectFile = e.target.files[0]
+    js.parseExcel(selectFile)
+    reset()
+  }
+
+  function refresh() {
+    js.parseExcel(selectFile)
+  }
+
+  function reset() {
+    $("#notice").html('')
+    $("#error").html('')
+  }
+
+  function showNotice(text) {
+    $("#error").text(text)
+    $("#error").show()
+    setTimeout(() => {
+      $("#error").fadeOut(1000)
+    }, 1000);
+  }
+
+  function posted() {
+    $.post(
+      strHref,
+      {action: 'check', data: gals, filter: checkFilter()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#content").html(data['html'])
+          $("#notice").html(data['notify'])
+          if (data['error']) {
+            $("#error").html(data['error'])
+          }
+        }, () => {})
+      }
+    )
   }
 </script>
 <!-- END: main -->

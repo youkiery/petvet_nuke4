@@ -45,3 +45,18 @@ function checkResult(response, status) {
     }
   })
 }
+
+function convertobj(data) {
+  obj = []
+  data.forEach(item => {
+    count = 0
+    pair = {}
+    for (const key in item) {
+      if (item.hasOwnProperty(key)) {
+        pair[count++] = item[key]
+      }
+    }
+    obj.push(pair)
+  });
+  return obj
+}

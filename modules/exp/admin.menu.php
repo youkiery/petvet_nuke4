@@ -8,8 +8,8 @@
 
 if (!defined('NV_ADMIN')) die('Stop!!!');
 
-$submenu['item'] = 'Danh sách sản phẩm';
 $submenu['category'] = 'Danh sách loại hàng';
+$submenu['item'] = 'Danh sách sản phẩm';
 $submenu['exp'] = 'Quản lý hạn sử dụng';
 $submenu['excel'] = 'Thêm bằng excel';
 

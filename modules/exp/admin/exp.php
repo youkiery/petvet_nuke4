@@ -92,6 +92,49 @@ if (!empty($action)) {
       $result['notify'] = 'Đã cập nhật ' . $count . ' trên tổng số ' . $total;
       $result['html'] = expList();
     break;
+    case 'check':
+      $data = $nv_Request->get_array('data', 'post', '');
+      $error = array();
+      $inserted = 0;
+      $count = 1;
+
+      foreach ($data as $row) {
+        if (empty($row[0])) {
+          $error[] = 'Dòng ' . $count . ': tên trống';
+        }
+        else {
+          if (!checkItemName($row[0])) {
+            // insert item
+            // echo 'insert into `'. PREFIX .'item` (name, update_time) values("'. $row[0] .'", "'. time() .'")<br>';
+            $query = $db->query('insert into `'. PREFIX .'item` (name, update_time) values("'. $row[0] .'", "'. time() .'")');
+
+            if ($query) {
+              $id = $db->lastInsertId();
+            }
+          }
+          else {
+            $id = getItemName($row[0])['id'];
+          }
+          // insert row
+          if (empty($id) || empty(getItemId($id))) {
+            $error[] = 'Dòng ' . $count . ': Lỗi thêm hàng hóa (' . $row[1] . ')';
+          }
+          else {
+            // echo 'insert into `'. PREFIX .'row` (rid, exp_time, update_time) values("'. $id .'", "'. totime($row[1]) .'", "'. time() .'")<br>';
+            $query = $db->query('insert into `'. PREFIX .'row` (rid, exp_time, number, update_time) values("'. $id .'", "'. totime($row[2]) .'", '. $row[1] .', "'. time() .'")');
+            if ($query) {
+              $inserted ++;
+            }
+          }
+        }
+        $count++;
+      }
+      $count--;
+      $result['status'] = 1;
+      $result['html'] = expList();
+      $result['error'] = implode('<br>', $error);
+      $result['notify'] = 'Đã thêm ' . $inserted . ' trên tổng ' . $count . ' dòng';
+    break;
   }
   echo json_encode($result);
   die();

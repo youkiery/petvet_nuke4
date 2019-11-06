@@ -1,29 +1,4 @@
 <!-- BEGIN: main -->
-<style>
-label.filebutton {
-    widows: 300px;
-    height: 200px;
-    overflow:hidden;
-    position:relative;
-}
-
-label span input {
-    z-index: 999;
-    line-height: 0;
-    font-size: 50px;
-    position: absolute;
-    top: -2px;
-    left: -700px;
-    opacity: 0;
-    filter: alpha(opacity = 0);
-    -ms-filter: "alpha(opacity=0)";
-    cursor: pointer;
-    _cursor: hand;
-    margin: 0;
-    padding:0;
-}
-</style>
-
 <a href="/{module_name}/"> Danh sách </a> <br>
 <a href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/exp.xlsx"> Tải về tệp mẫu </a>
 
@@ -36,7 +11,7 @@ label span input {
         </div>
         
         <span>
-          <input type="file" id="file" onchange="tick(event)">
+          <input type="file" class="fileinput" id="file" onchange="tick(event)">
         </span>
       </label>
   </div>
@@ -101,21 +76,6 @@ label span input {
 
   function refresh() {
     js.parseExcel(selectFile)
-  }
-
-  function convertobj(data) {
-    obj = []
-    data.forEach(item => {
-      count = 0
-      pair = {}
-      for (const key in item) {
-        if (item.hasOwnProperty(key)) {
-          pair[count++] = item[key]
-        }
-      }
-      obj.push(pair)
-    });
-    return obj
   }
 
   function reset() {

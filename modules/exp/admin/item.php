@@ -70,9 +70,10 @@ if (!empty($action)) {
         $result['notify'] = 'Hàng hóa không tồn tại';
       }
       else {
-        $query = $db->query('delete from `'. PREFIX .'item` id = ' . $id);
+        $query = $db->query('delete from `'. PREFIX .'item` where id = ' . $id);
         if ($query) {
           $result['status'] = 1;
+          $result['html'] = itemList();
           $result['notify'] = 'Đã xóa';
         }
       }
@@ -99,6 +100,48 @@ if (!empty($action)) {
       
       $result['status'] = 1;
       $result['html'] = itemList();
+    break;
+    case 'check':
+      $data = $nv_Request->get_array('data', 'post', '');
+      $error = array();
+      $inserted = 0;
+      $edited = 0;
+      $count = 1;
+
+      foreach ($data as $row) {
+        if (empty($row[0])) {
+          $error[] = 'Dòng ' . $count . ': mã trống';
+        }
+        else if (empty($row[1])) {
+          $error[] = 'Dòng ' . $count . ': tên trống';
+        }
+        else {
+          if (checkItemCode($row[1])) {
+            // update
+            // die('update `'. PREFIX .'item` set name = "'. $row[1] .'", number = '. $row['2'] .' where code = "'. $row[0] .'"');
+            $query = $db->query('update `'. PREFIX .'item` set number = '. $row['2'] .', update_time = '. time() .' where code = "'. $row[0] .'"');
+            if ($query) {
+              $inserted++;
+            }
+          }
+          else if (checkItemName($row[1])) {
+            $error[] = 'Dòng ' . $count . ': tên trùng';
+          }
+          else {
+            // insert 
+            $query = $db->query('insert into `'. PREFIX .'item` (name, code, number, cate_id, update_time) values("'. $row['1'] .'", "'. $row['0'] .'", "'. $row['2'] .'", 0, '. time() .')');
+            if ($query) {
+              $inserted++;
+            }
+          }
+        }
+        $count++;
+      }
+      $count--;
+      $result['status'] = 1;
+      $result['html'] = expList();
+      $result['error'] = implode('<br>', $error);
+      $result['notify'] = 'Đã thêm/chỉnh sửa ' . $inserted . ' trên tổng ' . $count . ' dòng';
     break;
   }
   echo json_encode($result);
