@@ -80,12 +80,12 @@
     )
   }
   function goPage(page) {
+    global['page'] = page
     $.post(
       '',
       {action: 'filter', page: page},
       (response, status) => {
         checkResult(response, status).then(data => {
-          global['page'] = page
           $('#content').html(data['html'])
         }, () => {}) 
       }

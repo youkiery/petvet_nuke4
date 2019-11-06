@@ -189,12 +189,12 @@
   }
   
   function goPage(page) {
+    global['page'] = page
     $.post(
       '',
       {action: 'filter', filter: checkFilter()},
       (response, status) => {
         checkResult(response, status).then(data => {
-          global['page'] = page
           $('#content').html(data['html'])
           installCheckAll()
         }, () => {}) 
