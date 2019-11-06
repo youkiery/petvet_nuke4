@@ -5,6 +5,42 @@
 
 <div id="msgshow"></div>
 
+<div class="modal" id="modal-done-submit" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <div class="text-center">
+          <button class="btn btn-warning" onclick="doneSubmit()">
+            Xác nhận
+          </button>
+          <button class="btn btn-info" data-dismiss="modal">
+            Hủy
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal-done-check-submit" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <div class="text-center">
+          <button class="btn btn-warning" onclick="doneCheckSubmit()">
+            Xác nhận
+          </button>
+          <button class="btn btn-info" data-dismiss="modal">
+            Hủy
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <a href="/{module_name}/excel"> Thêm bằng excel </a>
 <div class="row">
   <div class="col-sm-12">
@@ -53,17 +89,13 @@
 <script>
   $(document).ready(() => {
     var today = new Date().getTime()
+    installCheckAll('item')
+    installCheckAll('filter')
     $(".date").datepicker({
       format: 'dd/mm/yyyy',
       changeMonth: true,
       changeYear: true
     });
-    $("#item-check-all").change((e) => {
-      checked = e.currentTarget.checked
-      $(".event-checkbox").each((index, item) => {
-        item.checked = checked
-      })
-    })
     // $("#filter-time").change((e) => {
     //   time = e.currentTarget.value * 60 * 60 * 24 * 1000
     //   from = today - time
@@ -79,6 +111,15 @@
     month = (time.getMonth() + 1)
     return (day < 10 ? '0' : '') + day + '/' + (month < 10 ? '0' : '') + month + '/' + time.getFullYear()
   }
+  function checkfilter() {
+    return {
+      keyword: $("#filter-keyword").val(),
+      time: $("#filter-time").val(),
+      from: $("#filter-from").val(),
+      to: $("#filter-to").val()
+    }
+  }
+
   function filter() {
     list = []
     $(".event-checkbox:checked").each((index, item) => {
@@ -88,13 +129,65 @@
     })
     $.post(
       '',
-      {action: 'filter', keyword: $("#filter-keyword").val(), list: list, time: $("#filter-time").val(), from: $("#filter-from").val(), to: $("#filter-to").val()},
+      {action: 'filter', filter: checkfilter(), list: list},
       (response, status) => {
         checkResult(response, status).then(data => {
           $('#content').html(data['html'])
         }, () => {}) 
       }
     )
+  }
+
+  function done(id) {
+    global['id'] = id
+    $("#modal-done-submit").modal('show')
+  }
+
+  function doneCheck() {
+    $("#modal-done-check-submit").modal('show')
+  }
+
+  function doneSubmit() {
+    $.post(
+      '',
+      {action: 'done', id: global['id']},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $('#content').html(data['html'])
+          $("#modal-done-submit").modal('hide')
+        }, () => {}) 
+      }
+    )
+  }
+
+  function doneCheckSubmit() {
+    list = []
+    $(".item-checkbox:checked").each((index, item) => {
+      if (item.checked) {
+        list.push(item.getAttribute('id').replace('item-check-', ''))
+      }
+    })
+    if (list.length) {
+      $.post(
+        '',
+        {action: 'done-check', filter: checkfilter(), list: list},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            $('#content').html(data['html'])
+            $("#modal-done-check-submit").modal('show')
+          }, () => {}) 
+        }
+      )
+    }
+  }
+
+  function installCheckAll(name) {
+    $("#"+ name +"-check-all").change((e) => {
+      checked = e.currentTarget.checked 
+      $("."+ name +"-checkbox").each((index, item) => {
+        item.checked = checked
+      })
+    })
   }
 </script>
 <!-- END: main -->

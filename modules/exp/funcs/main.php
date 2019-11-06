@@ -16,6 +16,40 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = outdateList();
     break;
+    case 'done':
+      $id = $nv_Request->get_string('id', 'post', 0);
+
+      if (empty(getRowId($id))) {
+        $result['notify'] = 'Không tồn tại';
+      }
+      else {
+        if ($db->query('update `'. PREFIX .'row` set number = 0 where id = ' . $id)) {
+          $result['status'] = 1;
+          $result['html'] = outdateList();
+          $result['notify'] = 'Đã cập nhật';
+        }
+      }
+    break;
+    case 'done-check':
+      $list = $nv_Request->get_array('list', 'post');
+
+      if (!count($list)) {
+        $result['notify'] = 'Chọn 1 mục trước khi xác nhận';
+      }
+      else {
+        $total = 0;
+        $count = 0;
+        foreach ($list as $id) {
+          if ($db->query('update `'. PREFIX .'row` set number = 0 where id = ' . $id)) {
+            $count ++;
+          }
+        }
+        $total ++;
+        $result['status'] = 1;
+        $result['html'] = outdateList();
+        $result['notify'] = 'Đã cập nhật ' . $count . ' trên tổng số ' . $total;
+      }
+    break;
   }
   echo json_encode($result);
   die();
