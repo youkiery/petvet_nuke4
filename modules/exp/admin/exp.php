@@ -31,8 +31,9 @@ if (!empty($action)) {
       }
     break;
     case 'update':
-      $id = $nv_Request->get_int('id', 'post', '');
-      $rid = $nv_Request->get_int('rid', 'post', '');
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $rid = $nv_Request->get_int('rid', 'post', 0);
+      $number = $nv_Request->get_int('number', 'post', 0);
       $name = $nv_Request->get_string('name', 'post', '');
       $date = $nv_Request->get_string('date', 'post', '');
 
@@ -46,6 +47,7 @@ if (!empty($action)) {
         $result['notify'] = 'Hàng hoá không tồn tại';
       }
       else {
+        // die('update `'. PREFIX .'row` set rid = "'. $rid .'", number = '. $number .', exp_time = "'. totime($date) .'", update_time = '. time() .' where id = ' . $id);
         $query = $db->query('update `'. PREFIX .'row` set rid = "'. $rid .'", number = '. $number .', exp_time = "'. totime($date) .'", update_time = '. time() .' where id = ' . $id);
         if ($query) {
           $result['status'] = 1;
