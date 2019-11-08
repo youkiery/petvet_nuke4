@@ -8,6 +8,7 @@
 
 if (!defined('NV_MAINFILE')) { die('Stop!!!'); }
 define('PREFIX', $db_config['prefix'] . '_' . $module_name . '_');
+define('PATH', NV_ROOTDIR . "/modules/". $module_file ."/template");
 
 function checkItemName($name) {
   global $db;
@@ -31,4 +32,41 @@ function checkCompany($name) {
     if ($query) return $row->lastInsertId();
   }
   return 0;
+}
+
+function getItemData($id) {
+  global $db;
+  $empty = 'chưa xác định';
+
+  if (empty($id)) return $empty;
+  $query = $db->query('select * from `'. PREFIX .'item` where id = '. $id);
+  if ($row = $query->fetch()) {
+    return $row;
+  }
+  return $empty;
+}
+
+function getCompanyName($id) {
+  global $db;
+  $empty = 'chưa xác định';
+
+  if (empty($id)) return $empty;
+  $query = $db->query('select * from `'. PREFIX .'company` where id = '. $id);
+  if ($row = $query->fetch()) {
+    return $row['name'];
+  }
+  return $empty;
+}
+
+function parseFilter() {
+  global $nv_Request;
+  $filter = $nv_Request->get_array('filter', 'post');
+
+  if (empty($filter['page']) || $filter['page'] < 1) {
+    $filter['page'] = 1;
+  }
+  if (empty($filter['limit']) || $filter['limit'] < 10) {
+    $filter['limit'] = 10;
+  }
+  return $filter;
 }

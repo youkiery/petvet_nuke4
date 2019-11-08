@@ -13,12 +13,16 @@
           </div>
           <div class="form-group">
             <label class="control-label col-sm-4"> Số lượng </label>
-            <div class="col-sm-8">
+            <div class="col-sm-3">
               <input type="text" class="form-control" id="item-number">
             </div>
             <label class="control-label col-sm-4"> Đơn vị </label>
-            <div class="col-sm-8">
+            <div class="col-sm-3">
               <input type="text" class="form-control" id="item-unit">
+            </div>
+            <label class="control-label col-sm-4"> Chất lượng </label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" id="item-status">
             </div>
           </div>
           <div class="form-group">
