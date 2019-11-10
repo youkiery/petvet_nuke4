@@ -26,12 +26,52 @@ if (!empty($action)) {
         $sql = 'insert into `'. PREFIX .'item` (name, unit, company, description) values("'. $data['name'] .'", "'. $data['unit'] .'", "'. checkCompany($data['company']) .'", "'. $data['description'] .'")';
         if ($query = $db->query($sql)) {
           $id = $db->lastInsertId();
-          $sql = 'insert into `'. PREFIX .'item_detail` (item_id, number, status) values ('. $id .', '. $data['number'] .', "'. $data['status'] .'")';
+          $sql = 'insert into `'. PREFIX .'item_detail` (item_id, number, date, status) values ('. $id .', '. $data['number'] .', '. strtotime(date('Y/m/d')) .', "'. $data['status'] .'")';
           if ($db->query($sql)) {
             $result['status'] = 1;
             $result['notify'] = 'Đã thêm';
             $result['id'] = $db->lastInsertId();
           }
+        }
+      }
+    break;
+    case 'insert-import':
+      $data = $nv_Request->get_array('data', 'post');
+
+      if (!($count = count($data))) {
+        $result['notify'] = 'Chưa có hàng hóa nhập';
+      }
+      else {
+        // insert
+        $query = $db->query('insert into `'. PREFIX .'import` (import_date, note) values('. time().', "")');
+        if ($query) {
+          $total = 0;
+          $id = $db->lastInsertId();
+          // check item, status, expiry
+          foreach ($data as $row) {
+            $row['date'] = totimev2($row['date']);
+            if (!($item_id = checkItemId($row['id'], $row['date'], $row['status']))) {
+              $result['notify'] = 'Lỗi hệ thống';
+            }
+            else {
+              // die('insert into `'. PREFIX .'import_detail` (import_id, item_id, number, note) values('. $id .', '. $item_id .', '. $row['number'] .', "")');
+              $query = $db->query('insert into `'. PREFIX .'import_detail` (import_id, item_id, number, note) values('. $id .', '. $item_id .', '. $row['number'] .', "")');
+              if ($query) {
+                $total ++;
+              }
+            }
+          }
+          if ($total > 0) {
+            $result['status'] = 1;
+            $result['html'] = importList();
+            if ($count == $total) {
+              $result['notify'] = 'Đã lưu nhập thiết bị';
+            }
+            else {
+              $result['notify'] = "Đã lưu $total/$count";
+            }
+          }
+
         }
       }
     break;
@@ -44,7 +84,11 @@ $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/temp
 $xtpl2 = new XTemplate("item-modal.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/device");
 $xtpl2->parse('main');
 $xtpl->assign('item_modal', $xtpl2->text());
+$xtpl->assign('item', getItemDataList());
+$xtpl->assign('today', date('d/m/Y', time()));
 $xtpl->assign('content', itemList());
+$xtpl->assign('import', importModal());
+$xtpl->assign('import_insert', importInsertModal());
 
 $xtpl->parse('main');
 $contents = $xtpl->text();

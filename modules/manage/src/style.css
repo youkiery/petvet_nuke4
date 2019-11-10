@@ -17,6 +17,11 @@ hr {
   margin-bottom: 10px !important;
 }
 
+.cell-center {
+  text-align: center;
+  vertical-align: inherit;
+}
+
 [class*="col-"] {
   float: left;
   padding: 5px;
