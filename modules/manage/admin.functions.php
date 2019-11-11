@@ -25,24 +25,36 @@ function departModal() {
   return $xtpl->text();
 }
 
-function itemList() {
+function removeModal() {
+  global $module_file;
+  $xtpl = new XTemplate("remove-modal.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/device");
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function removeAllModal() {
+  global $module_file;
+  $xtpl = new XTemplate("remove-all-modal.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/device");
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function deviceList() {
   global $db, $module_file;
 
   $filter = parseFilter();
   $xtpl = new XTemplate("device-list.tpl", PATH . "/admin/device");
 
-  $query = $db->query('select count(*) as count from `'. PREFIX .'item_detail`');
+  $query = $db->query('select count(*) as count from `'. PREFIX .'device`');
   $number = $query->fetch();
-
-  // die('select * from `'. PREFIX .'item_detail` order by item_id, status limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
-  $query = $db->query('select * from `'. PREFIX .'item_detail` order by item_id, status limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+  // die('select * from `'. PREFIX .'device` order by update_time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+  $query = $db->query('select * from `'. PREFIX .'device` order by update_time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
   while ($row = $query->fetch()) {
-    $item = getItemData($row['item_id']);
-    $company = getCompanyName($item['company']);
     $xtpl->assign('index', $index++);
-    $xtpl->assign('name', $item['name']);
-    $xtpl->assign('company', $company);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('company', $row['intro']);
     $xtpl->assign('status', $row['status']);
     $xtpl->assign('number', $row['number']);
     $xtpl->parse('main.row');

@@ -4,6 +4,9 @@
     <div class="modal-content">
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
+        <button class="btn btn-info" onclick="loadDefault()">
+          <span class="glyphicon glyphicon-refresh"></span>
+        </button>
 
         <div class="form-horizontal">
           <div class="form-group">
@@ -14,27 +17,30 @@
           </div>
 
           <div class="form-group">
+            <label class="control-label col-sm-4"> Quy cách </label>
+            <div class="col-sm-20">
+              <input type="text" class="form-control" id="device-intro">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-4"> Đơn vị </label>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="device-unit">
+            </div>
             <label class="control-label col-sm-4"> Số lượng </label>
             <div class="col-sm-3">
               <input type="text" class="form-control" id="device-number">
             </div>
-            <label class="control-label col-sm-4"> Đơn vị </label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" id="device-unit">
-            </div>
-            <label class="control-label col-sm-4"> Năm sử dụng </label>
-            <div class="col-sm-3">
+            <label class="control-label col-sm-6"> Năm sử dụng </label>
+            <div class="col-sm-4">
               <input type="text" class="form-control" id="device-year">
             </div>
           </div>
 
           <div class="form-group">
-            <label class="control-label col-sm-4"> Quy cách </label>
-            <div class="col-sm-8">
-              <input type="text" class="form-control" id="device-intro">
-            </div>
             <label class="control-label col-sm-4"> Nguồn cung cấp </label>
-            <div class="col-sm-8">
+            <div class="col-sm-20">
               <input type="text" class="form-control" id="device-source">
             </div>
           </div>
@@ -68,8 +74,8 @@
               <textarea class="form-control" id="device-description" rows="5"></textarea>
             </div>
           </div>
-          <div class="form-group text-center" onclick="deviceInsertsubmit()">
-            <button type="submit" class="btn btn-info"> Xác nhận </button>
+          <div class="form-group text-center">
+            <button type="submit" class="btn btn-info" onclick="deviceInsertsubmit()"> Xác nhận </button>
           </div>
         </div>
       </div>

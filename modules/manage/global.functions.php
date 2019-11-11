@@ -10,6 +10,78 @@ if (!defined('NV_MAINFILE')) { die('Stop!!!'); }
 define('PREFIX', $db_config['prefix'] . '_' . $module_name . '_');
 define('PATH', NV_ROOTDIR . "/modules/". $module_file ."/template");
 
+function totime($time) {
+  if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
+    $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);
+    if (!$time) {
+      $time = time();
+    }
+  }
+  else {
+    $time = time();
+  }
+  return $time;
+}
+
+function totimev2($time) {
+  if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
+    $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);
+    if (!$time) {
+      $time = 0;
+    }
+  }
+  else {
+    $time = 0;
+  }
+  return $time;
+}
+
+function checkDeviceName($name) {
+  global $db;
+
+  // die('select * from `'. PREFIX .'device` where name = "'. $name . '"');
+  $query = $db->query('select * from `'. PREFIX .'device` where name = "'. $name . '"');
+  if ($query->fetch()) {
+    return true;
+  }
+  return false;
+}
+
+function checkRemind($name, $value) {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'remind` where name = "'. $name .'" and value = "'. $value .'"');
+
+  if (!($row = $query->fetch())) {
+    $query = $db->query('insert into `'. PREFIX .'remind` (name, value) values("'. $name .'", "'. $value .'")');
+  }
+  else {
+    $query = $db->query('update `'. PREFIX .'remind` set rate = rate + 1 where id = ' . $row['id']);
+  }
+}
+
+function getRemind() {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'remind` group by name order by rate desc');
+  $list = array();
+  while ($row = $query->fetch()) {
+    $list [$row['name']]= $row['value'];
+  }
+  return $list;
+}
+
+function getDeviceData($id) {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'device` where id = '. $id);
+  if ($row = $query->fetch()) {
+    $row['depart'] = json_decode($row['depart']);
+    return $row;
+  }
+  return false;
+}
+
 function checkDepartName($name) {
   global $db;
 
@@ -169,28 +241,4 @@ function getDepartList() {
   return $list;
 }
 
-function totime($time) {
-  if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
-    $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);
-    if (!$time) {
-      $time = time();
-    }
-  }
-  else {
-    $time = time();
-  }
-  return $time;
-}
 
-function totimev2($time) {
-  if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
-    $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);
-    if (!$time) {
-      $time = 0;
-    }
-  }
-  else {
-    $time = 0;
-  }
-  return $time;
-}

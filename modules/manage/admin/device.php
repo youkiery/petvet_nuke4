@@ -43,13 +43,63 @@ if (!empty($action)) {
         $result['notify'] = 'Đơn vị đã tồn tại';
       }
       else {
-        $query = $db->query('insert into `'. PREFIX .'depart` (name) values("'. $name .'")');
+        $query = $db->query('insert into `'. PREFIX .'depart` (name, update_time) values("'. $name .'", '. time() .')');
         if ($query) {
           $result['status'] = 1;
           $result['inserted'] = array('id' => $db->lastInsertId(), 'name' => $name);
           $result['notify'] = 'Đã thêm đơn vị';
         }
       }
+    break;
+    case 'insert-device':
+      $data = $nv_Request->get_array('data', 'post');
+      if (checkDeviceName($data['name'])) {
+        $result['notify'] = 'Thiết bị đã tồn tại';
+      }
+      else {
+        foreach ($data as $name => $value) {
+          if (!($name == 'depart' || $name == 'description' || $name == 'name')) checkRemind($name, $value);
+        }
+        if (empty($data['depart'])) $data['depart'] = array();
+        $sql = 'insert into `'. PREFIX .'device` (name, unit, number, year, intro, status, depart, source, description, update_time) values("'. $data['name'] .'", "'. $data['unit'] .'", "'. $data['number'] .'", "'. $data['year'] .'", "'. $data['intro'] .'", "'. $data['status'] .'", \''. json_encode($data['depart']) .'\', "'. $data['source'] .'", "'. $data['description'] .'", '. time() .')';
+        // die($sql);
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+          $result['html'] = deviceList();
+          $result['notify'] = 'Đã thêm thiết bị';
+        }
+      }
+    break;
+    case 'get-device':
+      $id = $nv_Request->get_int('id', 'post');
+
+      if ($data = getDeviceData($id)) {
+        $result['status'] = 1;
+        $result['device'] = $data;
+      }
+    break;
+    case 'remove-device':
+      $id = $nv_Request->get_int('id', 'post');
+
+      if ($db->query('delete from `'. PREFIX .'device` where id = ' . $id)) {
+        $result['status'] = 1;
+        $result['notify'] = 'Đã xóa';
+        $result['html'] = deviceList();
+      }
+    break;
+    case 'remove-all-device':
+      $list = $nv_Request->get_array('list', 'post');
+      $count = count($list);
+      $removed = 0;
+
+      foreach ($list as $id) {
+        if ($db->query('delete from `'. PREFIX .'device` where id = ' . $id)) {
+          $removed ++;
+        }
+      }
+      $result['status'] = 1;
+      $result['notify'] = "Đã xóa $removed trong tổng số $count đã chọn";
+      $result['html'] = deviceList();
     break;
   }
   echo json_encode($result);
@@ -59,10 +109,13 @@ $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/temp
 
 $xtpl->assign('depart', json_encode(getDepartList(), JSON_UNESCAPED_UNICODE));
 $xtpl->assign('device_modal', deviceModal());
+$xtpl->assign('remove_modal', removeModal());
+$xtpl->assign('remove_all_modal', removeAllModal());
+$xtpl->assign('content', deviceList());
+$xtpl->assign('remind', json_encode(getRemind(), JSON_UNESCAPED_UNICODE));
 // $xtpl->assign('depart_modal', departmodal());
 // $xtpl->assign('item', json_encode(getItemDataList(), JSON_UNESCAPED_UNICODE));
 // $xtpl->assign('today', date('d/m/Y', time()));
-// $xtpl->assign('content', itemList());
 // $xtpl->assign('import', importModal());
 // $xtpl->assign('import_insert', importInsertModal());
 

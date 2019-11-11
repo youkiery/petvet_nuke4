@@ -2,9 +2,11 @@
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <link rel="stylesheet" href="/modules/manage/src/style.css">
 {device_modal}
+{remove_modal}
+{remove_all_modal}
 <div id="msgshow"></div>
 <div style="float: right;">
-  <button class="btn btn-success" onclick="$('#device-modal').modal('show')">
+  <button class="btn btn-success" onclick="deviceInsert()">
     <span class="glyphicon glyphicon-plus"></span>
   </button>
 </div>
@@ -23,25 +25,28 @@
   {content}
 </div>
 
-<button class="btn btn-info">
+<!-- <button class="btn btn-info">
   edit all
-</button>  
-<button class="btn btn-danger">
-  remove all
+</button>   -->
+<button class="btn btn-danger" onclick="removeAll()">
+  Xóa mục đã chọn
 </button>  
 <script src="/modules/manage/src/script.js"></script>
 <script>
   var global = {
+    id: 0,
     page: {
       'main': 1
     },
     depart: {
       list: JSON.parse('{depart}'),
       selected: {}
-    }
+    },
+    remind: JSON.parse('{remind}')
   }
 
   $(document).ready(() => {
+    installCheckAll('device')
     input = $("#device-depart-input")
     suggest = $("#device-depart-suggest")
     input.keyup((e) => {
@@ -151,6 +156,21 @@
     }
   }
 
+  function deviceInsert() {
+    $("#content").html(data['html'])
+    $("#device-name").val(''),
+    $("#device-unit").val(''),
+    $("#device-number").val(''),
+    $("#device-year").val(''),
+    $("#device-intro").val(''),
+    $("#device-source").val(''),
+    $("#device-status").val(''),
+    $("#device-description").val('')
+    global['depart']['selected'] = {}
+    $("#device-depart").html('')
+    $('#device-modal').modal('show')
+  }
+
   function deviceInsertsubmit() {
     $.post(
       '',
@@ -158,9 +178,112 @@
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#content").html(data['html'])
-        })
+          $("#device-name").val(''),
+          $("#device-unit").val(''),
+          $("#device-number").val(''),
+          $("#device-year").val(''),
+          $("#device-intro").val(''),
+          $("#device-source").val(''),
+          $("#device-status").val(''),
+          $("#device-description").val('')
+          global['depart']['selected'] = {}
+          $("#device-depart").html('')
+          $('#device-modal').modal('hide')
+        }, () => {})
       }
     )
+  }
+
+  function deviceEdit(id) {
+    $.post(
+      '',
+      { action: 'get-device', id: id },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#content").html(data['html'])
+          $("#device-name").val(data['device']['name']),
+          $("#device-unit").val(data['device']['unit']),
+          $("#device-number").val(data['device']['number']),
+          $("#device-year").val(data['device']['year']),
+          $("#device-intro").val(data['device']['intro']),
+          $("#device-source").val(data['device']['source']),
+          $("#device-status").val(data['device']['status']),
+          $("#device-description").val(data['device']['description'])
+          global['depart']['selected'] = {}
+          data['device']['depart'].forEach(depart => {
+            global['depart']['list'].forEach((item, index) => {
+              if (item['id'] == depart) {
+                selectDepart(index)
+              }
+            })
+          })
+          $('#device-modal').modal('show')
+        }, () => {})
+      }
+    )
+  }
+
+  function loadDefault() {
+    $("#device-name").val(),
+    $("#device-unit").val(global['remind']['unit']),
+    $("#device-number").val(global['remind']['number']),
+    $("#device-year").val(global['remind']['year']),
+    $("#device-intro").val(global['remind']['intro']),
+    $("#device-source").val(global['remind']['source']),
+    $("#device-status").val(global['remind']['status']),
+    $("#device-description").val('')
+  }
+
+  function deviceRemove(id) {
+    $('#remove-modal').modal('show')
+    global['id'] = id
+  }
+
+  function deviceRemoveSubmit() {
+    $.post(
+      '',
+      { action: 'remove-device', filter: checkFilter(), id: global['id'] },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#content").html(data['html'])
+          $('#remove-modal').modal('hide')
+        }, () => {})
+      }
+    )
+  }
+
+  function removeAll() {
+    list = []
+    $(".device-checkbox:checked").each((index, item) => {
+      if (item.checked) {
+        console.log(item);
+        
+        list.push(item.getAttribute('id').replace('device-checkbox-', ''))
+      }
+    })
+    if (!list.length) {
+      alert_msg('Chọn ít nhất một thiết bị')
+    }
+    else {
+      $.post(
+      '',
+      { action: 'remove-all-device', filter: checkFilter(), list: list },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#content").html(data['html'])
+          $('#remove-all-modal').modal('hide')
+        }, () => {})
+      })
+    }
+  }
+
+  function installCheckAll(name) {
+    $("#"+ name +"-check-all").change((e) => {
+      checked = e.currentTarget.checked 
+      $("."+ name +"-checkbox").each((index, item) => {
+        item.checked = checked
+      })
+    })
   }
 </script>
 <!-- END: main -->
