@@ -35,43 +35,19 @@ if (!empty($action)) {
         }
       }
     break;
-    case 'insert-import':
-      $data = $nv_Request->get_array('data', 'post');
-
-      if (!($count = count($data))) {
-        $result['notify'] = 'Chưa có hàng hóa nhập';
+    case 'insert-depart':
+      $name = $nv_Request->get_string('name', 'post', '');
+      $name = ucwords($name);
+       
+      if (checkDepartName($name)) {
+        $result['notify'] = 'Đơn vị đã tồn tại';
       }
       else {
-        // insert
-        $query = $db->query('insert into `'. PREFIX .'import` (import_date, note) values('. time().', "")');
+        $query = $db->query('insert into `'. PREFIX .'depart` (name) values("'. $name .'")');
         if ($query) {
-          $total = 0;
-          $id = $db->lastInsertId();
-          // check item, status, expiry
-          foreach ($data as $row) {
-            $row['date'] = totimev2($row['date']);
-            if (!($item_id = checkItemId($row['id'], $row['date'], $row['status']))) {
-              $result['notify'] = 'Lỗi hệ thống';
-            }
-            else {
-              // die('insert into `'. PREFIX .'import_detail` (import_id, item_id, number, note) values('. $id .', '. $item_id .', '. $row['number'] .', "")');
-              $query = $db->query('insert into `'. PREFIX .'import_detail` (import_id, item_id, number, note) values('. $id .', '. $item_id .', '. $row['number'] .', "")');
-              if ($query) {
-                $total ++;
-              }
-            }
-          }
-          if ($total > 0) {
-            $result['status'] = 1;
-            $result['html'] = importList();
-            if ($count == $total) {
-              $result['notify'] = 'Đã lưu nhập thiết bị';
-            }
-            else {
-              $result['notify'] = "Đã lưu $total/$count";
-            }
-          }
-
+          $result['status'] = 1;
+          $result['inserted'] = array('id' => $db->lastInsertId(), 'name' => $name);
+          $result['notify'] = 'Đã thêm đơn vị';
         }
       }
     break;
@@ -81,14 +57,14 @@ if (!empty($action)) {
 }
 $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/device");
 
-$xtpl2 = new XTemplate("item-modal.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/device");
-$xtpl2->parse('main');
-$xtpl->assign('item_modal', $xtpl2->text());
-$xtpl->assign('item', getItemDataList());
-$xtpl->assign('today', date('d/m/Y', time()));
-$xtpl->assign('content', itemList());
-$xtpl->assign('import', importModal());
-$xtpl->assign('import_insert', importInsertModal());
+$xtpl->assign('depart', json_encode(getDepartList(), JSON_UNESCAPED_UNICODE));
+$xtpl->assign('device_modal', deviceModal());
+// $xtpl->assign('depart_modal', departmodal());
+// $xtpl->assign('item', json_encode(getItemDataList(), JSON_UNESCAPED_UNICODE));
+// $xtpl->assign('today', date('d/m/Y', time()));
+// $xtpl->assign('content', itemList());
+// $xtpl->assign('import', importModal());
+// $xtpl->assign('import_insert', importInsertModal());
 
 $xtpl->parse('main');
 $contents = $xtpl->text();

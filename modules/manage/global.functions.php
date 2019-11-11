@@ -10,6 +10,16 @@ if (!defined('NV_MAINFILE')) { die('Stop!!!'); }
 define('PREFIX', $db_config['prefix'] . '_' . $module_name . '_');
 define('PATH', NV_ROOTDIR . "/modules/". $module_file ."/template");
 
+function checkDepartName($name) {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'depart` where name = "'. $name .'"');
+  if ($query->fetch()) {
+    return true;
+  }
+  return false;
+}
+
 function checkItemName($name) {
   global $db;
 
@@ -99,7 +109,7 @@ function getItemDataList() {
   while ($row = $query->fetch()) {
     $list []= $row;
   }
-  return json_encode($list, JSON_UNESCAPED_UNICODE);
+  return $list;
 }
 
 function checkItemId($item_id, $item_date, $item_status) {
@@ -113,6 +123,50 @@ function checkItemId($item_id, $item_date, $item_status) {
   $query = $db->query('insert into `'. PREFIX .'item_detail` (item_id, number, date, status) values ('. $item_id .', 0, '. $item_date .', "'. $data['status'] .'")');
   if ($query) return $db->lastInsertId();  
   return 0;
+}
+
+function getItemDatav2($id) {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'item_detail` where id = ' . $id);
+  if ($row = $query->fetch()) {
+    return $row;
+  }
+  return false;
+}
+
+// function getImportData($id) {
+//   global $db;
+
+//   $query = $db->query('select * from `'. PREFIX .'import_detail` where id = ' . $id);
+//   if ($row = $query->fetch()) {
+//     return $row;
+//   }
+//   return false;
+// }
+
+function checkItemIndex($list, $id) {
+  global $db;
+
+  $itemData = getItemDatav2($id);
+
+  foreach ($list as $index => $row) {
+    if ($row['id'] === $itemData['item_id']) {
+      return $index;
+    }
+  }
+}
+
+function getDepartList() {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'depart`');
+  $list = array();
+
+  while($row = $query->fetch()) {
+    $list []= $row;
+  }
+  return $list;
 }
 
 function totime($time) {
@@ -140,5 +194,3 @@ function totimev2($time) {
   }
   return $time;
 }
-
-

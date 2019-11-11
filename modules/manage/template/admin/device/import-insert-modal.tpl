@@ -30,7 +30,8 @@
           </table>
         </div>
         <div class="text-center">
-          <button class="btn btn-info" onclick="importSubmit()"> Thêm phiếu nhập </button>
+          <button class="btn btn-info" id="import-button" onclick="importSubmit()"> Thêm phiếu nhập </button>
+          <button class="btn btn-info" id="edit-import-button" onclick="editImportSubmit()"> Sửa phiếu nhập </button>
         </div>
       </div>
     </div>

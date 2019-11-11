@@ -5,7 +5,7 @@
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
         <div style="float: right;">
-          <button class="btn btn-success" onclick="$('#import-insert-modal').modal('show')">
+          <button class="btn btn-success" onclick="importInsert()">
             Nhập hàng
           </button>
         </div>

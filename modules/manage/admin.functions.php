@@ -11,11 +11,25 @@ define('NV_IS_FILE_ADMIN', true);
 include_once(NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php');
 include_once(NV_ROOTDIR . '/modules/' . $module_file . '/theme.php');
 
+function deviceModal() {
+  global $module_file;
+  $xtpl = new XTemplate("device-modal.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/device");
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function departModal() {
+  global $module_file;
+  $xtpl = new XTemplate("depart-modal.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/device");
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function itemList() {
   global $db, $module_file;
 
   $filter = parseFilter();
-  $xtpl = new XTemplate("item-list.tpl", PATH . "/admin/device");
+  $xtpl = new XTemplate("device-list.tpl", PATH . "/admin/device");
 
   $query = $db->query('select count(*) as count from `'. PREFIX .'item_detail`');
   $number = $query->fetch();
@@ -59,14 +73,15 @@ function importList() {
   $query = $db->query('select count(*) as count from `'. PREFIX .'import`');
   $number = $query->fetch();
 
-  // die('select * from `'. PREFIX .'item_detail` order by item_id, status limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+  // die('select * from `'. PREFIX .'import` limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
   $query = $db->query('select * from `'. PREFIX .'import` limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
   while ($row = $query->fetch()) {
     $id = $row['id'];
     $importData = getImportData($row['id']);
 
-    $xtpl->assign('id', 'ip' . spat(6 - strlen($row['number']), '0'));
+    $xtpl->assign('id', 'ip' . spat(6 - strlen($row['id']), '0'));
+    $xtpl->assign('import_id', $row['id']);
     $xtpl->assign('date', date('d/m/Y H:i', $row['import_date']));
     $xtpl->assign('count', $importData['count']);
     $xtpl->assign('total', $importData['total']);

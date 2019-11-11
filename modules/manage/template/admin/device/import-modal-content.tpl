@@ -19,7 +19,7 @@
       <td> {count} </td>
       <td> {total} </td>
       <td> 
-        <button class="btn btn-info">
+        <button class="btn btn-info" onclick="checkImport({import_id})">
           edit
         </button>  
         <button class="btn btn-danger">
