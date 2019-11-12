@@ -36,14 +36,18 @@ function totimev2($time) {
   return $time;
 }
 
-function checkDeviceName($name) {
+function checkDeviceName($name, $id = 0) {
   global $db;
 
-  // die('select * from `'. PREFIX .'device` where name = "'. $name . '"');
-  $query = $db->query('select * from `'. PREFIX .'device` where name = "'. $name . '"');
+  $xtra = '';
+  if ($id) {
+    $xtra = ' and id <> ' . $id;
+  }
+  $query = $db->query('select * from `'. PREFIX .'device` where name = "'. $name . '"' . $xtra);
   if ($query->fetch()) {
     return true;
   }
+  // die('select * from `'. PREFIX .'device` where name = "'. $name . '"');
   return false;
 }
 
@@ -66,7 +70,19 @@ function getRemind() {
   $query = $db->query('select * from `'. PREFIX .'remind` group by name order by rate desc');
   $list = array();
   while ($row = $query->fetch()) {
-    $list [$row['name']]= $row['value'];
+    $list[$row['name']] = $row['value'];
+  }
+  return $list;
+}
+
+function getRemindv2() {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'remind`');
+  $list = array();
+  while ($row = $query->fetch()) {
+    if (empty($list[$row['name']])) $list[$row['name']] = array();
+    $list[$row['name']][] = $row['value'];
   }
   return $list;
 }

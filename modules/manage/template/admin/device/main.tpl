@@ -42,11 +42,14 @@
       list: JSON.parse('{depart}'),
       selected: {}
     },
-    remind: JSON.parse('{remind}')
+    remind: JSON.parse('{remind}'),
+    remindv2: JSON.parse('{remindv2}')
   }
 
   $(document).ready(() => {
     installCheckAll('device')
+    installRemindv2('device', 'intro')
+    installRemindv2('device', 'source')
     input = $("#device-depart-input")
     suggest = $("#device-depart-suggest")
     input.keyup((e) => {
@@ -157,7 +160,6 @@
   }
 
   function deviceInsert() {
-    $("#content").html(data['html'])
     $("#device-name").val(''),
     $("#device-unit").val(''),
     $("#device-number").val(''),
@@ -166,32 +168,59 @@
     $("#device-source").val(''),
     $("#device-status").val(''),
     $("#device-description").val('')
+    $("#device-insert").show()
+    $("#device-edit").hide()
     global['depart']['selected'] = {}
     $("#device-depart").html('')
     $('#device-modal').modal('show')
   }
 
-  function deviceInsertsubmit() {
-    $.post(
-      '',
-      { action: 'insert-device', filter: checkFilter(), data: checkDeviceData() },
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          $("#content").html(data['html'])
-          $("#device-name").val(''),
-          $("#device-unit").val(''),
-          $("#device-number").val(''),
-          $("#device-year").val(''),
-          $("#device-intro").val(''),
-          $("#device-source").val(''),
-          $("#device-status").val(''),
-          $("#device-description").val('')
-          global['depart']['selected'] = {}
-          $("#device-depart").html('')
-          $('#device-modal').modal('hide')
-        }, () => {})
-      }
-    )
+  function deviceInsertSubmit() {
+    data = checkDeviceData()
+    if (!data['name'].length) {
+      alert_msg('Điền tên thiết bị')
+    }
+    else {
+      $.post(
+        '',
+        { action: 'insert-device', filter: checkFilter(), data: data },
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            $("#content").html(data['html'])
+            $("#device-name").val(''),
+            $("#device-unit").val(''),
+            $("#device-number").val(''),
+            $("#device-year").val(''),
+            $("#device-intro").val(''),
+            $("#device-source").val(''),
+            $("#device-status").val(''),
+            $("#device-description").val('')
+            global['depart']['selected'] = {}
+            $("#device-depart").html('')
+            $('#device-modal').modal('hide')
+          }, () => {})
+        }
+      )
+    }
+  }
+
+  function deviceEditSubmit() {
+    data = checkDeviceData()
+    if (!data['name'].length) {
+      alert_msg('Điền tên thiết bị')
+    }
+    else {
+      $.post(
+        '',
+        { action: 'edit-device', filter: checkFilter(), data: data, id: global['id'] },
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            $("#content").html(data['html'])
+            $('#device-modal').modal('hide')
+          }, () => {})
+        }
+      )
+    }
   }
 
   function deviceEdit(id) {
@@ -209,6 +238,8 @@
           $("#device-source").val(data['device']['source']),
           $("#device-status").val(data['device']['status']),
           $("#device-description").val(data['device']['description'])
+          $("#device-insert").hide()
+          $("#device-edit").show()
           global['depart']['selected'] = {}
           data['device']['depart'].forEach(depart => {
             global['depart']['list'].forEach((item, index) => {
@@ -217,6 +248,7 @@
               }
             })
           })
+          global['id'] = id
           $('#device-modal').modal('show')
         }, () => {})
       }
@@ -284,6 +316,43 @@
         item.checked = checked
       })
     })
+  }
+
+  function installRemindv2(prefix, type) {
+    var timeout
+    var input = $("#"+ prefix +"-" + type)
+    var suggest = $("#"+ prefix + '-' + type + "-suggest")
+
+    input.keyup(() => {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        var key = convert(input.val())
+        var html = ''
+        
+        for (const index in global['remindv2'][type]) {
+          if (global['remindv2'][type].hasOwnProperty(index)) {
+            const element = convert(global['remindv2'][type][index]);
+            
+            if (element.search(key) >= 0) {
+              html += '<div class="suggest-item" onclick="selectRemindv2(\'' + name + '\', \'' + type + '\', \'' + global['remindv2'][type][index] + '\')"><p class="right-click">' + global['remindv2'][type][index] + '</p></div>'
+            }
+          }
+        }
+        suggest.html(html)
+      }, 200);
+    })
+    input.focus(() => {
+      suggest.show()
+    })
+    input.blur(() => {
+      setTimeout(() => {
+        suggest.hide()
+      }, 200);
+    })
+  }
+
+  function selectRemindv2(prefix, type, value) {
+    $("#" + prefix + "-" + type).val(value)
   }
 </script>
 <!-- END: main -->
