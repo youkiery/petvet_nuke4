@@ -288,8 +288,6 @@
     list = []
     $(".device-checkbox:checked").each((index, item) => {
       if (item.checked) {
-        console.log(item);
-        
         list.push(item.getAttribute('id').replace('device-checkbox-', ''))
       }
     })
@@ -297,16 +295,20 @@
       alert_msg('Chọn ít nhất một thiết bị')
     }
     else {
-      $.post(
-      '',
-      { action: 'remove-all-device', filter: checkFilter(), list: list },
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          $("#content").html(data['html'])
-          $('#remove-all-modal').modal('hide')
-        }, () => {})
-      })
+      $("#remove-all-modal").modal('show')
     }
+  }
+
+  function removeAllSubmit() {
+    $.post(
+    '',
+    { action: 'remove-all-device', filter: checkFilter(), list: list },
+    (response, status) => {
+      checkResult(response, status).then(data => {
+        $("#content").html(data['html'])
+        $('#remove-all-modal').modal('hide')
+      }, () => {})
+    })
   }
 
   function installCheckAll(name) {

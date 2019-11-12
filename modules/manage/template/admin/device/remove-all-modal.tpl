@@ -6,9 +6,7 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
         
         <div class="form-group text-center">
-          <b>
-            Chọn xác nhận để xóa các mục đã chọn
-          </b>
+          <p> <b> Chọn xác nhận để xóa các mục đã chọn </b> </p>
           <button type="submit" class="btn btn-danger" onclick="deviceRemoveAllSubmit()"> Xác nhận </button>
         </div>
       </div>
