@@ -5,6 +5,7 @@
       <th> STT </th>
       <th> <input type="checkbox" id="device-check-all"> </th>
       <th> Tên thiết bị </th>
+      <th> Phòng ban </th>
       <th> Công ty </th>
       <th> Tình trạng </th>
       <th> Số lượng </th>
@@ -17,6 +18,7 @@
       <td> {index} </td>
       <th> <input type="checkbox" class="device-checkbox" id="device-checkbox-{id}"> </th>
       <td> {name} </td>
+      <td> {depart} </td>
       <td> {company} </td>
       <td> {status} </td>
       <td> {number} </td>

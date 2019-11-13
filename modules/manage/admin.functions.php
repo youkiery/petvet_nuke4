@@ -40,25 +40,44 @@ function removeAllModal() {
 }
 
 function deviceList() {
-  global $db, $module_file;
-
-  $filter = parseFilter();
+  global $db, $module_file, $nv_Request;
+  
+  $filter = parseFilter('device');
   $xtpl = new XTemplate("device-list.tpl", PATH . "/admin/device");
 
   $query = $db->query('select count(*) as count from `'. PREFIX .'device`');
   $number = $query->fetch();
-  // die('select * from `'. PREFIX .'device` order by update_time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
-  $query = $db->query('select * from `'. PREFIX .'device` order by update_time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+  $xtra = '';
+  // var_dump($filter);die();
+  if (!empty($filter['depart'])) {
+    $list = array();
+    foreach ($filter['depart'] as $value) {
+      $list[]= 'depart like \'%"'. $value .'"%\'';
+    }
+    $xtra = ' where ('. implode(' or ', $list) .') ';
+  }
+  $query = $db->query('select count(*) as count from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit']);
+  $count = $query->fetch();
+  $number = $count['count'];
+  // die('select * from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+  $query = $db->query('select * from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
   while ($row = $query->fetch()) {
+    $depart = json_decode($row['depart']);
+    $list = array();
+    foreach ($depart as $value) {
+      $list[]= checkDepartId($value);
+    }
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('name', $row['name']);
+    $xtpl->assign('depart', implode(', ', $list));
     $xtpl->assign('company', $row['intro']);
     $xtpl->assign('status', $row['status']);
     $xtpl->assign('number', $row['number']);
     $xtpl->parse('main.row');
   }
+  $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
   $xtpl->parse('main');
   return $xtpl->text();
 }

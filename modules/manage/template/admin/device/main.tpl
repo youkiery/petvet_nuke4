@@ -19,6 +19,22 @@
     </div>
   </div>
 </div>
+<div class="form-group">
+  Lọc danh sách phòng ban
+  <div class="relative">
+    <div class="input-group">
+      <input type="text" class="form-control" id="filter-depart-input">
+      <div class="input-group-btn">
+        <button class="btn btn-info" onclick="goPage(1)"> Hiển thị </button>
+      </div>
+    </div>
+    <div class="suggest" id="filter-depart-suggest"></div>
+  </div>
+  <span id="filter-depart"></span>
+</div>
+<div class="form-group">
+  <button class="btn btn-info" onclick="excel()"> Xuất excel </button>
+</div>
 
 <div style="clear: both;"></div>
 <div id="content">
@@ -38,10 +54,14 @@
     page: {
       'main': 1
     },
-    depart: {
-      list: JSON.parse('{depart}'),
+    selected: {
+      filter: {},
+      device: {}
+    },
+    filter: {
       selected: {}
     },
+    list: JSON.parse('{depart}'),
     today: '{today}',
     remind: JSON.parse('{remind}'),
     remindv2: JSON.parse('{remindv2}')
@@ -52,60 +72,43 @@
     installRemindv2('device', 'name')
     installRemindv2('device', 'intro')
     installRemindv2('device', 'source')
-    input = $("#device-depart-input")
-    suggest = $("#device-depart-suggest")
-    input.keyup((e) => {
-      keyword = e.currentTarget.value
-      html = ''
-      count = 0
-
-      global['depart']['list'].forEach((depart, index) => {
-        if (count < 30 && depart['name'].search(keyword) >= 0) {
-          count ++
-          html += `
-            <div class="suggest-item" onclick="selectDepart(`+ index +`)">
-              `+ depart['name'] +`
-            </div>`
-        }
-      })
-      if (!html.length) {
-        html = 'Không có kết quả'
-      }
-      suggest.html(html)
-    })
-
-    input.focus(() => {
-      suggest.show()
-    })
-
-    input.blur(() => {
-      setTimeout(() => {
-        suggest.hide()
-      }, 300);
-    })
+    installDepart('filter')
+    installDepart('device')
   })
 
-  function selectDepart(index) {
-    global['depart']['selected'][index] = 1
-    $("#device-depart-input").val('')
-    val = []
-    for (const key in global['depart']['selected']) {
-      if (global['depart']['selected'].hasOwnProperty(key)) {
-        val.push('<span class="btn btn-info btn-xs" onclick="deselectDepart('+ key +')"> '+ global['depart']['list'][key]['name'] +' </span>')
+  function excel() {
+    $.post(
+      '',
+      {action: 'excel'},
+      (response, status) => {
+        console.log(response);
       }
-    }
-    $("#device-depart").html(val.join(', '))
+    )
   }
 
-  function deselectDepart(index) {
-    delete global['depart']['selected'][index]
+  function selectDepart(prefix, index) {
+    global['selected'][prefix][index] = 1
+    $("#"+ prefix +"-depart-input").val('')
     val = []
-    for (const key in global['depart']['selected']) {
-      if (global['depart']['selected'].hasOwnProperty(key)) {
-        val.push('<span class="btn btn-info btn-xs" onclick="deselectDepart('+ key +')"> '+ global['depart']['list'][key]['name'] +' </span>')
+    for (const key in global['selected'][prefix]) {
+      if (global['selected'][prefix].hasOwnProperty(key)) {
+        val.push('<span class="btn btn-info btn-xs" onclick="deselectDepart(\''+ prefix +'\', '+ key +')"> '+ global['list'][key]['name'] +' </span>')
       }
     }
-    $("#device-depart").html(val.join(', '))
+    
+    $("#"+ prefix +"-depart").html(val.join(', '))
+  }
+
+  function deselectDepart(prefix, index) {
+    delete global['selected'][prefix][index]
+    val = []
+    for (const key in global['selected'][prefix]) {
+      if (global['selected'][prefix].hasOwnProperty(key)) {
+        val.push('<span class="btn btn-info btn-xs" onclick="deselectDepart(\''+ prefix +'\', '+ key +')"> '+ global['list'][key]['name'] +' </span>')
+      }
+    }
+
+    $("#"+ prefix +"-depart").html(val.join(', '))
   }
 
   function insertDepart() {
@@ -135,17 +138,24 @@
     else if (limit > 200) {
       $("#filter-limit").val(200)
     }
+    list = []
+    for (const key in global['selected']['filter']) {
+      if (global['selected']['filter'].hasOwnProperty(key)) {
+        list.push(global['list'][key]['id'])
+      }
+    }
     return {
       page: global['page']['main'],
-      limit: $("#filter-limit").val()
+      limit: $("#filter-limit").val(),
+      depart: list
     }
   }
 
   function checkDeviceData() {
     list = []
-    for (const key in global['depart']['selected']) {
-      if (global['depart']['selected'].hasOwnProperty(key)) {
-        list.push(global['depart']['list'][key]['id'])
+    for (const key in global['selected']['depart']) {
+      if (global['selected']['depart'].hasOwnProperty(key)) {
+        list.push(global['list'][key]['id'])
       }
     }
     name = $("#device-name").val()
@@ -261,9 +271,9 @@
           $("#device-description").val(data['device']['description'])
           $("#device-insert").hide()
           $("#device-edit").show()
-          global['depart']['selected'] = {}
+          global['selected']['depart'] = {}
           data['device']['depart'].forEach(depart => {
-            global['depart']['list'].forEach((item, index) => {
+            global['list'].forEach((item, index) => {
               if (item['id'] == depart) {
                 selectDepart(index)
               }
@@ -304,6 +314,19 @@
         checkResult(response, status).then(data => {
           $("#content").html(data['html'])
           $('#remove-modal').modal('hide')
+        }, () => {})
+      }
+    )
+  }
+
+  function goPage(page) {
+    global['page']['main'] = page
+    $.post(
+      '',
+      { action: 'filter', 'device_filter': checkFilter() },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#content").html(data['html'])
         }, () => {})
       }
     )
@@ -375,6 +398,43 @@
       setTimeout(() => {
         suggest.hide()
       }, 200);
+    })
+  }
+
+  function installDepart(prefix) {
+    var input = $("#"+ prefix +"-depart-input")
+    var suggest = $("#"+ prefix +"-depart-suggest")
+    
+    input.keyup((e) => {
+      keyword = e.currentTarget.value
+      html = ''
+      count = 0
+      
+
+      global['list'].forEach((depart, index) => {
+        if (count < 30 && depart['name'].search(keyword) >= 0) {
+          count ++
+          html += `
+            <div class="suggest-item" onclick="selectDepart('`+ prefix +`', `+ index +`)">
+              `+ depart['name'] +`
+            </div>`
+        }
+      })
+      if (!html.length) {
+        html = 'Không có kết quả'
+      }
+      
+      suggest.html(html)
+    })
+
+    input.focus(() => {
+      suggest.show()
+    })
+
+    input.blur(() => {
+      setTimeout(() => {
+        suggest.hide()
+      }, 300);
     })
   }
 

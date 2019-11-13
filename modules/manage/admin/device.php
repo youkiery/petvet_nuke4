@@ -12,6 +12,61 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
+    case 'excel':
+      $xco = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
+      $title = array('STT', 'Tài sản', 'Quy cách', 'ĐVT', 'Số lượng', 'Năm sử dụng', 'Nguồn cung cấp', 'Ghi chú');
+
+      include NV_ROOTDIR . '/PHPExcel/IOFactory.php';
+      $fileType = 'Excel2007'; 
+      $objPHPExcel = PHPExcel_IOFactory::load(NV_ROOTDIR . '/excel.xlsx');
+    
+      $query = $db->query('select * from `'. PREFIX .'depart`');
+      $i = 1;
+      while ($depart = $query->fetch()) {
+        $device_query = $db->query('select * from `'. PREFIX .'device` where depart like \'%"'. $depart['id'] .'"%\' limit 1');
+        if ($device_query->fetch()) {
+          $device_query = $db->query('select * from `'. PREFIX .'device` where depart like \'%"'. $depart['id'] .'"%\'');
+          $j = 0;
+          $objPHPExcel
+          ->setActiveSheetIndex(0)
+          ->setCellValue($xco['0'] . $i, 'DANH MUC TÀI SẢN KIỂM KÊ PHÒNG '. $depart['name'] .' NĂM ' . date('Y', time()));
+          $i += 2;
+ 
+          foreach ($title as $value) {
+            $objPHPExcel
+            ->setActiveSheetIndex(0)
+            ->setCellValue($xco[$j++] . $i, $value);
+          }
+          $i++;
+
+          $index = 1;
+          $count = 0;
+          while ($device = $device_query->fetch()) {
+            $j = 0;
+            $count += $device['number'];
+            $objPHPExcel
+            ->setActiveSheetIndex(0)
+            ->setCellValue($xco[$j++] . $i, $index++)
+            ->setCellValue($xco[$j++] . $i, $device['name'])
+            ->setCellValue($xco[$j++] . $i, $device['intro'])
+            ->setCellValue($xco[$j++] . $i, $device['unit'])
+            ->setCellValue($xco[$j++] . $i, $device['number'])
+            ->setCellValue($xco[$j++] . $i, $device['year'])
+            ->setCellValue($xco[$j++] . $i, $device['source'])
+            ->setCellValue($xco[$j++] . $i++, $device['description']);
+          }
+          $objPHPExcel
+          ->setActiveSheetIndex(0)
+          ->setCellValue($xco[0] . $i, 'Tổng cộng: ')
+          ->setCellValue($xco[4] . $i++, $count);
+          $i += 2;
+        }
+      }
+      $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+      $objWriter->save(NV_ROOTDIR . '/excel-output.xlsx');
+      $objPHPExcel->disconnectWorksheets();
+      unset($objWriter, $objPHPExcel);
+    break;
     // case 'insert-item':
     //   $data = $nv_Request->get_array('data', 'post');
 
@@ -82,7 +137,6 @@ if (!empty($action)) {
         }
         if (empty($data['depart'])) $data['depart'] = array();
         $sql = 'update `'. PREFIX .'device` set name = "'. $data['name'] .'", unit = "'. $data['unit'] .'", number = "'. $data['number'] .'", year = "'. $data['year'] .'", intro = "'. $data['intro'] .'", status = "'. $data['status'] .'", depart = \''. json_encode($data['depart']) .'\', source = "'. $data['source'] .'", description = "'. $data['description'] .'", update_time = '. time() .' where id = ' . $id;
-        // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;
           $result['html'] = deviceList();
@@ -119,6 +173,10 @@ if (!empty($action)) {
       }
       $result['status'] = 1;
       $result['notify'] = "Đã xóa $removed trong tổng số $count đã chọn";
+      $result['html'] = deviceList();
+    break;
+    case 'filter':
+      $result['status'] = 1;
       $result['html'] = deviceList();
     break;
   }

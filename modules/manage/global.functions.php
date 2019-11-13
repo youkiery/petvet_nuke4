@@ -108,6 +108,16 @@ function checkDepartName($name) {
   return false;
 }
 
+function checkDepartId($id) {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'depart` where id = ' . $id);
+  if ($row = $query->fetch()) {
+    return $row['name'];
+  }
+  return '';
+}
+
 function checkItemName($name) {
   global $db;
 
@@ -158,7 +168,8 @@ function getCompanyName($id) {
 
 function parseFilter($name) {
   global $nv_Request;
-  $filter = $nv_Request->get_array($name . '-filter', 'post');
+  $filter = $nv_Request->get_array($name . '_filter', 'post');
+  // var_dump($filter);die();
 
   if (empty($filter['page']) || $filter['page'] < 1) {
     $filter['page'] = 1;
