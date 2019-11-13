@@ -42,12 +42,14 @@
       list: JSON.parse('{depart}'),
       selected: {}
     },
+    today: '{today}',
     remind: JSON.parse('{remind}'),
     remindv2: JSON.parse('{remindv2}')
   }
 
   $(document).ready(() => {
     installCheckAll('device')
+    installRemindv2('device', 'name')
     installRemindv2('device', 'intro')
     installRemindv2('device', 'source')
     input = $("#device-depart-input")
@@ -146,8 +148,26 @@
         list.push(global['depart']['list'][key]['id'])
       }
     }
+    name = $("#device-name").val()
+    day = $("#device-import-day").val()
+    month = $("#device-import-month").val()
+    year = $("#device-import-year").val()
+
+    if (!name.length) {
+      return 'Điền tên thiết bị'
+    }
+    if (day < 0 || day > 31) {
+      return 'Ngày quá giới hạn'
+    }
+    if (month < 0 || month > 12) {
+      return 'Tháng quá giới hạn'
+    }
+    if (year < 1950 || year > 2050) {
+      return 'Năm quá giới hạn'
+    }
+
     return {
-      name: $("#device-name").val(),
+      name: name,
       unit: $("#device-unit").val(),
       number: $("#device-number").val(),
       year: $("#device-year").val(),
@@ -155,7 +175,8 @@
       source: $("#device-source").val(),
       status: $("#device-status").val(),
       depart: list,
-      description: $("#device-description").val()
+      description: $("#device-description").val(),
+      import: day + '/' + month + '/' + year
     }
   }
 
@@ -177,8 +198,8 @@
 
   function deviceInsertSubmit() {
     data = checkDeviceData()
-    if (!data['name'].length) {
-      alert_msg('Điền tên thiết bị')
+    if (!data['name']) {
+      alert_msg(data)
     }
     else {
       $.post(
@@ -206,8 +227,8 @@
 
   function deviceEditSubmit() {
     data = checkDeviceData()
-    if (!data['name'].length) {
-      alert_msg('Điền tên thiết bị')
+    if (!data['name']) {
+      alert_msg(data)
     }
     else {
       $.post(
@@ -263,6 +284,10 @@
     $("#device-intro").val(global['remind']['intro']),
     $("#device-source").val(global['remind']['source']),
     $("#device-status").val(global['remind']['status']),
+    time = global['today'].split('/')
+    $("#device-day").val(time[0]),
+    $("#device-month").val(time[1]),
+    $("#device-year").val(time[2]),
     $("#device-description").val('')
   }
 
@@ -336,7 +361,7 @@
             const element = convert(global['remindv2'][type][index]);
             
             if (element.search(key) >= 0) {
-              html += '<div class="suggest-item" onclick="selectRemindv2(\'' + name + '\', \'' + type + '\', \'' + global['remindv2'][type][index] + '\')"><p class="right-click">' + global['remindv2'][type][index] + '</p></div>'
+              html += '<div class="suggest-item" onclick="selectRemindv2(\'' + prefix + '\', \'' + type + '\', \'' + global['remindv2'][type][index] + '\')"><p class="right-click">' + global['remindv2'][type][index] + '</p></div>'
             }
           }
         }

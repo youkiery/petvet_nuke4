@@ -11,8 +11,9 @@
         <div class="form-horizontal">
           <div class="form-group">
             <label class="control-label col-sm-4"> Tên thiết bị </label>
-            <div class="col-sm-20">
+            <div class="col-sm-20 relative">
               <input type="text" class="form-control" id="device-name">
+              <div class="suggest" id="device-name-suggest"> </div>
             </div>
           </div>
 
@@ -68,6 +69,19 @@
               <div class="suggest" id="device-depart-suggest"> </div>
             </div>
             <div> Đã chọn: <span id="device-depart"> </span> </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-4"> Ngày nhập </label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" id="device-import-day" placeholder="Ngày">
+            </div>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" id="device-import-month" placeholder="Tháng">
+            </div>
+            <div class="col-sm-8">
+              <input type="text" class="form-control" id="device-import-year" placeholder="Năm">
+            </div>
           </div>
 
           <div class="form-group">
