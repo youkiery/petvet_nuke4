@@ -7,8 +7,11 @@
  */
 
 if (!defined('NV_IS_FILE_ADMIN')) { die('Stop!!!'); }
-
+$excel = $nv_Request->get_int('excel', 'get');
 $action = $nv_Request->get_string('action', 'post', '');
+if ($nv_Request->get_int('excel', 'get')) {
+  header('location: /excel-output.xlsx');
+}
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {

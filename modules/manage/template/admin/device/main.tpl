@@ -81,7 +81,7 @@
       '',
       {action: 'excel'},
       (response, status) => {
-        console.log(response);
+    		window.open(strHref + '&excel=1')
       }
     )
   }
@@ -201,7 +201,7 @@
     $("#device-description").val('')
     $("#device-insert").show()
     $("#device-edit").hide()
-    global['depart']['selected'] = {}
+    global['selected']['device'] = {}
     $("#device-depart").html('')
     $('#device-modal').modal('show')
   }
@@ -295,10 +295,10 @@
     $("#device-source").val(global['remind']['source']),
     $("#device-status").val(global['remind']['status']),
     time = global['today'].split('/')
-    $("#device-day").val(time[0]),
-    $("#device-month").val(time[1]),
-    $("#device-year").val(time[2]),
-    $("#device-description").val('')
+    $("#device-import-day").val(time[0]),
+    $("#device-import-month").val(time[1]),
+    $("#device-import-year").val(time[2]),
+    $("#device-import-description").val('')
   }
 
   function deviceRemove(id) {
