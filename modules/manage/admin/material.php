@@ -75,10 +75,10 @@ if (!empty($action)) {
       $data = $nv_Request->get_array('data', 'post');
 
       if (!strlen($data['name'])) {
-        $result['notify'] = 'Tên thiết bị trống';
+        $result['notify'] = 'Tên vật tư trống';
       }
       else if (checkMaterialName($data['name'])) {
-        $result['notify'] = 'Trùng tên thiết bị';
+        $result['notify'] = 'Trùng tên vật tư';
       }
       else {
         // insert
@@ -91,6 +91,7 @@ if (!empty($action)) {
             $result['status'] = 1;
             $result['notify'] = 'Đã thêm';
             $result['id'] = $db->lastInsertId();
+            $result['json'] = array('id' => $db->lastInsertId(), 'name' => $data['name'], 'type' => $data['type'], 'unit' => $data['unit'], 'description' => $data['description']);
           }
         // }
       }
@@ -178,6 +179,28 @@ if (!empty($action)) {
 
         }
       }
+    break;
+    case 'get-import':
+      $id = $nv_Request->get_int('id', 'post');
+
+      $query = $db->query('select * from `'. PREFIX .'import_detail` where import_id = ' . $id);
+      $list = array();
+      $item = getMaterialDataList();
+      while ($row = $query->fetch()) {
+        $index = checkItemIndex($item, $row['item_id']);
+        
+        if ($itemData = getItemDatav2($row['item_id'])) {
+          $list[] = array(
+            'index' => $index,
+            'id' => $itemData['id'],
+            'date' => $itemData['date'] ? date('d/m/Y', $itemData['date']) : '',
+            'number' => $row['number'],
+            'status' => $itemData['status']
+          );
+        }
+      }
+      $result['status'] = 1;
+      $result['import'] = $list;
     break;
   }
   echo json_encode($result);

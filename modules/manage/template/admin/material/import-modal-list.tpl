@@ -13,7 +13,14 @@
     <td> {date} </td>
     <td> {count} </td>
     <td> {total} </td>
-    <td>  </td>
+    <td>
+      <button class="btn btn-info" onclick="checkImport({id})">
+        <span class="glyphicon glyphicon-edit"></span>
+      </button>  
+      <button class="btn btn-danger" onclick="importRemove({id})">
+        <span class="glyphicon glyphicon-remove"></span>
+      </button>  
+    </td>
   </tr>
   <!-- END: row -->
 </table>

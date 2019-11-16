@@ -204,7 +204,7 @@ function getItemDataList() {
   global $db;
 
   $list = array();
-  $query = $db->query('select * from `'. PREFIX .'item`');
+  $query = $db->query('select * from `'. PREFIX .'material`');
   while ($row = $query->fetch()) {
     $list []= $row;
   }

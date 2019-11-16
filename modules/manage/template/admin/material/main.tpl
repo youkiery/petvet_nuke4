@@ -1,10 +1,10 @@
 <!-- BEGIN: main -->
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <link rel="stylesheet" href="/modules/manage/src/style.css">
-{material_modal}
 {import_modal}
 {import_modal_insert}
 {export_modal}
+{material_modal}
 <div id="msgshow"></div>
 <div style="float: right;">
   <button class="btn btn-success" onclick="materialModal()">
@@ -98,6 +98,10 @@
       { action: 'insert-material', data: checkMaterialData() },
       (response, status) => {
         checkResult(response, status).then(data => {
+          global['material'].push(data['json'])
+          $("#material-name").val('')
+          $("#material-unit").val('')
+          $("#material-description").val('')
           $("#content").html(data['html'])
         }, () => {})
       }
@@ -254,6 +258,24 @@
       )
     }
   }
+
+  function checkImport(id) {
+    $.post(
+      "",
+      {action: 'get-import', id: id},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          global['import_id'] = id
+          global['import'] = data['import']
+          parseImport()
+          $("#import-button").hide()
+          $("#edit-import-button").show()
+          $('#import-insert-modal').modal('show')
+        }, () => {})
+      }
+    )
+  }
+
 
   // function checkItemData() {
   //   name = $("#item-name").val()

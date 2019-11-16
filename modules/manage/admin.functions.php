@@ -165,7 +165,7 @@ function importList() {
 
     // $xtpl->assign('id', 'ip' . spat(6 - strlen($row['id']), '0'));
     $xtpl->assign('index', $index++);
-    $xtpl->assign('import_id', $row['id']);
+    $xtpl->assign('id', $row['id']);
     $xtpl->assign('date', date('d/m/Y H:i', $row['import_date']));
     $xtpl->assign('count', $importData['count']);
     $xtpl->assign('total', $importData['total']);

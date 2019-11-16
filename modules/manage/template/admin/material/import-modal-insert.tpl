@@ -9,8 +9,8 @@
           <div class="input-group">
             <input type="text" class="form-control" id="import-item-finder">
             <div class="input-group-btn">
-              <button class="btn btn-info" onclick="itemFilter()">
-                Tìm kiếm  
+              <button class="btn btn-success" onclick="materialModal()">
+                <span class="glyphicon glyphicon-plus"></span>
               </button>
             </div>
           </div>
