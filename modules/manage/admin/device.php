@@ -7,6 +7,7 @@
  */
 
 if (!defined('NV_IS_FILE_ADMIN')) { die('Stop!!!'); }
+$page_title = "Quản lý thiết bị";
 $excel = $nv_Request->get_int('excel', 'get');
 $action = $nv_Request->get_string('action', 'post', '');
 if ($nv_Request->get_int('excel', 'get')) {

@@ -268,4 +268,21 @@ function getDepartList() {
   return $list;
 }
 
+function checkMaterialName($name) {
+  global $db;
 
+  $query = $db->query('select * from `'. PREFIX .'material` where name = "'. $name .'"');
+  if ($row = $query->fetch()) return $row['id'];
+  return false;
+}
+
+function getMaterialDataList() {
+  global $db;
+
+  $list = array();
+  $query = $db->query('select * from `'. PREFIX .'material`');
+  while ($row = $query->fetch()) {
+    $list []= $row;
+  }
+  return $list;
+}
