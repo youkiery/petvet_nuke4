@@ -76,11 +76,59 @@ if (!empty($action)) {
         $result['notify'] = 'Đã ẩn';
       }
     break;
+    case 'confirm-contest':
+      $id = $nv_Request->get_string('id', 'post', 0);
+      $type = $nv_Request->get_string('type', 'post', 0);
+
+      if ($db->query('update `'. PREFIX .'row` set active = ' . $type . ' where id = ' . $id)) {
+        $result['status'] = 1;
+        $result['html'] = contestList();
+        if ($type) $result['notify'] = 'Đã duyệt';
+        else $result['notify'] = 'Đã bỏ duyệt';
+      }
+      else $result['notify'] = 'Có lỗi xảy ra';
+    break;
+    case 'done-all-contest':
+      $list = $nv_Request->get_array('list', 'post');
+      $type = $nv_Request->get_string('type', 'post', 0);
+      $update = 0;
+      $total = count($list);
+
+      foreach ($list as $id) {
+        if ($db->query('update `'. PREFIX .'row` set active = ' . $type . ' where id = ' . $id)) $update ++;
+      }
+      
+      $result['status'] = 1;
+      $result['html'] = contestList();
+      if ($type) $result['notify'] = "Đã duyệt $update trên tổng số $total";
+      else $result['notify'] = "Đã bỏ duyệt $update trên tổng số $total";
+    break;
+    case 'filter':
+      $result['status'] = 1;
+      $result['html'] = contestList();
+    break;
   }
   echo json_encode($result);
   die();
 }
 $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/$module_file/template/admin/$op");
+
+$query = $db->query('select * from `'. PREFIX .'species` order by rate desc');
+$species = array();
+while ($row = $query->fetch()) {
+  $xtpl->assign('id', $row['id']);
+  $xtpl->assign('species', ucwords($row['name']));
+  $xtpl->parse('main.species');
+}
+
+$query = $db->query('select * from `'. PREFIX .'test`');
+$species = array();
+while ($row = $query->fetch()) {
+  $xtpl->assign('id', $row['id']);
+  $xtpl->assign('contest', $row['name']);
+  $xtpl->parse('main.contest');
+}
+
 $xtpl->assign('modal_test', testModal());
 $xtpl->assign('remove_contest_modal', removeModal());
 $xtpl->assign('remove_all_contest_modal', removeAllModal());

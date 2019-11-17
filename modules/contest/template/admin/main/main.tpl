@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <div id="msgshow"></div>
 <style>
-  .form-group { overflow: auto; }
+  .form-group { clear: both; }
 </style>
 
 {modal_test}
@@ -17,11 +17,45 @@
   </button>
 </div>
 
+<div class="form-group form-inline">
+  <div class="input-group">
+    <input type="text" class="form-control" id="filter-limit" value="10">
+    <div class="input-group-btn">
+      <button class="btn btn-info" onclick="goPage(1)">
+        Hiển thị
+      </button>
+    </div>
+  </div>
+  <select class="form-control" id="filter-species">
+    <option value="0" checked> Toàn bộ </option>
+    <!-- BEGIN: species -->
+    <option value="{id}" checked> {species} </option>
+    <!-- END: species -->
+  </select>
+</div>
+<div class="form-group form-inline">
+  Danh sách phần thi
+  <!-- BEGIN: contest -->
+  <label class="checkbox" style="margin-right: 10px"> <input type="checkbox" class="filter-contest" index="{id}" checked> {contest} </label>
+  <!-- END: contest -->
+</div>
+<div class="form-group text-center">
+  <button class="btn btn-info" onclick="goPage(1)">
+    Lọc danh sách
+  </button>
+</div>
+
 <div id="content">
   {content}
 </div>
+<button class="btn btn-info" onclick="confirmAllSubmit(1)">
+  Duyệt các mục đã chọn
+</button>
+<button class="btn btn-warning" onclick="confirmAllSubmit(0)">
+  Bỏ duyệt các mục đã chọn
+</button>
 <button class="btn btn-danger" onclick="removeAllRow()">
-  Xóa mục đã chọn
+  Xóa các mục đã chọn
 </button>
 
 
@@ -30,13 +64,44 @@
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <script>
   var global = {
-    id: 0
+    id: 0,
+    page: 1
   }
 
   $(document).ready(() => {
     installCheckbox('test')
     installCheckbox('contest')
   })
+
+  function checkFilter() {
+    limit = $("#filter-limit")
+    if (!(limit > 10)) limit = 10
+
+    contest = []
+    $(".filter-contest").each((index, item) => {
+      if (item.checked) contest.push(item.getAttribute('index'))
+    })
+    
+    return {
+      page: global['page'],
+      limit: limit,
+      species: $("#filter-species").val(),
+      contest: contest
+    }
+  }
+
+  function goPage(page) {
+    global['page'] = page
+    $.post(
+      '',
+      { action: 'filter', filter: checkFilter() },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $('#content').html(data['html'])
+        })
+      }
+    )
+  }
 
   function testModal() {
     $("#modal-test").modal('show')
@@ -136,6 +201,41 @@
     else $("#remove-all-contest-modal").modal('show')
   }
 
+  function confirmSubmit(id, type) {
+    $.post(
+      '',
+      { action: 'confirm-contest', filter: checkFilter(), id: id, type: type },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          global['id'] = 0
+          $("#content").html(data['html'])
+          installCheckbox('contest')
+        })
+      }
+    )
+  }
+
+  function confirmAllSubmit(type) {
+    list = []
+    $('.contest-checkbox').each((index, item) => {
+      indexkey = item.getAttribute('index')
+      if (item.checked) list.push(indexkey)
+    })
+    if (!list.length) alert_msg('Chọn ít nhất 1 mục để duyệt')
+    else {
+      $.post(
+        '',
+        { action: 'done-all-contest', filter: checkFilter(), list: list, type: type },
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            $("#content").html(data['html'])
+            installCheckbox('contest')
+          })
+        }
+      )
+    }
+  }
+
   function removeRowSubmit() {
     if (!global['id']) {
       alert_msg('Mục chọn không tồn tại')
@@ -143,7 +243,7 @@
     else {
       $.post(
         '',
-        { action: 'remove-contest', id: global['id'] },
+        { action: 'remove-contest', filter: checkFilter(), id: global['id'] },
         (response, status) => {
           checkResult(response, status).then(data => {
             global['id'] = 0
@@ -166,7 +266,7 @@
     else {
       $.post(
         '',
-        { action: 'remove-all-contest', list: list },
+        { action: 'remove-all-contest', filter: checkFilter(), list: list },
         (response, status) => {
           checkResult(response, status).then(data => {
             $("#remove-all-contest-modal").modal('hide')

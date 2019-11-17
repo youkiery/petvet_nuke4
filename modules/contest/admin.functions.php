@@ -49,27 +49,54 @@ function testList() {
 }
 
 function contestList() {
-  global $module_file, $db, $op;
+  global $module_file, $nv_Request, $db, $op;
+
+  $filter = $nv_Request->get_array('filter', 'post');
+  if (!$filter['page']) $filter['page'] = 1;
+  if (!$filter['limit']) $filter['limit'] = 10;
+
+  $xtra = array();
+
+  if (!empty($filter['species'])) {
+    $xtra[]= 'species = ' . $filter['species'];
+  }
+  if (!empty($filter['contest'])) {
+    $list = array();
+    foreach ($filter['contest'] as $id) {
+      $list[]= '(test like \'%["' . $id .'"]%\')';
+    }
+    $xtra[]= implode(' or ', $list);
+  }
+  $xtra = implode(' and ', $xtra);
+
   $xtpl = new XTemplate("contest-list.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/" . $op);
-  $query = $db->query("select * from `". PREFIX ."row` order by id desc");
+
+  $query = $db->query("select count(*) as count from `". PREFIX ."row` where active = 1 ". ($xtra ? " and " . $xtra : "") ." order by id desc");
+  $number = $query->fetch()['count'];
+  
+  $query = $db->query("select * from `". PREFIX ."row` where active = 1 ". ($xtra ? " and " . $xtra : "") ." order by id desc limit 10 offset " . ($filter['page'] - 1) * $filter['limit']);
   $index = 1;
   $test_data = getTestDataList();
   // var_dump($test_data);die();
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index ++);
-    $contest = explode(', ', $row['test']);
+    $contest = json_decode($row['test']);
     $test = array();
     foreach ($contest as $id) {
       if ($test_data[$id]) $test[]= $test_data[$id];
     }
 
     $xtpl->assign('id', $row['id']);
+    $xtpl->assign('species', ucwords(getSpecies($row['species'])));
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('address', $row['address']);
     $xtpl->assign('mobile', $row['mobile']);
     $xtpl->assign('contest', implode(', ', $test));
+    if ($row['active']) $xtpl->parse('main.row.done');
+    else $xtpl->parse('main.row.undone');
     $xtpl->parse('main.row');
   }
+  $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
   $xtpl->parse('main');
   return $xtpl->text();
 }

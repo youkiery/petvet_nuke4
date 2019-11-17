@@ -4,6 +4,7 @@
     <th> STT </th>
     <th> <input type="checkbox" id="contest-check-all"> </th>
     <th> Người tham gia </th>
+    <th> Giống loài </th>
     <th> Địa chỉ </th>
     <th> Số điện thoại </th>
     <th> Mục tham gia </th>
@@ -17,21 +18,30 @@
     </td>
     <td> 
       {name}
-      <!-- <input type="contest" class="form-control contest-name" id="contest-name-{id}" value="{name}"> -->
+    </td>
+    <td> 
+      {species}
     </td>
     <td> 
       {address}
-      <!-- <input type="contest" class="form-control contest-name" id="contest-name-{id}" value="{name}"> -->
     </td>
     <td> 
       {mobile}
-      <!-- <input type="contest" class="form-control contest-name" id="contest-name-{id}" value="{name}"> -->
     </td>
     <td> 
       {contest}
-      <!-- <input type="contest" class="form-control contest-name" id="contest-name-{id}" value="{name}"> -->
     </td>
     <td>
+      <!-- BEGIN: done -->
+      <button class="btn btn-warning" onclick="confirmSubmit({id}, 0)">
+        <span class="glyphicon glyphicon-check"></span>
+      </button>
+      <!-- END: done -->
+      <!-- BEGIN: undone -->
+      <button class="btn btn-info" onclick="confirmSubmit({id}, 1)">
+        <span class="glyphicon glyphicon-unchecked"></span>
+      </button>
+      <!-- END: undone -->
       <button class="btn btn-danger" onclick="removeRow({id})">
         <span class="glyphicon glyphicon-remove"></span>
       </button>
@@ -39,4 +49,5 @@
   </tr>
   <!-- END: row -->
 </table>
+{nav}
 <!-- END: main -->

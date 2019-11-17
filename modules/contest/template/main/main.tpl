@@ -1,13 +1,14 @@
 <!-- BEGIN: main -->
 <style>
   .form-group {
-    overflow: auto;
+    clear: both;
   }
 </style>
 <div class="container" style="margin-top: 20px;">
   <div id="msgshow"></div>
   <div style="float: right;">
     {FILE "heading.tpl"}
+    {confirm_list}
   </div>
   <div style="clear: right;"></div>
   <a href="/">
@@ -34,6 +35,13 @@
         </div>
       </div>
       <div class="form-group">
+        <label class="label-control col-4"> Giống chó </label>
+        <div class="col-8 relative">
+          <input type="text" class="form-control" id="signup-species">
+          <div class="suggest" id="signup-species-suggest"></div>
+        </div>
+      </div>
+      <div class="form-group">
         <label class="label-control col-4"> Địa chỉ </label>
         <div class="col-8">
           <input type="text" class="form-control" id="signup-address">
@@ -57,6 +65,12 @@
         <button class="btn btn-success" onclick="signupPresubmit()">
           Đăng ký
         </button>
+        <br>
+        <br>
+        <button class="btn btn-info" onclick="confirmList()">
+          Danh sách những người đã đăng ký
+        </button>
+
       </div>
     </div>
   </div>
@@ -81,6 +95,15 @@
 </div>
 
 <script>
+  global = {
+    'species': JSON.parse('{species}'),
+    'page': 1
+  }
+
+  $(document).ready(() => {
+    installSuggest('signup', 'species')
+  })
+
   function signupPresubmit() {
     data = checkSignupData()
     if (!data['name']) {
@@ -96,7 +119,9 @@
     name = $("#signup-name").val()
     address = $("#signup-address").val()
     mobile = $("#signup-mobile").val()
+    species = $("#signup-species").val()
     if (!name.length) return 'Tên người/đơn vị không được để trống'
+    if (!species.length) return 'Giống loài không được để trống'
     if (!address.length) return 'Địa chỉ không được để trống'
     if (!mobile.length) return 'Số điện thoại không được để trống'
     $("[name=test]").each((index, item) => {
@@ -106,6 +131,7 @@
     if (!test.length) return 'Chọn ít nhất 1 phần thi'
     return {
       name: name,
+      species: species,
       address: address,
       mobile: mobile,
       test: test
@@ -124,17 +150,75 @@
         (response, status) => {
           checkResult(response, status).then(data => {
             $("#modal-presignup").modal('hide')
-            $("#content").html(data['notify'])
-            // $("#signup-name").val('')
-            // $("#signup-address").val('')
-            // $("#signup-mobile").val('')
-            // $("[name=test]").each((index, item) => {
-            //   item.checked = false
-            // })
+            $("#signup-name").val('')
+            $("#signup-species").val('')
+            $("#signup-address").val('')
+            $("#signup-mobile").val('')
+            $("[name=test]").each((index, item) => {
+              item.checked = false
+            })
           })
         }
       )
     }
   }
+
+  function confirmList() {
+    $("#confirm-modal").modal('show')
+  }
+
+  function goPage(page) {
+    global['page'] = page
+    $.post(
+      '',
+      { action: 'filter', page: global['page'] },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $('#confirm-content').html(data['html'])
+        })
+      }
+    )
+  }
+
+  function selectKey(name, type, key) {
+    input = $("#"+ name +"-"+ type)
+    input.val(key)
+  }
+
+  function installSuggest(name, type) {
+    input = $("#"+ name +"-"+ type)
+    suggest = $("#"+ name +"-"+ type + "-suggest")
+    
+    input.keyup((e) => {
+      keyword = e.currentTarget.value.toLowerCase()
+      html = ''
+      count = 0
+
+      global[type].forEach(item => {
+        if (count < 30 && item.toLowerCase().search(keyword) >= 0) {
+          count ++
+          html += `
+            <div class="suggest-item" onclick="selectKey('`+ name +`', '`+ type +`', '`+ item +`')">
+              `+ item +`
+            </div>`
+        }
+      })
+      
+      if (!html.length) {
+        html = 'Không có kết quả'
+      }
+      
+      suggest.html(html)
+    })
+    input.focus(() => {
+      suggest.show()
+    })
+    input.blur(() => {
+      setTimeout(() => {
+        suggest.hide()
+      }, 300);
+    })
+  }
+
 </script>
 <!-- END: main -->

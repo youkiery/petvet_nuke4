@@ -20,8 +20,9 @@ if (!empty($action)) {
         $result['notify'] = 'Số điện thoại đã đăng ký';
       }
       else {
-        $test = implode(', ', $data['test']);
-        $sql = "insert into `". PREFIX ."row` (name, address, mobile, test) values('$data[name]', '$data[address]', '$data[mobile]', '$test')";
+        $species = checkSpecies($data['species']);
+        $test = json_encode($data['test'], JSON_UNESCAPED_UNICODE);
+        $sql = "insert into `". PREFIX ."row` (name, species, address, mobile, test) values('$data[name]', $species, '$data[address]', '$data[mobile]', '$test')";
         if (!$db->query($sql)) {
           $result['notify'] = 'Lỗi đăng ký';
         }
@@ -30,7 +31,10 @@ if (!empty($action)) {
           $result['notify'] = 'Đã đăng ký thành công';
         }
       }
-
+    break;
+    case 'filter':
+      $result['status'] = 1;
+      $result['html'] = confirmList();
     break;
   }
   echo json_encode($result);
@@ -44,7 +48,14 @@ while ($row = $query->fetch()) {
   $xtpl->parse('main.test');
 }
 
-// $xtpl->assign('content', outdateList());
+$query = $db->query('select * from `'. PREFIX .'species` order by rate desc');
+$species = array();
+while ($row = $query->fetch()) {
+  $species[] = ucwords($row['name']);
+}
+
+$xtpl->assign('confirm_list', confirmModal());
+$xtpl->assign('species', json_encode($species, JSON_UNESCAPED_UNICODE));
 $xtpl->parse('main');
 $contents = $xtpl->text();
 
