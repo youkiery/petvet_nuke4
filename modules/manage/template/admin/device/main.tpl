@@ -153,27 +153,15 @@
 
   function checkDeviceData() {
     list = []
-    for (const key in global['selected']['depart']) {
-      if (global['selected']['depart'].hasOwnProperty(key)) {
+    for (const key in global['selected']['device']) {
+      if (global['selected']['device'].hasOwnProperty(key)) {
         list.push(global['list'][key]['id'])
       }
     }
     name = $("#device-name").val()
-    day = $("#device-import-day").val()
-    month = $("#device-import-month").val()
-    year = $("#device-import-year").val()
 
     if (!name.length) {
       return 'Điền tên thiết bị'
-    }
-    if (day < 0 || day > 31) {
-      return 'Ngày quá giới hạn'
-    }
-    if (month < 0 || month > 12) {
-      return 'Tháng quá giới hạn'
-    }
-    if (year < 1950 || year > 2050) {
-      return 'Năm quá giới hạn'
     }
 
     return {

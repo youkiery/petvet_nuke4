@@ -74,13 +74,7 @@
           <div class="form-group">
             <label class="control-label col-sm-4"> Ngày nhập </label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" id="device-import-day" placeholder="Ngày">
-            </div>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" id="device-import-month" placeholder="Tháng">
-            </div>
-            <div class="col-sm-8">
-              <input type="text" class="form-control" id="device-import-year" placeholder="Năm">
+              <input type="text" class="form-control" id="device-import-time" placeholder="Ngày">
             </div>
           </div>
 
