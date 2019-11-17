@@ -36,3 +36,13 @@ function totimev2($time) {
   return $time;
 }
 
+function getTestDataList() {
+  global $db;
+
+  $list = array();
+  $query = $db->query('select * from `'. PREFIX .'test`');
+  while ($row = $query->fetch()) {
+    $list[$row['id']] = $row['name'];
+  }
+  return $list;
+}
