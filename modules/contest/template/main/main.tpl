@@ -1,54 +1,62 @@
 <!-- BEGIN: main -->
-<link rel="stylesheet" href="/modules/exp/src/style.css">
-<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <style>
-  .form-group { overflow: auto; }
+  .form-group {
+    overflow: auto;
+  }
 </style>
+<div class="container" style="margin-top: 20px;">
+  <div id="msgshow"></div>
+  <div style="float: right;">
+    {FILE "heading.tpl"}
+  </div>
+  <div style="clear: right;"></div>
+  <a href="/">
+    <img src="/themes/default/images/banner.png" style="float: left; width: 200px;">
+  </a>
+  <form style="width: 60%; float: right;">
+    <label class="input-group">
+      <input type="hidden" name="nv" value="biograph">
+      <input type="hidden" name="op" value="list">
+      <input type="text" class="form-control" name="keyword" value="{keyword}" id="keyword" placeholder="Nhập tên hoặc mã số">
+      <div class="input-group-btn">
+        <button class="btn btn-info"> Tìm kiếm </button>
+      </div>
+    </label>
+  </form>
+  <div style="clear: both;"></div>
 
-<div id="msgshow"></div>
-
-<div class="modal" id="modal-signup" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <div type="button" class="close" data-dismiss="modal"> &times; </div> <br><br>
-        <div class="form-group">
-          <label class="label-control col-sm-8"> Tên người/đơn vị đăng ký </label>
-          <div class="col-sm-16">
-            <input type="text" class="form-control" id="signup-name">
-          </div>
+  <div id="content">
+    <div style="max-width: 500px; margin: auto; border: 1px solid lightgray; border-radius: 10px; padding: 60px 10px 60px 10px;">
+      <div class="form-group">
+        <label class="label-control col-4"> Tên người/đơn vị đăng ký </label>
+        <div class="col-8">
+          <input type="text" class="form-control" id="signup-name">
         </div>
-
-        <div class="form-group">
-          <label class="label-control col-sm-8"> Địa chỉ </label>
-          <div class="col-sm-16">
-            <input type="text" class="form-control" id="signup-address">
-          </div>
+      </div>
+      <div class="form-group">
+        <label class="label-control col-4"> Địa chỉ </label>
+        <div class="col-8">
+          <input type="text" class="form-control" id="signup-address">
         </div>
-
-        <div class="form-group">
-          <label class="label-control col-sm-8"> Số điện thoại </label>
-          <div class="col-sm-16">
-            <input type="text" class="form-control" id="signup-mobile">
-          </div>
+      </div>
+      <div class="form-group">
+        <label class="label-control col-4"> Số điện thoại </label>
+        <div class="col-8">
+          <input type="text" class="form-control" id="signup-mobile">
         </div>
-
-        <div class="form-group">
-          <label class="label-control col-sm-8"> Phần thi đăng ký </label>
-          <div class="col-sm-16 checkbox">
-            <!-- BEGIN: test -->
-            <label style="margin-right: 10px;"> <input type="checkbox" name="test" index="{id}"> {name} </label>
-            <!-- END: test -->
-          </div>
+      </div>
+      <div class="form-group">
+        <label class="label-control col-4"> Phần thi đăng ký </label>
+        <div class="col-8 checkbox">
+          <!-- BEGIN: test -->
+          <label style="margin-right: 10px;"> <input type="checkbox" name="test" index="{id}"> {name} <label>
+          <!-- END: test -->
         </div>
-
-        <div class="text-center">
-          <button class="btn btn-success" onclick="signupPresubmit()">
-            Đăng ký
-          </button>
-        </div>
-
+      </div>
+      <div class="text-center">
+        <button class="btn btn-success" onclick="signupPresubmit()">
+          Đăng ký
+        </button>
       </div>
     </div>
   </div>
@@ -72,17 +80,7 @@
   </div>
 </div>
 
-<div id="content">
-  <p> <span> Đăng ký phần thi cuộc thi </span> <button class="btn btn-info" onclick="signup()"> Đăng ký </button> </p>
-</div>
-
-<script src="/modules/exp/src/script.js"></script>
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <script>
-  function signup() {
-    $("#modal-signup").modal('show')
-  }
   function signupPresubmit() {
     data = checkSignupData()
     if (!data['name']) {
@@ -125,7 +123,6 @@
         { action: 'signup', data: data },
         (response, status) => {
           checkResult(response, status).then(data => {
-            $("#modal-signup").modal('hide')
             $("#modal-presignup").modal('hide')
             $("#content").html(data['notify'])
             // $("#signup-name").val('')

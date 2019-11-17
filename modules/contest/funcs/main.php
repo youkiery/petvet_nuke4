@@ -48,6 +48,6 @@ while ($row = $query->fetch()) {
 $xtpl->parse('main');
 $contents = $xtpl->text();
 
-include NV_ROOTDIR . '/includes/header.php';
-echo nv_site_theme($contents);
-include NV_ROOTDIR . '/includes/footer.php';
+include NV_ROOTDIR . "/modules/$module_file/template/layout/header.php";
+echo $contents;
+include NV_ROOTDIR . "/module/$module_file/template/layout/footer.php";
