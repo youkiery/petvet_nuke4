@@ -109,10 +109,10 @@
         regno
       </div>
       <div style="top: calc(54mm + -t-mm + -t3-mm); left: calc(-4mm + 209mm + -r-mm);">
-        microchip
+        micro
       </div>
       <div style="top: calc(54mm + -t-mm + -t4-mm); left: calc(-4mm + 202mm + -r-mm);">
-        tattoo
+        tatto
       </div>
       <div style="top: calc(54mm + -t-mm + -t5-mm); left: calc(-4mm + 191mm + -r-mm);">
         breed
