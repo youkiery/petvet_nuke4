@@ -1,7 +1,13 @@
 <!-- BEGIN: main -->
 <style>
-  .form-group {
-    clear: both;
+  .form-group { clear: both; }
+  .vetleft, .vetright { position: absolute; top: 0px; width: 200px; text-align: center; }
+  .vetleft { left: 0px; }
+  .vetright { right: 0px; }
+
+  @media screen and (max-width: 992px) {
+    .vetleft, .vetright { position: unset; display: inline-block; width: 100%; }
+    .vetleft img, .vetright img { width: 75px !important; }
   }
 
   @media screen and (max-width: 768px) {
@@ -11,6 +17,7 @@
     }
   }
   @media screen and (max-width: 600px) {
+    .vetleft img, .vetright img { width: 50px !important; }
     .hideout {
       display: none;
     }
@@ -40,94 +47,110 @@
   <!-- <div style="position: fixed; background: red; width: 100px; height: 100px;"></div>
   <div style="position: fixed; background: blue; right: calc(25% - 125px); width: 100px; height: 100px;"></div> -->
 
-  <div id="content">
-    <div></div>
-    <div style="max-width: 500px; margin: auto; border: 1px solid lightgray; border-radius: 10px; padding: 60px 10px 60px 10px;">
-      <div class="form-group">
-        <label class="label-control col-4"> Tên người/đơn vị đăng ký </label>
-        <div class="col-8">
-          <input type="text" class="form-control" id="signup-name">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="label-control col-4"> Tên thú cưng </label>
-        <div class="col-8">
-          <input type="text" class="form-control" id="signup-petname">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="label-control col-4"> Giống loài </label>
-        <div class="col-8 relative">
-          <input type="text" class="form-control" id="signup-species">
-          <div class="suggest" id="signup-species-suggest"></div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="label-control col-4"> Địa chỉ </label>
-        <div class="col-8">
-          <input type="text" class="form-control" id="signup-address">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="label-control col-4"> Số điện thoại </label>
-        <div class="col-8">
-          <input type="text" class="form-control" id="signup-mobile">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="label-control col-4"> Hạng mục đăng ký </label>
-        <div class="col-8 checkbox">
-          <!-- BEGIN: test -->
-          <label style="margin-right: 10px;"> <input type="checkbox" name="test" index="{id}"> {name} </label>
-          <!-- END: test -->
-        </div>
-      </div>
-      <div class="text-center">
-        <button class="btn btn-success" onclick="signupPresubmit()">
-          Đăng ký
-        </button>
-      </div>
+  <div id="content" style="position: relative;">
+    <div class="vetleft">
+      <img src="/assets/images/1.jpg" style="width: 100px;">
+      <img src="/assets/images/2.jpg" style="width: 100px;">
+      <img src="/assets/images/3.jpg" style="width: 100px;">
+      <img src="/assets/images/4.jpg" style="width: 100px;">
+      <img src="/assets/images/5.jpg" style="width: 100px;">
     </div>
-    <div></div>
-    <br>
-    <div style="max-width: 700px; margin: auto; border: 1px solid lightgray; border-radius: 10px; padding: 10px 10px 60px 10px;">
-      <p>
-        Danh sách những người đã đăng ký
-      </p>
-      <br>
-      <div class="form-group form-inline">
-        <div class="input-group">
-          <input type="text" class="form-control" id="filter-limit" value="10">
-          <div class="input-group-btn">
-            <button class="btn btn-info" onclick="goPage(1)">
-              Hiển thị
-            </button>
+    <div>
+      <div style="max-width: 500px; margin: auto; border: 1px solid lightgray; border-radius: 10px; padding: 10px 10px 10px 10px;">
+        <div class="text-center"> Mẫu đăng ký </div>
+        <div class="form-group">
+          <label class="label-control"> Tên người đăng ký </label>
+          <div>
+            <input type="text" class="form-control" id="signup-name">
           </div>
         </div>
-        <select class="form-control" id="filter-species">
-          <option value="0" checked> Toàn bộ </option>
-          <!-- BEGIN: species -->
-          <option value="{id}" checked> {species} </option>
-          <!-- END: species -->
-        </select>
+        <div class="form-group">
+          <label class="label-control"> Tên thú cưng </label>
+          <div>
+            <input type="text" class="form-control" id="signup-petname">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="label-control"> Giống loài </label>
+          <div class="relative">
+            <input type="text" class="form-control" id="signup-species">
+            <div class="suggest" id="signup-species-suggest"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="label-control"> Địa chỉ </label>
+          <div>
+            <input type="text" class="form-control" id="signup-address">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="label-control"> Số điện thoại </label>
+          <div>
+            <input type="text" class="form-control" id="signup-mobile">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="label-control"> Hạng mục đăng ký </label>
+          <div class="checkbox">
+            <!-- BEGIN: test -->
+            <label style="margin-right: 10px; width: 100%;"> <input type="checkbox" name="test" index="{id}"> {name} </label>
+            <!-- END: test -->
+          </div>
+        </div>
+        <div style="clear: both;"></div>
+        <div class="text-center">
+          <button class="btn btn-success" onclick="signupPresubmit()">
+            Đăng ký
+          </button>
+        </div>
       </div>
-      <div class="form-group form-inline">
-        Danh sách phần thi
-        <!-- BEGIN: contest -->
-        <label class="checkbox" style="margin-right: 10px"> <input type="checkbox" class="filter-contest" index="{id}" checked> {contest} </label>
-        <!-- END: contest -->
-      </div>
-      <div class="form-group text-center">
-        <button class="btn btn-info" onclick="goPage(1)">
-          Lọc danh sách
-        </button>
-      </div>
-      
-      <div id="confirm-content">
-        {confirm_list}
-      </div>
+      <div></div>
     </div>
-
+    <div class="vetright">
+      <img src="/assets/images/1.jpg" style="width: 100px;">
+      <img src="/assets/images/2.jpg" style="width: 100px;">
+      <img src="/assets/images/3.jpg" style="width: 100px;">
+      <img src="/assets/images/4.jpg" style="width: 100px;">
+      <img src="/assets/images/5.jpg" style="width: 100px;">
+    </div>
+    <br>
+          <div style="max-width: 700px; margin: auto; border: 1px solid lightgray; border-radius: 10px; padding: 10px 10px 60px 10px;">
+        <p>
+          Danh sách những người đã đăng ký
+        </p>
+        <br>
+        <div class="form-group form-inline">
+          <div class="input-group">
+            <input type="text" class="form-control" id="filter-limit" value="10">
+            <div class="input-group-btn">
+              <button class="btn btn-info" onclick="goPage(1)">
+                Hiển thị
+              </button>
+            </div>
+          </div>
+          <select class="form-control" id="filter-species">
+            <option value="0" checked> Toàn bộ </option>
+            <!-- BEGIN: species -->
+            <option value="{id}" checked> {species} </option>
+            <!-- END: species -->
+          </select>
+        </div>
+        <div class="form-group form-inline">
+          Danh sách phần thi
+          <!-- BEGIN: contest -->
+          <label class="checkbox" style="margin-right: 10px"> <input type="checkbox" class="filter-contest" index="{id}" checked> {contest} </label>
+          <!-- END: contest -->
+        </div>
+        <div class="form-group text-center">
+          <button class="btn btn-info" onclick="goPage(1)">
+            Lọc danh sách
+          </button>
+        </div>
+        
+        <div id="confirm-content">
+          {confirm_list}
+        </div>
+      </div>
   </div>
 </div>
 
