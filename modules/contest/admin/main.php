@@ -109,6 +109,42 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = contestList();
     break;
+    case 'get-contest':
+      $id = $nv_Request->get_int('id', 'post', 0);
+
+      $query = $db->query('select * from `'. PREFIX .'row` where id = ' . $id);
+      if (!($row = $query->fetch())) {
+        $result['notify'] = 'Có lỗi xảy ra';
+      }
+      else {
+        $result['status'] = 1;
+        $row['test'] = json_decode($row['test']);
+        $result['data'] = $row;
+      }
+    break;
+    case 'edit-contest':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $data = $nv_Request->get_array('data', 'post');
+
+      $query = $db->query("select * from `". PREFIX ."row` where mobile = '$data[mobile]' and id <> $id");
+      if ($row = $query->fetch()) {
+        $result['notify'] = 'Số điện thoại đã đăng ký';
+      }
+      else {
+        $species = checkSpecies($data['species']);
+        $test = json_encode($data['test'], JSON_UNESCAPED_UNICODE);
+        $sql = "update `". PREFIX ."row` set name = '$data[name]', petname = '$data[petname]', species = $species, address = '$data[address]', mobile = '$data[mobile]', test = '$test' where id = $id";
+        // die($sql);
+        if (!$db->query($sql)) {
+          $result['notify'] = 'Lỗi đăng ký';
+        }
+        else {
+          $result['status'] = 1;
+          $result['notify'] = 'Đã cập nhật thông tin';
+          $result['html'] = contestList();
+        }
+      }
+    break;
   }
   echo json_encode($result);
   die();
@@ -118,23 +154,25 @@ $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/$module_file/template/a
 $query = $db->query('select * from `'. PREFIX .'species` order by rate desc');
 $species = array();
 while ($row = $query->fetch()) {
+  $species[] = ucwords($row['name']);
   $xtpl->assign('id', $row['id']);
   $xtpl->assign('species', ucwords($row['name']));
   $xtpl->parse('main.species');
 }
 
 $query = $db->query('select * from `'. PREFIX .'test`');
-$species = array();
 while ($row = $query->fetch()) {
   $xtpl->assign('id', $row['id']);
   $xtpl->assign('contest', $row['name']);
   $xtpl->parse('main.contest');
 }
 
+$xtpl->assign('modal_contest', contestModal());
 $xtpl->assign('modal_test', testModal());
 $xtpl->assign('remove_contest_modal', removeModal());
 $xtpl->assign('remove_all_contest_modal', removeAllModal());
 $xtpl->assign('content', contestList());
+$xtpl->assign('species', json_encode($species, JSON_UNESCAPED_UNICODE));
 $xtpl->parse('main');
 $contents = $xtpl->text();
 

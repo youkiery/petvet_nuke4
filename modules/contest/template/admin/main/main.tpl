@@ -7,6 +7,7 @@
   .form-group { clear: both; }
 </style>
 
+{modal_contest}
 {modal_test}
 {remove_contest_modal}
 {remove_all_contest_modal}
@@ -65,12 +66,14 @@
 <script>
   var global = {
     id: 0,
-    page: 1
+    page: 1,
+    'species': JSON.parse('{species}')
   }
 
   $(document).ready(() => {
     installCheckbox('test')
     installCheckbox('contest')
+    installSuggest('signup', 'species')
   })
 
   function checkFilter() {
@@ -87,6 +90,78 @@
       limit: limit,
       species: $("#filter-species").val(),
       contest: contest
+    }
+  }
+
+  function getContest(id) {
+    $.post(
+      '',
+      { action: 'get-contest', id: id },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          global['id'] = id
+          $("#modal-contest").modal('show')
+          $("#signup-name").val(data['data']['name'])
+          $("#signup-petname").val(data['data']['petname'])
+          $("#signup-species").val(data['data']['species'])
+          $("#signup-address").val(data['data']['address'])
+          $("#signup-mobile").val(data['data']['mobile'])
+          $("[name=contest]").each((index, item) => {
+            item.checked = false
+          })
+          data['data']['test'].forEach(id => {
+            $("[name=contest][index="+ id +"]").each((index, item) => {
+              item.checked = true
+            })
+          });
+        })
+      }
+    )
+  }
+
+  function checkSignupData() {
+    test = []
+    name = $("#signup-name").val()
+    petname = $("#signup-petname").val()
+    address = $("#signup-address").val()
+    mobile = $("#signup-mobile").val()
+    species = $("#signup-species").val()
+    if (!name.length) return 'Tên người/đơn vị không được để trống'
+    if (!petname.length) return 'Tên thú cưng không được để trống'
+    if (!species.length) return 'Giống loài không được để trống'
+    if (!address.length) return 'Địa chỉ không được để trống'
+    if (!mobile.length) return 'Số điện thoại không được để trống'
+    $("[name=contest]").each((index, item) => {
+      indexkey = item.getAttribute('index')
+      if (item.checked) test.push(indexkey)
+    })
+    if (!test.length) return 'Chọn ít nhất 1 phần thi'
+    return {
+      name: name,
+      petname: petname,
+      species: species,
+      address: address,
+      mobile: mobile,
+      test: test
+    }
+  }
+
+  function editSubmit() {
+    data = checkSignupData()
+    if (!data['name']) {
+      alert_msg(data)
+    }
+    else {
+      $.post(
+        '',
+        { action: 'edit-contest', filter: checkFilter(), id: global['id'], data: data },
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            $("#content").html(data['html'])
+            $("#modal-contest").modal('hide')
+          })
+        }
+      )
     }
   }
 
@@ -276,6 +351,42 @@
         }
       )
     }
+  }
+
+  
+  function installSuggest(name, type) {
+    input = $("#"+ name +"-"+ type)
+    suggest = $("#"+ name +"-"+ type + "-suggest")
+    
+    input.keyup((e) => {
+      keyword = e.currentTarget.value.toLowerCase()
+      html = ''
+      count = 0
+
+      global[type].forEach(item => {
+        if (count < 30 && item.toLowerCase().search(keyword) >= 0) {
+          count ++
+          html += `
+            <div class="suggest-item" onclick="selectKey('`+ name +`', '`+ type +`', '`+ item +`')">
+              `+ item +`
+            </div>`
+        }
+      })
+      
+      if (!html.length) {
+        html = 'Không có kết quả'
+      }
+      
+      suggest.html(html)
+    })
+    input.focus(() => {
+      suggest.show()
+    })
+    input.blur(() => {
+      setTimeout(() => {
+        suggest.hide()
+      }, 300);
+    })
   }
 </script>
 <!-- END: main -->

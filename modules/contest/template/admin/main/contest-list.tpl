@@ -46,6 +46,9 @@
         <span class="glyphicon glyphicon-unchecked"></span>
       </button>
       <!-- END: undone -->
+      <button class="btn btn-info" onclick="getContest({id})">
+        <span class="glyphicon glyphicon-edit"></span>
+      </button>
       <button class="btn btn-danger" onclick="removeRow({id})">
         <span class="glyphicon glyphicon-remove"></span>
       </button>

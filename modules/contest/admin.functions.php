@@ -19,6 +19,20 @@ function testModal() {
   return $xtpl->text();
 }
 
+function contestModal() {
+  global $module_file, $db, $op;
+  $xtpl = new XTemplate("contest-modal.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/" . $op);
+
+  $query = $db->query("select * from `". PREFIX ."test` where active = 1");
+  while ($row = $query->fetch()) {
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->parse('main.test');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function removeModal() {
   global $module_file, $op;
   $xtpl = new XTemplate("remove-contest-modal.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/" . $op);
@@ -54,8 +68,8 @@ function contestList() {
   global $module_file, $nv_Request, $db, $op;
 
   $filter = $nv_Request->get_array('filter', 'post');
-  if (!$filter['page']) $filter['page'] = 1;
-  if (!$filter['limit']) $filter['limit'] = 10;
+  if (!empty($filter['page'])) $filter['page'] = 1;
+  if (!empty($filter['limit'])) $filter['limit'] = 10;
 
   $xtra = array();
 
@@ -65,7 +79,7 @@ function contestList() {
   if (!empty($filter['contest'])) {
     $list = array();
     foreach ($filter['contest'] as $id) {
-      $list[]= '(test like \'%["' . $id .'"]%\')';
+      $list[]= '(test like \'%"' . $id .'"%\')';
     }
     $xtra[]= implode(' or ', $list);
   }
