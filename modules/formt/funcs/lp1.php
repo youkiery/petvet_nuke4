@@ -10,7 +10,6 @@
 if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
-
 // cập nhật chủ hộ thư ký
 // $query = $db->query('select * from `'. PREFIX .'_secretary`');
 // while ($row = $query->fetch()) {
@@ -45,29 +44,29 @@ if (!defined('NV_IS_FORM')) {
 // die();
 
 // cập nhật 
-$query = $db->query($sql = 'select * from `'. PREFIX .'_notires`');
+// $query = $db->query($sql = 'select * from `'. PREFIX .'_notires`');
 
-while ($row = $query->fetch()) {
-  $data = json_decode($row['data']);
-  $secq = $db->query($secs = 'select * from `'. PREFIX .'_secretary` where rid = ' . $row['rid']);
-  // echo $secs . '<br>';
-  if (!empty($sec = $secq->fetch())) {
-    $data->{datetime} = $sec['mcode'] . '/THTY-5 ngày ' . date('d/m/Y', $sec['date']);
-    echo 'update `'. PREFIX .'_notires` set data = \''. json_encode($data, JSON_UNESCAPED_UNICODE) .'\' where rid = ' . $row['rid'] . '<br>';
-    $db->query('update `'. PREFIX .'_notires` set data = \''. json_encode($data, JSON_UNESCAPED_UNICODE) .'\' where rid = ' . $row['rid']);
-  }
-  else {
-    $f5q = $db->query($f5s = 'select * from `'. PREFIX .'_row` where rid = ' . $row['rid']);
-    // echo $f5s . '<br>';
-    if (!empty($f5 = $f5q->fetch())) {
-      $data->{datetime} = $f5['mcode'] . '/THTY-5 ngày ' . date('d/m/Y', $f5['xresend']);
-      echo 'update `'. PREFIX .'_notires` set data = \''. json_encode($data, JSON_UNESCAPED_UNICODE) .'\' where rid = ' . $row['rid'] . '<br>';
-      $db->query('update `'. PREFIX .'_notires` set data = \''. json_encode($data, JSON_UNESCAPED_UNICODE) .'\' where rid = ' . $row['rid']);
-    }
-  }
-  var_dump($row);
-}
-die();
+// while ($row = $query->fetch()) {
+//   $data = json_decode($row['data']);
+//   $secq = $db->query($secs = 'select * from `'. PREFIX .'_secretary` where rid = ' . $row['rid']);
+//   // echo $secs . '<br>';
+//   if (!empty($sec = $secq->fetch())) {
+//     $data->{datetime} = $sec['mcode'] . '/THTY-5 ngày ' . date('d/m/Y', $sec['date']);
+//     echo 'update `'. PREFIX .'_notires` set data = \''. json_encode($data, JSON_UNESCAPED_UNICODE) .'\' where rid = ' . $row['rid'] . '<br>';
+//     $db->query('update `'. PREFIX .'_notires` set data = \''. json_encode($data, JSON_UNESCAPED_UNICODE) .'\' where rid = ' . $row['rid']);
+//   }
+//   else {
+//     $f5q = $db->query($f5s = 'select * from `'. PREFIX .'_row` where rid = ' . $row['rid']);
+//     // echo $f5s . '<br>';
+//     if (!empty($f5 = $f5q->fetch())) {
+//       $data->{datetime} = $f5['mcode'] . '/THTY-5 ngày ' . date('d/m/Y', $f5['xresend']);
+//       echo 'update `'. PREFIX .'_notires` set data = \''. json_encode($data, JSON_UNESCAPED_UNICODE) .'\' where rid = ' . $row['rid'] . '<br>';
+//       $db->query('update `'. PREFIX .'_notires` set data = \''. json_encode($data, JSON_UNESCAPED_UNICODE) .'\' where rid = ' . $row['rid']);
+//     }
+//   }
+//   var_dump($row);
+// }
+// die();
 
 $page_title = "Nhập hồ sơ một cửa";
 $sampleType = array(0 => 'Nguyên con', 'Huyết thanh', 'Máu', 'Phủ tạng', 'Swab');
@@ -273,7 +272,7 @@ if (!empty($action)) {
 
           if (!empty($row = $query->fetch())) {
             $ig = json_decode($row['ig']);
-            $xtpl->assign('datetime', $row['mcode'] . '/THTY-5 ngày ' . date('d/m/Y', $row['date']));
+            $xtpl->assign('datetime', $row['mcode'] . '/TYV5-TH ngày ' . date('d/m/Y', $row['date']));
             $count = 0;
             foreach ($ig as $name => $number) {
               $count ++;
@@ -318,7 +317,7 @@ if (!empty($action)) {
               $ig = f5igtosec($row['ig']);
               // echo json_encode($ig);die();
 
-              $xtpl->assign('datetime', $row['mcode'] . '/THTY-5 ngày ' . date('d/m/Y', $row['xresend']));
+              $xtpl->assign('datetime', $row['mcode'] . '/TYV5-TH ngày ' . date('d/m/Y', $row['xresend']));
               
               $xtpl->assign('row', count($ig));
               $xtpl->assign('gindex', $gindex++);
