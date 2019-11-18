@@ -22,7 +22,7 @@ if (!empty($action)) {
       else {
         $species = checkSpecies($data['species']);
         $test = json_encode($data['test'], JSON_UNESCAPED_UNICODE);
-        $sql = "insert into `". PREFIX ."row` (name, petname, species, address, mobile, test) values('$data[name]', $data[petname], $species, '$data[address]', '$data[mobile]', '$test')";
+        $sql = "insert into `". PREFIX ."row` (name, petname, species, address, mobile, test) values('$data[name]', '$data[petname]', $species, '$data[address]', '$data[mobile]', '$test')";
         if (!$db->query($sql)) {
           $result['notify'] = 'Lỗi đăng ký';
         }
