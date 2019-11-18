@@ -3,12 +3,23 @@
   .form-group {
     clear: both;
   }
+
+  @media screen and (max-width: 768px) {
+    .checkbox input[type=checkbox] {
+      position: inherit;
+      margin-left: inherit;
+    }
+  }
+  @media screen and (max-width: 600px) {
+    .hideout {
+      display: none;
+    }
+  }
 </style>
 <div class="container" style="margin-top: 20px;">
   <div id="msgshow"></div>
   <div style="float: right;">
     {FILE "heading.tpl"}
-    {confirm_list}
   </div>
   <div style="clear: right;"></div>
   <a href="/">
@@ -26,7 +37,11 @@
   </form>
   <div style="clear: both;"></div>
 
+  <!-- <div style="position: fixed; background: red; width: 100px; height: 100px;"></div>
+  <div style="position: fixed; background: blue; right: calc(25% - 125px); width: 100px; height: 100px;"></div> -->
+
   <div id="content">
+    <div></div>
     <div style="max-width: 500px; margin: auto; border: 1px solid lightgray; border-radius: 10px; padding: 60px 10px 60px 10px;">
       <div class="form-group">
         <label class="label-control col-4"> Tên người/đơn vị đăng ký </label>
@@ -71,14 +86,48 @@
         <button class="btn btn-success" onclick="signupPresubmit()">
           Đăng ký
         </button>
-        <br>
-        <br>
-        <button class="btn btn-info" onclick="confirmList()">
-          Danh sách những người đã đăng ký
-        </button>
-
       </div>
     </div>
+    <div></div>
+    <br>
+    <div style="max-width: 700px; margin: auto; border: 1px solid lightgray; border-radius: 10px; padding: 10px 10px 60px 10px;">
+      <p>
+        Danh sách những người đã đăng ký
+      </p>
+      <br>
+      <div class="form-group form-inline">
+        <div class="input-group">
+          <input type="text" class="form-control" id="filter-limit" value="10">
+          <div class="input-group-btn">
+            <button class="btn btn-info" onclick="goPage(1)">
+              Hiển thị
+            </button>
+          </div>
+        </div>
+        <select class="form-control" id="filter-species">
+          <option value="0" checked> Toàn bộ </option>
+          <!-- BEGIN: species -->
+          <option value="{id}" checked> {species} </option>
+          <!-- END: species -->
+        </select>
+      </div>
+      <div class="form-group form-inline">
+        Danh sách phần thi
+        <!-- BEGIN: contest -->
+        <label class="checkbox" style="margin-right: 10px"> <input type="checkbox" class="filter-contest" index="{id}" checked> {contest} </label>
+        <!-- END: contest -->
+      </div>
+      <div class="form-group text-center">
+        <button class="btn btn-info" onclick="goPage(1)">
+          Lọc danh sách
+        </button>
+      </div>
+      
+      <div id="confirm-content">
+        {confirm_list}
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -103,12 +152,29 @@
 <script>
   global = {
     'species': JSON.parse('{species}'),
-    'page': 1
+    'page': 1,
   }
 
   $(document).ready(() => {
     installSuggest('signup', 'species')
   })
+
+  function checkFilter() {
+    limit = $("#filter-limit")
+    if (!(limit > 10)) limit = 10
+
+    contest = []
+    $(".filter-contest").each((index, item) => {
+      if (item.checked) contest.push(item.getAttribute('index'))
+    })
+    
+    return {
+      page: global['page'],
+      limit: limit,
+      species: $("#filter-species").val(),
+      contest: contest
+    }
+  }
 
   function signupPresubmit() {
     data = checkSignupData()
@@ -181,7 +247,7 @@
     global['page'] = page
     $.post(
       '',
-      { action: 'filter', page: global['page'] },
+      { action: 'filter', filter: checkFilter(), page: global['page'] },
       (response, status) => {
         checkResult(response, status).then(data => {
           $('#confirm-content').html(data['html'])

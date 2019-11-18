@@ -68,8 +68,8 @@ function contestList() {
   global $module_file, $nv_Request, $db, $op;
 
   $filter = $nv_Request->get_array('filter', 'post');
-  if (!empty($filter['page'])) $filter['page'] = 1;
-  if (!empty($filter['limit'])) $filter['limit'] = 10;
+  if (empty($filter['page'])) $filter['page'] = 1;
+  if (empty($filter['limit'])) $filter['limit'] = 10;
 
   $xtra = array();
 

@@ -3,33 +3,24 @@
 <table class="table table-bordered">
   <tr>
     <th> STT </th>
-    <th> Người tham gia </th>
-    <th> Tên thú cưng </th>
-    <th> Giống loài </th>
-    <th> Địa chỉ </th>
-    <th> Số điện thoại </th>
-    <th> Mục tham gia </th>
+    <th> Thông tin </th>
   </tr>
   <!-- BEGIN: row -->
   <tr>
     <td> {index} </td>
-    <td> 
-      {name}
-    </td>
-    <td> 
-      {petname}
-    </td>
-    <td> 
-      {species}
-    </td>
-    <td> 
-      {address}
-    </td>
-    <td> 
-      {mobile}
-    </td>
-    <td> 
-      {contest}
+    <td>
+      <ul>
+        <li>
+          Người tham gia: {name}
+        </li>
+        <li>
+          Tên thú cưng: {petname}
+        </li>
+        <li> Giống loài: {species} </li>
+        <li> Địa chỉ: {address} </li>
+        <li> Số điện thoại: {mobile} </li>
+        <li> Mục tham gia: {contest}  </li>
+      </ul> 
     </td>
   </tr>
   <!-- END: row -->

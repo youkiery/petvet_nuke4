@@ -54,7 +54,21 @@ while ($row = $query->fetch()) {
   $species[] = ucwords($row['name']);
 }
 
-$xtpl->assign('confirm_list', confirmModal());
+$query = $db->query('select * from `'. PREFIX .'species` order by rate desc');
+while ($row = $query->fetch()) {
+  $xtpl->assign('id', $row['id']);
+  $xtpl->assign('species', ucwords($row['name']));
+  $xtpl->parse('main.species');
+}
+
+$query = $db->query('select * from `'. PREFIX .'test` where active = 1');
+while ($row = $query->fetch()) {
+  $xtpl->assign('id', $row['id']);
+  $xtpl->assign('contest', $row['name']);
+  $xtpl->parse('main.contest');
+}
+
+$xtpl->assign('confirm_list', confirmList());
 $xtpl->assign('species', json_encode($species, JSON_UNESCAPED_UNICODE));
 $xtpl->parse('main');
 $contents = $xtpl->text();
