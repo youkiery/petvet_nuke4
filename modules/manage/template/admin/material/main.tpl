@@ -266,11 +266,11 @@
       (response, status) => {
         checkResult(response, status).then(data => {
           global['import_id'] = id
-          global['import'] = data['import']
+          global['selected']['import'] = data['import']
           parseImport()
           $("#import-button").hide()
           $("#edit-import-button").show()
-          $('#import-insert-modal').modal('show')
+          $('#import-modal-insert').modal('show')
         }, () => {})
       }
     )

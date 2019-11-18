@@ -140,7 +140,8 @@ if (!empty($action)) {
           if (!($name == 'depart' || $name == 'description')) checkRemind($name, $value);
         }
         if (empty($data['depart'])) $data['depart'] = array();
-        $sql = 'update `'. PREFIX .'device` set name = "'. $data['name'] .'", unit = "'. $data['unit'] .'", number = "'. $data['number'] .'", year = "'. $data['year'] .'", intro = "'. $data['intro'] .'", status = "'. $data['status'] .'", depart = \''. json_encode($data['depart']) .'\', source = "'. $data['source'] .'", description = "'. $data['description'] .'", update_time = '. time() .' where id = ' . $id;
+        $sql = 'update `'. PREFIX .'device` set name = "'. $data['name'] .'", unit = "'. $data['unit'] .'", number = "'. $data['number'] .'", year = "'. $data['year'] .'", intro = "'. $data['intro'] .'", status = "'. $data['status'] .'", depart = \''. json_encode($data['depart']) .'\', source = "'. $data['source'] .'", description = "'. $data['description'] .'", import_time = "'. totime($data['import']) .'", update_time = '. time() .' where id = ' . $id;
+        // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;
           $result['html'] = deviceList();
@@ -152,6 +153,9 @@ if (!empty($action)) {
       $id = $nv_Request->get_int('id', 'post');
 
       if ($data = getDeviceData($id)) {
+        $data['import'] = date('d/m/Y', $data['import_time']);
+        unset($data['import_time']);
+        unset($data['update_time']);
         $result['status'] = 1;
         $result['device'] = $data;
       }

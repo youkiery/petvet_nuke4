@@ -1,6 +1,9 @@
 <!-- BEGIN: main -->
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <link rel="stylesheet" href="/modules/manage/src/style.css">
+<link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
+<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
+<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 {device_modal}
 {remove_modal}
 {remove_all_modal}
@@ -74,6 +77,11 @@
     installRemindv2('device', 'source')
     installDepart('filter')
     installDepart('device')
+    $("#device-import-time").datepicker({
+      format: 'dd/mm/yyyy',
+      changeMonth: true,
+      changeYear: true
+    });
   })
 
   function excel() {
@@ -123,7 +131,7 @@
         (response, status) => {
           checkResult(response, status).then(data => {
             global['depart']['list'].push(data['inserted'])
-            selectDepart(global['depart']['list'].length - 1)
+            selectDepart('device', global['depart']['list'].length - 1)
           }, () => {})
         }
       )
@@ -174,7 +182,7 @@
       status: $("#device-status").val(),
       depart: list,
       description: $("#device-description").val(),
-      import: day + '/' + month + '/' + year
+      import: $("#device-import-time").val()
     }
   }
 
@@ -187,6 +195,7 @@
     $("#device-source").val(''),
     $("#device-status").val(''),
     $("#device-description").val('')
+    $("#device-import-time").val(global['today'])
     $("#device-insert").show()
     $("#device-edit").hide()
     global['selected']['device'] = {}
@@ -257,13 +266,14 @@
           $("#device-source").val(data['device']['source']),
           $("#device-status").val(data['device']['status']),
           $("#device-description").val(data['device']['description'])
+          $("#device-import-time").val(data['device']['import'])
           $("#device-insert").hide()
           $("#device-edit").show()
           global['selected']['depart'] = {}
           data['device']['depart'].forEach(depart => {
             global['list'].forEach((item, index) => {
               if (item['id'] == depart) {
-                selectDepart(index)
+                selectDepart('device', index)
               }
             })
           })

@@ -73,8 +73,8 @@
 
           <div class="form-group">
             <label class="control-label col-sm-4"> Ngày nhập </label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" id="device-import-time" placeholder="Ngày">
+            <div class="col-sm-20">
+              <input type="text" class="form-control" id="device-import-time" placeholder="Ngày/tháng/năm nhập">
             </div>
           </div>
 
