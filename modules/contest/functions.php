@@ -45,6 +45,7 @@ function confirmList() {
 
     $xtpl->assign('species', ucwords(getSpecies($row['species'])));
     $xtpl->assign('name', $row['name']);
+    $xtpl->assign('petname', $row['petname']);
     $xtpl->assign('address', $row['address']);
     $xtpl->assign('mobile', $row['mobile']);
     $xtpl->assign('contest', implode(', ', $test));

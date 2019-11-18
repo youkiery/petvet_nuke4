@@ -36,12 +36,14 @@ function removeAllModal() {
 function testList() {
   global $module_file, $db, $op;
   $xtpl = new XTemplate("test-content.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/" . $op);
-  $query = $db->query("select * from `". PREFIX ."test` where active = 1 order by id desc");
+  $query = $db->query("select * from `". PREFIX ."test` order by id desc");
   $index = 1;
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index ++);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('name', $row['name']);
+    if ($row['active']) $xtpl->parse('main.row.toggleon');
+    else $xtpl->parse('main.row.toggleoff');
     $xtpl->parse('main.row');
   }
   $xtpl->parse('main');
@@ -71,10 +73,10 @@ function contestList() {
 
   $xtpl = new XTemplate("contest-list.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/" . $op);
 
-  $query = $db->query("select count(*) as count from `". PREFIX ."row` where active = 1 ". ($xtra ? " and " . $xtra : "") ." order by id desc");
+  $query = $db->query("select count(*) as count from `". PREFIX ."row`  ". ($xtra ? " where " . $xtra : "") ." order by id desc");
   $number = $query->fetch()['count'];
-  
-  $query = $db->query("select * from `". PREFIX ."row` where active = 1 ". ($xtra ? " and " . $xtra : "") ." order by id desc limit 10 offset " . ($filter['page'] - 1) * $filter['limit']);
+
+  $query = $db->query("select * from `". PREFIX ."row` ". ($xtra ? " where " . $xtra : "") ." order by id desc limit 10 offset " . ($filter['page'] - 1) * $filter['limit']);
   $index = 1;
   $test_data = getTestDataList();
   // var_dump($test_data);die();
@@ -89,6 +91,7 @@ function contestList() {
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('species', ucwords(getSpecies($row['species'])));
     $xtpl->assign('name', $row['name']);
+    $xtpl->assign('petname', $row['petname']);
     $xtpl->assign('address', $row['address']);
     $xtpl->assign('mobile', $row['mobile']);
     $xtpl->assign('contest', implode(', ', $test));

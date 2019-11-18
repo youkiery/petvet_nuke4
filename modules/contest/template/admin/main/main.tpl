@@ -107,10 +107,10 @@
     $("#modal-test").modal('show')
   }
 
-  function hideTestSubmit(id) {
+  function toggleTestSubmit(id, type) {
     $.post(
       '',
-      { action: 'hide-test', id: id },
+      { action: 'toggle-test', id: id, type: type },
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#test-content").html(data['html'])

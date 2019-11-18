@@ -68,11 +68,13 @@ if (!empty($action)) {
       $result['html'] = contestList();
       $result['notify'] = "Đã xóa $delete trên tổng số $total";
     break;
-    case 'hide-test':
+    case 'toggle-test':
       $id = $nv_Request->get_string('id', 'post', 0);
+      $type = $nv_Request->get_string('type', 'post', 0);
 
-      if ($db->query("update `". PREFIX ."test` set active = 0 where id = $id")) {
+      if ($db->query("update `". PREFIX ."test` set active = $type where id = $id")) {
         $result['status'] = 1;
+        $result['html'] = testList();
         $result['notify'] = 'Đã ẩn';
       }
     break;

@@ -4,6 +4,7 @@
   <tr>
     <th> STT </th>
     <th> Người tham gia </th>
+    <th> Tên thú cưng </th>
     <th> Giống loài </th>
     <th> Địa chỉ </th>
     <th> Số điện thoại </th>
@@ -14,6 +15,9 @@
     <td> {index} </td>
     <td> 
       {name}
+    </td>
+    <td> 
+      {petname}
     </td>
     <td> 
       {species}

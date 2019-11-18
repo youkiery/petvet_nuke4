@@ -22,7 +22,7 @@ if (!empty($action)) {
       else {
         $species = checkSpecies($data['species']);
         $test = json_encode($data['test'], JSON_UNESCAPED_UNICODE);
-        $sql = "insert into `". PREFIX ."row` (name, species, address, mobile, test) values('$data[name]', $species, '$data[address]', '$data[mobile]', '$test')";
+        $sql = "insert into `". PREFIX ."row` (name, petname, species, address, mobile, test) values('$data[name]', $data[petname], $species, '$data[address]', '$data[mobile]', '$test')";
         if (!$db->query($sql)) {
           $result['notify'] = 'Lỗi đăng ký';
         }
@@ -41,7 +41,7 @@ if (!empty($action)) {
   die();
 }
 $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/". $op);
-$query = $db->query("select * from `". PREFIX ."test`");
+$query = $db->query("select * from `". PREFIX ."test` where active = 1");
 while ($row = $query->fetch()) {
   $xtpl->assign('id', $row['id']);
   $xtpl->assign('name', $row['name']);

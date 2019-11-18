@@ -35,7 +35,13 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="label-control col-4"> Giống chó </label>
+        <label class="label-control col-4"> Tên thú cưng </label>
+        <div class="col-8">
+          <input type="text" class="form-control" id="signup-petname">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="label-control col-4"> Giống loài </label>
         <div class="col-8 relative">
           <input type="text" class="form-control" id="signup-species">
           <div class="suggest" id="signup-species-suggest"></div>
@@ -54,10 +60,10 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="label-control col-4"> Phần thi đăng ký </label>
+        <label class="label-control col-4"> Hạng mục đăng ký </label>
         <div class="col-8 checkbox">
           <!-- BEGIN: test -->
-          <label style="margin-right: 10px;"> <input type="checkbox" name="test" index="{id}"> {name} <label>
+          <label style="margin-right: 10px;"> <input type="checkbox" name="test" index="{id}"> {name} </label>
           <!-- END: test -->
         </div>
       </div>
@@ -117,10 +123,12 @@
   function checkSignupData() {
     test = []
     name = $("#signup-name").val()
+    petname = $("#signup-petname").val()
     address = $("#signup-address").val()
     mobile = $("#signup-mobile").val()
     species = $("#signup-species").val()
     if (!name.length) return 'Tên người/đơn vị không được để trống'
+    if (!petname.length) return 'Tên thú cưng không được để trống'
     if (!species.length) return 'Giống loài không được để trống'
     if (!address.length) return 'Địa chỉ không được để trống'
     if (!mobile.length) return 'Số điện thoại không được để trống'
@@ -131,6 +139,7 @@
     if (!test.length) return 'Chọn ít nhất 1 phần thi'
     return {
       name: name,
+      petname: petname,
       species: species,
       address: address,
       mobile: mobile,
@@ -151,6 +160,7 @@
           checkResult(response, status).then(data => {
             $("#modal-presignup").modal('hide')
             $("#signup-name").val('')
+            $("#signup-petname").val('')
             $("#signup-species").val('')
             $("#signup-address").val('')
             $("#signup-mobile").val('')
