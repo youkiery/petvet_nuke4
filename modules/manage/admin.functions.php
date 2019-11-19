@@ -8,8 +8,15 @@
 
 if (!defined('NV_ADMIN') or !defined('NV_MAINFILE') or !defined('NV_IS_MODADMIN')) die('Stop!!!');
 define('NV_IS_FILE_ADMIN', true);
+define('PATH', NV_ROOTDIR . "/modules/". $module_file ."/template/admin/" . $op);
 include_once(NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php');
 include_once(NV_ROOTDIR . '/modules/' . $module_file . '/theme.php');
+
+function memberModal() {
+  $xtpl = new XTemplate("member-modal.tpl", PATH);
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
 
 function deviceModal() {
   global $module_file, $op;
@@ -204,6 +211,58 @@ function materialList() {
     $xtpl->assign('description', $row['description']);
     if ($row['unit']) $xtpl->assign('unit', "($row[unit])");
     else $xtpl->assign('unit', '');
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function editMemberModal() {
+  global $db;
+  $xtpl = new XTemplate("edit-member-modal.tpl", PATH);
+
+  $query = $db->query('select * from `'. PREFIX .'depart`');
+  while ($row = $query->fetch()) {
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->parse('main.depart');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function removeMemberModal() {
+  $xtpl = new XTemplate("remove-member-modal.tpl", PATH);
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function memberList() {
+  global $db, $db_config;
+
+  $xtpl = new XTemplate("member-list.tpl", PATH);
+  $allowance = array(1 => 'Chỉ xem', 'Chỉnh sửa');
+
+  $sql = 'select a.id, a.author, b.first_name from `'. PREFIX .'member` a inner join `'. $db_config['prefix'] .'_users` b on a.userid = b.userid';
+  $query = $db->query($sql);
+  $index = 1;
+
+  while($row = $query->fetch()) {
+    $authors = json_decode($row['author']);
+    $author = '';
+    if (!empty($authors->{depart})) {
+      if (!empty($authors->{allowance})) {
+        $depart = array();
+        $query2 = $db->query('select * from `'. PREFIX .'depart` where id in (' . implode(', ', $authors->{depart}) . ')');
+        while ($row2 = $query2->fetch()) $depart[]= '[' .$row2['name'] . ']';
+        $author = '[' . $allowance[$authors->{allowance}] . '] trên phòng ban ' . implode(', ', $depart);
+      }
+    }
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $row['first_name']);
+    $xtpl->assign('author', $author);
     $xtpl->parse('main.row');
   }
 

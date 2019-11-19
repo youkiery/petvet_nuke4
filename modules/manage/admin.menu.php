@@ -13,5 +13,6 @@ if (!defined('NV_ADMIN')) die('Stop!!!');
 // $submenu['exp'] = 'Quản lý hạn sử dụng';
 $submenu['device'] = 'Quản lý thiết bị';
 $submenu['material'] = 'Quản lý vật tư, hóa chất';
+$submenu['config'] = 'Cấu hình';
 
-$allow_func = array('main', 'device', 'material'); 
+$allow_func = array('main', 'device', 'material', 'config'); 
