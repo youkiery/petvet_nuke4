@@ -29,9 +29,6 @@
     {FILE "heading.tpl"}
   </div>
   <div style="clear: right;"></div>
-  <a href="/">
-    <img src="/themes/default/images/banner.png" style="float: left; width: 200px;">
-  </a>
   <form style="width: 60%; float: right;">
     <label class="input-group">
       <input type="hidden" name="nv" value="biograph">
@@ -42,6 +39,9 @@
       </div>
     </label>
   </form>
+  <a href="/">
+    <img src="/themes/default/images/banner.png" style="float: left; width: 200px;">
+  </a>
   <div style="clear: both;"></div>
 
   <!-- <div style="position: fixed; background: red; width: 100px; height: 100px;"></div>
@@ -49,11 +49,13 @@
 
   <div id="content" style="position: relative;">
     <div class="vetleft">
+      <img src="/assets/images/5.jpg" style="width: 100px;">
       <img src="/assets/images/1.jpg" style="width: 100px;">
-      <img src="/assets/images/2.jpg" style="width: 100px;">
       <img src="/assets/images/3.jpg" style="width: 100px;">
       <img src="/assets/images/4.jpg" style="width: 100px;">
-      <img src="/assets/images/5.jpg" style="width: 100px;">
+      <img src="/assets/images/9.jpg" style="width: 100px;">
+      <img src="/assets/images/2.jpg" style="width: 100px;">
+      <p style="font-weight: bold; margin: 14px; font-size: 1.25em; color: deepskyblue; text-shadow: 2px 2px 6px;">LỄ HỘI THÚ CƯNG ĐẮK LẮK 2019</p>
     </div>
     <div>
       <div style="max-width: 500px; margin: auto; border: 1px solid lightgray; border-radius: 10px; padding: 10px 10px 10px 10px;">
@@ -107,11 +109,11 @@
       <div></div>
     </div>
     <div class="vetright">
-      <img src="/assets/images/1.jpg" style="width: 100px;">
+      <img src="/assets/images/6.jpg" style="width: 100px;">
+      <img src="/assets/images/7.jpg" style="width: 100px;">
+      <img src="/assets/images/8.jpg" style="width: 100px;">
       <img src="/assets/images/2.jpg" style="width: 100px;">
-      <img src="/assets/images/3.jpg" style="width: 100px;">
-      <img src="/assets/images/4.jpg" style="width: 100px;">
-      <img src="/assets/images/5.jpg" style="width: 100px;">
+      <p style="font-weight: bold; margin: 14px; font-size: 1.25em; color: deepskyblue; text-shadow: 2px 2px 6px;">LỄ HỘI THÚ CƯNG ĐẮK LẮK 2019</p>
     </div>
     <br>
           <div style="max-width: 700px; margin: auto; border: 1px solid lightgray; border-radius: 10px; padding: 10px 10px 60px 10px;">
