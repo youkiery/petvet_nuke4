@@ -9,7 +9,9 @@
       <th> Công ty </th>
       <th> Tình trạng </th>
       <th> Số lượng </th>
+      <!-- BEGIN: v1 -->
       <th></th>
+      <!-- END: v1 -->
     </tr>
   </thead>
   <tbody>
@@ -22,6 +24,7 @@
       <td> {company} </td>
       <td> {status} </td>
       <td> {number} </td>
+      <!-- BEGIN: v2 -->
       <td> 
         <button class="btn btn-info" onclick="deviceEdit({id})">
           <span class="glyphicon glyphicon-edit"></span>
@@ -30,6 +33,7 @@
           <span class="glyphicon glyphicon-remove"></span>
         </button>  
       </td>
+      <!-- END: v2 -->
     </tr>
     <!-- END: row -->
   </tbody>

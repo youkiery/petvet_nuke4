@@ -33,12 +33,16 @@ function removeAllModal() {
 }
 
 function deviceList() {
-  global $db, $module_file, $op, $nv_Request;
+  global $db, $module_file, $op, $nv_Request, $user_info;
   
   $filter = parseFilter('device');
   $xtpl = new XTemplate("device-list.tpl", PATH);
 
-  $depart = getUserDepartList();
+  $query = $db->query('select * from `'. PREFIX .'member` where userid = '. $user_info['userid']);
+  $user = $query->fetch();
+  $authors = json_decode($user['author']);
+
+  $depart = $authors->{depart};
   $depart2 = array();
   $departid = array();
   foreach ($depart as $row) {
@@ -69,6 +73,7 @@ function deviceList() {
   // die('select * from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
   $query = $db->query('select * from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+  if ($authors->{device} == 2) $xtpl->parse('main.v1');
   while ($row = $query->fetch()) {
     $depart = json_decode($row['depart']);
     $list = array();
@@ -82,6 +87,7 @@ function deviceList() {
     $xtpl->assign('company', $row['intro']);
     $xtpl->assign('status', $row['status']);
     $xtpl->assign('number', $row['number']);
+    if ($authors->{device} == 2) $xtpl->parse('main.row.v2');
     $xtpl->parse('main.row');
   }
   $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));

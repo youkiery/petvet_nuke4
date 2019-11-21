@@ -12,11 +12,13 @@
 {remove_modal}
 {remove_all_modal}
 <div id="msgshow"></div>
+<!-- BEGIN: v1 -->
 <div style="float: right;">
   <button class="btn btn-success" onclick="deviceInsert()">
     <span class="glyphicon glyphicon-plus"></span>
   </button>
 </div>
+<!-- END: v1 -->
 <div class="form-group form-inline">
   Số dòng mỗi trang
   <div class="input-group">
@@ -50,9 +52,11 @@
 <!-- <button class="btn btn-info">
   edit all
 </button>   -->
+<!-- BEGIN: v2 -->
 <button class="btn btn-danger" onclick="removeAll()">
   Xóa mục đã chọn
 </button>  
+<!-- BEGIN: v2 -->
 <script src="/modules/manage/src/script.js"></script>
 <script>
   var global = {

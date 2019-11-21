@@ -192,10 +192,19 @@ if (!empty($action)) {
   echo json_encode($result);
   die();
 }
+
+$query = $db->query('select * from `'. PREFIX .'member` where userid = '. $user_info['userid']);
+$user = $query->fetch();
+$authors = json_decode($user['author']);
+
 $xtpl = new XTemplate("main.tpl", PATH);
-$xtpl->assign('device_modal', deviceModal());
-$xtpl->assign('remove_modal', removeModal());
-$xtpl->assign('remove_all_modal', removeAllModal());
+if ($authors->{device} == 2) {
+  $xtpl->assign('device_modal', deviceModal());
+  $xtpl->assign('remove_modal', removeModal());
+  $xtpl->assign('remove_all_modal', removeAllModal());
+  $xtpl->parse('main.v1');
+  $xtpl->parse('main.v2');
+}
 $xtpl->assign('content', deviceList());
 $xtpl->assign('today', date('d/m/Y', time()));
 $xtpl->assign('depart', json_encode(getUserDepartList(), JSON_UNESCAPED_UNICODE));
