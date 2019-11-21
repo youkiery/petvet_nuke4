@@ -11,8 +11,8 @@ if (!defined('NV_MAINFILE'))
 
 $module_version = array(
     'name' => 'Quản lý thiết bị, vật tư',
-    'modfuncs' => 'main',
-    'submenu' => 'main',
+    'modfuncs' => 'main, device',
+    'submenu' => 'main, device',
     'is_sysmod' => 0,
     'virtual' => 1,
     'version' => '4.3.01',

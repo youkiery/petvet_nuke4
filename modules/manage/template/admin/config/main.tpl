@@ -39,7 +39,7 @@
             item.checked = false
           })
           data['data']['depart'].forEach(departid => {
-            $("#member-depart-" + departid).checked = true
+            $("#member-depart-" + departid)[0].checked = true
           });
           $("#member-device-" + data['data']['device'])[0].checked = true
           $("#member-material-" + data['data']['material'])[0].checked = true

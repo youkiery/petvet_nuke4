@@ -60,15 +60,15 @@ if (!empty($action)) {
       $query = $db->query('select * from `'. PREFIX .'member` where id = '. $id);
       if ($row = $query->fetch()) {
         $result['status'] = 1;
-        $data = json_decode($data['author']);
-        if (empty($data['depart'])) {
-          $data['depart'] = array();
+        $data = json_decode($row['author']);
+        if (empty($data->{depart})) {
+          $data->{depart} = array();
         }
-        if (empty($data['device'])) {
-          $data['device'] = 0;
+        if (empty($data->{device})) {
+          $data->{device} = 0;
         }
-        if (empty($data['material'])) {
-          $data['material'] = 0;
+        if (empty($data->{material})) {
+          $data->{material} = 0;
         }
         $result['data'] = $data;
       }

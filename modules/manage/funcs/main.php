@@ -7,6 +7,8 @@
  */
 
 if (!defined('NV_IS_MOD_CONGVAN')) die('Stop!!!');
+$page_title = 'Quản lý thiết bị, vật tư';
+
 
 checkMember();
 $action = $nv_Request->get_string('action', 'post', '');

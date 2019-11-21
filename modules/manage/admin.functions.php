@@ -50,10 +50,8 @@ function deviceList() {
   global $db, $module_file, $op, $nv_Request;
   
   $filter = parseFilter('device');
-  $xtpl = new XTemplate("device-list.tpl", PATH . "/admin/" . $op);
+  $xtpl = new XTemplate("device-list.tpl", PATH);
 
-  $query = $db->query('select count(*) as count from `'. PREFIX .'device`');
-  $number = $query->fetch();
   $xtra = '';
   // var_dump($filter);die();
   if (!empty($filter['depart'])) {
@@ -91,7 +89,7 @@ function deviceList() {
 
 // function importModal() {
 //   global $op;
-//   $xtpl = new XTemplate("import-modal.tpl", PATH . "/admin/" . $op);
+//   $xtpl = new XTemplate("import-modal.tpl", PATH);
 //   $xtpl->assign('content', importList());
 //   $xtpl->parse('main');
 //   return $xtpl->text();
@@ -99,7 +97,7 @@ function deviceList() {
 
 function importInsertModal() {
   global $op;
-  $xtpl = new XTemplate("import-insert-modal.tpl", PATH . "/admin/" . $op);
+  $xtpl = new XTemplate("import-insert-modal.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -108,7 +106,7 @@ function importInsertModal() {
 //   global $db, $module_file, $op;
 
 //   $filter = parseFilter('import');
-//   $xtpl = new XTemplate("import-modal-content.tpl", PATH . "/admin/" . $op);
+//   $xtpl = new XTemplate("import-modal-content.tpl", PATH);
 
 //   $query = $db->query('select count(*) as count from `'. PREFIX .'import`');
 //   $number = $query->fetch();
@@ -133,14 +131,14 @@ function importInsertModal() {
 
 function materialModal() {
   global $op;
-  $xtpl = new XTemplate("material-modal.tpl", PATH . "/admin/" . $op);
+  $xtpl = new XTemplate("material-modal.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }
 
 function importModal() {
   global $op;
-  $xtpl = new XTemplate("import-modal.tpl", PATH . "/admin/" . $op);
+  $xtpl = new XTemplate("import-modal.tpl", PATH);
   $xtpl->assign('content', importList());
   $xtpl->parse('main');
   return $xtpl->text();
@@ -148,7 +146,7 @@ function importModal() {
 
 function importModalInsert() {
   global $op;
-  $xtpl = new XTemplate("import-modal-insert.tpl", PATH . "/admin/" . $op);
+  $xtpl = new XTemplate("import-modal-insert.tpl", PATH);
   $xtpl->assign('content', importList());
   $xtpl->parse('main');
   return $xtpl->text();
@@ -158,7 +156,7 @@ function importList() {
   global $db, $module_file, $op;
 
   $filter = parseFilter('import');
-  $xtpl = new XTemplate("import-modal-list.tpl", PATH . "/admin/" . $op);
+  $xtpl = new XTemplate("import-modal-list.tpl", PATH);
 
   $query = $db->query('select count(*) as count from `'. PREFIX .'import`');
   $number = $query->fetch();
@@ -184,7 +182,7 @@ function importList() {
 
 function exportModal() {
   global $op;
-  $xtpl = new XTemplate("export-modal.tpl", PATH . "/admin/" . $op);
+  $xtpl = new XTemplate("export-modal.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -194,7 +192,7 @@ function materialList() {
 
   $type_list = array(0 => 'Vật tư', 1 => 'Hóa chất');
   $filter = parseFilter('import');
-  $xtpl = new XTemplate("material-list.tpl", PATH . "/admin/" . $op);
+  $xtpl = new XTemplate("material-list.tpl", PATH);
 
   $sql = 'select count(*) as count from `'. PREFIX .'material` limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);

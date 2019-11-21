@@ -5,5 +5,14 @@
 
 <div id="msgshow"></div>
 
+<ul>
+  <li>
+    <a href="/manage/device"> Quản lý thiết bị </a>
+  </li>
+  <li>
+    <a href="/manage/material"> Quản lý Vật tư, hóa chất </a>
+  </li>
+</ul>
+
 <script></script>
 <!-- END: main -->

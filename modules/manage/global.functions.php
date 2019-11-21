@@ -270,6 +270,23 @@ function checkItemIndex($list, $id) {
   }
 }
 
+function getUserDepartList() {
+  global $db, $user_info;
+
+  $query = $db->query('select * from `'. PREFIX .'member` where userid = '. $user_info['userid']);
+  $user = $query->fetch();
+  $author = json_decode($user['author']);
+
+  $xtra = ' where id in ('. implode(', ', $author->{depart}) .') ';
+  
+  $list = array();
+  $query = $db->query('select * from `'. PREFIX .'depart`'. $xtra);
+  while($row = $query->fetch()) {
+    $list []= $row;
+  }
+  return $list;
+}
+
 function getDepartList() {
   global $db;
 
