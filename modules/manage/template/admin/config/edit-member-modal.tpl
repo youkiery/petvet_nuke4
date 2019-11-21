@@ -55,7 +55,7 @@
 
 
         <div class="text-center" style="clear: left;">
-          <button class="btn btn-danger" onclick="editMemberSubmit()">
+          <button class="btn btn-info" onclick="editMemberSubmit()">
             Cập nhật
           </button>
         </div>

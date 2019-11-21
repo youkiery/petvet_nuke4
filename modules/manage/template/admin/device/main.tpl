@@ -292,13 +292,10 @@
     $("#device-intro").val(global['remind']['intro']),
     $("#device-source").val(global['remind']['source']),
     $("#device-status").val(global['remind']['status']),
-    time = global['today'].split('/')
-    $("#device-import-day").val(time[0]),
-    $("#device-import-month").val(time[1]),
-    $("#device-import-year").val(time[2]),
+    $("#device-import-time").val(global['today']),
     $("#device-import-description").val('')
   }
-
+  
   function deviceRemove(id) {
     $('#remove-modal').modal('show')
     global['id'] = id
