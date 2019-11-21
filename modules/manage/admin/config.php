@@ -64,8 +64,11 @@ if (!empty($action)) {
         if (empty($data['depart'])) {
           $data['depart'] = array();
         }
-        if (empty($data['allowance'])) {
-          $data['allowance'] = 0;
+        if (empty($data['device'])) {
+          $data['device'] = 0;
+        }
+        if (empty($data['material'])) {
+          $data['material'] = 0;
         }
         $result['data'] = $data;
       }

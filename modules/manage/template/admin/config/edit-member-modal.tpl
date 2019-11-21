@@ -5,7 +5,6 @@
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
 
-        <p> <b> Quản lý thiết bị </b> </p>
         <div class="form-group">
           <div class="col-4">
             Phòng ban
@@ -18,6 +17,7 @@
             <!-- END: depart -->
           </div>
         </div>
+        <p> <b> Quản lý thiết bị </b> </p>
         <div style="clear: left;"></div>
         <div class="form-group">
           <div class="col-4">
@@ -25,16 +25,34 @@
           </div>
           <div class="col-8">
             <div class="radio">
-              <label> <input type="radio" name="allowance" id="member-allowance-0" value="0" checked> Không </label>
+              <label> <input type="radio" name="device" id="member-device-0" value="0" checked> Không </label>
             </div>
             <div class="radio">
-              <label> <input type="radio" name="allowance" id="member-allowance-1" value="1"> Chỉ xem </label>
+              <label> <input type="radio" name="device" id="member-device-1" value="1"> Chỉ xem </label>
             </div>
             <div class="radio">
-              <label> <input type="radio" name="allowance" id="member-allowance-2" value="2"> Chỉnh sửa </label>
+              <label> <input type="radio" name="device" id="member-device-2" value="2"> Chỉnh sửa </label>
             </div>
           </div>
         </div>
+        <p> <b> Quản lý vật tư, hóa chất </b> </p>
+        <div class="form-group">
+          <div class="col-4">
+            Quyền sử dụng
+          </div>
+          <div class="col-8">
+            <div class="radio">
+              <label> <input type="radio" name="material" id="member-material-0" value="0" checked> Không </label>
+            </div>
+            <div class="radio">
+              <label> <input type="radio" name="material" id="member-material-1" value="1"> Chỉ xem </label>
+            </div>
+            <div class="radio">
+              <label> <input type="radio" name="material" id="member-material-2" value="2"> Chỉnh sửa </label>
+            </div>
+          </div>
+        </div>
+
 
         <div class="text-center" style="clear: left;">
           <button class="btn btn-danger" onclick="editMemberSubmit()">

@@ -252,11 +252,11 @@ function memberList() {
     $authors = json_decode($row['author']);
     $author = '';
     if (!empty($authors->{depart})) {
-      if (!empty($authors->{allowance})) {
+      if (!empty($authors->{device}) || !empty($authors->{device})) {
         $depart = array();
         $query2 = $db->query('select * from `'. PREFIX .'depart` where id in (' . implode(', ', $authors->{depart}) . ')');
         while ($row2 = $query2->fetch()) $depart[]= '[' .$row2['name'] . ']';
-        $author = '[' . $allowance[$authors->{allowance}] . '] trên phòng ban ' . implode(', ', $depart);
+        $author =  ($authors->{device} ? ' [' . $allowance[$authors->{device}] . '] thiết bị' : '') . ($authors->{material} ? ' [' . $allowance[$authors->{material}] . '] vật tư' : '') . ' của phòng ban ' . implode(', ', $depart);
       }
     }
     $xtpl->assign('index', $index++);

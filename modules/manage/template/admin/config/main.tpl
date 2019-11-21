@@ -41,7 +41,8 @@
           data['data']['depart'].forEach(departid => {
             $("#member-depart-" + departid).checked = true
           });
-          $("#member-allowance-" + data['data']['allowance'])[0].checked = true
+          $("#member-device-" + data['data']['device'])[0].checked = true
+          $("#member-material-" + data['data']['material'])[0].checked = true
           $("#edit-member-modal").modal('show')
         }, () => {})
       }
@@ -55,7 +56,8 @@
     })
     return {
       depart: depart,
-      allowance: $("[name=allowance]:checked").val()
+      device: $("[name=device]:checked").val(),
+      material: $("[name=material]:checked").val()
     }
   }
 
