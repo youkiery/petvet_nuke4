@@ -152,6 +152,13 @@ function importModalInsert() {
   return $xtpl->text();
 }
 
+function importModalRemove() {
+  global $op;
+  $xtpl = new XTemplate("import-modal-remove.tpl", PATH);
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function importList() {
   global $db, $module_file, $op;
 
@@ -206,6 +213,7 @@ function materialList() {
     $xtpl->assign('index', $index++);
     $xtpl->assign('type', $type_list[$row['type']]);
     $xtpl->assign('name', $row['name']);
+    $xtpl->assign('number', $row['number']);
     $xtpl->assign('description', $row['description']);
     if ($row['unit']) $xtpl->assign('unit', "($row[unit])");
     else $xtpl->assign('unit', '');

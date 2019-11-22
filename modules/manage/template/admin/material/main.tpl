@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="/modules/manage/src/style.css">
 {import_modal}
 {import_modal_insert}
+{import_modal_remove}
 {export_modal}
 {material_modal}
 <div id="msgshow"></div>
@@ -22,10 +23,10 @@
 </div>
 <div class="form-group">
   <button class="btn btn-info" onclick="importModal()">
-    import
+    Phiếu nhập
   </button>  
   <button class="btn btn-info">
-    export
+    Phiếu xuất
   </button>  
 </div>
 
@@ -75,6 +76,8 @@
     $("#import-modal").modal('show')
   }
   function insertImportModal() {
+    $("#import-button").show()
+    $("#edit-import-button").hide()
     $("#import-modal-insert").modal('show')
   }
   function exportModal() {
@@ -82,13 +85,22 @@
   }
 
   function checkMaterialData() {
+    name = $("#material-name").val()
+    number = $("#material-number").val()
+    unit = $("#material-unit").val()
     type = $("[name=type]")[1].checked
     type = (type ? 1 : 0)
+    description = $("#material-description").val()
+
+    if (!name.length) alert_msg('Nhập tên trước khi thêm')
+    if (!number.length) number = 0
+
     return {
-      name: $("#material-name").val(),
-      unit: $("#material-unit").val(),
+      name: name,
+      number: number,
+      unit: unit,
       type: type,
-      description: $("#material-description").val(),
+      description: description
     }
   }
 
@@ -198,7 +210,7 @@
       // indexX = trim(item.getAttribute('id').replace('import-index-', ''))
       data.push({
         index: indexX,
-        id: global['selected']['import'][indexX]['id'],
+        id: global['material'][indexX]['id'],
         date: $("#import-date-" + index).val(),
         number: $("#import-number-" + index).val(),
         status: $("#import-status-" + index).val()
@@ -226,16 +238,38 @@
         {action: 'insert-import', data: global['selected']['import']},
         (response, status) => {
           checkResult(response, status).then(data => {
-            console.log(data);
-            
             $("#material-content").html(data['html'])
+            $("#content").html(data['html2'])
             $('#import-modal-insert').modal('hide')
+            global['selected']['import'] = []
+            parseImport()
             // do nothing
             // return inserted item_id
           }, () => {})
         }
       )
     }
+  }
+
+  function importRemoveSubmit() {
+    $.post(
+      "",
+      {action: 'remove-import', id: global['id']},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#material-content").html(data['html'])
+          $("#content").html(data['html2'])
+          $('#import-modal-remove').modal('hide')
+          // do nothing
+          // return inserted item_id
+        }, () => {})
+      }
+    )
+  }
+
+  function importRemove(id) {
+    global['id'] = id
+    $('#import-modal-remove').modal('show')
   }
 
   function editImportSubmit() {
