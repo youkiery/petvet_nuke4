@@ -213,6 +213,42 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['import'] = $list;
     break;
+    case 'insert-export':
+      $data = $nv_Request->get_array('data', 'post');
+
+      if (!($total = count($data))) {
+        $result['notify'] = 'Chưa có hàng hóa nhập';
+      }
+      else {
+        // insert
+        $query = $db->query('insert into `'. PREFIX .'export` (export_date, note) values('. time().', "")');
+        if ($query) {
+          $count = 0;
+          $id = $db->lastInsertId();
+          // check item, status, expiry
+          foreach ($data as $row) {
+            $row['date'] = totimev2($row['date']);
+            $sql = 'insert into `'. PREFIX .'export_detail` (export_id, item_id, number, note) values('. $id .', '. $row['id'] .', '. $row['number'] .', "")';
+            $sql2 = 'update `'. PREFIX .'material` set number = number - '. $row['number'] .' where id = ' . $row['id'];
+            if ($db->query($sql) && $db->query($sql2)) {
+              $count ++;
+            }
+          }
+          if ($total > 0) {
+            $result['status'] = 1;
+            $result['html'] = exportList();
+            $result['html2'] = materialList();
+            if ($count == $total) {
+              $result['notify'] = 'Đã lưu phiếu xuất thiết bị';
+            }
+            else {
+              $result['notify'] = "Đã lưu $count/$total";
+            }
+          }
+
+        }
+      }
+    break;
   }
   echo json_encode($result);
   die();
@@ -225,6 +261,7 @@ $xtpl->assign('import_modal', importModal());
 $xtpl->assign('import_modal_insert', importModalInsert());
 $xtpl->assign('import_modal_remove', importModalRemove());
 $xtpl->assign('export_modal', exportModal());
+$xtpl->assign('export_modal_insert', exportModalInsert());
 $xtpl->assign('material', json_encode(getMaterialDataList(), JSON_UNESCAPED_UNICODE));
 // $xtpl->assign('remove_modal', removeModal());
 // $xtpl->assign('remove_all_modal', removeAllModal());

@@ -5,6 +5,7 @@
 {import_modal_insert}
 {import_modal_remove}
 {export_modal}
+{export_modal_insert}
 {material_modal}
 <div id="msgshow"></div>
 <div style="float: right;">
@@ -25,7 +26,7 @@
   <button class="btn btn-info" onclick="importModal()">
     Phiếu nhập
   </button>  
-  <button class="btn btn-info">
+  <button class="btn btn-info" onclick="exportModal()">
     Phiếu xuất
   </button>  
 </div>
@@ -49,24 +50,14 @@
     },
     material: JSON.parse('{material}'),
     selected: {
-      'import': []
+      'import': [],
+      'export': []
     }
   }
 
   $(document).ready(() => {
-    itemFilter()
-    input = $("#import-item-finder")
-    suggest = $("#import-item-finder-suggest")
-    input.focus(() => {
-      setTimeout(() => {
-        suggest.show()
-      }, 300);
-    })
-    input.blur(() => {
-      setTimeout(() => {
-        suggest.hide()
-      }, 300);
-    })
+    itemFilter('import')
+    itemFilter('export')
   })
 
   function materialModal() {
@@ -79,6 +70,11 @@
     $("#import-button").show()
     $("#edit-import-button").hide()
     $("#import-modal-insert").modal('show')
+  }
+  function insertExportModal() {
+    $("#export-button").show()
+    $("#edit-export-button").hide()
+    $("#export-modal-insert").modal('show')
   }
   function exportModal() {
     $("#export-modal").modal('show')
@@ -120,48 +116,61 @@
     )
   }
 
-  function itemFilter() {
-    input = $("#import-item-finder")
-    suggest = $("#import-item-finder-suggest")
-    keyword = input.value
-    html = ''
+  function itemFilter(name) {
+    input = $("#"+ name +"-item-finder")
+    suggest = $("#"+ name +"-item-finder-suggest")
     count = 0
 
-    global['material'].forEach((item, index) => {
-      if (count < 30 && item['name'].search(keyword) >= 0) {
-        count ++
-        html += `
-          <div class="suggest-item" onclick="selectItem(`+ index +`)">
-            `+ item['name'] +`
-          </div>`
+    input.keyup((e) => {
+      keyword = input.val()
+      html = ''
+
+      global['material'].forEach((item, index) => {
+        if (count < 30 && item['name'].search(keyword) >= 0) {
+          count ++
+          html += `
+            <div class="suggest-item" onclick="selectItem('`+ name +`', `+ index +`)">
+              `+ item['name'] +`
+            </div>`
+        }
+      })
+      if (!html.length) {
+        html = 'Không có kết quả'
       }
+      suggest.html(html)
     })
-    if (!html.length) {
-      html = 'Không có kết quả'
-    }
-    suggest.html(html)
-    input.focus()
+    input.focus(() => {
+      setTimeout(() => {
+        suggest.show()
+      }, 300);
+    })
+    input.blur(() => {
+      setTimeout(() => {
+        suggest.hide()
+      }, 300);
+    })
+
   }
 
-  function selectItem(index) {
+  function selectItem(name, index) {
     selected = global['material'][index]
-    $("#import-item-finder").val(selected['name'])
-    getImport()
-    global['selected']['import'].push({
+    $("#"+ name +"-item-finder").val(selected['name'])
+    getFormLine(name)
+    global['selected'][name].push({
       index: index,
       id: global['material'][index]['id'],
       date: '',
       number: 1,
       status: '',
     })
-    parseImport()
+    parseFormLine(name)
   }
 
-  function parseImport() {
+  function parseFormLine(name) {
     var html = ''
-    global['selected']['import'].forEach((item, index) => {
+    global['selected'][name].forEach((item, index) => {
       html += `
-        <tbody class="import" id="import-index-`+ index +`" index="`+ item['index'] +`">
+        <tbody class="`+ name +`" id="`+ name +`-index-`+ index +`" index="`+ item['index'] +`">
           <tr>
             <td>
               `+ (index + 1) +`
@@ -170,16 +179,16 @@
               `+ (global['material'][item['index']]['name']) +`
             </td>
             <td>
-              <input class="form-control" id="import-date-`+ index +`" value="`+ (item['date']) +`">
+              <input class="form-control" id="`+ name +`-date-`+ index +`" value="`+ (item['date']) +`">
             </td>
             <td>
-              <input class="form-control" id="import-number-`+ index +`" value="`+ (item['number']) +`">
+              <input class="form-control" id="`+ name +`-number-`+ index +`" value="`+ (item['number']) +`">
             </td>
             <td>
-              <input class="form-control" id="import-status-`+ index +`" value="`+ (item['status']) +`">
+              <input class="form-control" id="`+ name +`-status-`+ index +`" value="`+ (item['status']) +`">
             </td>
             <td>
-              <button class="btn btn-danger" onclick="removeImport(`+ index +`)">
+              <button class="btn btn-danger" onclick="removeFormLine('`+ name +`', `+ index +`)">
                 <span class="glyphicon glyphicon-remove"> <span>
               </button>
             </td>
@@ -200,35 +209,57 @@
         </thead>
         `+ html +`
       </table>`
-    $("#import-insert-modal-content").html(html)
+    $("#"+ name +"-insert-modal-content").html(html)
   }
 
-  function getImport() {
+  function getFormLine(name) {
     data = []
-    $(".import").each((index, item) => {
+    $("." + name).each((index, item) => {
       indexX = trim(item.getAttribute('index'))
       // indexX = trim(item.getAttribute('id').replace('import-index-', ''))
       data.push({
         index: indexX,
         id: global['material'][indexX]['id'],
-        date: $("#import-date-" + index).val(),
-        number: $("#import-number-" + index).val(),
-        status: $("#import-status-" + index).val()
+        date: $("#"+ name +"-date-" + index).val(),
+        number: $("#"+ name +"-number-" + index).val(),
+        status: $("#"+ name +"-status-" + index).val()
       })
     })
-    global['selected']['import'] = data
+    global['selected'][name] = data
   }
 
-  function removeImport(index) {
-    getImport()
-    global['selected']['import'] = global['selected']['import'].filter((item, itemIndex) => {
+  function removeFormLine(name, index) {
+    getFormLine(name)
+    global['selected'][name] = global['selected'][name].filter((item, itemIndex) => {
       return itemIndex !== index
     })
-    parseImport()
+    parseFormLine(name)
+  }
+
+  function exportSubmit() {
+    getFormLine('export')
+    if (!global['selected']['export'].length) {
+      alert_msg('Chưa nhập hàng hóa')
+    }
+    else {
+      $.post(
+        "",
+        {action: 'insert-export', data: global['selected']['export']},
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            $("#export-content").html(data['html'])
+            $("#content").html(data['html2'])
+            $('#export-modal-insert').modal('hide')
+            global['selected']['export'] = []
+            parseFormLine('export')
+          }, () => {})
+        }
+      )
+    }
   }
 
   function importSubmit() {
-    getImport()
+    getFormLine('import')
     if (!global['selected']['import'].length) {
       alert_msg('Chưa nhập hàng hóa')
     }
@@ -242,7 +273,7 @@
             $("#content").html(data['html2'])
             $('#import-modal-insert').modal('hide')
             global['selected']['import'] = []
-            parseImport()
+            parseFormLine('import')
             // do nothing
             // return inserted item_id
           }, () => {})
@@ -273,7 +304,7 @@
   }
 
   function editImportSubmit() {
-    getImport()
+    getFormLine('import')
     if (!global['selected']['import'].length) {
       alert_msg('Chưa nhập hàng hóa')
     }
@@ -301,7 +332,7 @@
         checkResult(response, status).then(data => {
           global['import_id'] = id
           global['selected']['import'] = data['import']
-          parseImport()
+          parseFormLine('import')
           $("#import-button").hide()
           $("#edit-import-button").show()
           $('#import-modal-insert').modal('show')
@@ -309,238 +340,5 @@
       }
     )
   }
-
-
-  // function checkItemData() {
-  //   name = $("#item-name").val()
-  //   unit = $("#item-unit").val()
-  //   number = $("#item-number").val()
-  //   status = $("#item-status").val()
-  //   company = $("#item-company").val()
-  //   description = $("#item-description").val()
-  //   if (!name.length) {
-  //     alert_msg('Tên thiết bị trống')
-  //     return false
-  //   }
-  //   else {
-  //     return {
-  //       name: name,
-  //       unit: unit,
-  //       number: number > 0 ? number : 0,
-  //       status: status,
-  //       company: company,
-  //       description: description
-  //     }
-  //   }
-  // }
-
-  // function itemInsertsubmit() {
-  //   if (data = checkItemData()) {
-  //     $.post(
-  //       "",
-  //       {action: 'insert-item', data: data},
-  //       (response, status) => {
-  //         checkResult(response, status).then(data => {
-  //           // do nothing
-  //           // return inserted item_id
-  //         }, () => {})
-  //       }
-  //     )
-  //   }
-  // }
-
-  // function importSubmit() {
-  //   getImport()
-  //   if (!global['import'].length) {
-  //     alert_msg('Chưa nhập hàng hóa')
-  //   }
-  //   else {
-  //     $.post(
-  //       "",
-  //       {action: 'insert-import', data: global['import']},
-  //       (response, status) => {
-  //         checkResult(response, status).then(data => {
-  //           $("#import-modal-content").html(data['html'])
-  //           $('#import-insert-modal').modal('hide')
-  //           // do nothing
-  //           // return inserted item_id
-  //         }, () => {})
-  //       }
-  //     )
-  //   }
-  // }
-
-  // function editImportSubmit() {
-  //   getImport()
-  //   if (!global['import'].length) {
-  //     alert_msg('Chưa nhập hàng hóa')
-  //   }
-  //   else {
-  //     $.post(
-  //       "",
-  //       {action: 'edit-import', data: global['import']},
-  //       (response, status) => {
-  //         checkResult(response, status).then(data => {
-  //           $("#import-modal-content").html(data['html'])
-  //           $('#import-insert-modal').modal('hide')
-  //           // do nothing
-  //           // return inserted item_id
-  //         }, () => {})
-  //       }
-  //     )
-  //   }
-  // }
-
-  // function importInsert() {
-  //   global['import'] = []
-  //   parseImport()
-  //   $("#import-button").show()
-  //   $("#edit-import-button").hide()
-  //   $('#import-insert-modal').modal('show')
-  // }
-
-  // function checkImport(id) {
-  //   $.post(
-  //     "",
-  //     {action: 'get-import', id: id},
-  //     (response, status) => {
-  //       checkResult(response, status).then(data => {
-  //         global['import_id'] = id
-  //         global['import'] = data['import']
-  //         parseImport()
-  //         $("#import-button").hide()
-  //         $("#edit-import-button").show()
-  //         $('#import-insert-modal').modal('show')
-  //       }, () => {})
-  //     }
-  //   )
-  // }
-
-  // function checkFilter() {
-  //   limit = $("#filter-limit").val()
-  //   return {
-  //     page: global['page'],
-  //     limit: limit > 10 ? limit : 10
-  //   }
-  // }
-
-  // function goPage(page) {
-  //   global['page'] = page
-  //   $.post(
-  //     "",
-  //     {action: 'filter', filter: checkFilter()},
-  //     (response, status) => {
-  //       checkResult(response, status).then(data => {
-  //         $("#content").html(data['html'])
-  //       }, () => {})
-  //     }
-  //   )
-  // }
-
-  // function itemFilter() {
-  //   input = $("#import-item-finder")
-  //   suggest = $("#import-item-finder-suggest")
-  //   keyword = input.value
-  //   html = ''
-  //   count = 0
-
-  //   global['item'].forEach((item, index) => {
-  //     if (count < 30 && item['name'].search(keyword) >= 0) {
-  //       count ++
-  //       html += `
-  //         <div class="suggest-item" onclick="selectItem(`+ index +`)">
-  //           `+ item['name'] +`
-  //         </div>`
-  //     }
-  //   })
-  //   if (!html.length) {
-  //     html = 'Không có kết quả'
-  //   }
-  //   suggest.html(html)
-  //   input.focus()
-  // }
-
-  // function selectItem(index) {
-  //   selected = global['item'][index]
-  //   $("#import-item-finder").val(selected['name'])
-  //   getImport()
-  //   global['import'].push({
-  //     index: index,
-  //     id: global['item'][index]['id'],
-  //     date: '',
-  //     number: 1,
-  //     status: '',
-  //   })
-  //   parseImport()
-  // }
-
-  // function removeImport(index) {
-  //   getImport()
-  //   global['import'] = global['import'].filter((item, itemIndex) => {
-  //     return itemIndex !== index
-  //   })
-  //   parseImport()
-  // }
-
-  // function parseImport() {
-  //   var html = ''
-  //   global['import'].forEach((item, index) => {
-  //     html += `
-  //       <tbody class="import" id="export-index-`+ index +`" index="`+ item['index'] +`">
-  //         <tr>
-  //           <td>
-  //             `+ (index + 1) +`
-  //           </td>
-  //           <td>
-  //             `+ (global['item'][item['index']]['name']) +`
-  //           </td>
-  //           <td>
-  //             <input class="form-control" id="export-date-`+ index +`" value="`+ (item['date']) +`">
-  //           </td>
-  //           <td>
-  //             <input class="form-control" id="export-number-`+ index +`" value="`+ (item['number']) +`">
-  //           </td>
-  //           <td>
-  //             <input class="form-control" id="export-status-`+ index +`" value="`+ (item['status']) +`">
-  //           </td>
-  //           <td>
-  //             <button class="btn btn-danger" onclick="removeImport(`+ index +`)">
-  //               <span class="glyphicon glyphicon-remove"> <span>
-  //             </button>
-  //           </td>
-  //         </tr>
-  //       </tbody>`
-  //   })
-  //   html = `
-  //     <table class="table table-bordered">
-  //       <thead>
-  //         <tr>
-  //           <th class="cell-center"> STT </th>
-  //           <th class="cell-center"> Tên thiết bị </th>
-  //           <th class="cell-center"> Ngày hết hạn </th>
-  //           <th class="cell-center"> Số lượng </th>
-  //           <th class="cell-center"> Chất lượng </th>
-  //           <th></th>
-  //         </tr>
-  //       </thead>
-  //       `+ html +`
-  //     </table>`
-  //   $("#import-insert-modal-content").html(html)
-  // }
-
-  // function getImport() {
-  //   data = []
-  //   $(".import").each((index, item) => {
-  //     index = trim(item.getAttribute('id').replace('export-index-', ''))
-  //     data.push({
-  //       index: item.getAttribute('index'),
-  //       id: global['item'][index]['id'],
-  //       date: $("#export-date-" + index).val(),
-  //       number: $("#export-number-" + index).val(),
-  //       status: $("#export-status-" + index).val()
-  //     })
-  //   })
-  //   global['import'] = data
-  // }
 </script>
 <!-- END: main -->

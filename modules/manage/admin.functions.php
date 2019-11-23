@@ -87,47 +87,12 @@ function deviceList() {
   return $xtpl->text();
 }
 
-// function importModal() {
-//   global $op;
-//   $xtpl = new XTemplate("import-modal.tpl", PATH);
-//   $xtpl->assign('content', importList());
-//   $xtpl->parse('main');
-//   return $xtpl->text();
-// }
-
 function importInsertModal() {
   global $op;
   $xtpl = new XTemplate("import-insert-modal.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }
-
-// function importList() {
-//   global $db, $module_file, $op;
-
-//   $filter = parseFilter('import');
-//   $xtpl = new XTemplate("import-modal-content.tpl", PATH);
-
-//   $query = $db->query('select count(*) as count from `'. PREFIX .'import`');
-//   $number = $query->fetch();
-
-//   // die('select * from `'. PREFIX .'import` limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
-//   $query = $db->query('select * from `'. PREFIX .'import` limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
-//   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
-//   while ($row = $query->fetch()) {
-//     $id = $row['id'];
-//     $importData = getImportData($row['id']);
-
-//     $xtpl->assign('id', 'ip' . spat(6 - strlen($row['id']), '0'));
-//     $xtpl->assign('import_id', $row['id']);
-//     $xtpl->assign('date', date('d/m/Y H:i', $row['import_date']));
-//     $xtpl->assign('count', $importData['count']);
-//     $xtpl->assign('total', $importData['total']);
-//     $xtpl->parse('main.row');
-//   }
-//   $xtpl->parse('main');
-//   return $xtpl->text();
-// }
 
 function materialModal() {
   global $op;
@@ -147,7 +112,13 @@ function importModal() {
 function importModalInsert() {
   global $op;
   $xtpl = new XTemplate("import-modal-insert.tpl", PATH);
-  $xtpl->assign('content', importList());
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function exportModalInsert() {
+  global $op;
+  $xtpl = new XTemplate("export-modal-insert.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -190,9 +161,43 @@ function importList() {
 function exportModal() {
   global $op;
   $xtpl = new XTemplate("export-modal.tpl", PATH);
+  $xtpl->assign('content', exportList());
   $xtpl->parse('main');
   return $xtpl->text();
 }
+
+function exportList() {
+  global $db, $module_file, $op;
+
+  $filter = parseFilter('export');
+  $xtpl = new XTemplate("export-list.tpl", PATH);
+
+  $query = $db->query('select count(*) as count from `'. PREFIX .'export`');
+  $number = $query->fetch();
+
+  // die('select * from `'. PREFIX .'import` limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+  $query = $db->query('select * from `'. PREFIX .'export` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+  while ($row = $query->fetch()) {
+    $id = $row['id'];
+    $exportData = getExportData($row['id']);
+
+    // $xtpl->assign('id', 'ip' . spat(6 - strlen($row['id']), '0'));
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('date', date('d/m/Y H:i', $row['export_date']));
+    $xtpl->assign('count', $exportData['count']);
+    $xtpl->assign('total', $exportData['total']);
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+// function (Type $var = null)
+// {
+//   # code...
+// }
 
 function departList() {
   global $db;

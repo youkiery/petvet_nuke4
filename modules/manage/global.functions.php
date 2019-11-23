@@ -206,6 +206,18 @@ function getImportData($id) {
   return $data;
 }
 
+function getExportData($id) {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'export_detail` where export_id = '. $id);
+  $data = array('total' => 0, 'count' => 0);
+  while ($row = $query->fetch()) {
+    $data['count'] ++;
+    $data['total'] += $row['number'];
+  }
+  return $data;
+}
+
 function spat($number, $str) {
   $string = '';
   for ($i = 0; $i < $number; $i++) { 

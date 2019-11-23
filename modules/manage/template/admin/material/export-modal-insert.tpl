@@ -1,5 +1,5 @@
 <!-- BEGIN: main -->
-<div class="modal" id="import-modal-insert" role="dialog">
+<div class="modal" id="export-modal-insert" role="dialog">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body">
@@ -7,16 +7,16 @@
 
         <div class="relative">
           <div class="input-group">
-            <input type="text" class="form-control" id="import-item-finder">
+            <input type="text" class="form-control" id="export-item-finder">
             <div class="input-group-btn">
               <button class="btn btn-success" onclick="materialModal()">
                 <span class="glyphicon glyphicon-plus"></span>
               </button>
             </div>
           </div>
-          <div id="import-item-finder-suggest" class="suggest"></div>
+          <div id="export-item-finder-suggest" class="suggest"></div>
         </div>
-        <div id="import-insert-modal-content" style="margin-top: 10px;">
+        <div id="export-insert-modal-content" style="margin-top: 10px;">
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -30,8 +30,8 @@
           </table>
         </div>
         <div class="text-center">
-          <button class="btn btn-info" id="import-button" onclick="importSubmit()"> Thêm phiếu nhập </button>
-          <!-- <button class="btn btn-info" id="edit-import-button" onclick="editImportSubmit()"> Sửa phiếu nhập </button> -->
+          <button class="btn btn-info" id="export-button" onclick="exportSubmit()"> Thêm phiếu xuất </button>
+          <!-- <button class="btn btn-info" id="edit-export-button" onclick="editexportSubmit()"> Sửa phiếu xuất </button> -->
         </div>
       </div>
     </div>
