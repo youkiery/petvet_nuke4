@@ -73,6 +73,22 @@ if (!empty($action)) {
         $result['data'] = $data;
       }
     break;
+    case 'insert-depart':
+      $name = $nv_Request->get_string('name', 'post', '');
+      $name = ucwords($name);
+       
+      if (checkDepartName($name)) {
+        $result['notify'] = 'Đơn vị đã tồn tại';
+      }
+      else {
+        $query = $db->query('insert into `'. PREFIX .'depart` (name, update_time) values("'. $name .'", '. time() .')');
+        if ($query) {
+          $result['status'] = 1;
+          $result['inserted'] = array('id' => $db->lastInsertId(), 'name' => $name);
+          $result['notify'] = 'Đã thêm đơn vị';
+        }
+      }
+    break;
   }
   echo json_encode($result);
   die();

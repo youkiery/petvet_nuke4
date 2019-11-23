@@ -241,7 +241,7 @@ function checkItemId($item_id, $item_date, $item_status) {
 function getItemDatav2($id) {
   global $db;
 
-  $query = $db->query('select * from `'. PREFIX .'item_detail` where id = ' . $id);
+  $query = $db->query('select * from `'. PREFIX .'material` where id = ' . $id);
   if ($row = $query->fetch()) {
     return $row;
   }
@@ -264,7 +264,7 @@ function checkItemIndex($list, $id) {
   $itemData = getItemDatav2($id);
 
   foreach ($list as $index => $row) {
-    if ($row['id'] === $itemData['item_id']) {
+    if ($row['id'] === $itemData['id']) {
       return $index;
     }
   }

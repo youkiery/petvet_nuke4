@@ -169,7 +169,7 @@ function importList() {
   $number = $query->fetch();
 
   // die('select * from `'. PREFIX .'import` limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
-  $query = $db->query('select * from `'. PREFIX .'import` limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+  $query = $db->query('select * from `'. PREFIX .'import` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
   while ($row = $query->fetch()) {
     $id = $row['id'];
@@ -194,6 +194,23 @@ function exportModal() {
   return $xtpl->text();
 }
 
+function departList() {
+  global $db;
+
+  $xtpl = new XTemplate("depart-list.tpl", PATH);
+
+  $sql = 'select * from `'. PREFIX .'depart`';
+  $query = $db->query($sql);
+
+  while($row = $query->fetch()) {
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->parse('main');
+  }
+
+  return $xtpl->text();
+}
+
 function materialList() {
   global $db, $op, $module_file;
 
@@ -205,7 +222,7 @@ function materialList() {
   $query = $db->query($sql);
   $number = $query->fetch()['count'];
 
-  $sql = 'select * from `'. PREFIX .'material` limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'material` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
@@ -228,12 +245,7 @@ function editMemberModal() {
   global $db;
   $xtpl = new XTemplate("edit-member-modal.tpl", PATH);
 
-  $query = $db->query('select * from `'. PREFIX .'depart`');
-  while ($row = $query->fetch()) {
-    $xtpl->assign('id', $row['id']);
-    $xtpl->assign('name', $row['name']);
-    $xtpl->parse('main.depart');
-  }
+  $xtpl->assign('content', departList());
   $xtpl->parse('main');
   return $xtpl->text();
 }

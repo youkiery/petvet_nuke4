@@ -10,11 +10,18 @@
             Phòng ban
           </div>
           <div class="col-8">
-            <!-- BEGIN: depart -->
-            <div class="checkbox">
-              <label> <input type="checkbox" name="member-depart" index="{id}" id="member-depart-{id}"> {name} </label>
+            <div class="input-group form-group">
+              <input type="text" class="form-control" id="depart-name">
+              <div class="input-group-btn">
+                <button class="btn btn-success" onclick="insertDepart()">
+                  Thêm
+                </button>
+              </div>
             </div>
-            <!-- END: depart -->
+            <div id="depart-content">
+              {content}
+              <div id="depart-content-tail"></div>
+            </div>
           </div>
         </div>
         <p> <b> Quản lý thiết bị </b> </p>

@@ -9,7 +9,7 @@
 <div id="msgshow"></div>
 <div class="form-group">
   <button class="btn btn-info" onclick="insertMember()">
-    add member
+    Thêm thành viên
   </button>
 </div>
 
@@ -27,6 +27,28 @@
   $(document).ready(() => {
     memberFilter()
   })
+
+  function insertDepart() {
+    name = $("#depart-name").val()
+    if (!name.length) {
+      alert_msg('Nhập tên phòng ban trước khi thêm')
+    }
+    else {
+      $.post(
+        '',
+        { action: 'insert-depart', name: name },
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            $("#depart-name").val('')
+            $("#depart-content-tail").before(`
+            <div class="checkbox">
+              <label> <input type="checkbox" name="member-depart" index="`+ data['inserted']['id'] +`" id="member-depart-`+ data['inserted']['id'] +`"> `+ data['inserted']['name'] +` </label>
+            </div>`)
+          }, () => {})
+        }
+      )
+    }
+  }
 
   function editMember(id) {
     $.post(

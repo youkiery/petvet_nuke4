@@ -84,15 +84,11 @@ if (!empty($action)) {
         // insert
         $sql = 'insert into `'. PREFIX .'material` (name, type, number, unit, description) values("'. $data['name'] .'", "'. $data['number'] .'", "'. $data['type'] .'", "'. $data['unit'] .'", "'. $data['description'] .'")';
         // die($sql);
-        if ($query = $db->query($sql)) {
-          $id = $db->lastInsertId();
-          $sql = 'insert into `'. PREFIX .'item_detail` (item_id, number, date, status) values ('. $id .', '. $data['number'] .', '. strtotime(date('Y/m/d')) .', "'. $data['status'] .'")';
-          if ($db->query($sql)) {
-            $result['status'] = 1;
-            $result['notify'] = 'Đã thêm';
-            $result['id'] = $db->lastInsertId();
-            $result['json'] = array('id' => $db->lastInsertId(), 'name' => $data['name'], 'type' => $data['type'], 'unit' => $data['unit'], 'description' => $data['description']);
-          }
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+          $result['notify'] = 'Đã thêm';
+          $result['id'] = $db->lastInsertId();
+          $result['json'] = array('id' => $db->lastInsertId(), 'name' => $data['name'], 'type' => $data['type'], 'unit' => $data['unit'], 'description' => $data['description']);
         }
       }
     break;
@@ -201,7 +197,6 @@ if (!empty($action)) {
       $list = array();
       $item = getMaterialDataList();
       while ($row = $query->fetch()) {
-        die();
         $index = checkItemIndex($item, $row['item_id']);
         
         if ($itemData = getItemDatav2($row['item_id'])) {
@@ -210,7 +205,7 @@ if (!empty($action)) {
             'id' => $itemData['id'],
             'date' => $itemData['date'] ? date('d/m/Y', $itemData['date']) : '',
             'number' => $row['number'],
-            'status' => $itemData['status']
+            'status' => $itemData['description']
           );
         }
       }
