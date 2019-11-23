@@ -6,6 +6,7 @@
 {import_modal_remove}
 {export_modal}
 {export_modal_insert}
+{export_modal_remove}
 {material_modal}
 <div id="msgshow"></div>
 <div style="float: right;">
@@ -301,6 +302,27 @@
   function importRemove(id) {
     global['id'] = id
     $('#import-modal-remove').modal('show')
+  }
+
+  function exportRemove(id) {
+    global['id'] = id
+    $('#export-modal-remove').modal('show')
+  }
+
+  function exportRemoveSubmit() {
+    $.post(
+      "",
+      {action: 'remove-export', id: global['id']},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#export-content").html(data['html'])
+          $("#content").html(data['html2'])
+          $('#export-modal-remove').modal('hide')
+          // do nothing
+          // return inserted item_id
+        }, () => {})
+      }
+    )
   }
 
   function editImportSubmit() {

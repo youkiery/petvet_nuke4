@@ -130,6 +130,13 @@ function importModalRemove() {
   return $xtpl->text();
 }
 
+function exportModalRemove() {
+  global $op;
+  $xtpl = new XTemplate("export-modal-remove.tpl", PATH);
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function importList() {
   global $db, $module_file, $op;
 

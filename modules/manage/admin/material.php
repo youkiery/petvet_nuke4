@@ -249,6 +249,27 @@ if (!empty($action)) {
         }
       }
     break;
+    case 'remove-export':
+      $id = $nv_Request->get_int('id', 'post', 0);
+
+      // ktb: lấy số lượng nhập, giảm số lượng kho
+      $query = $db->query('select * from `'. PREFIX .'export_detail` where export_id = ' . $id);
+      $count = 0;
+      $total = 0;
+      while ($row = $query->fetch()) {
+        if ($db->query('update `'.  PREFIX .'material` set number = number + '. $row['number'] .' where id = ' . $row['item_id'])) {
+          $count ++;
+        }
+        $total ++;
+      }
+
+      if ($db->query('delete from `'.  PREFIX .'export` where id = ' . $id)) {
+        $result['status'] = 1;
+        $result['notify'] = 'Đã xóa phiếu nhập';
+        $result['html'] = exportList();
+        $result['html2'] = materialList();
+      }
+    break;
   }
   echo json_encode($result);
   die();
@@ -262,6 +283,7 @@ $xtpl->assign('import_modal_insert', importModalInsert());
 $xtpl->assign('import_modal_remove', importModalRemove());
 $xtpl->assign('export_modal', exportModal());
 $xtpl->assign('export_modal_insert', exportModalInsert());
+$xtpl->assign('export_modal_remove', exportModalRemove());
 $xtpl->assign('material', json_encode(getMaterialDataList(), JSON_UNESCAPED_UNICODE));
 // $xtpl->assign('remove_modal', removeModal());
 // $xtpl->assign('remove_all_modal', removeAllModal());
