@@ -1,13 +1,15 @@
 <!-- BEGIN: main -->
 <style>
   .form-group { clear: both; }
-  .vetleft, .vetright { position: absolute; top: 0px; width: 200px; text-align: center; }
+  .vetleft, .vetright { position: absolute; top: 0px; width: 135px; text-align: center; }
   .vetleft { left: 0px; }
   .vetright { right: 0px; }
+  .vetleft img, .vetright img {
+    width: 75px !important;
+  }
 
   @media screen and (max-width: 992px) {
     .vetleft, .vetright { position: unset; display: inline-block; width: 100%; }
-    .vetleft img, .vetright img { width: 75px !important; }
   }
 
   @media screen and (max-width: 768px) {
@@ -49,12 +51,12 @@
 
   <div id="content" style="position: relative;">
     <div class="vetleft">
-      <img src="/assets/images/5.jpg" style="width: 100px;">
-      <img src="/assets/images/1.jpg" style="width: 100px;">
-      <img src="/assets/images/3.jpg" style="width: 100px;">
-      <img src="/assets/images/4.jpg" style="width: 100px;">
-      <img src="/assets/images/9.jpg" style="width: 100px;">
-      <img src="/assets/images/2.jpg" style="width: 100px;">
+      <img src="/assets/images/5.jpg">
+      <img src="/assets/images/1.jpg">
+      <img src="/assets/images/3.jpg">
+      <img src="/assets/images/4.jpg">
+      <img src="/assets/images/9.jpg">
+      <img src="/assets/images/2.jpg">
       <p style="font-weight: bold; margin: 14px; font-size: 1.25em; color: deepskyblue; text-shadow: 2px 2px 6px;">LỄ HỘI THÚ CƯNG ĐẮK LẮK 2019</p>
     </div>
     <div>
@@ -109,14 +111,17 @@
       <div></div>
     </div>
     <div class="vetright">
-      <img src="/assets/images/6.jpg" style="width: 100px;">
-      <img src="/assets/images/7.jpg" style="width: 100px;">
-      <img src="/assets/images/8.jpg" style="width: 100px;">
-      <img src="/assets/images/2.jpg" style="width: 100px;">
+      <img src="/assets/images/6.jpg">
+      <img src="/assets/images/7.jpg">
+      <img src="/assets/images/8.jpg">
+      <img src="/assets/images/10.jpg">
+      <img src="/assets/images/1.jpg">
+      <img src="/assets/images/2.jpg">
       <p style="font-weight: bold; margin: 14px; font-size: 1.25em; color: deepskyblue; text-shadow: 2px 2px 6px;">LỄ HỘI THÚ CƯNG ĐẮK LẮK 2019</p>
     </div>
     <br>
-          <div style="max-width: 700px; margin: auto; border: 1px solid lightgray; border-radius: 10px; padding: 10px 10px 60px 10px;">
+    <!-- BEGIN: list -->
+      <div style="max-width: 700px; margin: auto; border: 1px solid lightgray; border-radius: 10px; padding: 10px 10px 60px 10px;">
         <p>
           Danh sách những người đã đăng ký
         </p>
@@ -153,6 +158,7 @@
           {confirm_list}
         </div>
       </div>
+    <!-- BEGIN: list -->
   </div>
 </div>
 

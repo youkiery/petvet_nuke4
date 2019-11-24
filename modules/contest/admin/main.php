@@ -145,11 +145,33 @@ if (!empty($action)) {
         }
       }
     break;
+    case 'toggle-content':
+      $type = $nv_Request->get_int('type', 'post', 0);
+
+      if ($db->query('update `'. PREFIX .'config` set value = ' . $type . ' where name = "show_content"')) {
+        $result['status'] = 1;
+      }
+    break;
   }
   echo json_encode($result);
   die();
 }
 $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/$module_file/template/admin/$op");
+$query = $db->query('select * from `'. PREFIX .'config` where name = "show_content"');
+$contest_config = $query->fetch();
+if (empty($contest_config)) {
+  $db->query('insert into `'. PREFIX .'config` (name, value) values("show_content", 1)');
+  $contest_config = array('value' => 1);
+}
+
+if ($contest_config['value']) {
+  $xtpl->assign('show_yes', 'block');
+  $xtpl->assign('show_no', 'none');
+}
+else {
+  $xtpl->assign('show_yes', 'none');
+  $xtpl->assign('show_no', 'block');
+}
 
 $query = $db->query('select * from `'. PREFIX .'species` order by rate desc');
 $species = array();

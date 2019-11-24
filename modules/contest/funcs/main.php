@@ -42,6 +42,32 @@ if (!empty($action)) {
 }
 $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/". $op);
 $query = $db->query("select * from `". PREFIX ."test` where active = 1");
+
+$query = $db->query('select * from `'. PREFIX .'config` where name = "show_content"');
+$contest_config = $query->fetch();
+if (empty($contest_config)) {
+  $db->query('insert into `'. PREFIX .'config` (name, value) values("show_content", 1)');
+  $contest_config = array('value' => 1);
+}
+
+if ($contest_config['value']) {
+  $xtpl->assign('confirm_list', confirmList());
+  $query = $db->query('select * from `'. PREFIX .'species` order by rate desc');
+  while ($row = $query->fetch()) {
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('species', ucwords($row['name']));
+    $xtpl->parse('main.list.species');
+  }
+  
+  $query = $db->query('select * from `'. PREFIX .'test` where active = 1');
+  while ($row = $query->fetch()) {
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('contest', $row['name']);
+    $xtpl->parse('main.list.contest');
+  }
+  $xtpl->parse('main.list');
+}
+
 while ($row = $query->fetch()) {
   $xtpl->assign('id', $row['id']);
   $xtpl->assign('name', $row['name']);
@@ -54,21 +80,6 @@ while ($row = $query->fetch()) {
   $species[] = ucwords($row['name']);
 }
 
-$query = $db->query('select * from `'. PREFIX .'species` order by rate desc');
-while ($row = $query->fetch()) {
-  $xtpl->assign('id', $row['id']);
-  $xtpl->assign('species', ucwords($row['name']));
-  $xtpl->parse('main.species');
-}
-
-$query = $db->query('select * from `'. PREFIX .'test` where active = 1');
-while ($row = $query->fetch()) {
-  $xtpl->assign('id', $row['id']);
-  $xtpl->assign('contest', $row['name']);
-  $xtpl->parse('main.contest');
-}
-
-$xtpl->assign('confirm_list', confirmList());
 $xtpl->assign('species', json_encode($species, JSON_UNESCAPED_UNICODE));
 $xtpl->parse('main');
 $contents = $xtpl->text();

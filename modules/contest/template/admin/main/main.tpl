@@ -18,6 +18,17 @@
   </button>
 </div>
 
+<div style="float: left; margin: 10px 0px;">
+  <button class="btn btn-warning" id="show-yes" style="display: {show_yes};" onclick="toggleContent(0)">
+    <span class="glyphicon glyphicon-eye-open"> </span>
+  </button>
+  <button class="btn btn-info" id="show-no" style="display: {show_no};" onclick="toggleContent(1)">
+    <span class="glyphicon glyphicon-eye-close"> </span>
+  </button>
+</div>
+
+<div style="clear: both;"></div>
+
 <div class="form-group form-inline">
   <div class="input-group">
     <input type="text" class="form-control" id="filter-limit" value="10">
@@ -163,6 +174,25 @@
         }
       )
     }
+  }
+
+  function toggleContent(type) {
+    $.post(
+      '',
+      { action: 'toggle-content', type: type },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          if (type) {
+            $("#show-yes").show()
+            $("#show-no").hide()
+          }
+          else {
+            $("#show-no").show()
+            $("#show-yes").hide()
+          }
+        })
+      }
+    )
   }
 
   function goPage(page) {
