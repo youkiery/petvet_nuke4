@@ -41,10 +41,10 @@
   </div>
 </div>
 
-<a href="/{module_name}/excel"> Thêm bằng excel </a>
+<a href="/{module_name}/exp"> Quản lý danh sách </a>
 <div class="row">
   <div class="col-sm-12">
-    <input type="text" class="form-control" id="filter-key" placeholder="Từ khóa">
+    <input type="text" class="form-control" id="filter-keyword" placeholder="Từ khóa">
   </div>
   <div class="col-sm-12">
     <select class="form-control" id="filter-time">
