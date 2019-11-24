@@ -18,14 +18,7 @@
       <td> {type} </td>
       <td> {number} </td>
       <td> {description} </td>
-      <td>
-        <button class="btn btn-info" onclick="editMaterial({id})">
-          <span class="glyphicon glyphicon-edit"></span>
-        </button>
-        <button class="btn btn-danger" onclick="removeMaterial({id})">
-          <span class="glyphicon glyphicon-remove"></span>
-        </button>
-      </td>
+      <td>  </td>
     </tr>
   </tbody>
   <!-- END: row -->

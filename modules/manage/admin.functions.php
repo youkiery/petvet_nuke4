@@ -20,28 +20,28 @@ function memberModal() {
 
 function deviceModal() {
   global $module_file, $op;
-  $xtpl = new XTemplate("device-modal.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/" . $op);
+  $xtpl = new XTemplate("device-modal.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }
 
 function departModal() {
   global $module_file, $op;
-  $xtpl = new XTemplate("depart-modal.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/" . $op);
+  $xtpl = new XTemplate("depart-modal.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }
 
 function removeModal() {
   global $module_file, $op;
-  $xtpl = new XTemplate("remove-modal.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/" . $op);
+  $xtpl = new XTemplate("remove-modal.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }
 
 function removeAllModal() {
   global $module_file, $op;
-  $xtpl = new XTemplate("remove-all-modal.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/" . $op);
+  $xtpl = new XTemplate("remove-all-modal.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -201,11 +201,6 @@ function exportList() {
   return $xtpl->text();
 }
 
-// function (Type $var = null)
-// {
-//   # code...
-// }
-
 function departList() {
   global $db;
 
@@ -227,19 +222,25 @@ function materialList() {
   global $db, $op, $module_file;
 
   $type_list = array(0 => 'Vật tư', 1 => 'Hóa chất');
-  $filter = parseFilter('import');
+  $filter = parseFilter('main');
+
+  if (empty($filter['type'])) {
+    $filter['type'] = array(0, 1);
+  }
+
   $xtpl = new XTemplate("material-list.tpl", PATH);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'material` limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select count(*) as count from `'. PREFIX .'material` where name like "%'. $filter['keyword'] .'%" and type in ('. implode(', ', $filter['type']) .') limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $number = $query->fetch()['count'];
 
-  $sql = 'select * from `'. PREFIX .'material` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'material`  where name like "%'. $filter['keyword'] .'%" and type in ('. implode(', ', $filter['type']) .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
   while($row = $query->fetch()) {
     $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
     $xtpl->assign('type', $type_list[$row['type']]);
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('number', $row['number']);

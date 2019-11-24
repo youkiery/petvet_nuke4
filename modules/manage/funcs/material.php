@@ -6,7 +6,7 @@
  * @Createdate Mon, 28 Oct 2019 15:00:00 GMT
  */
 
-if (!defined('NV_IS_FILE_ADMIN')) { die('Stop!!!'); }
+if (!defined('NV_IS_MOD_CONGVAN')) { die('Stop!!!'); }
 $page_title = "Quản lý vật tư, hóa chất";
 $excel = $nv_Request->get_int('excel', 'get');
 if ($nv_Request->get_int('excel', 'get')) {
@@ -94,7 +94,7 @@ if (!empty($action)) {
     break;
     case 'filter':
       $result['status'] = 1;
-      $result['html'] = materialList();
+      $result['html'] = deviceList();
     break;
     case 'insert-import':
       $data = $nv_Request->get_array('data', 'post');
@@ -270,42 +270,11 @@ if (!empty($action)) {
         $result['html2'] = materialList();
       }
     break;
-    case 'get-material':
-      $id = $nv_Request->get_string('id', 'post', 0);
-
-      $query = $db->query('select * from `'. PREFIX .'material` where id = '. $id);
-      if (!empty($material = $query->fetch())) {
-        $result['status'] = 1;
-        $result['data'] = $material;
-      }
-    break;
-    case 'edit-material':
-      $id = $nv_Request->get_int('id', 'post', 0);
-      $data = $nv_Request->get_array('data', 'post');
-
-      if (!strlen($data['name'])) {
-        $result['notify'] = 'Tên vật tư trống';
-      }
-      else if (checkMaterialName($data['name'], $id)) {
-        $result['notify'] = 'Trùng tên vật tư';
-      }
-      else {
-        // insert
-        $sql = 'update `'. PREFIX .'material` set name = "'. $data['name'] .'", number = "'. $data['number'] .'", type = "'. $data['type'] .'", unit = "'. $data['unit'] .'", description = "'. $data['description'] .'" where id = ' . $id;
-        // die($sql);
-        if ($db->query($sql)) {
-          $result['status'] = 1;
-          $result['notify'] = 'Đã sửa';
-          $result['json'] = array('id' => $id, 'name' => $data['name'], 'number' => $data['number'], 'type' => $data['type'], 'unit' => $data['unit'], 'description' => $data['description']);
-        }
-      }
-    break;
   }
   echo json_encode($result);
   die();
 }
 $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/material");
-
 $xtpl->assign('content', materialList());
 $xtpl->assign('material_modal', materialModal());
 $xtpl->assign('import_modal', importModal());
@@ -329,5 +298,5 @@ $xtpl->parse('main');
 $contents = $xtpl->text();
 
 include NV_ROOTDIR . '/includes/header.php';
-echo nv_admin_theme($contents);
+echo nv_site_theme($contents);
 include NV_ROOTDIR . '/includes/footer.php';

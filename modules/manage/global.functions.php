@@ -183,7 +183,6 @@ function getCompanyName($id) {
 function parseFilter($name) {
   global $nv_Request;
   $filter = $nv_Request->get_array($name . '_filter', 'post');
-  // var_dump($filter);die();
 
   if (empty($filter['page']) || $filter['page'] < 1) {
     $filter['page'] = 1;
@@ -311,10 +310,15 @@ function getDepartList() {
   return $list;
 }
 
-function checkMaterialName($name) {
+function checkMaterialName($name, $id = 0) {
   global $db;
 
-  $query = $db->query('select * from `'. PREFIX .'material` where name = "'. $name .'"');
+  if ($id) {
+    $query = $db->query('select * from `'. PREFIX .'material` where name = "'. $name .'" and id <>' . $id);
+  }
+  else {
+    $query = $db->query('select * from `'. PREFIX .'material` where name = "'. $name .'"');
+  }
   if ($row = $query->fetch()) return $row['id'];
   return false;
 }

@@ -9,54 +9,27 @@
 {export_modal_remove}
 {material_modal}
 <div id="msgshow"></div>
-<div class="form-group">
-  <input type="text" class="form-control" id="filter-keyword" placeholder="Tìm kiếm theo tên">
-</div>
-<div class="form-group">
-  Phân loại
-  <label> <input name="filter-type" type="checkbox" value="0" checked> Vật tư </label>
-  <label> <input name="filter-type" type="checkbox" value="1" checked> Hóa chất </label>
-</div>
-<div class="text-center">
-  <button class="btn btn-info" onclick="goPage(1)">
-    Tìm kiếm
-  </button>
-</div>
-
-<div class="form-group" style="float: right;">
+<div style="float: right;">
   <button class="btn btn-success" onclick="materialModal()">
     <span class="glyphicon glyphicon-plus"></span>
   </button>
 </div>
-
-<div style="clear: both;"></div>
-<div class="form-group">
-  <div style="float: left;">
-    <button class="btn btn-info" onclick="importModal()">
-      Phiếu nhập
-    </button>  
-    <button class="btn btn-info" onclick="exportModal()">
-      Phiếu xuất
-    </button>  
-  </div>
-  <div style="float: right;">
-    <div class="form-group form-inline">
-      Số dòng mỗi trang
-      <div class="input-group">
-        <select class="form-control" id="filter-limit">
-          <option value="10"> 10 </option>
-          <option value="20"> 20 </option>
-          <option value="50"> 50 </option>
-          <option value="100"> 100 </option>
-          <option value="200"> 200 </option>
-        </select>
-        <!-- <input type="text" class="form-control" id="filter-limit" value="10"> -->
-        <div class="input-group-btn">
-          <button class="btn btn-info" onclick="goPage(1)"> Hiển thị </button>
-        </div>
-      </div>
+<div class="form-group form-inline">
+  Số dòng mỗi trang
+  <div class="input-group">
+    <input type="text" class="form-control" id="filter-limit" value="10">
+    <div class="input-group-btn">
+      <button class="btn btn-info" onclick="goPage(1)"> Hiển thị </button>
     </div>
   </div>
+</div>
+<div class="form-group">
+  <button class="btn btn-info" onclick="importModal()">
+    Phiếu nhập
+  </button>  
+  <button class="btn btn-info" onclick="exportModal()">
+    Phiếu xuất
+  </button>  
 </div>
 
 <div style="clear: both;"></div>
@@ -67,9 +40,9 @@
 <!-- <button class="btn btn-info">
   edit all
 </button>   -->
-<!-- <button class="btn btn-danger">
+<button class="btn btn-danger">
   remove all
-</button>   -->
+</button>  
 <script src="/modules/manage/src/script.js"></script>
 <script>
   var global = {
@@ -88,41 +61,7 @@
     itemFilter('export')
   })
 
-  function goPage(page) {
-    global['page']['main'] = page
-    $.post(
-      "",
-      { action: 'filter', main_filter: checkFilter() },
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          $("#content").html(data['html'])
-        }, () => {})
-      }
-    )
-  }
-
-  function checkFilter() {
-    type = []
-    $("[name=filter-type]:checked").each((index, item) => {
-      type.push(item.value)
-    });
-    return {
-      page: global['main'],
-      limit: $("#filter-limit").val(),
-      keyword: $("#filter-keyword").val(),
-      type: type
-    }
-  }
-
   function materialModal() {
-    $("#insert-material").show()
-    $("#edit-material").hide()
-    $("#material-name").val(data['data']['name'])
-    $("#material-number").val(data['data']['number'])
-    $("#material-unit").val(data['data']['unit'])
-    $("#material-description").val(data['data']['description'])
-    $("#material-type-0").prop('checked', true)
-
     $("#material-modal").modal('show')
   }
   function importModal() {
@@ -162,13 +101,16 @@
     }
   }
 
-  function insertMaterialSubmit() {
+  function insertMaterial() {
     $.post(
       "",
-      { action: 'insert-material', data: checkMaterialData(), main_filter: checkFilter() },
+      { action: 'insert-material', data: checkMaterialData() },
       (response, status) => {
         checkResult(response, status).then(data => {
           global['material'].push(data['json'])
+          $("#material-name").val('')
+          $("#material-unit").val('')
+          $("#material-description").val('')
           $("#content").html(data['html'])
         }, () => {})
       }
@@ -303,7 +245,7 @@
     else {
       $.post(
         "",
-        {action: 'insert-export', data: global['selected']['export'], main_filter: checkFilter()},
+        {action: 'insert-export', data: global['selected']['export']},
         (response, status) => {
           checkResult(response, status).then(data => {
             $("#export-content").html(data['html'])
@@ -325,7 +267,7 @@
     else {
       $.post(
         "",
-        {action: 'insert-import', data: global['selected']['import'], main_filter: checkFilter()},
+        {action: 'insert-import', data: global['selected']['import']},
         (response, status) => {
           checkResult(response, status).then(data => {
             $("#material-content").html(data['html'])
@@ -344,7 +286,7 @@
   function importRemoveSubmit() {
     $.post(
       "",
-      {action: 'remove-import', id: global['id'], main_filter: checkFilter()},
+      {action: 'remove-import', id: global['id']},
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#material-content").html(data['html'])
@@ -370,7 +312,7 @@
   function exportRemoveSubmit() {
     $.post(
       "",
-      {action: 'remove-export', id: global['id'], main_filter: checkFilter()},
+      {action: 'remove-export', id: global['id']},
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#export-content").html(data['html'])
@@ -416,42 +358,6 @@
           $("#import-button").hide()
           $("#edit-import-button").show()
           $('#import-modal-insert').modal('show')
-        }, () => {})
-      }
-    )
-  }
-
-  function editMaterial(id) {
-    $.post(
-      "",
-      {action: 'get-material', id: id},
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          global['id'] = id
-          $("#material-name").val(data['data']['name'])
-          $("#material-number").val(data['data']['number'])
-          $("#material-unit").val(data['data']['unit'])
-          $("#material-description").val(data['data']['description'])
-          $("#material-type-" + data['data']['type']).prop('checked', true)
-          $("#insert-material").hide()
-          $("#edit-material").show()
-          $("#material-modal").modal('show')
-        }, () => {})
-      }
-    )
-  }
-
-  function editMaterialSubmit() {
-    $.post(
-      "",
-      { action: 'edit-material', id: global['id'], data: checkMaterialData(), main_filter: checkFilter() },
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          global['material'].forEach((item, index) => {
-            if (item['id'] == global['id']) global['material'][index] = data['json']
-          });
-          $("#content").html(data['html'])
-          $("#material-modal").modal('hide')
         }, () => {})
       }
     )

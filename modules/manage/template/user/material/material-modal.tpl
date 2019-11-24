@@ -25,8 +25,8 @@
           <div class="form-group">
             <label class="control-label col-sm-6"> Loại </label>
             <div class="col-sm-18">
-              <label> <input name="type" type="radio" id="material-type-0" checked> Vật tư </label>
-              <label> <input name="type" type="radio" id="material-type-1"> Hóa chất </label>
+              <label> <input name="type" type="radio" checked> Vật tư </label>
+              <label> <input name="type" type="radio"> Hóa chất </label>
             </div>
           </div>
           <div class="form-group">
@@ -36,11 +36,8 @@
             </div>
           </div>
           <div class="text-center">
-            <button class="btn btn-success" id="insert-material" onclick="insertMaterialSubmit()">
+            <button class="btn btn-success" onclick="insertMaterial()">
               Thêm mục hàng
-            </button>
-            <button class="btn btn-info" id="edit-material" onclick="editMaterialSubmit()">
-              Sửa mục hàng
             </button>
           </div>
         </div>
