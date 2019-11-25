@@ -383,6 +383,10 @@
     }
   }
 
+  function selectKey(name, type, key) {
+    input = $("#"+ name +"-"+ type)
+    input.val(key)
+  }
   
   function installSuggest(name, type) {
     input = $("#"+ name +"-"+ type)

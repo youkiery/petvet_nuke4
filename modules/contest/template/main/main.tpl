@@ -158,7 +158,7 @@
           {confirm_list}
         </div>
       </div>
-    <!-- BEGIN: list -->
+    <!-- END: list -->
   </div>
 </div>
 
@@ -181,7 +181,7 @@
 </div>
 
 <script>
-  global = {
+  var global = {
     'species': JSON.parse('{species}'),
     'page': 1,
   }

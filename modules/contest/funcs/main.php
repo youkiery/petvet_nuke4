@@ -41,7 +41,6 @@ if (!empty($action)) {
   die();
 }
 $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/". $op);
-$query = $db->query("select * from `". PREFIX ."test` where active = 1");
 
 $query = $db->query('select * from `'. PREFIX .'config` where name = "show_content"');
 $contest_config = $query->fetch();
@@ -68,6 +67,7 @@ if ($contest_config['value']) {
   $xtpl->parse('main.list');
 }
 
+$query = $db->query("select * from `". PREFIX ."test` where active = 1");
 while ($row = $query->fetch()) {
   $xtpl->assign('id', $row['id']);
   $xtpl->assign('name', $row['name']);

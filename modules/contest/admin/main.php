@@ -118,6 +118,7 @@ if (!empty($action)) {
       }
       else {
         $result['status'] = 1;
+        $row['species'] = ucwords(getSpecies($row['species']));
         $row['test'] = json_decode($row['test']);
         $result['data'] = $row;
       }
@@ -131,6 +132,7 @@ if (!empty($action)) {
         $result['notify'] = 'Số điện thoại đã đăng ký';
       }
       else {
+        // echo json_encode($data);die();
         $species = checkSpecies($data['species']);
         $test = json_encode($data['test'], JSON_UNESCAPED_UNICODE);
         $sql = "update `". PREFIX ."row` set name = '$data[name]', petname = '$data[petname]', species = $species, address = '$data[address]', mobile = '$data[mobile]', test = '$test' where id = $id";
