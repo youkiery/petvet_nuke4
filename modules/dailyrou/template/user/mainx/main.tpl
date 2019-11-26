@@ -18,6 +18,9 @@
   <button class="btn btn-info" id="parse-button" onclick="parseTable()">
     Đăng ký
   </button>
+  <button class="btn btn-info" id="parse-button" onclick="summaryModal()">
+    Tổng kết
+  </button>
 </div>
 
 <div style="clear: both;"></div>
@@ -42,6 +45,10 @@
   $(document).ready(() => {
     installColor()
   })
+
+  function summaryModal() {
+    $("#summary-modal").modal('show')
+  }
 
   function cancelColor() {
     global['regist'] = false

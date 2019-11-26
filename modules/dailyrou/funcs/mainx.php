@@ -83,12 +83,15 @@ die();
 
 $xtpl = new XTemplate("main.tpl", PATH2);
 
+
 $xtpl->assign('userid', $user_info['userid']);
 $xtpl->assign('user', json_encode($user, JSON_UNESCAPED_UNICODE));
 $xtpl->assign('data', json_encode($data, JSON_UNESCAPED_UNICODE));
 $xtpl->assign('except', json_encode($except, JSON_UNESCAPED_UNICODE));
 $xtpl->assign('permission', ($used['permission'] ? 1 : 0));
 $xtpl->assign('today', date('d/m/Y'));
+
+$today = time();
 
 $xtpl->assign('notify_modal', notifyModal());
 $xtpl->assign('summary_modal', summaryModal());
