@@ -13,6 +13,7 @@ if (!defined('NV_SYSTEM')) {
 
 define('NV_IS_DAILY', true); 
 define("PATH", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_name);
+define("PATH2", NV_ROOTDIR . "/modules/" . $module_file . '/template/user/' . $op);
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 
@@ -40,6 +41,40 @@ if (!empty($user_info) && !empty($user_info['userid'])) {
 else {
   $check = true;
   $contents = '<p style="padding: 10px;">Chỉ có thành viên được phân quyền mới có thể thấy được mục này</p>';
+}
+
+function calTable($time, $data, $user) {
+  global $db;
+
+  $datetime = array(0 => 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'CN');
+  $i = 0;
+  $j = 0;
+  $list = array(0 => array(), array(), array(), array(), array(), array(), array());
+  $length = count($data);
+  $xtpl = new XTemplate("cal-table.tpl", PATH2);
+
+  foreach ($data as $key => $row) {
+    $list[$row['time']][$row['type']][]= $user[$row['user_id']];
+  }
+
+  foreach ($list as $i => $day) {
+    $xtpl->assign('date', date('d/m/Y', $time + 60 * 60 * 24 * $i));
+    $xtpl->assign('day', $datetime[$i]);
+    $xtpl->assign('datetime', $i);
+    foreach ($day as $court => $row) {
+      $xtpl->assign('p' . $court, implode(', ', $row));
+    }
+    $xtpl->parse('main.row');
+  }
+  
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function notifyModal() {
+  $xtpl = new XTemplate("notify-modal.tpl", PATH2);
+  $xtpl->parse('main');
+  return $xtpl->text();
 }
 
 if ($check) {
