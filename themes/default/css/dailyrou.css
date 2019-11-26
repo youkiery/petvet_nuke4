@@ -64,6 +64,11 @@
   background: #8f8;
 }
 
+.gray {
+  background: gray;
+  color: white;
+}
+
 .red {
   background: red;
   color: white;
@@ -71,7 +76,7 @@
 
 .green {
   background: green;
-  color: black;
+  color: white;
 }
 
 .white {
@@ -99,7 +104,7 @@
   color: white;
 }
 
-.red, .green, .white, .yellow, .orange, .purple, .blue {
+.gray, .red, .green, .white, .yellow, .orange, .purple, .blue {
   border: 1px solid #fff;
 }
 

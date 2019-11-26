@@ -77,6 +77,13 @@ function notifyModal() {
   return $xtpl->text();
 }
 
+function summaryModal($startDate, $endDate) {
+  $xtpl = new XTemplate("summary-modal.tpl", PATH2);
+  $xtpl->assign('content', adminSummary($startDate, $endDate));
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 if ($check) {
   include ( NV_ROOTDIR . "/includes/header.php" );
   echo nv_site_theme($contents);

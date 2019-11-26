@@ -5,13 +5,14 @@
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <div class="msgshow" id="msgshow"></div>
 
-{notify_model}
+{notify_modal}
+{summary_modal}
 
 <div class="form-group" style="float: right;">
   <button class="btn btn-danger" id="cancel-button" style="display: none;" onclick="cancelColor()">
     Hủy đăng ký
   </button>
-  <button class="btn btn-success" id="submit-button" style="display: none;" onclick="registSubmit()">
+  <button class="btn btn-success" id="submit-button" style="display: none;" onclick="regist()">
     Đăng ký
   </button>
   <button class="btn btn-info" id="parse-button" onclick="parseTable()">
@@ -32,7 +33,10 @@
     except: JSON.parse('{except}'),
     userid: '{userid}',
     time: '{today}',
-    regist: false
+    permission: '{permission}',
+    today: '{today}',
+    regist: false,
+    list: []
   }
 
   $(document).ready(() => {
@@ -90,9 +94,26 @@
       $("#cancel-button").show()
       $(".dailyrou").attr('class', 'dailyrou green')
 
+      today = global['today'].split('/')
+      today = new Date(today[2], today[1] - 1, today[0]).getTime()
+
+      if (!global['permission']) {
+        $("[day]").each((index, item) => {
+          current = trim(item.innerText)
+          day = item.getAttribute('day')
+          current = current.split('/')
+          current = new Date(current[2], current[1] - 1, current[0]).getTime()
+          
+          if (current <= today) {
+            $("[datetime="+ day +"]").attr('class', 'dailyrou gray')
+          }
+        })        
+      }
+
       global['data'].forEach(item => {
         current = $("[datetime="+ item['time'] +"][court="+ item['type'] +"]")
         value = current.text()
+        
         if (value.search(global['user'][global['userid']]) >= 0) {
           // user regiested
           current.attr('class', 'dailyrou orange')
@@ -120,29 +141,50 @@
   }
 
   function registSubmit() {
-    list = []
-    a = ['blue', 'orange']
-    $('.dailyrou').each((index, item) => {
-      value = item.getAttribute('class').replace('dailyrou ', '')
-      type = item.getAttribute('court')
-      datetime = item.getAttribute('datetime')
-      if (a.indexOf(value) >= 0) {
-        list.push({
-          time: trim($("[day="+ datetime +"]").text()),
-          type: type
-        })
-      }
-    })
-
     $.post(
       "",
       {action: 'insert-regist', list: list},
       (response, status) => {
         checkResult(response, status).then(data => {
-          // global[]
-        })
+          global['regist'] = false
+          parseButton()
+          global['list'] = []
+          global['data'] = data['json']
+          $("#content").html(data['html'])
+          $("#notify-modal").modal('hide')
+        }, () => {})
       }
     )
+  }
+
+  function regist() {
+    html = ''
+    list = []
+    a = ['blue', 'yellow']
+    b = ['Trực sáng', 'Trực tối', 'Nghỉ sáng', 'Nghỉ chiều']
+    $('.dailyrou').each((index, item) => {
+      value = item.getAttribute('class').replace('dailyrou ', '')
+      type = item.getAttribute('court')
+      datetime = item.getAttribute('datetime')
+      time = trim($("[day="+ datetime +"]").text())
+      if (a.indexOf(value) >= 0) {
+        html += 'Đăng ký ' + b[type] + ' ngày ' + time + '<br>'
+        list.push({
+          color: value,
+          time: time,
+          type: type
+        })
+      }
+    })
+
+    if (!list.length) {
+      alert_msg('Chọn ít nhất một ngày để nghỉ')
+    }
+    else {
+      global['list'] = list
+      $("#notify-content").html(html)
+      $("#notify-modal").modal('show')
+    }
   }
 </script>
 <!-- END: main -->
