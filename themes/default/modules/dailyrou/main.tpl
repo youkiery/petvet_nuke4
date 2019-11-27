@@ -243,17 +243,9 @@
   var cconfirm = $("#cconfirm")
   var reset = $("#reset")
   var doctor = $("#doctor")
-  // var list = $("#list")
   var content = $("#content")
   var registConfirm = $("#regist_confirm")
   var registList = $("#regist_list")
-  // var workList = $("#work_list")
-  // var workContentList = $("#work_content_list")
-  // var exchangeWork = $("#exchange_work")
-  // var exchangeWorkContent = $("#exchange_work_content")
-  // var exchangeWorkDoctor = $("#exchange_work_doctor")
-  // var confirmWork = $("#confirm_work")
-  // var confirmWorkContent = $("#confirm_work_content")
   var dconfirm = $("#dconfirm")
   var wconfirmAlert = $("#wconfirm_alert")
   var wconfirmAlertContent = $("#wconfirm_alert_content")
@@ -268,7 +260,7 @@
 
   var admin = {admin}
   var regist = false
-  var color = ["white", "green", "red", "orange"]
+  var color = ["white", "gray", "green", "red", "orange"]
   var panis = []
   var exDate = -1
   var exType = -1
@@ -282,130 +274,6 @@
   }
 
   setEvent()
-
-  // #exchange
-  // exchangeWorkDoctor.change(() => {
-  //   getWorkList()
-  // })
-
-  // function exchange(exchangeDate, exchangeType) {
-  //   exDate = exchangeDate
-  //   exType = exchangeType
-
-  //   getWorkList().then(() => {
-  //     exchangeWork.modal("show")
-  //   })
-  // }
-
-  // function getWorkList() {
-  //   return new Promise(resolve => {
-  //     $.post(
-  //       strHref,
-  //       {action: "getWorkList", doctorId: exchangeWorkDoctor.val(), exType: exType, startDate: startDate.val(), endDate: endDate.val()},
-  //       (response, status) => {
-  //         checkResult(response, status).then((data) => {
-  //           exchangeWorkContent.html(data["html"])
-  //           resolve()
-  //         }, () => {})
-  //       }    
-  //     )
-  //   })
-  // }
-
-  // function exchangeSubmit(exDate2, extype2) {
-  //   $.post(
-  //     strHref,
-  //     {action: "exchange", exDate: exDate, exType: exType, exDate2: exDate2, exType2: exType2},
-  //     (response, status) => {
-  //       checkResult(response, status).then((data) => {
-
-  //       }, () => {})
-  //     }
-  //   )
-  // }
-
-  // #confirm schedule
-  // function editSchedule() {
-  //   $.post(
-  //     strHref,
-  //     {action: "editSchedule", doctorId: exchangeWorkDoctor.val(), exType: exType, startDate: startDate.val(), endDate: endDate.val()},
-  //     (response, status) => {
-  //       checkResult(response, status).then((data) => {
-  //         confirmWorkContent.html(data["html"])
-  //         confirmWork.modal("show")
-          
-  //         setEvent2()
-  //       }, () => {})
-  //     }    
-  //   )
-  // }
-
-  // function registOnAdmin() {
-  //   if (admin) {
-  //     registOff()
-  //   }
-  //   else {
-  //     var table = content[0].children[0].children[1].children
-  //     var i = 0
-  //     var thisDateString = "", thisDate = 0
-  //     for (const rowKey in table) {
-  //       if (table.hasOwnProperty(rowKey)) {
-  //         const row = table[rowKey];
-  //         var moi = [0, 0, 0, 0, 0]
-          
-  //         while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
-  //           moi[dbdata[i]["type"] + 1] = 2
-  //           i ++
-  //         }
-  //         moi.forEach((cellColor, index) => {
-  //           row.children[index].setAttribute("class", color[cellColor])
-  //         });
-  //       }
-  //     }
-      
-  //   }
-  //   admin = !admin
-  // }
-
-  // list.click(() => {
-  //   var table = content[0].children[0].children[1].children
-  //   var i = 0
-  //   html = ""
-  //   for (const rowKey in table) {
-  //     if (table.hasOwnProperty(rowKey)) {
-  //       const row = table[rowKey];
-  //       var last_type = -1
-  //       var last_date = -1
-
-  //       while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
-  //         if (row.children[dbdata[i]["type"] + 1].innerText.search(username) >= 0) {
-  //           if (last_date != dbdata[i]["date"] || last_type != dbdata[i]["type"]) {
-  //             switch (dbdata[i]["type"]) {
-  //               case 0:
-  //                 type = "trực sáng"
-  //                 break;
-  //               case 1:
-  //                 type = "trực tối"
-  //                 break;
-  //               case 2:
-  //                 type = "nghỉ sáng"
-  //                 break;
-  //               case 3:
-  //                 type = "nghỉ chiều"
-  //                 break;
-  //             }
-  //             html += "<div class='item'>Ngày " + dbdata[i]["date"] + ": " + type + "<button class='btn btn-info right' onclick='exchange(\"" + dbdata[i]["date"] + "\", " + dbdata[i]["type"] +")'><span class='glyphicon glyphicon-retweet'></span></button></div>"
-  //           }
-  //         }
-  //         last_date = dbdata[i]["date"]
-  //         last_type = dbdata[i]["type"]
-  //         i ++
-  //       }
-  //     }
-  //   }
-  //   workContentList.html(html)
-  //   workList.modal("show")
-  // })
 
   // general
 
@@ -637,44 +505,6 @@
     }
   })
 
-  // dateType.change(() => {
-  //   var date = {}
-  //   var now = new Date();
-    
-  //   switch (dateType.val()) {
-  //     case "1":
-  //       // this week
-  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 1);
-  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 7);
-  //     break;
-  //     case "2":
-  //       // next week
-  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 7);
-  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 14);
-  //     break;
-  //     case "3":
-  //       // this month
-  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 2, 1);
-  //     break;
-  //     case "4":
-  //       // last month
-  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth(), 1);
-  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-  //     break;
-  //     case "5":
-  //       // next month
-  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 2, 1);
-  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 3, 1);
-  //     break;
-  //   }
-  //   if (date["startDate"]) {
-  //     startDate.val(dateToString(date["startDate"]));
-  //     endDate.val(dateToString(date["endDate"]));
-  //     filterData(); 
-  //   }
-  // })
-
   $("#start-date").change(() => {
     dateTimeout = setTimeout(() => {
       filterData()
@@ -695,10 +525,17 @@
     for (const rowKey in table) {
       if (table.hasOwnProperty(rowKey)) {
         const row = table[rowKey];
-        var moi = [0, 0, 1, 1, 1, 1]
+        moi = [0, 0, 2, 2, 2, 2]
+        if (!admin) {
+          date = trim(row.children[0].innerText).split('/')
+          date = new Date(date[2], date[1] - 1, date[0]).getTime()
+          
+          if (date <= today) moi = [0, 0, 1, 1, 1, 1]
+        }
+        
         while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
           var thisIndex = Number(dbdata[i]["type"]) + 2
-          // var color = ["white", "green", "red", "orange"]
+          // var color = ["white", "gray", "green", "red", "orange"]
           
           if (row.children[thisIndex].innerText.search(username) >= 0) {
             moi[thisIndex] = 3
@@ -930,5 +767,176 @@
     }
     return 0
   }
+
+  // var list = $("#list")
+  // var workList = $("#work_list")
+  // var workContentList = $("#work_content_list")
+  // var exchangeWork = $("#exchange_work")
+  // var exchangeWorkContent = $("#exchange_work_content")
+  // var exchangeWorkDoctor = $("#exchange_work_doctor")
+  // var confirmWork = $("#confirm_work")
+  // var confirmWorkContent = $("#confirm_work_content")
+
+  // #exchange
+  // exchangeWorkDoctor.change(() => {
+  //   getWorkList()
+  // })
+
+  // function exchange(exchangeDate, exchangeType) {
+  //   exDate = exchangeDate
+  //   exType = exchangeType
+
+  //   getWorkList().then(() => {
+  //     exchangeWork.modal("show")
+  //   })
+  // }
+
+  // function getWorkList() {
+  //   return new Promise(resolve => {
+  //     $.post(
+  //       strHref,
+  //       {action: "getWorkList", doctorId: exchangeWorkDoctor.val(), exType: exType, startDate: startDate.val(), endDate: endDate.val()},
+  //       (response, status) => {
+  //         checkResult(response, status).then((data) => {
+  //           exchangeWorkContent.html(data["html"])
+  //           resolve()
+  //         }, () => {})
+  //       }    
+  //     )
+  //   })
+  // }
+
+  // function exchangeSubmit(exDate2, extype2) {
+  //   $.post(
+  //     strHref,
+  //     {action: "exchange", exDate: exDate, exType: exType, exDate2: exDate2, exType2: exType2},
+  //     (response, status) => {
+  //       checkResult(response, status).then((data) => {
+
+  //       }, () => {})
+  //     }
+  //   )
+  // }
+
+  // #confirm schedule
+  // function editSchedule() {
+  //   $.post(
+  //     strHref,
+  //     {action: "editSchedule", doctorId: exchangeWorkDoctor.val(), exType: exType, startDate: startDate.val(), endDate: endDate.val()},
+  //     (response, status) => {
+  //       checkResult(response, status).then((data) => {
+  //         confirmWorkContent.html(data["html"])
+  //         confirmWork.modal("show")
+          
+  //         setEvent2()
+  //       }, () => {})
+  //     }    
+  //   )
+  // }
+
+  // function registOnAdmin() {
+  //   if (admin) {
+  //     registOff()
+  //   }
+  //   else {
+  //     var table = content[0].children[0].children[1].children
+  //     var i = 0
+  //     var thisDateString = "", thisDate = 0
+  //     for (const rowKey in table) {
+  //       if (table.hasOwnProperty(rowKey)) {
+  //         const row = table[rowKey];
+  //         var moi = [0, 0, 0, 0, 0]
+          
+  //         while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
+  //           moi[dbdata[i]["type"] + 1] = 2
+  //           i ++
+  //         }
+  //         moi.forEach((cellColor, index) => {
+  //           row.children[index].setAttribute("class", color[cellColor])
+  //         });
+  //       }
+  //     }
+      
+  //   }
+  //   admin = !admin
+  // }
+
+  // list.click(() => {
+  //   var table = content[0].children[0].children[1].children
+  //   var i = 0
+  //   html = ""
+  //   for (const rowKey in table) {
+  //     if (table.hasOwnProperty(rowKey)) {
+  //       const row = table[rowKey];
+  //       var last_type = -1
+  //       var last_date = -1
+
+  //       while (i < schedule && (row.children[0].innerText == dbdata[i]["date"])) {
+  //         if (row.children[dbdata[i]["type"] + 1].innerText.search(username) >= 0) {
+  //           if (last_date != dbdata[i]["date"] || last_type != dbdata[i]["type"]) {
+  //             switch (dbdata[i]["type"]) {
+  //               case 0:
+  //                 type = "trực sáng"
+  //                 break;
+  //               case 1:
+  //                 type = "trực tối"
+  //                 break;
+  //               case 2:
+  //                 type = "nghỉ sáng"
+  //                 break;
+  //               case 3:
+  //                 type = "nghỉ chiều"
+  //                 break;
+  //             }
+  //             html += "<div class='item'>Ngày " + dbdata[i]["date"] + ": " + type + "<button class='btn btn-info right' onclick='exchange(\"" + dbdata[i]["date"] + "\", " + dbdata[i]["type"] +")'><span class='glyphicon glyphicon-retweet'></span></button></div>"
+  //           }
+  //         }
+  //         last_date = dbdata[i]["date"]
+  //         last_type = dbdata[i]["type"]
+  //         i ++
+  //       }
+  //     }
+  //   }
+  //   workContentList.html(html)
+  //   workList.modal("show")
+  // })
+
+  // dateType.change(() => {
+  //   var date = {}
+  //   var now = new Date();
+    
+  //   switch (dateType.val()) {
+  //     case "1":
+  //       // this week
+  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 1);
+  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 7);
+  //     break;
+  //     case "2":
+  //       // next week
+  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 7);
+  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate() - now.getDay() + 14);
+  //     break;
+  //     case "3":
+  //       // this month
+  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 2, 1);
+  //     break;
+  //     case "4":
+  //       // last month
+  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth(), 1);
+  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  //     break;
+  //     case "5":
+  //       // next month
+  //       date["startDate"] = new Date(now.getFullYear(), now.getMonth() + 2, 1);
+  //       date["endDate"] = new Date(now.getFullYear(), now.getMonth() + 3, 1);
+  //     break;
+  //   }
+  //   if (date["startDate"]) {
+  //     startDate.val(dateToString(date["startDate"]));
+  //     endDate.val(dateToString(date["endDate"]));
+  //     filterData(); 
+  //   }
+  // })
 </script>
 <!-- END: main -->
