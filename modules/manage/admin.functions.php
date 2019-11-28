@@ -218,6 +218,26 @@ function departList() {
   return $xtpl->text();
 }
 
+function departContentList() {
+  global $db;
+
+  $xtpl = new XTemplate("depart-list.tpl", PATH);
+  $index = 1;
+
+  $sql = 'select * from `'. PREFIX .'depart` order by id desc';
+  $query = $db->query($sql);
+
+  while($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->parse('main.row');
+  }
+  
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function materialList() {
   global $db, $op, $module_file;
 
