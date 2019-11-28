@@ -117,10 +117,10 @@
   function materialModal() {
     $("#insert-material").show()
     $("#edit-material").hide()
-    $("#material-name").val(data['data']['name'])
-    $("#material-number").val(data['data']['number'])
-    $("#material-unit").val(data['data']['unit'])
-    $("#material-description").val(data['data']['description'])
+    $("#material-name").val('')
+    $("#material-number").val('')
+    $("#material-unit").val('')
+    $("#material-description").val('')
     $("#material-type-0").prop('checked', true)
 
     $("#material-modal").modal('show')
