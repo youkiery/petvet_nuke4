@@ -12,6 +12,22 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
+    case 'edit-depart':
+      $id = $nv_Request->get_int('id', 'post');
+      $name = $nv_Request->get_string('name', 'post', '');
+      $name = ucwords($name);
+       
+      if (checkDepartName($name, $id)) {
+        $result['notify'] = 'Phòng ban đã tồn tại';
+      }
+      else {
+        $query = $db->query('update `'. PREFIX .'depart` set name = "'. $name .'", update_time = '. time() .' where id = ' . $id);
+        if ($query) {
+          $result['status'] = 1;
+          $result['notify'] = 'Đã cập nhật';
+        }
+      }
+    break;
     case 'insert-depart':
       $name = $nv_Request->get_string('name', 'post', '');
       $name = ucwords($name);

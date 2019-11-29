@@ -56,10 +56,9 @@
     function departEdit(id) {
         $.post(
             '',
-            { action: 'edit-depart', id: global['id'], data: checkDepartData() },
+            { action: 'edit-depart', id: id, name: $("#depart-name-" + id).val() },
             (response, status) => {
                 checkResult(response, status).then(data => {
-                    $("#content").html(data['html'])
                 })
             }
         )

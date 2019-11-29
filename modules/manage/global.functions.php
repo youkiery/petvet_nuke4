@@ -112,10 +112,15 @@ function getDeviceData($id) {
   return false;
 }
 
-function checkDepartName($name) {
+function checkDepartName($name, $id = 0) {
   global $db;
 
-  $query = $db->query('select * from `'. PREFIX .'depart` where name = "'. $name .'"');
+  if ($id) {
+    $query = $db->query('select * from `'. PREFIX .'depart` where name = "'. $name .'" and id <> ' . $id);
+  }
+  else {
+    $query = $db->query('select * from `'. PREFIX .'depart` where name = "'. $name .'"');
+  }
   if ($query->fetch()) {
     return true;
   }
