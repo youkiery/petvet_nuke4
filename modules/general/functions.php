@@ -1,17 +1,13 @@
 <?php
 
 /**
- * @Project Petcoffee-tech
- * @Chistua (hchieuthua@gmail.com)
- * @Copyright (C) 2019
- * @Createdate 21-03-2019 13:15
+ * @Project Mining 0.1
+ * @Author Frogsis
+ * @Createdate Mon, 28 Oct 2019 15:00:00 GMT
  */
 
-if (!defined('NV_SYSTEM')) {
-  die('Stop!!!');
-}
+if (!defined('NV_SYSTEM')) die('Stop!!!');
+define('NV_IS_MOD_CONGVAN', true);
+define('PATH', NV_ROOTDIR . '/modules/' . $module_file . '/template/user/' . $op);
+include_once(NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php');
 
-define('NV_GENERAL', true); 
-define("PATH", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_name);
-
-require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';

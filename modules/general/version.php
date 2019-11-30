@@ -1,24 +1,23 @@
 <?php
 
 /**
- * @Project Petcoffee-tech
- * @Chistua (hchieuthua@gmail.com)
- * @Copyright (C) 2019
- * @Createdate 21-03-2019 13:15
+ * @Project Mining 0.1
+ * @Author Frogsis
+ * @Createdate Mon, 28 Oct 2019 15:00:00 GMT
  */
 
-if (!defined('NV_ADMIN') or !defined('NV_MAINFILE')) {
-  die('Stop!!!');
-}
+if (!defined('NV_MAINFILE'))
+    die('Stop!!!');
 
 $module_version = array(
     'name' => 'Quản lý chung',
     'modfuncs' => 'main',
     'submenu' => 'main',
-    'is_sysmod' => 1,
+    'is_sysmod' => 0,
     'virtual' => 1,
-    'version' => '4.3.04',
-    'date' => 'Thusday, March 21, 2019 13:15:00 AM GMT+07:00',
-    'author' => 'Chistua <hchieuthua@gmail.com>',
+    'version' => '4.3.01',
+    'date' => 'Mon, 28 Oct 2019 15:00:00 GMT',
+    'author' => 'Frogsis',
+    'uploads_dir' => array($module_name),
     'note' => ''
 );

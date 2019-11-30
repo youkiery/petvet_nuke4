@@ -1,17 +1,30 @@
 <?php
 
 /**
- * @Project Petcoffee-tech
- * @Chistua (hchieuthua@gmail.com)
- * @Copyright (C) 2019
- * @Createdate 21-03-2019 13:15
+ * @Project Mining 0.1
+ * @Author Frogsis
+ * @Createdate Mon, 28 Oct 2019 15:00:00 GMT
  */
 
-if (!defined('NV_ADMIN_GENERAL')) {
-	die('Stop!!!');
-}
+if (!defined('NV_IS_FILE_ADMIN')) { die('Stop!!!'); }
 
-$page_title = "Quản lý chấm công";
-include (NV_ROOTDIR . "/includes/header.php");
+$action = $nv_Request->get_string('action', 'post', '');
+if (!empty($action)) {
+  $result = array('status' => 0);
+  switch ($action) {
+    case 'filter':
+      $result['status'] = 1;
+      $result['html'] = outdateList();
+    break;
+  }
+  echo json_encode($result);
+  die();
+}
+$xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/main");
+
+$xtpl->parse('main');
+$contents = $xtpl->text();
+
+include NV_ROOTDIR . '/includes/header.php';
 echo nv_admin_theme($contents);
-include (NV_ROOTDIR . "/includes/footer.php");
+include NV_ROOTDIR . '/includes/footer.php';
