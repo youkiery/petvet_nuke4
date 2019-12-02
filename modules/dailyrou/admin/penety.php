@@ -38,13 +38,11 @@ if (!empty($action)) {
         $except = 1;
       }
 
-			if (checkUser($id)) {
         $sql = "delete from `" . PREFIX . "_penety` where id = " . $id;
-				if ($db->query($sql) && $html = penetyList($filter)) {
-					$result["status"] = 1;
-					$result["html"] = $html;
-				}
-			}
+		if ($db->query($sql) && $html = penetyList($filter)) {
+			$result["status"] = 1;
+			$result["html"] = $html;
+		}
 		break;
 	}
 

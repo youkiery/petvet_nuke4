@@ -64,6 +64,7 @@
     var global = ''
     var parse = []
     var selectFile = null
+
     var ExcelToJSON = function() {
       this.parseExcel = function(file) {
         reset()

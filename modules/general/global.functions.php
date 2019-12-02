@@ -8,6 +8,7 @@
 
 if (!defined('NV_MAINFILE')) { die('Stop!!!'); }
 define('PREFIX', $db_config['prefix'] . '_' . $module_name . '_');
+define('BLOCK', NV_ROOTDIR . '/modules/' . $module_file . '/template/block/');
 
 function totime($time) {
   if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {

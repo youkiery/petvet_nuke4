@@ -20,7 +20,16 @@ if (!empty($action)) {
   echo json_encode($result);
   die();
 }
+
 $xtpl = new XTemplate("main.tpl", PATH);
+
+$xtpl->assign('item', json_encode(array()));
+
+$xtpl->assign('excel_modal', excelModal());
+$xtpl->assign('category_modal', categoryModal());
+$xtpl->assign('item_modal', itemModal());
+
+$xtpl->assign('content', itemList());
 
 $xtpl->parse('main');
 $contents = $xtpl->text();
