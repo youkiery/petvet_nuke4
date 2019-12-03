@@ -26,6 +26,7 @@
 
   $(document).ready(() => {
     memberFilter()
+    installCheckAll('depart')
   })
 
   function insertDepart() {
@@ -61,8 +62,9 @@
             item.checked = false
           })
           data['data']['depart'].forEach(departid => {
-            $("#member-depart-" + departid)[0].checked = true
+            if ($("#member-depart-" + departid).length) $("#member-depart-" + departid)[0].checked = true
           });
+          $("#depart-check-all")[0].checked = false
           $("#member-device-" + data['data']['device'])[0].checked = true
           $("#member-material-" + data['data']['material'])[0].checked = true
           $("#edit-member-modal").modal('show')
@@ -150,5 +152,15 @@
       }
     )
   }
+
+  function installCheckAll(name) {
+    $("#"+ name +"-check-all").change((e) => {
+      checked = e.currentTarget.checked 
+      $("."+ name +"-checkbox").each((index, item) => {
+        item.checked = checked
+      })
+    })
+  }
+
 </script>
 <!-- END: main -->

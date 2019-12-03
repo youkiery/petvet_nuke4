@@ -45,9 +45,9 @@ function deviceList() {
   $depart = $authors->{depart};
   $depart2 = array();
   $departid = array();
-  foreach ($depart as $row) {
-    $departid[$row['id']] = 1;
-    $depart2[]= $row['id'];
+  foreach ($depart as $id) {
+    $departid[$id] = 1;
+    $depart2[]= $id;
   }
   $xtra = '';
   if (empty($filter['depart'])) {

@@ -19,6 +19,9 @@
               </div>
             </div>
             <div id="depart-content">
+              <div class="checkbox">
+                <label> <input type="checkbox" id="depart-check-all"> Tất cả </label>
+              </div>
               {content}
               <div id="depart-content-tail"></div>
             </div>

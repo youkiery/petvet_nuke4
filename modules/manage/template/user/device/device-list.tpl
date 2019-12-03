@@ -38,4 +38,5 @@
     <!-- END: row -->
   </tbody>
 </table>
+{nav}
 <!-- END: main -->
