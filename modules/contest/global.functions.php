@@ -47,6 +47,14 @@ function getTestDataList() {
   return $list;
 }
 
+function checkCallNumber($number) {
+  $number = intval($number);
+  if ($number < 10) {
+    return "0" . $number;
+  } 
+  return $number;
+}
+
 function checkSpecies($species) {
   global $db;
   $species = trim(mb_strtolower($species));

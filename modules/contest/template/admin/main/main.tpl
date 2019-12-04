@@ -16,6 +16,9 @@
   <button class="btn btn-success" onclick="testModal()">
     Danh sách phần thi
   </button>
+  <button class="btn btn-success" onclick="excel()">
+    Xuất Excel
+  </button>
 </div>
 
 <div style="float: left; margin: 10px 0px;">
@@ -47,8 +50,9 @@
 </div>
 <div class="form-group form-inline">
   Danh sách phần thi
+  <label class="checkbox" style="margin-right: 20px"> <input type="checkbox" id="filter-check-all" index="{id}" checked> tất cả </label>
   <!-- BEGIN: contest -->
-  <label class="checkbox" style="margin-right: 10px"> <input type="checkbox" class="filter-contest" index="{id}" checked> {contest} </label>
+  <label class="checkbox" style="margin-right: 10px"> <input type="checkbox" class="filter-contest filter-checkbox" index="{id}" checked> {contest} </label>
   <!-- END: contest -->
 </div>
 <div class="form-group text-center">
@@ -84,6 +88,7 @@
   $(document).ready(() => {
     installCheckbox('test')
     installCheckbox('contest')
+    installCheckbox('filter')
     installSuggest('signup', 'species')
   })
 
@@ -102,6 +107,22 @@
       species: $("#filter-species").val(),
       contest: contest
     }
+  }
+
+  function excel() {
+    contest = []
+    $(".filter-contest").each((index, item) => {
+      if (item.checked) contest.push(item.getAttribute('index'))
+    })
+    $.post(
+      '',
+      { action: 'excel', contest: contest },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          window.open(strHref +'&download=1')
+        })
+      }
+    )
   }
 
   function getContest(id) {

@@ -8,12 +8,62 @@
 
 if (!defined('NV_IS_FILE_ADMIN')) { die('Stop!!!'); }
 
+$xco = array(1 => 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
+$yco = array(1 => 'SBD', 'Tên thú cưng', 'Tên Chủ nuôi', 'Phần thi');
+
+if ($nv_Request->get_string('download', 'get')) {
+  header('location: /assets/excel-output.xlsx');
+}
+
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
-    case 'done-check':
-      $x = 1;
+    case 'excel':
+      include NV_ROOTDIR . '/PHPExcel/IOFactory.php';
+      $fileType = 'Excel2007'; 
+      $objPHPExcel = PHPExcel_IOFactory::load(NV_ROOTDIR . '/assets/excel.xlsx');
+  
+      $contest = $nv_Request->get_array('contest', 'post');
+      $test = getTestDataList();
+      $xtra = array();
+      foreach ($contest as $id) {
+        $xtra[] = 'test like \'%"'. $id .'"%\' ';
+      }
+      
+      $sql = 'select * from `'. PREFIX .'row` ' . ((count($xtra) > 0) ? ' where ' . implode(' or ', $xtra) : "") . ' order by id desc';
+      $query = $db->query($sql);
+      $index = 1;
+      $i = 1;
+      $j = 1;
+
+      foreach ($yco as $index => $value) {
+        $objPHPExcel
+        ->setActiveSheetIndex(0)
+        ->setCellValue($xco[$j ++] . $i, $value);
+      }
+      
+      while ($row = $query->fetch()) {
+        $i++;
+        $j = 1;
+        $list = array();
+        $test_data = json_decode($row['test']);
+        foreach ($test_data as $id) {
+          $list[] = $test[$id];
+        }
+
+        $objPHPExcel
+        ->setActiveSheetIndex(0)
+        ->setCellValue($xco[$j ++] . $i, checkCallNumber($index++))
+        ->setCellValue($xco[$j ++] . $i, $row['petname'])
+        ->setCellValue($xco[$j ++] . $i, $row['name'])
+        ->setCellValue($xco[$j ++] . $i, implode(', ', $list));
+      } 
+      $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+      $objWriter->save(NV_ROOTDIR . '/assets/excel-output.xlsx');
+      $objPHPExcel->disconnectWorksheets();
+      unset($objWriter, $objPHPExcel);
+      $result['status'] = 1;
     break;
     case 'insert-test':
       $id = $nv_Request->get_int('id', 'post', 0);
