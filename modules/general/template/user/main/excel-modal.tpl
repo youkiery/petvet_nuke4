@@ -17,7 +17,7 @@
                             </div>
 
                             <span>
-                                <input type="file" id="file" style="display: none;" onchange="tick(event)" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                <input type="file" id="file" style="display: none;" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                             </span>
                         </label>
                     </div>
