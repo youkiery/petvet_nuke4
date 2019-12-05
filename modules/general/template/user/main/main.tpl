@@ -140,26 +140,38 @@
     function goPage(page) {
         global['page'] = page
         length = global['selected'].length
-        // check limit
-        limit = length
+        start = global['limit'] * (global['page'] - 1)
+        limit = global['limit'] * global['page']
+        limit = (length < limit) ? length : limit
+        page = Math.floor(length / global['limit']) + ((length % global['limit']) ? 1 : 0)
 
-        html = ''
-        index = 1
+        if (!(length % global['limit']) && !(limit - start)) {
+            goPage(global['page'] - 1)
+        }
+        else {
+            html = ''
+            nav = ''
+            index = start + 1
 
-        for (i = 0; i < limit; i++) {
-            e = global['selected'][i];
-            html += `
+            for (i = 1; i <= page; i++) {
+                if (i == global['page']) nav += '<button class="btn">' + i + '</button>'
+                else nav += '<button class="btn btn-info submit" onclick="goPage(' + i + ')">' + i + '</button>'
+            }
+
+            for (i = start; i < limit; i++) {
+                e = global['selected'][i];
+                html += `
                 <tr>
                     <td> `+ index + ` </td>
-                    <td> <input type="checkbox" class="item-checkbox" index="`+ index + `" selected> </td>
+                    <td> <input type="checkbox" class="item-checkbox" index="`+ (--index) + `" selected> </td>
                     <td> `+ e['Mã hàng'] + ` </td>
                     <td> `+ e['Nhóm hàng(3 Cấp)'] + ` </td>
                     <td> <input type="text" class="form-control" id="item-number-`+ index + `" value="` + e['Tồn kho'] + `">  </td>
-                    <td> <button class="btn btn-danger" onclick="removeIndex(`+ (--index) + `)"> <span class="glyphicon glyphicon-remove"> </span> </button> </td>
+                    <td> <button class="btn btn-danger submit" onclick="removeIndex(`+ index + `)"> <span class="glyphicon glyphicon-remove"> </span> </button> </td>
                 </tr> `
-            index+= 2
-        }
-        html = `
+                index += 2
+            }
+            html = `
             <table class="table table-bordered">
                 <tr>
                     <th> STT </th>
@@ -170,9 +182,14 @@
                     <th>  </th>
                 </tr>
                 `+ html + `
-            <table>`
-        $("#item-content").html(html)
-        installCheckAll('item')
+            </table>
+            <div class="form-group">
+                `+ nav + `
+            </div>
+            `
+            $("#item-content").html(html)
+            installCheckAll('item')
+        }
     }
 
     function removeIndex(i) {
@@ -187,6 +204,59 @@
         $(".item-checkbox:checked").each((index, item) => {
             list.push(item.getAttribute('index'))
         })
+
+        if (!list.length) {
+            alert_msg('Chọn 1 mục trước khi xóa')
+        }
+        else {
+            global['selected'] = global['selected'].filter((item, index) => {
+                index = index.toString()
+                res = list.indexOf(index)
+                return res < 0
+            })
+            goPage(global['page'])
+        }
+
+    }
+
+    function submitAll() {
+        list = []
+        data = []
+        $(".item-checkbox:checked").each((index, item) => {
+            id = item.getAttribute('index')
+            list.push(id)
+            temp = global['selected'][id]
+            data.push({
+                code: temp['Mã hàng'],
+                name: temp['Tên hàng hóa'],
+                number: temp['Tồn kho'],
+                category: temp['Nhóm hàng(3 Cấp)']
+            })
+        })
+
+        if (!list.length) {
+            alert_msg('Chọn 1 mục trước khi xác nhận')
+        }
+        else {
+            $(".submit").prop('disabled', true)
+            $.post(
+                '',
+                { action: 'submit-all', data: data },
+                (response, status) => {
+                    checkResult(response, status).then(data => {
+                        global['selected'] = global['selected'].filter((item, index) => {
+                            index = index.toString()
+                            res = list.indexOf(index)
+                            return res < 0
+                        })
+                        goPage(global['page'])
+                        $(".submit").prop('disabled', false)
+                    }, () => {
+                        $(".submit").prop('disabled', false)
+                    })
+                }
+            )
+        }
     }
 
     function installCheckAll(name) {

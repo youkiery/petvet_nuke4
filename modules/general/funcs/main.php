@@ -12,9 +12,20 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
-    case 'filter':
+    case 'submit-all':
+      $data = $nv_Request->get_array('data', 'post');
+      $count = 0;
+      $total = count($data);
+
+      foreach ($data as $row) {
+        if (!checkCode($row['code'])) {
+          $row['category'] = checkCategory($row['category']);
+          if (insertItem($row)) $count ++;
+        }
+      }
+
       $result['status'] = 1;
-      $result['html'] = outdateList();
+      $result['notify'] = "Đã thêm $count trên $total sản phẩm";
     break;
   }
   echo json_encode($result);
@@ -23,7 +34,14 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("main.tpl", PATH);
 
-$xtpl->assign('item', json_encode(array()));
+$item = array();
+
+$query = $db->query('select * from `'. PREFIX .'item` where active = 1');
+while ($row = $query->fetch()) {
+  $item[] = $row['id'];
+}
+
+$xtpl->assign('item', json_encode($item));
 
 $xtpl->assign('excel_modal', excelModal());
 $xtpl->assign('category_modal', categoryModal());
