@@ -29,6 +29,61 @@ function itemModal() {
     return $xtpl->text();
 }
 
+function lowitemModal() {
+    global $db;
+    $xtpl = new XTemplate("lowitem-modal.tpl", PATH);
+    $query = $db->query('select * from `'. PREFIX .'category` order by name');
+
+    while ($row = $query->fetch()) {
+        $xtpl->assign('id', $row['id']);
+        $xtpl->assign('name', $row['name']);
+        $xtpl->parse('main.category');
+    }
+    $xtpl->assign('content', lowitemList());
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function removeModal() {
+    $xtpl = new XTemplate("remove-modal.tpl", PATH);
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function lowitemList() {
+    global $db, $nv_Request;
+
+    $filter = $nv_Request->get_array('filter', 'post');
+    if (empty($filter['limit'])) $filter['limit'] = 10;
+    $xtra = array();
+    // $xtra = '';
+    if (!empty($filter['catogory'])) {
+        // $xtra = ' and category = ' . $filter['category'];
+        $category = implode(', ', $filter['category']);
+        foreach ($filter['catogory'] as $id) {
+            $xtra[]= 'category in ('. $category .')';
+        }
+    }
+    
+    $index = 1;
+    $xtpl = new XTemplate("lowitem-list.tpl", PATH);
+
+    $query = $db->query('select * from `'. PREFIX .'item` where active = 1 and ((bound = 0 and number < '. $filter['limit'] .') or (bound > 0 and number <= bound)) '. (count($xtra) ? ' and ' . implode(' or ', $xtra) : '') .' order by time desc');
+    // $query = $db->query('select * from `'. PREFIX .'item` where active = 1 and ((bound = 0 and number < '. $filter['limit'] .') or (bound > 0 and number <= bound)) '. $xtra .' order by time desc');
+    while ($row = $query->fetch()) {
+        $xtpl->assign('index', $index++);
+        $xtpl->assign('name', $row['name']);
+        $xtpl->assign('category', categoryName($row['category']));
+        $xtpl->assign('number', $row['number']);
+        $xtpl->assign('limit', $row['limit']);
+        $xtpl->parse('main.row');
+    }
+    
+    $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
 function itemList() {
     global $db, $nv_Request;
 
@@ -44,9 +99,11 @@ function itemList() {
     $query = $db->query('select * from `'. PREFIX .'item` where active = 1 order by time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
     while ($row = $query->fetch()) {
         $xtpl->assign('index', $index++);
+        $xtpl->assign('id', $row['id']);
         $xtpl->assign('name', $row['name']);
-        $xtpl->assign('category', $row['category']);
+        $xtpl->assign('category', categoryName($row['category']));
         $xtpl->assign('number', $row['number']);
+        $xtpl->assign('bound', $row['bound']);
         $xtpl->assign('limit', $row['limit']);
         $xtpl->parse('main.row');
     }

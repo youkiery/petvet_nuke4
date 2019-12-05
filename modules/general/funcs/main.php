@@ -46,6 +46,28 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = itemList();
     break;
+    case 'lowitem-filter':
+      $result['status'] = 1;
+      $result['html'] = lowitemitemList();
+    break;
+    case 'update-item':
+      $id = $nv_Request->get_int('id', 'post');
+      $data = $nv_Request->get_array('data', 'post');
+
+      if ($db->query('update `'. PREFIX .'item` set name = "'. $data['name'] .'", number = '. $data['number'] .', bound = '. $data['bound'] .' where id = ' . $id)) {
+        $result['status'] = 1;
+        $result['notify'] = 'Đã cập nhật';
+      }
+    break;
+    case 'remove-item':
+      $id = $nv_Request->get_int('id', 'post');
+
+      if ($db->query('delete from `'. PREFIX .'item` where id = ' . $id)) {
+        $result['status'] = 1;
+        $result['html'] = itemList();
+        $result['notify'] = 'Đã xóa';
+      }
+    break;
   }
   echo json_encode($result);
   die();
@@ -65,6 +87,8 @@ $xtpl->assign('item', json_encode($item));
 $xtpl->assign('excel_modal', excelModal());
 $xtpl->assign('category_modal', categoryModal());
 $xtpl->assign('item_modal', itemModal());
+$xtpl->assign('lowitem_modal', lowitemModal());
+$xtpl->assign('remove_modal', removeModal());
 
 $xtpl->assign('content', itemList());
 

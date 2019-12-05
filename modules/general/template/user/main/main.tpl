@@ -14,9 +14,17 @@
 
 <div id="msgshow"></div>
 
+{remove_modal}
+{lowitem_modal}
 {excel_modal}
 {category_modal}
 {item_modal}
+
+<div class="form-group" style="float: left">
+    <button class="btn btn-info" onclick="lowitem()">
+        Danh sách hàng hết
+    </button>
+</div>
 
 <div class="form-group" style="float: right">
     <button class="btn btn-info" onclick="excel(0)">
@@ -33,6 +41,7 @@
 
 <script>
     var global = {
+        id: 0,
         filter_main: {
             page: 1,
             limit: 10,
@@ -91,6 +100,10 @@
     var handler = typeof IE_LoadFile !== 'undefined' ? handle_ie : handle_fr;
     if (input_dom_element.attachEvent) input_dom_element.attachEvent('onchange', handler);
     else input_dom_element.addEventListener('change', handler, false);
+
+    function lowitem() {
+        $("#lowitem-modal").modal('show')
+    }
 
     function excel(mode) {
         // 0: update, 1: insert
@@ -261,6 +274,22 @@
         })
     }
 
+    function lowitemFilter() {
+        var filter = {
+            limit: $("#lowitem-filter").val()
+        }
+
+        $.post(
+            '',
+            { action: 'lowitem-filter', filter: filter },
+            (response, status) => {
+                checkResult(response, status).then(data => {
+                    $("#lowitem-content").html(data['html'])
+                })
+            }
+        )
+    }
+
     function goPage(page) {
         global['filter_main']['page'] = page
         $.post(
@@ -269,6 +298,44 @@
             (response, status) => {
                 checkResult(response, status).then(data => {
                     $("#content").html(data['html'])
+                })
+            }
+        )
+    }
+
+    function checkItemData(id) {
+        return {
+            name: $("#item-name-" + id).val(),
+            number: $("#item-number-" + id).val(),
+            bound: $("#item-bound-" + id).val(),
+        }
+    }
+
+    function updateItem(id) {
+        $.post(
+            '',
+            { action: 'update-item', data: checkItemData(id), id: id, filter: global['filter_main'] },
+            (response, status) => {
+                checkResult(response, status).then(data => {
+                    // do nothing
+                })
+            }
+        )
+    }
+
+    function removeItem(id) {
+        global['id'] = id
+        $("#remove-modal").modal('show')
+    }
+
+    function removeItemSubmit() {
+        $.post(
+            '',
+            { action: 'remove-item', id: global['id'], filter: global['filter_main'] },
+            (response, status) => {
+                checkResult(response, status).then(data => {
+                    $("#content").html(data['html'])
+                    $("#remove-modal").modal('hide')
                 })
             }
         )

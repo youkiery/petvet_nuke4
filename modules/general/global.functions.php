@@ -27,6 +27,14 @@ function checkCategory($category) {
   return $db->lastInsertId();
 }
 
+function categoryName($categoryid) {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'category` where id = '. $categoryid);
+  if ($row = $query->fetch()) return $row['name'];
+  return 0;
+}
+
 function insertItem($data) {
   global $db;
 
