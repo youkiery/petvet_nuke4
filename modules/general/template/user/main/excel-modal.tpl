@@ -5,8 +5,10 @@
             <div class="modal-body">
                 <div type="button" class="close" data-dismiss="modal"> &times; </div> <br><br>
 
-                <p class="excel-text" id="text-insert"> Chọn file excel Kiot để thêm hàng hóa </p>
-                <p class="excel-text" id="text-update"> Chọn file excel Kiot để cập nhật số lượng </p>
+                <div class="text-center">
+                    <p class="excel-text" id="text-insert"> Chọn file excel Kiot để thêm hàng hóa </p>
+                    <p class="excel-text" id="text-update"> Chọn file excel Kiot để cập nhật số lượng </p>
+                </div>
 
                 <div style="text-align: center; position: relative;">
                     <div style="margin: auto;">

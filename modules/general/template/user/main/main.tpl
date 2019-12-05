@@ -33,8 +33,14 @@
 
 <script>
     var global = {
-        page: 1,
-        limit: 10,
+        filter_main: {
+            page: 1,
+            limit: 10,
+        },
+        filter_item: {
+            page: 1,
+            limit: 10,
+        },
         item: JSON.parse('{item}'),
         mode: 0,
         selected: null,
@@ -45,13 +51,13 @@
         var path = input_dom_element.value;
         var data = IE_LoadFile(path);
         var wb = XLSX.read(data, { type: 'binary' });
-        process_wb(wb);
     }
 
     function handle_fr(e) {
         var files = e.target.files, f = files[0];
         var reader = new FileReader();
         var rABS = !!reader.readAsBinaryString;
+        input_dom_element.value = null
         reader.onload = function (e) {
             var data = e.target.result;
             if (!rABS) data = new Uint8Array(data);
@@ -76,7 +82,7 @@
                 });
             }
             global['selected'] = list
-            goPage(1)
+            goPageItem(1)
             $("#excel-modal").modal('hide')
             $("#item-modal").modal('show')
         };
@@ -86,49 +92,12 @@
     if (input_dom_element.attachEvent) input_dom_element.attachEvent('onchange', handler);
     else input_dom_element.addEventListener('change', handler, false);
 
-    // var ExcelToJSON = function () {
-    //     this.parseExcel = function (file) {
-    //         var reader = new FileReader()
-    //         reader.onload = function (e) {
-    //             var data = e.target.result
-    //             document.getElementById('file').value = null
-
-    //             var workbook = XLSX.read(data, {
-    //                 type: 'binary'
-    //             })
-    //             var object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[workbook.SheetNames[0]])
-    //             list = []
-    //             if (global['mode']) {
-    //                 // insert
-    //                 object.forEach((item) => {
-    //                     code = item['Mã hàng'].toString()
-    //                     if (code.indexOf(global['item']) < 0) list.push(item)
-    //                 });
-    //             }
-    //             else {
-    //                 // update
-    //                 object.forEach((item) => {
-    //                     code = item['Mã hàng'].toString()
-    //                     if (code.indexOf(global['item']) >= 0) list.push(item)
-    //                 });
-    //             }
-    //             global['selected'] = list
-    //             goPage(1)
-    //             $("#excel-modal").modal('hide')
-    //             $("#item-modal").modal('show')
-    //         }
-    //         // reader.onerror = function (ex) { console.log(ex) }
-    //         if (file) reader.readAsBinaryString(file)
-    //     }
-    // }
-    // js = new ExcelToJSON()
-
     function excel(mode) {
         // 0: update, 1: insert
         global['mode'] = mode
         $(".excel-text").hide()
-        if (mode) $(".excel-insert").show()
-        else $(".excel-update").show()
+        if (mode) $("#text-insert").show()
+        else $("#text-update").show()
         $("#excel-modal").modal('show')
     }
 
@@ -137,16 +106,18 @@
     //     js.parseExcel(selectFile)
     // }
 
-    function goPage(page) {
-        global['page'] = page
-        length = global['selected'].length
-        start = global['limit'] * (global['page'] - 1)
-        limit = global['limit'] * global['page']
-        limit = (length < limit) ? length : limit
-        page = Math.floor(length / global['limit']) + ((length % global['limit']) ? 1 : 0)
+    function goPageItem(page) {
+        global['filter_item']['page'] = page
+        global['filter_item']['limit'] = $("#item-filter").val()
 
-        if (!(length % global['limit']) && !(limit - start)) {
-            goPage(global['page'] - 1)
+        length = global['selected'].length
+        start = global['filter_item']['limit'] * (global['filter_item']['page'] - 1)
+        limit = global['filter_item']['limit'] * global['filter_item']['page']
+        limit = (length < limit) ? length : limit
+        page = Math.floor(length / global['filter_item']['limit']) + ((length % global['filter_item']['limit']) ? 1 : 0)
+
+        if (!(length % global['filter_item']['limit']) && !(limit - start) && global['filter_item']['page'] > 1) {
+            goPageItem(global['filter_item']['page'] - 1)
         }
         else {
             html = ''
@@ -154,8 +125,8 @@
             index = start + 1
 
             for (i = 1; i <= page; i++) {
-                if (i == global['page']) nav += '<button class="btn">' + i + '</button>'
-                else nav += '<button class="btn btn-info submit" onclick="goPage(' + i + ')">' + i + '</button>'
+                if (i == global['filter_item']['page']) nav += '<button class="btn">' + i + '</button>'
+                else nav += '<button class="btn btn-info submit" onclick="goPageItem(' + i + ')">' + i + '</button>'
             }
 
             for (i = start; i < limit; i++) {
@@ -196,7 +167,7 @@
         global['selected'] = global['selected'].filter((item, index) => {
             return index !== i
         })
-        goPage(global['page'])
+        goPageItem(global['filter_item']['page'])
     }
 
     function removeAll() {
@@ -214,7 +185,7 @@
                 res = list.indexOf(index)
                 return res < 0
             })
-            goPage(global['page'])
+            goPageItem(global['filter_item']['page'])
         }
 
     }
@@ -237,11 +208,11 @@
         if (!list.length) {
             alert_msg('Chọn 1 mục trước khi xác nhận')
         }
-        else {
+        else if (global['mode']) {
             $(".submit").prop('disabled', true)
             $.post(
                 '',
-                { action: 'submit-all', data: data },
+                { action: 'insert-all', data: data },
                 (response, status) => {
                     checkResult(response, status).then(data => {
                         global['selected'] = global['selected'].filter((item, index) => {
@@ -249,7 +220,29 @@
                             res = list.indexOf(index)
                             return res < 0
                         })
-                        goPage(global['page'])
+                        goPageItem(global['filter_item']['page'])
+                        $("#content").html(data['html'])
+                        $(".submit").prop('disabled', false)
+                    }, () => {
+                        $(".submit").prop('disabled', false)
+                    })
+                }
+            )
+        }
+        else {
+            $(".submit").prop('disabled', true)
+            $.post(
+                '',
+                { action: 'update-all', data: data },
+                (response, status) => {
+                    checkResult(response, status).then(data => {
+                        global['selected'] = global['selected'].filter((item, index) => {
+                            index = index.toString()
+                            res = list.indexOf(index)
+                            return res < 0
+                        })
+                        goPageItem(global['filter_item']['page'])
+                        $("#content").html(data['html'])
                         $(".submit").prop('disabled', false)
                     }, () => {
                         $(".submit").prop('disabled', false)
@@ -266,6 +259,19 @@
                 item.checked = checked
             })
         })
+    }
+
+    function goPage(page) {
+        global['filter_main']['page'] = page
+        $.post(
+            '',
+            { action: 'filter', filter: global['filter_main'] },
+            (response, status) => {
+                checkResult(response, status).then(data => {
+                    $("#content").html(data['html'])
+                })
+            }
+        )
     }
 </script>
 <!-- END: main -->

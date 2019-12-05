@@ -30,11 +30,18 @@ function itemModal() {
 }
 
 function itemList() {
-    global $db;
+    global $db, $nv_Request;
 
-    $index = 1;
+    $filter = $nv_Request->get_array('filter', 'post');
+    if (empty($filter['page'])) $filter['page'] = 1;
+    if (empty($filter['limit'])) $filter['limit'] = 10;
+    
+    $index = ($filter['page'] - 1) * $filter['limit'] + 1;
     $xtpl = new XTemplate("item-list.tpl", PATH);
-    $query = $db->query('select * from `'. PREFIX .'item` where active = 1 order by time desc');
+    $query = $db->query('select count(*) as count from `'. PREFIX .'item` where active = 1');
+    $number = $query->fetch()['count'];
+
+    $query = $db->query('select * from `'. PREFIX .'item` where active = 1 order by time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
     while ($row = $query->fetch()) {
         $xtpl->assign('index', $index++);
         $xtpl->assign('name', $row['name']);
@@ -43,7 +50,8 @@ function itemList() {
         $xtpl->assign('limit', $row['limit']);
         $xtpl->parse('main.row');
     }
-
+    
+    $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
     $xtpl->parse('main');
     return $xtpl->text();
 }

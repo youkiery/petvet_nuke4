@@ -34,6 +34,13 @@ function insertItem($data) {
   return $db->lastInsertId();
 }
 
+function updateItem($data) {
+  global $db;
+
+  $db->query('update `'. PREFIX .'item` set number = '. $data['number'] .', category = '. $data['category'] .' where code = "'. $data['code'] .'"');
+  return true;
+}
+
 function totime($time) {
   if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
     $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);
