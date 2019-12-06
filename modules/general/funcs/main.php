@@ -68,6 +68,18 @@ if (!empty($action)) {
         $result['notify'] = 'Đã xóa';
       }
     break;
+    case 'remove-all-item':
+      $list = $nv_Request->get_array('list', 'post');
+      $count = 0;
+      $total = count($list);
+
+      foreach ($list as $id) {
+        if ($db->query('delete from `'. PREFIX .'item` where id = ' . $id)) $count ++;
+      }
+      $result['status'] = 1;
+      $result['html'] = itemList();
+      $result['notify'] = "Đã xóa $count trên $total sản phẩm";
+    break;
   }
   echo json_encode($result);
   die();
@@ -80,6 +92,14 @@ $item = array();
 $query = $db->query('select * from `'. PREFIX .'item` where active = 1');
 while ($row = $query->fetch()) {
   $item[] = $row['code'];
+}
+
+$query = $db->query('select * from `'. PREFIX .'category` order by name');
+
+while ($row = $query->fetch()) {
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->parse('main.category');
 }
 
 $xtpl->assign('item', json_encode($item));

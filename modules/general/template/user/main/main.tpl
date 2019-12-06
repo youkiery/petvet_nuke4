@@ -35,6 +35,30 @@
     </button>
 </div>
 
+<div style="clear: both;"> </div>
+
+<div class="form-group input-group">
+    <input type="text" class="form-control" id="filter-limit" value="10" placeholder="Giới hạn mặc định">
+    <div class="input-group-btn">
+        <button class="btn btn-info" onclick="goPage(1)">
+            Lọc
+        </button>
+    </div>
+</div>
+<div class="form-group">
+    <label style="margin-right: 10px;"> <input type="checkbox" id="filter-check-all" checked> Tất cả </label>
+    <!-- BEGIN: category -->
+    <label style="margin-right: 10px;"> <input type="checkbox" class="filter-checkbox" index="{id}" checked> {name}
+    </label>
+    <!-- END: category -->
+</div>
+
+<div class="form-group">
+    <button class="btn btn-danger submit" style="position: sticky; top: 10px; left: 10px;" onclick="removeAll()">
+        Xóa mục chọn
+    </button>
+</div>
+
 <div id="content">
     {content}
 </div>
@@ -55,6 +79,11 @@
         selected: null,
     }
     var input_dom_element = document.getElementById("file");
+
+    $(document).ready(() => {
+        installCheckAll('filter')
+        installCheckAll('item')
+    })
 
     function handle_ie() {
         var path = input_dom_element.value;
@@ -147,10 +176,10 @@
                 html += `
                 <tr>
                     <td> `+ index + ` </td>
-                    <td> <input type="checkbox" class="item-checkbox" index="`+ (--index) + `" selected> </td>
+                    <td> <input type="checkbox" class="row-checkbox" index="`+ (--index) + `" selected> </td>
                     <td> `+ e['Mã hàng'] + ` </td>
                     <td> `+ e['Nhóm hàng(3 Cấp)'] + ` </td>
-                    <td> <input type="text" class="form-control" id="item-number-`+ index + `" value="` + e['Tồn kho'] + `">  </td>
+                    <td> <input type="text" class="form-control" id="row-number-`+ index + `" value="` + e['Tồn kho'] + `">  </td>
                     <td> <button class="btn btn-danger submit" onclick="removeIndex(`+ index + `)"> <span class="glyphicon glyphicon-remove"> </span> </button> </td>
                 </tr> `
                 index += 2
@@ -159,7 +188,7 @@
             <table class="table table-bordered">
                 <tr>
                     <th> STT </th>
-                    <th> <input type="checkbox" id="item-check-all" selected> </th>
+                    <th> <input type="checkbox" id="row-check-all" selected> </th>
                     <th> Mã hàng </th>
                     <th> Loại hàng </th>
                     <th> Số lượng </th>
@@ -172,7 +201,7 @@
             </div>
             `
             $("#item-content").html(html)
-            installCheckAll('item')
+            installCheckAll('row')
         }
     }
 
@@ -184,6 +213,26 @@
     }
 
     function removeAll() {
+        list = []
+        $(".item-checkbox:checked").each((index, item) => {
+            list.push(item.getAttribute('index'))
+        })
+        if (!list.length) alert_msg('Chọn 1 mục trước khi xóa')
+        else {
+            $.post(
+                '',
+                { action: 'remove-all-item', list: list, filter: global['filter_main'] },
+                (response, status) => {
+                    checkResult(response, status).then(data => {
+                        $("#content").html(data['html'])
+                        installCheckAll('item')
+                    }, () => { })
+                }
+            )
+        }
+    }
+
+    function removeAllItem() {
         list = []
         $(".item-checkbox:checked").each((index, item) => {
             list.push(item.getAttribute('index'))
@@ -206,10 +255,11 @@
     function submitAll() {
         list = []
         data = []
-        $(".item-checkbox:checked").each((index, item) => {
+        $(".row-checkbox:checked").each((index, item) => {
             id = item.getAttribute('index')
             list.push(id)
             temp = global['selected'][id]
+            console.log(temp, id);
             data.push({
                 code: temp['Mã hàng'],
                 name: temp['Tên hàng hóa'],
@@ -225,7 +275,7 @@
             $(".submit").prop('disabled', true)
             $.post(
                 '',
-                { action: 'insert-all', data: data },
+                { action: 'insert-all', data: data, filter: global['filter_main'] },
                 (response, status) => {
                     checkResult(response, status).then(data => {
                         global['selected'] = global['selected'].filter((item, index) => {
@@ -235,6 +285,7 @@
                         })
                         goPageItem(global['filter_item']['page'])
                         $("#content").html(data['html'])
+                        installCheckAll('item')
                         $(".submit").prop('disabled', false)
                     }, () => {
                         $(".submit").prop('disabled', false)
@@ -246,7 +297,7 @@
             $(".submit").prop('disabled', true)
             $.post(
                 '',
-                { action: 'update-all', data: data },
+                { action: 'update-all', data: data, filter: global['filter_main'] },
                 (response, status) => {
                     checkResult(response, status).then(data => {
                         global['selected'] = global['selected'].filter((item, index) => {
@@ -256,6 +307,7 @@
                         })
                         goPageItem(global['filter_item']['page'])
                         $("#content").html(data['html'])
+                        installCheckAll('item')
                         $(".submit").prop('disabled', false)
                     }, () => {
                         $(".submit").prop('disabled', false)
@@ -292,12 +344,14 @@
 
     function goPage(page) {
         global['filter_main']['page'] = page
+        global['filter_main']['limit'] = $("#filter-limit").val()
         $.post(
             '',
             { action: 'filter', filter: global['filter_main'] },
             (response, status) => {
                 checkResult(response, status).then(data => {
                     $("#content").html(data['html'])
+                    installCheckAll('item')
                 })
             }
         )
@@ -335,10 +389,21 @@
             (response, status) => {
                 checkResult(response, status).then(data => {
                     $("#content").html(data['html'])
+                    installCheckAll('item')
                     $("#remove-modal").modal('hide')
                 })
             }
         )
     }
+
+    function installCheckAll(name) {
+        $("#" + name + "-check-all").change((e) => {
+            checked = e.currentTarget.checked
+            $("." + name + "-checkbox").each((index, item) => {
+                item.checked = checked
+            })
+        })
+    }
+
 </script>
 <!-- END: main -->

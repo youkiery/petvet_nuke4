@@ -10,7 +10,7 @@
                         Xác nhận mục chọn
                     </button>
                     <button class="btn btn-danger submit" style="position: sticky; top: 10px; left: 10px;"
-                        onclick="removeAll()">
+                        onclick="removeAllItem()">
                         Xóa mục chọn
                     </button>
                 </div>
