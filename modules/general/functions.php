@@ -50,6 +50,20 @@ function removeModal() {
     return $xtpl->text();
 }
 
+function filterModal() {
+    global $db;
+    $xtpl = new XTemplate("filter-modal.tpl", PATH);
+    $query = $db->query('select * from `'. PREFIX .'category` order by name');
+
+    while ($row = $query->fetch()) {
+        $xtpl->assign('id', $row['id']);
+        $xtpl->assign('name', $row['name']);
+        $xtpl->parse('main.category');
+    }
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
 function lowitemList() {
     global $db, $nv_Request;
 
@@ -57,10 +71,10 @@ function lowitemList() {
     if (empty($filter['limit'])) $filter['limit'] = 10;
     $xtra = array();
     // $xtra = '';
-    if (!empty($filter['catogory'])) {
+    if (!empty($filter['category'])) {
         // $xtra = ' and category = ' . $filter['category'];
         $category = implode(', ', $filter['category']);
-        foreach ($filter['catogory'] as $id) {
+        foreach ($filter['category'] as $id) {
             $xtra[]= 'category in ('. $category .')';
         }
     }
@@ -68,7 +82,7 @@ function lowitemList() {
     $index = 1;
     $xtpl = new XTemplate("lowitem-list.tpl", PATH);
 
-    $query = $db->query('select * from `'. PREFIX .'item` where active = 1 and ((bound = 0 and number < '. $filter['limit'] .') or (bound > 0 and number <= bound)) '. (count($xtra) ? ' and ' . implode(' or ', $xtra) : '') .' order by time desc');
+    $query = $db->query('select * from `'. PREFIX .'item` where active = 1 and name like "%'. $filter['keyword'] .'%" and ((bound = 0 and number < '. $filter['limit'] .') or (bound > 0 and number <= bound)) '. (count($xtra) ? ' and ' . implode(' or ', $xtra) : '') .' order by time desc');
     // $query = $db->query('select * from `'. PREFIX .'item` where active = 1 and ((bound = 0 and number < '. $filter['limit'] .') or (bound > 0 and number <= bound)) '. $xtra .' order by time desc');
     while ($row = $query->fetch()) {
         $xtpl->assign('index', $index++);
@@ -88,15 +102,23 @@ function itemList() {
     global $db, $nv_Request;
 
     $filter = $nv_Request->get_array('filter', 'post');
+    $xtra = '';
     if (empty($filter['page'])) $filter['page'] = 1;
     if (empty($filter['limit'])) $filter['limit'] = 10;
-    
+    if (!empty($filter['category'])) {
+        // $xtra = ' and category = ' . $filter['category'];
+        $category = implode(', ', $filter['category']);
+        foreach ($filter['category'] as $id) {
+            $xtra[]= 'category in ('. $category .')';
+        }
+    }
+
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
     $xtpl = new XTemplate("item-list.tpl", PATH);
-    $query = $db->query('select count(*) as count from `'. PREFIX .'item` where active = 1');
+    $query = $db->query('select count(*) as count from `'. PREFIX .'item` where active = 1 and name like "%'. $filter['keyword'] .'%" ' . $xtra);
     $number = $query->fetch()['count'];
 
-    $query = $db->query('select * from `'. PREFIX .'item` where active = 1 order by time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+    $query = $db->query('select * from `'. PREFIX .'item` where active = 1 and name like "%'. $filter['keyword'] .'%" '. $xtra .' order by time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
     while ($row = $query->fetch()) {
         $xtpl->assign('index', $index++);
         $xtpl->assign('id', $row['id']);

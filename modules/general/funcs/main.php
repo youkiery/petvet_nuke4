@@ -79,6 +79,10 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = itemList();
       $result['notify'] = "Đã xóa $count trên $total sản phẩm";
+      break;
+      case 'filter-low':
+        $result['status'] = 1;
+        $result['html'] = lowitemList();
     break;
   }
   echo json_encode($result);
@@ -104,6 +108,7 @@ while ($row = $query->fetch()) {
 
 $xtpl->assign('item', json_encode($item));
 
+$xtpl->assign('filter_modal', filterModal());
 $xtpl->assign('excel_modal', excelModal());
 $xtpl->assign('category_modal', categoryModal());
 $xtpl->assign('item_modal', itemModal());

@@ -14,6 +14,7 @@
 
 <div id="msgshow"></div>
 
+{filter_modal}
 {remove_modal}
 {lowitem_modal}
 {excel_modal}
@@ -23,6 +24,9 @@
 <div class="form-group" style="float: left">
     <button class="btn btn-info" onclick="lowitem()">
         Danh sách hàng hết
+    </button>
+    <button class="btn btn-info" onclick="filter()">
+        Lọc danh sách
     </button>
 </div>
 
@@ -37,22 +41,6 @@
 
 <div style="clear: both;"> </div>
 
-<div class="form-group input-group">
-    <input type="text" class="form-control" id="filter-limit" value="10" placeholder="Giới hạn mặc định">
-    <div class="input-group-btn">
-        <button class="btn btn-info" onclick="goPage(1)">
-            Lọc
-        </button>
-    </div>
-</div>
-<div class="form-group">
-    <label style="margin-right: 10px;"> <input type="checkbox" id="filter-check-all" checked> Tất cả </label>
-    <!-- BEGIN: category -->
-    <label style="margin-right: 10px;"> <input type="checkbox" class="filter-checkbox" index="{id}" checked> {name}
-    </label>
-    <!-- END: category -->
-</div>
-
 <div class="form-group">
     <button class="btn btn-danger submit" style="position: sticky; top: 10px; left: 10px;" onclick="removeAll()">
         Xóa mục chọn
@@ -66,9 +54,16 @@
 <script>
     var global = {
         id: 0,
+        filter_low: {
+            limit: 10,
+            keyword: '',
+            category: []
+        },
         filter_main: {
             page: 1,
             limit: 10,
+            keyword: '',
+            category: []
         },
         filter_item: {
             page: 1,
@@ -83,6 +78,7 @@
     $(document).ready(() => {
         installCheckAll('filter')
         installCheckAll('item')
+        installCheckAll('lowitem')
     })
 
     function handle_ie() {
@@ -132,6 +128,10 @@
 
     function lowitem() {
         $("#lowitem-modal").modal('show')
+    }
+
+    function filter() {
+        $("#filter-modal").modal('show')
     }
 
     function excel(mode) {
@@ -342,14 +342,41 @@
         )
     }
 
+    function filterLowitem() {
+        list = []
+        $(".lowitem-checkbox:checked").each((index, item) => {
+            list.push(item.getAttribute('index'))
+        })
+        global['filter_low']['category'] = list
+        global['filter_low']['limit'] = $("#lowitem-limit").val()
+        global['filter_low']['keyword'] = $("#lowitem-keyword").val()
+        
+        $.post(
+            '',
+            { action: 'filter-low', filter: global['filter_low'] },
+            (response, status) => {
+                checkResult(response, status).then(data => {
+                    $("#lowitem-content").html(data['html'])
+                })
+            }
+        )
+    }
+
     function goPage(page) {
+        list = []
+        $(".lowitem-checkbox:checked").each((index, item) => {
+            list.push(item.getAttribute('index'))
+        })
+        global['filter_main']['category'] = list
         global['filter_main']['page'] = page
         global['filter_main']['limit'] = $("#filter-limit").val()
+        global['filter_main']['keyword'] = $("#filter-keyword").val()
         $.post(
             '',
             { action: 'filter', filter: global['filter_main'] },
             (response, status) => {
                 checkResult(response, status).then(data => {
+                    $("#filter-modal").modal('hide')
                     $("#content").html(data['html'])
                     installCheckAll('item')
                 })

@@ -5,24 +5,31 @@
             <div class="modal-body">
                 <div type="button" class="close" data-dismiss="modal"> &times; </div> <br><br>
 
-                <div class="form-group input-group">
-                    <input type="text" class="form-control" id="lowitem-filter" value="10"
-                        placeholder="Giới hạn mặc định">
-                    <div class="input-group-btn">
-                        <button class="btn btn-info" onclick="filterLowitem()">
-                            Lọc
-                        </button>
-                    </div>
+                <div class="form-group">
+                    Từ khóa
+                    <input type="text" class="form-control" id="lowitem-keyword" placeholder="Từ khóa tìm kiếm">
                 </div>
                 <div class="form-group">
-                    <label style="margin-right: 10px;"> <input type="checkbox" class="lowitem-check-all" checked> Tất cả </label>
+                    Giới hạn mặc định
+                    <input type="text" class="form-control" id="lowitem-limit" placeholder="Giới hạn mặc định" value="10">
+                </div>
+                <div class="form-group">
+                    <label style="margin-right: 10px;"> <input type="checkbox" id="lowitem-check-all" checked> Tất cả
+                    </label>
                     <!-- BEGIN: category -->
-                    <label style="margin-right: 10px;"> <input type="checkbox" class="lowitem-checkbox" index="{id}" checked> {name} </label>
+                    <label style="margin-right: 10px;"> <input type="checkbox" class="lowitem-checkbox" index="{id}"
+                            checked> {name} </label>
                     <!-- END: category -->
                 </div>
 
+                <div class="text-center">
+                    <button class="btn btn-info" onclick="filterLowitem()">
+                        Lọc
+                    </button>
+                </div>
+
                 <div id="lowitem-content">
-                    {content}
+
                 </div>
             </div>
         </div>
