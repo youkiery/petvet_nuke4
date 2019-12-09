@@ -93,32 +93,39 @@
         var rABS = !!reader.readAsBinaryString;
         input_dom_element.value = null
         reader.onload = function (e) {
-            var data = e.target.result;
-            if (!rABS) data = new Uint8Array(data);
-            var wb = XLSX.read(data, { type: rABS ? 'binary' : 'array' });
-            var object = XLSX.utils.sheet_to_row_object_array(wb.Sheets[wb.SheetNames[0]])
+            try {
+                var data = e.target.result;
+                if (!rABS) data = new Uint8Array(data);
+                var wb = XLSX.read(data, { type: rABS ? 'binary' : 'array' });
+                var object = XLSX.utils.sheet_to_row_object_array(wb.Sheets[wb.SheetNames[0]])
 
-            list = []
-            if (global['mode']) {
-                // insert
-                object.forEach((item) => {
-                    code = item['Mã hàng'].toString()
-                    res = global['item'].indexOf(code)
-                    if (res < 0) list.push(item)
-                });
+                list = []
+                if (global['mode']) {
+                    // insert
+                    object.forEach((item) => {
+                        code = item['Mã hàng'].toString()
+                        res = global['item'].indexOf(code)
+                        if (res < 0) list.push(item)
+                    });
+                }
+                else {
+                    // update
+                    object.forEach((item) => {
+                        code = item['Mã hàng'].toString()
+                        res = global['item'].indexOf(code)
+                        if (res >= 0) list.push(item)
+                    });
+                }
+                global['selected'] = list
+                goPageItem(1)
+                $("#excel-modal").modal('hide')
+                $("#item-modal").modal('show')
+            } catch (error) {
+                // console.log(e);
+                $("#excel-error").text('Tệp tải lên không hợp lệ')
+                $("#excel-error").show()
+                $("#excel-error").fadeOut(3000)
             }
-            else {
-                // update
-                object.forEach((item) => {
-                    code = item['Mã hàng'].toString()
-                    res = global['item'].indexOf(code)
-                    if (res >= 0) list.push(item)
-                });
-            }
-            global['selected'] = list
-            goPageItem(1)
-            $("#excel-modal").modal('hide')
-            $("#item-modal").modal('show')
         };
         if (rABS) reader.readAsBinaryString(f); else reader.readAsArrayBuffer(f);
     }
@@ -214,7 +221,7 @@
 
     function removeAll() {
         list = []
-        $(".item-checkbox:checked").each((index, item) => {
+        $(".row-checkbox:checked").each((index, item) => {
             list.push(item.getAttribute('index'))
         })
         if (!list.length) alert_msg('Chọn 1 mục trước khi xóa')
@@ -234,7 +241,7 @@
 
     function removeAllItem() {
         list = []
-        $(".item-checkbox:checked").each((index, item) => {
+        $(".row-checkbox:checked").each((index, item) => {
             list.push(item.getAttribute('index'))
         })
 
@@ -249,7 +256,6 @@
             })
             goPageItem(global['filter_item']['page'])
         }
-
     }
 
     function submitAll() {
@@ -259,7 +265,6 @@
             id = item.getAttribute('index')
             list.push(id)
             temp = global['selected'][id]
-            console.log(temp, id);
             data.push({
                 code: temp['Mã hàng'],
                 name: temp['Tên hàng hóa'],
@@ -275,7 +280,7 @@
             $(".submit").prop('disabled', true)
             $.post(
                 '',
-                { action: 'insert-all', data: data, filter: global['filter_main'] },
+                { action: 'insert-all', data: data, brand: $("#item-brand").val(), filter: global['filter_main'] },
                 (response, status) => {
                     checkResult(response, status).then(data => {
                         global['selected'] = global['selected'].filter((item, index) => {
@@ -350,7 +355,7 @@
         global['filter_low']['category'] = list
         global['filter_low']['limit'] = $("#lowitem-limit").val()
         global['filter_low']['keyword'] = $("#lowitem-keyword").val()
-        
+
         $.post(
             '',
             { action: 'filter-low', filter: global['filter_low'] },

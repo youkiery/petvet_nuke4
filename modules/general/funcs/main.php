@@ -14,13 +14,14 @@ if (!empty($action)) {
   switch ($action) {
     case 'insert-all':
       $data = $nv_Request->get_array('data', 'post');
+      $brand = $nv_Request->get_int('brand', 'post');
       $count = 0;
       $total = count($data);
 
       foreach ($data as $row) {
         if (!checkCode($row['code'])) {
           $row['category'] = checkCategory($row['category']);
-          if (insertItem($row)) $count ++;
+          if (insertItem($row, $brand)) $count ++;
         }
       }
 

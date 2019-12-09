@@ -35,10 +35,13 @@ function categoryName($categoryid) {
   return 0;
 }
 
-function insertItem($data) {
+function insertItem($data, $brand) {
   global $db;
 
-  $db->query('insert into `'. PREFIX .'item` (code, name, category, number, bound, active, time) values("'. $data['code'] .'", "'. $data['name'] .'", '. $data['category'] .', '. $data['number'] .', 0, 1, '. time() .')');
+  if ($brand) $xtra = $data['number'] . ', 0';
+  else $xtra = '0, ' . $data['number'];
+
+  $db->query('insert into `'. PREFIX .'item` (code, name, category, number, number2, bound, active, time) values("'. $data['code'] .'", "'. $data['name'] .'", '. $data['category'] .', '. $xtra .', 0, 1, '. time() .')');
   return $db->lastInsertId();
 }
 

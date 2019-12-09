@@ -15,6 +15,12 @@
                     </button>
                 </div>
 
+                Lưu vào chi nhánh
+                <select class="form-control form-group" id="item-brand">
+                    <option value="0"> Bệnh viện </option>
+                    <option value="1"> Kho </option>
+                </select>
+
                 <div class="form-group input-group">
                     <input type="text" class="form-control" id="item-filter" value="10"
                         placeholder="Hàng hóa mỗi trang">

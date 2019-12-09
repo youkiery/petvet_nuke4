@@ -24,6 +24,8 @@
                         </label>
                     </div>
                 </div>
+
+                <div class="text-center" id="excel-error" style="color: red; font-weight: bold;"> </div>
             </div>
         </div>
     </div>
