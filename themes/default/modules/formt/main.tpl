@@ -1118,7 +1118,7 @@
     2: `<table class="table-bordered" border="1">
           <tr>
             <td style="width: 60%;" class="cell-center">CHI CỤC THÚ Y VÙNG V <br> <b> TRẠM CHẨN ĐOÁN XÉT NGHIỆM BỆNH ĐỘNG VẬT </b></td>
-            <td><div class="c20"></div><div class="c80"><b>Biểu mẫu số: BM.STTT.20.01 <br>Số soát xét: 03.02718</b></div></td>
+            <td><div class="c20"></div><div class="c80"><b>Biểu mẫu số: BM.STTT.20.01 <br>Số soát xét: 04.01719</b></div></td>
           </tr>
         </table>
         <br>
@@ -1170,7 +1170,7 @@
     3: `<table class="table-bordered" border="1">
         <tr>
           <td class="cell-center"> <b>Biểu mẫu số: BM.STTT.22.01</b> </td>
-          <td class="cell-center"> <b>Số soát xét: 03.02718</b> </td>
+          <td class="cell-center"> <b>Số soát xét: 04.01719</b> </td>
         </tr>
         <tr>
           <td colspan="2">
@@ -1211,7 +1211,7 @@
         <table border="1" class="table-bordered">
           <tr>
             <td class="text-center"> <b>Biểu mẫu số: BM.STTT.22.01</b> </td> 
-            <td class="text-center"> <b>Số soát xét: 03.02718</b> </td>
+            <td class="text-center"> <b>Số soát xét: 04.01719</b> </td>
           </tr>
           <tr>
             <td colspan="2"> 
