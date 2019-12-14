@@ -1,6 +1,12 @@
 <!-- BEGIN: main -->
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <link rel="stylesheet" href="/modules/manage/src/style.css">
+
+<ul>
+  <li> <a href="/manage/device"> Quản lý thiết bị </a> </li>
+  <li> <a href="/manage/material"> Quản lý Vật tư, hóa chất </a> </li>
+</ul>
+
 {import_modal}
 {import_modal_insert}
 {import_modal_remove}

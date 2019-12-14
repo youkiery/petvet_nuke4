@@ -12,7 +12,7 @@ checkMember();
 $excel = $nv_Request->get_int('excel', 'get');
 $action = $nv_Request->get_string('action', 'post', '');
 if ($nv_Request->get_int('excel', 'get')) {
-  header('location: /excel-output.xlsx');
+  header('location: /excel-output.xlsx?t=' . time());
 }
 if (!empty($action)) {
   $result = array('status' => 0);

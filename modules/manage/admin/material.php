@@ -10,8 +10,8 @@ if (!defined('NV_IS_FILE_ADMIN')) { die('Stop!!!'); }
 $page_title = "Quản lý vật tư, hóa chất";
 $excel = $nv_Request->get_int('excel', 'get');
 if ($nv_Request->get_int('excel', 'get')) {
-    header('location: /excel-output.xlsx');
-  }
+  header('location: /excel-output.xlsx?t=' . time());
+}
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);

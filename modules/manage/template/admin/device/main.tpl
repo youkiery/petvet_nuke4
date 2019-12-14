@@ -89,7 +89,7 @@
       '',
       {action: 'excel'},
       (response, status) => {
-    		window.open(strHref + '&excel=1')
+    		window.open(strHref + '?excel=1')
       }
     )
   }
