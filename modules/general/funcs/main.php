@@ -91,6 +91,7 @@ if (!empty($action)) {
 }
 
 $xtpl = new XTemplate("main.tpl", PATH);
+$xtpl->assign('module_file', $module_file);
 
 $item = array();
 

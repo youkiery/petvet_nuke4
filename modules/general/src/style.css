@@ -125,3 +125,8 @@ label.filebutton {
   margin: 0;
   padding:0;
 }
+
+.cell-center {
+  text-align: center;
+  vertical-align: inherit !important;
+}

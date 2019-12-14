@@ -69,20 +69,17 @@ function lowitemList() {
 
     $filter = $nv_Request->get_array('filter', 'post');
     if (empty($filter['limit'])) $filter['limit'] = 10;
-    $xtra = array();
-    // $xtra = '';
+    $xtra = '';
     if (!empty($filter['category'])) {
         // $xtra = ' and category = ' . $filter['category'];
         $category = implode(', ', $filter['category']);
-        foreach ($filter['category'] as $id) {
-            $xtra[]= 'category in ('. $category .')';
-        }
+        $xtra= 'and category in ('. $category .')';
     }
     
     $index = 1;
     $xtpl = new XTemplate("lowitem-list.tpl", PATH);
 
-    $query = $db->query('select * from `'. PREFIX .'item` where active = 1 and name like "%'. $filter['keyword'] .'%" and ((bound = 0 and number < '. $filter['limit'] .') or (bound > 0 and number <= bound)) '. (count($xtra) ? ' and ' . implode(' or ', $xtra) : '') .' order by time desc');
+    $query = $db->query('select * from `'. PREFIX .'item` where active = 1 and name like "%'. $filter['keyword'] .'%" and ((bound = 0 and number < '. $filter['limit'] .') or (bound > 0 and number <= bound)) '. $xtra .' order by time desc');
     // $query = $db->query('select * from `'. PREFIX .'item` where active = 1 and ((bound = 0 and number < '. $filter['limit'] .') or (bound > 0 and number <= bound)) '. $xtra .' order by time desc');
     while ($row = $query->fetch()) {
         $xtpl->assign('index', $index++);
@@ -108,9 +105,7 @@ function itemList() {
     if (!empty($filter['category'])) {
         // $xtra = ' and category = ' . $filter['category'];
         $category = implode(', ', $filter['category']);
-        foreach ($filter['category'] as $id) {
-            $xtra[]= 'category in ('. $category .')';
-        }
+        $xtra= 'and category in ('. $category .')';
     }
 
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
@@ -125,6 +120,7 @@ function itemList() {
         $xtpl->assign('name', $row['name']);
         $xtpl->assign('category', categoryName($row['category']));
         $xtpl->assign('number', $row['number']);
+        $xtpl->assign('number2', $row['number2']);
         $xtpl->assign('bound', $row['bound']);
         $xtpl->assign('limit', $row['limit']);
         $xtpl->parse('main.row');

@@ -1,8 +1,8 @@
 <!-- BEGIN: main -->
-<link rel="stylesheet" href="/modules/exp/src/style.css">
+<link rel="stylesheet" href="/modules/{module_file}/src/style.css">
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
-<script src="/modules/exp/src/script.js"></script>
+<script src="/modules/{module_file}/src/script.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript"
     src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
@@ -40,6 +40,16 @@
 </div>
 
 <div style="clear: both;"> </div>
+
+
+<div class="form-group input-group">
+    <input type="text" class="form-control" id="x-limit" value="10" placeholder="Hàng hóa mỗi trang">
+    <div class="input-group-btn">
+        <button class="btn btn-info" onclick="goPage(1)">
+            Lọc
+        </button>
+    </div>
+</div>
 
 <div class="form-group">
     <button class="btn btn-danger submit" style="position: sticky; top: 10px; left: 10px;" onclick="removeAll()">
@@ -98,21 +108,20 @@
                 if (!rABS) data = new Uint8Array(data);
                 var wb = XLSX.read(data, { type: rABS ? 'binary' : 'array' });
                 var object = XLSX.utils.sheet_to_row_object_array(wb.Sheets[wb.SheetNames[0]])
+                object = convertData(object)
 
                 list = []
                 if (global['mode']) {
                     // insert
                     object.forEach((item) => {
-                        code = item['Mã hàng'].toString()
-                        res = global['item'].indexOf(code)
+                        res = global['item'].indexOf(item['code'])
                         if (res < 0) list.push(item)
                     });
                 }
                 else {
                     // update
                     object.forEach((item) => {
-                        code = item['Mã hàng'].toString()
-                        res = global['item'].indexOf(code)
+                        res = global['item'].indexOf(item['code'])
                         if (res >= 0) list.push(item)
                     });
                 }
@@ -121,7 +130,7 @@
                 $("#excel-modal").modal('hide')
                 $("#item-modal").modal('show')
             } catch (error) {
-                // console.log(e);
+                console.log(error);
                 $("#excel-error").text('Tệp tải lên không hợp lệ')
                 $("#excel-error").show()
                 $("#excel-error").fadeOut(3000)
@@ -132,6 +141,20 @@
     var handler = typeof IE_LoadFile !== 'undefined' ? handle_ie : handle_fr;
     if (input_dom_element.attachEvent) input_dom_element.attachEvent('onchange', handler);
     else input_dom_element.addEventListener('change', handler, false);
+
+    function convertData(data) {
+        list = []
+
+        data.forEach(item => {
+            list.push({
+                code: item['Mã hàng'],
+                category: item['Nhóm hàng(3 Cấp)'],
+                name: item['Tên hàng hóa'],
+                number: item['Tồn kho']
+            })
+        });
+        return list
+    }
 
     function lowitem() {
         $("#lowitem-modal").modal('show')
@@ -184,9 +207,10 @@
                 <tr>
                     <td> `+ index + ` </td>
                     <td> <input type="checkbox" class="row-checkbox" index="`+ (--index) + `" selected> </td>
-                    <td> `+ e['Mã hàng'] + ` </td>
-                    <td> `+ e['Nhóm hàng(3 Cấp)'] + ` </td>
-                    <td> <input type="text" class="form-control" id="row-number-`+ index + `" value="` + e['Tồn kho'] + `">  </td>
+                    <td> `+ e['code'] + ` </td>
+                    <td> `+ e['category'] + ` </td>
+                    <td> <input type="text" class="form-control" id="row-name-`+ index + `" value="` + e['name'] + `">  </td>
+                    <td> <input type="text" class="form-control" id="row-number-`+ index + `" value="` + e['number'] + `">  </td>
                     <td> <button class="btn btn-danger submit" onclick="removeIndex(`+ index + `)"> <span class="glyphicon glyphicon-remove"> </span> </button> </td>
                 </tr> `
                 index += 2
@@ -198,6 +222,7 @@
                     <th> <input type="checkbox" id="row-check-all" selected> </th>
                     <th> Mã hàng </th>
                     <th> Loại hàng </th>
+                    <th> Tên hàng </th>
                     <th> Số lượng </th>
                     <th>  </th>
                 </tr>
@@ -221,7 +246,7 @@
 
     function removeAll() {
         list = []
-        $(".row-checkbox:checked").each((index, item) => {
+        $(".item-checkbox:checked").each((index, item) => {
             list.push(item.getAttribute('index'))
         })
         if (!list.length) alert_msg('Chọn 1 mục trước khi xóa')
@@ -241,7 +266,7 @@
 
     function removeAllItem() {
         list = []
-        $(".row-checkbox:checked").each((index, item) => {
+        $(".item-checkbox:checked").each((index, item) => {
             list.push(item.getAttribute('index'))
         })
 
@@ -264,13 +289,7 @@
         $(".row-checkbox:checked").each((index, item) => {
             id = item.getAttribute('index')
             list.push(id)
-            temp = global['selected'][id]
-            data.push({
-                code: temp['Mã hàng'],
-                name: temp['Tên hàng hóa'],
-                number: temp['Tồn kho'],
-                category: temp['Nhóm hàng(3 Cấp)']
-            })
+            data.push(global['selected'][id])
         })
 
         if (!list.length) {
@@ -342,7 +361,7 @@
             (response, status) => {
                 checkResult(response, status).then(data => {
                     $("#lowitem-content").html(data['html'])
-                })
+                }, () => { })
             }
         )
     }
@@ -362,7 +381,7 @@
             (response, status) => {
                 checkResult(response, status).then(data => {
                     $("#lowitem-content").html(data['html'])
-                })
+                }, () => { })
             }
         )
     }
@@ -374,8 +393,8 @@
         })
         global['filter_main']['category'] = list
         global['filter_main']['page'] = page
-        global['filter_main']['limit'] = $("#filter-limit").val()
-        global['filter_main']['keyword'] = $("#filter-keyword").val()
+        global['filter_main']['limit'] = $("#x-limit").val()
+        // global['filter_main']['keyword'] = $("#filter-keyword").val()
         $.post(
             '',
             { action: 'filter', filter: global['filter_main'] },
@@ -384,7 +403,7 @@
                     $("#filter-modal").modal('hide')
                     $("#content").html(data['html'])
                     installCheckAll('item')
-                })
+                }, () => { })
             }
         )
     }
@@ -404,7 +423,7 @@
             (response, status) => {
                 checkResult(response, status).then(data => {
                     // do nothing
-                })
+                }, () => { })
             }
         )
     }
@@ -423,7 +442,7 @@
                     $("#content").html(data['html'])
                     installCheckAll('item')
                     $("#remove-modal").modal('hide')
-                })
+                }, () => { })
             }
         )
     }
