@@ -21,6 +21,10 @@ label span input {
   padding:0;
 }
 
+.maxi-form label {
+  width: 100%;
+}
+
 .row-x::after {
   content: "";
   clear: both;

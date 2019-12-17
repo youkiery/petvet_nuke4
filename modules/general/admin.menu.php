@@ -11,6 +11,6 @@ if (!defined('NV_ADMIN')) die('Stop!!!');
 // $submenu['category'] = 'Danh sách loại hàng';
 // $submenu['item'] = 'Danh sách sản phẩm';
 // $submenu['exp'] = 'Quản lý hạn sử dụng';
-// $submenu['excel'] = 'Thêm bằng excel';
+$submenu['blood'] = 'Quản lý xét nghiệm máu';
 
-$allow_func = array('main', 'item', 'exp', 'excel', 'category'); 
+$allow_func = array('main', 'blood'); 

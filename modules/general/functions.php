@@ -44,6 +44,35 @@ function lowitemModal() {
     return $xtpl->text();
 }
 
+function bloodInsertModal() {
+    global $db, $db_config, $user_info;
+
+    $xtpl = new XTemplate("insert-modal.tpl", PATH);
+    $last = checkLastBlood();
+    $query = $db->query('select a.user_id, b.first_name from `'. $db_config['prefix'] .'_rider_user` a inner join `'. $db_config['prefix'] .'_users` b on a.user_id = b.userid where a.type = 1');
+    $xtpl->assign('today', date('d/m/Y'));
+    $xtpl->assign('last', $last);
+    $xtpl->assign('nextlast', $last - 1);
+    while ($row = $query->fetch()) {
+        $xtpl->assign('id', $row['user_id']);
+        $xtpl->assign('name', $row['first_name']);
+        if ($row['user_id'] == $user_info['userid']) $xtpl->assign('selected', 'selected');
+        else $xtpl->assign('selected', '');
+        $xtpl->parse('main.doctor');
+    }
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function bloodImportModal() {
+    global $db;
+
+    $xtpl = new XTemplate("import-modal.tpl", PATH);
+    $xtpl->assign('today', date('d/m/Y'));
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
 function removeModal() {
     $xtpl = new XTemplate("remove-modal.tpl", PATH);
     $xtpl->parse('main');
@@ -90,6 +119,43 @@ function lowitemList() {
         $xtpl->parse('main.row');
     }
     
+    $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function bloodList() {
+    global $db, $nv_Request;
+    $xtpl = new XTemplate("blood-list.tpl", PATH);
+    $filter = $nv_Request->get_array('filter', 'post');
+    if (empty($filter['page'])) {
+        $filter['page'] = 1;
+    }
+    if (empty($filter['limit'])) {
+        $filter['limit'] = 10;
+    }
+
+    $xtra = '';
+    if (!empty($filter['type'])) {
+        $xtra = 'where type in ('. implode(', ', $filter['type']) .')';
+    }
+
+    $query = $db->query('select count(*) as num from ((select id, time, 0 as type, number from `'. PREFIX .'blood_row`) union (select id, time, 1 as type, number from `'. PREFIX .'blood_import`)) a '. $xtra);
+    $number = $query->fetch()['num'];
+
+
+    $query = $db->query('select * from ((select id, time, 0 as type, number from `'. PREFIX .'blood_row`) union (select id, time, 1 as type, number from `'. PREFIX .'blood_import`)) a '. $xtra .' order by time desc, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+    $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+    while ($row = $query->fetch()) {
+        $xtpl->assign('index', $index++);
+        $xtpl->assign('time', date('d/m/Y', $row['time']));
+        $xtpl->assign('number', $row['number']);
+        $xtpl->assign('id', $row['id']);
+        $xtpl->assign('typeid', $row['type']);
+        if ($row['type']) $xtpl->assign('type', 'Phiếu nhập');
+        else $xtpl->assign('type', 'Phiếu xét nghiệm');
+        $xtpl->parse('main.row');
+    }
     $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
     $xtpl->parse('main');
     return $xtpl->text();

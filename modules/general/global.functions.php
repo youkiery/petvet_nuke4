@@ -52,6 +52,17 @@ function updateItem($data) {
   return true;
 }
 
+function checkLastBlood() {
+  global $db, $db_config;
+
+  $query = $db->query('select * from `'. $db_config['prefix'] .'_config` where config_name = "blood_number"');
+  if (!empty($row = $query->fetch())) {
+    return $row['config_value'];
+  }
+  $db->query('insert into `'. $db_config['prefix'] .'_config` (lang, module, config_name, config_value) values ("sys", "site", "blood_number", "1")');
+  return 1;
+}
+
 function totime($time) {
   if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
     $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);
@@ -75,4 +86,10 @@ function convert($str) {
   $str = preg_replace("/(ỳ|ý|ỵ|ỷ|ỹ)/", 'y', $str);
   $str = preg_replace("/(đ)/", 'd', $str);
   return $str;
+}
+
+function loadModal($file_name) {
+  $xtpl = new XTemplate($file_name . '.tpl', PATH);
+  $xtpl->parse('main');
+  return $xtpl->text();
 }
