@@ -16,21 +16,33 @@ define('PERMISSION_MODULE', 1);
 
 // lấy khoảng thời gian khóa văn bản
 function getLocker() {
-  global $db, $db_config, $module_name, $user_info;
+  global $db, $db_config;
 
-  if (!empty($user_info)) {
-    if (in_array('1', $user_info['in_groups'])) {
-      return 0;
-    }
-  }
-
-  $sql = 'select * from `'. $db_config['prefix'] .'_config` where module = "' . $module_name . '" and config_name = "locked_time"';
-  // die($sql);
+  $sql = 'select * from `'. $db_config['prefix'] .'_config` where config_name = "locked_time"';
   $query = $db->query($sql);
   // chọn dữ liệu từ bảng config
 
   if (empty($row = $query->fetch())) {
-    $sql = 'insert into `'. $db_config['prefix'] .'_config` (lang, module, config_name, config_value) values ("sys", "'. $module_name .'", "locked_time", "0")';
+    $sql = 'insert into `'. $db_config['prefix'] .'_config` (lang, module, config_name, config_value) values ("sys", "site", "locked_time", "0")';
+    // die($sql);
+    $query = $db->query($sql);
+
+    return 0;
+  }
+  else {
+    return $row['config_value'];
+  }
+}
+// lấy khoảng thời gian khóa văn bản
+function getAutolocker() {
+  global $db, $db_config;
+
+  $sql = 'select * from `'. $db_config['prefix'] .'_config` where config_name = "auto_locker"';
+  $query = $db->query($sql);
+  // chọn dữ liệu từ bảng config
+
+  if (empty($row = $query->fetch())) {
+    $sql = 'insert into `'. $db_config['prefix'] .'_config` (lang, module, config_name, config_value) values ("sys", "site", "auto_locker", "0")';
     // die($sql);
     $query = $db->query($sql);
 

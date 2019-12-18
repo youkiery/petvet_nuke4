@@ -25,19 +25,16 @@ if (!empty($action)) {
 
       if (count($data) > 0) {
         $time = totime($data['locker']);
-        $today = strtotime(date('Y/m/d', time()));
-        if ($time < $today) {
           if (empty($data['checker'])) {
             $time = 0;
+            $data['auto'] = 0;
           }
-          $sql = 'update `'. $db_config['prefix'] .'_config` set config_value = "'. $time .'" where module = "' . $module_name . '" and config_name = "locked_time"';
-          if ($db->query($sql)) {
+          if ($data['locker'])
+          $sql = 'update `'. $db_config['prefix'] .'_config` set config_value = "'. $time .'" where config_name = "locked_time"';
+          $sql2 = 'update `'. $db_config['prefix'] .'_config` set config_value = "'. $data['auto'] .'" where config_name = "auto_locker"';
+          if ($db->query($sql) && $db->query($sql2)) {
             $result['status'] = 1;
           }
-        }
-        else {
-
-        }
       }
 		break;
 	}
@@ -55,14 +52,24 @@ if (in_array('1', $admin_info['in_groups']) || $adin['admin'] > 0) {
   $xtpl = new XTemplate("locked.tpl", PATH);
 
   $locked_time = getLocker();
+  $auto_locker = getAutolocker();
 
   $xtpl->assign('checked', '');
   $xtpl->assign('lchecked', 'disabled');
+
+  if ($auto_locker) {
+    $xtpl->assign('autolocker', 'checked');
+  }
+  else { $xtpl->assign('autolocker', ''); }
+
   if ($locked_time > 0) {
     $xtpl->assign('checked', 'checked');
-    $xtpl->assign('lchecked', '');
+    if (!$auto_locker) {
+      $xtpl->assign('lchecked', '');
+    }
   }
   else {
+    $xtpl->assign('autolocker', 'disabled');
     $locked_time = time();
   }
 

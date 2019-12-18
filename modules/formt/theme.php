@@ -287,6 +287,7 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
   $xcode = str_replace('/', ', ', $xcode);
 
   $today = time();
+  $lastdate = strtotime(date('Y/m/d')) - 1;
   if (empty($other['end'])) {
     $other['end'] = date('d/m/Y', $today);
   }
@@ -296,6 +297,7 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
   }
 
   $locker_time = getLocker();
+  $auto_locker = getAutolocker();
 
   $other['from'] = totime($other['from']);
   $other['end'] = totime($other['end'] + 60 * 60 * 24 - 1);
@@ -348,9 +350,16 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
           $xtpl->parse('main.row.mod.clone');
         } 
 
-        // echo date('d/m/Y', $row['time']) . ': ' . date('d/m/Y', $locker_time) . '<br>';
+        // auto, time < lastdate
+        // locker, time < locker
 
-        if ($row['time'] > $locker_time) {
+        if ($auto_locker && $row['time'] < $lastdate) {
+          // lock
+        }
+        else if ($row['time'] <= $locker_time) {
+          // lock
+        }
+        else {
           $xtpl->parse('main.row.mod.lockg');
         }
         $xtpl->parse('main.row.mod');
