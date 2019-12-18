@@ -207,8 +207,6 @@
                 <tr>
                     <td> `+ index + ` </td>
                     <td> <input type="checkbox" class="row-checkbox" index="`+ (--index) + `" selected> </td>
-                    <td> `+ e['code'] + ` </td>
-                    <td> `+ e['category'] + ` </td>
                     <td> <input type="text" class="form-control" id="row-name-`+ index + `" value="` + e['name'] + `">  </td>
                     <td> <input type="text" class="form-control" id="row-number-`+ index + `" value="` + e['number'] + `">  </td>
                     <td> <button class="btn btn-danger submit" onclick="removeIndex(`+ index + `)"> <span class="glyphicon glyphicon-remove"> </span> </button> </td>
@@ -218,10 +216,8 @@
             html = `
             <table class="table table-bordered">
                 <tr>
-                    <th> STT </th>
+                    <th>  </th>
                     <th> <input type="checkbox" id="row-check-all" selected> </th>
-                    <th> Mã hàng </th>
-                    <th> Loại hàng </th>
                     <th> Tên hàng </th>
                     <th> Số lượng </th>
                     <th>  </th>

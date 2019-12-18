@@ -6,7 +6,6 @@
             <th> <input type="checkbox" id="item-check-all"> </th>
             <th class="cell-center"> Tên hàng </th>
             <th class="cell-center"> Bệnh viện </th>
-            <th class="cell-center"> Kho </th>
             <th class="cell-center"> Giới hạn </th>
             <th> </th>
         </tr>
@@ -22,7 +21,6 @@
             </td>
             <td> <input type="text" class="form-control" id="item-name-{id}" index="{id}" value="{name}"> </td>
             <td> <input type="text" class="form-control" id="item-number-{id}" index="{id}" value="{number}"> </td>
-            <td> <input type="text" class="form-control" id="item-number2-{id}" index="{id}" value="{number2}"> </td>
             <td> <input type="text" class="form-control" id="item-bound-{id}" index="{id}" value="{bound}"> </td>
             <td>
                 <button class="btn btn-info btn-xs" onclick="updateItem({id})">
