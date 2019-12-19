@@ -9,10 +9,10 @@
 if (!defined('NV_IS_FILE_ADMIN')) { die('Stop!!!'); }
 
 $xco = array(1 => 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
-$yco = array(1 => 'SBD', 'Tên thú cưng', 'Tên Chủ nuôi', 'Phần thi');
+$yco = array(1 => 'SBD', 'Tên Chủ nuôi', 'Địa chỉ', 'Số điện thoại', 'Tên thú cưng', 'Giống loài', 'Phần thi');
 
 if ($nv_Request->get_string('download', 'get')) {
-  header('location: /assets/excel-output.xlsx');
+  header('location: /assets/excel-output.xlsx?' . time());
 }
 
 $action = $nv_Request->get_string('action', 'post', '');
@@ -31,9 +31,15 @@ if (!empty($action)) {
         $xtra[] = 'test like \'%"'. $id .'"%\' ';
       }
       
-      $sql = 'select * from `'. PREFIX .'row` ' . ((count($xtra) > 0) ? ' where ' . implode(' or ', $xtra) : "") . ' order by id desc';
+      $species = [];
+      $sql = 'select * from `'. PREFIX .'species`';
       $query = $db->query($sql);
-      $index = 1;
+      while ($row = $query->fetch()) {
+        $species[$row['id']] = $row['name'];
+      }
+
+      $sql = 'select * from `'. PREFIX .'row` ' . ((count($xtra) > 0) ? ' where ' . implode(' or ', $xtra) : "") . ' order by species desc';
+      $query = $db->query($sql);
       $i = 1;
       $j = 1;
 
@@ -43,6 +49,7 @@ if (!empty($action)) {
         ->setCellValue($xco[$j ++] . $i, $value);
       }
       
+      $index = 1;
       while ($row = $query->fetch()) {
         $i++;
         $j = 1;
@@ -55,8 +62,11 @@ if (!empty($action)) {
         $objPHPExcel
         ->setActiveSheetIndex(0)
         ->setCellValue($xco[$j ++] . $i, checkCallNumber($index++))
-        ->setCellValue($xco[$j ++] . $i, $row['petname'])
         ->setCellValue($xco[$j ++] . $i, $row['name'])
+        ->setCellValue($xco[$j ++] . $i, $row['address'])
+        ->setCellValue($xco[$j ++] . $i, $row['mobile'])
+        ->setCellValue($xco[$j ++] . $i, $row['petname'])
+        ->setCellValue($xco[$j ++] . $i, $species[$row['species']])
         ->setCellValue($xco[$j ++] . $i, implode(', ', $list));
       } 
       $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
@@ -232,6 +242,7 @@ while ($row = $query->fetch()) {
   $xtpl->assign('id', $row['id']);
   $xtpl->assign('species', ucwords($row['name']));
   $xtpl->parse('main.species');
+  $xtpl->parse('main.species2');
 }
 
 $query = $db->query('select * from `'. PREFIX .'test`');

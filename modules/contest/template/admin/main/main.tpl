@@ -1,3 +1,11 @@
+<div class="form-group form-inline">
+  Giống loài
+  <label class="checkbox" style="margin-right: 20px"> <input type="checkbox" id="species-check-all" index="{id}" checked> tất cả </label>
+  <!-- BEGIN: species2 -->
+  <label class="checkbox" style="margin-right: 10px"> <input type="checkbox" class="species-checkbox" index="{id}" checked> {species} </label>
+  <!-- END: species2 -->
+</div>
+
 <!-- BEGIN: main -->
 <link rel="stylesheet" href="/modules/contest/src/style.css">
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
@@ -87,6 +95,7 @@
 
   $(document).ready(() => {
     installCheckbox('test')
+    // installCheckbox('species')
     installCheckbox('contest')
     installCheckbox('filter')
     installSuggest('signup', 'species')
@@ -100,7 +109,6 @@
     $(".filter-contest").each((index, item) => {
       if (item.checked) contest.push(item.getAttribute('index'))
     })
-    
     return {
       page: global['page'],
       limit: limit,
