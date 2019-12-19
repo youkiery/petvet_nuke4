@@ -93,3 +93,14 @@ function loadModal($file_name) {
   $xtpl->parse('main');
   return $xtpl->text();
 }
+
+function getDoctorList() {
+  global $db, $db_config;
+
+  $list = array();
+  $query = $db->query('select a.userid, a.first_name from `'. $db_config['prefix'] .'_rider_user` b inner join `'. $db_config['prefix'] .'_users` a on a.userid = b.user_id where b.type = 1');
+  while ($row = $query->fetch()) {
+    $list[$row['userid']] = $row['first_name'];
+  }
+  return $list;
+}

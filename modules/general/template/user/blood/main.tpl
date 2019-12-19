@@ -40,6 +40,24 @@
         type: 0,
         id: 0
     }
+    const formatter = new Intl.NumberFormat('vi-VI', {
+        style: 'currency',
+        currency: 'VND'
+    })
+
+    $(document).ready(() => {
+        $("#import-price").keyup((e) => {
+            var current = e.currentTarget
+            var val = Number(current['value'].replace(/\,/g, ""));
+            if (Number.isFinite(val)) {
+                money = val
+            }
+
+            val = formatter.format(val).replace(/ ₫/g, "").replace(/\./g, ",");
+            current.value = val
+        })
+    })
+
 
     function bloodInsertModal() {
         $("#blood-insert-button").show()
