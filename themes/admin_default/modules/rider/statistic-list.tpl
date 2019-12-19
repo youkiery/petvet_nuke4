@@ -1,9 +1,4 @@
 <!-- BEGIN: main -->
-<style>
-  label {
-    width: 100%;
-  }
-</style>
 <p> Thống kê từ {from} đến {end} </p>
 <!-- BEGIN: row -->
 <div>
@@ -21,4 +16,6 @@
   </ul>
 </div>
 <!-- END: row -->
+<p> Tổng tiền thu: {total} </p>
+<p> Tổng tiền chi: {total2} </p>
 <!-- END: main -->

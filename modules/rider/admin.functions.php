@@ -56,6 +56,7 @@ function statistic($filter = array()) {
   // $sql = "select a.*, c.last_name from `" . $db_config["prefix"] . "_" . $module_name . "_row` a inner join `" . $db_config["prefix"] . "_" . $module_name . "_user` b on a.driver_id = b.user_id and b.type = 0 and  inner join `" . $db_config["prefix"] . "_users` c on b.user_id = c.userid";
   $sql = "select b.user_id, c.first_name from `" . $db_config["prefix"] . "_" . $module_name . "_user` b inner join `" . $db_config["prefix"] . "_users` c on b.user_id = c.userid and type = 0";
   $query = $db->query($sql);
+  $total = 0;
 
   while (!empty($row = $query->fetch())) {
     $count = 0;
@@ -71,13 +72,24 @@ function statistic($filter = array()) {
       $count ++;
       $desti += $row2['clock_to'] - $row2['clock_from'];
       $price += $row2['price'];
+      $total += $row2['price'];
     }
 
     $xtpl->assign('count', $count);
     $xtpl->assign('desti', $desti);
-    $xtpl->assign('price', $price);
+    $xtpl->assign('price', number_format($price, 0, '', ',') . ' VND');
     $xtpl->parse('main.row');
   }
+  $xtpl->assign('total', number_format($total, 0, '', ',') . ' VND');
+
+  $sql = "select * from `" . $db_config["prefix"] . "_" . $module_name . "_row` where type = 1 and time between ". $filter['from'] ." and ". $filter['end'];
+  $query = $db->query($sql);
+  $total = 0;
+  while ($row = $query->fetch()) {
+    $total += $row['amount'];
+  }
+  $xtpl->assign('total2', number_format($total, 0, '', ',') . ' VND');
+
   $xtpl->parse('main');
   return $xtpl->text();
 }
