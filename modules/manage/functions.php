@@ -18,6 +18,21 @@ function deviceModal() {
   return $xtpl->text();
 }
 
+function excelModal() {
+  global $module_file, $op;
+  $xtpl = new XTemplate("excel-modal.tpl", PATH);
+
+  $depart = getDepartList();
+  foreach ($depart as $data) {
+    $xtpl->assign('id', $data['id']);
+    $xtpl->assign('name', $data['name']);
+    $xtpl->parse('main.depart');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function removeModal() {
   global $module_file, $op;
   $xtpl = new XTemplate("remove-modal.tpl", PATH);

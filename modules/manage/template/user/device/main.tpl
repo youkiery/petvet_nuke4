@@ -5,11 +5,7 @@
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 
-<ul>
-  <li> <a href="/manage/device"> Quản lý thiết bị </a> </li>
-  <li> <a href="/manage/material"> Quản lý Vật tư, hóa chất </a> </li>
-</ul>
-
+{excel_modal}
 {device_modal}
 {remove_modal}
 {remove_all_modal}
@@ -93,7 +89,7 @@
     });
   })
 
-  function excel() {
+  function excelAll() {
     $.post(
       '',
       {action: 'excel'},
@@ -101,6 +97,22 @@
     		window.open(strHref + '?excel=1')
       }
     )
+  }
+
+  function excelDepartSelected() {
+    $.post(
+      '',
+      {action: 'excel', depart: $("#excel-depart").val() },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+      		window.open(strHref + '?excel=1')
+        })
+      }
+    )
+  }
+
+  function excel() {
+    $("#excel-modal").modal('show')
   }
 
   function selectDepart(prefix, index) {

@@ -338,3 +338,46 @@ function getMaterialDataList() {
   }
   return $list;
 }
+
+function deviceParseExcel($depart) {
+  global $db, $objPHPExcel, $i, $j, $xco, $title;
+  $device_query = $db->query('select * from `'. PREFIX .'device` where depart like \'%"'. $depart['id'] .'"%\' limit 1');
+  if ($device_query->fetch()) {
+    $device_query = $db->query('select * from `'. PREFIX .'device` where depart like \'%"'. $depart['id'] .'"%\'');
+    $j = 0;
+    $objPHPExcel
+    ->setActiveSheetIndex(0)
+    ->setCellValue($xco['0'] . $i, 'DANH MUC TÀI SẢN KIỂM KÊ PHÒNG '. $depart['name'] .' NĂM ' . date('Y', time()));
+    $i += 2;
+
+    foreach ($title as $value) {
+      $objPHPExcel
+      ->setActiveSheetIndex(0)
+      ->setCellValue($xco[$j++] . $i, $value);
+    }
+    $i++;
+
+    $index = 1;
+    $count = 0;
+    while ($device = $device_query->fetch()) {
+      $j = 0;
+      $count += $device['number'];
+      $objPHPExcel
+      ->setActiveSheetIndex(0)
+      ->setCellValue($xco[$j++] . $i, $index++)
+      ->setCellValue($xco[$j++] . $i, $device['name'])
+      ->setCellValue($xco[$j++] . $i, $device['intro'])
+      ->setCellValue($xco[$j++] . $i, $device['unit'])
+      ->setCellValue($xco[$j++] . $i, $device['number'])
+      ->setCellValue($xco[$j++] . $i, $device['year'])
+      ->setCellValue($xco[$j++] . $i, $device['source'])
+      ->setCellValue($xco[$j++] . $i++, $device['description']);
+    }
+    $objPHPExcel
+    ->setActiveSheetIndex(0)
+    ->setCellValue($xco[0] . $i, 'Tổng cộng: ')
+    ->setCellValue($xco[4] . $i++, $count);
+    $i += 2;
+  }
+  return $objPHPExcel;
+}
