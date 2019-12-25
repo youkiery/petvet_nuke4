@@ -50,7 +50,7 @@
             </tr>
           </thead>
           <tbody id="search-all-content">
-            {content}
+            <!-- {content} -->
           </tbody>
         </table>
       </div>
@@ -197,7 +197,7 @@
               </select>      
             </div>
             <div class="form-group text-center">
-              <input class="btn btn-info" id="btn_save_vaccine" type="button" onclick="save_form()" value="{lang.save}" data-dismiss="modal">
+              <input class="btn btn-info" id="btn_save_vaccine" type="button" onclick="save_form()" value="{lang.save}">
             </div>
           </form>
       </div>
@@ -562,11 +562,12 @@
 
   function save_form() {
     $.post(
-      link + "main&act=post",
+      '',
       {action: "save", petid: g_petid, recall: $("#confirm_recall").val(), doctor: $("#doctor_select").val(), vacid: g_vacid, diseaseid: g_disease, id: g_id, page: page, cnote: note_s},
       (data, status) => {
 				data = JSON.parse(data);
 				if (data["status"]) {
+          $("#vaccinedetail").modal('hide')
           $("#disease_display").html(data["data"]["html"])
           alert_msg('{lang.saved}');
           // note_s = 0
@@ -583,7 +584,7 @@
   }
 
   function recall(index, vacid, petid, diseaseid) {
-    $("#btn_save_vaccine").attr("disabled", true);
+    $("#btn_save_vaccine").prop("disabled", true);
     $.post(
 			link + "main&act=post",
       {action: "getrecall", vacid: vacid, diseaseid: diseaseid, id: g_id, page: page, cnote: note_s},
@@ -597,9 +598,7 @@
           if (data["data"]["doctor"]) {
             $("#doctor_select").html(data["data"]["doctor"]);
             $("#confirm_recall").val(data["data"]["calltime"]);
-            if (data["data"]["recall"] == 0) {
-              $("#btn_save_vaccine").attr("disabled", false);
-            }
+            $("#btn_save_vaccine").prop("disabled", false);
           }
 				}
 			}

@@ -12,11 +12,12 @@ if(!(empty($act) || empty($value) || empty($vacid)) && $diseaseid >= 0) {
 	} else {
 		$mod = -1;
 	}
+
 	$x = in_array($value, $lang_module["confirm_value"]);
 	if ($x) {
 		$confirmid = array_search($value, $lang_module["confirm_value"]);
 		$confirmid += $mod;
-		if (!empty($lang_module["confirm_value"][$confirmid])) {
+		if (!empty($lang_module["confirm_value"][$confirmid]) && $confirmid < 2) {
 			$sql = "update " .  VAC_PREFIX . "_vaccine set status = $confirmid where id = $vacid";
 			$result = $db->query($sql);
 			if ($result) {

@@ -180,6 +180,34 @@ if (!empty($action)) {
 				}
 			}
 		break;
+    case 'save':
+      $recall = $nv_Request->get_string('recall', 'post', '');
+      $doctor = $nv_Request->get_string('doctor', 'post', '');
+      $vacid = $nv_Request->get_string('vacid', 'post', '');
+      $diseaseid = $nv_Request->get_string('diseaseid', 'post', '');
+      $petid = $nv_Request->get_string('petid', 'post', '');
+
+      if (!(empty($petid) || empty($recall) || empty($doctor) || empty($vacid)) && $diseaseid >= 0) {
+        $cometime = strtotime(date('Y/m/d'));
+        $calltime = totime($recall);
+
+        $sql = "select * from `" . VAC_PREFIX . "_vaccine` where id = $vacid";
+        $query = $db->query($sql);
+        $vaccine = $query->fetch();
+
+        $sql = "update `" . VAC_PREFIX . "_vaccine` set status = 2, recall = $calltime, calltime = $calltime, doctorid = $doctor where id = $vacid";
+        // die($sql);
+        if ($db->query($sql)) {
+          $result["status"] = 1;
+          $result["data"]["html"] = user_vaccine();
+        }
+
+        if ($vaccine["recall"]) {
+          $sql = "insert into `" . VAC_PREFIX . "_vaccine` (petid, diseaseid, cometime, calltime, status, note, recall, doctorid, ctime) values ($petid, $diseaseid, $cometime, $calltime, 0, '', 0, 0, " . time() . ")";
+          $db->query($sql);
+        }
+      }
+      break;
 	}
 	echo json_encode($result);
 	die();

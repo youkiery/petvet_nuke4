@@ -1550,7 +1550,7 @@ function user_vaccine($keyword = '') {
   }
   
   $sql = "select a.id, a.note, a.recall, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, ctime, a.status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id $where and (c.name like '%$keyword%' or c.phone like '%$keyword%') order by calltime";
-//   die($sql);
+  // die($sql);
   $query = $db->query($sql);
   $list = fetchall($db, $query);
   return vaccine_list($list);
@@ -1725,7 +1725,7 @@ function vaccine_list($vaclist, $order = 0) {
   // display
   $id = $nv_Request->get_int('id', 'post/get', 0);
   $keyword = $nv_Request->get_string('keyword', 'post/get', '');
-  if (empty($keyword)) {
+  if (empty($keyword) && $id < 2) {
     $today = strtotime(date('Y/m/d'));
     $fromtime = $today - $vacconfigv2['filter'];
     $diseases = getDiseaseData();
@@ -1752,9 +1752,9 @@ function vaccine_list($vaclist, $order = 0) {
       $xtpl->assign("note", $row["note"]);
       $xtpl->assign("confirm", $lang_module["confirm_" . $row["status"]]);
   
-      if ($row["status"] > 1) {
-        $xtpl->parse("disease.vac_body.recall_link");
-      }
+      // if ($row["status"] > 1) {
+      //   $xtpl->parse("disease.vac_body.recall_link");
+      // }
       switch ($row["status"]) {
         case '1':
           $xtpl->assign("color", "yellow");
@@ -1770,7 +1770,12 @@ function vaccine_list($vaclist, $order = 0) {
           break;
       }
       $xtpl->assign("cometime", date("d/m/Y", $row["cometime"]));
-      $xtpl->assign("calltime", date("d/m/Y", $row["calltime"]));
+      if ($id == 2) {
+        $xtpl->assign("calltime", date("d/m/Y", $row["recall"]));
+      }
+      else {
+        $xtpl->assign("calltime", date("d/m/Y", $row["calltime"]));
+      }
       $index++;
       $xtpl->parse("disease.vac_body");
     }
@@ -1789,9 +1794,9 @@ function vaccine_list($vaclist, $order = 0) {
     $xtpl->assign("note", $vaclist[$value]["note"]);
     $xtpl->assign("confirm", $lang_module["confirm_" . $vaclist[$value]["status"]]);
 
-    if ($vaclist[$value]["status"] > 1) {
-      $xtpl->parse("disease.vac_body.recall_link");
-    }
+    // if ($vaclist[$value]["status"] > 1) {
+    //   $xtpl->parse("disease.vac_body.recall_link");
+    // }
     switch ($vaclist[$value]["status"]) {
       case '1':
         $xtpl->assign("color", "yellow");
@@ -1807,7 +1812,12 @@ function vaccine_list($vaclist, $order = 0) {
         break;
     }
     $xtpl->assign("cometime", date("d/m/Y", $vaclist[$value]["cometime"]));
-    $xtpl->assign("calltime", date("d/m/Y", $vaclist[$value]["calltime"]));
+    if ($id == 2) {
+      $xtpl->assign("calltime", date("d/m/Y", $vaclist[$value]["recall"]));
+    }
+    else {
+      $xtpl->assign("calltime", date("d/m/Y", $vaclist[$value]["calltime"]));
+    }
     $index++;
     $xtpl->parse("disease.vac_body");
   }
