@@ -229,9 +229,10 @@
     }
   
     function confirm_lower(index, vacid, petid) {
-      value = trim(value.innerText)
+      var e = document.getElementById("vac_confirm_" + index);
+      value = trim(e.innerText)
       if (value == "Đã Tiêm") {
-      
+        
       }
       else {
         var value = document.getElementById("vac_confirm_" + index);
@@ -243,7 +244,7 @@
     }
   
     function change_color(e, response, index, vacid, petid) {
-        console.log(response);
+        // console.log(response);
       if (response["status"]) {
         
         $("#nav").html(response["data"]["nav"])

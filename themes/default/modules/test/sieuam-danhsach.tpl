@@ -387,7 +387,7 @@
 
   function confirm_lower(index, vacid, petid) {
     var e = document.getElementById("vac_confirm_" + index);
-    e = trim(e.innerHTML)
+    e = trim(e.innerText)
     if (e == "Đã Sinh") {
       
     }
@@ -517,7 +517,7 @@
     $.post(link + "sieuam",
     {action: "getusgdetail", id: id},
     (response, status) => {
-      console.log(response);
+      // console.log(response);
       data = JSON.parse(response);
 
       if (data["status"]) {
@@ -543,7 +543,7 @@
         $("#dusinh").text(data["data"]["calltime"]);
       }
       else {
-        console.log(data["error"]);
+        // console.log(data["error"]);
       }
       
     })
