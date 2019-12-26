@@ -160,6 +160,8 @@ function materialList() {
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
   while($row = $query->fetch()) {
+    // echo json_encode($row);
+    // echo '<br>';
     $xtpl->assign('index', $index++);
     $xtpl->assign('type', $type_list[$row['type']]);
     $xtpl->assign('name', $row['name']);
@@ -169,6 +171,7 @@ function materialList() {
     else $xtpl->assign('unit', '');
     $xtpl->parse('main.row');
   }
+  // die();
 
   $xtpl->parse('main');
   return $xtpl->text();
