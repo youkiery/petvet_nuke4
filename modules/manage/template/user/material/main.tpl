@@ -1,6 +1,10 @@
 <!-- BEGIN: main -->
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <link rel="stylesheet" href="/modules/manage/src/style.css">
+<link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
+<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
+<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
+
 {import_modal}
 {import_modal_insert}
 {import_modal_remove}
@@ -8,6 +12,7 @@
 {export_modal_insert}
 {export_modal_remove}
 {material_modal}
+
 <div id="msgshow"></div>
 <div style="float: right;">
   <button class="btn btn-success" onclick="materialModal()">
@@ -70,6 +75,8 @@
   function insertImportModal() {
     $("#import-button").show()
     $("#edit-import-button").hide()
+    global['selected']['import'] = []
+    parseFormLine('import')
     $("#import-modal-insert").modal('show')
   }
   function insertExportModal() {
@@ -101,33 +108,55 @@
     }
   }
 
+  function checkFilter() {
+    return {
+      page: global['page']['main'],
+      limit: $("#filter-limit").val()
+    }
+  }
+
+  function goPage(page) {
+    $.post(
+      "",
+      { action: 'insert-material', filter: checkFilter() },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#content").html(data['html'])
+        })
+      }
+    )
+  }
+
   function insertMaterial() {
     $.post(
       "",
-      { action: 'insert-material', data: checkMaterialData() },
+      { action: 'insert-material', data: checkMaterialData(), filter: checkFilter() },
       (response, status) => {
         checkResult(response, status).then(data => {
           global['material'].push(data['json'])
           $("#material-name").val('')
           $("#material-unit").val('')
+          $("#material-number").val('')
           $("#material-description").val('')
           $("#content").html(data['html'])
+          $("#material-modal").modal('hide')
         }, () => {})
       }
     )
   }
 
   function itemFilter(name) {
-    input = $("#"+ name +"-item-finder")
-    suggest = $("#"+ name +"-item-finder-suggest")
-    count = 0
+    var input = $("#"+ name +"-item-finder")
+    var suggest = $("#"+ name +"-item-finder-suggest")
 
     input.keyup((e) => {
-      keyword = input.val()
+      keyword = convert(input.val())
       html = ''
+      count = 0
 
       global['material'].forEach((item, index) => {
-        if (count < 30 && item['name'].search(keyword) >= 0) {
+        itemName = convert(item['name'])
+        if (count < 30 && itemName.search(keyword) >= 0) {
           count ++
           html += `
             <div class="suggest-item" onclick="selectItem('`+ name +`', `+ index +`)">
@@ -180,7 +209,7 @@
               `+ (global['material'][item['index']]['name']) +`
             </td>
             <td>
-              <input class="form-control" id="`+ name +`-date-`+ index +`" value="`+ (item['date']) +`">
+              <input class="form-control date" id="`+ name +`-date-`+ index +`" value="`+ (item['date']) +`">
             </td>
             <td>
               <input class="form-control" id="`+ name +`-number-`+ index +`" value="`+ (item['number']) +`">
@@ -211,6 +240,11 @@
         `+ html +`
       </table>`
     $("#"+ name +"-insert-modal-content").html(html)
+    $(".date").datepicker({
+      format: 'dd/mm/yyyy',
+      changeMonth: true,
+      changeYear: true
+    });
   }
 
   function getFormLine(name) {
@@ -245,7 +279,7 @@
     else {
       $.post(
         "",
-        {action: 'insert-export', data: global['selected']['export']},
+        {action: 'insert-export', data: global['selected']['export'], filter: checkFilter() },
         (response, status) => {
           checkResult(response, status).then(data => {
             $("#export-content").html(data['html'])
@@ -267,7 +301,7 @@
     else {
       $.post(
         "",
-        {action: 'insert-import', data: global['selected']['import']},
+        {action: 'insert-import', data: global['selected']['import'], filter: checkFilter() },
         (response, status) => {
           checkResult(response, status).then(data => {
             $("#material-content").html(data['html'])
@@ -286,7 +320,7 @@
   function importRemoveSubmit() {
     $.post(
       "",
-      {action: 'remove-import', id: global['id']},
+      {action: 'remove-import', id: global['id'], filter: checkFilter() },
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#material-content").html(data['html'])
@@ -312,7 +346,7 @@
   function exportRemoveSubmit() {
     $.post(
       "",
-      {action: 'remove-export', id: global['id']},
+      {action: 'remove-export', id: global['id'], filter: checkFilter() },
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#export-content").html(data['html'])

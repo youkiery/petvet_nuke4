@@ -142,10 +142,13 @@ function checkMember() {
 }
 
 function materialList() {
-  global $db, $op, $module_file;
+  global $db, $op, $module_file, $nv_Request;
+
+  $filter = $nv_Request->get_array('filter', 'post');
+  if (empty($filter['page'])) $filter['page'] = 1;
+  if (empty($filter['limit'])) $filter['limit'] = 10;
 
   $type_list = array(0 => 'Vật tư', 1 => 'Hóa chất');
-  $filter = parseFilter('import');
   $xtpl = new XTemplate("material-list.tpl", PATH);
 
   $sql = 'select count(*) as count from `'. PREFIX .'material` limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];

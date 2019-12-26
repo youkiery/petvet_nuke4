@@ -87,6 +87,7 @@ if (!empty($action)) {
         if ($db->query($sql)) {
           $result['status'] = 1;
           $result['notify'] = 'Đã thêm';
+          $result['html'] = materialList();
           $result['id'] = $db->lastInsertId();
           $result['json'] = array('id' => $db->lastInsertId(), 'name' => $data['name'], 'type' => $data['type'], 'unit' => $data['unit'], 'description' => $data['description']);
         }
@@ -111,7 +112,7 @@ if (!empty($action)) {
           // check item, status, expiry
           foreach ($data as $row) {
             $row['date'] = totimev2($row['date']);
-            $sql = 'insert into `'. PREFIX .'import_detail` (import_id, item_id, number, note) values('. $id .', '. $row['id'] .', '. $row['number'] .', "")';
+            $sql = 'insert into `'. PREFIX .'import_detail` (import_id, item_id, number, date, note) values('. $id .', '. $row['id'] .', '. $row['number'] .', '. $row['date'] .', "")';
             $sql2 = 'update `'. PREFIX .'material` set number = number + '. $row['number'] .' where id = ' . $row['id'];
             if ($db->query($sql) && $db->query($sql2)) {
               $count ++;
@@ -203,7 +204,7 @@ if (!empty($action)) {
           $list[] = array(
             'index' => $index,
             'id' => $itemData['id'],
-            'date' => $itemData['date'] ? date('d/m/Y', $itemData['date']) : '',
+            'date' => $row['date'] ? date('d/m/Y', $row['date']) : '',
             'number' => $row['number'],
             'status' => $itemData['description']
           );
@@ -274,7 +275,8 @@ if (!empty($action)) {
   echo json_encode($result);
   die();
 }
-$xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/material");
+
+$xtpl = new XTemplate("main.tpl", PATH);
 $xtpl->assign('content', materialList());
 $xtpl->assign('material_modal', materialModal());
 $xtpl->assign('import_modal', importModal());
