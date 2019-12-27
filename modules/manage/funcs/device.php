@@ -160,6 +160,17 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = deviceList();
     break;
+    case 'transfer':
+      $data = $nv_Request->get_array('data', 'post');
+      $depart = array();
+      $depart[]= $data['depart'];
+
+      $sql = 'update `'. PREFIX .'device` set depart = \'' . json_encode($depart) . '\' where id = ' . $data['id'];
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = deviceList();
+      }
+    break;
   }
   echo json_encode($result);
   die();
@@ -175,6 +186,7 @@ if ($authors->{device} == 2) {
   $xtpl->assign('device_modal', deviceModal());
   $xtpl->assign('remove_modal', removeModal());
   $xtpl->assign('remove_all_modal', removeAllModal());
+  $xtpl->assign('transfer_modal', transferModal());
   $xtpl->parse('main.v1');
   $xtpl->parse('main.v2');
 }

@@ -26,10 +26,13 @@
       <td> {number} </td>
       <!-- BEGIN: v2 -->
       <td> 
-        <button class="btn btn-info" onclick="deviceEdit({id})">
+        <button class="btn btn-info btn-xs" onclick="transfer({id}, {departid})">
+          <span class="glyphicon glyphicon-transfer"></span>
+        </button>  
+        <button class="btn btn-info btn-xs" onclick="deviceEdit({id})">
           <span class="glyphicon glyphicon-edit"></span>
         </button>  
-        <button class="btn btn-danger" onclick="deviceRemove({id})">
+        <button class="btn btn-danger btn-xs" onclick="deviceRemove({id})">
           <span class="glyphicon glyphicon-remove"></span>
         </button>  
       </td>
@@ -38,5 +41,7 @@
     <!-- END: row -->
   </tbody>
 </table>
-{nav}
+<div class="form-group">
+  {nav}
+</div>
 <!-- END: main -->

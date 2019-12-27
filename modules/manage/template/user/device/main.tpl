@@ -9,6 +9,7 @@
 {device_modal}
 {remove_modal}
 {remove_all_modal}
+{transfer_modal}
 <div id="msgshow"></div>
 <!-- BEGIN: v1 -->
 <div style="float: right;">
@@ -88,6 +89,49 @@
       changeYear: true
     });
   })
+
+  function transfer(id, departid) {
+    global['id'] = id
+    $("#transfer-content").html(parseSelect(departid))
+    $("#transfer-modal").modal('show')
+  }
+
+  function checkTransfer() {
+    return {
+      id: global['id'],
+      depart: $("#transfer-depart").val()
+    }
+  }
+
+  function parseSelect(departid) {
+    html = ''
+    global['list'].forEach(item => {
+      checked = ''
+      if (item['id'] == departid) checked = 'selected'
+      html += `
+        <option value=`+ item['id'] +` `+ checked +`>
+          `+ item['name'] +`
+        </option>`
+    })
+    html = `
+      <select class="form-control form-group" id="transfer-depart">
+        `+ html +`
+      <select>`
+    return html
+  }
+
+  function transferSubmit() {
+    $.post(
+      '',
+      {action: 'transfer', data: checkTransfer(), filter: checkFilter()},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#content").html(data['html'])
+          $("#transfer-modal").modal('hide')
+        })
+      }
+    )
+  }
 
   function excelAll() {
     $.post(

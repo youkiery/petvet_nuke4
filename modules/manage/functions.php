@@ -12,14 +12,12 @@ define('PATH', NV_ROOTDIR . "/modules/". $module_file ."/template/user/" . $op);
 include_once(NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php');
 
 function deviceModal() {
-  global $module_file, $op;
   $xtpl = new XTemplate("device-modal.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }
 
 function excelModal() {
-  global $module_file, $op;
   $xtpl = new XTemplate("excel-modal.tpl", PATH);
 
   $depart = getDepartList();
@@ -33,24 +31,39 @@ function excelModal() {
   return $xtpl->text();
 }
 
+function transferModal() {
+  $xtpl = new XTemplate("transfer-modal.tpl", PATH);
+
+  $depart = getDepartList();
+  foreach ($depart as $data) {
+    $xtpl->assign('id', $data['id']);
+    $xtpl->assign('name', $data['name']);
+    $xtpl->parse('main.depart');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function removeModal() {
-  global $module_file, $op;
   $xtpl = new XTemplate("remove-modal.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }
 
 function removeAllModal() {
-  global $module_file, $op;
   $xtpl = new XTemplate("remove-all-modal.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }
 
 function deviceList() {
-  global $db, $module_file, $op, $nv_Request, $user_info;
+  global $db, $nv_Request, $user_info;
   
-  $filter = parseFilter('device');
+  $filter = $nv_Request->get_array('filter', 'post');
+  if (empty($filter['page'])) $filter['page'] = 1;
+  if (empty($filter['limit'])) $filter['limit'] = 10;
+
   $xtpl = new XTemplate("device-list.tpl", PATH);
 
   $query = $db->query('select * from `'. PREFIX .'member` where userid = '. $user_info['userid']);
@@ -99,6 +112,7 @@ function deviceList() {
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('depart', implode(', ', $list));
+    $xtpl->assign('departid', $depart[0]);
     $xtpl->assign('company', $row['intro']);
     $xtpl->assign('status', $row['status']);
     $xtpl->assign('number', $row['number']);
@@ -178,14 +192,12 @@ function materialList() {
 }
 
 function materialModal() {
-  global $op;
   $xtpl = new XTemplate("material-modal.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }
 
 function importModal() {
-  global $op;
   $xtpl = new XTemplate("import-modal.tpl", PATH);
   $xtpl->assign('content', importList());
   $xtpl->parse('main');
@@ -193,35 +205,31 @@ function importModal() {
 }
 
 function importModalInsert() {
-  global $op;
   $xtpl = new XTemplate("import-modal-insert.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }
 
 function exportModalInsert() {
-  global $op;
   $xtpl = new XTemplate("export-modal-insert.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }
 
 function importModalRemove() {
-  global $op;
   $xtpl = new XTemplate("import-modal-remove.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }
 
 function exportModalRemove() {
-  global $op;
   $xtpl = new XTemplate("export-modal-remove.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }
 
 function importList() {
-  global $db, $module_file, $op;
+  global $db;
 
   $filter = parseFilter('import');
   $xtpl = new XTemplate("import-modal-list.tpl", PATH);
@@ -249,7 +257,6 @@ function importList() {
 }
 
 function exportModal() {
-  global $op;
   $xtpl = new XTemplate("export-modal.tpl", PATH);
   $xtpl->assign('content', exportList());
   $xtpl->parse('main');
@@ -257,7 +264,7 @@ function exportModal() {
 }
 
 function exportList() {
-  global $db, $module_file, $op;
+  global $db;
 
   $filter = parseFilter('export');
   $xtpl = new XTemplate("export-list.tpl", PATH);
