@@ -176,6 +176,41 @@ if (!empty($action)) {
   die();
 }
 
+
+if (empty($user_info)) {
+  // check if logged
+  $contents = 'Đăng nhập trước khi sử dụng chức năng';
+
+  include NV_ROOTDIR . '/includes/header.php';
+  echo nv_site_theme($contents);
+  include NV_ROOTDIR . '/includes/footer.php';
+  die();
+}
+else {
+  // check if administrator
+  $sql = 'select * from `'. $db_config['prefix'] .'_users` where userid = ' . $user_info['userid'];
+  $query = $db->query($sql);
+  $user = $query->fetch();
+  $group = explode(',', $user['in_groups']);
+
+  if (!in_array('1', $group)) {
+    // check if is allowed
+    $sql = 'select * from `'. PREFIX .'devicon` where userid = ' . $user_info['userid'];
+    $query = $db->query($sql);
+    $devicon = $query->fetch();
+
+    if (!$devicon['level']) {
+      // not allow
+      $contents = 'Tài khoản không được cấp quyền truy cập';
+
+      include NV_ROOTDIR . '/includes/header.php';
+      echo nv_site_theme($contents);
+      include NV_ROOTDIR . '/includes/footer.php';
+      die();
+    }
+  }
+}
+
 $query = $db->query('select * from `'. PREFIX .'member` where userid = '. $user_info['userid']);
 $user = $query->fetch();
 $authors = json_decode($user['author']);

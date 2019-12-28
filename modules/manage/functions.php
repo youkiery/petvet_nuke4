@@ -58,7 +58,7 @@ function removeAllModal() {
 }
 
 function deviceList() {
-  global $db, $nv_Request, $user_info;
+  global $db, $nv_Request, $user_info, $db_config;
   
   $filter = $nv_Request->get_array('filter', 'post');
   if (empty($filter['page'])) $filter['page'] = 1;
@@ -66,34 +66,55 @@ function deviceList() {
 
   $xtpl = new XTemplate("device-list.tpl", PATH);
 
-  $query = $db->query('select * from `'. PREFIX .'member` where userid = '. $user_info['userid']);
-  $user = $query->fetch();
-  $authors = json_decode($user['author']);
+  // $query = $db->query('select * from `'. PREFIX .'member` where userid = '. $user_info['userid']);
+  // $user = $query->fetch();
+  // $authors = json_decode($user['author']);
 
-  $depart = $authors->{depart};
-  $depart2 = array();
-  $departid = array();
-  foreach ($depart as $id) {
-    $departid[$id] = 1;
-    $depart2[]= $id;
-  }
-  $xtra = '';
-  if (empty($filter['depart'])) {
-    $filter['depart'] = $depart2;
-  }
-  else {
-    foreach ($filter['depart'] as $index => $value) {
-      if (empty($departid[$value])) unset($filter['depart'][$index]);
-    }
+  // $depart = $authors->{depart};
+  // $depart2 = array();
+  // $departid = array();
+  // foreach ($depart as $id) {
+  //   $departid[$id] = 1;
+  //   $depart2[]= $id;
+  // }
+  // $xtra = '';
+  // if (empty($filter['depart'])) {
+  //   $filter['depart'] = $depart2;
+  // }
+  // else {
+  //   foreach ($filter['depart'] as $index => $value) {
+  //     if (empty($departid[$value])) unset($filter['depart'][$index]);
+  //   }
+  // }
+
+  // $sql = 'select * from `'. $db_config['prefix'] .'_users` where userid = ' . $user_info['userid'];
+  // $query = $db->query($sql);
+  // $user = $query->fetch();
+  // $group = explode(',', $user['in_groups']);
+  $group = array();
+
+  if (!in_array('1', $group)) {
+    // check if is allowed
+    $sql = 'select * from `'. PREFIX .'devicon` where userid = ' . $user_info['userid'];
+    $query = $db->query($sql);
+    $devicon = $query->fetch();
+
+    if ($devicon['level'] < 3) {
+      $devicon['depart'] = json_decode($devicon['depart']);
+      $list = array();
+      // var_dump($devicon);die(); 
+      if (count($devicon['depart'])) {
+        foreach ($devicon['depart'] as $value) {
+          $list[]= 'depart like \'%"'. $value .'"%\'';
+        }
+        $xtra = ' where ('. implode(' or ', $list) .') ';
+      }
+      else {
+        $xtra = ' where 0';
+      }
+    } 
   }
 
-  if (!empty($filter['depart'])) {
-    $list = array();
-    foreach ($filter['depart'] as $value) {
-      $list[]= 'depart like \'%"'. $value .'"%\'';
-    }
-    $xtra = ' where ('. implode(' or ', $list) .') ';
-  }
   if (!empty($filter['keyword'])) {
     if ($xtra) $xtra .= ' and name like "%'. $filter['keyword'] .'%"';
     else $xtra .= ' where name like "%'. $filter['keyword'] .'%"';
@@ -121,7 +142,7 @@ function deviceList() {
     $xtpl->assign('company', $row['intro']);
     $xtpl->assign('status', $row['status']);
     $xtpl->assign('number', $row['number']);
-    if ($authors->{device} == 2) $xtpl->parse('main.row.v2');
+    if (empty($devicon) || (!empty($devicon) && $devicon['level'] > 1)) $xtpl->parse('main.row.v2');
     $xtpl->parse('main.row');
   }
   $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
