@@ -14,6 +14,7 @@ if (!defined('NV_ADMIN')) die('Stop!!!');
 $submenu['depart'] = 'Quản lý phòng ban';
 $submenu['device'] = 'Quản lý thiết bị';
 $submenu['material'] = 'Quản lý vật tư, hóa chất';
+$submenu['devicon'] = 'Quản lý phân quyền';
 $submenu['config'] = 'Cấu hình';
 
-$allow_func = array('main', 'device', 'material', 'config', 'depart'); 
+$allow_func = array('main', 'device', 'material', 'config', 'depart', 'devicon'); 

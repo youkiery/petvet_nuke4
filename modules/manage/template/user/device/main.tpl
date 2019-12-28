@@ -10,36 +10,18 @@
 {remove_modal}
 {remove_all_modal}
 {transfer_modal}
+{filter_modal}
 <div id="msgshow"></div>
 <!-- BEGIN: v1 -->
 <div style="float: right;">
   <button class="btn btn-success" onclick="deviceInsert()">
     <span class="glyphicon glyphicon-plus"></span>
   </button>
+  <button class="btn btn-success" onclick="$('#filter-modal').modal('show')">
+    <span class="glyphicon glyphicon-filter"></span>
+  </button>
 </div>
 <!-- END: v1 -->
-<div class="form-group form-inline">
-  Số dòng mỗi trang
-  <div class="input-group">
-    <input type="text" class="form-control" id="filter-limit" value="10">
-    <div class="input-group-btn">
-      <button class="btn btn-info" onclick="goPage(1)"> Hiển thị </button>
-    </div>
-  </div>
-</div>
-<div class="form-group">
-  Lọc danh sách phòng ban
-  <div class="relative">
-    <div class="input-group">
-      <input type="text" class="form-control" id="filter-depart-input">
-      <div class="input-group-btn">
-        <button class="btn btn-info" onclick="goPage(1)"> Hiển thị </button>
-      </div>
-    </div>
-    <div class="suggest" id="filter-depart-suggest"></div>
-  </div>
-  <span id="filter-depart"></span>
-</div>
 <div class="form-group">
   <button class="btn btn-info" onclick="excel()"> Xuất excel </button>
 </div>
@@ -220,7 +202,8 @@
     return {
       page: global['page']['main'],
       limit: $("#filter-limit").val(),
-      depart: list
+      depart: list,
+      keyword: $('#filter-keyword').val()
     }
   }
 
@@ -383,7 +366,7 @@
     global['page']['main'] = page
     $.post(
       '',
-      { action: 'filter', 'device_filter': checkFilter() },
+      { action: 'filter', 'filter': checkFilter() },
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#content").html(data['html'])

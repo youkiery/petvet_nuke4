@@ -94,6 +94,11 @@ function deviceList() {
     }
     $xtra = ' where ('. implode(' or ', $list) .') ';
   }
+  if (!empty($filter['keyword'])) {
+    if ($xtra) $xtra .= ' and name like "%'. $filter['keyword'] .'%"';
+    else $xtra .= ' where name like "%'. $filter['keyword'] .'%"';
+  }
+
   // die('select count(*) as count from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit']);
   $query = $db->query('select count(*) as count from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit']);
   $count = $query->fetch();

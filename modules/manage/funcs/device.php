@@ -187,6 +187,7 @@ if ($authors->{device} == 2) {
   $xtpl->assign('remove_modal', removeModal());
   $xtpl->assign('remove_all_modal', removeAllModal());
   $xtpl->assign('transfer_modal', transferModal());
+  $xtpl->assign('filter_modal', loadModal('filter-modal'));
   $xtpl->parse('main.v1');
   $xtpl->parse('main.v2');
 }
