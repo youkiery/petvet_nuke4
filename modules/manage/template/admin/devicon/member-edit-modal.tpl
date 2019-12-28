@@ -10,10 +10,12 @@
         </div>
 
         <!-- BEGIN: depart -->
-        <label style="margin-right: 10px;"> <input type="checkbox" class="member-depart-{id}" name="member-depart" value="{id}"> {name} </label>
+        <div class="row-x">
+          <label class="col-4"> <input type="checkbox" class="member-depart-{id}" name="member-depart" value="{id}"> {name} </label>
+        </div>
         <!-- END: depart -->
 
-        <div class="text-center">
+        <div class="text-center" style="clear: both;">
           <button class="btn btn-info" onclick="editMemberSubmit()">
             Chỉnh sửa phân quyền
           </button>

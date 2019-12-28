@@ -4,8 +4,10 @@
 <script src="/modules/manage/src/script.js"></script>
 
 <div id="msgshow"></div>
+{remove_modal}
 {member_modal}
 {member_edit_modal}
+{member_remove_modal}
 
 <div class="form-group">
     <button class="btn btn-info" onclick="insertMember()">
@@ -19,6 +21,7 @@
 
 <script>
     var global = {
+        id: 0,
         memberpage: 1,
         page: 1,
         level: [
@@ -29,7 +32,26 @@
         ]
     }
 
+    function removeMember(id) {
+        global['id'] = id
+        $("#remove-modal").modal('show')
+    }
+
+    function removeSubmit() {
+        $.post(
+            '',
+            { action: 'remove-member', id: global['id'], filter: checkFilter() },
+            (response, status) => {
+                checkResult(response, status).then(data => {
+                    $("#content").html(data['html'])
+                    $("#remove-modal").modal('hide')
+                })
+            }
+        )
+    }
+
     function editMember(id) {
+        global['id'] = id
         $.post(
             '',
             { action: 'get-member', id: id },
@@ -49,8 +71,38 @@
                     data['member']['depart'].forEach(item => {
                         $(".member-depart-" + item).prop('checked', true)
                     })
-
                     $("#member-edit-modal").modal('show')
+                })
+            }
+        )
+    }
+
+    function checkFilter() {
+        return {
+            page: global['page'],
+            limit: 10
+        }
+    }
+
+    function checkEditData() {
+        depart = []
+        $("[name='member-depart']:checked").each((index, item) => {
+            depart.push(item.value)
+        })
+        return {
+            level: $("#member-level").val(),
+            depart: depart
+        }
+    }
+
+    function editMemberSubmit() {
+        $.post(
+            '',
+            { action: 'edit-member', id: global['id'], data: checkEditData(), filter: checkFilter() },
+            (response, status) => {
+                checkResult(response, status).then(data => {
+                    $("#content").html(data['html'])
+                    $("#member-edit-modal").modal('hide')
                 })
             }
         )
@@ -59,10 +111,11 @@
     function insertMemberSubmit(id) {
         $.post(
             '',
-            { action: 'insert-member', id: id, memfilter: checkMemberFilter() },
+            { action: 'insert-member', id: id, filter: checkFilter(), memfilter: checkMemberFilter() },
             (response, status) => {
                 checkResult(response, status).then(data => {
                     $("#member-content").html(data['html'])
+                    $("#content").html(data['html2'])
                 })
             }
         )
@@ -76,6 +129,19 @@
             (response, status) => {
                 checkResult(response, status).then(data => {
                     $("#member-content").html(data['html'])
+                })
+            }
+        )
+    }
+
+    function goPage(page) {
+        global['page'] = page
+        $.post(
+            '',
+            { action: 'filter', filter: checkFilter() },
+            (response, status) => {
+                checkResult(response, status).then(data => {
+                    $("#content").html(data['html'])
                 })
             }
         )

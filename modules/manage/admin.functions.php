@@ -50,11 +50,11 @@ function memberuserList() {
   
   $number = $query->fetch()['number'];
   // die('select a.userid, a.level, a.depart, b.username, b.first_name from `'. PREFIX .'devicon` a inner join `'. $db_config['prefix'] .'users` b on a.userid = b.userid order by a.id desc');
-  $query = $db->query('select a.userid, a.level, a.depart, b.username, b.first_name from `'. PREFIX .'devicon` a inner join `'. $db_config['prefix'] .'_users` b on a.userid = b.userid order by a.id desc');
+  $query = $db->query('select a.id, a.userid, a.level, a.depart, b.username, b.first_name from `'. PREFIX .'devicon` a inner join `'. $db_config['prefix'] .'_users` b on a.userid = b.userid order by a.id desc');
 
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index++);
-    $xtpl->assign('id', $row['userid']);
+    $xtpl->assign('id', $row['id']);
     $xtpl->assign('name', $row['last_name'] . ' ' . $row['first_name']);
     $xtpl->assign('username', $row['username']);
     $xtpl->assign('level', $row['level']);
