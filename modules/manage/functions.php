@@ -51,6 +51,16 @@ function removeModal() {
   return $xtpl->text();
 }
 
+function filterModal() {
+  $xtpl = new XTemplate("filter-modal.tpl", PATH);
+  $start = date('d/m/Y', time() - (date('d') - 1) * 60 * 60 * 24);
+  $end = date('d/m/Y');
+  $xtpl->assign('start', $start);
+  $xtpl->assign('end', $end);
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function removeAllModal() {
   $xtpl = new XTemplate("remove-all-modal.tpl", PATH);
   $xtpl->parse('main');
@@ -150,6 +160,106 @@ function deviceList() {
   return $xtpl->text();
 }
 
+function reportList() {
+  global $db, $op, $module_file, $nv_Request;
+  $type_list = array(0 => 'Vật tư', 1 => 'Hóa chất');
+
+  $filter = $nv_Request->get_array('filter', 'post');
+  if (empty($filter['page'])) $filter['page'] = 1;
+  if (empty($filter['limit'])) $filter['limit'] = 10;
+  if (empty($filter['start'])) $filter['start'] = strtotime(date('Y/m/d', time() - (date('d') - 1) * 60 * 60 * 24));
+  else $filter['start'] = totime($filter['start']);
+  if (empty($filter['end'])) $filter['end'] = strtotime(date('Y/m/d')) + 60 * 60 * 24 - 1;
+  else $filter['end'] = totime($filter['end']) + 60 * 60 * 24 - 1;
+
+  $xtpl = new XTemplate("report-list.tpl", PATH);
+  $data = array();
+
+  $sql = 'select * from `'. PREFIX .'export` where export_date between '. $filter['start'] .' and '. $filter['end'];
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $sql2 = 'select * from `'. PREFIX .'export_detail` where export_id = ' . $row['id'];
+    $query2 = $db->query($sql2);
+    
+    while ($export = $query2->fetch()) {
+      if (empty($data[$export['item_id']])) {
+        $data[$export['item_id']] = array(
+          'export' => 0,
+          'import' => 0
+        );
+      } 
+      $data[$export['item_id']]['export'] += $export['number'];
+    }
+  }
+
+  $sql = 'select * from `'. PREFIX .'import` where import_date between '. $filter['start'] .' and '. $filter['end'];
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $sql2 = 'select * from `'. PREFIX .'import_detail` where import_id = ' . $row['id'];
+    $query2 = $db->query($sql2);
+    
+    while ($import = $query2->fetch()) {
+      if (empty($data[$import['item_id']])) {
+        $data[$import['item_id']] = array(
+          'export' => 0,
+          'import' => 0
+        );
+      } 
+      $data[$import['item_id']]['import'] += $import['number'];
+    }
+  }
+
+  $index = 1;
+
+  foreach ($data as $itemid => $itemdata) {
+    $sql = 'select * from `'. PREFIX .'material` where id = ' . $itemid;
+    $query = $db->query($sql);
+    $material = $query->fetch();
+
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $itemid);
+    $xtpl->assign('name', $material['name']);
+    $xtpl->assign('type', $type_list[$material['type']]);
+    $xtpl->assign('import', $itemdata['import']);
+    $xtpl->assign('export', $itemdata['export']);
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goReportPage'));
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function reportDetail() {
+  global $db, $nv_Request;
+  $type_list = array('Phiếu xuất', 'Phiếu nhập');
+
+  $xtpl = new XTemplate("report-list.tpl", PATH);
+  $id = $nv_Request->get_int('id', 'post');
+  $filter = $nv_Request->get_array('filter', 'post');
+  if (empty($filter['start'])) $filter['start'] = strtotime(date('Y/m/d', time() - (date('d') - 1) * 60 * 60 * 24));
+  else $filter['start'] = totime($filter['start']);
+  if (empty($filter['end'])) $filter['end'] = strtotime(date('Y/m/d')) + 60 * 60 * 24 - 1;
+  else $filter['end'] = totime($filter['end']) + 60 * 60 * 24 - 1;
+
+  $sql = 'select * from ((select a.number, b.export_date as time, 0 as type from `'. PREFIX .'export_detail` a inner join `'. PREFIX .'export` b on a.item_id = '. $id .' and a.export_id = b.id) union (select a.number, b.import_date as time, 1 as type from `'. PREFIX .'import_detail` a inner join `'. PREFIX .'import` b on a.item_id = '. $id .' and a.import_id = b.id)) as a order by time desc';
+  $query = $db->query($sql);
+  $index = 1;
+
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index ++);
+    $xtpl->assign('number', $row['number']);
+    $xtpl->assign('type', $type_list[$row['type']]);
+    $xtpl->assign('time', date('d/m/Y H:i', $row['time']));
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function checkMember() {
   global $db, $user_info, $op;
 
@@ -191,7 +301,7 @@ function materialList() {
   $type_list = array(0 => 'Vật tư', 1 => 'Hóa chất');
   $xtpl = new XTemplate("material-list.tpl", PATH);
 
-  $sql = 'select count(*) as count from `'. PREFIX .'material` limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select count(*) as count from `'. PREFIX .'material`';
   $query = $db->query($sql);
   $number = $query->fetch()['count'];
 
@@ -212,6 +322,7 @@ function materialList() {
     $xtpl->parse('main.row');
   }
   // die();
+  $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
 
   $xtpl->parse('main');
   return $xtpl->text();

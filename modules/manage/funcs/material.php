@@ -271,6 +271,14 @@ if (!empty($action)) {
         $result['html2'] = materialList();
       }
     break;
+    case 'filter-report':
+      $result['status'] = 1;
+      $result['html'] = reportList();
+    break;
+    case 'report':
+      $result['status'] = 1;
+      $result['html'] = reportDetail();
+    break;
   }
   echo json_encode($result);
   die();
@@ -285,6 +293,8 @@ $xtpl->assign('import_modal_remove', importModalRemove());
 $xtpl->assign('export_modal', exportModal());
 $xtpl->assign('export_modal_insert', exportModalInsert());
 $xtpl->assign('export_modal_remove', exportModalRemove());
+$xtpl->assign('filter_modal', filterModal());
+$xtpl->assign('report_modal', loadModal('report-modal'));
 $xtpl->assign('material', json_encode(getMaterialDataList(), JSON_UNESCAPED_UNICODE));
 // $xtpl->assign('remove_modal', removeModal());
 // $xtpl->assign('remove_all_modal', removeAllModal());

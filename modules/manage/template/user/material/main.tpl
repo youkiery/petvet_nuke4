@@ -12,11 +12,16 @@
 {export_modal_insert}
 {export_modal_remove}
 {material_modal}
+{filter_modal}
+{report_modal}
 
 <div id="msgshow"></div>
 <div style="float: right;">
   <button class="btn btn-success" onclick="materialModal()">
     <span class="glyphicon glyphicon-plus"></span>
+  </button>
+  <button class="btn btn-info" onclick="filter()">
+    <span class="glyphicon glyphicon-filter"></span>
   </button>
 </div>
 <div class="form-group form-inline">
@@ -45,14 +50,15 @@
 <!-- <button class="btn btn-info">
   edit all
 </button>   -->
-<button class="btn btn-danger">
+<!-- <button class="btn btn-danger">
   remove all
-</button>  
+</button>   -->
 <script src="/modules/manage/src/script.js"></script>
 <script>
   var global = {
     page: {
-      'main': 1
+      'main': 1,
+      'report': 1
     },
     material: JSON.parse('{material}'),
     selected: {
@@ -86,6 +92,46 @@
   }
   function exportModal() {
     $("#export-modal").modal('show')
+  }
+
+  function filter() {
+    $("#filter-modal").modal('show')
+  }
+
+  function checkFilterReport() {
+    return {
+      page: global['page']['report'],
+      limit: 10,
+      keyword: $("#filter-keyword").val(),
+      start: $("#filter-start").val(),
+      end: $("#filter-end").val()
+    }
+  }
+
+  function report(id) {
+    $.post(
+      "",
+      { action: 'report', id: id, filter: checkFilterReport() },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#report-content").html(data['html'])
+          $("#report-modal").modal('show')
+        })
+      }
+    )
+  }
+
+  function goReportPage(page) {
+    global['page']['report'] = page
+    $.post(
+      "",
+      { action: 'filter-report', filter: checkFilterReport() },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#filter-content").html(data['html'])
+        })
+      }
+    )
   }
 
   function checkMaterialData() {

@@ -3,22 +3,18 @@
   <thead>
     <tr>
       <th> STT </th>
-      <th> Tên mục hàng </th>
-      <th> Loại </th>
+      <th> Loại phiếu </th>
       <th> Số lượng </th>
-      <th> Mô tả </th>
-      <th>  </th>
+      <th> Thời gian </th>
     </tr>
   </thead>
   <!-- BEGIN: row -->
   <tbody>
     <tr>
       <td> {index} </td>
-      <td> {name} {unit} </td>
       <td> {type} </td>
       <td> {number} </td>
-      <td> {description} </td>
-      <td>  </td>
+      <td> {time} </td>
     </tr>
   </tbody>
   <!-- END: row -->
