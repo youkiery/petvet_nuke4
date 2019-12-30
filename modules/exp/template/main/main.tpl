@@ -87,6 +87,9 @@
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <script>
+  var global = {
+    id: 0
+  }
   $(document).ready(() => {
     var today = new Date().getTime()
     installCheckAll('item')

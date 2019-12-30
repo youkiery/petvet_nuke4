@@ -57,10 +57,12 @@ function outdateList() {
   if (count($list)) {
     $list[]= 0;
     $list = implode(', ', $list);
-    $query = $db->query('select * from `'. PREFIX .'row` a inner join `'. PREFIX .'item` b on a.rid = b.id '. $xtra .' and b.name like "%'. $filter['keyword'] .'%" and a.number > 0 and cate_id in ('. $list .') order by exp_time desc');
+    $sql = 'select * from `'. PREFIX .'row` a inner join `'. PREFIX .'item` b on a.rid = b.id '. $xtra .' and b.name like "%'. $filter['keyword'] .'%" and a.number > 0 and cate_id in ('. $list .') order by exp_time desc';
+    $query = $db->query($sql);
   }
   else {
-    $query = $db->query('select * from `'. PREFIX .'row` a inner join `'. PREFIX .'item` b on a.rid = b.id '. $xtra .' and b.name like "%'. $filter['keyword'] .'%" and a.number > 0 order by exp_time desc');
+    $sql = 'select * from `'. PREFIX .'row` a inner join `'. PREFIX .'item` b on a.rid = b.id '. $xtra .' and b.name like "%'. $filter['keyword'] .'%" and a.number > 0 order by exp_time desc';
+    $query = $db->query($sql);
   }
   // var_dump($query);die();
 
