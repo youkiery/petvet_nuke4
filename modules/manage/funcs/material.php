@@ -16,61 +16,52 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
-    case 'excel':
-      $xco = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
-      $title = array('STT', 'Tài sản', 'Quy cách', 'ĐVT', 'Số lượng', 'Năm sử dụng', 'Nguồn cung cấp', 'Ghi chú');
+    // case 'excel':
+    //   $xco = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
+    //   $title = array('STT', 'Ngày nhập', 'Ngày xuất', 'Số lượng', 'Tồn kho');
+    //   // Tìm kiếm số lượng tồn kho trước 1 thời điểm
 
-      include NV_ROOTDIR . '/PHPExcel/IOFactory.php';
-      $fileType = 'Excel2007'; 
-      $objPHPExcel = PHPExcel_IOFactory::load(NV_ROOTDIR . '/excel.xlsx');
+    //   include NV_ROOTDIR . '/PHPExcel/IOFactory.php';
+    //   $fileType = 'Excel2007'; 
+    //   $objPHPExcel = PHPExcel_IOFactory::load(NV_ROOTDIR . '/excel.xlsx');
     
-      $query = $db->query('select * from `'. PREFIX .'depart`');
-      $i = 1;
-      while ($depart = $query->fetch()) {
-        $device_query = $db->query('select * from `'. PREFIX .'device` where depart like \'%"'. $depart['id'] .'"%\' limit 1');
-        if ($device_query->fetch()) {
-          $device_query = $db->query('select * from `'. PREFIX .'device` where depart like \'%"'. $depart['id'] .'"%\'');
-          $j = 0;
-          $objPHPExcel
-          ->setActiveSheetIndex(0)
-          ->setCellValue($xco['0'] . $i, 'DANH MUC TÀI SẢN KIỂM KÊ PHÒNG '. $depart['name'] .' NĂM ' . date('Y', time()));
-          $i += 2;
- 
-          foreach ($title as $value) {
-            $objPHPExcel
-            ->setActiveSheetIndex(0)
-            ->setCellValue($xco[$j++] . $i, $value);
-          }
-          $i++;
+    //   $id = $nv_Request->get_int('id', 'post');
+    //   $filter = $nv_Request->get_array('filter', 'post');
+    //   if (empty($filter['start'])) $filter['start'] = strtotime(date('Y/m/d', time() - (date('d') - 1) * 60 * 60 * 24));
+    //   else $filter['start'] = totime($filter['start']);
+    //   if (empty($filter['end'])) $filter['end'] = strtotime(date('Y/m/d')) + 60 * 60 * 24 - 1;
+    //   else $filter['end'] = totime($filter['end']) + 60 * 60 * 24 - 1;
+    
+    //   $sql = 'select * from ((select a.number, b.export_date as time, 0 as type from `'. PREFIX .'export_detail` a inner join `'. PREFIX .'export` b on a.item_id = '. $id .' and a.export_id = b.id) union (select a.number, b.import_date as time, 1 as type from `'. PREFIX .'import_detail` a inner join `'. PREFIX .'import` b on a.item_id = '. $id .' and a.import_id = b.id)) as a order by time asc';
+    //   $query = $db->query($sql);
+    //   $i = 1; $j = 0;
+    //   $index = 1;
 
-          $index = 1;
-          $count = 0;
-          while ($device = $device_query->fetch()) {
-            $j = 0;
-            $count += $device['number'];
-            $objPHPExcel
-            ->setActiveSheetIndex(0)
-            ->setCellValue($xco[$j++] . $i, $index++)
-            ->setCellValue($xco[$j++] . $i, $device['name'])
-            ->setCellValue($xco[$j++] . $i, $device['intro'])
-            ->setCellValue($xco[$j++] . $i, $device['unit'])
-            ->setCellValue($xco[$j++] . $i, $device['number'])
-            ->setCellValue($xco[$j++] . $i, $device['year'])
-            ->setCellValue($xco[$j++] . $i, $device['source'])
-            ->setCellValue($xco[$j++] . $i++, $device['description']);
-          }
-          $objPHPExcel
-          ->setActiveSheetIndex(0)
-          ->setCellValue($xco[0] . $i, 'Tổng cộng: ')
-          ->setCellValue($xco[4] . $i++, $count);
-          $i += 2;
-        }
-      }
-      $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-      $objWriter->save(NV_ROOTDIR . '/excel-output.xlsx');
-      $objPHPExcel->disconnectWorksheets();
-      unset($objWriter, $objPHPExcel);
-    break;
+    //   foreach ($title as $value) {
+    //     $objPHPExcel
+    //     ->setActiveSheetIndex(0)
+    //     ->setCellValue($xco[$j++] . $i, $value);
+    //   }
+
+    //   while ($row = $query->fetch()) {
+    //     $j = 0;
+    //     $i ++;
+
+    //     // $objPHPExcel
+    //     // ->setActiveSheetIndex(0)
+    //     // ->setCellValue($xco[$j++] . $i, $index ++)
+    //     // ->setCellValue($xco[$j++] . $i, $index +);
+    //   }
+
+    //   $objPHPExcel
+    //   ->setActiveSheetIndex(0)
+    //   ->setCellValue($xco[$j++] . $i, $value);
+
+    //   $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+    //   $objWriter->save(NV_ROOTDIR . '/excel-output.xlsx');
+    //   $objPHPExcel->disconnectWorksheets();
+    //   unset($objWriter, $objPHPExcel);
+    // break;
     case 'insert-material':
       $data = $nv_Request->get_array('data', 'post');
 

@@ -3,18 +3,29 @@
   <thead>
     <tr>
       <th> STT </th>
-      <th> Loại phiếu </th>
-      <th> Số lượng </th>
-      <th> Thời gian </th>
+      <th> Tên mục hàng </th>
+      <th> Loại </th>
+      <th> Số lượng nhập </th>
+      <th> Số lượng xuất </th>
+      <th>  </th>
     </tr>
   </thead>
   <!-- BEGIN: row -->
   <tbody>
     <tr>
       <td> {index} </td>
+      <td> {name} </td>
       <td> {type} </td>
-      <td> {number} </td>
-      <td> {time} </td>
+      <td> {import} </td>
+      <td> {export} </td>
+      <td>  
+        <button class="btn btn-info btn-xs" onclick="report({id})">
+          Xem báo cáo
+        </button>
+        <button class="btn btn-info btn-xs" onclick="report({id})">
+          Xuất excel
+        </button>
+      </td>
     </tr>
   </tbody>
   <!-- END: row -->

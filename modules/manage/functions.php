@@ -237,7 +237,7 @@ function reportDetail() {
   global $db, $nv_Request;
   $type_list = array('Phiếu xuất', 'Phiếu nhập');
 
-  $xtpl = new XTemplate("report-list.tpl", PATH);
+  $xtpl = new XTemplate("report-detail.tpl", PATH);
   $id = $nv_Request->get_int('id', 'post');
   $filter = $nv_Request->get_array('filter', 'post');
   if (empty($filter['start'])) $filter['start'] = strtotime(date('Y/m/d', time() - (date('d') - 1) * 60 * 60 * 24));
