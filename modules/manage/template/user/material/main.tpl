@@ -70,6 +70,11 @@
   $(document).ready(() => {
     itemFilter('import')
     itemFilter('export')
+    $(".date").datepicker({
+      format: 'dd/mm/yyyy',
+      changeMonth: true,
+      changeYear: true
+    });
   })
 
   function materialModal() {

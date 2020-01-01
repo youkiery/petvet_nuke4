@@ -18,7 +18,7 @@ if (!empty($action)) {
   switch ($action) {
     // case 'excel':
     //   $xco = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
-    //   $title = array('STT', 'Ngày nhập', 'Ngày xuất', 'Số lượng', 'Tồn kho');
+    //   $title = array('STT', 'Ngày nhập', 'Ngày xuất', 'Số lượng nhập', 'Số lượng xuất', 'Tồn', 'Ghi chú');
     //   // Tìm kiếm số lượng tồn kho trước 1 thời điểm
 
     //   include NV_ROOTDIR . '/PHPExcel/IOFactory.php';
@@ -26,6 +26,8 @@ if (!empty($action)) {
     //   $objPHPExcel = PHPExcel_IOFactory::load(NV_ROOTDIR . '/excel.xlsx');
     
     //   $id = $nv_Request->get_int('id', 'post');
+
+      // $sql = 'select * from '
     //   $filter = $nv_Request->get_array('filter', 'post');
     //   if (empty($filter['start'])) $filter['start'] = strtotime(date('Y/m/d', time() - (date('d') - 1) * 60 * 60 * 24));
     //   else $filter['start'] = totime($filter['start']);
@@ -57,11 +59,11 @@ if (!empty($action)) {
     //   ->setActiveSheetIndex(0)
     //   ->setCellValue($xco[$j++] . $i, $value);
 
-    //   $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-    //   $objWriter->save(NV_ROOTDIR . '/excel-output.xlsx');
-    //   $objPHPExcel->disconnectWorksheets();
-    //   unset($objWriter, $objPHPExcel);
-    // break;
+      $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+      $objWriter->save(NV_ROOTDIR . '/excel-output.xlsx');
+      $objPHPExcel->disconnectWorksheets();
+      unset($objWriter, $objPHPExcel);
+    break;
     case 'insert-material':
       $data = $nv_Request->get_array('data', 'post');
 
