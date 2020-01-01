@@ -73,6 +73,7 @@ $lang_module['dis_inter'] = 'Công văn nội bộ';
 $lang_module['dis_name'] = 'Tên công văn';
 $lang_module['dis_souce'] = 'Đơn vị soạn';
 $lang_module['dis_code'] = 'Số công văn';
+$lang_module['dis_code_ex'] = 'Số công văn đến/đi';
 $lang_module['dis_content'] = 'Trích yếu công văn';
 $lang_module['dis_date_iss'] = 'Ngày ban hành';
 $lang_module['dis_date_first'] = 'Ngày có hiệu lực';

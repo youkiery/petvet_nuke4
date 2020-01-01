@@ -37,6 +37,7 @@ $lang_module['org'] = ' Các tổ chức cơ quan cách nhau bởi dấu <span s
 $lang_module['print_depart'] = ' Phòng ban:  &ldquo;<strong>%s</strong>&rdquo;';
 $lang_module['print_title'] = ' Tên công văn:  &ldquo;<strong>%s</strong>&rdquo;';
 $lang_module['print_code'] = ' Số công văn:  &ldquo;<strong>%s</strong>&rdquo;';
+$lang_module['print_excode'] = ' Số công văn đến/đi:  &ldquo;<strong>%s</strong>&rdquo;';
 $lang_module['error_org'] = 'Lỗi : Đơn vị nhận công văn không được để trống';
 
 $lang_module['add_dis_inter'] = ' Nhập công văn nội bộ';
@@ -45,6 +46,7 @@ $lang_module['from_depid'] = 'Tên phòng gửi';
 $lang_module['dis_name'] = 'Tên công văn';
 $lang_module['dis_souce'] = 'Đơn vị soạn';
 $lang_module['dis_code'] = 'Số công văn';
+$lang_module['dis_code_ex'] = 'Số công văn đến/đi';
 $lang_module['dis_content'] = 'Trích yếu';
 $lang_module['dis_date_iss'] = 'Ngày ban hành';
 $lang_module['dis_date_first'] = 'Ngày có hiệu lực';

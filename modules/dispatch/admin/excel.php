@@ -54,6 +54,7 @@ if (!empty($action)) {
           'from_time' => $row['Ngày gửi'],
           'from_signer' => $row['Người ký'],
           'code' => $row['Số công văn'], // text
+          'excode' => $row['Số công văn đến/đi'], // text
           'catid' => $row['Thuộc chủ đề'],
           'content' => $row['Trích yếu công văn'], // text
           'status' => mb_strtolower($row['Trạng thái']),
@@ -62,8 +63,8 @@ if (!empty($action)) {
           'to_org' => $row['Đơn vị nhận'], // text
           'from_org' => $row['Đơn vị soạn'], // text
           'date_die' => $row['Ngày hết hiệu lực'],
-          'file' => $row['Công văn đính kèm'] // text
-          // '' => $data['Phòng ban nhận'],
+          'file' => $row['Công văn đính kèm'], // text
+          'dedo' => $row['Phòng ban nhận']
         );
 
         if (!($array['date_iss'] = parseTime($array['date_iss']))) {
@@ -145,6 +146,7 @@ if (!empty($action)) {
           	" . $array['catid'] . ",'". $alias ."',
           	" . $db->quote($array['title']) . ",
           	" . $db->quote($array['code']) . ",
+          	" . $db->quote($array['excode']) . ",
           	" . $db->quote($array['content']) . ",
           	" . $db->quote($array['file']) . ",
           	" . $db->quote($array['from_org']) . "," . $array['from_depid'] . ",
@@ -154,8 +156,19 @@ if (!empty($action)) {
           	" . $array['date_first'] . ",
           	" . $array['date_die'] . ",
           	" . $db->quote($array['to_org']) . ", 4,
-          	" . $array['status'] . ", 0 )";
+            " . $array['status'] . ", 0 )";
+            
           if ($db->query($sql)) {
+            $id = $db->lastInsertId();
+            $dedo = explode(', ', $array['dedo']);
+            foreach ($dedo as $dedo_name) {
+              $sql = 'select * from ' . NV_PREFIXLANG . '_' . $module_data . '_departments where title like "%'. trim($dedo_name) .'%"';
+              $dedo_query = $db->query($sql);
+              if ($dedo_data = $dedo_query->fetch()) {
+                $sql = 'insert into ' . NV_PREFIXLANG . '_' . $module_data . '_de_do values (null, '. $id .', '. $dedo_data['id'] .')';
+                $db->query($sql);
+              }
+            }
             $count ++;
           }
         }

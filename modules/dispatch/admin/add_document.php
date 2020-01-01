@@ -23,6 +23,7 @@ $groups_list = nv_groups_list();
 $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_document WHERE id=" . $id;
 $result = $db->query($sql);
 $num = $result->rowCount();
+$defcode = getdefcode();
 if ($num > 0) {
     $array = $result->fetch();
     $array['parentid'] = $array['catid'];
@@ -54,6 +55,7 @@ if ($nv_Request->isset_request('submit', 'post')) {
     $array['title'] = $nv_Request->get_string('title', 'post', '', '');
     $array['alias'] = change_alias($array['title']);
     $array['code'] = $nv_Request->get_string('code', 'post', '');
+    $array['excode'] = $nv_Request->get_string('excode', 'post', '');
     $array['to_org'] = $nv_Request->get_string('to_org', 'post', '');
     $array['from_org'] = $nv_Request->get_string('from_org', 'post', '');
     $array['from_signer'] = $nv_Request->get_int('from_signer', 'post', 0);
@@ -142,6 +144,7 @@ if ($nv_Request->isset_request('submit', 'post')) {
                     title = " . $db->quote($array['title']) . ",
                     alias = '',
 					code = '" . $array['code'] . "',
+					excode = '" . $array['excode'] . "',
 					content= " . $db->quote($array['content']) . ",
 					file = " . $db->quote($array['file']) . ",
 					from_org = " . $db->quote($array['from_org']) . ",
@@ -153,7 +156,7 @@ if ($nv_Request->isset_request('submit', 'post')) {
 					date_first = " . $array['date_first'] . ",
 					date_die = " . $array['date_die'] . ",
 					groups_view = " . $array['groups_view'] . ",
-					status = " . $array['statusid'] . " WHERE id = " . $id;
+                    status = " . $array['statusid'] . " WHERE id = " . $id;
 
                 if ($db->query($sql)) {
                     $db->query("DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . "_de_do WHERE doid =" . $id);
@@ -181,12 +184,26 @@ if ($nv_Request->isset_request('submit', 'post')) {
                     $error = $lang_module['error_update'];
                 }
             } else {
+                $excode = explode('/', $array['excode']);
+                if (empty(count($excode))) {
+                    $excode = explode('-', $array['excode']);
+                }
+                if (empty(count($excode))) {
+                    $excode = $array['excode'];
+                }
+                $excode = intval($excode[0]) + 1;
+
+                $sql = 'update `'. $db_config['prefix'] .'_config` set config_value = "'. $excode .'" where config_name = "defcode"';
+                $db->query($sql);
+
                 $sql = "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "_document VALUES (
 					NULL,
 					" . $array['type'] . ",
-					" . $array['parentid'] . ",'',
+					" . $array['parentid'] . ",
+					" . $db->quote($array['alias']) . ",
 					" . $db->quote($array['title']) . ",
 					" . $db->quote($array['code']) . ",
+					" . $db->quote($array['excode']) . ",
 					" . $db->quote($array['content']) . ",
 					" . $db->quote($array['file']) . ",
 					" . $db->quote($array['from_org']) . "," . $array['from_depid'] . ",
@@ -197,8 +214,10 @@ if ($nv_Request->isset_request('submit', 'post')) {
 					" . $array['date_die'] . ",
 					" . $db->quote($array['to_org']) . ",
 					" . $db->quote($array['groups_view']) . ",
-					" . $array['statusid'] . ", 0 )";
-
+                    " . $array['statusid'] . ", 0 )";
+                    // echo json_encode($array);die();
+                    // die($sql);
+                    
                 $array['id'] = $db->insert_id($sql);
 
                 if ($array['id'] > 0) {
@@ -258,7 +277,6 @@ foreach ($listdes as $li) {
         );
     }
 }
-
 foreach ($arr_status as $a) {
     $as[] = array(
         'id' => $a['id'],
@@ -296,6 +314,10 @@ if ($array['date_first'] != '') {
 
 if ($array['date_die'] != '' && $array['date_die'] != 0) {
     $array['date_die'] = date("d.m.Y", $array['date_die']);
+}
+
+if (empty($array['excode'])) {
+    $array['excode'] = $defcode;
 }
 
 $xtpl->assign('DATA', $array);
@@ -345,15 +367,15 @@ if (!empty($arr_imgs)) {
     $str = NV_BASE_SITEURL . "uploads/" . $module_name . "/";
     if ($arr_imgs[0] != '') {
         foreach ($arr_imgs as $file) {
-
-            if (file_exists(NV_UPLOADS_REAL_DIR . "/" . $module_upload . "/" . $file)) {
+            
+            // if (file_exists(NV_UPLOADS_REAL_DIR . "/" . $module_upload . "/" . $file)) {
                 $xtpl->assign('FILEUPLOAD', array(
-                    'value' => $str . $file,
+                    'value' => $file,
                     'key' => $a
                 ));
                 $xtpl->parse('inter.fileupload');
                 $a++;
-            }
+            // }
         }
     } else {
         $xtpl->parse('inter.fileupload');

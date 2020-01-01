@@ -16,7 +16,7 @@ if (!defined('NV_IS_MOD_CONGVAN')) die('Stop!!!');
  * @param mixed $array_data
  * @return
  */
-function nv_theme_congvan_main($error, $array, $page_title, $base_url, $all_page, $per_page, $page, $type, $se, $to, $from, $from_signer, $content, $code, $title, $depart)
+function nv_theme_congvan_main($error, $array, $page_title, $base_url, $all_page, $per_page, $page, $type, $se, $to, $from, $from_signer, $content, $code, $excode, $tab, $title, $depart)
 {
     global $global_config, $module_name, $module_file, $module_data, $lang_module, $module_config, $module_info, $op, $arr_type, $db, $db_config, $user_info;
 
@@ -75,6 +75,19 @@ function nv_theme_congvan_main($error, $array, $page_title, $base_url, $all_page
         $xtpl->parse('main.timkiem.depart');
     }
 
+    $sql = 'select * from `'. NV_PREFIXLANG .'_'. $module_data .'_cat`';
+    $query = $db->query($sql);
+
+    $xtpl->assign('tab', $tab);
+    while ($row = $query->fetch()) {
+        $xtpl->assign('catid', $row['id']);
+        $xtpl->assign('catname', $row['title']);
+        $xtpl->assign('cattype', '');
+        if ($row['id'] == $tab) {
+            $xtpl->assign('cattype', 'btn-info');
+        }
+        $xtpl->parse('main.redden');
+    }
 
     $listtypes = array(
         array(
@@ -145,6 +158,7 @@ function nv_theme_congvan_main($error, $array, $page_title, $base_url, $all_page
         }
 
         $xtpl->assign('code', $code);
+        $xtpl->assign('excode', $excode);
         $xtpl->assign('s_title', $title);
         $xtpl->assign('content', $content);
 

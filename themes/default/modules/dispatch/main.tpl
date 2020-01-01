@@ -107,6 +107,11 @@
 				<td><input name="code" class="form-control" style="width: 200px" size="15" value="{code}"></td>
 			</tr>
 			<tr>
+				<td> {LANG.dis_code_ex} </td>
+				<td><input name="excode" class="form-control" style="width: 200px" size="15" value="{excode}"></td>
+				<input name="tab" type="hidden" class="form-control" value="{tab}">
+			</tr>
+			<tr>
 				<td> {LANG.dis_content} </td>
 				<td><textarea class="form-control" name="content">{content}</textarea></td>
 			</tr>
@@ -144,6 +149,12 @@
 		{ERROR}
 	</div>
 	<!-- END: error -->
+
+	<!-- BEGIN: redden -->
+	<button class="btn {cattype}" onclick="change(event, {catid})">
+		{catname}
+	</button>
+	<!-- END: redden -->
 
 	<!-- BEGIN: data -->
 	<table class="table table-striped table-bordered table-hover">
@@ -227,6 +238,29 @@
       }
     })
     return list
+  }
+
+  function change(e, tabid) {
+	e.preventDefault()
+	x = strHref.split('?')
+	if (x[1]) {
+		y = x[1].split('&')
+		check = 0
+		y.forEach((item, index) => {
+			if (item.search('tab') >= 0) {
+				check = 1
+				strHref = strHref.replace(item, 'tab=' + tabid)
+			}		
+		});
+		if (!check) {
+			strHref += '&tab=' + tabid
+		}
+	}
+	else {
+		strHref = 'http://' + strHref.replace('http://', '').replace('https://', '').split('/')[0]
+		strHref += '/index.php?' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=' + nv_func_name + '&tab=' + tabid
+	}
+	window.location.replace(strHref);
   }
 
 </script>

@@ -43,6 +43,23 @@ $arr_status = array(
 
 define('NV_IS_FILE_ADMIN', true);
 
+function getdefcode() {
+    global $db, $db_config;
+
+    $sql = 'select * from `' . $db_config['prefix'] . '_config` where config_name = "defcode"';
+    $query2 = $db->query($sql);
+    if ($row2 = $query2->fetch()) {
+        // gotten
+        return $row2['config_value'];
+    }
+    else {
+        // insert
+        $sql = 'insert into `' . $db_config['prefix'] . '_config` values ("lang", "sys", "defcode", "1")';
+        $db->query($sql);
+        return 1;
+    }
+}
+
 /**
  * nv_setcats1()
  *

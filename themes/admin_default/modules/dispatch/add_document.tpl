@@ -41,6 +41,11 @@
 			</tr>
 
 			<tr>
+				<td>{LANG.dis_code_ex}(<span class="red">*</span>)</strong></td>
+				<td><input class="form-control w400" value="{DATA.excode}" name="excode" id="excode" maxlength="100" /></td>
+			</tr>
+
+			<tr>
 				<td>{LANG.dis_code}(<span class="red">*</span>)</strong></td>
 				<td><input class="form-control w400" value="{DATA.code}" name="code" id="code" maxlength="100" /></td>
 			</tr>

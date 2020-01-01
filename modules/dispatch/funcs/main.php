@@ -302,6 +302,21 @@ if ($nv_Request->isset_request("code", "get")) {
   $sql .= " AND a.code LIKE '%" . $db->dblikeescape($code) . "%' ";
   $base_url .= "&amp;code=" . urlencode($code);
 }
+if ($nv_Request->isset_request("excode", "get")) {
+  $excode = $nv_Request->get_title('excode', 'get', '');
+  if ($excode != '') {
+    $page_title = sprintf($lang_module['print_excode'], '...' . $excode . '...');
+  }
+  $sql .= " AND a.excode LIKE '%" . $db->dblikeescape($excode) . "%' ";
+  $base_url .= "&amp;excode=" . urlencode($excode);
+}
+
+$tab = $nv_Request->get_title('tab', 'get', '');
+if (empty($tab)) {
+  $tab = 1;
+}
+$sql .= " AND a.catid = $tab ";
+$base_url .= "&amp;tab=" . urlencode($tab);
 
 if ($nv_Request->isset_request("content", "get")) {
   $content = $nv_Request->get_title('content', 'get', '');
@@ -323,7 +338,7 @@ $sql .= " ORDER BY from_time DESC";
 $page = $nv_Request->get_int('page', 'get', 0);
 $per_page = 30;
 $sql2 = "SELECT a.*, b.id as departid, b.title as depart " . $sql . " LIMIT " . $page . ", " . $per_page;
-
+// die($sql2);
 $query2 = $db->query($sql2);
 
 $array = array();
@@ -374,7 +389,7 @@ if (empty($array)) {
   $error = $lang_module['error_rows'];
 }
 
-$contents = nv_theme_congvan_main($error, $array, $page_title, $base_url, $all_page, $per_page, $page, $type, $se, $to, $from, $from_signer, $content, $code, $title, $depart);
+$contents = nv_theme_congvan_main($error, $array, $page_title, $base_url, $all_page, $per_page, $page, $type, $se, $to, $from, $from_signer, $content, $code, $excode, $tab, $title, $depart);
 
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_site_theme($contents);
