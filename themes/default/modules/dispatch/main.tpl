@@ -29,8 +29,9 @@
 				<label style="width: 30%"> <input type="checkbox" class="po" id="title" checked> Tên công văn </label>
 				<label style="width: 30%"> <input type="checkbox" class="po" id="catid" checked> Chủ đề </label>
 				<label style="width: 30%"> <input type="checkbox" class="po" id="type" checked> Loại công văn </label>
-				<label style="width: 30%"> <input type="checkbox" class="po" id="from_time" checked> Ngày gửi </label>
+				<label style="width: 30%"> <input type="checkbox" class="po" id="from_time" checked> Ngày đến </label>
 				<label style="width: 30%"> <input type="checkbox" class="po" id="code" checked> Số công văn </label>
+				<label style="width: 30%"> <input type="checkbox" class="po" id="excode" checked> Số công văn đến/đi </label>
 				<label style="width: 30%"> <input type="checkbox" class="po" id="from_org"> Đơn vị soạn </label>
 				<label style="width: 30%"> <input type="checkbox" class="po" id="to_org"> Đơn vị nhận </label>
 				<label style="width: 30%"> <input type="checkbox" class="po" id="from_depid"> Tên phòng gửi </label>

@@ -19,7 +19,7 @@ $type = '';
 $code = $content = '';
 
 $xco = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
-$yco = array('index' => 'STT', 'title' => 'Tên công văn', 'catid' => 'Chủ đề', 'type' => 'Loại công văn', 'from_time' => 'Ngày gửi', 'code' => 'Số công văn', 'from_org' => 'Đơn vị soạn', 'to_org' => 'Đơn vị nhận', 'from_depid' => 'Tên phòng gửi', 'from_signer' => 'Người ký', 'date_iss' => 'Ngày ban hành', 'date_first' => 'Ngày có hiệu lực', 'date_die' => 'Ngày hết hiệu lực', 'content' => 'Trích yếu công văn', 'statusid' => 'Trạng thái', 'deid' => 'Phòng ban nhận');
+$yco = array('index' => 'STT', 'title' => 'Tên công văn', 'catid' => 'Chủ đề', 'type' => 'Loại công văn', 'from_time' => 'Ngày đến', 'code' => 'Số công văn', 'excode' => 'Số công văn đến/đi', 'from_org' => 'Đơn vị soạn', 'to_org' => 'Đơn vị nhận', 'from_depid' => 'Tên phòng gửi', 'from_signer' => 'Người ký', 'date_iss' => 'Ngày ban hành', 'date_first' => 'Ngày có hiệu lực', 'date_die' => 'Ngày hết hiệu lực', 'content' => 'Trích yếu công văn', 'statusid' => 'Trạng thái', 'deid' => 'Phòng ban nhận');
 $status = array(0 => 'Chưa xử lý', 'Đã xử lý', 'Để lưu');
 
 $array = array();
