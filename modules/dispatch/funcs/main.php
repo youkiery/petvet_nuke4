@@ -195,7 +195,7 @@ if ($nv_Request->isset_request("excel", "get")) {
   $objWriter->save('excel-output.xlsx');
 	$objPHPExcel->disconnectWorksheets();
 	unset($objWriter, $objPHPExcel);
-  header('location: /excel-output.xlsx');
+  header('location: /excel-output.xlsx?t=' . time());
 }
 if ($nv_Request->isset_request("se", "get")) {
   $page_title = $lang_module['list_se'];
