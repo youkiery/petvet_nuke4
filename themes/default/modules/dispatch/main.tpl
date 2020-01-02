@@ -168,9 +168,8 @@
 				<th> {LANG.dis_code_ex} </th>
 				<th> {LANG.dis_name} </th>
 				<th> {LANG.dis_code} </th>
-				<th> {LANG.dis_code} </th>
 				<th> {LANG.dis_souce} </th>
-				<th> {LANG.dis_to_org} </th>
+				<!-- <th> {LANG.dis_to_org} </th> -->
 				<th> {LANG.file} </th>
 			</tr>
 		</thead>
@@ -182,7 +181,7 @@
 				<td> {ROW.title} </td>
 				<td><a href="{ROW.link_code}">{ROW.code}</a></td>
 				<td> {ROW.from_org} </td>
-				<td> {ROW.to_org} </td>
+				<!-- <td> {ROW.to_org} </td> -->
 				<td>
 					<!-- BEGIN: loop1 -->
 					<a href="{FILEUPLOAD}" title="Download"><em class="fa fa-download">&nbsp;</em></a>
