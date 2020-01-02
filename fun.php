@@ -6,6 +6,7 @@
   while ($row = $query->fetch_assoc()) {
     $data = str_replace('THTY-5', 'TYV5-TH', $row['data']);
     // echo "update pet_formt_notires set data = '$data' where id = $row[id] <br>";
-    $db->query("update pet_formt_notires set data = '$data' where id = $row[id]");
+    // $db->query("update pet_formt_notires set data = '$data' where id = $row[id]");
   }
+  // str_replace()
 ?>
