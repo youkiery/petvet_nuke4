@@ -364,6 +364,7 @@ while ($row = $query2->fetch()) {
       'id' => (int) $row['id'],
       'stt' => $i,
       'title' => $row['title'],
+      'excode' => $row['excode'],
       'code' => $row['code'],
       'from_org' => $row['from_org'],
       'to_org' => $row['to_org'],

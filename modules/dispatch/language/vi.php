@@ -51,6 +51,7 @@ $lang_module['dis_content'] = 'Trích yếu';
 $lang_module['dis_date_iss'] = 'Ngày ban hành';
 $lang_module['dis_date_first'] = 'Ngày có hiệu lực';
 $lang_module['dis_date_re'] = 'Ngày gửi';
+$lang_module['dis_date_re2'] = 'Ngày đến';
 $lang_module['dis_date_die'] = 'Ngày hết hiệu lực';
 $lang_module['dis_file'] = 'Công văn đính kèm';
 $lang_module['dis_dis'] = 'Nội dung';

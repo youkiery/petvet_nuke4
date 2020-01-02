@@ -164,8 +164,10 @@
 		</caption>
 		<thead>
 			<tr>
-				<th> {LANG.dis_date_re} </th>
+				<th> {LANG.dis_date_re2} </th>
+				<th> {LANG.dis_code_ex} </th>
 				<th> {LANG.dis_name} </th>
+				<th> {LANG.dis_code} </th>
 				<th> {LANG.dis_code} </th>
 				<th> {LANG.dis_souce} </th>
 				<th> {LANG.dis_to_org} </th>
@@ -176,6 +178,7 @@
 			<!-- BEGIN: row -->
 			<tr>
 				<td> {ROW.from_time} </td>
+				<td> {ROW.excode} </td>
 				<td> {ROW.title} </td>
 				<td><a href="{ROW.link_code}">{ROW.code}</a></td>
 				<td> {ROW.from_org} </td>
