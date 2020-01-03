@@ -14,6 +14,7 @@ if (!defined('NV_SYSTEM')) {
 
 define('NV_IS_MOD_QUANLY', true); 
 define('PATH', NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file); 
+define('PATH2', NV_ROOTDIR . "/modules/" . $module_file . '/template/user/' . $op); 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 // kiểm tra phân quyền
 
@@ -61,4 +62,17 @@ if ($check) {
   echo nv_site_theme($contents);
   include ( NV_ROOTDIR . "/includes/footer.php" );
   die();
+}
+
+function usgModal($lang_module) {
+  $xtpl = new XTemplate("modal.tpl", PATH2);
+  $doctor = getDoctorList();
+  $xtpl->assign('lang', $lang_module);
+  foreach ($doctor as $data) {
+    $xtpl->assign('doctor_value', $data['id']);
+    $xtpl->assign('doctor_name', $data['name']);
+    $xtpl->parse('main.doctor');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
 }

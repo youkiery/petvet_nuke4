@@ -242,3 +242,20 @@ td, th {
 .orange {
   background: #ffaa44 !important;
 }
+#ui-datepicker-div {
+  z-index: 10000 !important;
+}
+.customer_icon {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  display: inline-block;
+  background-image: url('/themes/default/images/vaccine/contact_add_small.png')
+}
+.pet_icon {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  display: inline-block;
+  background-image: url('/themes/default/images/vaccine/pet_add.png')
+}
