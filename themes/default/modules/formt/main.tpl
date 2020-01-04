@@ -2505,9 +2505,9 @@
       <th rowspan="2"> Ghi chú </th>
     </tr>
     <tr>
-      <th style="width: 50px"> Chỉ tiêu </th>
+      <th style="width: 100px"> Chỉ tiêu </th>
       <th> Phương pháp </th>
-      <th> Kết quả </th>
+      <th style="width: 120px"> Kết quả </th>
     </tr>`
     var html2 = ''
     var index = 1
@@ -2877,7 +2877,7 @@
     formInsertQuality.val('')
     formInsertPhone.val('')
     formInsertOther.val('')
-    formInsertResult.val('....................................................................................................')
+    formInsertResult.val('.........................................................................................................................................................................................................................<br>..........................................................................................................................................................................................................................................')
     formInsertTarget.val('')
     formInsertEndedCopy.val('')
     formInsertNote.val('')
@@ -3725,18 +3725,18 @@
             html = html.replace('xcode-0', trim(data['xcode'][0]))
             html = html.replace('xcode-1', trim(data['xcode'][1]))
             html = html.replace('xcode-2', trim(data['xcode'][2]))
-            html = html.replace('resend-0', resend[0])
-            html = html.replace('resend-1', resend[1])
-            html = html.replace('resend-2', resend[2])
-            html = html.replace('xresend-0', xresend[0])
-            html = html.replace('xresend-1', xresend[1])
-            html = html.replace('xresend-2', xresend[2])
-            html = html.replace('xreceive-0', xreceive[0])
-            html = html.replace('xreceive-1', xreceive[1])
-            html = html.replace('xreceive-2', xreceive[2])
-            html = html.replace('xsend-0', xsend[0])
-            html = html.replace('xsend-1', xsend[1])
-            html = html.replace('xsend-2', xsend[2])
+            html = html.replace('resend-0', (resend[0] ? resend[0] : '&emsp;'))
+            html = html.replace('resend-1', (resend[1] ? resend[1] : '&emsp;'))
+            html = html.replace('resend-2', (resend[2] ? resend[2] : '&emsp;&emsp;&emsp;'))
+            html = html.replace('xresend-0', (xresend[0] ? xresend[0] : '&emsp;'))
+            html = html.replace('xresend-1', (xresend[1] ? xresend[1] : '&emsp;'))
+            html = html.replace('xresend-2', (xresend[2] ? xresend[2] : '&emsp;&emsp;&emsp;'))
+            html = html.replace('xreceive-0', (xreceive[0] ? xreceive[0] : '&emsp;'))
+            html = html.replace('xreceive-1', (xreceive[1] ? xreceive[1] : '&emsp;'))
+            html = html.replace('xreceive-2', (xreceive[2] ? xreceive[2] : '&emsp;&emsp;&emsp;'))
+            html = html.replace('xsend-0', (xsend[0] ? xsend[0] : '&emsp;'))
+            html = html.replace('xsend-1', (xsend[1] ? xsend[1] : '&emsp;'))
+            html = html.replace('xsend-2', (xsend[2] ? xsend[2] : '&emsp;&emsp;&emsp;'))
             html = html.replace('examdate', data['examdate'])
             html = html.replace('iresend', data['iresend'])
             html = html.replace('xsender', data['xsender'])
@@ -3747,7 +3747,7 @@
               html = html.replace('(result)', '<br>- Kết quả: ' + data['result'].replace(/\n/g, '; '))
             }
             else {
-              html = html.replace('(result)', '')
+              html = html.replace('(result)', '<br>- Kết quả: .........................................................................................................................................................................................................................<br>..........................................................................................................................................................................................................................................')
             }
             html = html.replace('xtable', parseFieldTable(data['ig']))
             data['note'] = trim(data['note'])
@@ -3969,12 +3969,12 @@
         var winPrint = window.open(origin + '/index.php?nv=' + nv_module_name + '&hash=' + (new Date()).getTime(), '_blank', 'left=0,top=0,width=800,height=600');
         winPrint.focus()
         winPrint.document.write(html);
-        if (!prev) {
+        // if (!prev) {
           setTimeout(() => {
             winPrint.print()
             winPrint.close()
           }, 300)
-        }
+        // }
       }
     }
   }
