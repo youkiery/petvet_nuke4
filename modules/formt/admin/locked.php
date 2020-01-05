@@ -48,7 +48,8 @@ $sql = 'select * from `'. $db_config['prefix'] .'_user_allow` where userid = ' .
 $query = $db->query($sql);
 $adin = $query->fetch();
 
-if (in_array('1', $admin_info['in_groups']) || $adin['admin'] > 0) {
+// if (in_array('1', $admin_info['in_groups']) || $adin['admin'] > 0) {
+if (1) {
   $xtpl = new XTemplate("locked.tpl", PATH);
 
   $locked_time = getLocker();

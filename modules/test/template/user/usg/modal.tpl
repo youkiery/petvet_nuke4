@@ -5,30 +5,21 @@
             <div class="modal-body">
                 <div type="button" class="close" data-dismiss="modal">&times;</div> <br>
 
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label class="control-label col-sm-2"> Tên khách hàng </label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="customer-name">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-2"> Số điện thoại </label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="customer-phone">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-2"> Địa chỉ </label>
-                        <div class="col-sm-10">
-                            <textarea id="customer-address" rows="4"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-default"> Thêm khách hàng </button>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label> Tên khách hàng </label>
+                    <input type="text" class="form-control" id="insert-customer-name">
+                </div>
+                <div class="form-group">
+                    <label> Số điện thoại </label>
+                    <input type="text" class="form-control" id="insert-customer-phone">
+                </div>
+                <div class="form-group">
+                    <label> Địa chỉ </label>
+                    <textarea class="form-control" id="insert-customer-address" rows="4"></textarea>
+                </div>
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-success" onclick="insertCustomerSubmit()"> Thêm khách hàng
+                    </button>
                 </div>
             </div>
         </div>
@@ -40,21 +31,11 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div type="button" class="close" data-dismiss="modal">&times;</div> <br>
-
-                <div class="form-horizontal">
-                    <div class="form-group">
-                        <label class="control-label col-sm-2"> Tên thú cưng </label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="pet-name">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-default"> Thêm thú cưng </button>
-                        </div>
-                    </div>
-                    </form>
-                </div>
+                <label> Tên thú cưng </label>
+                <input type="text" class="form-control" id="insert-pet-name">
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-success" onclick="insertPetSubmit()"> Thêm thú cưng </button>
             </div>
         </div>
     </div>
@@ -112,7 +93,7 @@
                         <div class="form-group col-md-6">
                             <label>{lang.usgcome}</label>
                             <div class="input-group date" data-provide="datepicker">
-                                <input type="text" class="form-control" id="ngaysieuam" value="{now}" readonly>
+                                <input type="text" class="form-control date" id="ngaysieuam" value="{now}" readonly>
                                 <div class="input-group-addon">
                                     <span class="glyphicon glyphicon-th"></span>
                                 </div>
@@ -121,7 +102,7 @@
                         <div class="form-group col-md-6">
                             <label>{lang.usgcall}</label>
                             <div class="input-group date" data-provide="datepicker">
-                                <input type="text" class="form-control" id="calltime" value="{dusinh}" readonly>
+                                <input type="text" class="form-control date" id="calltime" value="{dusinh}" readonly>
                                 <div class="input-group-addon">
                                     <span class="glyphicon glyphicon-th"></span>
                                 </div>
@@ -147,7 +128,7 @@
                         </div>
                     </div>
                     <div class="form-group text-center">
-                        <input class="btn btn-info" type="submit" value="{lang.submit}">
+                        <input class="btn btn-success" type="submit" value="{lang.submit}">
                     </div>
                 </div>
             </div>
