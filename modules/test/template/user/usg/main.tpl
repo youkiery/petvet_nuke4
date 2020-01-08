@@ -2,567 +2,289 @@
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript"
-  src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
-
+	src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <div id="msgshow" class="msgshow"></div>
+
+<style>
+	.btn-default {
+		color: #333 !important;
+	}
+</style>
 
 {modal}
 
-<div style="float: right;">
-  <button class="btn btn-info">
-    Lọc danh sách
-  </button>
-  <button class="btn btn-info" onclick="addUsg()">
-    Thêm phiếu siêu âm
-  </button>
+<div class="form-group" style="float: right;">
+	<button class="btn btn-info" onclick="insertModal()">
+		Thêm phiếu siêu âm
+	</button>
 </div>
-
 <div style="clear: both;"></div>
 
-<!-- <ul style="list-style-type: circle; padding: 10px;">
-  <li>
-    <a href="/index.php?nv={nv}&op={op}"> {lang.usg_list} </a>
-  </li>
-  <li>
-    <a href="/index.php?nv={nv}&op={op}&page=list"> {lang.usg_new_list} </a>
-    <img src="/themes/default/images/dispatch/new.gif">
-  </li>
-</ul> -->
+<div class="form-group">
+	<!-- BEGIN: type -->
+	<a href="{type_link}" class="{type_button} btn" role="button">
+		{type_name}
+	</a>
+	<!-- END: type -->
+</div>
 
-<!-- BEGIN: filter -->
-<!-- <button class="filter btn {check}" id="chatter_{ipd}" onclick="change_data({ipd})">
-  {vsname}
-</button> -->
-<!-- END: filter -->
-
-<!-- <div class="right">
-  <button class="btn btn-info" id="exall">
-    Hiện ghi chú
-  </button>
-</div> -->
-
-<!-- <table class="table table-striped">
-  <thead>
-    <tr>
-      <th>
-        {lang.index}
-      </th>  
-      <th>
-        {lang.customer}
-      </th>  
-      <th>
-        {lang.phone}
-      </th>  
-      <th>
-        {lang.usgcome}
-      </th>  
-      <th>
-        {lang.usgcall}
-      </th>  
-      <th>
-        {lang.usgconfirm}
-      </th>
-    </tr>
-  </thead>
-  <tbody id="disease_display">
-    {content}
-  </tbody>
-  <tfoot>
-    <tr>
-      <td colspan="9">
-        <p style="float: right;" id="nav">
-          {nav}
-        </p>
-      </td>
-    </tr>
-  </tfoot>
-</table> -->
-
+<div id="html_content">
+	{content}
+</div>
 <script>
+	var g_id = -1
+	var g_customerid = -1
+	var g_petid = -1
+	var g_pet = ""
+	var blur = true;
+	var g_customer = -1;
+	var customer_data = [];
 	var customer_list = [];
-  var customer_data = []
-  var g_filter = 0;
-  var g_miscustom = -1;
-  var g_vacid = -1;
-  var g_index = -1
-  var g_id = -1
-  var g_petid = -1
-  var page = "{page}";
-  var refresh = 0
+	var customer_name = document.getElementById("customer_name");
+	var customer_phone = document.getElementById("customer_phone");
+	var customer_address = document.getElementById("customer_address");
+	var pet_info = document.getElementById("pet_info");
+	var pet_note = document.getElementById("pet_note");
+	var suggest_name = document.getElementById("customer_name_suggest");
+	var suggest_phone = document.getElementById("customer_phone_suggest");
+	var global = {
+		type: {select_status},
+		id: 0,
+		recall: '{recall_date}'
+	}
 
-  var note = ["Hiện ghi chú", "Ẩn ghi chú"]
-  var note_s = 0;
-  // $("#exall").click(() => {
-  //   if (note_s) {
-  //     $(".note").hide()
-  //     note_s = 0
-  //   }
-  //   else {
-  //     $(".note").show()
-  //     note_s = 1
-  //   }
-  //   $("#exall").text(note[note_s])
-  // })
+	$('#cometime2, #calltime2, #calltime, #ngaysieuam, #recall, #birth, #firstvac, #from, #to, .date').datepicker({
+		format: 'dd/mm/yyyy'
+	});
 
-  $(document).ready(() => {
-    $(".date").datepicker({
-      format: 'dd/mm/yyyy',
-      changeMonth: true,
-      changeYear: true
-    });
-    checkCustomer = () => {
-      $.post(
-        '',
-        { action: 'check'}
-      )
-    }
-    installSuggest('name', 'customer', checkCustomer)
-    installSuggest('phone', 'customer', checkPhone)
-  })
+	function insertModal() {
+		$("#insert-modal").modal('show')
+	}
 
-  function addUsg() {
-    $("#insert-modal").modal('show')
-  }
+	$("#vaccine_status").change((e) => {
+		if (e.currentTarget.value == 4) {
+			$("#recall").attr("disabled", false);
+		}
+		else {
+			$("#recall").attr("disabled", true);
+		}
+	})
 
-  function addCustomer() {
-    $("#insert-customer-name").val($("#customer_name").val())
-    $("#insert-customer-phone").val($("#customer_phone").val())
-    $("#insert-customer-address").val($("#customer_address").val())
-    $("#customer-modal").modal('show')
-  }
-  function addPet() {
-    $("#insert-pet-name").val()
-    $("#pet-modal").modal('show')
-  }
+	$("#birthnumber").change((e) => {
+		if (e.currentTarget.value.length > 0) {
+			$("#firstvac").attr("disabled", false);
+			$("#vaccine_status").attr("disabled", false);
+		}
+	})
 
-  function checkCustomerInfo() {
-    return {
-      name: $("#insert-customer-name").val(),
-      phone: $("#insert-customer-phone").val(),
-      address: $("#insert-customer-address").val()
-    }
-  }
+	function xoasieuam(id) {
+		var answer = confirm("Xóa bản ghi này?");
+		if (answer) {
+			$.post(
+				"",
+				{ action: "xoasieuam", id: id },
+				(data, status) => {
+					data = JSON.parse(data);
+					if (data) {
+						window.location.reload()
+					}
+				}
+			)
+		}
+	}
 
-  function insertCustomerSubmit() {
-    sdata = checkCustomerInfo()
-    if (!sdata['name'].length) {
-      alert_msg("Nhập tên khách hàng trước!");
-    }
-    if (!sdata['phone'].length) {
-      alert_msg("Nhập số điện thoại trước!");
-    }
-    else {
-      $.post(
-        '',
-        { action: 'insert-customer', data: sdata },
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            switch (data["status"]) {
-              case 1:
-              alert_msg("Đã thêm khách hàng: " + sdata['name'] + "; Số điện thoại: " + sdata['phone']);
-                customer_data = {
-                  id: data["id"],
-                  customer: sdata['name'],
-                  phone: sdata['phone'],
-                  pet: []
-                }
-                g_index = customer_list.length;
-                customer_list.push(customer_data);
-                customer_name.value = sdata['name'];
-                customer_phone.value = sdata['phone'];
-                g_customer = data["id"];
-                $("#customer-modal").modal('hide')
-                reloadPetOption(customer_data["pet"])
-                break;
-              case 2:
-                alert_msg("Số điện thoại "+ sdata['phone'] +" đã được sử dụng");
-                break;
-            }
-          })
-        }
-      )
-    }
-  }
+	function update_usg(e) {
+		e.preventDefault()
+		$.post(
+			"",
+			{ action: "update_usg", id: g_id, cometime: $("#cometime2").val(), calltime: $("#calltime2").val(), doctorid: $("#doctor2").val(), note: $("#note2").val(), image: $("#image2").val(), birth: $("#birthnumber").val(), exbirth: $("#exbirth").val(), recall: $("#recall").val(), vaccine: $("#vaccine_status").val(), birthday: $("#birth").val(), firstvac: $("#firstvac").val(), customer: g_customerid },
+			(response, status) => {
+				var data = JSON.parse(response)
+				if (data["status"]) {
+					$("#usgupdate").modal("toggle");
+					g_id = -1
+					window.location.reload()
+				}
+			}
+		)
+	}
 
-  function insertPetSubmit() {
-    sdata = {
-      name: $("#insert-pet-name").val(),
-      id: g_customer
-    }
-    if (!sdata['id']) {
-      alert_msg('Chưa chọn khách hàng')
-    }
-    else if (!sdata['name']) {
-      alert_msg('Nhập tên thú cưng trước')
-    }
-    else {
-      $.post(
-        '',
-        { action: 'insert-pet', data: sdata },
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            switch (data['status']) {
-              case 1:
-                customer_data["pet"].push(data["data"]);
-                reloadPetOption(customer_data["pet"])
-                alert_msg("Đã thêm thú cưng(" + sdata['name'] + ")");
-                $("#pet-modal").modal('hide')
-              break;
-              case 2:
-                alert_msg('Nhập tên thú cưng khác')
-              break;
-            }
-          })
-        }
-      )
-    }
-  }
+	function themsieuam(event) {
+		event.preventDefault();
+		msg = "";
+		if (!customer_name) {
+			msg = "Chưa nhập tên khách hàng!"
+		} else if (!customer_phone.value) {
+			msg = "Chưa nhập số điện thoại!"
+		} else if (!pet_info.value) {
+			msg = "Khách hàng chưa có thú cưng!"
+		} else {
+			$.post(
+				"",
+				{ action: 'insert-usg', petid: pet_info.value, doctorid: $("#doctor").val(), cometime: $("#ngaysieuam").val(), calltime: $("#calltime").val(), image: "", note: $("#note").val() },
+				(data, status) => {
+					data = JSON.parse(data);
+					if (data["status"] == 1) {
+						window.location.reload();
+					}
+				}
+			)
+		}
+		alert_msg(msg);
+		return false;
+	}
 
-  function installSuggest(name, type, func) {
-    var timeout
-    var input = $("#"+ type +"-" + name)
-    var suggest = $("#"+ type +"-" + name + "-suggest")
+	function changeStatus(id, type) {
+		if ((global['type'] == 0 && type == 0)) {
+			// alert_msg('');
+		}
+		else if ((global['type'] == 2 && type == 1)) {
+			recall(id)
+		}
+		else {
+			$.post(
+				"",
+				{ action: "change-status", data: {
+						id: id,
+						type: type
+					}
+				},
+				(response, status) => {
+					checkResult(response, status).then(data => {
+						alert_msg('Đã thay đổi trạng thái');
+						$("#html_content").html(data['html'])
+					})
+				}
+			)
+		}
+	}
 
-    input.keyup(() => {
-      clearTimeout(timeout)
-      timeout = setTimeout(() => {
-        var key = paintext(input.val())
-        var html = ''
-        func().then(list => {
-          list.forEach(item => {
-            html += '<div class="suggest_item" onclick="selectSuggest(\'' + name + '\', \'' + type + '\', \'' + JSON.stringify(item['data']) + '\')"> ' + item['name'] + '</div>'
-          });
-        })
-        if (!html) html = 'Không tìm thấy kết quả'
-        
-        suggest.html(html)
-      }, 200);
-    })
-    input.focus(() => {
-      suggest.show()
-    })
-    input.blur(() => {
-      setTimeout(() => {
-        suggest.hide()
-      }, 200);
-    })
-  }
+	function recall(id, disease) {
+		global.id = id
+		global.disease = disease
+		$("#recall-recall").val(global.recall)
+		$("#recall-modal").modal('show')
+	}
 
-  function selectSuggest(name, type, data) {
-    data = JSON.parse(data)
-    data.forEach(item => {
-      $("." + type + '-' + name + '-' + item['type']).val(name) 
-    });
-  }
+	function recallSubmit() {
+		sdata = {
+			id: global.id,
+			birth: $("#recall-birth").val(),
+			recall: $("#recall-recall").val()
+		}
+		$.post(
+			"",
+			{ action: "recall", data: sdata
+			},
+			(response, status) => {
+				checkResult(response, status).then(data => {
+					alert_msg('Đã thay đổi trạng thái');
+					$("#html_content").html(data['html'])
+					$("#recall-modal").modal('hide')
+				})
+			}
+		)
+	}
 
-    // function filter2(e) {
-    //   e.preventDefault();
-    //   $("#disease_display").html("")
-    //   var element = $("[name='filter']");
-    //   var filter = "";
-    //   element.each((i, e) => {
-    //     if (e.checked == true) {
-    //       filter += e.value;
-    //     }
-    //   })
-    //   if (!filter.length) {
-    //     filter = "0";
-    //   }
+	function changeVaccineStatus(id, type) {
+		if ((global['type'] == 0 && type == 0) || (global['type'] == 2 && type == 1) || (global['type'] == 2)) {
+			// alert_msg('');
+		}
+		else if (global['type'] == 2 && type == 1) {
+			birth(id);
+			// $("#usgrecall").modal("toggle")
+		}
+		else {
+			$.post(
+				"",
+				{ action: "change-vaccine-status", data: {
+						id: id,
+						type: type
+					}
+				},
+				(response, status) => {
+					checkResult(response, status).then(data => {
+						alert_msg('Đã thay đổi trạng thái');
+						$("#html_content").html(data['html'])
+					})
+				}
+			)
+		}
+	}
 
-    //   $.post(link + "sieuam", 
-    //   {action: "filter", keyword: $("#keyword").val(), filter: filter},
-    //   (response, status) => {
-    //     var data = JSON.parse(response);
-    //     $("#disease_display").html(data["data"]["html"])
-    //   })
-    // }
+	function birth(id) {
+		global.id = id
+		$("#birth-recall").val(global.recall)
+		$("#birth-modal").modal('show')
+	}
 
-    // function change_custom(e) {
-    //   e.preventDefault()
-    //   var name = $("#vaccustom").val()
-    //   var phone = $("#vacphone").val()
-    //   var address = $("#vacaddress").val()
-    //   var msg = "";
+	function birthRecall() {
+		sdata = {
+			id: global.id,
+			doctor: $("#birth-doctor").val(),
+			disease: $("#birth-disease").val(),
+			petname: $("#birth-petname").val(),
+			recall: $("#birth-recall").val()
+		}
+		if (!sdata['petname'].length) {
+			sdata['petname'] = 'Chưa đề tên'
+		}
+		$.post(
+			"",
+			{ action: "birth-recall", data: sdata
+			},
+			(response, status) => {
+				checkResult(response, status).then(data => {
+					alert_msg('Đã thay đổi trạng thái');
+					$("#html_content").html(data['html'])
+					$("#birth-modal").modal('hide')
+				})
+			}
+		)
+	}
 
-    //   if (!name.length) {
-    //     msg = "{lang.no_custom_name}"
-    //   }
-    //   else if (phone.length < 4 || phone.length > 15) {
-    //     msg = "{lang.no_custom_phone}"
-    //   }
-    //   else {
-    //     $.post(
-    //       strHref,
-    //       { action: "change_custom", name: name, phone: phone, address: address, cid: g_miscustom, id: g_id, page: page, cnote: note_s },
-    //       (response, status) => {
-    //         var data = JSON.parse(response)
-    //         if (data["status"]) {
-    //           $("#miscustom").modal("toggle")
-    //           $("#disease_display").html(data["list"])
-    //         }
-    //         alert_msg(data["notify"])
-    //       }
-    //     )
-    //   }
-    //   if (msg) {
-    //     alert_msg(msg)
-    //   }
-    // }
+	function update(e, id) {
+		g_id = id
+		$("#btn_usg_update").attr("disabled", true);
+		// $("#birth").attr("disabled", true);
+		// $("#birthnumber").attr("disabled", true);
+		$("#firstvac").attr("disabled", true);
+		$("#vaccine_status").attr("disabled", true);
+		$("#recall").attr("disabled", true);
+		$.post(
+			"",
+			{ action: "usg_info", id: g_id },
+			(response, status) => {
+				var data = JSON.parse(response);
+				if (data["status"]) {
+					$("#btn_usg_update").attr("disabled", false);
+					g_customerid = data["data"]["customerid"]
+					g_petid = data["data"]["petid"]
 
-    // function miscustom(id) {
-    //   g_vacid = id
-    //   $.post(
-    //     strHref,
-    //     { action: "get_miscustom", id: id },
-    //     (response, status) => {
-    //       var data = JSON.parse(response)
-    //       if (data["status"]) {
-    //         g_miscustom = data["id"]
-    //         $("#miscustom").modal("toggle")
-    //         $("#vaccustom").val(data["name"])
-    //         $("#vacphone").val(data["phone"])
-    //         $("#vacaddress").val(data["address"])
-    //       }
-    //     }
-    //   )
-    // }
+					g_pet = trim(e.target.parentElement.parentElement.children[1].innerText)
+					$("#cometime2").val(data["data"]["cometime"])
+					$("#calltime2").val(data["data"]["calltime"])
+					$("#doctor2").val(data["data"]["doctorid"])
+					$("#note2").val(data["data"]["note"])
+					$("#image2").val(data["data"]["image"])
+					$("#birthnumber").val(data["data"]["birth"])
+					$("#birth").val(data["data"]["birthday"])
+					$("#exbirth").val(data["data"]["exbirth"])
+					$("#vaccine_status").html(data["data"]["vaccine"])
+					if (data["data"]["birth"] > 0) {
+						$("#firstvac").attr("disabled", false);
+						$("#firstvac").val(data["data"]["firstvac"]);
+						$("#vaccine_status").attr("disabled", false);
+						if (data["data"]["recall"] > 0 || data["data"]["vacid"] == 4) {
+							$("#recall").attr("disabled", false);
+							$("#recall").val(data["data"]["recall"])
+						}
+					}
+				}
+			}
+		)
+	}
 
-    // function miscustom_submit() {
-    //   $.post(
-    //     "index.php?" + query_string,
-    //     { action: "miscustom", vacid: g_vacid, id: g_id, page: page, cnote: note_s },
-    //     (response, status) => {
-    //       var data = JSON.parse(response)
-    //       if (data["status"]) {
-    //         $("#disease_display").html(data["list"])
-    //         // note_s = 0
-    //         // $("#exall").text(note[note_s])
-    //         alert_msg("{lang.complete}")
-    //       }
-    //       else {
-    //         alert_msg("{lang.error}")
-    //       }
-    //     }
-    //   )
-    // }
-    // function deadend(id) {
-    //   g_vacid = id
-    //   $("#deadend").modal("toggle")
-    // }
-    // function deadend_submit(id) {
-    //   $.post(
-    //     "index.php?" + query_string,
-    //     { action: "deadend", vacid: g_vacid, id: g_id, page: page },
-    //     (response, status) => {
-    //       var data = JSON.parse(response)
-    //       if (data["status"]) {
-    //         $("#disease_display").html(data["list"])
-    //         alert_msg("{lang.complete}")
-    //         // note_s = 0
-    //         // $("#exall").text(note[note_s])
-    //       }
-    //       else {
-    //         alert_msg("{lang.error}")
-    //       }
-    //     }
-    //   )
-    // }
-
-    // function change_data(id) {
-    //   g_filter = id;
-    //   $.post(link + "sieuam",
-    //     { action: "change_data", keyword: $("#customer_key").val(), filter: g_filter, page: page, cnote: 0 },
-    //     (response, status) => {
-    //       var data = JSON.parse(response);
-
-    //       $(".filter").removeClass("btn-info")
-    //       $("#chatter_" + id).addClass("btn-info")
-    //       $("#disease_display").html(data["data"]["html"])
-    //       note_s = 0
-    //       $("#exall").text(note[note_s])
-    //     })
-    // }
-
-    // $('#birthday').datepicker({
-    //   format: 'dd/mm/yyyy',
-    //   changeMonth: true,
-    //   changeYear: true
-    // });
-
-    // function confirm_lower(index, vacid, petid) {
-    //   var e = document.getElementById("vac_confirm_" + index);
-    //   e = trim(e.innerText)
-    //   if (e == "Đã Sinh") {
-
-    //   }
-    //   else {
-    //     $.post(
-    //       link + "xacnhansieuam",
-    //       { act: "down", value: e, id: vacid, filter: g_filter, page: page, cnote: note_s },
-    //       (data, status) => {
-    //         data = JSON.parse(data);
-    //         change_color(e, data, index, vacid, petid);
-    //       }
-    //     )
-    //   }
-    // }
-
-    // function confirm_upper(index, vacid, petid) {
-    //   var e = document.getElementById("vac_confirm_" + index);
-    //   e = trim(e.innerHTML)
-    //   if (e == "Đã Gọi") {
-    //     birth(index, vacid, petid);
-    //     $("#usgrecall").modal("toggle")
-    //   }
-    //   else {
-    //     $.post(
-    //       link + "xacnhansieuam",
-    //       { act: "up", value: e, id: vacid, filter: g_filter, page: page, cnote: note_s },
-    //       (data, status) => {
-    //         data = JSON.parse(data);
-    //         change_color(e, data, index, vacid, petid);
-    //       }
-    //     )
-    //   }
-    // }
-
-    // function change_color(e, response, index, vacid, petid) {
-    //   if (response["status"]) {
-    //     // e.innerText = response["data"]["value"];
-    //     // e.style.color = response["data"]["color"];
-
-    //     $("#disease_display").html(response["data"]["html"]);
-    //     alert_msg('{lang.changed}');
-    //     // note_s = 0
-    //     // $("#exall").text(note[note_s])
-
-
-    //     // var check = response["data"].hasOwnProperty("birth");
-    //     // if (check) {
-    //     //   if (response["data"]["color"] == "green") {
-    //     //     $("#birth_" + index).html("~> <button class='btn btn-info' type='button' data-toggle='modal' data-target='#usgrecall' onclick='birth(" + index + ", " + vacid + ", " + petid + ")'> " + response["data"]["birth"] + "</button>");
-    //     //   }
-    //     // } else {
-    //     //   $("#birth_" + index).html("");
-    //     // }
-    //   }
-    // }
-
-    // function editNote(index) {
-    //   var answer = prompt("Ghi chú: ", trim($("#note_v" + index).text()));
-    //   if (answer) {
-    //     $.post(
-    //       link + "sieuam&act=post",
-    //       { action: "editNote", note: answer, id: index },
-    //       (data, status) => {
-    //         data = JSON.parse(data);
-    //         if (data["status"]) {
-    //           $("#note_v" + index).text(answer);
-    //         }
-    //       }
-    //     )
-    //   }
-    // }
-
-    // function viewNote(index) {
-    //   $("#note_" + index).toggle(500);
-    // }
-
-    // function birth(index, vacid, petid) {
-    //   $("#birthnumber").val("")
-    //   $("#birthday").val("")
-    //   $("#btn_save_birth").attr("disable", true);
-
-    //   $.post(
-    //     link + "sieuam",
-    //     { action: "getbirth", id: vacid },
-    //     (response, status) => {
-    //       data = JSON.parse(response);
-    //       if (data["status"]) {
-    //         $("#birthnumber").val(data["data"]["birth"])
-    //         if (data["data"]["birthday"]) {
-    //           $("#birthday").val(data["data"]["birthday"])
-    //         }
-    //         $("#doctor_select").html(data["data"]["doctor"])
-    //         $("#btn_save_birth").attr("disable", false);
-    //       }
-    //     }
-    //   )
-
-    //   g_index = index
-    //   g_id = vacid
-    //   g_petid = petid
-    // }
-
-    // function onbirth(event) {
-    //   event.preventDefault()
-    //   $.post(
-    //     link + "sieuam",
-    //     { action: "birth", id: g_id, petid: g_petid, birth: $("#birthnumber").val(), birthday: $("#birthday").val(), doctor: $("#doctor_select").val(), filter: g_filter, page: page, cnote: note_s },
-    //     (response, status) => {
-    //       data = JSON.parse(response);
-    //       if (data["status"]) {
-    //         $("#usgrecall").modal("toggle");
-    //         $("#disease_display").html(data["data"]["html"])
-    //         alert_msg("{lang.saved}")
-    //         // note_s = 0
-    //         // $("#exall").text(note[note_s])
-    //         // $("#birth_" + g_index).attr("disabled", "true")
-    //         g_index = -1
-    //         g_id = -1
-    //         g_petid = -1
-    //       }
-    //     }
-    //   )
-    // }
-
-    // $("tbody td[class]").click((e) => {
-    //   var id = e.currentTarget.parentElement.getAttribute("id");
-    //   $.post(link + "sieuam",
-    //     { action: "getusgdetail", id: id },
-    //     (response, status) => {
-    //       // console.log(response);
-    //       data = JSON.parse(response);
-
-    //       if (data["status"]) {
-    //         var c = document.createElement("canvas")
-    //         var ctx = c.getContext("2d");
-    //         var img = new Image()
-    //         img.src = data["data"]["image"];
-    //         img.onload = () => {
-    //           c.width = img.width
-    //           c.height = img.height
-    //           ctx.fillStyle = "#fff"
-    //           ctx.fillRect(0, 0, c.width, c.height)
-    //           ctx.drawImage(img, 0, 0)
-    //           var image_data = c.toDataURL("image/jpg")
-    //           $("#thumb").attr("src", image_data);
-    //         }
-
-    //         $("#thumb").attr("src", "");
-    //         $("#petname").text(data["data"]["petname"]);
-    //         $("#customer").text(data["data"]["customer"]);
-    //         $("#phone").text(data["data"]["phone"]);
-    //         $("#sieuam").text(data["data"]["cometime"]);
-    //         $("#dusinh").text(data["data"]["calltime"]);
-    //       }
-    //       else {
-    //         // console.log(data["error"]);
-    //       }
-    //     })
-    // })
-
-    // setInterval(() => {
-    //   if (!refresh) {
-    //     refresh = 1
-    //     $.post(link + "sieuam",
-    //       { action: "change_data", keyword: $("#customer_key").val(), filter: g_filter, page: page, cnote: note_s },
-    //       (response, status) => {
-    //         var data = JSON.parse(response);
-    //         $("#disease_display").html(data["data"]["html"])
-    //         refresh = 0
-    //       })
-    //   }
-    // }, 10000);
+	suggest_init()
 </script>
 <!-- END: main -->

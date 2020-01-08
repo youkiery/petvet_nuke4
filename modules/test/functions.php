@@ -65,14 +65,45 @@ if ($check) {
 }
 
 function usgModal($lang_module) {
+  global $sort_type, $filter_type;
   $xtpl = new XTemplate("modal.tpl", PATH2);
   $doctor = getDoctorList();
   $xtpl->assign('lang', $lang_module);
+  $xtpl->assign('now', date('d/m/Y', time()));
+
+  $diseases = getDiseaseList();
+  foreach ($diseases as $key => $value) {
+    $xtpl->assign("id", $value["id"]);
+    $xtpl->assign("name", $value["name"]);
+    $xtpl->parse("main.disease");
+    $xtpl->parse("main.disease2");
+  }
+  
   foreach ($doctor as $data) {
     $xtpl->assign('doctor_value', $data['id']);
     $xtpl->assign('doctor_name', $data['name']);
     $xtpl->parse('main.doctor');
+    $xtpl->parse('main.doctor2');
+    $xtpl->parse('main.doctor3');
+    $xtpl->parse('main.doctor4');
   }
+
+  foreach ($sort_type as $key => $sort_name) {
+    $xtpl->assign("sort_name", $sort_name);
+    $xtpl->assign("sort_value", $key);
+    if ($key == $sort) $xtpl->assign("sort_check", "selected");
+    else $xtpl->assign("sort_check", "");
+    $xtpl->parse("main.sort");
+  }
+  
+  foreach ($filter_type as $filter_value) {
+    $xtpl->assign("time_value", $filter_value);
+    $xtpl->assign("time_name", $filter_value);
+    if ($filter_value == $filter) $xtpl->assign("time_check", "selected");
+    else $xtpl->assign("time_check", "");
+    $xtpl->parse("main.time");
+  }
+
   $xtpl->parse('main');
   return $xtpl->text();
 }

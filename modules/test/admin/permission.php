@@ -9,7 +9,7 @@
 
 if (!defined('NV_IS_QUANLY_ADMIN')) die('Stop!!!');
 $link = NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=";
-$module = array(1 => 'Vaccine', 'Siêu âm', 'Lưu bệnh', 'Spa', 'Thuốc', 'Hồ sơ điều trị');
+$module = array(1 => 'Vaccine', 'Siêu âm', 'Lưu bệnh', 'Spa', 'Thuốc', 'Hồ sơ điều trị', 'Quản lý siêu âm');
 
 $action = $nv_Request->get_string('action', 'post/get', "");
 if($action) {

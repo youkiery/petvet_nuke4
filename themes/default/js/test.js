@@ -18,7 +18,7 @@ function fetch(url, data) {
 	})	
 }
 
-function showMsg(msg) {
+function alert_msg(msg) {
 	$("#e_notify").show();
 	$("#e_notify").text(msg);
 	setTimeout(() => {
@@ -99,14 +99,15 @@ function addCustomer() {
           default:
             msg = "Không để trống tên và số điện thoại!";
         }
-        showMsg(msg);
+        alert_msg(msg);
       })
     }
   }
   else {
     msg = "Không để trống số điện thoại!";
   }
-  showMsg(msg);
+  console.log(msg);
+  alert_msg(msg);
 }
 
 function addPet() {
@@ -140,11 +141,11 @@ function addPet() {
           default:
             msg = "Lỗi mạng!";
         }
-        showMsg(msg);
+        alert_msg(msg);
       })
     }
   }
-  showMsg(msg);
+  alert_msg(msg);
 }
 
 function reloadPetOption(petlist) {
