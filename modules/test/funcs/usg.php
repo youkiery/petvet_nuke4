@@ -23,11 +23,15 @@ $filter = $nv_Request -> get_int('filter', 'get', 25);
 $page = $nv_Request -> get_int('page', 'get', 1);
 $status = $nv_Request -> get_int('status', 'get', 0);
 $sort = $nv_Request -> get_string('sort', 'get', '');
-$from = $nv_Request -> get_string('from', 'get', '');
-$to = $nv_Request -> get_string('to', 'get', '');
+// $from = $nv_Request -> get_string('from', 'get', '');
+// $to = $nv_Request -> get_string('end', 'get', '');
 $keyword = $nv_Request -> get_string('keyword', 'get', '');
+// $filter_data = array('status' => $status, 'type' => $type, 'sort' => $sort, 'keyword' => $keyword, 'filter' => $filter, 'from' => $from, 'end' => $to);
 $filter_data = array('status' => $status, 'type' => $type, 'sort' => $sort, 'keyword' => $keyword, 'filter' => $filter);
 $id = $nv_Request->get_string('id', 'post', "");
+// $tick = 0;
+// if (empty($from)) $tick += 1;
+// if (empty($to)) $tick += 2;
 
 // Hiển thị danh sách tab
 if (empty($status)) $status = 0;
@@ -50,10 +54,16 @@ foreach ($type_list as $key => $value) {
 	if ($key == $type) $xtpl->assign('type_button', 'btn-info');
 	else $xtpl->assign('type_button', 'btn-default');
 	$xtpl->assign('type', $key);
-	$xtpl->assign('type_link', $link . "&type=$key");
+	$filter_data['status'] = 0;
+	$filter_data['type'] = $key;
+	$filter_data['page'] = 1;
+	$xtpl->assign('type_link', "?" . http_build_query($filter_data));
 	$xtpl->assign('type_name', $value);
 	$xtpl->parse('main.type');
 }
+$filter_data['page'] = $page;
+$filter_data['type'] = $type;
+$filter_data['status'] = $status;
 
 $xtpl->assign("keyword", $keyword);
 $xtpl->assign("nv", $module_name);
@@ -74,38 +84,6 @@ $xtpl->assign("recall_date", date('d/m/Y', time() + 60 * 60 * 24 * 21));
 $xtpl->assign("dusinh", date("d/m/Y", strtotime($today) + $dusinh));
 
 if (empty($sort)) $sort = 0;
-$where = "";
-$tick = 0;
-if (empty($from)) $tick += 1;
-else {
-	$xtpl->assign("from", $from);
-	$from = totime($from);
-}
-if (empty($to)) $tick += 2;
-else {
-	$xtpl->assign("to", $to);
-	$to = totime($to);
-}
-
-switch ($tick) {
-	case 0:
-		if ($from > $to) {
-			$t = $from;
-			$from = $to;
-			$to = $t;
-		}
-		$where = "where calltime between $from and $to";
-		break;
-	case 1:
-		$where = "where calltime <= $to";
-	break;
-	case 2:
-		$where = "where calltime >= $from";
-		break;
-}
-if (empty($where)) {
-	$where = "where c.name like '%$keyword%' or phone like '%$keyword%' or b.name like '%$keyword%'";
-} else $where .= " and (c.name like '%$keyword%' or phone like '%$keyword%' or b.name like '%$keyword%')";
 
 foreach ($sort_type as $key => $sort_name) {
 	$xtpl->assign("sort_name", $sort_name);
@@ -123,16 +101,15 @@ foreach ($filter_type as $filter_value) {
 	$xtpl->parse("main.time");
 }
 
-// $sql = "select * from " .  VAC_PREFIX . "_usg a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id $order[$sort]";
-$revert = true;
-$tpage = $page;
-$from = $tpage * $filter;
-$to = $from + $filter;
-
 $action = $nv_Request->get_string('action', 'post', "");
 if ($action) {
 	$ret = array("status" => 0, "data" => array());
 	switch ($action) {
+		case 'overflow':
+			$data = $nv_Request->get_array('data', 'post');
+			$ret['status'] = 1;
+			$ret['html'] = overflowList($data);
+		break;
 		case 'change-status':
 			$data = $nv_Request->get_array('data', 'post');
 			$status_list = array(0 => "Chưa Gọi", "Đã Gọi", "Đã Siêu Âm");
@@ -173,7 +150,9 @@ if ($action) {
 			$data = $nv_Request->get_array('data', 'post');
 			$recall = $data['recall'] + 60 * 60 * 24 * 30;
 
-			$sql = 'update `'. VAC_PREFIX .'_usg` set status = 4, birth = '. $data['birth'] .', birthday = ' . totime($data['recall']) . ', recall = '. $recall .', cbtime = '. time() .' where id = ' . $data['id'];
+			$sql = "update `" . VAC_PREFIX . "_usg` set birth = $data[birth], birthday = " . totime($data['recall']) . ", firstvac = $recall, doctorid = $data[doctor], status = 4, cbtime = " . time() . " where id = $data[id]";
+			// die($sql);
+			// $sql = 'update `'. VAC_PREFIX .'_usg` set status = 4, birth = '. $data['birth'] .', birthday = ' . totime($data['recall']) . ', recall = '. $recall .', cbtime = '. time() .' where id = ' . $data['id'];
 
 			if ($db->query($sql)) {
 				$ret['status'] = 1;
@@ -193,25 +172,22 @@ if ($action) {
 			
 			$sql = "insert into `". VAC_PREFIX ."_pet` values(null, '$data[petname]', $pet[customerid], 0, 0, 0, 0)";
 			$sql2 = "insert into `". VAC_PREFIX ."_vaccine` values(null, '$pet[id]', $data[disease], ". time() .", ". totime($data['recall']) .", '', 0, 0, $data[doctor], ". time() .")";
-			$sql3 = 'update `'. VAC_PREFIX .'_usg` set vaccine = 2 where id = ' . $data['id'];
+			$sql3 = 'update `'. VAC_PREFIX .'_usg` set vaccine = 4 where id = ' . $data['id'];
 
 			if ($db->query($sql) && $db->query($sql2) && $db->query($sql3)) {
 				$ret['status'] = 1;
 				$ret['html'] = usgVaccineList();
 			}
 		break;
-		case 'xoasieuam':
-			$id = $nv_Request->get_string('id', 'post', "");
+		case 'remove-usg':
+			$id = $nv_Request->get_int('id', 'post', 0);
 			if (!empty($id)) {
 				$sql = "delete from " .  VAC_PREFIX . "_usg where id = $id";
-				// echo json_encode($ret);
-				// die();
-				$result = $db->query($sql);
 			
-				if ($result) {
-					$check = true;
+				if ($db->query($sql)) {
+					$ret['status'] = 1;
+					$ret['html'] = usgManageList();
 				}
-				echo 1;
 			}
 		break;
 		case 'usg_info':
@@ -390,6 +366,49 @@ include (NV_ROOTDIR . "/includes/header.php");
 echo nv_site_theme($contents);
 include (NV_ROOTDIR . "/includes/footer.php");
 
+function overflowList($data = array()) {
+	global $db;
+	$xtpl = new XTemplate("overflow-list.tpl", PATH2);
+
+	$tick;
+	if (empty($data['from'])) $tick += 1;
+	if (empty($data['end'])) $tick += 2;
+	switch ($tick) {
+		case 1:
+			$time = 'and calltime < ' . totime($data['end']);
+		break;
+		case 2:
+			$end = totime($data['end']) + 60 * 60 * 24 - 1;
+			$time = 'and calltime > ' . totime($data['from']);
+			break;
+		case 3:
+			$now = strtotime(date('Y/m/d'));
+			$from = $now - 60 * 60 * 24 * 30;
+			$end = $now + 60 * 60 * 24 - 1;
+			$time = 'and (calltime between ' . $from . ' and ' . $end . ')';
+			break;
+		case 0:
+			$end = totime($data['end']) + 60 * 60 * 24 - 1;
+			$time = 'and (calltime between ' . totime($data['from']) . ' and ' . $end . ')';
+			break;
+	}
+
+	$sql = 'select a.*, b.name as petname, c.name, c.phone from `'. VAC_PREFIX .'_usg` a inner join `'. VAC_PREFIX .'_pet` b on a.petid = b.id inner join `'. VAC_PREFIX .'_customer` c on b.customerid = c.id where a.status < 2 and (b.name like "%'. $data['keyword'].'%" or c.name like "%'. $data['keyword'].'%" or c.phone like "%'. $data['keyword'].'%") ' . $time . ' order by calltime desc';
+	$query = $db->query($sql);
+
+	$index = 1;
+	while ($row = $query->fetch()) {
+		$xtpl->assign('index', $index ++);
+		$xtpl->assign('petname', $row['petname']);
+		$xtpl->assign('name', $row['name']);
+		$xtpl->assign('phone', $row['phone']);
+		$xtpl->assign('recall', date('d/m/Y', $row['calltime']));
+		$xtpl->parse('main.row');
+	}
+	$xtpl->parse('main');
+	return $xtpl->text();
+}
+
 function usgRecallList() {
 	global $db, $filter, $lang_module, $order, $sort, $page, $status, $link, $filter_data;
 	$xtpl = new XTemplate("recall-list.tpl", PATH2);
@@ -408,10 +427,11 @@ function usgRecallList() {
 		$xtpl->assign('recall_name', $statusname);
 		$xtpl->parse('main.button');
 	}
-  
-	$where = "where (c.name like '%$keyword%' or c.phone like '%$keyword%')";
+
+	$where = "where (c.name like '%$filter_data[keyword]%' or c.phone like '%$filter_data[keyword]%')";
 
 	$sql = "select a.id, a.cometime, a.calltime, a.status, a.image, a.note, a.birthday, a.birth, a.expectbirth, a.doctorid, b.id as petid, b.name as petname, c.name as customer, c.phone from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.status = $status and a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id $where order by a.calltime desc";
+	// die($sql);
 
 	$query = $db->query($sql);
 
@@ -491,7 +511,7 @@ function usgVaccineList() {
   
 	// filter sql
 	
-	$where = "where (c.name like '%$keyword%' or c.phone like '%$keyword%') and a.vaccine = $status and a.birthday > 0 and (cbtime between $from and $end)";
+	$where = "where (c.name like '%$filter_data[keyword]%' or c.phone like '%$filter_data[keyword]%') and a.vaccine = $status and a.birthday > 0 and (cbtime between $from and $end)";
 	// list
 	$sql = "select a.id, a.birthday, a.birth, a.expectbirth, a.firstvac, a.recall, a.vaccine, a.doctorid, b.id as petid, b.name as petname, c.name as customer, c.phone from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id $where order by birthday";
 	$query = $db->query($sql);
@@ -541,11 +561,11 @@ function usgVaccineList() {
 }
 
 function usgManageList() {
-	global $db, $filter, $lang_module, $order, $sort, $page, $status, $link, $filter_data, $vacconfigv2, $where;
+	global $db, $filter, $lang_module, $order, $sort, $page, $status, $link, $filter_data, $vacconfigv2;
 	$xtpl = new XTemplate("manage-list.tpl", PATH2);
 	$xtpl->assign("lang", $lang_module);
 
-	$xtpl->assign("lang", $lang_module);	
+	$where = "where c.name like '%$filter_data[keyword]%' or phone like '%$filter[keyword]%' or b.name like '%$filter[keyword]%'";
 
 	$sql = "select a.id, a.cometime, a.calltime, a.birth, a.expectbirth, a.vaccine, a.recall, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone, d.name as doctor from " .  VAC_PREFIX . "_usg a inner join " .  VAC_PREFIX . "_pet b on a.petid = b.id inner join " .  VAC_PREFIX . "_customer c on b.customerid = c.id inner join " .  VAC_PREFIX . "_doctor d on a.doctorid = d.id $where $order[$sort] limit $filter offset " . ($page - 1) * $filter;
 	$query = $db->query($sql);

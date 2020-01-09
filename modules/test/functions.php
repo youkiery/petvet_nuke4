@@ -65,9 +65,14 @@ if ($check) {
 }
 
 function usgModal($lang_module) {
-  global $sort_type, $filter_type;
+  global $sort_type, $filter_type, $filter_data;
   $xtpl = new XTemplate("modal.tpl", PATH2);
   $doctor = getDoctorList();
+  $xtpl->assign('keyword', $filter_data['keyword']);
+  $xtpl->assign('filter' . $filter_data['filter'], 'selected');
+  $xtpl->assign('overflow_content', overflowList());
+  // $xtpl->assign('from', $filter_data['from']);
+  // $xtpl->assign('end', $filter_data['end']);
   $xtpl->assign('lang', $lang_module);
   $xtpl->assign('now', date('d/m/Y', time()));
 

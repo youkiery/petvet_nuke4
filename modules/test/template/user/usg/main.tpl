@@ -14,6 +14,12 @@
 {modal}
 
 <div class="form-group" style="float: right;">
+	<button class="btn btn-info" onclick="overflowModal()">
+		Danh sách quá ngày
+	</button>
+	<!-- <button class="btn btn-info" onclick="filterModal()">
+		Lọc danh sách
+	</button> -->
 	<button class="btn btn-info" onclick="insertModal()">
 		Thêm phiếu siêu âm
 	</button>
@@ -47,18 +53,26 @@
 	var pet_note = document.getElementById("pet_note");
 	var suggest_name = document.getElementById("customer_name_suggest");
 	var suggest_phone = document.getElementById("customer_phone_suggest");
+	var esc = encodeURIComponent;
+
 	var global = {
 		type: {select_status},
 		id: 0,
 		recall: '{recall_date}'
 	}
 
-	$('#cometime2, #calltime2, #calltime, #ngaysieuam, #recall, #birth, #firstvac, #from, #to, .date').datepicker({
-		format: 'dd/mm/yyyy'
+	$('.date').datepicker({
+		format: 'dd-mm-yyyy'
 	});
 
 	function insertModal() {
 		$("#insert-modal").modal('show')
+	}
+	function filterModal() {
+		$("#filter-modal").modal('show')
+	}
+	function overflowModal() {
+		$("#overflow-modal").modal('show')
 	}
 
 	$("#vaccine_status").change((e) => {
@@ -77,20 +91,36 @@
 		}
 	})
 
-	function xoasieuam(id) {
+	function removeUsg(id) {
 		var answer = confirm("Xóa bản ghi này?");
 		if (answer) {
 			$.post(
 				"",
-				{ action: "xoasieuam", id: id },
-				(data, status) => {
-					data = JSON.parse(data);
-					if (data) {
-						window.location.reload()
-					}
+				{ action: "remove-usg", id: id },
+				(response, status) => {
+					checkResult(response, status).then(data => {
+						$("#html_content").html(data['html'])
+					})
 				}
 			)
 		}
+	}
+
+	function overflowFilter() {
+		$.post(
+			"",
+			{ action: "overflow", data: {
+					keyword: $("#overflow-keyword").val(),
+					from: $("#overflow-from").val(),
+					end: $("#overflow-end").val()
+				} 
+			},
+			(response, status) => {
+				checkResult(response, status).then(data => {
+					$("#overflow-content").html(data['html'])
+				})
+			}
+		)
 	}
 
 	function update_usg(e) {
@@ -170,6 +200,7 @@
 		sdata = {
 			id: global.id,
 			birth: $("#recall-birth").val(),
+			doctor: $("#recall-doctor").val(),
 			recall: $("#recall-recall").val()
 		}
 		$.post(
@@ -187,7 +218,7 @@
 	}
 
 	function changeVaccineStatus(id, type) {
-		if ((global['type'] == 0 && type == 0) || (global['type'] == 2 && type == 1) || (global['type'] == 2)) {
+		if (global['type'] == 0 && type == 0) {
 			// alert_msg('');
 		}
 		else if (global['type'] == 2 && type == 1) {
@@ -241,6 +272,22 @@
 				})
 			}
 		)
+	}
+
+	function filterSubmit() {
+		keyList = (window.location.search.slice(1, window.location.search.length)).split('&')
+		http = {}
+		keyList.forEach(keystring => {
+			data = keystring.split('=')
+			http[data[0]] = data[1]
+		});
+		$(".filter").each((index, item) => {
+			http[item.getAttribute('name')] = item.value
+			// http[item.getAttribute('name')] = item.value.replace(/\//g, '-')
+		})
+		
+		http = window.location.origin + window.location.pathname + '?' + Object.keys(http).map(k => esc(k) + '=' + esc(http[k])).join('&')
+		window.location.replace(http)
 	}
 
 	function update(e, id) {
