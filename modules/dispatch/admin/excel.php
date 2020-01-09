@@ -66,6 +66,10 @@ if (!empty($action)) {
           'file' => $row['Công văn đính kèm'], // text
           'dedo' => $row['Phòng ban nhận']
         );
+        // var_dump($array);die();
+        foreach ($array as $key => $value) {
+          $array[$key] = preg_replace('/^\p{Z}+|\p{Z}+$/u', '', $value);
+        }
 
         if (!($array['date_iss'] = parseTime($array['date_iss']))) {
           $error[] = 'Ngày ban hành sai';
@@ -114,7 +118,12 @@ if (!empty($action)) {
         $sql = 'select * from `'. PREFIX .'_signer` where lower(name) like "%' . mb_strtolower($array['from_signer']) . '%"';
         $query = $db->query($sql);
         if (empty($row = $query->fetch())) {
-          $error[] = 'Người ký không tồn tại';
+          $sql = 'select * from `'. PREFIX .'_signer` order by weight limit 1';
+          $query = $db->query($sql);
+          $signer = $query->fetch();
+          $sql = 'insert into `'. PREFIX .'_signer` values(null, "'. $array['from_signer'] .'", "", '. ($signer['weight'] + 1) .', 1)';
+          $db->query($sql);
+          $array['from_signer'] = $db->lastInsertId();
         }
         else {
           $array['from_signer'] = $row['id'];

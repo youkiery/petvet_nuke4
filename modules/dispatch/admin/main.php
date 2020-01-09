@@ -175,7 +175,7 @@ if (!$all_page) {
     $error = 'Không có dữ liệu như bạn tìm';
 }
 
-$sql .= " ORDER BY a.from_time DESC";
+$sql .= " ORDER BY a.id DESC";
 
 $page = $nv_Request->get_int('page', 'get', 0);
 $per_page = 30;
