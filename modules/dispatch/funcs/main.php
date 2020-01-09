@@ -333,7 +333,7 @@ if (!$all_page) {
   $error = $lang_module['search_empty'];
 }
 
-$sql .= " ORDER BY from_time DESC";
+$sql .= " ORDER BY excode desc, from_time DESC";
 
 $page = $nv_Request->get_int('page', 'get', 0);
 $per_page = 30;
