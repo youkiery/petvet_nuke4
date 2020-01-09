@@ -321,6 +321,18 @@ function getDepartList() {
   return $list;
 }
 
+function getDepartidList() {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'depart`');
+  $list = array();
+
+  while($row = $query->fetch()) {
+    $list []= $row['id'];
+  }
+  return $list;
+}
+
 function checkMaterialName($name, $id = 0) {
   global $db;
 

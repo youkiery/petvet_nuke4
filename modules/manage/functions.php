@@ -97,11 +97,13 @@ function deviceList() {
   //   }
   // }
 
-  // $sql = 'select * from `'. $db_config['prefix'] .'_users` where userid = ' . $user_info['userid'];
-  // $query = $db->query($sql);
-  // $user = $query->fetch();
-  // $group = explode(',', $user['in_groups']);
-  $group = array();
+  $sql = 'select * from `'. $db_config['prefix'] .'_users` where userid = ' . $user_info['userid'];
+  $query = $db->query($sql);
+  $user = $query->fetch();
+  $group = explode(',', $user['in_groups']);
+  // $group = array();
+  $list = array();
+  $xtra = '';
 
   if (!in_array('1', $group)) {
     // check if is allowed
@@ -110,19 +112,20 @@ function deviceList() {
     $devicon = $query->fetch();
 
     if ($devicon['level'] < 3) {
-      $devicon['depart'] = json_decode($devicon['depart']);
-      $list = array();
+      $list = json_decode($devicon['depart']);
       // var_dump($devicon);die(); 
-      if (count($devicon['depart'])) {
-        foreach ($devicon['depart'] as $value) {
-          $list[]= 'depart like \'%"'. $value .'"%\'';
-        }
-        $xtra = ' where ('. implode(' or ', $list) .') ';
-      }
-      else {
-        $xtra = ' where 0';
-      }
     } 
+    else $list = getDepartidList();
+  }
+  else $list = getDepartidList();
+
+  if (!empty($filter['depart']) && count($filter['depart'])) {
+    $query_list = array();
+    foreach ($filter['depart'] as $departid) {
+      if (in_array($departid, $list)) $query_list[] = 'depart like \'%"'. $departid .'"%\'';
+    }
+    if (count($query_list)) $xtra = 'where ('. implode(' or ', $query_list) .')';
+    else $xtra = 'where 0';
   }
 
   if (!empty($filter['keyword'])) {
@@ -131,7 +134,9 @@ function deviceList() {
   }
 
   // die('select count(*) as count from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit']);
-  $query = $db->query('select count(*) as count from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit']);
+  $sql = 'select count(*) as count from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit'];
+  $query = $db->query($sql);
+
   $count = $query->fetch();
   $number = $count['count'];
   // die('select * from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
