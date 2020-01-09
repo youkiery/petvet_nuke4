@@ -333,12 +333,11 @@ if (!$all_page) {
   $error = $lang_module['search_empty'];
 }
 
-$sql .= " ORDER BY excode desc, from_time DESC";
+$sql .= " ORDER BY from_time desc, excode DESC";
 
-$page = $nv_Request->get_int('page', 'get', 0);
+$page = $nv_Request->get_int('page', 'get', 1);
 $per_page = 30;
-$sql2 = "SELECT a.*, b.id as departid, b.title as depart " . $sql . " LIMIT " . $page . ", " . $per_page;
-// die($sql2);
+$sql2 = "SELECT a.*, b.id as departid, b.title as depart " . $sql . " LIMIT " . $per_page . " offset " . ($page - 1) * $per_page;
 $query2 = $db->query($sql2);
 
 $array = array();
