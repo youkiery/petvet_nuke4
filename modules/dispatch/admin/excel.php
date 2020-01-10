@@ -64,7 +64,11 @@ if (!empty($action)) {
           'from_org' => $row['Đơn vị soạn'], // text
           'date_die' => $row['Ngày hết hiệu lực'],
           'file' => $row['Công văn đính kèm'], // text
-          'dedo' => $row['Phòng ban nhận']
+          'dedo' => $row['Phòng ban nhận'],
+          'dedo1' => $row['Phòng ban nhận 1'],
+          'dedo2' => $row['Phòng ban nhận 2'],
+          'dedo3' => $row['Phòng ban nhận 3'],
+          'dedo4' => $row['Phòng ban nhận 4'],
         );
         // var_dump($array);die();
         foreach ($array as $key => $value) {
@@ -169,7 +173,17 @@ if (!empty($action)) {
             
           if ($db->query($sql)) {
             $id = $db->lastInsertId();
-            $dedo = explode(', ', $array['dedo']);
+            if (!empty($array['dedo'])) {
+              $dedo = explode(', ', $array['dedo']);
+            }
+            else {
+              $dedo = array();
+              if (!empty($array['dedo1'])) $dedo[]= $array['dedo1'];
+              if (!empty($array['dedo2'])) $dedo[]= $array['dedo2'];
+              if (!empty($array['dedo3'])) $dedo[]= $array['dedo3'];
+              if (!empty($array['dedo4'])) $dedo[]= $array['dedo4'];
+            }
+    
             foreach ($dedo as $dedo_name) {
               $sql = 'select * from ' . NV_PREFIXLANG . '_' . $module_data . '_departments where title like "%'. trim($dedo_name) .'%"';
               $dedo_query = $db->query($sql);
