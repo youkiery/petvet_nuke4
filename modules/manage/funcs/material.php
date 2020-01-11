@@ -16,16 +16,65 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
-    // case 'excel':
-    //   $xco = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
-    //   $title = array('STT', 'Ngày nhập', 'Ngày xuất', 'Số lượng nhập', 'Số lượng xuất', 'Tồn', 'Ghi chú');
+    case 'report-excel':
+      $xco = array(1 => 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
+      $title = array('STT', 'Ngày nhập', 'Ngày xuất', 'Nhập', 'Xuất', 'Tồn', 'Ghi chú');
     //   // Tìm kiếm số lượng tồn kho trước 1 thời điểm
 
-    //   include NV_ROOTDIR . '/PHPExcel/IOFactory.php';
-    //   $fileType = 'Excel2007'; 
-    //   $objPHPExcel = PHPExcel_IOFactory::load(NV_ROOTDIR . '/excel.xlsx');
+      include NV_ROOTDIR . '/PHPExcel/IOFactory.php';
+      $fileType = 'Excel2007'; 
+      $objPHPExcel = PHPExcel_IOFactory::load(NV_ROOTDIR . '/assets/excel-material-template.xlsx');
+
+      $i = 1;
+      $j = 1;
+      foreach ($title as $key => $value) {
+        $objPHPExcel
+        ->setActiveSheetIndex(0)
+        ->setCellValue($xco[$j++] . $i, $value);
+      }
     
-    //   $id = $nv_Request->get_int('id', 'post');
+      $id = $nv_Request->get_int('id', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
+      if (empty($filter['start'])) $filter['start'] = strtotime(date('Y/m/d', time() - (date('d') - 1) * 60 * 60 * 24));
+      else $filter['start'] = totime($filter['start']);
+      if (empty($filter['end'])) $filter['end'] = strtotime(date('Y/m/d')) + 60 * 60 * 24 - 1;
+      else $filter['end'] = totime($filter['end']) + 60 * 60 * 24 - 1;
+    
+      $sql = 'select * from ((select a.number, b.export_date as time, 0 as type from `'. PREFIX .'export_detail` a inner join `'. PREFIX .'export` b on a.item_id = '. $id .' and a.export_id = b.id) union (select a.number, b.import_date as time, 1 as type from `'. PREFIX .'import_detail` a inner join `'. PREFIX .'import` b on a.item_id = '. $id .' and a.import_id = b.id)) as a where time between '. $filter['start'] .' and '. $filter['end'] .' order by time desc';
+      $query = $db->query($sql);
+      
+      $summary = array('import' => 0, 'export' => 0);
+      $i = 4;
+      $index = 1;
+      while ($row = $query->fetch()) {
+        $j = 1;
+        $a = ''; $b = ''; $c = ''; $d = '';
+        if ($row['type'] == 0) {
+          $summary['export'] += $row['number'];
+          $b = date('d/m/Y', $row['time']);
+          $d = $row['number'];
+        }
+        else {
+          $summary['import'] += $row['number'];
+          $a = date('d/m/Y', $row['time']);
+          $c = $row['number'];
+        }
+
+        $objPHPExcel
+        ->setActiveSheetIndex(0)
+        ->setCellValue($xco[$j++] . $i, $index++)
+        ->setCellValue($xco[$j++] . $i, $a)
+        ->setCellValue($xco[$j++] . $i, $b)
+        ->setCellValue($xco[$j++] . $i, $c)
+        ->setCellValue($xco[$j++] . $i, $d);
+        $i++;
+      }
+
+      $objPHPExcel
+      ->setActiveSheetIndex(0)
+      ->setCellValue($xco[4] . 2, $summary['import'])
+      ->setCellValue($xco[5] . 2, $summary['export'])
+      ->setCellValue($xco[6] . 2, $summary['import'] - $summary['export']);
 
       // $sql = 'select * from '
     //   $filter = $nv_Request->get_array('filter', 'post');
@@ -60,9 +109,10 @@ if (!empty($action)) {
     //   ->setCellValue($xco[$j++] . $i, $value);
 
       $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-      $objWriter->save(NV_ROOTDIR . '/excel-output.xlsx');
+      $objWriter->save(NV_ROOTDIR . '/assets/excel-material.xlsx');
       $objPHPExcel->disconnectWorksheets();
       unset($objWriter, $objPHPExcel);
+      $result['status'] = 1;
     break;
     case 'insert-material':
       $data = $nv_Request->get_array('data', 'post');

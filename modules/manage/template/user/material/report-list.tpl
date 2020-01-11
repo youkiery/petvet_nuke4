@@ -1,4 +1,7 @@
 <!-- BEGIN: main -->
+<div class="form-group">
+  Phiếu xuất nhập từ ngày {from} đến ngày {end}
+</div>
 <table class="table table-bordered">
   <thead>
     <tr>
@@ -22,7 +25,7 @@
         <button class="btn btn-info btn-xs" onclick="report({id})">
           Xem báo cáo
         </button>
-        <button class="btn btn-info btn-xs" onclick="report({id})">
+        <button class="btn btn-info btn-xs" onclick="reportExcel({id})">
           Xuất excel
         </button>
       </td>

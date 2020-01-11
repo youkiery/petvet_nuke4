@@ -126,6 +126,18 @@
     )
   }
 
+  function reportExcel(id) {
+    $.post(
+      "",
+      { action: 'report-excel', id: id, filter: checkFilterReport() },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          window.open('/assets/excel-material.xlsx?t=' + new Date())
+        })
+      }
+    )
+  }
+
   function goReportPage(page) {
     global['page']['report'] = page
     $.post(
