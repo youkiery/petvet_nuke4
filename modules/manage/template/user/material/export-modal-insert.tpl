@@ -24,7 +24,7 @@
                 <th class="cell-center"> Tên thiết bị </th>
                 <th class="cell-center"> Ngày hết hạn </th>
                 <th class="cell-center"> Số lượng </th>
-                <th class="cell-center"> Chất lượng </th>
+                <th class="cell-center"> Ghi chú </th>
               </tr>
             </thead>
           </table>

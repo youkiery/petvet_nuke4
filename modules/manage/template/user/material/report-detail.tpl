@@ -6,18 +6,27 @@
       <th> Loại phiếu </th>
       <th> Số lượng </th>
       <th> Thời gian </th>
+      <th> Ghi chú </th>
     </tr>
   </thead>
-  <!-- BEGIN: row -->
   <tbody>
-    <tr>
+    <!-- BEGIN: row -->
+    <tr class="{color}">
       <td> {index} </td>
       <td> {type} </td>
       <td> {number} </td>
       <td> {time} </td>
+      <td> {note} </td>
+    </tr>
+    <!-- END: row -->
+    <tr>
+      <td></td>
+      <td></td>
+      <td> {total} </td>
+      <td></td>
+      <td></td>
     </tr>
   </tbody>
-  <!-- END: row -->
 </table>
 {nav}
 <!-- END: main -->

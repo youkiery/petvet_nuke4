@@ -40,7 +40,7 @@ if (!empty($action)) {
       if (empty($filter['end'])) $filter['end'] = strtotime(date('Y/m/d')) + 60 * 60 * 24 - 1;
       else $filter['end'] = totime($filter['end']) + 60 * 60 * 24 - 1;
     
-      $sql = 'select * from ((select a.number, b.export_date as time, 0 as type from `'. PREFIX .'export_detail` a inner join `'. PREFIX .'export` b on a.item_id = '. $id .' and a.export_id = b.id) union (select a.number, b.import_date as time, 1 as type from `'. PREFIX .'import_detail` a inner join `'. PREFIX .'import` b on a.item_id = '. $id .' and a.import_id = b.id)) as a where time between '. $filter['start'] .' and '. $filter['end'] .' order by time desc';
+      $sql = 'select * from ((select a.number, b.export_date as time, 0 as type, a.note from `'. PREFIX .'export_detail` a inner join `'. PREFIX .'export` b on a.item_id = '. $id .' and a.export_id = b.id) union (select a.number, b.import_date as time, 1 as type, a.note from `'. PREFIX .'import_detail` a inner join `'. PREFIX .'import` b on a.item_id = '. $id .' and a.import_id = b.id)) as a where time between '. $filter['start'] .' and '. $filter['end'] .' order by time desc';
       $query = $db->query($sql);
       
       $summary = array('import' => 0, 'export' => 0);
@@ -66,7 +66,8 @@ if (!empty($action)) {
         ->setCellValue($xco[$j++] . $i, $a)
         ->setCellValue($xco[$j++] . $i, $b)
         ->setCellValue($xco[$j++] . $i, $c)
-        ->setCellValue($xco[$j++] . $i, $d);
+        ->setCellValue($xco[$j++] . $i, $d)
+        ->setCellValue($xco[$j++] . $i, $row['note']);
         $i++;
       }
 
@@ -155,7 +156,7 @@ if (!empty($action)) {
           // check item, status, expiry
           foreach ($data as $row) {
             $row['date'] = totimev2($row['date']);
-            $sql = 'insert into `'. PREFIX .'import_detail` (import_id, item_id, number, date, note) values('. $id .', '. $row['id'] .', '. $row['number'] .', '. $row['date'] .', "")';
+            $sql = 'insert into `'. PREFIX .'import_detail` (import_id, item_id, number, date, note) values('. $id .', '. $row['id'] .', '. $row['number'] .', '. $row['date'] .', "'. $row['status'] .'")';
             $sql2 = 'update `'. PREFIX .'material` set number = number + '. $row['number'] .' where id = ' . $row['id'];
             if ($db->query($sql) && $db->query($sql2)) {
               $count ++;
@@ -272,7 +273,7 @@ if (!empty($action)) {
           // check item, status, expiry
           foreach ($data as $row) {
             $row['date'] = totimev2($row['date']);
-            $sql = 'insert into `'. PREFIX .'export_detail` (export_id, item_id, number, note) values('. $id .', '. $row['id'] .', '. $row['number'] .', "")';
+            $sql = 'insert into `'. PREFIX .'export_detail` (export_id, item_id, number, note) values('. $id .', '. $row['id'] .', '. $row['number'] .', "'. $row['status'] .'")';
             $sql2 = 'update `'. PREFIX .'material` set number = number - '. $row['number'] .' where id = ' . $row['id'];
             if ($db->query($sql) && $db->query($sql2)) {
               $count ++;

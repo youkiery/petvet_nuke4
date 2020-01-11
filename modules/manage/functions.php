@@ -253,17 +253,28 @@ function reportDetail() {
   if (empty($filter['end'])) $filter['end'] = strtotime(date('Y/m/d')) + 60 * 60 * 24 - 1;
   else $filter['end'] = totime($filter['end']) + 60 * 60 * 24 - 1;
 
-  $sql = 'select * from ((select a.number, b.export_date as time, 0 as type from `'. PREFIX .'export_detail` a inner join `'. PREFIX .'export` b on a.item_id = '. $id .' and a.export_id = b.id) union (select a.number, b.import_date as time, 1 as type from `'. PREFIX .'import_detail` a inner join `'. PREFIX .'import` b on a.item_id = '. $id .' and a.import_id = b.id)) as a where time between '. $filter['start'] .' and '. $filter['end'] .' order by time desc';
+  $sql = 'select * from ((select a.number, b.export_date as time, 0 as type, a.note from `'. PREFIX .'export_detail` a inner join `'. PREFIX .'export` b on a.item_id = '. $id .' and a.export_id = b.id) union (select a.number, b.import_date as time, 1 as type, a.note from `'. PREFIX .'import_detail` a inner join `'. PREFIX .'import` b on a.item_id = '. $id .' and a.import_id = b.id)) as a where time between '. $filter['start'] .' and '. $filter['end'] .' order by time desc';
   $query = $db->query($sql);
   $index = 1;
 
+  $total = 0;
   while ($row = $query->fetch()) {
+    if ($row['type']) {
+      $xtpl->assign('color', 'greenbg');
+      $total += $row['number'];
+    }
+    else {
+      $xtpl->assign('color', 'redbg');
+      $total -= $row['number'];
+    }
     $xtpl->assign('index', $index ++);
     $xtpl->assign('number', $row['number']);
     $xtpl->assign('type', $type_list[$row['type']]);
     $xtpl->assign('time', date('d/m/Y H:i', $row['time']));
+    $xtpl->assign('note', $row['note']);
     $xtpl->parse('main.row');
   }
+  $xtpl->assign('total', $total);
   $xtpl->parse('main');
   return $xtpl->text();
 }
