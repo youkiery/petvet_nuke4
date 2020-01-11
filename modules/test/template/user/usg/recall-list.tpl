@@ -5,7 +5,13 @@
 		{recall_name}
 	</a>
 	<!-- END: button -->
+	<div style="float: right;">
+		<button class="btn btn-info" onclick="noteToggle()">
+			Ẩn/hiện ghi chú
+		</button>
+	</div>
 </div>
+<div style="clear: both;"></div>
 <table class="table table-bordered table-hover">
 	<thead>
 		<tr>
@@ -71,17 +77,11 @@
 				</span>
 			</td>
 		</tr>
-		<tr class="note" style="display: {cnote}" id="note_{vacid}">
-			<td colspan="9" id="note_v{vacid}">
+		<tr class="note" style="display: none;" id="note_{id}">
+			<td colspan="9" id="note_v{id}">
 				{note}
-				<button class="btn btn-info right" onclick="deadend({vacid})">
-					{lang.deadend}
-				</button>
-				<button class="btn btn-info right" onclick="miscustom({vacid})">
-					{lang.miscustom}
-				</button>
 				<img class="mini-icon right" src="/themes/default/images/vaccine/note_add.png" alt="thêm ghi chú"
-					onclick="editNote({vacid})">
+					onclick="editNote({id})">
 			</td>
 		</tr>
 		<!-- END: row -->

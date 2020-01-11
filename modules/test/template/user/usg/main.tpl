@@ -91,6 +91,26 @@
 		}
 	})
 
+	function noteToggle() {
+		$(".note").toggle()
+	}
+
+	function editNote(id) {
+		var answer = prompt("Ghi chú: ", trim($("#note_v" + id).text()));
+		if (answer) {
+			$.post(
+				"",
+				{action: "edit-note", note: answer, id: id},
+				(response, status) => {
+					checkResult(response, status).then(data => {
+						$("#note_v" + id).text(answer);
+					})
+				}
+			)
+		}
+	}
+
+
 	function removeUsg(id) {
 		var answer = confirm("Xóa bản ghi này?");
 		if (answer) {

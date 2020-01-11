@@ -105,6 +105,15 @@ $action = $nv_Request->get_string('action', 'post', "");
 if ($action) {
 	$ret = array("status" => 0, "data" => array());
 	switch ($action) {
+		case 'edit-note':
+			$note = $nv_Request->get_string('note', 'post', '');
+			$id = $nv_Request->get_int('id', 'post', '');
+
+			$sql = 'update `'. VAC_PREFIX .'_usg` set note = "'. $note .'" where id = ' . $id;
+			if ($db->query($sql)) {
+				$ret['status'] = 1;
+			}
+		break;
 		case 'overflow':
 			$data = $nv_Request->get_array('data', 'post');
 			$ret['status'] = 1;
@@ -373,27 +382,35 @@ function overflowList($data = array()) {
 	$tick;
 	if (empty($data['from'])) $tick += 1;
 	if (empty($data['end'])) $tick += 2;
+	$msg = '';
 	switch ($tick) {
 		case 1:
-			$time = 'and calltime < ' . totime($data['end']);
+			$end = totime($data['end']) + 60 * 60 * 24 - 1;
+			$time = 'and calltime < ' . $end;
+			$msg = 'Danh sách trước ngày ' . date('d/m/Y', totime($data['end']));
 		break;
 		case 2:
-			$end = totime($data['end']) + 60 * 60 * 24 - 1;
+			$from = totime($data['from']);
 			$time = 'and calltime > ' . totime($data['from']);
+			$msg = 'Danh sách sau ngày ' . date('d/m/Y', $from);
 			break;
 		case 3:
 			$now = strtotime(date('Y/m/d'));
 			$from = $now - 60 * 60 * 24 * 30;
 			$end = $now + 60 * 60 * 24 - 1;
 			$time = 'and (calltime between ' . $from . ' and ' . $end . ')';
+			$msg = 'Danh sách từ ngày ' . date('d/m/Y', $from) . ' đến ngày ' . date('d/m/Y', totime($data['end']));
 			break;
 		case 0:
 			$end = totime($data['end']) + 60 * 60 * 24 - 1;
 			$time = 'and (calltime between ' . totime($data['from']) . ' and ' . $end . ')';
+			$msg = 'Danh sách từ ngày ' . date('d/m/Y', totime($data['from'])) . ' đến ngày ' . date('d/m/Y', totime($data['end']));
 			break;
 	}
+	$xtpl->assign('msg', $msg);
 
 	$sql = 'select a.*, b.name as petname, c.name, c.phone from `'. VAC_PREFIX .'_usg` a inner join `'. VAC_PREFIX .'_pet` b on a.petid = b.id inner join `'. VAC_PREFIX .'_customer` c on b.customerid = c.id where a.status < 2 and (b.name like "%'. $data['keyword'].'%" or c.name like "%'. $data['keyword'].'%" or c.phone like "%'. $data['keyword'].'%") ' . $time . ' order by calltime desc';
+	// die($sql);
 	$query = $db->query($sql);
 
 	$index = 1;
@@ -403,8 +420,10 @@ function overflowList($data = array()) {
 		$xtpl->assign('name', $row['name']);
 		$xtpl->assign('phone', $row['phone']);
 		$xtpl->assign('recall', date('d/m/Y', $row['calltime']));
-		$xtpl->parse('main.row');
+		$xtpl->parse('main.m1.row');
 	}
+	if ($index == 1) $xtpl->parse('main.m2');
+	else $xtpl->parse('main.m1');
 	$xtpl->parse('main');
 	return $xtpl->text();
 }
