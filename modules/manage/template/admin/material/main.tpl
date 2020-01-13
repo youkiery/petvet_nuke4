@@ -147,19 +147,22 @@
     name = $("#material-name").val()
     number = $("#material-number").val()
     unit = $("#material-unit").val()
+    bound = $("#material-bound").val()
     type = $("[name=type]")[1].checked
     type = (type ? 1 : 0)
     description = $("#material-description").val()
 
     if (!name.length) alert_msg('Nhập tên trước khi thêm')
     if (!number.length) number = 0
+    if (!bound) bound = 0
 
     return {
       name: name,
       number: number,
       unit: unit,
       type: type,
-      description: description
+      description: description,
+      bound: bound
     }
   }
 
@@ -433,6 +436,7 @@
           $("#material-number").val(data['data']['number'])
           $("#material-unit").val(data['data']['unit'])
           $("#material-description").val(data['data']['description'])
+          $("#material-bound").val(data['data']['bound'])
           $("#material-type-" + data['data']['type']).prop('checked', true)
           $("#insert-material").hide()
           $("#edit-material").show()

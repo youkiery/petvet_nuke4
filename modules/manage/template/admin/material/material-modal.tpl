@@ -29,6 +29,14 @@
               <label> <input name="type" type="radio" id="material-type-1"> Hóa chất </label>
             </div>
           </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-6"> Giới hạn </label>
+            <div class="col-sm-18">
+              <input type="text" class="form-control" id="material-bound">
+            </div>
+          </div>
+
           <div class="form-group">
             <label class="control-label col-sm-6"> Mô tả </label>
             <div class="col-sm-18">
