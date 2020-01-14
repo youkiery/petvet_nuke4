@@ -897,7 +897,7 @@
       for (const key in data['ig']) {
         if (data['ig'].hasOwnProperty(key)) {
           const element = data['ig'][key];
-          temp += '<p><div style="width: 80%; display: inline-block;">&emsp;- Chỉ tiêu: '+key+'</div><span style="width: 20%;">/<div style="width: 20pt; text-align: center; display: inline-block">'+element['number']+'</div> mẫu.</span> </p>'
+          temp += '<p><div style="width: 80%; display: inline-block;">&emsp;- Chỉ tiêu: '+key+'</div><span style="width: 20%;"><div style="width: 20pt; text-align: center; display: inline-block">'+element['code']+'</div> /<div style="width: 20pt; text-align: center; display: inline-block">'+element['number']+'</div> mẫu.</span> </p>'
         }
       }
       html = html.replace('(xcontent)', temp)
