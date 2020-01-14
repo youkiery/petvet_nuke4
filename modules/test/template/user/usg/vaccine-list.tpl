@@ -7,7 +7,7 @@
 	<!-- END: button -->
 </div>
 
-<table class="table table-bordered table-striped">
+<table class="table table-bordered table-hover">
 	<thead>
 		<tr>
 			<th>
@@ -34,7 +34,7 @@
 		</tr>
 	</thead>
 	<!-- BEGIN: list -->
-	<tr style="text-transform: capitalize;" img="{image}" id="{id}">
+	<tr style="text-transform: capitalize;" class="{bgcolor}" id="{id}">
 		<td>
 			{index}
 		</td>

@@ -1,105 +1,90 @@
 <!-- BEGIN: main -->
-<div id="usgupdate" class="modal fade" role="dialog">
+<div id="update-modal" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vaccine/contact_edit.png')"
-                    class="vac_icon" onclick="update_customer(g_customerid)">
-                    <img src="/themes/default/images/vaccine/trans.png" title="Sửa khách hàng">
-                </div>
-                <div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/congnghe/images/vaccine/pet_edit.png')"
-                    class="vac_icon" tooltip="Sửa thú cưng" onclick="update_pet(g_petid, g_pet)">
-                    <img src="/themes/default/images/vaccine/trans.png" title="Thêm thú cưng">
-                </div>
-            </div>
             <div class="modal-body">
-                <form onsubmit="return update_usg(event)" autocomplete="off">
-                    <div>
-                        {lang.usg_update}
-                        <span id="e_notify" style="display: none;"></span>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-8">
-                            <label>{lang.usgcome}</label>
-                            <div class="input-group" data-provide="datepicker">
-                                <input type="text" class="form-control date" id="cometime2" value="{now}">
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-8">
-                            <label>{lang.usgcall}</label>
-                            <div class="input-group" data-provide="datepicker">
-                                <input type="text" class="form-control date" id="calltime2" value="{now}">
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-8">
-                            <label>{lang.exbirth}</label>
-                            <input class="form-control" id="exbirth" type="number">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            <label>{lang.birthday}</label>
-                            <div class="input-group" data-provide="datepicker">
-                                <input type="text" class="form-control date" id="birth" value="{now}">
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-12">
-                            <label>{lang.birth}</label>
-                            <input class="form-control" id="birthnumber" type="number">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-8">
-                            <label>{lang.firstvac}</label>
-                            <div class="input-group" data-provide="datepicker">
-                                <input type="text" class="form-control date" id="firstvac" value="{now}">
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-8">
-                            <label>{lang.vaccine}</label>
-                            <select class="form-control" id="vaccine_status"> </select>
-                        </div>
-                        <div class="form-group col-md-8">
-                            <label>{lang.recall}</label>
-                            <div class="input-group" data-provide="datepicker">
-                                <input type="text" class="form-control date" id="recall" value="{now}">
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th"></span>
-                                </div>
+                <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
+
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <label>{lang.usgcome}</label>
+                        <div class="input-group" data-provide="datepicker">
+                            <input type="text" class="form-control date" id="cometime2" value="{now}">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>{lang.doctor}</label>
-                        <select class="form-control" name="doctor" id="doctor2">
-                            <!-- BEGIN: doctor3 -->
-                            <option value="{doctor_value}">{doctor_name}</option>
-                            <!-- END: doctor3 -->
-                        </select>
+                    <div class="form-group col-md-8">
+                        <label>{lang.usgcall}</label>
+                        <div class="input-group" data-provide="datepicker">
+                            <input type="text" class="form-control date" id="calltime2" value="{now}">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>{lang.note}</label>
-                        <textarea class="form-control" id="note2" rows="3"></textarea>
+                    <div class="form-group col-md-8">
+                        <label>{lang.exbirth}</label>
+                        <input class="form-control" id="exbirth" type="number">
                     </div>
-                    <div class="form-group text-center">
-                        <button class="btn btn-info" id="btn_usg_update">
-                            {lang.submit}
-                        </button>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label>{lang.birthday}</label>
+                        <div class="input-group" data-provide="datepicker">
+                            <input type="text" class="form-control date" id="birth" value="{now}">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
                     </div>
-                </form>
+                    <div class="form-group col-md-12">
+                        <label>{lang.birth}</label>
+                        <input class="form-control" id="birthnumber" type="number">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <label>{lang.firstvac}</label>
+                        <div class="input-group" data-provide="datepicker">
+                            <input type="text" class="form-control date" id="firstvac" value="{now}">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-8">
+                        <label>{lang.vaccine}</label>
+                        <select class="form-control" id="vaccine_status"> </select>
+                    </div>
+                    <div class="form-group col-md-8">
+                        <label>{lang.recall}</label>
+                        <div class="input-group" data-provide="datepicker">
+                            <input type="text" class="form-control date" id="recall" value="{now}">
+                            <div class="input-group-addon">
+                                <span class="glyphicon glyphicon-th"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>{lang.doctor}</label>
+                    <select class="form-control" name="doctor" id="doctor2">
+                        <!-- BEGIN: doctor3 -->
+                        <option value="{doctor_value}">{doctor_name}</option>
+                        <!-- END: doctor3 -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>{lang.note}</label>
+                    <textarea class="form-control" id="note2" rows="3"></textarea>
+                </div>
+                <div class="form-group text-center">
+                    <button class="btn btn-info" id="btn_usg_update" onclick="update_usg()">
+                        {lang.submit}
+                    </button>
+                </div>
             </div>
         </div>
     </div>

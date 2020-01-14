@@ -14,9 +14,9 @@
 {modal}
 
 <div class="form-group" style="float: right;">
-	<button class="btn btn-info" onclick="overflowModal()">
+	<!-- <button class="btn btn-info" onclick="overflowModal()">
 		Danh sách quá ngày
-	</button>
+	</button> -->
 	<!-- <button class="btn btn-info" onclick="filterModal()">
 		Lọc danh sách
 	</button> -->
@@ -139,22 +139,6 @@
 				checkResult(response, status).then(data => {
 					$("#overflow-content").html(data['html'])
 				})
-			}
-		)
-	}
-
-	function update_usg(e) {
-		e.preventDefault()
-		$.post(
-			"",
-			{ action: "update_usg", id: g_id, cometime: $("#cometime2").val(), calltime: $("#calltime2").val(), doctorid: $("#doctor2").val(), note: $("#note2").val(), image: $("#image2").val(), birth: $("#birthnumber").val(), exbirth: $("#exbirth").val(), recall: $("#recall").val(), vaccine: $("#vaccine_status").val(), birthday: $("#birth").val(), firstvac: $("#firstvac").val(), customer: g_customerid },
-			(response, status) => {
-				var data = JSON.parse(response)
-				if (data["status"]) {
-					$("#usgupdate").modal("toggle");
-					g_id = -1
-					window.location.reload()
-				}
 			}
 		)
 	}
@@ -310,25 +294,14 @@
 		window.location.replace(http)
 	}
 
-	function update(e, id) {
-		g_id = id
-		$("#btn_usg_update").attr("disabled", true);
-		// $("#birth").attr("disabled", true);
-		// $("#birthnumber").attr("disabled", true);
-		$("#firstvac").attr("disabled", true);
-		$("#vaccine_status").attr("disabled", true);
-		$("#recall").attr("disabled", true);
+	function update(id) {
+		global['id'] = id
 		$.post(
 			"",
-			{ action: "usg_info", id: g_id },
+			{ action: "get-update", id: id },
 			(response, status) => {
-				var data = JSON.parse(response);
-				if (data["status"]) {
-					$("#btn_usg_update").attr("disabled", false);
-					g_customerid = data["data"]["customerid"]
-					g_petid = data["data"]["petid"]
-
-					g_pet = trim(e.target.parentElement.parentElement.children[1].innerText)
+				checkResult(response, status).then(data => {
+					
 					$("#cometime2").val(data["data"]["cometime"])
 					$("#calltime2").val(data["data"]["calltime"])
 					$("#doctor2").val(data["data"]["doctorid"])
@@ -338,15 +311,41 @@
 					$("#birth").val(data["data"]["birthday"])
 					$("#exbirth").val(data["data"]["exbirth"])
 					$("#vaccine_status").html(data["data"]["vaccine"])
-					if (data["data"]["birth"] > 0) {
-						$("#firstvac").attr("disabled", false);
+					// if (data["data"]["birth"] > 0) {
+					// 	$("#firstvac").attr("disabled", false);
 						$("#firstvac").val(data["data"]["firstvac"]);
-						$("#vaccine_status").attr("disabled", false);
-						if (data["data"]["recall"] > 0 || data["data"]["vacid"] == 4) {
-							$("#recall").attr("disabled", false);
+					// 	$("#vaccine_status").attr("disabled", false);
+					// 	if (data["data"]["recall"] > 0 || data["data"]["vacid"] == 4) {
+					// 		$("#recall").attr("disabled", false);
 							$("#recall").val(data["data"]["recall"])
-						}
-					}
+					// 	}
+					// }
+					$("#update-modal").modal('show')
+				})
+			}
+		)
+	}
+
+	function update_usg() {
+		sdata = {
+			cometime: $("#cometime2").val(),
+			calltime: $("#calltime2").val(),
+			doctorid: $("#doctor2").val(),
+			note: $("#note2").val(),
+			birth: $("#birthnumber").val(),
+			expectbirth: $("#exbirth").val(),
+			recall: $("#recall").val(),
+			vaccine: $("#vaccine_status").val(),
+			birthday: $("#birth").val(),
+			firstvac: $("#firstvac").val()
+		}
+		$.post(
+			"",
+			{ action: "update-usg", id: global['id'], data: sdata },
+			(response, status) => {
+				var data = JSON.parse(response)
+				if (data["status"]) {
+					window.location.reload()
 				}
 			}
 		)

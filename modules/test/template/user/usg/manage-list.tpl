@@ -47,12 +47,12 @@
 				{recall} {vacname}
 			</td>
 			<td>
-				<button class="btn btn-danger btn-xs" onclick="removeUsg({id})">
+				<!-- <button class="btn btn-danger btn-xs" onclick="removeUsg({id})">
 					{lang.remove}
-				</button>
-				<!-- <button class="btn btn-info btn-xs" onclick="update(event, {id})" data-toggle="modal" data-target="#usgupdate">
-					{lang.update}
 				</button> -->
+				<button class="btn btn-info btn-xs" onclick="update({id})">
+					{lang.update}
+				</button>
 			</td>
 		</tr>
 		<!-- END: row -->

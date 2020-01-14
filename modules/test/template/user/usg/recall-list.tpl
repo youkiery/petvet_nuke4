@@ -37,7 +37,7 @@
 	</thead>
 	<tbody>
 		<!-- BEGIN: row -->
-		<tr style="text-transform: capitalize;" id="{vacid}">
+		<tr style="text-transform: capitalize;" class="{bgcolor}" id="{vacid}">
 			<td>
 				{index}
 			</td>

@@ -242,6 +242,17 @@ td, th {
 .orange {
   background: #ffaa44 !important;
 }
+.redbg {
+  background: lightsalmon;
+}
+
+.yellowbg {
+  background: lightpink;
+}
+
+.greenbg {
+  background: lightgreen;
+}
 #ui-datepicker-div {
   z-index: 10000 !important;
 }
