@@ -16,7 +16,8 @@ if (!empty($action)) {
       $data = $nv_Request->get_array('data', 'post');
       $data['time'] = totime($data['time']);
 
-      $query = $db->query('insert into `'. PREFIX .'blood_row` (time, number, start, end, doctor) values('. $data['time'] .', '. $data['number'] .', '. $data['start'] .', '. $data['end'] .', '. $data['doctor'] .')');
+      $sql = 'insert into `'. PREFIX .'blood_row` (time, number, start, end, doctor) values('. $data['time'] .', '. $data['number'] .', '. $data['start'] .', '. $data['end'] .', '. $data['doctor'] .')';
+      $query = $db->query($sql);
       if ($query) {
         $query = $db->query('update `'. $db_config['prefix'] .'_config` set config_value = ' . $data['end'] . ' where config_name = "blood_number"');
         if ($query) {
@@ -29,13 +30,16 @@ if (!empty($action)) {
       $data = $nv_Request->get_array('data', 'post');
       $data['time'] = totime($data['time']);
 
-      $query = $db->query('insert into `'. PREFIX .'blood_import` (time, number, price, note) values('. $data['time'] .', '. $data['number'] .', '. $data['price'] .', "'. $data['note'] .'")');
+      $data['price'] = str_replace(',', '', $data['price']);
+      $sql = 'insert into `'. PREFIX .'blood_import` (time, number, price, note) values('. $data['time'] .', '. $data['number'] .', '. $data['price'] .', "'. $data['note'] .'")';
+      $query = $db->query($sql);
       if ($query) {
         $query = $db->query('update `'. $db_config['prefix'] .'_config` set config_value = config_value + ' . $data['number'] . ' where config_name = "blood_number"');
         if ($query) {
           $query = $db->query('select * from `'. $db_config['prefix'] .'_config` where config_name = "blood_number"');
           $row = $query->fetch();
           $result['status'] = 1;
+          $result['notify'] = 'Đã nhập hóa chất';
           $result['number'] = $row['config_value'];
           $result['html'] = bloodList();
         }
