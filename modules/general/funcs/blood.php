@@ -8,6 +8,32 @@
 
 if (!defined('NV_IS_MOD_CONGVAN')) die('Stop!!!');
 
+$type = 0;
+if (!empty($user_info)) {
+  $sql = 'select * from `'. $db_config['prefix'] .'_users` where userid = ' . $user_info['userid'];
+  $query = $db->query($sql);
+  $user = $query->fetch();
+  $group = explode(',', $user['in_groups']);
+  if (in_array('1', $group)) {
+    // do nothing
+    $type = 2;
+  }
+  else {
+    $sql = 'select * from `'. PREFIX .'config` where name = "config" and type = 2 and groupid in ('. $user['in_groups'] .')';
+    $query = $db->query($sql);
+    if (!empty($query->fetch())) {
+      $type = 2;
+    }
+    else {
+      $sql = 'select * from `'. PREFIX .'config` where name = "config" and type = 1 and groupid in ('. $user['in_groups'] .')';
+      $query = $db->query($sql);
+      if (!empty($query->fetch())) {
+        $type = 1;
+      }
+    }
+  }
+}
+
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
@@ -39,7 +65,7 @@ if (!empty($action)) {
           $query = $db->query('select * from `'. $db_config['prefix'] .'_config` where config_name = "blood_number"');
           $row = $query->fetch();
           $result['status'] = 1;
-          $result['notify'] = 'Đã nhập hóa chất';
+          $result['notify'] = 'Đã nhập hóa châ';
           $result['number'] = $row['config_value'];
           $result['html'] = bloodList();
         }
@@ -60,6 +86,27 @@ if (!empty($action)) {
       $row['time'] = date('d/m/Y', $row['time']);
       $result = $row;
       $result['status'] = 1;
+    break;
+    case 'edit-import':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $data = $nv_Request->get_array('data', 'post');
+
+      $sql = 'select * from `'. PREFIX .'blood_import` where id = ' . $id;
+      $query = $db->query($sql);
+
+      if (!empty($row = $query->fetch())) {
+        $sql = 'update `'. PREFIX .'blood_import` set time = ' . totime($data['time']) . ', price = ' . $data['price'] . ', number = ' . $data['number'] .', note = "'. $data['note'] .'" where id = ' . $id;
+        $sql2 = 'update `'. $db_config['prefix'] .'_config` set config_value = config_value + ' . ($data['number'] - $row['number']) . ' where config_name = "blood_number"';
+        if ($db->query($sql) && $db->query($sql2)) {
+          $sql = 'select * from `'. $db_config['prefix'] .'_config` where config_name = "blood_number"';
+          $query = $db->query($sql);
+          $config = $query->fetch();
+          $result['status'] = 1;
+          $result['number'] = $config['config_value'];
+          $result['notify'] = 'Đã lưu thay đổi phiếu nhập';
+          $result['html'] = bloodList();
+        }        
+      }
     break;
     case 'remove':
       $id = $nv_Request->get_int('id', 'post');
@@ -85,18 +132,24 @@ if (!empty($action)) {
   die();
 }
 
-$xtpl = new XTemplate("main.tpl", PATH);
-$xtpl->assign('module_file', $module_file);
-$xtpl->assign('module_name', $module_name);
-$xtpl->assign('today', date('d/m/Y'));
-
-$xtpl->assign('insert_modal', bloodInsertModal());
-$xtpl->assign('import_modal', bloodImportModal());
-$xtpl->assign('remove_modal', loadModal('remove-modal'));
-
-$xtpl->assign('content', bloodList());
-$xtpl->parse('main');
-$contents = $xtpl->text();
+if ($type) {
+  $xtpl = new XTemplate("main.tpl", PATH);
+  $xtpl->assign('module_file', $module_file);
+  $xtpl->assign('module_name', $module_name);
+  $xtpl->assign('today', date('d/m/Y'));
+  
+  $xtpl->assign('insert_modal', bloodInsertModal());
+  $xtpl->assign('import_modal', bloodImportModal());
+  $xtpl->assign('remove_modal', loadModal('remove-modal'));
+  
+  $xtpl->assign('content', bloodList());
+  $xtpl->parse('main');
+  $contents = $xtpl->text();
+}
+else {
+  $contents = '<div class="form-group text-center"> Tài khoản cần cấp quyền để sử dụng chức năng này </div>';
+}
+$sql = 'select * from `'. $db_config['prefix'] .'_user`';
 
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_site_theme($contents);

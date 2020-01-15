@@ -95,6 +95,7 @@
                         $("#blood-edit-button").show()
                         $("#insert-modal").modal('show')
                     }
+                    global['id'] = id
                     $("#content").html(data['html'])
                 })
             }
@@ -238,7 +239,7 @@
         else {
             $.post(
                 '',
-                { action: 'edit-import', data: insertData, filter: checkFilter() },
+                { action: 'edit-import', id: global['id'], data: insertData, filter: checkFilter() },
                 (reponse, status) => {
                     checkResult(reponse, status).then(data => {
                         $("#content").html(data['html'])

@@ -134,3 +134,7 @@ label.filebutton {
   text-align: center;
   vertical-align: inherit !important;
 }
+
+.hide {
+  display: none;
+}

@@ -125,9 +125,13 @@ function lowitemList() {
 }
 
 function bloodList() {
-    global $db, $nv_Request;
+    global $db, $nv_Request, $type;
     $xtpl = new XTemplate("blood-list.tpl", PATH);
     $filter = $nv_Request->get_array('filter', 'post');
+    if ($type == 1) {
+        $xtpl->assign('show', 'hide');
+    }
+
     if (empty($filter['page'])) {
         $filter['page'] = 1;
     }
@@ -154,6 +158,9 @@ function bloodList() {
         $xtpl->assign('typeid', $row['type']);
         if ($row['type']) $xtpl->assign('type', 'Phiếu nhập');
         else $xtpl->assign('type', 'Phiếu xét nghiệm');
+        if ($type == 2) {
+            $xtpl->parse('main.row.test');
+        }
         $xtpl->parse('main.row');
     }
     $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
