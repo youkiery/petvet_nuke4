@@ -149,7 +149,7 @@
             list.push({
                 code: item['Mã hàng'],
                 category: item['Nhóm hàng(3 Cấp)'],
-                name: item['Tên hàng hóa'],
+                name: item['Tên hàng'],
                 number: item['Tồn kho']
             })
         });
