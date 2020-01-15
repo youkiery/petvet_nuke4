@@ -15,7 +15,7 @@
           <div class="form-group">
             <label class="control-label col-sm-6"> Số lượng </label>
             <div class="col-sm-6">
-              <input type="text" class="form-control" id="material-number">
+              <input type="text" class="form-control" id="material-number" value="0">
             </div>
             <label class="control-label col-sm-6"> Đơn vị </label>
             <div class="col-sm-6">
@@ -31,9 +31,10 @@
           </div>
 
           <div class="form-group">
-            <label class="control-label col-sm-6"> Giới hạn </label>
+            <label class="control-label col-sm-6"> Giới hạn nhận hàng </label>
             <div class="col-sm-18">
-              <input type="text" class="form-control" id="material-bound">
+              <input type="text" class="form-control" id="material-bound" value="0"
+                placeholder="Số lượng dưới giới hạn, cần phải nhập hàng">
             </div>
           </div>
 
@@ -51,6 +52,26 @@
               Sửa mục hàng
             </button>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="overlow-modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
+
+        <div id="overlow-content">
+          {content}
+        </div>
+
+        <div class="text-center">
+          <button class="btn btn-info" onclick="overlowFilter()">
+            Tải lại
+          </button>
         </div>
       </div>
     </div>

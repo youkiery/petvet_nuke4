@@ -323,6 +323,10 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = reportDetail();
     break;
+    case 'overlow':
+      $result['status'] = 1;
+      $result['html'] = materialOverlowList();
+    break;
   }
   echo json_encode($result);
   die();

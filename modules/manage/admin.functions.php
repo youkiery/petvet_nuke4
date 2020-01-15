@@ -162,6 +162,7 @@ function importInsertModal() {
 function materialModal() {
   global $op;
   $xtpl = new XTemplate("material-modal.tpl", PATH);
+  $xtpl->assign('content', materialOverlowList());
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -329,11 +330,13 @@ function materialList() {
     $xtpl->assign('type', $type_list[$row['type']]);
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('number', $row['number']);
+    $xtpl->assign('bound', $row['bound']);
     $xtpl->assign('description', $row['description']);
     if ($row['unit']) $xtpl->assign('unit', "($row[unit])");
     else $xtpl->assign('unit', '');
     $xtpl->parse('main.row');
   }
+  $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
 
   $xtpl->parse('main');
   return $xtpl->text();
@@ -385,3 +388,4 @@ function memberList() {
   $xtpl->parse('main');
   return $xtpl->text();
 }
+

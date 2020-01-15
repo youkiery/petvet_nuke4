@@ -349,6 +349,7 @@ function materialList() {
 
 function materialModal() {
   $xtpl = new XTemplate("material-modal.tpl", PATH);
+  $xtpl->assign('content', materialOverlowList());
   $xtpl->parse('main');
   return $xtpl->text();
 }

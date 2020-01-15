@@ -34,6 +34,9 @@
   </div>
 </div>
 <div class="form-group">
+  <button class="btn btn-info" onclick='$("#overlow-modal").modal("show")'>
+    Danh sách vật tư hết
+  </button>  
   <button class="btn btn-info" onclick="importModal()">
     Phiếu nhập
   </button>  
@@ -455,6 +458,18 @@
           $("#import-button").hide()
           $("#edit-import-button").show()
           $('#import-modal-insert').modal('show')
+        }, () => {})
+      }
+    )
+  }
+
+  function overlowFilter() {
+    $.post(
+      "",
+      { action: 'overlow' },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#overlow-content").html(data['html'])
         }, () => {})
       }
     )

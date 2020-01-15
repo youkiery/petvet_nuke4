@@ -24,15 +24,12 @@
   </button>
 </div>
 
-<div class="form-group" style="float: right;">
-  <button class="btn btn-success" onclick="materialModal()">
-    <span class="glyphicon glyphicon-plus"></span>
-  </button>
-</div>
-
 <div style="clear: both;"></div>
 <div class="form-group">
   <div style="float: left;">
+    <button class="btn btn-info" onclick='$("#overlow-modal").modal("show")'>
+      Danh sách vật tư hết
+    </button>  
     <button class="btn btn-info" onclick="importModal()">
       Phiếu nhập
     </button>  
@@ -40,6 +37,14 @@
       Phiếu xuất
     </button>  
   </div>
+  <div class="form-group" style="float: right;">
+    <button class="btn btn-success" onclick="materialModal()">
+      <span class="glyphicon glyphicon-plus"></span>
+    </button>
+  </div>
+</div>
+<div style="clear: both;"></div>
+<div class="form-group">
   <div style="float: right;">
     <div class="form-group form-inline">
       Số dòng mỗi trang
@@ -447,16 +452,29 @@
   }
 
   function editMaterialSubmit() {
+    sdata = checkMaterialData()
     $.post(
       "",
-      { action: 'edit-material', id: global['id'], data: checkMaterialData(), main_filter: checkFilter() },
+      { action: 'edit-material', id: global['id'], data: sdata, main_filter: checkFilter() },
       (response, status) => {
         checkResult(response, status).then(data => {
           global['material'].forEach((item, index) => {
-            if (item['id'] == global['id']) global['material'][index] = data['json']
+            if (item['id'] == global['id']) global['material'][index] = sdata
           });
           $("#content").html(data['html'])
           $("#material-modal").modal('hide')
+        }, () => {})
+      }
+    )
+  }
+
+  function overlowFilter() {
+    $.post(
+      "",
+      { action: 'overlow' },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#overlow-content").html(data['html'])
         }, () => {})
       }
     )

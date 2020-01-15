@@ -82,7 +82,7 @@ if (!empty($action)) {
       }
       else {
         // insert
-        $sql = 'insert into `'. PREFIX .'material` (name, type, number, unit, description) values("'. $data['name'] .'", "'. $data['number'] .'", "'. $data['type'] .'", "'. $data['unit'] .'", "'. $data['description'] .'")';
+        $sql = 'insert into `'. PREFIX .'material` (name, type, number, bound, unit, description) values("'. $data['name'] .'", "'. $data['number'] .'", "'. $data['bound'] .'", "'. $data['type'] .'", "'. $data['unit'] .'", "'. $data['description'] .'")';
         // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;
@@ -291,14 +291,18 @@ if (!empty($action)) {
       }
       else {
         // insert
-        $sql = 'update `'. PREFIX .'material` set name = "'. $data['name'] .'", number = "'. $data['number'] .'", type = "'. $data['type'] .'", unit = "'. $data['unit'] .'", description = "'. $data['description'] .'" where id = ' . $id;
+        $sql = 'update `'. PREFIX .'material` set name = "'. $data['name'] .'", number = "'. $data['number'] .'", type = "'. $data['type'] .'", unit = "'. $data['unit'] .'", bound = "'. $data['bound'] .'", description = "'. $data['description'] .'" where id = ' . $id;
         // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;
           $result['notify'] = 'Đã sửa';
-          $result['json'] = array('id' => $id, 'name' => $data['name'], 'number' => $data['number'], 'type' => $data['type'], 'unit' => $data['unit'], 'description' => $data['description']);
+          $result['html'] = materialList();
         }
       }
+    break;
+    case 'overlow':
+      $result['status'] = 1;
+      $result['html'] = materialOverlowList();
     break;
   }
   echo json_encode($result);

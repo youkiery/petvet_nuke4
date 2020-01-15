@@ -399,3 +399,40 @@ function deviceParseExcel($depart) {
   }
   return $objPHPExcel;
 }
+
+function materialOverlowList() {
+  global $db;
+
+  $type_list = array(0 => 'Vật tư', 1 => 'Hóa chất');
+
+  if (empty($filter['type'])) {
+    $filter['type'] = array(0, 1);
+  }
+
+  $xtpl = new XTemplate("overlow-list.tpl", PATH);
+
+  $sql = 'select count(*) as count from `'. PREFIX .'material` where number < bound';
+  $query = $db->query($sql);
+  $number = $query->fetch()['count'];
+
+  $sql = 'select * from `'. PREFIX .'material` where number < bound order by id desc';
+  $query = $db->query($sql);
+  $index = 1;
+  // $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+
+  while($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('type', $type_list[$row['type']]);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('number', $row['number']);
+    $xtpl->assign('description', $row['description']);
+    if ($row['unit']) $xtpl->assign('unit', "($row[unit])");
+    else $xtpl->assign('unit', '');
+    $xtpl->parse('main.row');
+  }
+  // $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
