@@ -436,3 +436,14 @@ function materialOverlowList() {
   $xtpl->parse('main');
   return $xtpl->text();
 }
+
+function getMaterialData($item_id) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'material` where id = ' . $item_id;
+  $query = $db->query($sql);
+  if (!empty($row = $query->fetch())) {
+    return $row;
+  }
+  return array();
+}

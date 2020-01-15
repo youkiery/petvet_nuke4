@@ -163,6 +163,7 @@ function materialModal() {
   global $op;
   $xtpl = new XTemplate("material-modal.tpl", PATH);
   $xtpl->assign('content', materialOverlowList());
+  $xtpl->assign('link_content', materialLinkList());
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -389,3 +390,27 @@ function memberList() {
   return $xtpl->text();
 }
 
+function materialLinkList() {
+    global $db;
+  
+    $xtpl = new XTemplate("link-list.tpl", PATH);
+  
+    $sql = 'select * from `'. PREFIX .'material_link`';
+    $query = $db->query($sql);
+    $index = 1;
+  
+    while($row = $query->fetch()) {
+      $item = getMaterialData($row['item_id']);
+      $item2 = getMaterialData($row['link_id']);
+      $xtpl->assign('index', $index++);
+      $xtpl->assign('id', $row['id']);
+      $xtpl->assign('name', $item['name']);
+      $xtpl->assign('name2', ($item2['name']));
+      $xtpl->assign('unit', (strlen($item['unit']) ? "($item[unit])" : ''));
+      $xtpl->assign('unit2', (strlen($item2['unit']) ? "($item2[unit])" : ''));
+      $xtpl->parse('main.row');
+    }
+  
+    $xtpl->parse('main');
+    return $xtpl->text();
+}

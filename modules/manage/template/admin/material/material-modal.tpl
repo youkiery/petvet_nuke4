@@ -77,4 +77,40 @@
     </div>
   </div>
 </div>
+
+<div class="modal" id="link-modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
+
+        <div class="form-group">
+          <label> Vật tư </label>
+          <div class="relative">
+            <input type="text" class="form-control" id="link-item">
+            <div class="suggest" id="link-item-suggest">  </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label> Vật tư liên kết </label>
+          <div class="relative">
+            <input type="text" class="form-control" id="link2-item">
+            <div class="suggest" id="link2-item-suggest">  </div>
+          </div>
+        </div>
+
+        <div id="link-content">
+          {link_content}
+        </div>
+
+        <div class="text-center">
+          <button class="btn btn-info" onclick="linkSubmit()">
+            Liên kết
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- END: main -->

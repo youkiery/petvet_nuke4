@@ -18,7 +18,7 @@
   <label> <input name="filter-type" type="checkbox" value="0" checked> Vật tư </label>
   <label> <input name="filter-type" type="checkbox" value="1" checked> Hóa chất </label>
 </div>
-<div class="text-center">
+<div class="form-group text-center">
   <button class="btn btn-info" onclick="goPage(1)">
     Tìm kiếm
   </button>
@@ -27,6 +27,9 @@
 <div style="clear: both;"></div>
 <div class="form-group">
   <div style="float: left;">
+    <button class="btn btn-info" onclick='$("#link-modal").modal("show")'>
+      Liên kết vật tư
+    </button>  
     <button class="btn btn-info" onclick='$("#overlow-modal").modal("show")'>
       Danh sách vật tư hết
     </button>  
@@ -85,13 +88,17 @@
     material: JSON.parse('{material}'),
     selected: {
       'import': [],
-      'export': []
+      'export': [],
+      link: -1,
+      link2: -1
     }
   }
 
   $(document).ready(() => {
     itemFilter('import')
     itemFilter('export')
+    itemFilter2('link')
+    itemFilter2('link2')
   })
 
   function goPage(page) {
@@ -187,10 +194,10 @@
   function itemFilter(name) {
     input = $("#"+ name +"-item-finder")
     suggest = $("#"+ name +"-item-finder-suggest")
-    count = 0
 
     input.keyup((e) => {
       keyword = input.val()
+      count = 0
       html = ''
 
       global['material'].forEach((item, index) => {
@@ -219,6 +226,40 @@
     })
 
   }
+  function itemFilter2(name) {
+    var input = $("#"+ name +"-item")
+    var suggest = $("#"+ name +"-item-suggest")
+
+    input.keyup((e) => {
+      keyword = input.val()
+      count = 0
+      html = ''
+
+      global['material'].forEach((item, index) => {
+        if (count < 30 && item['name'].search(keyword) >= 0) {
+          count ++
+          html += `
+            <div class="suggest-item" onclick="selectItem2('`+ name +`', `+ index +`)">
+              `+ item['name'] +`
+            </div>`
+        }
+      })
+      if (!html.length) {
+        html = 'Không có kết quả'
+      }
+      suggest.html(html)
+    })
+    input.focus(() => {
+      setTimeout(() => {
+        suggest.show()
+      }, 300);
+    })
+    input.blur(() => {
+      setTimeout(() => {
+        suggest.hide()
+      }, 300);
+    })
+  }
 
   function selectItem(name, index) {
     selected = global['material'][index]
@@ -232,6 +273,12 @@
       status: '',
     })
     parseFormLine(name)
+  }
+
+  function selectItem2(name, index) {
+    selected = global['material'][index]
+    global['selected'][name] = index
+    $("#"+ name +"-item").val(selected['name'])
   }
 
   function parseFormLine(name) {
@@ -479,5 +526,47 @@
       }
     )
   }
+
+  function linkSubmit() {
+    if (global['selected']['link'] < 0) {
+      alert_msg('Chưa chọn vật tư')
+    }
+    else if (global['selected']['link2'] < 0) {
+      alert_msg('Chưa chọn vật tư liên kết')
+    }
+    else if (global['selected']['link'] == global['selected']['link2']) {
+      alert_msg('Vật tư liên kết trùng nhau')
+    }
+    else {
+      $.post(
+        "",
+        { action: 'insert-link', item: [global.material[global['selected']['link']]['id'], global.material[global['selected']['link2']]['id']] },
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            $("#link-item").val('')
+            $("#link2-item").val('')
+            global['selected']['link'] = -1
+            global['selected']['link2'] = -1
+            $("#link-content").html(data['html'])
+            // $("#overlow-content").html(data['html'])
+          }, () => {})
+        }
+      )
+    }
+  }
+
+  function linkRemove(id) {
+    $.post(
+        "",
+        { action: 'remove-link', id: id },
+        (response, status) => {
+          checkResult(response, status).then(data => {
+            console.log(data);
+            $("#link-content").html(data['html'])
+          }, () => {})
+        }
+      )
+  }
+
 </script>
 <!-- END: main -->

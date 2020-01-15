@@ -304,6 +304,40 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = materialOverlowList();
     break;
+    case 'insert-link':
+      $item = $nv_Request->get_array('item', 'post');
+
+      $sql = 'select * from `'. PREFIX .'material_link` where item_id = ' . $item[0] . ' or link_id = ' . $item[0];
+      $sql2 = 'select * from `'. PREFIX .'material_link` where item_id = ' . $item[1] . ' or link_id = ' . $item[1];
+      $query = $db->query($sql);
+      $query2 = $db->query($sql2);
+
+      if (!empty($query->fetch())) {
+        $result['notify'] = 'Vật tư đã chọn tồn tại liên kết';
+      }
+      else if (!empty($query2->fetch())) {
+        $result['notify'] = 'Vật tư liên kết đã chọn tồn tại liên kết';
+      }
+      else {
+        $sql = 'insert into `'. PREFIX .'material_link` (item_id, link_id) values ('. $item[0] .', '. $item[1] .')';
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+          $result['html'] = materialLinkList();
+          $result['notify'] = 'Tạo liên kết';
+        }
+      }
+    break;
+    case 'remove-link':
+      $id = $nv_Request->get_int('id', 'post');
+
+      $sql = 'delete from `'. PREFIX .'material_link` where id = ' . $id;
+
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = materialLinkList();
+        $result['notify'] = 'Xóa liên kết';
+      }
+    break;
   }
   echo json_encode($result);
   die();
