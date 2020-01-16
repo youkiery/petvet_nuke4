@@ -2076,16 +2076,46 @@
         })
       })
 
-      maintemp.push({
-        code: data['samplecode'][i],
-        number: 1,
-        status: 0,
-        type: type,
-        mainer: temp
-      })
+      splited = splitCode(data['samplecode'][i])
+      if (splited.length > 1) {
+        from = Number(trim(splited[0]))
+        end = Number(trim(splited[1]))
+        for (let j = from; j <= end; j++) {
+          maintemp.push({
+            code: j,
+            number: 1,
+            status: 0,
+            type: type,
+            mainer: temp
+          })
+        }
+      }
+      else {
+        maintemp.push({
+          code: data['samplecode'][i],
+          number: 1,
+          status: 0,
+          type: type,
+          mainer: temp
+        })
+      }
+
     }
     global_field = maintemp
     parseField(global_field)
+  }
+
+  function splitCode(code) {
+    array = ['đến']
+    checker = false
+    array.forEach(item => {
+      splited = code.split(item)
+      if (splited.length > 1) {
+        // splited = code.replace('')
+        checker = splited
+      } 
+    })
+    return checker
   }
 
   function parseForm(id) {
