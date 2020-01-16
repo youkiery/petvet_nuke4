@@ -203,3 +203,19 @@ function itemList() {
     $xtpl->parse('main');
     return $xtpl->text();
 }
+
+function bloodModal() {
+    $xtpl = new XTemplate("modal.tpl", PATH);
+    $xtpl->assign('statistic_content', bloodStatistic());
+
+    $time = strtotime(date('Y/m/d'));
+    // $time = strtotime(date('8/8/2019'));
+    $filter['from'] = $time - 60 * 60 * 24 * 15;
+    $filter['end'] = $time + 60 * 60 * 24 * 15;
+
+    $xtpl->assign('from', date('d/m/Y', $filter['from']));
+    $xtpl->assign('end', date('d/m/Y', $filter['end']));
+
+    $xtpl->parse('main');
+    return $xtpl->text();
+}

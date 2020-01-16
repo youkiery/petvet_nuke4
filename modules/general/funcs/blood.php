@@ -127,6 +127,10 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = bloodList();
     break;
+    case 'statistic':
+      $result['status'] = 1;
+      $result['html'] = bloodStatistic();
+      break;
   }
   echo json_encode($result);
   die();
@@ -138,6 +142,7 @@ if ($type) {
   $xtpl->assign('module_name', $module_name);
   $xtpl->assign('today', date('d/m/Y'));
   
+  $xtpl->assign('modal', bloodModal());
   $xtpl->assign('insert_modal', bloodInsertModal());
   $xtpl->assign('import_modal', bloodImportModal());
   $xtpl->assign('remove_modal', loadModal('remove-modal'));

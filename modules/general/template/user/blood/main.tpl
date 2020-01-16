@@ -1,14 +1,27 @@
 <!-- BEGIN: main -->
 <link rel="stylesheet" href="/modules/{module_file}/src/style.css">
+<script src="/modules/{module_file}/src/script.js"></script>
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
+<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
+<script type="text/javascript"
+    src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
+
+<style> 
+    label { width: 100%; }
+</style>
 
 <div id="msgshow"></div>
 
+{modal}
 {insert_modal}
 {import_modal}
 {remove_modal}
 
 <div style="float: right">
+    <button class="btn btn-info" onclick="loadModal('statistic-modal')">
+        Thống kê
+    </button>
     <button class="btn btn-success" onclick="bloodInsertModal()">
         Thêm Mẫu xét nghiệm
     </button>
@@ -46,6 +59,12 @@
     })
 
     $(document).ready(() => {
+        $(".date").datepicker({
+            format: 'dd/mm/yyyy',
+            changeMonth: true,
+            changeYear: true
+        });
+
         $("#import-price").keyup((e) => {
             var current = e.currentTarget
             var val = Number(current['value'].replace(/\,/g, ""));
@@ -268,6 +287,22 @@
                     $("#content").html(data['html'])
                     $("#remove-modal").modal('hide')
                 })
+            }
+        )
+    }
+
+    function statisticFilter() {
+        $.post(
+            '',
+            { action: "statistic", filter: {
+                    from: $("#from").val(),
+                    end: $("#end").val()
+                }
+            },
+            (response, status) => {
+                checkResult(response, status).then((data) => {
+                    $("#statistic-content").html(data['html'])
+                }, () => { })
             }
         )
     }

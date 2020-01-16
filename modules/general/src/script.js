@@ -18,6 +18,10 @@ function convert(str) {
   return str;
 }
 
+function loadModal(name) {
+  $("#" + name).modal('show')
+}
+
 function checkResult(response, status) {
   return new Promise((resolve, reject) => {
     if (status === 'success') {
