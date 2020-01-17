@@ -5,6 +5,7 @@
         <th> Thời gian </th>
         <th> Số lượng </th>
         <th> Loại phiếu </th>
+        <th> Mục đích </th>
         <th> Người thực hiện </th>
         <th class="{show}"> </th>
     </tr>
@@ -14,6 +15,7 @@
         <td> {time} </td>
         <td> {number} </td>
         <td> {type} </td>
+        <td> {target} </td>
         <td> {doctor} </td>
         <td class="{show}">
             <!-- BEGIN: test -->

@@ -145,11 +145,18 @@ function bloodList() {
         $xtra = 'where type in ('. implode(', ', $filter['type']) .')';
     }
 
+    $target = array();
+    $sql = 'select * from `'. PREFIX .'remind` where name = "blood" order by id';
+    $query = $db->query($sql);
+
+    while ($row = $query->fetch()) {
+        $target[$row['id']] = $row['value'];
+    }
+
     $query = $db->query('select count(*) as num from ((select id, time, 0 as type, number from `'. PREFIX .'blood_row`) union (select id, time, 1 as type, number from `'. PREFIX .'blood_import`)) a '. $xtra);
     $number = $query->fetch()['num'];
 
-
-    $query = $db->query('select * from ((select id, time, 0 as type, number, doctor from `'. PREFIX .'blood_row`) union (select id, time, 1 as type, number, doctor from `'. PREFIX .'blood_import`)) a '. $xtra .' order by time desc, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+    $query = $db->query('select * from ((select id, time, 0 as type, number, doctor, target from `'. PREFIX .'blood_row`) union (select id, time, 1 as type, number, doctor, 0 as target from `'. PREFIX .'blood_import`)) a '. $xtra .' order by time desc, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
     while ($row = $query->fetch()) {
         $sql = 'select * from `'. $db_config['prefix'] .'_users` where userid = ' . $row['doctor'];
@@ -158,6 +165,7 @@ function bloodList() {
 
         $xtpl->assign('index', $index++);
         $xtpl->assign('time', date('d/m/Y', $row['time']));
+        $xtpl->assign('target', (!empty($target[$row['target']]) ? $target[$row['target']] : ''));
         $xtpl->assign('number', $row['number']);
         $xtpl->assign('id', $row['id']);
         $xtpl->assign('typeid', $row['type']);
