@@ -12,3 +12,43 @@ define('PATH', NV_ROOTDIR . '/modules/' . $module_file . '/template/admin/' . $o
 include_once(NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php');
 include_once(NV_ROOTDIR . '/modules/' . $module_file . '/theme.php');
 
+$remind_title = array('blood' => 'Xét nghiệm máu');
+
+function remindList($filter) {
+    global $db, $remind_title;
+
+    $filter = parseFilter($filter);
+    if (!empty($filter['name'])) $xtra = 'where name = "'. $filter['name'] .'"';
+
+    $xtpl = new XTemplate("remind-list.tpl", PATH);
+    $sql = 'select count(*) as number from `'. PREFIX .'remind` '. $xtra;
+    $query = $db->query($sql);
+    $number = $query->fetch()['number'];
+
+    $sql = 'select * from `'. PREFIX .'remind` '. $xtra .' order by name, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['limit'] * ($filter['page'] - 1));
+    $query = $db->query($sql);
+    $index = $filter['limit'] * ($filter['page'] - 1) + 1;
+
+    while ($row = $query->fetch()) {
+        $xtpl->assign('index', $index++);
+        $xtpl->assign('id', $row['id']);
+        $xtpl->assign('name', (!empty($remind_title[$row['name']]) ? $remind_title[$row['name']] : ''));
+        $xtpl->assign('value', $row['value']);
+        $xtpl->parse('main.row');
+    }
+    $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function remindModal() {
+    global $remind_title;
+    $xtpl = new XTemplate("modal.tpl", PATH);
+    foreach ($remind_title as $key => $value) {
+        $xtpl->assign('id', $key);
+        $xtpl->assign('name', $value);
+        $xtpl->parse('main.name');
+    }
+    $xtpl->parse('main');
+    return $xtpl->text();
+}

@@ -57,7 +57,7 @@ if (!empty($action)) {
       $data['time'] = totime($data['time']);
 
       $data['price'] = str_replace(',', '', $data['price']);
-      $sql = 'insert into `'. PREFIX .'blood_import` (time, number, price, note) values('. $data['time'] .', '. $data['number'] .', '. $data['price'] .', "'. $data['note'] .'")';
+      $sql = 'insert into `'. PREFIX .'blood_import` (time, number, price, note, doctor) values('. $data['time'] .', '. $data['number'] .', '. $data['price'] .', "'. $data['note'] .'", '. ($user_info['userid'] ? $user_info['userid'] : 0) .')';
       $query = $db->query($sql);
       if ($query) {
         $query = $db->query('update `'. $db_config['prefix'] .'_config` set config_value = config_value + ' . $data['number'] . ' where config_name = "blood_number"');

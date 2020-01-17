@@ -187,3 +187,9 @@ function bloodStatistic() {
   $xtpl->parse('main');
   return $xtpl->text();
 }
+
+function parseFilter($filter) {
+  if (empty($filter['page'])) $filter['page']  = 1;
+  if (empty($filter['limit'])) $filter['limit']  = 10;
+  return $filter;
+}

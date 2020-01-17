@@ -125,7 +125,7 @@ function lowitemList() {
 }
 
 function bloodList() {
-    global $db, $nv_Request, $type;
+    global $db, $nv_Request, $type, $db_config;
     $xtpl = new XTemplate("blood-list.tpl", PATH);
     $filter = $nv_Request->get_array('filter', 'post');
     if ($type == 1) {
@@ -148,14 +148,19 @@ function bloodList() {
     $number = $query->fetch()['num'];
 
 
-    $query = $db->query('select * from ((select id, time, 0 as type, number from `'. PREFIX .'blood_row`) union (select id, time, 1 as type, number from `'. PREFIX .'blood_import`)) a '. $xtra .' order by time desc, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+    $query = $db->query('select * from ((select id, time, 0 as type, number, doctor from `'. PREFIX .'blood_row`) union (select id, time, 1 as type, number, doctor from `'. PREFIX .'blood_import`)) a '. $xtra .' order by time desc, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
     while ($row = $query->fetch()) {
+        $sql = 'select * from `'. $db_config['prefix'] .'_users` where userid = ' . $row['doctor'];
+        $user_query = $db->query($sql);
+        $user = $user_query->fetch();
+
         $xtpl->assign('index', $index++);
         $xtpl->assign('time', date('d/m/Y', $row['time']));
         $xtpl->assign('number', $row['number']);
         $xtpl->assign('id', $row['id']);
         $xtpl->assign('typeid', $row['type']);
+        $xtpl->assign('doctor', (!empty($user['first_name']) ? $user['first_name'] : ''));
         if ($row['type']) $xtpl->assign('type', 'Phiếu nhập');
         else $xtpl->assign('type', 'Phiếu xét nghiệm');
         if ($type == 2) {
