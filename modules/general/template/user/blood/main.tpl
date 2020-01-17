@@ -51,7 +51,10 @@
         limit: 10,
         today: '{today}',
         type: 0,
-        id: 0
+        id: 0,
+        prv: 0,
+        index: 0,
+        remind: JSON.parse('{remind_data}')
     }
     const formatter = new Intl.NumberFormat('vi-VI', {
         style: 'currency',
@@ -59,11 +62,29 @@
     })
 
     $(document).ready(() => {
+        installRemind('insert-name')
+
         $(".date").datepicker({
             format: 'dd/mm/yyyy',
             changeMonth: true,
             changeYear: true
         });
+
+        $("#insert-number").keyup((e) => {
+            value = e.currentTarget.value
+            start = $("#insert-start").val()
+            if (!Number(value)) {
+                $("#insert-number").val(global['prv'])
+            }
+            else {
+                console.log(start, value);
+                $("#insert-end").val(start - value)
+            }
+        })
+        $("#insert-number").keydown((e) => {
+            value = e.currentTarget.value
+            if (Number(value)) global['prv'] = value
+        })
 
         $("#import-price").keyup((e) => {
             var current = e.currentTarget
@@ -75,13 +96,56 @@
             val = formatter.format(val).replace(/ ₫/g, "").replace(/\./g, ",");
             current.value = val
         })
+
     })
 
+    function installRemind(name) {
+        var input = $("#" + name)
+        var suggest = $("#" + name + "-suggest")
+        var timeout
+
+        input.keyup((e) => {
+            clearTimeout(timeout)
+            timeout = setTimeout(() => {
+                keyword = convert(e.currentTarget.value)
+                html = ''
+    
+                for (const index in global.remind) {
+                    if (global.remind.hasOwnProperty(index)) {
+                        const item = global.remind[index];
+                        spitem = convert(item)
+                        if (spitem.search(keyword) >= 0) {
+                            html += `
+                                <div class="suggest-item" onclick="selectItem('`+ name +`', '`+ item +`', `+ index +`)">
+                                    `+ item +`
+                                </div>`
+                        }
+                    }
+                }
+                if (!html) suggest.text('Không tìm thấy kết quả')
+                else suggest.html(html)
+            }, 200);
+        })
+        input.focus(() => {
+            suggest.show()
+        })
+        input.blur(() => {
+            setTimeout(() => {
+                suggest.hide()
+            }, 200);
+        })
+    }
+
+    function selectItem(name, value, index) {
+        global['index'] = index
+        $("#" + name).val(value)
+    }
 
     function bloodInsertModal() {
         $("#blood-insert-button").show()
         $("#blood-edit-button").hide()
         loadBloodDefault()
+        $("#insert-number").prop('readonly', false)
         $("#insert-modal").modal('show')
     }
     function importInsertModal() {
@@ -90,6 +154,7 @@
         loadImportDefault()
         $("#import-modal").modal('show')
     }
+
     function edit(type, id) {
         $.post(
             '',
@@ -110,6 +175,7 @@
                         $("#insert-number").val(data['number'])
                         $("#insert-start").val(data['start'])
                         $("#insert-end").val(data['end'])
+                        $("#insert-name").val(data['target'])
                         $("#blood-insert-button").hide()
                         $("#blood-edit-button").show()
                         $("#insert-modal").modal('show')
@@ -149,6 +215,7 @@
 
     function checkBloodData() {
         return {
+            name: $("#insert-name").val(),
             time: $("#insert-time").val(),
             number: $("#insert-number").val(),
             start: $("#insert-start").val(),
@@ -160,6 +227,7 @@
     function loadBloodDefault() {
         $("#insert-time").val(global['today'])
         $("#insert-number").val(1)
+        $("#insert-name").val('')
     }
 
     function insertBlood() {
@@ -169,6 +237,9 @@
         }
         else if (insertData['start'] <= insertData['end']) {
             alert_msg('Số cuối phải nhỏ hơn số đầu')
+        }
+        else if (!insertData['name'].length) {
+            alert_msg('Nhập mục đích sử dụng trước khi thêm')
         }
         else {
             $.post(
@@ -198,13 +269,14 @@
         else {
             $.post(
                 '',
-                { action: 'edit-blood', data: insertData, filter: checkFilter() },
+                { action: 'edit-blood', id: global['id'], data: insertData, filter: checkFilter() },
                 (reponse, status) => {
                     checkResult(reponse, status).then(data => {
                         $("#content").html(data['html'])
                         $("#insert-start").val(insertData['end'])
                         $("#insert-end").val(insertData['end'] - 1)
                         loadBloodDefault()
+                        $("#insert-number").prop('readonly', true)
                         $("#insert-modal").modal('hide')
                     })
                 }

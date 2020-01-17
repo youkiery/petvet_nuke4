@@ -42,7 +42,21 @@ if (!empty($action)) {
       $data = $nv_Request->get_array('data', 'post');
       $data['time'] = totime($data['time']);
 
-      $sql = 'insert into `'. PREFIX .'blood_row` (time, number, start, end, doctor) values('. $data['time'] .', '. $data['number'] .', '. $data['start'] .', '. $data['end'] .', '. $data['doctor'] .')';
+      $targetid = 0;
+      $sql = 'select * from `'. PREFIX .'remind` where name = "blood" and value = "'. $data['name'] .'"';
+      $query = $db->query($sql);
+      if (!empty($row = $query->fetch())) {
+        $targetid = $row['id'];
+      }
+      else {
+        $sql = 'insert into `'. PREFIX .'remind` (name, value) values ("blood", "'. $data['name'] .'")';
+        if ($db->query($sql)) {
+          $targetid = $db->lastInsertId();
+        }
+      }
+      
+      $sql = 'insert into `'. PREFIX .'blood_row` (time, number, start, end, doctor, target) values('. $data['time'] .', '. $data['number'] .', '. $data['start'] .', '. $data['end'] .', '. $data['doctor'] .', '. $targetid .')';
+      // die($sql);
       $query = $db->query($sql);
       if ($query) {
         $query = $db->query('update `'. $db_config['prefix'] .'_config` set config_value = ' . $data['end'] . ' where config_name = "blood_number"');
@@ -77,12 +91,18 @@ if (!empty($action)) {
 
       if ($type) {
         $sql = 'select * from `'. PREFIX .'blood_import` where id = ' . $id;
+        $query = $db->query($sql);
+        $row = $query->fetch();
       }
       else {
         $sql = 'select * from `'. PREFIX .'blood_row` where id = ' . $id;
+        $query = $db->query($sql);
+        $row = $query->fetch();
+        $sql = 'select * from `'. PREFIX .'remind` where id = ' . $row['target'];
+        $query = $db->query($sql);
+        $remind = $query->fetch();
+        $row['target'] = $remind['value'];
       }
-      $query = $db->query($sql);
-      $row = $query->fetch();
       $row['time'] = date('d/m/Y', $row['time']);
       $result = $row;
       $result['status'] = 1;
@@ -104,6 +124,35 @@ if (!empty($action)) {
           $result['status'] = 1;
           $result['number'] = $config['config_value'];
           $result['notify'] = 'Đã lưu thay đổi phiếu nhập';
+          $result['html'] = bloodList();
+        }        
+      }
+    break;
+    case 'edit-blood':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $data = $nv_Request->get_array('data', 'post');
+
+      $sql = 'select * from `'. PREFIX .'blood_row` where id = ' . $id;
+      $query = $db->query($sql);
+
+      if (!empty($row = $query->fetch())) {
+        $targetid = 0;
+        $sql = 'select * from `'. PREFIX .'remind` where name = "blood" and value = "'. $data['name'] .'"';
+        $query = $db->query($sql);
+        if (!empty($row = $query->fetch())) {
+          $targetid = $row['id'];
+        }
+        else {
+          $sql = 'insert into `'. PREFIX .'remind` (name, value) values ("blood", "'. $data['name'] .'")';
+          if ($db->query($sql)) {
+            $targetid = $db->lastInsertId();
+          }
+        }
+
+        $sql = 'update `'. PREFIX .'blood_row` set time = ' . totime($data['time']) . ', target = '. $targetid .', doctor = '. $data['doctor'] .' where id = ' . $id;
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+          $result['notify'] = 'Đã lưu thay đổi phiếu xét nghiệm';
           $result['html'] = bloodList();
         }        
       }
@@ -141,6 +190,15 @@ if ($type) {
   $xtpl->assign('module_file', $module_file);
   $xtpl->assign('module_name', $module_name);
   $xtpl->assign('today', date('d/m/Y'));
+  
+  $sql = 'select * from `'. PREFIX .'remind` where name = "blood" and active = 1';
+  $query = $db->query($sql);
+  $list = array();
+  while ($row = $query->fetch()) {
+    $list[$row['id']] = $row['value'];
+  }
+  
+  $xtpl->assign('remind_data', json_encode($list));
   
   $xtpl->assign('modal', bloodModal());
   $xtpl->assign('insert_modal', bloodInsertModal());

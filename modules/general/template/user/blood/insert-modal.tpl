@@ -8,7 +8,7 @@
                 <div class="maxi-form">
                     <label class="form-group">
                         Thời gian
-                        <input type="text" class="form-control" id="insert-time" value="{today}">
+                        <input type="text" class="form-control date" id="insert-time" value="{today}">
                     </label>
                     <label class="form-group">
                         Số lượng mẫu
@@ -16,12 +16,21 @@
                     </label>
                     <label class="form-group">
                         Số đầu
-                        <input type="text" class="form-control" id="insert-start" value="{last}">
+                        <input type="text" class="form-control" id="insert-start" value="{last}" readonly>
                     </label>
                     <label class="form-group">
                         Số cuối
-                        <input type="text" class="form-control" id="insert-end" value="{nextlast}">
+                        <input type="text" class="form-control" id="insert-end" value="{nextlast}" readonly>
                     </label>
+
+                    <label class="form-group">
+                        Mục đích sử dụng
+                        <div class="relative">
+                            <input type="text" class="form-control" id="insert-name">
+                            <div class="suggest" id="insert-name-suggest"> </div>
+                        </div>
+                    </label>
+
                     <label class="form-group">
                         Người thực hiện
                         <select class="form-control" id="insert-doctor">

@@ -45,7 +45,7 @@ function lowitemModal() {
 }
 
 function bloodInsertModal() {
-    global $db, $db_config, $user_info;
+    global $db, $db_config, $user_info, $remind_title;
 
     $xtpl = new XTemplate("insert-modal.tpl", PATH);
     $last = checkLastBlood();
@@ -53,6 +53,7 @@ function bloodInsertModal() {
     $xtpl->assign('today', date('d/m/Y'));
     $xtpl->assign('last', $last);
     $xtpl->assign('nextlast', $last - 1);
+
     while ($row = $query->fetch()) {
         $xtpl->assign('id', $row['user_id']);
         $xtpl->assign('name', $row['first_name']);

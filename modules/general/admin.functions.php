@@ -12,8 +12,6 @@ define('PATH', NV_ROOTDIR . '/modules/' . $module_file . '/template/admin/' . $o
 include_once(NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php');
 include_once(NV_ROOTDIR . '/modules/' . $module_file . '/theme.php');
 
-$remind_title = array('blood' => 'Xét nghiệm máu');
-
 function remindList($filter) {
     global $db, $remind_title;
 

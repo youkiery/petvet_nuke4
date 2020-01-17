@@ -9,6 +9,7 @@
 if (!defined('NV_MAINFILE')) { die('Stop!!!'); }
 define('PREFIX', $db_config['prefix'] . '_' . $module_name . '_');
 define('BLOCK', NV_ROOTDIR . '/modules/' . $module_file . '/template/block/');
+$remind_title = array('blood' => 'Xét nghiệm máu');
 
 function checkCode($code) {
   global $db;
