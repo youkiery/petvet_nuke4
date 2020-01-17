@@ -55,6 +55,17 @@ if (!empty($action)) {
           $result['html'] = remindList($filter);
       }
     break;
+    case 'active':
+      $id = $nv_Request->get_int('id', 'post');
+      $type = $nv_Request->get_int('type', 'post');
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      $sql = 'update `'. PREFIX .'remind` set active = '. $type .' where id = ' . $id;
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = remindList($filter);
+      }
+    break;
   }
   echo json_encode($result);
   die();

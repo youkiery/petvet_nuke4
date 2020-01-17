@@ -68,6 +68,18 @@
         }
     }
 
+    function active(type, id) {
+        $.post(
+            '',
+            { action: 'active', type: type, id: id, filter: checkFilter() },
+            (response, status) => {
+                checkResult(response, status).then(data => {
+                    $("#content").html(data['html'])
+                })
+            }
+        )
+    }
+
     function goPage(page) {
         $.post(
             '',

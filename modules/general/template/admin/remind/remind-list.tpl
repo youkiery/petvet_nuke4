@@ -12,6 +12,16 @@
         <td> {name} </td>
         <td> <input type="text" class="form-control" id="value-{id}" value="{value}"> </td>
         <td> 
+            <!-- BEGIN: yes -->
+            <button class="btn btn-warning btn-sm" onclick="active(0, {id})">
+                <span class="glyphicon glyphicon-star"></span>
+            </button>
+            <!-- END: yes -->
+            <!-- BEGIN: no -->
+            <button class="btn btn-info btn-sm" onclick="active(1, {id})">
+                <span class="glyphicon glyphicon-star"></span>
+            </button>
+            <!-- END: no -->
             <button class="btn btn-info btn-sm" onclick="updateRemind({id})">
                 <span class="glyphicon glyphicon-refresh"></span>
             </button>

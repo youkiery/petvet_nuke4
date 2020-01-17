@@ -32,6 +32,8 @@ function remindList($filter) {
         $xtpl->assign('id', $row['id']);
         $xtpl->assign('name', (!empty($remind_title[$row['name']]) ? $remind_title[$row['name']] : ''));
         $xtpl->assign('value', $row['value']);
+        if ($row['active']) $xtpl->parse('main.row.yes');
+        else $xtpl->parse('main.row.no');
         $xtpl->parse('main.row');
     }
     $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
