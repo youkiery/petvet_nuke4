@@ -108,6 +108,7 @@ function getDoctorList() {
 function bloodStatistic() {
   global $db, $db_config, $module_name, $nv_Request;
   $filter = $nv_Request->get_array('filter', 'post');
+  $total = array('import' => 0, 'number' => 0, 'count' => 0, 'real' => 0);
 
   $check = 0;
   if (empty($filter['from'])) {
@@ -152,6 +153,9 @@ function bloodStatistic() {
         'count' => 0
       );
     }
+    $total['count'] ++;
+    $total['number'] += $row['number'];
+    $total['real'] += ($row['start'] - $row['end']);
     $data[$row['doctor']]['count'] ++;
     $data[$row['doctor']]['number'] += $row['number'];
     $data[$row['doctor']]['real'] += ($row['start'] - $row['end']);
@@ -172,11 +176,13 @@ function bloodStatistic() {
 
   $sql = 'select * from `'. PREFIX .'blood_import` where (time between '. $filter['from'] .' and '. $filter['end'] .')';
   $query = $db->query($sql);
-  $total = 0;
   while ($row = $query->fetch()) {
-    $total += $row['number'];
+    $total['import'] += $row['number']; // tổng tiền nhập
   }
-  $xtpl->assign('total', number_format($total * 1000, 0, '', ',') . ' VNĐ');
+  $xtpl->assign('import', number_format($total['import'] * 1000, 0, '', ',') . ' VNĐ');
+  $xtpl->assign('count', $total['count']);
+  $xtpl->assign('number', $total['number']);
+  $xtpl->assign('real', $total['real']);
 
   $xtpl->parse('main');
   return $xtpl->text();
