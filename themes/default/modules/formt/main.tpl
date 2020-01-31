@@ -2483,44 +2483,70 @@
     var sampleListA = samplecode.split(', ')
     sampleListA.forEach((sampleA, sampleAIndex) => {
       if (sampleA.search('-') >= 0) {
+        liberate = ''
         var sampleListB = sampleA.split('-')
         if (sampleListB.length == 2) {
           var sampleFrom = sampleListB[0]
           var sampleEnd = sampleListB[1]
-          var liberateCount = (sampleFrom.length > sampleEnd.length ? sampleEnd.length : sampleFrom.length)
-          var liberate = ''
-          for (let i = 0; i < liberateCount; i++) {
-            if (sampleFrom[i] == sampleEnd[i]) {
-              liberate += sampleFrom[i]
+
+          if (sampleFrom.length == sampleEnd.length) {
+            var liberateCount = sampleFrom.length
+            for (let i = 0; i < liberateCount; i++) {
+              if (sampleFrom[i] == sampleEnd[i]) {
+                liberate += sampleFrom[i]
+              }
+              else {
+                break;
+              }
             }
-            else {
-              break;
-            }
-          }
-          var sampleNumber = liberate.length
-          if (sampleNumber) {
-            var sampleNumberFrom = Number(sampleFrom.slice(sampleNumber))
-            var sampleNumberEnd = Number(sampleEnd.slice(sampleNumber))
-            sampleListA[sampleAIndex] = sampleFrom
-            for (let i = sampleNumberEnd; i > sampleNumberFrom; i--) {
-              sampleListA.splice(sampleAIndex + 1, 0, liberate + i)
-            }
-            // return true
           }
           else {
-            // reutrn false
+
           }
+
+          liberateCount = liberate.length
+          sampleFrom = Number(sampleFrom.slice(liberateCount))
+          sampleEnd = Number(sampleEnd.slice(liberateCount))
+          sampleCount = sampleFrom.length
+          if (sampleFrom && sampleEnd) {
+            // replace 
+          }
+
+          // var liberateCount = (sampleFrom.length > sampleEnd.length ? sampleEnd.length : sampleFrom.length)
+          // var liberate = ''
+          // for (let i = 0; i < liberateCount; i++) {
+          //   if (sampleFrom[i] == sampleEnd[i]) {
+          //     liberate += sampleFrom[i]
+          //   }
+          //   else {
+          //     break;
+          //   }
+          // }
+          // var sampleNumber = liberate.length
+          // if (sampleNumber) {
+          //   var sampleNumberFrom = Number(sampleFrom.slice(sampleNumber))
+          //   var sampleNumberEnd = Number(sampleEnd.slice(sampleNumber))
+          //   sampleListA[sampleAIndex] = sampleFrom
+          //   for (let i = sampleNumberEnd; i > sampleNumberFrom; i--) {
+          //     sampleListA.splice(sampleAIndex + 1, 0, liberate + i)
+          //   }
+          //   // return true
+          // }
+          // else {
+          //   // reutrn false
+          // }
         }
         else {
           // return false
         }
       }
     })
-    var result = (sampleListA.length == samplenumber ? true : false)
-    if (!result) {
-      alert_msg('Ký hiệu mẫu không khớp số lượng')
-    }
-    return {list: sampleListA, result: result}
+    
+    // var result = (sampleListA.length == samplenumber ? true : false)
+    // if (!result) {
+      //   alert_msg('Ký hiệu mẫu không khớp số lượng')
+    // }
+    // return {list: sampleListA, result: result}
   }
 
   function parseFieldTable(data) {
