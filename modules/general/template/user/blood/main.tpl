@@ -18,7 +18,7 @@
 {import_modal}
 {remove_modal}
 
-<div style="float: right">
+<div class="form-group" style="float: right">
     <button class="btn btn-info" onclick="loadModal('statistic-modal')">
         Thống kê
     </button>
@@ -353,7 +353,7 @@
     function removeSubmit() {
         $.post(
             '',
-            { action: 'remove', type: global['type'], id: global['id'], filter: checkFilter() },
+            { action: 'remove', typeid: global['type'], id: global['id'], filter: checkFilter() },
             (reponse, status) => {
                 checkResult(reponse, status).then(data => {
                     $("#content").html(data['html'])

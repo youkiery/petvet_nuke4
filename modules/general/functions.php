@@ -164,7 +164,7 @@ function bloodList() {
         $user = $user_query->fetch();
 
         $xtpl->assign('index', $index++);
-        $xtpl->assign('time', date('d/m/Y', $row['time']));
+        $xtpl->assign('time', date('d-m-Y', $row['time']));
         $xtpl->assign('target', (!empty($target[$row['target']]) ? $target[$row['target']] : ''));
         $xtpl->assign('number', $row['number']);
         $xtpl->assign('id', $row['id']);

@@ -159,9 +159,9 @@ if (!empty($action)) {
     break;
     case 'remove':
       $id = $nv_Request->get_int('id', 'post');
-      $type = $nv_Request->get_int('type', 'post');
+      $typeid = $nv_Request->get_int('typeid', 'post');
 
-      if ($type) {
+      if ($typeid) {
         $sql = 'delete from `'. PREFIX .'blood_import` where id = ' . $id;
       }
       else {
@@ -189,6 +189,7 @@ if ($type) {
   $xtpl = new XTemplate("main.tpl", PATH);
   $xtpl->assign('module_file', $module_file);
   $xtpl->assign('module_name', $module_name);
+  $xtpl->assign('type', $type);
   $xtpl->assign('today', date('d/m/Y'));
   
   $sql = 'select * from `'. PREFIX .'remind` where name = "blood" and active = 1';

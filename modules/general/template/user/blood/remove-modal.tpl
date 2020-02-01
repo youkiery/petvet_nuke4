@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-body">
-                <div class="close" type="button" data-dismiss="modal"> &times; </div> <br>
+                <div class="close" type="button" data-dismiss="modal"> &times; </div> <br> <br>
 
                 <div class="text-center">
                     <p> Sau khi xác nhận, phiếu sẽ bị xóa vĩnh viễn </p>
