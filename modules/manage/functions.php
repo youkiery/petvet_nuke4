@@ -11,6 +11,8 @@ define('NV_IS_MOD_CONGVAN', true);
 define('PATH', NV_ROOTDIR . "/modules/". $module_file ."/template/user/" . $op);
 include_once(NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php');
 
+
+
 function deviceModal() {
   $xtpl = new XTemplate("device-modal.tpl", PATH);
   $xtpl->parse('main');
@@ -47,16 +49,6 @@ function transferModal() {
 
 function removeModal() {
   $xtpl = new XTemplate("remove-modal.tpl", PATH);
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
-
-function filterModal() {
-  $xtpl = new XTemplate("filter-modal.tpl", PATH);
-  $start = date('d/m/Y', time() - (date('d') - 1) * 60 * 60 * 24);
-  $end = date('d/m/Y');
-  $xtpl->assign('start', $start);
-  $xtpl->assign('end', $end);
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -348,39 +340,16 @@ function materialList() {
 }
 
 function materialModal() {
-  $xtpl = new XTemplate("material-modal.tpl", PATH);
-  $xtpl->assign('content', materialOverlowList());
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
+  $xtpl = new XTemplate("modal.tpl", PATH);
+ 
+  $start = date('d/m/Y', time() - (date('d') - 1) * 60 * 60 * 24);
+  $end = date('d/m/Y');
+  $xtpl->assign('start', $start);
+  $xtpl->assign('end', $end);
+  $xtpl->assign('overlow_content', materialOverlowList());
+  $xtpl->assign('import_content', importList());
+  $xtpl->assign('export_content', exportList());
 
-function importModal() {
-  $xtpl = new XTemplate("import-modal.tpl", PATH);
-  $xtpl->assign('content', importList());
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
-
-function importModalInsert() {
-  $xtpl = new XTemplate("import-modal-insert.tpl", PATH);
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
-
-function exportModalInsert() {
-  $xtpl = new XTemplate("export-modal-insert.tpl", PATH);
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
-
-function importModalRemove() {
-  $xtpl = new XTemplate("import-modal-remove.tpl", PATH);
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
-
-function exportModalRemove() {
-  $xtpl = new XTemplate("export-modal-remove.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -409,13 +378,6 @@ function importList() {
     $xtpl->assign('total', $importData['total']);
     $xtpl->parse('main.row');
   }
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
-
-function exportModal() {
-  $xtpl = new XTemplate("export-modal.tpl", PATH);
-  $xtpl->assign('content', exportList());
   $xtpl->parse('main');
   return $xtpl->text();
 }

@@ -20,8 +20,7 @@
     </tr>
     <!-- END: row -->
     <tr>
-      <td></td>
-      <td></td>
+      <td colspan="2"> Chênh lệch </td>
       <td> {total} </td>
       <td></td>
       <td></td>

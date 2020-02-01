@@ -349,9 +349,20 @@ function checkMaterialName($name, $id = 0) {
 function getMaterialDataList() {
   global $db;
 
+  $link = array();
+
+  $sql = 'select * from `'. PREFIX .'material_link`';
+  $query = $db->query($sql);
+  while ($row = $query->fetch()) {
+    $link[$row['link_id']]= $row['item_id'];
+    $link[$row['item_id']]= $row['link_id'];
+  }
+
   $list = array();
   $query = $db->query('select * from `'. PREFIX .'material`');
+  // insert link
   while ($row = $query->fetch()) {
+    $row['link'] = $link[$row['id']];
     $list []= $row;
   }
   return $list;

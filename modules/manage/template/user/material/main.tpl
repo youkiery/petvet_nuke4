@@ -5,15 +5,7 @@
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 
-{import_modal}
-{import_modal_insert}
-{import_modal_remove}
-{export_modal}
-{export_modal_insert}
-{export_modal_remove}
-{material_modal}
-{filter_modal}
-{report_modal}
+{modal}
 
 <div id="msgshow"></div>
 <div style="float: right;">
@@ -252,6 +244,34 @@
     selected = global['material'][index]
     $("#"+ name +"-item-finder").val(selected['name'])
     getFormLine(name)
+    if (global['material'][index]['link']) {
+      check = false
+      for (const key in global['selected'][name]) {
+        if (global['selected'][name].hasOwnProperty(key)) {
+          const element = global['selected'][name][key];
+          if (element['id'] == global['material'][index]['link']) {
+            check = global['material'][index]['link']
+            // swap linked item to last
+            temp = element // current
+            last = Object.keys(global.material)
+            last = last[last.length - 1]
+            global['selected'][name][key] = global['selected'][name][last]
+            global['selected'][name][last] = temp
+          }
+        }
+      }
+      if (!check) {
+        // insert linked item
+        global['selected'][name].push({
+          index: index,
+          id: global['material'][index]['id'],
+          date: '',
+          number: 1,
+          status: '',
+        })
+        index ++
+      }
+    }
     global['selected'][name].push({
       index: index,
       id: global['material'][index]['id'],

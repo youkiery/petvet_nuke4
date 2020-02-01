@@ -334,25 +334,8 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("main.tpl", PATH);
 $xtpl->assign('content', materialList());
-$xtpl->assign('material_modal', materialModal());
-$xtpl->assign('import_modal', importModal());
-$xtpl->assign('import_modal_insert', importModalInsert());
-$xtpl->assign('import_modal_remove', importModalRemove());
-$xtpl->assign('export_modal', exportModal());
-$xtpl->assign('export_modal_insert', exportModalInsert());
-$xtpl->assign('export_modal_remove', exportModalRemove());
-$xtpl->assign('filter_modal', filterModal());
-$xtpl->assign('report_modal', loadModal('report-modal'));
+$xtpl->assign('modal', materialModal());
 $xtpl->assign('material', json_encode(getMaterialDataList(), JSON_UNESCAPED_UNICODE));
-// $xtpl->assign('remove_modal', removeModal());
-// $xtpl->assign('remove_all_modal', removeAllModal());
-// $xtpl->assign('today', date('d/m/Y', time()));
-// $xtpl->assign('remind', json_encode(getRemind(), JSON_UNESCAPED_UNICODE));
-// $xtpl->assign('remindv2', json_encode(getRemindv2(), JSON_UNESCAPED_UNICODE));
-// $xtpl->assign('depart_modal', departmodal());
-// $xtpl->assign('item', json_encode(getItemDataList(), JSON_UNESCAPED_UNICODE));
-// $xtpl->assign('import', importModal());
-// $xtpl->assign('import_insert', importInsertModal());
 
 $xtpl->parse('main');
 $contents = $xtpl->text();
