@@ -2265,7 +2265,7 @@
         </div>
       </div>`
     })
-    html = `<button class="btn btn-info" onclick="synchField()"><span class="glyphicon glyphicon-refresh"></span></button>`+ html +`<button class="btn btn-info" onclick="addField('`+ sampleX +`')"><span class="glyphicon glyphicon-plus"></span></button>`
+    html = `<button class="btn btn-info" onclick="synchField()"><span class="glyphicon glyphicon-refresh"></span></button> <a href="#fdown" class="btn btn-info"> <span class="glyphicon glyphicon-arrow-down"> </span></a><span id="fup"> `+ html +`<button class="btn btn-info" onclick="addField('`+ sampleX +`')"><span class="glyphicon glyphicon-plus"></span></button> <a href="#fup" class="btn btn-info"> <span class="glyphicon glyphicon-arrow-up"> </span></a><span id="fdown"></span>`
     sample.html(html)
     installer.forEach(item => {
       installRemindv2(item['name'], item['type'])
@@ -2478,75 +2478,103 @@
       winPrint.close()
   }
 
-  function checkSamplecode(samplecode, samplenumber) {
-    var result = []
-    var sampleListA = samplecode.split(', ')
-    sampleListA.forEach((sampleA, sampleAIndex) => {
-      if (sampleA.search('-') >= 0) {
-        liberate = ''
-        var sampleListB = sampleA.split('-')
-        if (sampleListB.length == 2) {
-          var sampleFrom = sampleListB[0]
-          var sampleEnd = sampleListB[1]
+    function checkSamplecode(samplecode, samplenumber) {
+      var result = []
+      var sampleListA = samplecode.split(', ')
+      sampleListA.forEach((sampleA, sampleAIndex) => {
+        if (sampleA.search('-') >= 0) {
+          liberate = ''
+          var sampleListB = sampleA.split('-')
+          if (sampleListB.length == 2) {
+            var sampleFrom = sampleListB[0]
+            var sampleEnd = sampleListB[1]
 
-          if (sampleFrom.length == sampleEnd.length) {
-            var liberateCount = sampleFrom.length
-            for (let i = 0; i < liberateCount; i++) {
-              if (sampleFrom[i] == sampleEnd[i]) {
-                liberate += sampleFrom[i]
+            if (sampleFrom.length == sampleEnd.length) {
+              var liberateCount = sampleFrom.length
+              for (let i = 0; i < liberateCount; i++) {
+                if (sampleFrom[i] == sampleEnd[i]) {
+                  liberate += sampleFrom[i]
+                }
+                else {
+                  break;
+                }
               }
-              else {
-                break;
+
+              liberateCount = liberate.length
+              sampleFrom = Number(sampleFrom.slice(liberateCount))
+              sampleEnd = Number(sampleEnd.slice(liberateCount))
+              sampleCount = String(sampleEnd).length
+
+              if (sampleFrom && sampleEnd) {
+                // replace 
+                if (sampleFrom > sampleEnd) {
+                  temp = sampleFrom
+                  sampleFrom = sampleEnd
+                  sampleEnd = temp
+                }
+
+                for (let index = sampleFrom; index <= sampleEnd; index++) {
+                  result.push(liberate + fillZero(index, sampleCount))
+                }
               }
             }
+            else {
+              result.push(sampleA)
+            }
+
+            // var liberateCount = (sampleFrom.length > sampleEnd.length ? sampleEnd.length : sampleFrom.length)
+            // var liberate = ''
+            // for (let i = 0; i < liberateCount; i++) {
+            //   if (sampleFrom[i] == sampleEnd[i]) {
+            //     liberate += sampleFrom[i]
+            //   }
+            //   else {
+            //     break;
+            //   }
+            // }
+            // var sampleNumber = liberate.length
+            // if (sampleNumber) {
+            //   var sampleNumberFrom = Number(sampleFrom.slice(sampleNumber))
+            //   var sampleNumberEnd = Number(sampleEnd.slice(sampleNumber))
+            //   sampleListA[sampleAIndex] = sampleFrom
+            //   for (let i = sampleNumberEnd; i > sampleNumberFrom; i--) {
+            //     sampleListA.splice(sampleAIndex + 1, 0, liberate + i)
+            //   }
+            //   // return true
+            // }
+            // else {
+            //   // reutrn false
+            // }
           }
           else {
-
+            result.push(sampleA)
+            // return false
           }
-
-          liberateCount = liberate.length
-          sampleFrom = Number(sampleFrom.slice(liberateCount))
-          sampleEnd = Number(sampleEnd.slice(liberateCount))
-          sampleCount = sampleFrom.length
-          if (sampleFrom && sampleEnd) {
-            // replace 
-          }
-
-          // var liberateCount = (sampleFrom.length > sampleEnd.length ? sampleEnd.length : sampleFrom.length)
-          // var liberate = ''
-          // for (let i = 0; i < liberateCount; i++) {
-          //   if (sampleFrom[i] == sampleEnd[i]) {
-          //     liberate += sampleFrom[i]
-          //   }
-          //   else {
-          //     break;
-          //   }
-          // }
-          // var sampleNumber = liberate.length
-          // if (sampleNumber) {
-          //   var sampleNumberFrom = Number(sampleFrom.slice(sampleNumber))
-          //   var sampleNumberEnd = Number(sampleEnd.slice(sampleNumber))
-          //   sampleListA[sampleAIndex] = sampleFrom
-          //   for (let i = sampleNumberEnd; i > sampleNumberFrom; i--) {
-          //     sampleListA.splice(sampleAIndex + 1, 0, liberate + i)
-          //   }
-          //   // return true
-          // }
-          // else {
-          //   // reutrn false
-          // }
         }
         else {
-          // return false
+          result.push(sampleA)
         }
+      })
+      // console.log(result);
+      
+      // var result = (sampleListA.length == samplenumber ? true : false)
+      // if (!result) {
+        //   alert_msg('Ký hiệu mẫu không khớp số lượng')
+      // }
+      // return {list: sampleListA, result: result}
+      resultChecker = result.length == samplenumber ? true : false
+      if (!resultChecker) {
+        alert_msg('Ký hiệu mẫu không khớp số lượng, ' + result.length + ' trên ' + samplenumber)
       }
-    })
-    
-    // var result = (sampleListA.length == samplenumber ? true : false)
-    // if (!result) {
-      //   alert_msg('Ký hiệu mẫu không khớp số lượng')
-    // }
-    // return {list: sampleListA, result: result}
+
+      return {list: result, result: resultChecker}
+    }
+
+  function fillZero(number, length) {
+    if (String(number).length < length) {
+      return (new Array(length - String(number).length).fill(0)).join('') + number
+    }
+    return number
   }
 
   function parseFieldTable(data) {
