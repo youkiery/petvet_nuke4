@@ -1,16 +1,21 @@
 <!-- BEGIN: main -->
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
+<script type="text/javascript"
+	src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <div id="msgshow" class="msgshow"></div>
 
-<div id="vac_notify" style="display: none; position: fixed; top: 0; right: 0; background: white; padding: 8px; border: 1px solid black; z-index: 1000;"></div>
+<div id="vac_notify"
+	style="display: none; position: fixed; top: 0; right: 0; background: white; padding: 8px; border: 1px solid black; z-index: 1000;">
+</div>
 <div style="float: right;">
-	<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/default/images/vaccine/contact_add_small.png')" class="vac_icon" onclick="addCustomer()">
-		<img src="/themes/default/images/vaccine/trans.png" title="Thêm khách hàng"> 
+	<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/default/images/vaccine/contact_add_small.png')"
+		class="vac_icon" onclick="addCustomer()">
+		<img src="/themes/default/images/vaccine/trans.png" title="Thêm khách hàng">
 	</div>
-	<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/default/images/vaccine/pet_add.png')" class="vac_icon" tooltip="Thêm thú cưng" onclick="addPet()">
-		<img src="/themes/default/images/vaccine/trans.png" title="Thêm thú cưng"> 
+	<div style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/default/images/vaccine/pet_add.png')"
+		class="vac_icon" tooltip="Thêm thú cưng" onclick="addPet()">
+		<img src="/themes/default/images/vaccine/trans.png" title="Thêm thú cưng">
 	</div>
 </div>
 <br>
@@ -22,8 +27,8 @@
 				<div>
 					<label>{lang.customer}</label>
 					<div class="relative">
-							<input class="form-control" id="customer_name" type="text" name="customer">
-							<div id="customer_name_suggest" class="suggest"></div>
+						<input class="form-control" id="customer_name" type="text" name="customer">
+						<div id="customer_name_suggest" class="suggest"></div>
 					</div>
 				</div>
 			</div>
@@ -31,9 +36,9 @@
 				<div>
 					<label>{lang.phone}</label>
 					<div class="relative">
-							<input class="form-control" id="customer_phone" type="number" name="phone">
-							<div id="customer_phone_suggest" class="suggest"></div>
-						</div>
+						<input class="form-control" id="customer_phone" type="number" name="phone">
+						<div id="customer_phone_suggest" class="suggest"></div>
+					</div>
 				</div>
 			</div>
 			<div class="form-group col-md-10">
@@ -48,7 +53,8 @@
 			</div>
 			<div class="form-group col-md-6">
 				<label>{lang.disease}</label>
-				<select class="form-control" id="pet_disease" class="vac_select_max" style="text-transform: capitalize;" name="disease">
+				<select class="form-control" id="pet_disease" class="vac_select_max" style="text-transform: capitalize;"
+					name="disease">
 					<!-- BEGIN: option -->
 					<option value="{disease_id}">
 						{disease_name}
@@ -61,7 +67,7 @@
 				<div class="input-group date" data-provide="datepicker">
 					<input type="text" class="form-control" id="pet_cometime" value="{now}" readonly>
 					<div class="input-group-addon">
-							<span class="glyphicon glyphicon-th"></span>
+						<span class="glyphicon glyphicon-th"></span>
 					</div>
 				</div>
 			</div>
@@ -70,7 +76,7 @@
 				<div class="input-group date" data-provide="datepicker">
 					<input type="text" class="form-control" id="pet_calltime" value="{calltime}" readonly>
 					<div class="input-group-addon">
-							<span class="glyphicon glyphicon-th"></span>
+						<span class="glyphicon glyphicon-th"></span>
 					</div>
 				</div>
 			</div>
@@ -98,9 +104,9 @@
 	var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=main&act=post";
 	var blur = true;
 	var customer_data = [];
-  var customer_list = [];
-  var g_index = -1;
-  var g_customer  = -1;
+	var customer_list = [];
+	var g_index = -1;
+	var g_customer = -1;
 	var customer_name = document.getElementById("customer_name");
 	var customer_phone = document.getElementById("customer_phone");
 	var customer_address = document.getElementById("customer_address");
@@ -114,17 +120,17 @@
 
 	$('#pet_calltime, #pet_cometime').datepicker({
 		format: 'dd/mm/yyyy',
-        changeMonth: true,
-        changeYear: true
+		changeMonth: true,
+		changeYear: true
 	});
 
 	function vaccine() {
 		msg = "";
-		if(!customer_name) {
+		if (!customer_name) {
 			msg = "Chưa nhập tên khách hàng!"
-		} else if(!customer_phone.value) {
+		} else if (!customer_phone.value) {
 			msg = "Chưa nhập số điện thoại!"
-		} else if(!pet_info.value) {
+		} else if (!pet_info.value) {
 			msg = "Khách hàng chưa có thú cưng!"
 		} else if (!pet_disease.value) {
 			msg = "Chưa có loại tiêm phòng!";
@@ -139,16 +145,16 @@
 				response = JSON.parse(response);
 				switch (response["status"]) {
 					case 2:
-						alert_msg("Đã lưu vào lịch báo tiêm phòng");
-            customer_list[g_index]["customer"] = customer_name.value
-            customer_list[g_index]["address"] = customer_address.value
-            g_index = -1;
+						msg = "Đã lưu vào lịch báo tiêm phòng";
+						customer_list[g_index]["customer"] = customer_name.value
+						customer_list[g_index]["address"] = customer_address.value
+						g_index = -1;
 						customer_name.value = ""
 						customer_phone.value = ""
-            customer_address.value = ""
+						customer_address.value = ""
 						pet_info.innerHTML = ""
-            pet_note.value = ""
-            
+						pet_note.value = ""
+
 						break;
 					case 3:
 						msg = "Thú cưng không tồn tại!";
@@ -162,10 +168,12 @@
 					default:
 						msg = "lỗi không xác định!"
 				}
-				showMsg(msg);
+				alert_msg(msg);
 			})
 		}
-		showMsg(msg);
+		if (msg) {
+			alert_msg(msg);
+		}
 		return false;
 	}
 
@@ -187,7 +195,7 @@
 		suggest_name.style.display = "block";
 	})
 	customer_name.addEventListener("blur", (e) => {
-		if(blur) {
+		if (blur) {
 			suggest_name.style.display = "none";
 		}
 	})
@@ -201,11 +209,10 @@
 		suggest_phone.style.display = "block";
 	})
 	customer_phone.addEventListener("blur", (e) => {
-		if(blur) {
+		if (blur) {
 			suggest_phone.style.display = "none";
 		}
 	})
 
 </script>
 <!-- END: main -->
-
