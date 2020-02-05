@@ -2045,12 +2045,16 @@
   }
 
   function synchField() {
+    var samplecode = checkSamplecode(formInsertSampleCode.val(), formInsertNumber.val())['list']
+    // console.log(samplecode);
+    
     var data = {
       type: getCheckbox('type', formInsertTypeOther),
       sample: formInsertSample.val(),
       samplecode: checkSamplecode(formInsertSampleCode.val(), formInsertNumber.val())['list'],
       exam: getExam()
     }
+
     var type = (data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text()))
     var sampleCount = data['samplecode'].length
     var maintemp = []
@@ -2076,21 +2080,21 @@
         })
       })
 
-      splited = splitCode(data['samplecode'][i])
-      if (splited.length > 1) {
-        from = Number(trim(splited[0]))
-        end = Number(trim(splited[1]))
-        for (let j = from; j <= end; j++) {
-          maintemp.push({
-            code: j,
-            number: 1,
-            status: 0,
-            type: type,
-            mainer: temp
-          })
-        }
-      }
-      else {
+      // splited = splitCode(data['samplecode'][i])
+      // if (splited.length > 1) {
+      //   from = Number(trim(splited[0]))
+      //   end = Number(trim(splited[1]))
+      //   for (let j = from; j <= end; j++) {
+      //     maintemp.push({
+      //       code: j,
+      //       number: 1,
+      //       status: 0,
+      //       type: type,
+      //       mainer: temp
+      //     })
+      //   }
+      // }
+      // else {
         maintemp.push({
           code: data['samplecode'][i],
           number: 1,
@@ -2098,10 +2102,12 @@
           type: type,
           mainer: temp
         })
-      }
+      // }
 
     }
     global_field = maintemp
+    // console.log(global_field);
+    
     parseField(global_field)
   }
 
@@ -2486,8 +2492,8 @@
           liberate = ''
           var sampleListB = sampleA.split('-')
           if (sampleListB.length == 2) {
-            var sampleFrom = sampleListB[0]
-            var sampleEnd = sampleListB[1]
+            var sampleFrom = trim(sampleListB[0])
+            var sampleEnd = trim(sampleListB[1])
 
             if (sampleFrom.length == sampleEnd.length) {
               var liberateCount = sampleFrom.length
