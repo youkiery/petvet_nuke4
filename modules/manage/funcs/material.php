@@ -154,7 +154,9 @@ if (!empty($action)) {
 
         foreach ($data as $key => $data_row) {
           $j = 1;
-  
+ 
+          $summary['import'] -= $data_row['export'];
+          $summary['import2'] -= $data_row['export2'];
           $objPHPExcel
           ->setActiveSheetIndex(0)
           ->setCellValue($xco[$j++] . $i, $index++) // STT
@@ -162,10 +164,10 @@ if (!empty($action)) {
           ->setCellValue($xco[$j++] . $i, $data_row['export_date']) // Ngày xuất
           ->setCellValue($xco[$j++] . $i, $data_row['import']) // nhập
           ->setCellValue($xco[$j++] . $i, $data_row['export']) // xuất
-          ->setCellValue($xco[$j++] . $i, $summary['import'] -= $data_row['export']) // tồn
+          ->setCellValue($xco[$j++] . $i, $summary['import']) // tồn
           ->setCellValue($xco[$j++] . $i, $data_row['import2']) // nhập
           ->setCellValue($xco[$j++] . $i, $data_row['export2']) // xuất
-          ->setCellValue($xco[$j++] . $i, $summary['export2'] -= $data_row['export2']) // tồn
+          ->setCellValue($xco[$j++] . $i, $summary['import2']) // tồn
           ->setCellValue($xco[$j++] . $i, $data_row['note']);  // ghi chú
           $i++;
         }
