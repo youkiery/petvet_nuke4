@@ -218,8 +218,8 @@
             name: $("#insert-name").val(),
             time: $("#insert-time").val(),
             number: $("#insert-number").val(),
-            start: $("#insert-start").val(),
-            end: $("#insert-end").val(),
+            start: Number($("#insert-start").val()),
+            end: Number($("#insert-end").val()),
             doctor: $("#insert-doctor").val()
         }
     }
@@ -232,6 +232,7 @@
 
     function insertBlood() {
         insertData = checkBloodData()
+        
         if (insertData['number'] <= 0) {
             alert_msg('Số lượng mẫu phải lớn hơn 0')
         }
