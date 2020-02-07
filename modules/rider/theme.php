@@ -196,14 +196,27 @@ function riderList($type, $startDate, $endDate) {
 }
 
 function riderModal() {
-  global $db;
+  global $db, $db_config, $user_info;
   $xtpl = new XTemplate('modal.tpl', PATH2);
-  $sql = "select * from `" . PREFIX . "_user` where type = 1";
+  $sql = "select * from `" . PREFIX . "_config` where user_id = 0 and name = 'clock'";
   $query = $db->query($sql);
+  $clock = $query->fetch();
+  if (!$clock) {
+    $clock = 0;
+  }
+  
+  $xtpl->assign("clock", $clock["value"] . '.0');
 
+  $sql = "select userid, username, first_name, last_name from `" . $db_config["prefix"] . "_users` a inner join `". PREFIX ."_user` b on a.userid = b.user_id where type = 1";
+  $query = $db->query($sql);
+  
   while ($row = $query->fetch()) {
-    $xtpl->assign("driver_id", $user[$row["user_id"]]["userid"]);
-    $xtpl->assign("driver_name", $user[$row["user_id"]]["last_name"] . " " . $user[$row["user_id"]]["first_name"]);
+    $xtpl->assign("collect_doctor_check", '');
+    if (!empty($user_info) && $user_info['userid'] == $row['userid']) {
+      $xtpl->assign("collect_doctor_check", 'selected');
+    }
+    $xtpl->assign("driver_id", $row["userid"]);
+    $xtpl->assign("driver_name", $row["last_name"] . " " . $row["first_name"]);
     $xtpl->parse("main.collect_doctor");
   }
   $xtpl->assign("statistic_content", riderStatistic());
