@@ -636,8 +636,11 @@
       <label class="col-sm-6">
         Ngày phân tích
       </label>
-      <div class="relative col-sm-12">
-        <input type="text" class="form-control" id="form-insert-exam-date" autocomplete="off">
+      <div class="col-sm-6">
+        <input type="text" class="form-control date" id="form-insert-exam-date" autocomplete="off">
+      </div>
+      <div class="col-sm-6">
+        <input type="text" class="form-control date" id="form-insert-exam-date-2" autocomplete="off">
       </div>
     </div>
 
@@ -1642,7 +1645,7 @@
     parseSaved()
   })
 
-  $("#form-insert-receive, #form-insert-resend, #form-insert-ireceive, #form-insert-iresend, #form-insert-sample-receive, #form-insert-sample-time, #form-insert-exam-date, #form-summary-from, #form-summary-end, #form-insert-notice-time, #form-insert-xresend, #form-insert-xreceive, #form-insert-xsend, #excelf, #excelt, #filter-from, #filter-end, #sfilter-from, #sfilter-end, #sfilter2-from, #sfilter2-end").datepicker({
+  $("#form-insert-receive, #form-insert-resend, #form-insert-ireceive, #form-insert-iresend, #form-insert-sample-receive, #form-insert-sample-time, #form-summary-from, #form-summary-end, #form-insert-notice-time, #form-insert-xresend, #form-insert-xreceive, #form-insert-xsend, #excelf, #excelt, #filter-from, #filter-end, #sfilter-from, #sfilter-end, #sfilter2-from, #sfilter2-end, .date").datepicker({
     format: 'dd/mm/yyyy',
     changeMonth: true,
     changeYear: true
@@ -2920,6 +2923,7 @@
     formInsertIreceive.val(defaultData['today'])
     formInsertIresend.val(defaultData['tomorrow'])
     formInsertExamDate.val(defaultData['tomorrow'])
+    $("#form-insert-exam-date-2").val(defaultData['tomorrow'])
     formInsertXreceive.val(defaultData['today'])
     formInsertXsend.val(defaultData['today'])
     formInsertXresend.val(defaultData['tomorrow'])
@@ -3298,6 +3302,7 @@
             xsender: formInsertXsender.val(),
             xresender: formInsertXresender.val(),
             examdate: formInsertExamDate.val(),
+            examdate2: $("#form-insert-exam-date-2").val(),
             iresend: formInsertIresend.val(),
             xreceive: formInsertXreceive.val(),
             xsend: formInsertXsend.val(),
@@ -3343,6 +3348,7 @@
             samplereceive: formInsertSampleReceive.val(),
             samplereceiver: formInsertSampleReceiver.val(),
             examdate: formInsertExamDate.val(),
+            examdate2: $("#form-insert-exam-date-2").val(),
             result: formInsertResult.val(),
             sample: formInsertSample.val(),
             note: formInsertNote.val(),
@@ -3486,6 +3492,7 @@
       formInsertIreceiverUnit.val(data['form']['ireceiverunit'])
       parseField(JSON.parse(data['form']['ig']))
       formInsertExamDate.val(data['form']['examdate'])
+      $("#form-insert-exam-date-2").val(data['form']['examdate2'])
       formInsertIresend.val(data['form']['iresend'])
       formInsertXreceive.val(data['form']['xreceive'])
       formInsertXreceiver.val(data['form']['xreceiver'])
