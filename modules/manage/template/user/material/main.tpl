@@ -237,49 +237,92 @@
         suggest.hide()
       }, 300);
     })
-
   }
 
   function selectItem(name, index) {
     selected = global['material'][index]
     $("#"+ name +"-item-finder").val(selected['name'])
     getFormLine(name)
+    checkSelected(name, global['material'][index]['id'])
     if (global['material'][index]['link']) {
-      check = false
-      for (const key in global['selected'][name]) {
-        if (global['selected'][name].hasOwnProperty(key)) {
-          const element = global['selected'][name][key];
-          if (element['id'] == global['material'][index]['link']) {
-            check = global['material'][index]['link']
-            // swap linked item to last
-            temp = element // current
-            last = Object.keys(global.material)
-            last = last[last.length - 1]
-            global['selected'][name][key] = global['selected'][name][last]
-            global['selected'][name][last] = temp
-          }
-        }
-      }
-      if (!check) {
-        // insert linked item
-        global['selected'][name].push({
-          index: index,
-          id: global['material'][index]['id'],
-          date: '',
-          number: 1,
-          status: '',
-        })
-        index ++
-      }
+      checkSelected(name, global['material'][index]['link'])
     }
-    global['selected'][name].push({
-      index: index,
-      id: global['material'][index]['id'],
-      date: '',
-      number: 1,
-      status: '',
-    })
+
+      // global['selected'][name].forEach((item, key) => {
+      //   console.log(item['id'], global['material'][index]['link']);
+      //   if (item['id'] == global['material'][index]['link']) {
+      //     check = global['material'][index]['link']
+      //     // swap linked item to last
+      //     temp = item // current
+      //     last = Object.keys(global.material)
+      //     last = last[last.length - 1]
+      //     global['selected'][name][key] = global['selected'][name][last]
+      //     global['selected'][name][last] = temp
+      //   }
+      // })
+
+      // if (!check) {
+      //   // insert linked item
+      //   global['selected'][name].push({
+      //     index: index,
+      //     id: global['material'][index]['id'],
+      //     date: '',
+      //     number: 1,
+      //     status: '',
+      //   })
+      // }
+
+    // global['selected'][name].push({
+    //   index: index,
+    //   id: global['material'][index]['id'],
+    //   date: '',
+    //   number: 1,
+    //   status: '',
+    // })
     parseFormLine(name)
+  }
+
+  function checkSelected(name, id) {
+    checker = false
+    checker2 = false
+    // tìm index của id trong global.material
+    // tìm trong danh sách selected có chứa item có index trên không
+    // nếu có, đưa lên đầu
+    // nếu không, thêm mới
+    global['material'].forEach((item, index) => {
+      if (item['id'] == id) {
+        checker = index
+      }
+    });
+
+    global['selected'][name].forEach((item, index) => {
+      if (item['index'] == checker) {
+        checker2 = global['material'][index]['index']
+        // checkItem = item
+        // đẩy item về đầu
+        for (let i = index - 1; i > 0; i--) {
+          swapItem(name, i, i - 1)
+        }
+        global['selected'][0] = item
+      } 
+    })
+
+    if (!checker2) {
+      // chưa swap, chỉ cần thêm mới
+      global['selected'][name].push({
+        index: checker,
+        id: global['material'][checker]['id'],
+        date: '',
+        number: 1,
+        status: '',
+      })
+    }
+  }
+
+  function swapItem(name, a, b) {
+    temp = global['selected'][name][a]
+    global['selected'][name][a] = global['selected'][name][b]
+    global['selected'][name][b] = temp
   }
 
   function parseFormLine(name) {
