@@ -5,123 +5,20 @@
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <div class="msgshow" id="msgshow"></div>
 
-<div class="modal fade" id="remove-modal" role="dialog">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <div class="text-center">
-          <p>
-            Xác nhận xóa bản ghi này
-          </p>
-          <button class="btn btn-danger" onclick="removeSubmit()">
-            Xóa
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+{modal}
+
+<div class="form-group" style="float: right;">
+  <button class="btn btn-info" onclick="statistic()">
+    Thống kê
+  </button>
+  <button class="btn btn-success" id="insert">
+    Thêm phiếu lái xe, chi
+  </button>
 </div>
 
-<div class="modal fade" id="rider-detail" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <p> Thời gian nhập: <span id="rider-date"></span> </p>
-        <p> Điểm đến: <span id="rider-destination"></span> </p>
-        <p> Cây số đi: <span id="rider-from"></span> </p>
-        <p> Cây số về: <span id="rider-end"></span> </p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="insert-collect" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <p class="text-center">
-          Phiếu ghi lộ trình
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </p>
-        <div class="form-group">
-          <label> Bác sĩ đi cùng </label>
-          <select class="form-control" id="collect-doctor">
-            <!-- BEGIN: collect_doctor -->
-            <option value="{driver_id}" {collect_doctor_check}>{driver_name}</option>
-            <!-- END: collect_doctor -->
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label> Cây số đầu </label>
-          <input class="form-control" id="collect-start" type="text" value="{clock}">
-        </div>
-        <div class="form-group">
-          <label> Cây số cuối </label>
-          <input class="form-control" id="collect-end" type="text" value="{clock}">
-        </div>
-        <div class="form-group">
-          <label> Giá tiền </label>
-          <input class="form-control" id="collect-price" type="text">
-        </div>
-        <div class="form-group">
-          <label> Khách hàng <span id="collect-customer-info"></span> </label>
-          <div class="relative">
-            <input class="form-control" id="collect-customer" type="text">
-            <div class="suggest" id="collect-customer-suggest">  </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label> Địa điểm đến </label>
-          <div class="relative">
-            <input class="form-control" id="collect-destination" type="text">
-            <div class="suggest" id="collect-destination-suggest">  </div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label> Ghi chú </label>
-          <input class="form-control" id="collect-note" type="text">
-        </div>
-        <div class="form-group text-center">
-          <button class="btn btn-success" id="collect-insert">
-            Lưu lộ trình
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<div style="clear: both;"></div>
   
-<div id="insert-pay" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <p class="text-center">
-          Phiếu chi lộ trình
-        </p>
-        <div class="form-group">
-          <label> Số tiền chi </label>
-          <input class="form-control" id="pay-money" type="text" value="0">
-        </div>
-        <div class="form-group">
-          <label> Ghi chú </label>
-          <input class="form-control" id="pay-note" type="text">
-        </div>
-        <div class="form-group">
-          <button class="btn btn-success" id="pay-insert">
-            Lưu phiếu chi
-          </button>
-          <button class="btn close" data-dismiss="modal">
-            Trở về
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-  
-<div class="row">
+<div class="row form-group">
   <div class="col-sm-4">
     <select class="form-control" id="type">
       <option value="0"> Lộ trình </option>
@@ -143,11 +40,6 @@
   </div>
   <div class="col-sm-4">
 
-  </div>
-  <div class="col-sm-4">
-    <button class="btn btn-info" id="insert">
-      Thêm
-    </button>
   </div>
 </div>
 <div id="content">
@@ -552,6 +444,35 @@
         }, () => {
           $(".btn, .form-control").attr("disabled", false)
         })        
+      }
+    )
+  }
+
+  $("#from, #end").datepicker({
+		format: 'dd/mm/yyyy',
+    changeMonth: true,
+    changeYear: true
+	});
+
+  function checkFilter() {
+    return {
+      from: $("#from").val(),
+      end: $("#end").val()
+    }
+  }
+
+  function statistic() {
+    $("#statistic-modal").modal('show')
+  }
+
+  function statisticSubmit() {
+    $.post(
+      '',
+      {action: "statistic", filter: checkFilter()},
+      (response, status) => {
+        checkResult(response, status).then((data) => {
+          $("#statistic-content").html(data['html'])
+        }, () => { })
       }
     )
   }

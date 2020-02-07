@@ -105,6 +105,12 @@ if (!empty($action)) {
       }
       $result["status"] = 1;
     break;
+    case 'statistic':
+      $filter = $nv_Request->get_array('filter', 'post');
+
+      $result['status'] = 1;
+      $result['html'] = riderStatistic($filter);
+    break;
 	}
 
 	echo json_encode($result);
@@ -168,15 +174,6 @@ while ($row = $query->fetch()) {
   $xtpl->parse("main.pay_driver");
 }
 
-$sql = "select * from `" . PREFIX . "_user` where type = 1";
-$query = $db->query($sql);
-
-while ($row = $query->fetch()) {
-  $xtpl->assign("driver_id", $user[$row["user_id"]]["userid"]);
-  $xtpl->assign("driver_name", $user[$row["user_id"]]["last_name"] . " " . $user[$row["user_id"]]["first_name"]);
-  $xtpl->parse("main.collect_doctor");
-}
-
 foreach ($date_option as $date_value => $date_name) {
   $xtpl->assign("date_name", $date_name);
   $xtpl->assign("date_value", $date_value);
@@ -186,6 +183,7 @@ foreach ($date_option as $date_value => $date_name) {
 $xtpl->assign("page", 1);
 $xtpl->assign("limit", 10);
 $xtpl->assign("content", collectList($today, $tomorrow));
+$xtpl->assign("modal", riderModal());
 
 $xtpl->assign('rider', $user_info['userid']);
 
