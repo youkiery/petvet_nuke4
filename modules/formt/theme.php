@@ -359,6 +359,9 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
         else if ($row['time'] <= $locker_time) {
           // lock
         }
+        else if ($row['locker']) {
+          // lock
+        }
         else {
           $xtpl->parse('main.row.mod.lockg');
         }

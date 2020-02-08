@@ -674,6 +674,12 @@
           <input type="checkbox" id="signer_xsign">
         </div>
       </div>
+      <div class="row form-group">
+        <label class="col-sm-6"> Khóa văn bản </label>
+        <div class="col-sm-12 relative">
+          <input type="checkbox" id="signer_locker">
+        </div>
+      </div>
     </div>
 
 
@@ -3031,6 +3037,7 @@
     $(".type").prop('checked', false)
     $(".state").prop('checked', false)
     $("#signer_xsign").prop('checked', false)
+    $("#signer_locker").prop('checked', false)
 
     $("#typed-0").prop('checked', true)
     $("#state-0").prop('checked', true)
@@ -3391,7 +3398,8 @@
             type: getCheckbox('type', formInsertTypeOther),
             samplereceive: formInsertSampleReceive.val(),
             signer: checkSigner(),
-            xsign: $("#signer_xsign").prop('checked') ? 1 : 0
+            xsign: $("#signer_xsign").prop('checked') ? 1 : 0,
+            locker: $("#signer_locker").prop('checked') ? 1 : 0
           }
         }
       break;
@@ -3542,6 +3550,7 @@
       formInsertExamSample.val(data['form']['examsample'])
       formInsertMcode.val(data['form']['mcode'])
       $("#signer_xsign").prop('checked', Number(data['form']['xsign']))
+      $("#signer_locker").prop('checked', Number(data['form']['locker']))
     }
   }
 
@@ -3835,7 +3844,11 @@
             html = html.replace('xsend-0', (xsend[0] ? xsend[0] : '&emsp;'))
             html = html.replace('xsend-1', (xsend[1] ? xsend[1] : '&emsp;'))
             html = html.replace('xsend-2', (xsend[2] ? xsend[2] : '&emsp;&emsp;&emsp;'))
-            html = html.replace('examdate', data['examdate'])
+            examdate = data['examdate']
+            if (data['examdate2'] && data['examdate'] != data['examdate2']) {
+              examdate = data['examdate'] + ' đến ' + data['examdate2']
+            }
+            html = html.replace('examdate', examdate)
             html = html.replace('iresend', data['iresend'])
             html = html.replace('xsender', data['xsender'])
             html = html.replace('xreceiver', data['xreceiver'])
@@ -3912,7 +3925,13 @@
             html = html.replace('(sampleReceiver)', data['samplereceiver'])
             html = html.replace('(ireceive)', data['receive'])
             html = html.replace('(ireceiver)', data['ireceiveremploy'])
-            html = html.replace('(examDate)', data['examdate'])
+            examdate = data['examdate']
+            if (data['examdate2'] && data['examdate'] != data['examdate2']) {
+              examdate = data['examdate'] + ' đến ' + data['examdate2']
+            }
+            html = html.replace('(examDate)', examdate)
+
+            // html = html.replace('(examDate)', data['examdate'])
             html = html.replace(/examdate-0/g, examdate[0])
             html = html.replace(/examdate-1/g, examdate[1])
             html = html.replace(/examdate-2/g, examdate[2])
