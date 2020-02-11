@@ -73,11 +73,10 @@
         $("#insert-number").keyup((e) => {
             value = e.currentTarget.value
             start = $("#insert-start").val()
-            if (!Number(value)) {
+            if (value && !Number(value)) {
                 $("#insert-number").val(global['prv'])
             }
             else {
-                console.log(start, value);
                 $("#insert-end").val(start - value)
             }
         })

@@ -13,9 +13,42 @@ if (! defined('NV_ADMIN') or ! defined('NV_MAINFILE') or ! defined('NV_IS_MODADM
 
 define('NV_IS_ADMIN_FORM', true);
 define("PATH", NV_ROOTDIR . "/themes/" . $global_config['admin_theme'] . "/modules/" . $module_file);
+define("PATH2", NV_ROOTDIR . "/modules/" . $module_file . '/template/admin/' . $op);
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';
+
+function lockerList($filter = array('page' => 1, 'limit' => 10)) {
+  global $db;
+
+  $xtpl = new XTemplate('locker-list.tpl', PATH2);
+  $sql = 'select count(*) as count from `'. PREFIX .'_row`';
+  $query = $db->query($sql);
+  $number = $query->fetch()['count'];
+
+  $sql = 'select * from `'. PREFIX .'_row` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  // die($sql);
+  $query = $db->query($sql);
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('code', $row['code']);
+    $xtpl->assign('mcode', $row['mcode']);
+    $xtpl->assign('xcode', str_replace(',', '/', $row['xcode']));
+    $xtpl->assign('sender', $row['sender']);
+    $xtpl->assign('number', $row['number']);
+    $xtpl->assign('sample', $row['sample']);
+    if ($row['locker']) $xtpl->parse('main.row.yes');
+    else $xtpl->parse('main.row.no');
+    $xtpl->parse('main.row');
+  }
+  
+  $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit']));
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
 
 function getNotAllow($key = '') {
   global $db, $db_config;
