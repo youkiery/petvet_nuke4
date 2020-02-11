@@ -44,6 +44,29 @@
 
 <div class="msgshow" id="msgshow"></div>
 
+<div id="modal-locker" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button> <br> <br>
+        <div class="text-center">
+          <p>
+            <b>
+              bạn có chắc chắn muốn khóa bộ hồ sơ này không?
+            </b>
+          </p>
+          <button class="btn btn-success" onclick="locker(1)">
+            Có
+          </button>
+          <button class="btn btn-danger" onclick="locker(0)">
+            Không
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="modal-print" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -236,10 +259,23 @@
       </div>
     </div>
 
-    <div class="row form-group boxed box-5 box-5-1">
-      <label class="col-sm-6">Số phiếu</label>
-      <div class="col-sm-12">
-        <input type="text" class="form-control" id="form-insert-mcode" autocomplete="off">
+    <div class="boxed box-5 box-5-1">
+      <div class="row form-group">
+        <label class="col-sm-6"> Khóa văn bản </label>
+        <div class="col-sm-12">
+          <button class="btn btn-info" id="locker_button" onclick="$('#modal-locker').modal('show')">
+            <span class="glyphicon glyphicon-lock"></span>
+          </button>
+          <input type="hidden" id="signer_locker">
+          <div id="signer_locking"> </div>
+        </div>
+      </div>
+
+      <div class="row form-group">
+        <label class="col-sm-6">Số phiếu</label>
+        <div class="col-sm-12">
+          <input type="text" class="form-control" id="form-insert-mcode" autocomplete="off">
+        </div>
       </div>
     </div>
 
@@ -674,14 +710,7 @@
           <input type="checkbox" id="signer_xsign">
         </div>
       </div>
-      <div class="row form-group">
-        <label class="col-sm-6"> Khóa văn bản </label>
-        <div class="col-sm-12 relative">
-          <input type="checkbox" id="signer_locker">
-        </div>
-      </div>
     </div>
-
 
     <div class="row form-group boxed box-5 box-5-15">
       <label class="col-sm-6">
@@ -3037,8 +3066,10 @@
     $(".type").prop('checked', false)
     $(".state").prop('checked', false)
     $("#signer_xsign").prop('checked', false)
-    $("#signer_locker").prop('checked', false)
-
+    $("#signer_locker").val(0)
+    $("#locker_button").attr('class', 'btn btn-info')
+    $("#signer_locking").text('Chưa khóa')
+    
     $("#typed-0").prop('checked', true)
     $("#state-0").prop('checked', true)
     formInsertReceiverStateOther.val('')
@@ -3399,7 +3430,7 @@
             samplereceive: formInsertSampleReceive.val(),
             signer: checkSigner(),
             xsign: $("#signer_xsign").prop('checked') ? 1 : 0,
-            locker: $("#signer_locker").prop('checked') ? 1 : 0
+            locker: $("#signer_locker").val()
           }
         }
       break;
@@ -3550,7 +3581,10 @@
       formInsertExamSample.val(data['form']['examsample'])
       formInsertMcode.val(data['form']['mcode'])
       $("#signer_xsign").prop('checked', Number(data['form']['xsign']))
-      $("#signer_locker").prop('checked', Number(data['form']['locker']))
+      lock = Number(data['form']['locker'])
+      $("#signer_locker").val(lock)
+      if (lock) $("#signer_locker").text('Đã khóa')
+      else $("#signer_locker").text('Chưa khóa')
     }
   }
 
@@ -3590,6 +3624,20 @@
     else {
       
     }
+  }
+
+  function locker(type) {
+    if (type) {
+      $("#signer_locking").text('Đã khóa')
+      $("#locker_button").attr('class', 'btn btn-warning')
+    }
+    else {
+      $("#locker_button").attr('class', 'btn btn-info')
+      $("#signer_locking").text('Chưa khóa')
+    }
+
+    $("#signer_locker").val(type)
+    $("#modal-locker").modal('hide')
   }
 
   function filter(e) {
