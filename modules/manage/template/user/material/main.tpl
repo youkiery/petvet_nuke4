@@ -297,10 +297,9 @@
 
     global['selected'][name].forEach((item, index) => {
       if (item['index'] == checker) {
-        checker2 = global['material'][index]['index']
-        // checkItem = item
+        checker2 = true
         // đẩy item về đầu
-        for (let i = index - 1; i > 0; i--) {
+        for (let i = index; i > 0; i--) {
           swapItem(name, i, i - 1)
         }
         global['selected'][0] = item
@@ -308,6 +307,7 @@
     })
 
     if (!checker2) {
+      
       // chưa swap, chỉ cần thêm mới
       global['selected'][name].push({
         index: checker,
@@ -316,6 +316,10 @@
         number: 1,
         status: '',
       })
+      // đẩy item về đầu
+      for (let i = global['selected'][name].length - 1; i > 0; i--) {
+        swapItem(name, i, i - 1)
+      }
     }
   }
 
