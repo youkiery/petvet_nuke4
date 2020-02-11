@@ -18,10 +18,41 @@ define("PATH2", NV_ROOTDIR . "/modules/" . $module_file . '/template/admin/' . $
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';
 
-function lockerList($filter = array('page' => 1, 'limit' => 10)) {
+function lockerList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', 'xcode' => '', 'printer' => '', 'unit' => '', 'owner' => '', 'exam' => '', 'sample' => '', 'from' => '', 'end' => '')) {
   global $db;
 
+  $tick = 0;
+  $time_sql = '';
+  if (!empty($filter['from'])) $tick += 1;
+  if (!empty($filter['end'])) $tick += 2;
+  $filter['from'] = totime($filter['from']);
+  $filter['end'] = totime($filter['end']);
+
+  switch ($tick) {
+    case 1:
+      // có from
+      $time_sql = 'receive > ' . $filter['from'];
+    break;
+    case 2:
+      // có end
+      $time_sql = 'receive < ' . $filter['end'];
+      break;
+    case 3:
+      // có cả 2
+      if ($filter['from'] > $filter['end']) {
+        // đầu > cuối => đảo vị
+        $temp = $filter['from'];
+        $filter['from'] = $filter['end'];
+        $filter['from'] = $temp;
+      }
+      $time_sql = '(receive between '. $filter['from'] .' and '. $filter['end'] .')';
+      break;
+    default:
+      // 0
+  }
+
   $xtpl = new XTemplate('locker-list.tpl', PATH2);
+  // not yet
   $sql = 'select count(*) as count from `'. PREFIX .'_row`';
   $query = $db->query($sql);
   $number = $query->fetch()['count'];
