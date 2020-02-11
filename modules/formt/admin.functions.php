@@ -18,7 +18,7 @@ define("PATH2", NV_ROOTDIR . "/modules/" . $module_file . '/template/admin/' . $
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';
 
-function lockerList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', 'xcode' => '', 'printer' => '', 'unit' => '', 'owner' => '', 'exam' => '', 'sample' => '', 'from' => '', 'end' => '')) {
+function lockerList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', 'xcode' => '', 'unit' => '', 'owner' => '', 'exam' => '', 'sample' => '', 'from' => '', 'end' => '')) {
   global $db;
 
   $tick = 0;
@@ -31,11 +31,11 @@ function lockerList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '',
   switch ($tick) {
     case 1:
       // có from
-      $time_sql = 'receive > ' . $filter['from'];
+      $time_sql = 'and receive > ' . $filter['from'];
     break;
     case 2:
       // có end
-      $time_sql = 'receive < ' . $filter['end'];
+      $time_sql = 'and receive < ' . $filter['end'];
       break;
     case 3:
       // có cả 2
@@ -44,20 +44,28 @@ function lockerList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '',
         $temp = $filter['from'];
         $filter['from'] = $filter['end'];
         $filter['from'] = $temp;
+        $time_sql = 'and (receive between '. $filter['from'] .' and '. $filter['end'] .')';
       }
-      $time_sql = '(receive between '. $filter['from'] .' and '. $filter['end'] .')';
+      else if ($filter['from'] == $filter['end']) {
+        // Chỉ ngày đang chọn
+        $time = strtotime(date('Y/m/d', $filter['from'])); 
+        $time_sql = 'and (receive between '. $time .' and '. ($time + 60 * 60 * 24 - 1) .')';
+      }
+      else $time_sql = 'and (receive between '. $filter['from'] .' and '. $filter['end'] .')';
       break;
     default:
       // 0
   }
+  // function lockerList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', 'xcode' => '', 'printer' => '', 'unit' => '', 'owner' => '', 'exam' => '', 'sample' => '', 'from' => '', 'end' => '')) {
 
   $xtpl = new XTemplate('locker-list.tpl', PATH2);
   // not yet
-  $sql = 'select count(*) as count from `'. PREFIX .'_row`';
+  $filter['xcode'] = explode(',', $filter['xcode']);
+  $sql = "select count(*) as count from `". PREFIX ."_row` where code like '%$filter[keyword]%' and (xcode like '%". $filter['xcode'][0] ."%' or xcode like '%". $filter['xcode'][1] ."%' or xcode like '%". $filter['xcode'][2] ."%') and sender like '%$filter[unit]%' and owner like '%$filter[owner]%' and exam like '%$filter[exam]%' and sample like '%$filter[sample]%' $time_sql";
   $query = $db->query($sql);
   $number = $query->fetch()['count'];
 
-  $sql = 'select * from `'. PREFIX .'_row` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = "select * from `". PREFIX ."_row` where code like '%$filter[keyword]%' and (xcode like '%". $filter['xcode'][0] ."%' or xcode like '%". $filter['xcode'][1] ."%' or xcode like '%". $filter['xcode'][2] ."%') and sender like '%$filter[unit]%' and owner like '%$filter[owner]%' and exam like '%$filter[exam]%' and sample like '%$filter[sample]%' $time_sql order by id desc limit $filter[limit] offset " . ($filter['page'] - 1) * $filter['limit'];
   // die($sql);
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;

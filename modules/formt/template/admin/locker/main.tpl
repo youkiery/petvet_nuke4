@@ -13,15 +13,6 @@
         <input type="text" class="form-control" id="filter-xcode" placeholder="Số ĐKXN" autocomplete="off">
     </div>
     <div class="col-sm-4">
-        <select class="form-control" id="filter-printer">
-            <option value="1" selected>Mẫu 1</option>
-            <option value="2">Mẫu 2</option>
-            <option value="3">Mẫu 3</option>
-            <option value="4">Mẫu 4</option>
-            <option value="5">Mẫu 5</option>
-        </select>
-    </div>
-    <div class="col-sm-4">
         <select class="form-control" id="filter-limit">
             <option value="10">10</option>
             <option value="20">20</option>
@@ -47,16 +38,16 @@
         <input type="text" class="form-control" id="filter-sample" placeholder="Loại động vật">
     </div>
     <div class="col-sm-4">
-        <input type="text" class="form-control" id="filter-from" value="{last_week}">
+        <input type="text" class="form-control date" id="filter-from">
     </div>
 
     <div class="col-sm-4">
-        <input type="text" class="form-control" id="filter-end" value="{today}">
+        <input type="text" class="form-control date" id="filter-end">
     </div>
 </div>
 
 <div class="text-center form-group">
-    <button class="btn btn-info"><span class="glyphicon glyphicon-search"></span></button>
+    <button class="btn btn-info" onclick="goPage(1)"><span class="glyphicon glyphicon-search"></span></button>
 </div>
 
 <div id="content">
@@ -68,13 +59,18 @@
         page: 1
     }
 
+    $(".date").datepicker({
+        format: 'dd/mm/yyyy',
+        changeMonth: true,
+        changeYear: true
+    });
+
     function checkFilter() {
         return {
             page: global['page'],
             limit: $("#filter-limit").val(),
             keyword: $("#filter-keyword").val(),
             xcode: $("#filter-xcode").val(),
-            printer: $("#filter-printer").val(),
             unit: $("#filter-unit").val(),
             owner: $("#filter-owner").val(),
             exam: $("#filter-exam").val(),
