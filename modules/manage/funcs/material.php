@@ -550,6 +550,11 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = materialOverlowList();
     break;
+    case 'expire-filter':
+      $limit = $nv_Request->get_int('limit', 'post', 0);
+      $result['status'] = 1;
+      $result['html'] = expireList($limit);
+    break;
   }
   echo json_encode($result);
   die();

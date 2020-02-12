@@ -11,6 +11,30 @@
   </div>
 </div>
 
+<div class="modal" id="modal-expire" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button> <br><br>
+        <select id="expire-limit">
+          <!-- BEGIN: expire -->
+          <option value="{value}"> {name} </option>
+          <!-- END: expire -->
+        </select>
+        <div id="text-center">
+          <button class="btn btn-info" onclick="expireFilter()">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+        </div>
+
+        <div id="expire-content">
+          {expire_content}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="material-modal" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -261,5 +285,4 @@
     </div>
   </div>
 </div>
-
 <!-- END: main -->

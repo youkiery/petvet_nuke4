@@ -323,6 +323,17 @@
     }
   }
 
+  function expireFilter() {
+    $.post(
+      '', { action: 'expire-filter', limit: $("#expire-limit").val() },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#expire-content").html(data['html'])
+        })
+      }
+    )
+  }
+
   function swapItem(name, a, b) {
     temp = global['selected'][name][a]
     global['selected'][name][a] = global['selected'][name][b]

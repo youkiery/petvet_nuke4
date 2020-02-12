@@ -339,6 +339,12 @@ function materialList() {
   return $xtpl->text();
 }
 
+function expireList($limit = 2592000) {
+  global $db;
+
+  $sql = "select * from `". PREFIX ."import_detail`"
+}
+
 function materialModal() {
   $xtpl = new XTemplate("modal.tpl", PATH);
  
@@ -349,6 +355,7 @@ function materialModal() {
   $xtpl->assign('overlow_content', materialOverlowList());
   $xtpl->assign('import_content', importList());
   $xtpl->assign('export_content', exportList());
+  $xtpl->assign('expire_content', expireList());
 
   $xtpl->parse('main');
   return $xtpl->text();
