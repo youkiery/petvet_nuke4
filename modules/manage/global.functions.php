@@ -368,6 +368,17 @@ function getMaterialDataList() {
   return $list;
 }
 
+function checkItem($id) {
+  global $db;
+
+  $sql = "select * from `". PREFIX ."material` where id = $id";
+  $query = $db->query($sql);
+  if ($row = $query->fetch()) {
+    return $row;
+  }
+  return array();
+}
+
 function deviceParseExcel($depart) {
   global $db, $objPHPExcel, $i, $j, $xco, $title;
   $device_query = $db->query('select * from `'. PREFIX .'device` where depart like \'%"'. $depart['id'] .'"%\' limit 1');

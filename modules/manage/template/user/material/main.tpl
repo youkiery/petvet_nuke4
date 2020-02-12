@@ -26,6 +26,9 @@
   </div>
 </div>
 <div class="form-group">
+  <button class="btn btn-info" onclick='$("#modal-expire").modal("show")'>
+    Danh sách vật tư hết hạn
+  </button>  
   <button class="btn btn-info" onclick='$("#overlow-modal").modal("show")'>
     Danh sách vật tư hết
   </button>  
@@ -321,6 +324,17 @@
         swapItem(name, i, i - 1)
       }
     }
+  }
+
+  function expireSubmit(id) {
+    $.post(
+      '', { action: 'expire', id: id, limit: $("#expire-limit").val() },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#expire-content").html(data['html'])
+        })
+      }
+    )
   }
 
   function expireFilter() {

@@ -339,10 +339,27 @@ function materialList() {
   return $xtpl->text();
 }
 
-function expireList($limit = 2592000) {
+function expireList($limit = 5184000) {
   global $db;
 
-  $sql = "select * from `". PREFIX ."import_detail`"
+  $xtpl = new XTemplate("expire-list.tpl", PATH);
+  $time = time() + $limit;
+  $index = 1;
+
+  $sql = "select * from `". PREFIX ."import_detail` where date > 0 && date < $time and expire = 0 order by date asc";
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $item = checkItem($row['item_id']);
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('item', $item['name']);
+    $xtpl->assign('number', $row['number']);
+    $xtpl->assign('date', date('d/m/Y', $row['date']));
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
 }
 
 function materialModal() {
@@ -350,6 +367,27 @@ function materialModal() {
  
   $start = date('d/m/Y', time() - (date('d') - 1) * 60 * 60 * 24);
   $end = date('d/m/Y');
+  $day = 60 * 60 * 24;
+  $default = $day * 60;
+  $array = array(
+    'Một tuần' => $day * 7,
+    'Hai tuần' => $day * 14,
+    'Một tháng' => $day * 30,
+    'Hai tháng' => $day * 60,
+    'Một quý' => $day * 120,
+    'Nửa năm' => $day * 180,
+    'Một năm' => $day * 365,
+    'Hai năm' => $day * 730,
+    'Bốn năm' => $day * 1460
+  );
+  foreach ($array as $key => $value) {
+    if ($value == $default) $xtpl->assign('check', 'selected');
+    else $xtpl->assign('check', '');
+    $xtpl->assign('name', $key);
+    $xtpl->assign('value', $value);
+    $xtpl->parse('main.expire');
+  }
+
   $xtpl->assign('start', $start);
   $xtpl->assign('end', $end);
   $xtpl->assign('overlow_content', materialOverlowList());

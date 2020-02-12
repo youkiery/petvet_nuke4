@@ -16,14 +16,14 @@
     <div class="modal-content">
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal">&times;</button> <br><br>
-        <select id="expire-limit">
+        <select class="form-control form-group" id="expire-limit">
           <!-- BEGIN: expire -->
-          <option value="{value}"> {name} </option>
+          <option value="{value}" {check}> {name} </option>
           <!-- END: expire -->
         </select>
-        <div id="text-center">
+        <div class="form-group text-center">
           <button class="btn btn-info" onclick="expireFilter()">
-            <span class="glyphicon glyphicon-search"></span>
+            Lọc danh sách
           </button>
         </div>
 

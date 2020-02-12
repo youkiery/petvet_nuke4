@@ -555,6 +555,16 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = expireList($limit);
     break;
+    case 'expire':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $limit = $nv_Request->get_int('limit', 'post', 0);
+
+      $sql = "update `". PREFIX ."import_detail` set expire = 1 where id = $id";
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = expireList($limit);
+      }
+    break;
   }
   echo json_encode($result);
   die();
