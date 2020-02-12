@@ -3978,6 +3978,7 @@
               examdate = data['examdate'] + ' đến ' + data['examdate2']
             }
             html = html.replace('(examDate)', examdate)
+            examdate = examdate.split('/')
 
             // html = html.replace('(examDate)', data['examdate'])
             html = html.replace(/examdate-0/g, examdate[0])
