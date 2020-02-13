@@ -1,6 +1,6 @@
 var vhttp = {
     // check: dùng để rút gọn jquery post | trả về dữ liệu trả về
-    check: (url, param) => {
+    check: function (url, param) {
         return new Promise((resolve, reject) => {
             $.post(url, param, (response, status) => {
                 try {
@@ -18,6 +18,14 @@ var vhttp = {
                     reject()
                 }
             })
+        })
+    },
+    // checkelse: giống check, nhưng không cần reject
+    checkelse: function (url, param) {
+        return new Promise((resolve) => {
+            this.check(url, param).then((data) => {
+                resolve(data)
+            }, () => {  })
         })
     }
 }
