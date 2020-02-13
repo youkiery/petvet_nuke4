@@ -613,7 +613,9 @@ if (!empty($action)) {
         $result['form']['xsend'] = date('d/m/Y', $result['form']['xsend']);
 
         $result['form']['examdate'] = date('d/m/Y', $result['form']['examdate']);
-        $result['form']['examdate2'] = date('d/m/Y', $result['form']['examdate2']);
+        
+        if (!empty($result['form']['examdate2'])) $result['form']['examdate2'] = date('d/m/Y', $result['form']['examdate2']);
+        else $result['form']['examdate2'] = '';
         $result['form']['note'] = str_replace('<br />', '', $result['form']['note']);
 
         if ($result['form']['typeindex'] >= 0) {
@@ -692,7 +694,8 @@ if (!empty($action)) {
             $xresend = totime($data['xresend']);
             $xsend = totime($data['xsend']);
             $examdate = totime($data['examdate']);
-            $examdate2 = totime($data['examdate2']);
+            $examdate2 = 0;
+            if (!empty($data['examdate2'])) $examdate2 = totime($data['examdate2']);
             $sampleReceive = totime($data['samplereceive']);
             $receive = totime($data['receive']);          
             $resend = totime($data['resend']);
@@ -840,7 +843,9 @@ if (!empty($action)) {
                 $xresend = totime($data['xresend']);
                 $xsend = totime($data['xsend']);
                 $examdate = totime($data['examdate']);
-                $examdate2 = totime($data['examdate2']);
+                $examdate2 = 0;
+                if (!empty($data['examdate2'])) $examdate2 = totime($data['examdate2']);
+            
   
                 $ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
                 $signer = json_encode($signer, JSON_UNESCAPED_UNICODE);
@@ -903,7 +908,9 @@ if (!empty($action)) {
                 $sampleReceive = totime($data['samplereceive']);
                 $receive = totime($data['receive']);
                 $examDate = totime($data['examdate']);
-                $examDate2 = totime($data['examdate2']);
+                $examdate2 = 0;
+                if (!empty($data['examdate2'])) $examdate2 = totime($data['examdate2']);
+            
                 $note = nl2br($data['note']);
   
                 checkRemindv2($data['address'], 'address');
@@ -925,7 +932,7 @@ if (!empty($action)) {
                 $exam = json_encode($data['exam'],JSON_UNESCAPED_UNICODE);
                 $signer = json_encode($signer, JSON_UNESCAPED_UNICODE);
 
-                $sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(',', $data['xcode']) .'", receiveHour = '.$data['receivehour'].', receiveMinute = '.$data['receiveminute'].', sampleReceive = "'.$sampleReceive.'", address = "'.$data['address'].'", sampleReceiver = "'.$data['samplereceiver'].'", examdate = "'.$examDate.'", examdate2 = "'.$examDate2.'", result = "'. $data['result'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', status = "'. $data['status']['index'] .'", sampleCode5 = "'. $data['samplecode5'] .'", receive = '. $receive .', note = "'. $note .'", xphone = "'. $data['xphone'] .'", sample = "'. $data['sample'] .'", isenderUnit = "'. $data['isenderunit'] .'", ireceiverEmploy = "'. $data['ireceiveremploy'] .'", exam = \''. $exam .'\', numberword = "'. $data['numberword'] .'", fax = "'. $data['fax'] .'", page4 = "'. $data['page4'] .'", xexam = "'. $data['xexam'] .'", xresender = "'. $data['xresender'] .'", signer = \''. $signer .'\' where id = ' . $id;
+                $sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(',', $data['xcode']) .'", receiveHour = '.$data['receivehour'].', receiveMinute = '.$data['receiveminute'].', sampleReceive = "'.$sampleReceive.'", address = "'.$data['address'].'", sampleReceiver = "'.$data['samplereceiver'].'", examdate = "'.$examDate.'", examdate2 = "'.$examdate2.'", result = "'. $data['result'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', status = "'. $data['status']['index'] .'", sampleCode5 = "'. $data['samplecode5'] .'", receive = '. $receive .', note = "'. $note .'", xphone = "'. $data['xphone'] .'", sample = "'. $data['sample'] .'", isenderUnit = "'. $data['isenderunit'] .'", ireceiverEmploy = "'. $data['ireceiveremploy'] .'", exam = \''. $exam .'\', numberword = "'. $data['numberword'] .'", fax = "'. $data['fax'] .'", page4 = "'. $data['page4'] .'", xexam = "'. $data['xexam'] .'", xresender = "'. $data['xresender'] .'", signer = \''. $signer .'\' where id = ' . $id;
                 $query = $db->query($sql);
                 if ($query) {
                   checkPrinter($id, $form);
