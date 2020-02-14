@@ -233,3 +233,42 @@ function bloodModal() {
     $xtpl->parse('main');
     return $xtpl->text();
 }
+
+function productList($url, $filter = array('page' => 1, 'limit' => 10, 'brand' => 1)) {
+    global $db;
+
+    $xtpl = new XTemplate("product-list.tpl", PATH);
+    $sql = 'select count(*) as count from `'. PREFIX .'brand_product` where brandid = '. $filter['brand'];
+    $query = $db->query($sql);
+    $number = $query->fetch()['count'];
+
+    $sql = 'select * from `'. PREFIX .'brand_product` where brandid = '. $filter['brand'] .' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+
+    $query = $db->query($sql);
+    $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+    
+    while ($row = $query->fetch()) {
+        $sql = 'select * from `'. PREFIX .'product` where id = '. $row['productid'];
+        $query = $db->query($sql);
+        $product = $query->fetch();
+
+        $sql = 'select * from `'. PREFIX .'product_category` where id = '. $product['category'];
+        $query = $db->query($sql);
+        $category = $query->fetch();
+
+        $xtpl->assign('index', $index++);
+        $xtpl->assign('category', $category['name']);
+        $xtpl->assign('item', $product['name']);
+        $xtpl->assign('number', $row['number']);
+        $xtpl->parse('main.row');
+    }
+    $xtpl->assign('nav', nv_generate_page_shop($url, $number, $filter['limit'], $filter['page']));
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function productModal() {
+    $xtpl = new XTemplate("product-modal.tpl", PATH);
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
