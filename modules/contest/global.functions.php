@@ -46,3 +46,45 @@ function getTestDataList() {
   }
   return $list;
 }
+
+function checkCallNumber($number) {
+  $number = intval($number);
+  if ($number < 10) {
+    return "0" . $number;
+  } 
+  return $number;
+}
+
+function checkSpecies($species) {
+  global $db;
+  $species = trim(mb_strtolower($species));
+  $query = $db->query('select * from `'. PREFIX .'species` where name = "'. $species .'"');
+  if ($row = $query->fetch()) {
+    rateSpecies($row['id']);
+    return $row['id'];
+  }
+  if ($db->query('insert into `'. PREFIX .'species` (name) values("'. $species .'")')) {
+    $id = $db->lastInsertId();
+    rateSpecies($id);
+    return $id;
+  }
+  return 0;
+}
+
+function rateSpecies($id) {
+  global $db;
+
+  $query = $db->query('update `'. PREFIX .'species` set rate = rate + 1 where id = ' . $id);
+  if ($query) return true;
+  return false;
+}
+
+function getSpecies($id) {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'species` where id = '. $id);
+  if ($row = $query->fetch()) {
+    return $row['name'];
+  }
+  return '';
+}

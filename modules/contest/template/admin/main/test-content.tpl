@@ -19,9 +19,16 @@
       <button class="btn btn-info" onclick="updateTestSubmit({id})">
         <span class="glyphicon glyphicon-refresh"></span>
       </button>
-      <button class="btn btn-info" onclick="hideTestSubmit({id})">
+      <!-- BEGIN: toggleon -->
+      <button class="btn btn-warning" onclick="toggleTestSubmit({id}, 0)">
+        <span class="glyphicon glyphicon-eye-open"></span>
+      </button>
+      <!-- END: toggleon -->
+      <!-- BEGIN: toggleoff -->
+      <button class="btn btn-info" onclick="toggleTestSubmit({id}, 1)">
         <span class="glyphicon glyphicon-eye-close"></span>
       </button>
+      <!-- END: toggleoff -->
     </td>
   </tr>
   <!-- END: row -->
