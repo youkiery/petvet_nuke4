@@ -15,69 +15,31 @@ if (!empty($action)) {
     case 'signup':
       $data = $nv_Request->get_array('data', 'post');
 
-      $query = $db->query("select * from `". PREFIX ."row` where mobile = '$data[mobile]'");
+      $query = $db->query("select * from `". PREFIX ."row` where mobile = '$data[mobile]' and court = $data[court]");
       if ($row = $query->fetch()) {
-        $result['notify'] = 'Số điện thoại đã đăng ký';
+        $result['notify'] = 'Bạn đã đăng ký khóa này rồi';
       }
       else {
-        $species = checkSpecies($data['species']);
-        $test = json_encode($data['test'], JSON_UNESCAPED_UNICODE);
-        $sql = "insert into `". PREFIX ."row` (name, petname, species, address, mobile, test) values('$data[name]', '$data[petname]', $species, '$data[address]', '$data[mobile]', '$test')";
-        if (!$db->query($sql)) {
-          $result['notify'] = 'Lỗi đăng ký';
-        }
-        else {
+        $sql = "insert into `". PREFIX ."row` (name, address, mobile, court) values('$data[name]', '$data[address]', '$data[mobile]', $data[court])";
+        if ($db->query($sql)) {
           $result['status'] = 1;
-          $result['notify'] = 'Đã đăng ký thành công';
+          $result['notify'] = 'Đã đăng ký thành công khoá học';
         }
       }
-    break;
-    case 'filter':
-      $result['status'] = 1;
-      $result['html'] = confirmList();
     break;
   }
   echo json_encode($result);
   die();
 }
 $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/". $op);
+$page_title = 'Đăng ký khóa học thú y';
 
-$query = $db->query('select * from `'. PREFIX .'config` where name = "show_content"');
-$contest_config = $query->fetch();
-if (empty($contest_config)) {
-  $db->query('insert into `'. PREFIX .'config` (name, value) values("show_content", 1)');
-  $contest_config = array('value' => 1);
-}
-
-if ($contest_config['value']) {
-  $xtpl->assign('confirm_list', confirmList());
-  $query = $db->query('select * from `'. PREFIX .'species` order by rate desc');
-  while ($row = $query->fetch()) {
-    $xtpl->assign('id', $row['id']);
-    $xtpl->assign('species', ucwords($row['name']));
-    $xtpl->parse('main.list.species');
-  }
-  
-  $query = $db->query('select * from `'. PREFIX .'test` where active = 1');
-  while ($row = $query->fetch()) {
-    $xtpl->assign('id', $row['id']);
-    $xtpl->assign('contest', $row['name']);
-    $xtpl->parse('main.list.contest');
-  }
-  $xtpl->parse('main.list');
-}
-
-$query = $db->query("select * from `". PREFIX ."test` where active = 1");
+$sql = 'select * from `'. PREFIX .'court`';
+$query = $db->query($sql);
 while ($row = $query->fetch()) {
   $xtpl->assign('id', $row['id']);
-  $xtpl->assign('name', $row['name']);
-  $xtpl->parse('main.test');
-}
-
-$query = $db->query('select * from `'. PREFIX .'species` order by rate desc');
-$species = array();
-while ($row = $query->fetch()) {
-  $species[] = ucwords($row['name']);
+  $xtpl->assign('court', $row['name'] . ' - Giá: ' . number_format($row['price'], 0, '', ',') . ($row['intro'] ? ' - ' : '') . $row['intro']);
+  $xtpl->parse('main.court');
 }
 
 $xtpl->assign('species', json_encode($species, JSON_UNESCAPED_UNICODE));
