@@ -8,8 +8,8 @@
 
 if (!defined('NV_ADMIN')) die('Stop!!!');
 
-// $submenu['category'] = 'Danh sách loại hàng';
+$submenu['court'] = 'Quản lý khóa học';
 // $submenu['item'] = 'Danh sách sản phẩm';
 // $submenu['exp'] = 'Quản lý hạn sử dụng';
 
-$allow_func = array('main'); 
+$allow_func = array('main', 'court'); 

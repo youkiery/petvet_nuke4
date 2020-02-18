@@ -8,8 +8,54 @@
 
 if (!defined('NV_ADMIN') or !defined('NV_MAINFILE') or !defined('NV_IS_MODADMIN')) die('Stop!!!');
 define('NV_IS_FILE_ADMIN', true);
+define('PATH', NV_ROOTDIR . "/modules/$module_file/template/admin/$op");
 include_once(NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php');
 include_once(NV_ROOTDIR . '/modules/' . $module_file . '/theme.php');
+
+function courtList() {
+  global $db;
+
+  $xtpl = new XTemplate("court-list.tpl", PATH);
+  $index = 1;
+  $sql = 'select * from `'. PREFIX .'court`';
+  $query = $db->query($sql);
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('price', $row['price']);
+    $xtpl->assign('description', $row['description']);
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function courtRegistList($filter = array('page' => 1, 'limit' => 10)) {
+  global $db, $module_name, $op;
+
+  $xtpl = new XTemplate("regist-list.tpl", PATH);
+  $index = 1;
+  $sql = 'select * from `'. PREFIX .'row` limit '. $filter['limit'] .' offset ' . $filter['limit'] * ($filter['page'] - 1);
+  $query = $db->query($sql);
+  $numer = 0;
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('mobile', $row['mobile']);
+    $xtpl->assign('court', checkCourt($row['court']));
+    $xtpl->assign('active', intval(!$row['active']));
+    $xtpl->assign('active_btn', 'btn-info');
+    if ($row['active']) {
+      $xtpl->assign('active_btn', 'btn-warning');
+    }
+    $number++;
+    $xtpl->parse('main.row');
+  }
+  $xtpl->assign('nav', nav_generater('/' . $module_name . '/' . $op . '?', $number, $filter['page'], $filter['limit']));
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
 
 function testModal() {
   global $module_file, $op;

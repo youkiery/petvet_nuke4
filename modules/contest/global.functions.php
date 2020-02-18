@@ -96,3 +96,17 @@ function getSpecies($id) {
   }
   return '';
 }
+
+function nav_generater($url, $number, $page, $limit) {
+  $html = '';
+  $total = floor($number / $limit) + ($number % $limit ? 1 : 0);
+  for ($i = 1; $i <= $total; $i++) {
+    if ($page == $i) {
+      $html .= '<a class="btn btn-default">' . $i . '</a>';
+    } 
+    else {
+      $html .= '<a class="btn btn-info" href="'. $url .'?page='. $i .'&limit='. $i .'">' . $i . '</a>';
+    }
+  }
+  return $html;
+}
