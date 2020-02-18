@@ -15,17 +15,28 @@ if (!empty($action)) {
     case 'signup':
       $data = $nv_Request->get_array('data', 'post');
 
-      $query = $db->query("select * from `". PREFIX ."row` where mobile = '$data[mobile]' and court = $data[court]");
-      if ($row = $query->fetch()) {
-        $result['notify'] = 'Bạn đã đăng ký khóa này rồi';
-      }
-      else {
-        $sql = "insert into `". PREFIX ."row` (name, address, mobile, court) values('$data[name]', '$data[address]', '$data[mobile]', $data[court])";
-        if ($db->query($sql)) {
-          $result['status'] = 1;
-          $result['notify'] = 'Đã đăng ký thành công khoá học';
+      $court = array();
+      $temp = array(
+        'yes' => array(),
+        'no' => array()
+      );
+      foreach ($data['court'] as $key => $value) {
+        $query = $db->query("select * from `". PREFIX ."row` where mobile = '$data[mobile]' and court = $value");
+        
+        $courtData = checkCourt($value);
+        $temp['list'][] = $courtData;
+        if (empty($row = $query->fetch())) {
+          $court[]= $value;
+          $temp['no'][] = $courtData;
         }
       }
+
+      foreach ($court as $value) {
+        $sql = "insert into `". PREFIX ."row` (name, address, mobile, court) values('$data[name]', '$dat[address]', '$data[mobile]', $value)";
+        $db->query($sql);
+      }
+      $result['status'] = 1;
+      $result['data'] = $temp;
     break;
   }
   echo json_encode($result);
