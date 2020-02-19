@@ -20,7 +20,7 @@
   }
   function activeSubmit(id, type) {
     $("[rel=" + id + "]").prop('disabled', true)
-    vhttp.check('', { action: 'active'}).then((data) => {
+    vhttp.check('', { action: 'active', id: id, type: type}).then((data) => {
       $("[rel=" + id + "]").prop('disabled', false)
       $("[rel=" + id + "]").attr('class', global['type'][type])
     }, () => {

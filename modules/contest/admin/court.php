@@ -19,22 +19,43 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
-    case 'active':
-      $id = $nv_Request->get_int('type', 'post', 0);
-      $type = $nv_Request->get_int('type', 'post', 0);
+    case 'get-info':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $sql = 'select * from `'. PREFIX .'court` where id = ' . $id;
+      $query = $db->query($sql);
 
-      $sql = 'update `'. PREFIX .'row` set active = ' . $type . ' where id = ' . $id;
+      if ($row = $query->fetch()) {
+        $result['data'] = $row;
+        $result['status'] = 1;
+      }
+    break;
+    case 'update':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $data = $nv_Request->get_array('data', 'post');
+
+      $sql = 'update `'. PREFIX .'court` set name = "'. $data['name'] .'", price = "'. $data['price'] .'", intro = "'. $data['intro'] .'" where id = ' . $id;
       if ($db->query($sql)) {
-          $result['status'] = 1;
+        $result['status'] = 1;
+        $result['html'] = courtList();
+      }
+    break;
+    case 'insert':
+      $data = $nv_Request->get_array('data', 'post', 0);
+
+      $sql = 'insert into `'. PREFIX .'court` (name, price, intro) values("'. $data['name'] .'", '. $data['price'] .', "'. $data['intro'] .'")';
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = courtList();
       }
     break;
   }
   echo json_encode($result);
   die();
 }
-$xtpl = new XTemplate("court.tpl", PATH);
+$xtpl = new XTemplate("main.tpl", PATH);
 
 // Quản lý khóa học
+$xtpl->assign('modal', courtModal());
 $xtpl->assign('content', courtList());
 
 $xtpl->parse('main');

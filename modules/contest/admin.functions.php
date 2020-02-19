@@ -20,10 +20,17 @@ function courtList() {
   $sql = 'select * from `'. PREFIX .'court`';
   $query = $db->query($sql);
   while ($row = $query->fetch()) {
+    $pos = strpos($row['intro'], ' ', 100);
+    $dot = true;
+    if ($pos <= 0) {
+      $dot = false;
+      $pos = strlen($row['intro']);
+    } 
     $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
     $xtpl->assign('name', $row['name']);
-    $xtpl->assign('price', $row['price']);
-    $xtpl->assign('description', $row['description']);
+    $xtpl->assign('price', number_format($row['price'], 0, '', ',') . ' VND');
+    $xtpl->assign('intro', substr($row['intro'], 0, $pos) . ($dot ? '...' : ''));
     $xtpl->parse('main.row');
   }
   $xtpl->parse('main');
@@ -53,6 +60,12 @@ function courtRegistList($filter = array('page' => 1, 'limit' => 10)) {
     $xtpl->parse('main.row');
   }
   $xtpl->assign('nav', nav_generater('/' . $module_name . '/' . $op . '?', $number, $filter['page'], $filter['limit']));
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function courtModal() {
+  $xtpl = new XTemplate("modal.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }

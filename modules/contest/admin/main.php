@@ -20,7 +20,7 @@ if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
     case 'active':
-      $id = $nv_Request->get_int('type', 'post', 0);
+      $id = $nv_Request->get_int('id', 'post', 0);
       $type = $nv_Request->get_int('type', 'post', 0);
 
       $sql = 'update `'. PREFIX .'row` set active = ' . $type . ' where id = ' . $id;
@@ -76,7 +76,12 @@ $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/$module_file/template/a
 // $xtpl->parse('main');
 
 // Danh sách khóa học, xác nhận
-$xtpl->assign('content', courtRegistList());
+$filter = array(
+  'page' => $nv_Request->get_int('page', 'get', 1),
+  'limit' => $nv_Request->get_int('limit', 'get', 10)
+);
+
+$xtpl->assign('content', courtRegistList($filter));
 
 $xtpl->parse('main');
 $contents = $xtpl->text();
