@@ -37,12 +37,27 @@ function courtList() {
   return $xtpl->text();
 }
 
-function courtRegistList($filter = array('page' => 1, 'limit' => 10)) {
+function courtRegistList($filter) {
   global $db, $module_name, $op;
 
   $xtpl = new XTemplate("regist-list.tpl", PATH);
   $index = 1;
-  $sql = 'select * from `'. PREFIX .'row` limit '. $filter['limit'] .' offset ' . $filter['limit'] * ($filter['page'] - 1);
+
+  $xtra = array();
+  if ($filter['keyword']) {
+    $xtra[]= '(name like "%'. $filter['keyword'] .'%" or mobile like "%'. $filter['keyword'] .'%")';
+  }
+
+  if ($filter['court']) {
+    $xtra[]= 'court = ' . $filter['court'];
+  }
+
+  if ($filter['active']) {
+    $filter['active']--;
+    $xtra[]= 'active = ' . $filter['active'];
+  }
+
+  $sql = 'select * from `'. PREFIX .'row` '. (count($xtra) ? 'where ' . implode(' and ', $xtra) : '') .' limit '. $filter['limit'] .' offset ' . $filter['limit'] * ($filter['page'] - 1);
   $query = $db->query($sql);
   $numer = 0;
   while ($row = $query->fetch()) {

@@ -78,8 +78,24 @@ $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/$module_file/template/a
 // Danh sách khóa học, xác nhận
 $filter = array(
   'page' => $nv_Request->get_int('page', 'get', 1),
-  'limit' => $nv_Request->get_int('limit', 'get', 10)
+  'limit' => $nv_Request->get_int('limit', 'get', 10),
+  'keyword' => $nv_Request->get_string('keyword', 'get', ''),
+  'court' => $nv_Request->get_int('court', 'get', 0),
+  'active' => $nv_Request->get_int('active', 'get', 0)
 );
+
+$xtpl->assign('keyword', $filter['keyword']);
+$xtpl->assign('active_' . $filter['active'], 'selected');
+
+$sql = 'select * from `'. PREFIX .'court` order by name';
+$query = $db->query($sql);
+while ($row = $query->fetch()) {
+  $xtpl->assign('selected', '');
+  if ($row['id'] == $filter['court']) $xtpl->assign('selected', 'selected');
+  $xtpl->assign('id', $row['id']);
+  $xtpl->assign('name', $row['name']);
+  $xtpl->parse('main.court');
+}
 
 $xtpl->assign('content', courtRegistList($filter));
 
