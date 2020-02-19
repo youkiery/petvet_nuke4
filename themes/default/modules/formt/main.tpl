@@ -3582,9 +3582,15 @@
       formInsertMcode.val(data['form']['mcode'])
       $("#signer_xsign").prop('checked', Number(data['form']['xsign']))
       lock = Number(data['form']['locker'])
+      if (lock) {
+        $("#signer_locking").text('Đã khóa')
+        $("#locker_button").attr('class', 'btn btn-warning')
+      }
+      else {
+        $("#locker_button").attr('class', 'btn btn-info')
+        $("#signer_locking").text('Chưa khóa')
+      }
       $("#signer_locker").val(lock)
-      if (lock) $("#signer_locker").text('Đã khóa')
-      else $("#signer_locker").text('Chưa khóa')
     }
   }
 
@@ -3794,6 +3800,7 @@
           global_id = 0
           global_form = 5
           global_saved = 5
+          data['form']['locker'] = 0
           parseData(data)
           
           $('a[href="#menu1"]').tab('show')
