@@ -1,6 +1,7 @@
 <!-- BEGIN: main -->
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/modules/core/js/vhttp.js"></script>
 <script type="text/javascript"
 	src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <div id="msgshow" class="msgshow"></div>
@@ -27,11 +28,20 @@
 <div style="clear: both;"></div>
 
 <div class="form-group">
-	<!-- BEGIN: type -->
-	<a href="{type_link}" class="{type_button} btn" role="button">
-		{type_name}
+	<a href="/{module_name}/{op}/?type=1{filter_param}" class="{type_button1} btn" role="button">
+		Danh sách gần sinh
 	</a>
-	<!-- END: type -->
+	<a href="/{module_name}/{op}/?type=2{filter_param}" class="{type_button2} btn" role="button">
+		Danh sách đã sinh
+	</a>
+	<a href="/{module_name}/{op}/?type=3{filter_param}" class="{type_button3} btn" role="button">
+		Danh sách tiêm phòng
+	</a>
+	<!-- BEGIN: manager -->
+	<a href="/{module_name}/{op}/?type=4{filter_param}" class="{type_button4} btn" role="button">
+		Danh sách quản lý
+	</a>
+	<!-- END: manager -->
 </div>
 
 <div id="html_content">
@@ -56,9 +66,9 @@
 	var esc = encodeURIComponent;
 
 	var global = {
-		type: {select_status},
+	// 	type: {select_status},
 		id: 0,
-		recall: '{recall_date}'
+	// 	recall: '{recall_date}'
 	}
 
 	$('.date').datepicker({
@@ -110,7 +120,6 @@
 		}
 	}
 
-
 	function removeUsg(id) {
 		var answer = confirm("Xóa bản ghi này?");
 		if (answer) {
@@ -143,29 +152,99 @@
 		)
 	}
 
-	function themsieuam(event) {
-		event.preventDefault();
-		msg = "";
-		if (!customer_name) {
-			msg = "Chưa nhập tên khách hàng!"
-		} else if (!customer_phone.value) {
-			msg = "Chưa nhập số điện thoại!"
-		} else if (!pet_info.value) {
-			msg = "Khách hàng chưa có thú cưng!"
-		} else {
-			$.post(
-				"",
-				{ action: 'insert-usg', petid: pet_info.value, doctorid: $("#doctor").val(), cometime: $("#ngaysieuam").val(), calltime: $("#calltime").val(), image: "", note: $("#note").val() },
-				(data, status) => {
-					data = JSON.parse(data);
-					if (data["status"] == 1) {
-						window.location.reload();
-					}
-				}
-			)
+	function checkData() {
+		return {
+			customer: g_customer,
+			pet: $("#pet_info").val(),
+			usgtime: $("#ngaysieuam").val(),
+			expecttime: $("#calltime").val(),
+			expectnumber: $("#expectnumber").val(),
+			doctor: $("#doctor").val(),
+			note: $("#note").val()
 		}
-		alert_msg(msg);
-		return false;
+	}
+
+	// thêm siêu âm
+	// khách hàng và thú cưng bắt buộc phải chọn
+	function usgInsertSubmit() {
+		sdata = checkData()
+		if (sdata['customer'] <= 0) alert_msg('Chưa chọn khách hàng')
+		else if (sdata['pet'] <= 0) alert_msg('Chưa chọn thú cưng')
+		else {
+			vhttp.checkelse('', { action: 'insert-usg', data: sdata }).then(data => {
+				$("#content").html(data['html'])
+				// xóa dữ liệu
+				$("#customer_name").val('')
+				$("#customer_phone").val('')
+				$("#customer_address").val('')
+				$("#pet_info").html('')
+				$("#ghichu").val('')
+				g_customer = -1
+				$("#insert-modal").modal('hide')
+			})
+		}
+	}
+
+	function changeRecall(id, type) {
+		vhttp.checkelse('', { action: 'change-recall', id: id, type: type }).then(data => {
+			$("#html_content").html(data['html'])
+		})
+	}
+
+	function birth(id) {
+		global.id = id
+		$("#birth-modal").modal('show')
+	}
+
+	function birthSubmit() {
+		vhttp.checkelse('',
+			{
+				action: 'birth',
+				id: global['id'],
+				number: $("#birth-number").val(),
+				time: $("#birth-time").val()
+			}
+		).then(data => {
+			$("#html_content").html(data['html'])
+			$("#birth-modal").modal('hide')
+		})
+	}
+
+	function vaccineRecall(id) {
+		global['id'] = id
+		$("#vaccine-modal").modal('show')
+	}
+
+	function vaccineSubmit() {
+		vhttp.checkelse('',
+			{
+				action: 'vaccine',
+				id: global['id'],
+				disease: $("#birth-disease").val(),
+				doctor: $("#birth-doctor").val(),
+				time: $("#birth-time").val()
+			}
+		).then(data => {
+			$("#html_content").html(data['html'])
+			$("#vaccine-modal").modal('hide')
+		})
+	}
+
+	function rejectRecall(id) {
+		global['id'] = id
+		$("#reject-modal").modal('show')
+	}
+
+	function rejectSubmit() {
+		vhttp.checkelse('',
+			{
+				action: 'reject',
+				id: global['id']
+			}
+		).then(data => {
+			$("#html_content").html(data['html'])
+			$("#reject-modal").modal('hide')
+		})
 	}
 
 	function changeStatus(id, type) {
@@ -245,12 +324,6 @@
 				}
 			)
 		}
-	}
-
-	function birth(id) {
-		global.id = id
-		$("#birth-recall").val(global.recall)
-		$("#birth-modal").modal('show')
 	}
 
 	function birthRecall() {

@@ -80,6 +80,15 @@
                     <label>{lang.note}</label>
                     <textarea class="form-control" id="note2" rows="3"></textarea>
                 </div>
+                <div class="form-group">
+                    <label> Loại tái chủng </label>
+                    <select class="form-control" name="disease" id="birth-disease">
+                        <!-- BEGIN: disease -->
+                        <option value="{id}">{name}</option>
+                        <!-- END: disease -->
+                    </select>
+                </div>
+
                 <div class="form-group text-center">
                     <button class="btn btn-info" id="btn_usg_update" onclick="update_usg()">
                         {lang.submit}
@@ -105,7 +114,6 @@
                     <img src="/themes/default/images/vaccine/trans.png" title="Thêm thú cưng">
                 </div>
                 <br>
-                <form id="add" onsubmit="return themsieuam(event)" autocomplete="off">
                     <div class="form-detail">
                         <h2>
                             {lang.usg_title}
@@ -136,12 +144,12 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-md-10">
+                            <div class="form-group col-md-6">
                                 <label>{lang.petname}</label>
                                 <select class="form-control" id="pet_info" style="text-transform: capitalize;"
                                     name="petname"></select>
                             </div>
-                            <div class="form-group col-md-7">
+                            <div class="form-group col-md-6">
                                 <label>{lang.usgcome}</label>
                                 <div class="input-group" data-provide="datepicker">
                                     <input type="text" class="form-control date" id="ngaysieuam" value="{now}">
@@ -150,7 +158,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group col-md-7">
+                            <div class="form-group col-md-6">
                                 <label>{lang.usgcall}</label>
                                 <div class="input-group" data-provide="datepicker">
                                     <input type="text" class="form-control date" id="calltime" value="{now}">
@@ -159,13 +167,16 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group col-md-6">
+                                <label> Số con dự đoán </label>
+                                <input type="text" class="form-control date" id="expectnumber" value="0">
+                            </div>
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label>{lang.image}</label>
                             <input class="form-control" type="text" name="hinhanh" id="hinhanh">
-                            <!-- <div class="icon upload" type="button" value="{lang.selimage}" name="selectimg"></div> -->
                             <br>
-                        </div>
+                        </div> -->
                         <div class="row">
                             <div class="form-group col-md-12">
                                 <label>{lang.doctor}</label>
@@ -181,10 +192,11 @@
                             </div>
                         </div>
                         <div class="form-group text-center">
-                            <input class="btn btn-info" type="submit" value="{lang.submit}">
+                            <button class="btn btn-info" onclick="usgInsertSubmit()">
+                                Thêm phiếu siêu âm
+                            </button>
                         </div>
                     </div>
-                </form>
             </div>
         </div>
     </div>
@@ -206,8 +218,39 @@
                 </div>
 
                 <div class="form-group">
+                    <label> Ngày sinh </label>
+                    <input type="text" class="form-control" id="birth-time" value="{now}">
+                </div>
+
+                <div class="form-group">
+                    <label> Số lượng con </label>
+                    <input type="text" class="form-control" id="birth-number" value="0">
+                </div>
+
+                <div class="text-center">
+                    <button class="btn btn-success" onclick="birthSubmit()">
+                        Xác nhận đã sinh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="vaccine-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
+
+                <div class="form-group">
+                    <label> Ngày tái chủng </label>
+                    <input type="text" class="form-control" id="vaccine-time" value="{now}">
+                </div>
+
+                <div class="form-group">
                     <label> Loại tái chủng </label>
-                    <select class="form-control" name="disease" id="birth-disease">
+                    <select class="form-control" id="vaccine-disease">
                         <!-- BEGIN: disease -->
                         <option value="{id}">{name}</option>
                         <!-- END: disease -->
@@ -215,18 +258,34 @@
                 </div>
 
                 <div class="form-group">
-                    <label> Tên thú cưng </label>
-                    <input type="text" class="form-control" id="birth-petname">
-                </div>
-
-                <div class="form-group">
-                    <label> Ngày tái chủng </label>
-                    <input type="text" class="form-control date" id="birth-recall">
+                    <label> Bác sĩ </label>
+                    <select class="form-control" id="vaccine-doctor">
+                        <!-- BEGIN: doctor2 -->
+                        <option value="{doctor_value}">{doctor_name}</option>
+                        <!-- END: doctor2 -->
+                    </select>
                 </div>
 
                 <div class="text-center">
-                    <button class="btn btn-success" onclick="birthRecall()">
-                        Thêm phiếu tiêm phòng
+                    <button class="btn btn-success" onclick="vaccineSubmit()">
+                        Thêm phiếu vaccine
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="reject-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
+
+                <div class="text-center">
+                    <p> Sau khi "bỏ vaccine", phiếu sẽ đưa vào mục hoàn thành, xác nhận? </p>
+                    <button class="btn btn-danger" onclick="rejectSubmit()">
+                        Bỏ vaccine
                     </button>
                 </div>
             </div>

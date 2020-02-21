@@ -1,7 +1,7 @@
 <!-- BEGIN: main -->
 <div class="form-group">
 	<!-- BEGIN: button -->
-	<a href="{recall_link}"  class="btn {recall_select}">
+	<a href="{recall_link}" class="btn {recall_select}">
 		{recall_name}
 	</a>
 	<!-- END: button -->
@@ -16,7 +16,7 @@
 	<thead>
 		<tr>
 			<th>
-				{lang.index}
+				STT
 			</th>
 			<th>
 				{lang.customer}
@@ -25,19 +25,14 @@
 				{lang.phone}
 			</th>
 			<th>
-				{lang.usgcome}
+				Ngày dự sinh
 			</th>
-			<th>
-				{lang.usgcall}
-			</th>
-			<th>
-				{lang.usgconfirm}
-			</th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
 		<!-- BEGIN: row -->
-		<tr style="text-transform: capitalize;" class="{bgcolor}" id="{vacid}">
+		<tr style="text-transform: capitalize;" class="{bgcolor}">
 			<td>
 				{index}
 			</td>
@@ -47,33 +42,25 @@
 			<td class="sieuam">
 				{phone}
 			</td>
-			<td class="sieuam">
-				{sieuam}
-			</td>
 			<td class="dusinh">
-				{dusinh}
+				{expecttime}
 			</td>
 			<td class="confirm">
-				<button class="btn left" onclick="changeStatus({id}, 0)">
+				<!-- BEGIN: right -->
+				<button class="btn left btn-sm" onclick="changeRecall({id}, 0)">
 					&lt;
 				</button>
-				<button class="btn right" onclick="changeStatus({id}, 1)">
+				<button class="btn btn-info btn-sm" type="button" onclick='birth({id})'>
+					Đã sinh
+				</button><br>
+				<!-- END: right -->
+				<!-- BEGIN: left -->
+				<button class="btn right btn-sm" onclick="changeRecall({id}, 1)">
 					&gt;
 				</button>
-
-				<span id="vac_confirm_{index}" style="color: {color};">
-					{status}
-				</span>
-				<br>
+				<!-- END: left -->
 				<span>
-					{lang.usgexpect} {exbirth}
-				</span>
-				<span id='birth_{index}'>
-					<!-- BEGIN: birth -->
-					, {lang.usgreal}
-					<button class="btn btn-info" type="button" data-toggle="modal" data-target="#usgrecall"
-						onclick='birth({index}, {vacid}, {petid})' {checked}>{birth}</button>
-					<!-- END: birth -->
+					Dự kiến: {expectnumber}
 				</span>
 			</td>
 		</tr>
@@ -87,5 +74,4 @@
 		<!-- END: row -->
 	</tbody>
 </table>
-{nav_link}
 <!-- END: main -->

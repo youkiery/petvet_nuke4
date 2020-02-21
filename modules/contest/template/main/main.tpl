@@ -99,7 +99,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label class="label-control"> Môn học đăng ký </label>
+          <label class="label-control"> Môn học đăng ký </label><br>
           <!-- BEGIN: court -->
           <label>
             <input type="checkbox" name="court" value="{id}"> {court} <br>
