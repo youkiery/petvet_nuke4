@@ -180,6 +180,7 @@
 				$("#pet_info").html('')
 				$("#ghichu").val('')
 				g_customer = -1
+				$("#html_content").html(data['html'])
 				$("#insert-modal").modal('hide')
 			})
 		}

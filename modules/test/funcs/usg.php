@@ -17,85 +17,6 @@ $filter = array(
   'status' => $nv_Request->get_int('status', 'get', 0)
 );
 
-// $xtpl->assign("lang", $lang_module);
-// $sort_type = array("Ngày dự sinh giảm dần", "Ngày dự sinh tăng dần", "ngày siêu âm giảm dần", "Ngày siêu âm tăng dần");
-// $order = array("order by calltime desc", "order by calltime asc", "order by cometime desc", "order by cometime asc");
-// $filter_type = array("25", "50", "100", "200", "Tất cả");
-// $result = array("status" => 0, "data" => "");
-// $check = false;
-// $type_list = array(1 => 'Danh sách gần sinh', 'Danh sách đã sinh', 'Danh sách tiêm phòng', 'Danh sách quản lý');
-// $type = $nv_Request -> get_int('type', 'get', 1);
-// $filter = $nv_Request -> get_int('filter', 'get', 25);
-// $page = $nv_Request -> get_int('page', 'get', 1);
-// $status = $nv_Request -> get_int('status', 'get', 0);
-// $sort = $nv_Request -> get_string('sort', 'get', '');
-// // $from = $nv_Request -> get_string('from', 'get', '');
-// // $to = $nv_Request -> get_string('end', 'get', '');
-// $keyword = $nv_Request -> get_string('keyword', 'get', '');
-// // $filter_data = array('status' => $status, 'type' => $type, 'sort' => $sort, 'keyword' => $keyword, 'filter' => $filter, 'from' => $from, 'end' => $to);
-// $filter_data = array('status' => $status, 'type' => $type, 'sort' => $sort, 'keyword' => $keyword, 'filter' => $filter);
-// $id = $nv_Request->get_string('id', 'post', "");
-// // $tick = 0;
-// // if (empty($from)) $tick += 1;
-// // if (empty($to)) $tick += 2;
-// // Hiển thị danh sách tab
-// if (empty($status)) $status = 0;
-// if (empty($type_list[$type])) $type = 1;
-// if (!empty($user_info['in_groups']) && count($user_info['in_groups'])) {
-// 	$sql = 'select * from `'. VAC_PREFIX .'_heal_manager` where type = 7 and groupid in ('. implode(', ', $user_info['in_groups']) .')';
-// 	$query = $db->query($sql);
-// 	$row = $query->fetch();
-// 	if (empty($row)) {
-// 		unset($type_list[4]);
-// 	}
-// }
-// $link = $link . "?" . http_build_query($filter_data);
-// $xtpl->assign('select_type', $type);
-// $xtpl->assign('select_status', $status);
-// foreach ($type_list as $key => $value) {
-// 	if ($key == $type) $xtpl->assign('type_button', 'btn-info');
-// 	else $xtpl->assign('type_button', 'btn-default');
-// 	$xtpl->assign('type', $key);
-// 	$filter_data['status'] = 0;
-// 	$filter_data['type'] = $key;
-// 	$filter_data['page'] = 1;
-// 	$xtpl->assign('type_link', "?" . http_build_query($filter_data));
-// 	$xtpl->assign('type_name', $value);
-// 	$xtpl->parse('main.type');
-// }
-// $filter_data['page'] = $page;
-// $filter_data['type'] = $type;
-// $filter_data['status'] = $status;
-// $xtpl->assign("keyword", $keyword);
-// $xtpl->assign("nv", $module_name);
-// $xtpl->assign("op", "sieuam");
-// $today = date("d/m/Y", NV_CURRENTTIME);
-// $dusinh = $vacconfigv2["expect"];
-// if (empty($dusinh)) {
-// 	$dusinh = 21 * 24 * 60 * 60;
-// }
-// if (empty($page)) {
-// 	$page = 1;
-// }
-// $xtpl->assign("now", $today);
-// $xtpl->assign("recall_date", date('d/m/Y', time() + 60 * 60 * 24 * 21));
-// $xtpl->assign("dusinh", date("d/m/Y", strtotime($today) + $dusinh));
-// if (empty($sort)) $sort = 0;
-// foreach ($sort_type as $key => $sort_name) {
-// 	$xtpl->assign("sort_name", $sort_name);
-// 	$xtpl->assign("sort_value", $key);
-// 	if ($key == $sort) $xtpl->assign("sort_check", "selected");
-// 	else $xtpl->assign("sort_check", "");
-// 	$xtpl->parse("main.sort");
-// }
-// foreach ($filter_type as $filter_value) {
-// 	$xtpl->assign("time_value", $filter_value);
-// 	$xtpl->assign("time_name", $filter_value);
-// 	if ($filter_value == $filter) $xtpl->assign("time_check", "selected");
-// 	else $xtpl->assign("time_check", "");
-// 	$xtpl->parse("main.time");
-// }
-
 $action = $nv_Request->get_string('action', 'post', "");
 if ($action) {
   $result = array("status" => 0, "data" => array());
@@ -383,7 +304,7 @@ if ($action) {
       $number = $nv_Request->get_int('number', 'post', 0);
       $time = $nv_Request->get_string('time', 'post', 0);
 
-      $sql = 'update `' . VAC_PREFIX . '_usg2` set number = ' . $number . ', birthtime = ' . totime($time) . ' status = 2 where id = ' . $id;
+	  $sql = 'update `' . VAC_PREFIX . '_usg2` set number = ' . $number . ', birthtime = ' . totime($time) . ', status = 2 where id = ' . $id;
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = usgCurrentList($filter);
@@ -410,6 +331,15 @@ if ($action) {
         }
       }
       break;
+    case 'reject':
+      $id = $nv_Request->get_int('id', 'post');
+
+	  $sql = "update `" . VAC_PREFIX . "_usg2` set status = 3 where id = " . $id;
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = usgCurrentList($filter);
+      }
+    break;
   }
   echo json_encode($result);
   die();
@@ -438,24 +368,6 @@ if (!empty($user_info['in_groups']) && count($user_info['in_groups'])) {
 }
 
 $xtpl->assign('content', usgCurrentList($filter));
-
-// switch ($type) {
-// 	case 1:
-// 		$xtpl->assign("content", usgRecallList());
-// 		break;
-// 	case 2:
-// 		$xtpl->assign("content", usgVaccineList());
-// 		break;
-// 	default:
-// 		// xxx: nếu không có quyền truy cập báo lại
-// 		if (!empty($type_list[3])) {
-// 			$xtpl->assign("content", usgManageList());
-// 		}
-// 		else {
-// 			$xtpl->assign("content", 'Danh sách không có quyền truy cập');
-// 		}
-// 		break;
-// }
 
 $xtpl->assign("modal", usgModal($lang_module));
 $xtpl->parse("main");

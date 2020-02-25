@@ -75,6 +75,7 @@ function usgModal($lang_module) {
   // $xtpl->assign('end', $filter_data['end']);
   $xtpl->assign('lang', $lang_module);
   $xtpl->assign('now', date('d/m/Y', time()));
+  $xtpl->assign('expecttime', date('d/m/Y', time() + 60 * 60 * 24 * 25));
 
   $diseases = getDiseaseList();
   foreach ($diseases as $key => $value) {
@@ -485,6 +486,7 @@ function usgRecallList($filter) {
 	$xtpl->assign('lang', $lang_module);
 	$index = 1;
 	$time = time() + $vacconfigv2['filter'];
+	$overtime = time();
 
 	$sql = 'select a.id, a.usgtime, a.expecttime, a.expectnumber, a.doctorid, b.id as petid, b.name as petname, c.name as customer, c.phone from `'. VAC_PREFIX .'_usg2` a inner join `'. VAC_PREFIX .'_pet` b on a.petid = b.id inner join `'. VAC_PREFIX .'_customer` c on b.customerid = c.id where expecttime < '. $time .' and a.status = '. $filter['status'] .' order by expecttime asc';
 	$query = $db->query($sql);
@@ -498,7 +500,7 @@ function usgRecallList($filter) {
 		$xtpl->assign('phone', $row['phone']);
 		$xtpl->assign('expectnumber', $row['expectnumber']);
 		$xtpl->assign('expecttime', date('d/m/Y', $row['expecttime']));
-		if ($row['expecttime'] < $time) $xtpl->assign('bgcolor', 'orange');
+		if ($row['expecttime'] < $overtime) $xtpl->assign('bgcolor', 'orange');
 		else $xtpl->assign('bgcolor', '');
 		$xtpl->parse('main.row.' . $recall[$status]);
 		$xtpl->parse('main.row');
@@ -521,6 +523,7 @@ function usgBirthList($filter) {
 	$xtpl = new XTemplate("birth-list.tpl", PATH2);
 	$index = 1;
 	$time = time() + $vacconfigv2['filter'];
+	$overtime = time();
 
 	$sql = 'select a.id, a.usgtime, a.birthtime, a.number, b.id as petid, b.name as petname, c.name as customer, c.phone from `'. VAC_PREFIX .'_usg2` a inner join `'. VAC_PREFIX .'_pet` b on a.petid = b.id inner join `'. VAC_PREFIX .'_customer` c on b.customerid = c.id where birthtime < '. $time .' and a.status = 2 order by birthtime asc';
 	$query = $db->query($sql);
@@ -533,7 +536,7 @@ function usgBirthList($filter) {
 		$xtpl->assign('phone', $row['phone']);
 		$xtpl->assign('number', $row['number']);
 		$xtpl->assign('birthtime', date('d/m/Y', $row['birthtime']));
-		if ($row['birthtime'] < $time) $xtpl->assign('bgcolor', 'orange');
+		if ($row['birthtime'] < $overtime) $xtpl->assign('bgcolor', 'orange');
 		else $xtpl->assign('bgcolor', '');
 		$xtpl->parse('main.row');
 	}
@@ -558,7 +561,8 @@ function usgVaccineList($filter) {
 		$xtpl->assign('customer', $row['customer']);
 		$xtpl->assign('phone', $row['phone']);
 		$xtpl->assign('number', $row['number']);
-		$xtpl->assign('vaccinetime', date('d/m/Y', $row['vaccinetime']));
+		if ($row['vaccinetime']) $xtpl->assign('vaccinetime', date('d/m/Y', $row['vaccinetime']));
+		else $xtpl->assign('vaccinetime', 'Không tiêm phòng');
 		$xtpl->parse('main.row');
 	}
 	$xtpl->parse('main');

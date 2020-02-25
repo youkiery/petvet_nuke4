@@ -114,89 +114,89 @@
                     <img src="/themes/default/images/vaccine/trans.png" title="Thêm thú cưng">
                 </div>
                 <br>
-                    <div class="form-detail">
-                        <h2>
-                            {lang.usg_title}
-                            <span id="e_notify" style="display: none;"></span>
-                        </h2>
-                        <div class="row">
-                            <div class="form-group col-md-7">
-                                <div>
-                                    <label>{lang.customer}</label>
-                                    <div class="relative">
-                                        <input class="form-control" id="customer_name" type="text" name="customer">
-                                        <div id="customer_name_suggest" class="suggest"></div>
-                                    </div>
+                <div class="form-detail">
+                    <h2>
+                        {lang.usg_title}
+                        <span id="e_notify" style="display: none;"></span>
+                    </h2>
+                    <div class="row">
+                        <div class="form-group col-md-7">
+                            <div>
+                                <label>{lang.customer}</label>
+                                <div class="relative">
+                                    <input class="form-control" id="customer_name" type="text" name="customer">
+                                    <div id="customer_name_suggest" class="suggest"></div>
                                 </div>
-                            </div>
-                            <div class="form-group col-md-7">
-                                <div>
-                                    <label>{lang.phone}</label>
-                                    <div class="relative">
-                                        <input class="form-control" id="customer_phone" type="number" name="phone">
-                                        <div id="customer_phone_suggest" class="suggest"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-10">
-                                <label>{lang.address}</label>
-                                <input class="form-control" id="customer_address" type="text" name="address">
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <label>{lang.petname}</label>
-                                <select class="form-control" id="pet_info" style="text-transform: capitalize;"
-                                    name="petname"></select>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>{lang.usgcome}</label>
-                                <div class="input-group" data-provide="datepicker">
-                                    <input type="text" class="form-control date" id="ngaysieuam" value="{now}">
-                                    <div class="input-group-addon">
-                                        <span class="glyphicon glyphicon-th"></span>
-                                    </div>
+                        <div class="form-group col-md-7">
+                            <div>
+                                <label>{lang.phone}</label>
+                                <div class="relative">
+                                    <input class="form-control" id="customer_phone" type="number" name="phone">
+                                    <div id="customer_phone_suggest" class="suggest"></div>
                                 </div>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>{lang.usgcall}</label>
-                                <div class="input-group" data-provide="datepicker">
-                                    <input type="text" class="form-control date" id="calltime" value="{now}">
-                                    <div class="input-group-addon">
-                                        <span class="glyphicon glyphicon-th"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label> Số con dự đoán </label>
-                                <input type="text" class="form-control date" id="expectnumber" value="0">
                             </div>
                         </div>
-                        <!-- <div class="form-group">
+                        <div class="form-group col-md-10">
+                            <label>{lang.address}</label>
+                            <input class="form-control" id="customer_address" type="text" name="address">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label>{lang.petname}</label>
+                            <select class="form-control" id="pet_info" style="text-transform: capitalize;"
+                                name="petname"></select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>{lang.usgcome}</label>
+                            <div class="input-group" data-provide="datepicker">
+                                <input type="text" class="form-control date" id="ngaysieuam" value="{now}">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>{lang.usgcall}</label>
+                            <div class="input-group" data-provide="datepicker">
+                                <input type="text" class="form-control date" id="calltime" value="{expecttime}">
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label> Số con dự đoán </label>
+                            <input type="text" class="form-control date" id="expectnumber" value="0">
+                        </div>
+                    </div>
+                    <!-- <div class="form-group">
                             <label>{lang.image}</label>
                             <input class="form-control" type="text" name="hinhanh" id="hinhanh">
                             <br>
                         </div> -->
-                        <div class="row">
-                            <div class="form-group col-md-12">
-                                <label>{lang.doctor}</label>
-                                <select class="form-control" name="doctor" id="doctor">
-                                    <!-- BEGIN: doctor -->
-                                    <option value="{doctor_value}">{doctor_name}</option>
-                                    <!-- END: doctor -->
-                                </select>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <label>{lang.note}</label>
-                                <textarea class="form-control" id="ghichu" rows="3"></textarea>
-                            </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label>{lang.doctor}</label>
+                            <select class="form-control" name="doctor" id="doctor">
+                                <!-- BEGIN: doctor -->
+                                <option value="{doctor_value}">{doctor_name}</option>
+                                <!-- END: doctor -->
+                            </select>
                         </div>
-                        <div class="form-group text-center">
-                            <button class="btn btn-info" onclick="usgInsertSubmit()">
-                                Thêm phiếu siêu âm
-                            </button>
+                        <div class="form-group col-md-12">
+                            <label>{lang.note}</label>
+                            <textarea class="form-control" id="ghichu" rows="3"></textarea>
                         </div>
                     </div>
+                    <div class="form-group text-center">
+                        <button class="btn btn-info" onclick="usgInsertSubmit()">
+                            Thêm phiếu siêu âm
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -219,7 +219,7 @@
 
                 <div class="form-group">
                     <label> Ngày sinh </label>
-                    <input type="text" class="form-control" id="birth-time" value="{now}">
+                    <input type="text" class="form-control date" id="birth-time" value="{now}">
                 </div>
 
                 <div class="form-group">
@@ -245,7 +245,7 @@
 
                 <div class="form-group">
                     <label> Ngày tái chủng </label>
-                    <input type="text" class="form-control" id="vaccine-time" value="{now}">
+                    <input type="text" class="form-control date" id="vaccine-time" value="{now}">
                 </div>
 
                 <div class="form-group">
