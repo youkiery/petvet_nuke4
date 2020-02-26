@@ -11,8 +11,11 @@
   <button class="btn btn-info" onclick="statistic()">
     Thống kê
   </button>
-  <button class="btn btn-success" id="insert">
-    Thêm phiếu lái xe, chi
+  <button class="btn btn-success" onclick="collectModal()">
+    Thêm phiếu lái xe
+  </button>
+  <button class="btn btn-success" onclick="payModal()">
+    Thêm phiếu chi
   </button>
 </div>
 
@@ -302,15 +305,13 @@
     changeYear: true
 	});
 
-  insert.click(() => {
-    switch (type.val()) {
-      case "1":
-        insertPay.modal("show")
-      break;
-      default:
-        insertCollect.modal("show")
-    }
-  })
+  function collectModal() {
+    insertCollect.modal("show")
+  }
+
+  function payModal() {
+    insertPay.modal("show")
+  }
 
   collectInsert.click(() => {
     if (!checkNumber(collectStart.val())) {
@@ -336,6 +337,8 @@
             collectPrice.val("")
             collectDestination.val("")
             collectNote.val("")
+            $("#type").val(0)
+            $("#insert-collect").modal('hide')
             content.html(data["html"])
             $(".btn, .form-control").attr("disabled", false)
           }, () => {
@@ -361,6 +364,8 @@
             payMoney.val("0")
             payNote.val("")
             content.html(data["html"])
+            $("#type").val(1)
+            $("#insert-pay").modal('hide')
             $(".btn, .form-control").attr("disabled", false)
           }, () => {
             $(".btn, .form-control").attr("disabled", false)

@@ -3,6 +3,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-body">
+                <div type="button" class="close" data-dismiss="modal"> &times; </div> <br><br>
 
                 <div class="row">
                     <label style="width: 100%;">
@@ -39,7 +40,7 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-body">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="close" data-dismiss="modal">&times;</button> <br><br>
                 <div class="text-center">
                     <p>
                         Xác nhận xóa bản ghi này
@@ -57,6 +58,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal">&times;</button> <br><br>
+
                 <p> Thời gian nhập: <span id="rider-date"></span> </p>
                 <p> Điểm đến: <span id="rider-destination"></span> </p>
                 <p> Cây số đi: <span id="rider-from"></span> </p>
@@ -70,10 +73,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
-                <p class="text-center">
-                    Phiếu ghi lộ trình
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </p>
+                <button type="button" class="close" data-dismiss="modal">&times;</button> <br><br>
                 <div class="form-group">
                     <label> Bác sĩ đi cùng </label>
                     <select class="form-control" id="collect-doctor">
@@ -124,9 +124,11 @@
 </div>
 
 <div id="insert-pay" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal">&times;</button> <br><br>
+
                 <p class="text-center">
                     Phiếu chi lộ trình
                 </p>
@@ -138,12 +140,9 @@
                     <label> Ghi chú </label>
                     <input class="form-control" id="pay-note" type="text">
                 </div>
-                <div class="form-group">
+                <div class="form-group text-center">
                     <button class="btn btn-success" id="pay-insert">
                         Lưu phiếu chi
-                    </button>
-                    <button class="btn close" data-dismiss="modal">
-                        Trở về
                     </button>
                 </div>
             </div>
