@@ -32,13 +32,26 @@
     font-weight: normal;
   }
 
+  .banner {
+    width: 100%;
+  }
+
+  .vblock {
+    top: 80px;
+  }
+
   @media screen and (max-width: 992px) {
+    .p_left { display: none; }
 
     .vetleft,
     .vetright {
       position: unset;
       display: inline-block;
-      width: 100%;
+      width: auto;
+    }
+
+    .vetright_block {
+      display: block;
     }
   }
 
@@ -50,7 +63,6 @@
   }
 
   @media screen and (max-width: 600px) {
-
     .vetleft img,
     .vetright img {
       width: 50px !important;
@@ -63,18 +75,21 @@
 </style>
 <div class="container" style="margin-top: 20px;">
   <div id="msgshow"></div>
-  <div class="text-center">
-    <img src="" alt="">
-  </div>
-
-  <!-- <div style="position: fixed; background: red; width: 100px; height: 100px;"></div>
-  <div style="position: fixed; background: blue; right: calc(25% - 125px); width: 100px; height: 100px;"></div> -->
 
   <div id="content" style="position: relative;">
-    <div class="vetleft">
-      <img src="/assets/images/1.jpg">
-      <p style="font-weight: bold; margin: 14px; font-size: 1.25em; color: deepskyblue; text-shadow: 2px 2px 6px;">Đăng
-        ký khóa học thú y</p>
+    <div class="text-center">
+      <div class="vetleft">
+        <img src="/assets/images/1.jpg">
+      </div>
+      <div class="vetleft vblock">
+        <p class="p_left" style="font-weight: bold; margin: 14px; font-size: 1.25em; color: deepskyblue; text-shadow: 2px 2px 6px;"> Đăng ký khóa học thú y</p>
+      </div>
+      <div class="vetright">
+        <img src="/assets/images/2.jpg">
+      </div>
+      <div class="vetright vetright_block vblock">
+        <p style="font-weight: bold; margin: 14px; font-size: 1.25em; color: deepskyblue; text-shadow: 2px 2px 6px;"> Đăng ký khóa học thú y</p>
+      </div>
     </div>
     <div>
       <div class="box-bordered" style="max-width: 500px;">
@@ -116,13 +131,12 @@
       </div>
       <div></div>
     </div>
-    <div class="vetright">
-      <img src="/assets/images/2.jpg">
-      <p style="font-weight: bold; margin: 14px; font-size: 1.25em; color: deepskyblue; text-shadow: 2px 2px 6px;"> Đăng ký khóa học thú y</p>
-    </div>
     <br>
     <div class="box-bordered" style="max-width: 500px;">
-      <p>BỆNH VIỆN THÚ CƯNG THANH XUÂN</p>
+        <div class="text-center">
+          <img class="banner" src="/assets/images/banner.jpg">
+          <p style="color: green; font-size: 1.2em;"> <b> BỆNH VIỆN THÚ CƯNG THANH XUÂN </b> </p>
+        </div>
       <p>Địa chỉ: 12-14 Lê Đại Hành, Buôn Ma Thuột</p>
       <p>Số điện thoại: 02626.290.609</p>
     </div>
