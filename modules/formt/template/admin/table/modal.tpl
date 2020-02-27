@@ -5,6 +5,10 @@
             <div class="modal-body">
                 <div type="button" class="close" data-dismiss="modal"> &times; </div> <br> <br>
 
+                <div id="list-content">
+                    
+                </div>
+
                 <div class="form-group">
                     <label> Số dòng </label>
                     <input type="checkbox" class="list" name="number" id="checkbox-number">
@@ -27,9 +31,6 @@
                         Lưu cấu hình
                     </button>
                 </div>
-                <!-- <div id="list-content">
-
-                </div> -->
             </div>
         </div>
     </div>

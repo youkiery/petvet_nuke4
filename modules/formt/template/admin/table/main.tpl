@@ -76,7 +76,7 @@
 
     $(document).ready(() => {
         CKEDITOR.replace('html');
-        refreshVarialbe()
+        refreshVariable()
         $(".list").change((e) => {
             item = e.currentTarget
             name = item.getAttribute('name')
@@ -133,7 +133,7 @@
         }
     }
 
-    function refreshVarialbe() {
+    function refreshVariable() {
         html = ''
         global['word'].forEach((item, index) => {
             html += `
@@ -158,7 +158,35 @@
                     <div type="button" class="close" onclick="removeVariable('`+ index +`')"> &times; </div>
                 </div>`
         });
-        $("#variable-table").html(html)
+        $("#" + name).html(html)
+    }
+
+    function refreshVariable() {
+        html = ''
+        global['word'].forEach((item, index) => {
+            html += `
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <input class="form-control variable" id="varname-`+ index +`" value="`+ item['name'] +`" placeholder="Tên">
+                    </div>
+                    <div class="col-sm-6">
+                        <select class="form-control" id="vartype-`+index+`" onchange="changeType(`+index+`)">
+                            <option value="0"> Ký tự </option>
+                            <option value="1"> Danh sách </option>
+                            <option value="2"> Bảng </option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <input class="form-control option-`+ index +`" id="varvalue-`+ index +`" value="`+ item['value'] +`" placeholder="Từ thay thế">
+                        <button class="btn btn-info option-`+ index +`" id="config-`+index+`" style="display: none;" onclick="openConfig(`+index+`)">
+                            Cấu hình
+                        </button>
+                    </div>
+
+                    <div type="button" class="close" onclick="removeVariable('`+ index +`')"> &times; </div>
+                </div>`
+        });
+        $("#" + name).html(html)
     }
 
     function checkVariable () {
@@ -184,7 +212,7 @@
                 value: ''
             })
         }
-        refreshVarialbe()
+        refreshVariable()
     }
 
     function insertVariable() {
@@ -193,7 +221,7 @@
             name: '',
             value: ''
         })
-        refreshVarialbe()
+        refreshVariable()
     }
 
     function saveListConfig() {
