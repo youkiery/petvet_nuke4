@@ -138,3 +138,9 @@ function checkUserPermission($userid) {
   }
   return 0;
 }
+
+function tableModal() {
+  $xtpl = new XTemplate('modal.tpl', PATH2);
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
