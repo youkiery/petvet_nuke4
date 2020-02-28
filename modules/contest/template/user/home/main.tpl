@@ -11,10 +11,7 @@
     }
 
     .nav-title-big {
-      height: 75px;
-      vertical-align: middle;
-      line-height: 30px;
-      width: 325px;
+      display: inline;
     }
 
     .jumbotron {
@@ -44,10 +41,8 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <div class="text-center nav-title-big" style="color: white;">
-        <img src="/assets/images/2.png" style="width: 75px; margin-right: 10px; margin-bottom: 10px; float: left;">
-        <p> SIÊU THỊ - BỆNH VIỆN THÚ CƯNG </p>
-        <p> THANH XUÂN </p>
+      <div class="text-center nav-title-big">
+        <img src="/assets/images/2.png" style="width: 300px; margin-bottom: 5px; float: left;">
       </div>
     </div>
     
