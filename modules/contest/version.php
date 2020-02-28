@@ -11,8 +11,8 @@ if (!defined('NV_MAINFILE'))
 
 $module_version = array(
     'name' => 'Đăng ký cuộc thi',
-    'modfuncs' => 'main',
-    'submenu' => 'main',
+    'modfuncs' => 'main, home',
+    'submenu' => 'main, home',
     'is_sysmod' => 0,
     'virtual' => 1,
     'version' => '4.3.01',

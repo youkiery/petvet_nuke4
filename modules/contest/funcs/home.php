@@ -45,15 +45,15 @@ if (!empty($action)) {
 $xtpl = new XTemplate("main.tpl", PATH2);
 $page_title = 'Đăng ký khóa học thú y';
 
-$sql = 'select * from `'. PREFIX .'court`';
-$query = $db->query($sql);
-while ($row = $query->fetch()) {
-  $xtpl->assign('id', $row['id']);
-  $xtpl->assign('court', $row['name'] . ' - Giá: ' . number_format($row['price'], 0, '', ',') . ($row['intro'] ? ' - ' : '') . $row['intro']);
-  $xtpl->parse('main.court');
-}
+// $sql = 'select * from `'. PREFIX .'court`';
+// $query = $db->query($sql);
+// while ($row = $query->fetch()) {
+//   $xtpl->assign('id', $row['id']);
+//   $xtpl->assign('court', $row['name'] . ' - Giá: ' . number_format($row['price'], 0, '', ',') . ($row['intro'] ? ' - ' : '') . $row['intro']);
+//   $xtpl->parse('main.court');
+// }
 
-$xtpl->assign('species', json_encode($species, JSON_UNESCAPED_UNICODE));
+// $xtpl->assign('species', json_encode($species, JSON_UNESCAPED_UNICODE));
 $xtpl->parse('main');
 $contents = $xtpl->text();
 

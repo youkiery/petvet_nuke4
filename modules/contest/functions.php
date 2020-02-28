@@ -8,12 +8,12 @@
 
 if (!defined('NV_SYSTEM')) die('Stop!!!');
 define('NV_IS_MOD_CONGVAN', true);
+define('PATH2', NV_ROOTDIR . "/modules/". $module_file ."/template/user/". $op);
 include_once(NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php');
-
 
 function confirmModal() {
   global $module_file, $db, $op;
-  $xtpl = new XTemplate("confirm-modal.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/" . $op);
+  $xtpl = new XTemplate("confirm-modal.tpl", PATH2);
   $query = $db->query('select * from `'. PREFIX .'species` order by rate desc');
   while ($row = $query->fetch()) {
     $xtpl->assign('id', $row['id']);
@@ -54,7 +54,7 @@ function confirmList() {
   }
   $xtra = implode(' and ', $xtra);
 
-  $xtpl = new XTemplate("confirm-list.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/" . $op);
+  $xtpl = new XTemplate("confirm-list.tpl", PATH2);
 
   $query = $db->query("select count(*) as count from `". PREFIX ."row` where active = 1 ". ($xtra ? " and " . $xtra : "") ." order by id desc");
   $number = $query->fetch()['count'];
