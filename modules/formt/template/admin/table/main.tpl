@@ -186,7 +186,34 @@
                     <div type="button" class="close" onclick="removeVariable('`+ index +`')"> &times; </div>
                 </div>`
         });
-        $("#" + name).html(html)
+        $("#variable-table").html(html)
+    }
+
+    function refreshVariable(data) {
+        html = ''
+        data.forEach((item, index) => {
+            html += `
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <input class="form-control variable" id="varname-`+ index +`" value="`+ item['name'] +`" placeholder="Tên">
+                    </div>
+                    <div class="col-sm-6">
+                        <select class="form-control" id="vartype-`+index+`" onchange="changeType(`+index+`)">
+                            <option value="0"> Ký tự </option>
+                            <option value="1"> Danh sách </option>
+                            <option value="2"> Bảng </option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <input class="form-control option-`+ index +`" id="varvalue-`+ index +`" value="`+ item['value'] +`" placeholder="Từ thay thế">
+                        <button class="btn btn-info option-`+ index +`" id="config-`+index+`" style="display: none;" onclick="openConfig(`+index+`)">
+                            Cấu hình
+                        </button>
+                    </div>
+                    <div type="button" class="close" onclick="removeVariable('`+ index +`')"> &times; </div>
+                </div>`
+        });
+        return html
     }
 
     function checkVariable () {

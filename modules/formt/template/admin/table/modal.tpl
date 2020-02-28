@@ -10,20 +10,26 @@
                 </div>
 
                 <div class="form-group">
-                    <label> Số dòng </label>
-                    <input type="checkbox" class="list" name="number" id="checkbox-number">
+                    <label> 
+                        <input type="checkbox" class="list" name="number" id="checkbox-number">
+                        Số dòng
+                    </label>
                     <input type="text" class="form-control list-input" id="list-number">
                 </div>
 
                 <div class="form-group">
-                    <label> Tiền tố </label>
-                    <input type="checkbox" class="list" name="prefix" id="checkbox-prefix">
+                    <label> 
+                        <input type="checkbox" class="list" name="prefix" id="checkbox-prefix">
+                        Tiền tố
+                    </label>
                     <input type="text" class="form-control list-input" id="list-prefix">
                 </div>
 
                 <div class="form-group">
-                    <label> Hậu tố </label>
-                    <input type="checkbox" class="list" name="subfix" id="checkbox-subfix">
+                    <label> 
+                        <input type="checkbox" class="list" name="subfix" id="checkbox-subfix">
+                        Hậu tố
+                    </label>
                     <input type="text" class="form-control list-input" id="list-subfix">
                 </div>
                 <div class="form-group text-center">
