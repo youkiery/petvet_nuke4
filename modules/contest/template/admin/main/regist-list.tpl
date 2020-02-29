@@ -12,11 +12,24 @@
     <td> {index} </td>
     <td> {name} </td>
     <td> {mobile} </td>
-    <td> {court} </td>
+    <td> {court} </td>  
     <td>
-      <button class="btn {active_btn}" rel="{id}" onclick="activeSubmit({id}, {active})">
-        <span class="glyphicon glyphicon-lock"></span>
+      <button class="btn btn-info" onclick="edit({id})">
+        <span class="glyphicon glyphicon-edit"></span>
       </button>
+      <button class="btn btn-danger" onclick="remove({id})">
+        <span class="glyphicon glyphicon-remove"></span>
+      </button>
+      <!-- BEGIN: yes -->
+      <button class="btn btn-warning" rel="{id}" onclick="activeSubmit({id}, 0)">
+        Hủy xác nhận
+      </button>
+      <!-- END: yes -->
+      <!-- BEGIN: no -->
+      <button class="btn btn-info" rel="{id}" onclick="activeSubmit({id}, 1)">
+        Xác nhận
+      </button>
+      <!-- END: no -->
     </td>
   </tr>
   <!-- END: row -->

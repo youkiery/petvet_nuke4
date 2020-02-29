@@ -10,6 +10,8 @@
   .form-group { clear: both; }
 </style>
 
+{modal}
+
 <div class="form-group row">
   <div class="col-sm-8">
     <label> Từ khóa </label>
@@ -45,6 +47,7 @@
 
 <script>
   var global = {
+    id: 0,
     type: {0: 'btn btn-info', 1: 'btn btn-warning'}
   }
 
@@ -53,13 +56,64 @@
   }
 
   function activeSubmit(id, type) {
-    $("[rel=" + id + "]").prop('disabled', true)
-    vhttp.check('', { action: 'active', id: id, type: type}).then((data) => {
-      $("[rel=" + id + "]").prop('disabled', false)
-      $("[rel=" + id + "]").attr('class', global['type'][type])
-    }, () => {
-      $("[rel=" + id + "]").prop('disabled', false)
+    vhttp.checkelse('', { action: 'active', id: id, type: type}).then((data) => {
+      $("#content").html(data['html'])
     })
   }
+
+  function remove(id) {
+    global['id'] = id
+    $("#remove-modal").modal('show')
+  }
+
+  function removeSubmit() {
+    vhttp.checkelse('', { action: 'remove', id: global['id']}).then((data) => {
+      // $("#edit-modal").modal('show')
+      $("#content").html(data['html'])
+      $("#remove-modal").modal('hide')
+    })
+  }
+
+  function edit(id) {
+    global['id'] = id
+    vhttp.checkelse('', { action: 'get-info', id: id}).then((data) => {
+      // $("#edit-modal").modal('show')
+      $("#signup-name").val(data['data']['name'])
+      $("#signup-address").val(data['data']['address'])
+      $("#signup-mobile").val(data['data']['mobile'])
+      $("#edit-modal").modal('show')
+    })
+  }
+
+  function signupPresubmit() {
+    data = checkSignupData()
+    if (!data['name']) notify(data)
+    else {
+      vhttp.checkelse('', { action: 'edit', id: global['id'], data: data }).then(data => {
+        $("#content").html(data['html'])
+        $("#edit-modal").modal('hide')
+      })
+    }
+  }
+
+  function checkSignupData() {
+    name = $("#signup-name").val()
+    address = $("#signup-address").val()
+    mobile = $("#signup-mobile").val()
+    if (!name.length) return 'Nhập tên người dùng'
+    if (!mobile.length) return 'Số điện thoại không được để trống'
+    return {
+      name: name,
+      address: address,
+      mobile: mobile
+    }
+  }
+
+  function notify(text) {
+    $("#notify").show()
+    $("#notify").text(text)
+    $("#notify").delay(1000).fadeOut(1000)
+  }
+
 </script>
 <!-- END: main -->

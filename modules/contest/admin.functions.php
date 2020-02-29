@@ -78,11 +78,8 @@ function courtRegistList($filter) {
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('mobile', $row['mobile']);
     $xtpl->assign('court', checkCourt($row['court']));
-    $xtpl->assign('active', intval(!$row['active']));
-    $xtpl->assign('active_btn', 'btn-info');
-    if ($row['active']) {
-      $xtpl->assign('active_btn', 'btn-warning');
-    }
+    if ($row['active']) $xtpl->parse('main.row.yes');
+    else $xtpl->parse('main.row.no');
     $number++;
     $xtpl->parse('main.row');
   }
@@ -208,6 +205,22 @@ function contestList() {
     $xtpl->parse('main.row');
   }
   $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function modal() {
+  global $db;
+  $xtpl = new XTemplate("modal.tpl", PATH);
+
+  $sql = 'select * from `'. PREFIX .'court`';
+  $query = $db->query($sql);
+  while ($row = $query->fetch()) {
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('court', $row['name'] . ' - Giá: ' . number_format($row['price'], 0, '', ',') . ($row['intro'] ? ' - ' : '') . $row['intro']);
+    $xtpl->parse('main.court');
+  }
+  
   $xtpl->parse('main');
   return $xtpl->text();
 }

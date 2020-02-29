@@ -15,17 +15,55 @@ if ($nv_Request->get_string('download', 'get')) {
   header('location: /assets/excel-output.xlsx?' . time());
 }
 
+$filter = array(
+  'page' => $nv_Request->get_int('page', 'get', 1),
+  'limit' => $nv_Request->get_int('limit', 'get', 10),
+  'keyword' => $nv_Request->get_string('keyword', 'get', ''),
+  'court' => $nv_Request->get_int('court', 'get', 0),
+  'active' => $nv_Request->get_int('active', 'get', 0)
+);
+
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
+    case 'get-info':
+      $id = $nv_Request->get_int('id', 'post');
+
+      $sql = 'select * from `'. PREFIX .'row` where id = ' . $id;
+      $query = $db->query($sql);
+      if (!empty($row = $query->fetch())) {
+        $result['status'] = 1;
+        $result['data'] = $row;
+      }
+    break;
+    case 'edit': 
+      $id = $nv_Request->get_int('id', 'post');
+      $data = $nv_Request->get_array('data', 'post');
+
+      $sql = 'update `'. PREFIX .'row` set name = "'. $data['name'] .'", mobile = "'. $data['mobile'] .'", address = "'. $data['address'] .'" where id = ' . $id;
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = courtRegistList($filter);
+      }
+    break;
+    case 'remove': 
+      $id = $nv_Request->get_int('id', 'post');
+
+      $sql = 'delete from `'. PREFIX .'row` where id = ' . $id;
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = courtRegistList($filter);
+      }
+    break;
     case 'active':
       $id = $nv_Request->get_int('id', 'post', 0);
       $type = $nv_Request->get_int('type', 'post', 0);
 
       $sql = 'update `'. PREFIX .'row` set active = ' . $type . ' where id = ' . $id;
       if ($db->query($sql)) {
-          $result['status'] = 1;
+        $result['status'] = 1;
+        $result['html'] = courtRegistList($filter);
       }
     break;
   }
@@ -76,14 +114,6 @@ $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/$module_file/template/a
 // $xtpl->parse('main');
 
 // Danh sách khóa học, xác nhận
-$filter = array(
-  'page' => $nv_Request->get_int('page', 'get', 1),
-  'limit' => $nv_Request->get_int('limit', 'get', 10),
-  'keyword' => $nv_Request->get_string('keyword', 'get', ''),
-  'court' => $nv_Request->get_int('court', 'get', 0),
-  'active' => $nv_Request->get_int('active', 'get', 0)
-);
-
 $xtpl->assign('keyword', $filter['keyword']);
 $xtpl->assign('active_' . $filter['active'], 'selected');
 
@@ -97,6 +127,7 @@ while ($row = $query->fetch()) {
   $xtpl->parse('main.court');
 }
 
+$xtpl->assign('modal', modal());
 $xtpl->assign('content', courtRegistList($filter));
 
 $xtpl->parse('main');
