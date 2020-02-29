@@ -53,7 +53,7 @@ while ($row = $query->fetch()) {
   $xtpl->parse('main.court');
 }
 
-$xtpl->assign('species', json_encode($species, JSON_UNESCAPED_UNICODE));
+// $xtpl->assign('species', json_encode($species, JSON_UNESCAPED_UNICODE));
 $xtpl->parse('main');
 $contents = $xtpl->text();
 

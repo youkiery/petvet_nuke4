@@ -88,3 +88,48 @@ function confirmList() {
   $xtpl->parse('main');
   return $xtpl->text();
 }
+
+function courtBlock() {
+  global $db;
+  $xtpl = new XTemplate("court-block.tpl", PATH2);
+
+  $sql = 'select * from pet_vi_quan_ly_khoa_hoc_1 order by id desc limit 4';
+  $query = $db->query($sql);
+  $xtpl->assign('type', 1);
+  $index = 0;
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('title', $row['title']);
+    $xtpl->assign('img', $row['homeimgfile']);
+    $xtpl->assign('short_intro', $row['hometext']);
+    $xtpl->parse('main.block');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function helpBlock() {
+  global $db;
+  $xtpl = new XTemplate("court-block.tpl", PATH2);
+
+  $sql = 'select * from pet_vi_quan_ly_khoa_hoc_3 order by id desc limit 4';
+  $query = $db->query($sql);
+  $xtpl->assign('type', 2);
+  $index = 0;
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('title', $row['title']);
+    $xtpl->assign('img', $row['homeimgfile']);
+    $xtpl->assign('short_intro', $row['hometext']);
+    $xtpl->parse('main.block');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function homeModal() {
+  global $db;
+  $xtpl = new XTemplate("modal.tpl", PATH2);
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
