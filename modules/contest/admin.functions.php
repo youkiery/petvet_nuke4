@@ -13,22 +13,34 @@ include_once(NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php');
 include_once(NV_ROOTDIR . '/modules/' . $module_file . '/theme.php');
 
 function courtList() {
-  global $db;
+  global $db, $db_config;
 
   $xtpl = new XTemplate("court-list.tpl", PATH);
   $index = 1;
   $sql = 'select * from `'. PREFIX .'court`';
   $query = $db->query($sql);
   while ($row = $query->fetch()) {
+    // cắt ngắn giới thiệu
     $pos = strpos($row['intro'], ' ', 100);
     $dot = true;
     if ($pos <= 0) {
       $dot = false;
       $pos = strlen($row['intro']);
     } 
+    // tách người thực hiện
+    $performer = array();
+    $performer_list = explode(',', $row['performer']);
+    foreach ($performer_list as $performerid) {
+      if (!empty($performerid)) {
+        $sql = 'select * from `'. $db_config['prefix'] .'_users` where userid = ' . $performerid;
+        $performer_query = $db->query($sql);
+        if ($performer_data = $performer_query->fetch()) $performer[] = $performer_data['first_name'];
+      }
+    }
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('name', $row['name']);
+    $xtpl->assign('performer', implode(', ', $performer));
     $xtpl->assign('price', number_format($row['price'], 0, '', ',') . ' VND');
     $xtpl->assign('intro', substr($row['intro'], 0, $pos) . ($dot ? '...' : ''));
     $xtpl->parse('main.row');
@@ -80,7 +92,15 @@ function courtRegistList($filter) {
 }
 
 function courtModal() {
+  global $db, $db_config;
   $xtpl = new XTemplate("modal.tpl", PATH);
+  $sql = 'select b.userid, b.first_name from `'. $db_config['prefix'] .'_rider_user` a inner join `'. $db_config['prefix'] .'_users` b on a.user_id = b.userid where a.type = 1';
+  $query = $db->query($sql);
+  while ($row = $query->fetch()) {
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $row['first_name']);
+    $xtpl->parse('main.performer');
+  }
   $xtpl->parse('main');
   return $xtpl->text();
 }
