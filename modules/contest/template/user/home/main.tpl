@@ -144,6 +144,28 @@
         subtitle: `{13b}`,
         content: `{13c}`,
       },
+    },
+    3: {
+      0: {
+        title: `{30a}`,
+        subtitle: `{30b}`,
+        content: `{30c}`,
+      },
+      1: {
+        title: `{31a}`,
+        subtitle: `{31b}`,
+        content: `{31c}`,
+      },
+      2: {
+        title: `{32a}`,
+        subtitle: `{32b}`,
+        content: `{32c}`,
+      },
+      3: {
+        title: `{33a}`,
+        subtitle: `{33b}`,
+        content: `{33c}`,
+      }
     }
   }
 
@@ -159,6 +181,13 @@
     $("#info-subtitle").html(data[type][id]['subtitle'])
     $("#info-content").html(data[type][id]['content'])
     $("#info-modal").modal('show')
+  }
+
+  function openRow2(id, type) {
+    $("#info2-title").html(data[type][id]['title'])
+    $("#info2-subtitle").html(data[type][id]['subtitle'])
+    $("#info2-content").html(data[type][id]['content'])
+    $("#info2-modal").modal('show')
   }
 </script>
 <!-- END: main -->

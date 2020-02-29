@@ -74,6 +74,18 @@ while ($row = $query->fetch()) {
   $index++;
 }
 
+$sql = 'select * from (select * from `pet_vi_quan_ly_khoa_hoc_3` order by id desc limit 4) a inner join `pet_vi_quan_ly_khoa_hoc_detail` b on a.id = b.id';
+$query = $db->query($sql);
+$data = array();
+$index = 0;
+while ($row = $query->fetch()) {
+  $xtpl->assign('id', $row['id']);
+  $xtpl->assign('3' . $index . 'a', $row['title']);
+  $xtpl->assign('3' . $index . 'b', $row['hometext']);
+  $xtpl->assign('3' . $index . 'c', str_replace('"', '\'', $row['bodyhtml']));
+  $index++;
+}
+
 $xtpl->assign('data', json_encode($data));
 $xtpl->assign('modal', homeModal());
 

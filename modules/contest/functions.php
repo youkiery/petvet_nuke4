@@ -110,11 +110,11 @@ function courtBlock() {
 
 function helpBlock() {
   global $db;
-  $xtpl = new XTemplate("court-block.tpl", PATH2);
+  $xtpl = new XTemplate("help-block.tpl", PATH2);
 
   $sql = 'select * from pet_vi_quan_ly_khoa_hoc_3 order by id desc limit 4';
   $query = $db->query($sql);
-  $xtpl->assign('type', 2);
+  $xtpl->assign('type', 3);
   $index = 0;
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index++);
