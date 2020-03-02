@@ -21,6 +21,8 @@ if ($NV_IS_ADMIN_FULL_MODULE) {
 }
 
 define('NV_MIN_MEDIUM_SYSTEM_ROWS', 100000);
+define('PREFIX', $db_config['prefix'] . '_contest_');
+define('PATH', NV_ROOTDIR . '/modules/' . $module_file . '/template/admin/' . $op);
 
 $array_viewcat_full = array(
     'viewcat_page_new' => $lang_module['viewcat_page_new'],
@@ -815,3 +817,81 @@ function nv_get_mod_countrows()
     $list = $nv_Cache->db($sql, '', $module_name);
     return $list[0]['totalnews'];
 }
+
+function courtRegistList($filter) {
+  global $db, $module_name, $op;
+
+  $xtpl = new XTemplate("regist-list.tpl", PATH);
+  $index = 1;
+
+  $xtra = array();
+  if ($filter['keyword']) {
+    $xtra[]= '(name like "%'. $filter['keyword'] .'%" or mobile like "%'. $filter['keyword'] .'%")';
+  }
+
+  if ($filter['court']) {
+    $xtra[]= 'court = ' . $filter['court'];
+  }
+
+  if ($filter['active']) {
+    $filter['active']--;
+    $xtra[]= 'active = ' . $filter['active'];
+  }
+
+  $sql = 'select * from `'. PREFIX .'row` '. (count($xtra) ? 'where ' . implode(' and ', $xtra) : '') .' limit '. $filter['limit'] .' offset ' . $filter['limit'] * ($filter['page'] - 1);
+  $query = $db->query($sql);
+  $numer = 0;
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('mobile', $row['mobile']);
+    $xtpl->assign('court', checkCourt($row['court']));
+    if ($row['active']) $xtpl->parse('main.row.yes');
+    else $xtpl->parse('main.row.no');
+    $number++;
+    $xtpl->parse('main.row');
+  }
+  $xtpl->assign('nav', nav_generater('/' . $module_name . '/' . $op . '?', $number, $filter['page'], $filter['limit']));
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function modal() {
+  global $db;
+  $xtpl = new XTemplate("modal.tpl", PATH);
+
+  $sql = 'select * from `'. PREFIX .'court`';
+  $query = $db->query($sql);
+  while ($row = $query->fetch()) {
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('court', $row['name'] . ' - Giá: ' . number_format($row['price'], 0, '', ',') . ($row['intro'] ? ' - ' : '') . $row['intro']);
+    $xtpl->parse('main.court');
+  }
+  
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function checkCourt($courtid) {
+  global $db;
+  $sql = 'select * from `'. PREFIX .'court` where id = '. $courtid;
+  $query = $db->query($sql);
+  if ($row = $query->fetch()) return $row['name'];
+  return '';
+}
+
+function nav_generater($url, $number, $page, $limit) {
+  $html = '';
+  $total = floor($number / $limit) + ($number % $limit ? 1 : 0);
+  for ($i = 1; $i <= $total; $i++) {
+    if ($page == $i) {
+      $html .= '<a class="btn btn-default">' . $i . '</a>';
+    } 
+    else {
+      $html .= '<a class="btn btn-info" href="'. $url .'?page='. $i .'&limit='. $i .'">' . $i . '</a>';
+    }
+  }
+  return $html;
+}
+
