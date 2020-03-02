@@ -5,6 +5,10 @@
     width: 100%;
   }
 
+  .footer {
+    border-top: 5px solid gray; padding: 10px 10px 5px 10px; background: darkgreen; color: white;
+  }
+
   .nav-image {
     width: 300px;
     margin-bottom: 5px;
@@ -73,7 +77,7 @@
         <span class="icon-bar"></span>
       </button>
       <div class="text-center nav-title-big">
-        <img src="/assets/images/2.png" class="nav-image">
+        <img src="/assets/images/2.png?t={time}" class="nav-image">
       </div>
     </div>
 
@@ -119,8 +123,9 @@
 
   <div style="clear: both;"></div>
 
-  <footer style="border-top: 5px solid gray; padding: 10px 10px 5px 10px; background: darkgreen; color: white;">
-    <p> SIÊU THỊ - BỆNH VIỆN THÚ CƯNG THANH XUÂN </p>
+  <footer class="footer">
+    {footer}
+    <!-- <p> SIÊU THỊ - BỆNH VIỆN THÚ CƯNG THANH XUÂN </p>
     <p> Địa chỉ: 14 Lê Đại Hành, Buôn Ma Thuột</p>
     <p> Số điện thoại: 02626.290.609 </p>
     <p> Website: <a href="http://petcoffee.com" style="color: white; text-decoration: underline;">
@@ -133,7 +138,7 @@
     <p>
       - <a href="https://facebook.com/petcoffee.com.vn" style="color: white; text-decoration: underline;">
         petcoffee.com.vn </a> </p>
-    <p> Email: petcoffee.com@gmail.com </p>
+    <p> Email: petcoffee.com@gmail.com </p> -->
   </footer>
 </div>
 

@@ -86,6 +86,13 @@ while ($row = $query->fetch()) {
   $index++;
 }
 
+$sql = 'select * from (select * from `pet_vi_quan_ly_khoa_hoc_4` order by id desc limit 1) a inner join `pet_vi_quan_ly_khoa_hoc_detail` b on a.id = b.id';
+$query = $db->query($sql);
+$footer = $query->fetch();
+
+$xtpl->assign('footer', $footer['bodyhtml']);
+$xtpl->assign('time', time());
+
 $xtpl->assign('data', json_encode($data));
 $xtpl->assign('modal', homeModal());
 
