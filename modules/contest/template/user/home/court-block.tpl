@@ -13,9 +13,11 @@
                 <p>
                     {short_intro}
                 </p>
-                <p class="text-center"><button class="btn btn-success" onclick="openRow('{index}', '{type}')"> Xem thêm »</button></p>
+                <p class="text-center"><button class="btn btn-success" onclick="openRow('{index}', '{type}')"> Xem thêm
+                        »</button></p>
             </div>
         </div>
     </div>
-    <!-- BEGIN: block -->
+    <!-- END: block -->
+</div>
 <!-- END: main -->

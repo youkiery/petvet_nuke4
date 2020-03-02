@@ -5,6 +5,17 @@
     width: 100%;
   }
 
+  .nav-image {
+    width: 300px;
+    margin-bottom: 5px;
+    float: left;
+    margin-top: 10px;
+  }
+
+  .panel {
+    height: 450px;
+  }
+  
   footer p {
     line-height: 0.9em;
   }
@@ -33,6 +44,15 @@
       padding-top: 80px;
     }
 
+    .col-sm-3 {
+      width: 50%;
+    }
+
+    .nav-image {
+      margin-top: 0px;
+      margin-bottom: 10px;
+    }
+
     .nav-title-big {
       width: 80%;
       margin-top: 13px;
@@ -53,7 +73,7 @@
         <span class="icon-bar"></span>
       </button>
       <div class="text-center nav-title-big">
-        <img src="/assets/images/2.png" style="width: 300px; margin-bottom: 5px; float: left;">
+        <img src="/assets/images/2.png" class="nav-image">
       </div>
     </div>
 
@@ -69,7 +89,7 @@
   <div class="container">
     <h1 style="text-shadow: black 1px 1px 0px; color: orange; " onclick="openMain()"> {title} </h1>
     <p style="text-shadow: black 1px 1px 0px; color: orange; " onclick="openMain()"> {content} </p>
-    <p><a class="btn btn-primary btn-lg" href="#" role="button"> Đăng ký </a></p>
+    <p><a class="btn btn-primary btn-lg" href="/contest" role="button"> Đăng ký </a></p>
   </div>
 </div>
 
@@ -93,6 +113,7 @@
   </div>
 
   <hr>
+  <div style="clear: both;"></div>
 
   {help_block}
 

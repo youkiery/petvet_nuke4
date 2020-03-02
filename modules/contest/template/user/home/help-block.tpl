@@ -2,7 +2,7 @@
 <div class="row">
     <!-- BEGIN: block -->
     <div class="col-sm-3">
-        <div class="panel panel-success">
+        <div class="panel small panel-success">
             <div class="panel-heading">
                 <h3 class="panel-title"> {title}</h3>
             </div>
@@ -13,9 +13,11 @@
                 <p>
                     {short_intro}
                 </p>
-                <p class="text-center"><button class="btn btn-success" onclick="openRow2('{index}', '{type}')"> Chi tiết »</button></p>
+                <p class="text-center"><button class="btn btn-success" onclick="openRow2('{index}', '{type}')"> Chi tiết
+                        »</button></p>
             </div>
         </div>
     </div>
-    <!-- BEGIN: block -->
+    <!-- END: block -->
+</div>
 <!-- END: main -->
