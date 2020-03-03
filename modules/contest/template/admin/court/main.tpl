@@ -57,6 +57,7 @@
     $("#insert-name").val(data['name'])
     $("#insert-price").val(data['price'])
     $("#insert-intro").val(data['intro'])
+    $("#insert-parent").val(data['parent'])
     // $(".performer").prop('checked', false)
     // data['performer'].forEach(item => {
     //   if (item) $("#" + item).prop('checked', true)
@@ -68,6 +69,7 @@
       name: '',
       price: 0,
       intro: '',
+      parent: 0,
       // performer: []
     })
     $(".insert-modal").hide()
@@ -96,6 +98,7 @@
       name: $("#insert-name").val(),
       price: $("#insert-price").val().replace(/\,/g, ''),
       intro: $("#insert-intro").val(),
+      parent: $("#insert-parent").val()
       // performer: performer
     }
   }

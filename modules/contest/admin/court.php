@@ -33,7 +33,7 @@ if (!empty($action)) {
       $id = $nv_Request->get_int('id', 'post', 0);
       $data = $nv_Request->get_array('data', 'post');
 
-      $sql = 'update `'. PREFIX .'court` set name = "'. $data['name'] .'", price = "'. $data['price'] .'", intro = "'. $data['intro'] .'" where id = ' . $id;
+      $sql = 'update `'. PREFIX .'court` set parent = '. $data['parent'] .', name = "'. $data['name'] .'", price = "'. $data['price'] .'", intro = "'. $data['intro'] .'" where id = ' . $id;
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = courtList();
@@ -42,7 +42,7 @@ if (!empty($action)) {
     case 'insert':
       $data = $nv_Request->get_array('data', 'post', 0);
 
-      $sql = 'insert into `'. PREFIX .'court` (name, price, intro) values("'. $data['name'] .'", '. $data['price'] .', "'. $data['intro'] .'")';
+      $sql = 'insert into `'. PREFIX .'court` (name, price, intro, parent) values("'. $data['name'] .'", '. $data['price'] .', "'. $data['intro'] .'", '. $data['parent'] .')';
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = courtList();

@@ -17,7 +17,7 @@ function courtList() {
 
   $xtpl = new XTemplate("court-list.tpl", PATH);
   $index = 1;
-  $sql = 'select * from `'. PREFIX .'court`';
+  $sql = 'select * from `'. PREFIX .'court` where parent = 0';
   $query = $db->query($sql);
   while ($row = $query->fetch()) {
     // cắt ngắn giới thiệu
@@ -44,6 +44,18 @@ function courtList() {
     $xtpl->assign('price', number_format($row['price'], 0, '', ',') . ' VND');
     $xtpl->assign('intro', substr($row['intro'], 0, $pos) . ($dot ? '...' : ''));
     $xtpl->parse('main.row');
+
+    // Danh sách khóa học con
+    $sql = "select * from `". PREFIX ."court`  where parent = $row[id] order by id desc";
+    $query2 = $db->query($sql);
+    while ($row2 = $query2->fetch()) {
+      $xtpl->assign('index', '');
+      $xtpl->assign('id', $row['id']);
+      $xtpl->assign('name', $row['name']);
+      $xtpl->assign('price', number_format($row['price'], 0, '', ',') . ' VND');
+      $xtpl->assign('intro', substr($row['intro'], 0, $pos) . ($dot ? '...' : ''));
+      $xtpl->parse('main.row');
+    }
   }
   $xtpl->parse('main');
   return $xtpl->text();
@@ -98,6 +110,7 @@ function courtModal() {
   //   $xtpl->assign('name', $row['first_name']);
   //   $xtpl->parse('main.performer');
   // }
+  $xtpl->assign('subcount', subCount());
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -181,7 +194,8 @@ function contestList() {
   $query = $db->query("select count(*) as count from `". PREFIX ."row`  ". ($xtra ? " where " . $xtra : "") ." order by id desc");
   $number = $query->fetch()['count'];
 
-  $query = $db->query("select * from `". PREFIX ."row` ". ($xtra ? " where " . $xtra : "") ." order by id desc limit 10 offset " . ($filter['page'] - 1) * $filter['limit']);
+  $query = $db->query("select * from `". PREFIX ."row`  where ". ($xtra ?  $xtra . ' and ' : "") ." parent = 0 order by id desc limit 10 offset " . ($filter['page'] - 1) * $filter['limit']);
+  die("select * from `". PREFIX ."row`  where ". ($xtra ?  $xtra . ' and ' : "") ." parent = 0 order by id desc limit 10 offset " . ($filter['page'] - 1) * $filter['limit']);
   $index = 1;
   $test_data = getTestDataList();
   // var_dump($test_data);die();
@@ -203,6 +217,22 @@ function contestList() {
     if ($row['active']) $xtpl->parse('main.row.done');
     else $xtpl->parse('main.row.undone');
     $xtpl->parse('main.row');
+    
+    // Danh sách khóa học con
+    $query2 = $db->query("select * from `". PREFIX ."row`  where ". ($xtra ?  $xtra . ' and ' : "") ." parent = $row[id] order by id desc");
+    while ($row2 = $query2->fetch()) {
+      $xtpl->assign('index', '');
+      $xtpl->assign('id', $row['id']);
+      $xtpl->assign('species', ucwords(getSpecies($row['species'])));
+      $xtpl->assign('name', $row['name']);
+      $xtpl->assign('petname', $row['petname']);
+      $xtpl->assign('address', $row['address']);
+      $xtpl->assign('mobile', $row['mobile']);
+      $xtpl->assign('contest', implode(', ', $test));
+      if ($row['active']) $xtpl->parse('main.row.done');
+      else $xtpl->parse('main.row.undone');
+      $xtpl->parse('main.row');
+    }
   }
   $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
   $xtpl->parse('main');
@@ -221,6 +251,20 @@ function modal() {
     $xtpl->parse('main.court');
   }
   
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function subCount() {
+  global $db;
+  $xtpl = new XTemplate("option.tpl", PATH);
+  $sql = 'select * from `'. PREFIX .'court`';
+  $query = $db->query($sql);
+  while ($row = $query->fetch()) {
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('value', $row['id']);
+    $xtpl->parse('main.row');
+  }
   $xtpl->parse('main');
   return $xtpl->text();
 }

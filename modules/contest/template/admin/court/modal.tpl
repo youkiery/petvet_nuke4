@@ -31,6 +31,17 @@
           </div>
         </div>
 
+        <div class="form-group row">
+          <label class="col-sm-6">
+            Thuộc khóa
+          </label>
+          <div class="col-sm-18">
+            <select class="form-control" id="insert-parent">
+              {subcount}
+            </select>
+          </div>
+        </div>
+
         <div class="text-center">
           <button class="btn btn-success insert-modal" id="insert-btn" onclick="insertSubmit()">
             Thêm khóa học
