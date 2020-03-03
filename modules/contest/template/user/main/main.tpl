@@ -125,12 +125,12 @@
           <label class="label-control"> Môn học đăng ký </label><br>
           <!-- BEGIN: court -->
           <label>
-            <input type="checkbox" name="court" value="{id}"> {court} <br>
+            <input type="checkbox" class="primary" rel="{id}" name="court" value="{id}"> {court} <br>
           </label>
           <div class="child">
             <!-- BEGIN: child -->
             <label>
-              <input type="checkbox" name="court" value="{id}"> {court} <br>
+              <input type="checkbox" class="sub" rel="{id}" name="court" value="{id2}"> {court2} <br>
             </label>
             <!-- END: child -->
           </div>
@@ -164,11 +164,24 @@
     <p class="text-center">
       Bạn có thể muốn: <br>
       <a href="/contest"> Đăng ký thêm </a> |
-      <a href="/"> Trở về trang chủ </a>
+      <a href="/contest/home"> Trở về trang chủ </a>
     </p>
   </div>
 </div>
 <script>
+  $(document).ready(() => {
+    $(".primary").change(e => {
+      id = e.currentTarget.getAttribute('rel')
+      console.log(id);
+      $(".sub[rel="+ id +"]").prop('checked', false)
+    })
+
+    $(".sub").change(e => {
+      id = e.currentTarget.getAttribute('rel')
+      $(".primary[rel="+ id +"]").prop('checked', false)
+    })
+  })
+
   function signupPresubmit() {
     data = checkSignupData()
     if (!data['name']) {

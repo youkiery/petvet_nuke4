@@ -50,15 +50,16 @@ $query = $db->query($sql);
 while ($row = $query->fetch()) {
   $xtpl->assign('id', $row['id']);
   $xtpl->assign('court', $row['name'] . ' - Học phí: <span class="red">' . number_format($row['price'], 0, '', ',') . '</span>' . ($row['intro'] ? ' - ' : '') . $row['intro']);
-  $xtpl->parse('main.court');
 
   $sql = 'select * from `'. PREFIX .'court` where parent = ' . $row['id'];
   $query2 = $db->query($sql);
   while ($row2 = $query2->fetch()) {
-    $xtpl->assign('id', $row2['id']);
-    $xtpl->assign('court', $row2['name'] . ' - <span class="red">Học phí: ' . number_format($row2['price'], 0, '', ',') . '</span>' . ($row2['intro'] ? ' - ' : '') . $row2['intro']);
+    // var_dump($row);die();
+    $xtpl->assign('id2', $row2['id']);
+    $xtpl->assign('court2', $row2['name'] . ' - <span class="red">Học phí: ' . number_format($row2['price'], 0, '', ',') . '</span>' . ($row2['intro'] ? ' - ' : '') . $row2['intro']);
     $xtpl->parse('main.court.child');
   }
+  $xtpl->parse('main.court');
 }
 
 // $xtpl->assign('species', json_encode($species, JSON_UNESCAPED_UNICODE));
