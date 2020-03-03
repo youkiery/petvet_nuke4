@@ -49,11 +49,18 @@ function courtList() {
     $sql = "select * from `". PREFIX ."court`  where parent = $row[id] order by id desc";
     $query2 = $db->query($sql);
     while ($row2 = $query2->fetch()) {
+      $pos = strpos($row2['intro'], ' ', 100);
+      $dot = true;
+      if ($pos <= 0) {
+        $dot = false;
+        $pos = strlen($row2['intro']);
+      } 
+  
       $xtpl->assign('index', '');
-      $xtpl->assign('id', $row['id']);
-      $xtpl->assign('name', $row['name']);
-      $xtpl->assign('price', number_format($row['price'], 0, '', ',') . ' VND');
-      $xtpl->assign('intro', substr($row['intro'], 0, $pos) . ($dot ? '...' : ''));
+      $xtpl->assign('id', $row2['id']);
+      $xtpl->assign('name', $row2['name']);
+      $xtpl->assign('price', number_format($row2['price'], 0, '', ',') . ' VND');
+      $xtpl->assign('intro', substr($row2['intro'], 0, $pos) . ($dot ? '...' : ''));
       $xtpl->parse('main.row');
     }
   }

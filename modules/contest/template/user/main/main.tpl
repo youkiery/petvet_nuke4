@@ -1,5 +1,13 @@
 <!-- BEGIN: main -->
 <style>
+  .child {
+    margin-left: 5px;
+    padding-left: 5px;
+    border-left: 2px solid green;
+  }
+  .red {
+      color: red;
+  }
   .form-group {
     clear: both;
   }
@@ -119,6 +127,13 @@
           <label>
             <input type="checkbox" name="court" value="{id}"> {court} <br>
           </label>
+          <div class="child">
+            <!-- BEGIN: child -->
+            <label>
+              <input type="checkbox" name="court" value="{id}"> {court} <br>
+            </label>
+            <!-- END: child -->
+          </div>
           <!-- END: court -->
         </div>
         <div style="clear: both;"></div>
