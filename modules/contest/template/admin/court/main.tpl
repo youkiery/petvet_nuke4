@@ -57,10 +57,10 @@
     $("#insert-name").val(data['name'])
     $("#insert-price").val(data['price'])
     $("#insert-intro").val(data['intro'])
-    $(".performer").prop('checked', false)
-    data['performer'].forEach(item => {
-      if (item) $("#" + item).prop('checked', true)
-    })
+    // $(".performer").prop('checked', false)
+    // data['performer'].forEach(item => {
+    //   if (item) $("#" + item).prop('checked', true)
+    // })
   }
 
   function insert() {
@@ -68,7 +68,7 @@
       name: '',
       price: 0,
       intro: '',
-      performer: []
+      // performer: []
     })
     $(".insert-modal").hide()
     $("#insert-btn").show()
@@ -80,7 +80,7 @@
       global['id'] = id
       $(".insert-modal").hide()
       $("#update-btn").show()
-      data['data']['performer'] = data['data']['performer'].split(',')
+      // data['data']['performer'] = data['data']['performer'].split(',')
       fillInsertForm(data['data'])
       $("#insert-price").val(format(data['data']['price']))
       $("#insert-modal").modal('show')
@@ -88,15 +88,15 @@
   }
 
   function checkData() {
-    performer = []
-    $(".performer:checked").each((index, item) => {
-      performer.push(item.getAttribute('id'))
-    })
+    // performer = []
+    // $(".performer:checked").each((index, item) => {
+    //   performer.push(item.getAttribute('id'))
+    // })
     return {
       name: $("#insert-name").val(),
       price: $("#insert-price").val().replace(/\,/g, ''),
       intro: $("#insert-intro").val(),
-      performer: performer
+      // performer: performer
     }
   }
 

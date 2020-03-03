@@ -5,7 +5,7 @@
     <th> Tên khóa </th>
     <th> Phí khóa học </th>
     <th> Giới thiệu </th>
-    <th> Người thực hiện </th>
+    <!-- <th> Người thực hiện </th> -->
     <th></th>
   </tr>
   <!-- BEGIN: row -->
@@ -14,7 +14,7 @@
     <td> {name} </td>
     <td> {price} </td>
     <td> {intro} </td>
-    <td> {performer} </td>
+    <!-- <td> {performer} </td> -->
     <td>
       <button class="btn btn-info btn-sm" onclick="update({id})">
         <span class="glyphicon glyphicon-edit"></span>

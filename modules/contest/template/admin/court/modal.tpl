@@ -30,18 +30,6 @@
             <textarea class="form-control" id="insert-intro" rows="5"></textarea>
           </div>
         </div>
-        <div class="form-group row">
-          <label class="col-sm-6">
-            Người thực hiện
-          </label>
-          <div class="col-sm-18">
-            <!-- BEGIN: performer -->
-            <label style="width: 100%;">
-              <input type="checkbox" class="performer" id="{id}"> {name}
-            </label>
-            <!-- END: performer -->
-          </div>
-        </div>
 
         <div class="text-center">
           <button class="btn btn-success insert-modal" id="insert-btn" onclick="insertSubmit()">
