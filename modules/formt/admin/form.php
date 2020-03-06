@@ -14,11 +14,28 @@ if (!defined('NV_IS_ADMIN_FORM')) {
 $page_title = "Danh sách khóa văn bản";
 $id = $nv_Request->get_int('id', 'get');
 // kiểm tra có tồn tại trong bảng không
+$sql = 'select * from `'. PREFIX .'_table_info` where id = ' . $id;
+$query = $db->query($sql);
+if (empty($row = $query->fetch())) {
+	// không tồn tại, chuyển về trang danh sách
+	header('location: /admin/index.php?nv='. $module_name .'&op=table');
+}
 
 $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
 	$result = array("status" => 0);
 	switch ($action) {
+		case 'save-style':
+			$data = $nv_Request->get_array('data', 'post');
+
+			if (!empty($data)) {
+				$sql = 'update `'. PREFIX .'_table_info` set style = \''. json_encode($data) .'\' where id = ' . $id;
+				if ($db->query($sql)) {
+					$result['status'] = 1;
+					$result['notify'] = 'Đã lưu';
+				}
+			}
+		break;
 		case 'filter':
 			$filter = $nv_Request->get_array('filter', 'post');
 
@@ -44,7 +61,13 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate('main.tpl', PATH2);
 
-$xtpl->assign('modal', tableModal());
+$style = json_decode($row['style']);
+$html = json_decode($row['html']);
+
+$xtpl->assign('name', $row['name']);
+$xtpl->assign('style', (empty($style) ? '{}' : $row['style']));
+$xtpl->assign('html', (empty($html) ? '{}' : $row['html']));
+$xtpl->assign('modal', formModal());
 $xtpl->parse('main');
 $contents = $xtpl->text();
 

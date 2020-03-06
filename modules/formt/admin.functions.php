@@ -166,3 +166,10 @@ function tableContent($filter) {
   $xtpl->parse("main");
   return $xtpl->text();
 }
+
+
+function formModal() {
+  $xtpl = new XTemplate('modal.tpl', PATH2);
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
