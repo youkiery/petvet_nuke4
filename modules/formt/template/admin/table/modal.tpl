@@ -15,11 +15,8 @@
                 </div>
 
                 <div class="form-group text-center">
-                    <button class="btn btn-success insert-btn" id="insert-btn" onclick="insertSubmit()">
+                    <button class="btn btn-success" onclick="insertSubmit()">
                         Thêm mẫu
-                    </button>
-                    <button class="btn btn-success insert-btn" id="edit-btn" onclick="editSubmit()">
-                        Sửa mẫu
                     </button>
                     <div class="error" id="insert-error"></div>
                 </div>

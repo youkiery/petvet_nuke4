@@ -150,15 +150,19 @@ function tableContent($filter) {
   
   $xtpl = new XTemplate("list.tpl", PATH2);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+  $sql = 'select count(*) as count from `'. PREFIX .'_table_info`';
+  $query = $db->query($sql);
+  $number = $query->fetch()['count'];
+
   $sql = 'select * from `'. PREFIX .'_table_info` order by id desc limit '. $filter['limit'] .' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index++);
-    $xtpl->assign('id', $row['id']);
     $xtpl->assign('name', $row['name']);
-    $xtpl->assign('link', '/admin/index.php?nv=' . $module_name . '&op=form&' . http_build_query($filter));
+    $xtpl->assign('link', '/admin/index.php?nv=' . $module_name . '&op=form&id=' . $row['id']);
     $xtpl->parse("main.row");
   }
+  $xtpl->assign('nav', nav_generater('/admin/index.php?nv=' . $module_name . '&op='. $op .'&', $number, $filter['page'], $filter['limit']));
   $xtpl->parse("main");
   return $xtpl->text();
 }

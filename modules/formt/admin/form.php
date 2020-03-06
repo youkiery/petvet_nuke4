@@ -12,6 +12,8 @@ if (!defined('NV_IS_ADMIN_FORM')) {
 }
 
 $page_title = "Danh sách khóa văn bản";
+$id = $nv_Request->get_int('id', 'get');
+// kiểm tra có tồn tại trong bảng không
 
 $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {

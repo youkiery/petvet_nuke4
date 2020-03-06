@@ -16,4 +16,4 @@ $submenu['locked'] = "Khóa văn bản";
 $submenu['table'] = "Văn bản";
 // $submenu['except'] = "Người ngoại lệ";
 
-$allow_func = array('main', 'locked', 'locker', 'table'); 
+$allow_func = array('main', 'locked', 'locker', 'table', 'form'); 

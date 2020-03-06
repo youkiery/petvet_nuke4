@@ -17,4 +17,5 @@
     </tr>
     <!-- END: row -->
 </table>
+{nav}
 <!-- END: main -->

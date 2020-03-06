@@ -24,8 +24,6 @@
 <script src="/modules/core/js/vhttp.js"></script>
 <script>
     function insertModal() {
-        $(".insert-btn").hide()
-        $("#insert-btn").show()
         $("#insert-modal").modal('show')
     }
 
@@ -39,6 +37,7 @@
                 '', {action: 'insert', name: name}
             ).then(data => {
                 $("#content").html(data['html'])
+                $("#insert-name").val('')
             })
         }
     }
