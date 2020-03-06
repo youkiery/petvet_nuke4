@@ -172,7 +172,6 @@
   $(document).ready(() => {
     $(".primary").change(e => {
       id = e.currentTarget.getAttribute('rel')
-      console.log(id);
       $(".sub[rel="+ id +"]").prop('checked', false)
     })
 
