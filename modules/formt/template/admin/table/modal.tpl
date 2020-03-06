@@ -1,54 +1,27 @@
 <!-- BEGIN: main -->
-<div class="modal" id="list-modal" role="dialog">
+<div class="modal" id="insert-modal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
                 <div type="button" class="close" data-dismiss="modal"> &times; </div> <br> <br>
 
-                <div id="list-content">
-                    
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <label> Tên mẫu </label>
+                    </div>
+                    <div class="col-sm-18">
+                        <input type="text" class="form-control" id="insert-name">
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label> 
-                        <input type="checkbox" class="list" name="number" id="checkbox-number">
-                        Số dòng
-                    </label>
-                    <input type="text" class="form-control list-input" id="list-number">
-                </div>
-
-                <div class="form-group">
-                    <label> 
-                        <input type="checkbox" class="list" name="prefix" id="checkbox-prefix">
-                        Tiền tố
-                    </label>
-                    <input type="text" class="form-control list-input" id="list-prefix">
-                </div>
-
-                <div class="form-group">
-                    <label> 
-                        <input type="checkbox" class="list" name="subfix" id="checkbox-subfix">
-                        Hậu tố
-                    </label>
-                    <input type="text" class="form-control list-input" id="list-subfix">
-                </div>
                 <div class="form-group text-center">
-                    <button class="btn btn-info" onclick="saveListConfig()">
-                        Lưu cấu hình
+                    <button class="btn btn-success insert-btn" id="insert-btn" onclick="insertSubmit()">
+                        Thêm mẫu
                     </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="table-modal" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div type="button" class="close" data-dismiss="modal"> &times; </div> <br> <br>
-                <div id="table-content">
-
+                    <button class="btn btn-success insert-btn" id="edit-btn" onclick="editSubmit()">
+                        Sửa mẫu
+                    </button>
+                    <div class="error" id="insert-error"></div>
                 </div>
             </div>
         </div>

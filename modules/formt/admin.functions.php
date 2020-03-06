@@ -144,3 +144,21 @@ function tableModal() {
   $xtpl->parse('main');
   return $xtpl->text();
 }
+
+function tableContent($filter) {
+  global $db, $module_name, $op;
+  
+  $xtpl = new XTemplate("list.tpl", PATH2);
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+  $sql = 'select * from `'. PREFIX .'_table_info` order by id desc limit '. $filter['limit'] .' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('link', '/admin/index.php?nv=' . $module_name . '&op=form&' . http_build_query($filter));
+    $xtpl->parse("main.row");
+  }
+  $xtpl->parse("main");
+  return $xtpl->text();
+}

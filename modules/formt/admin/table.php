@@ -11,40 +11,40 @@ if (!defined('NV_IS_ADMIN_FORM')) {
 	die('Stop!!!');
 }
 
-$page_title = "Danh sách khóa văn bản";
+// lấy dữ liệu lọc từ url
+$filter = array(
+	'page' => $nv_Request->get_int('page', 'get', 1),
+	'limit' => $nv_Request->get_int('page', 'get', 10)
+);
+
+$page_title = "Danh sách hồ sơ";
 
 $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
 	$result = array("status" => 0);
 	switch ($action) {
-		case 'filter':
-			$filter = $nv_Request->get_array('filter', 'post');
-
-			$result['status'] = 1;
-			$result['html'] = lockerList($filter);
-		break;
-		case 'lock':
-			$id = $nv_Request->get_int('id', 'post');
-			$type = $nv_Request->get_int('type', 'post', 0);
-			$filter = $nv_Request->get_array('filter', 'post');
-
-			$sql = 'update `'. PREFIX .'_row` set locker = ' . $type . ' where id = ' . $id;
-			if ($db->query($sql)) {
-				$result['status'] = 1;
-				$result['html'] = lockerList($filter);
+		case 'insert':
+			$name = $nv_Request->get_string('name', 'post');
+			if (!empty($name)) {
+				$sql = 'insert into `'. PREFIX .'_table_info` (name, html, style, prequire) values("'. $name .'", "", "", "")';
+				if ($db->query($sql)) {
+					$result['status'] = 1;
+					$result['notify'] = 'Đã thêm';
+					$result['html'] = tableContent($filter);
+				}
 			}
 		break;
 	}
-
 	echo json_encode($result);
 	die();
 }
 
-$xtpl = new XTemplate('main.tpl', PATH2);
+$xtpl = new XTemplate("main.tpl", PATH2);
 
+$xtpl->assign('content', tableContent($filter));
 $xtpl->assign('modal', tableModal());
-$xtpl->parse('main');
-$contents = $xtpl->text();
+$xtpl->parse("main");
+$contents = $xtpl->text("main");
 
 include (NV_ROOTDIR . "/includes/header.php");
 echo nv_admin_theme($contents);
