@@ -13,7 +13,7 @@ if (!defined('NV_ADMIN')) {
 
 $submenu['locker'] = "Danh sách văn bản";
 $submenu['locked'] = "Khóa văn bản";
-$submenu['table'] = "Văn bản";
+$submenu['list'] = "Quản lý mẫu văn bản";
 // $submenu['except'] = "Người ngoại lệ";
 
-$allow_func = array('main', 'locked', 'locker', 'table', 'form'); 
+$allow_func = array('main', 'locked', 'locker', 'list', 'table', 'form'); 
