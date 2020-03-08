@@ -11,8 +11,8 @@ if (!defined('NV_MAINFILE'))
 
 $module_version = array(
     'name' => 'Quản lý chung',
-    'modfuncs' => 'main, item, blood, product',
-    'submenu' => 'main, item, blood, product',
+    'modfuncs' => 'main, item, blood, product, market',
+    'submenu' => 'main, item, blood, product, market',
     'is_sysmod' => 0,
     'virtual' => 1,
     'version' => '4.3.01',

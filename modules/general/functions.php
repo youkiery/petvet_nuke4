@@ -272,3 +272,35 @@ function productModal() {
     $xtpl->parse('main');
     return $xtpl->text();
 }
+
+function marketModal() {
+    $xtpl = new XTemplate("modal.tpl", PATH);
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function marketContent($filter) {
+    global $db;
+
+    // $xtpl = new XTemplate("list.tpl", PATH);
+    // $sql = 'select count(*) as number from `'. PREFIX .'remind` '. $xtra;
+    // $query = $db->query($sql);
+    // $number = $query->fetch()['number'];
+
+    // $sql = 'select * from `'. PREFIX .'remind` '. $xtra .' order by name, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['limit'] * ($filter['page'] - 1));
+    // $query = $db->query($sql);
+    // $index = $filter['limit'] * ($filter['page'] - 1) + 1;
+
+    // while ($row = $query->fetch()) {
+    //     $xtpl->assign('index', $index++);
+    //     $xtpl->assign('id', $row['id']);
+    //     $xtpl->assign('name', (!empty($remind_title[$row['name']]) ? $remind_title[$row['name']] : ''));
+    //     $xtpl->assign('value', $row['value']);
+    //     if ($row['active']) $xtpl->parse('main.row.yes');
+    //     else $xtpl->parse('main.row.no');
+    //     $xtpl->parse('main.row');
+    // }
+    // $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
+    // $xtpl->parse('main');
+    // return $xtpl->text();
+}
