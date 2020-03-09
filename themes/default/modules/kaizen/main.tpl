@@ -76,6 +76,7 @@
 
   var g_id = 0
   var g_page = {page}
+  var page = 0
   var limit = {limit}
 
   initiaze()

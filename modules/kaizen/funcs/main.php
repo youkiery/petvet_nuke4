@@ -12,7 +12,7 @@ if (!defined('NV_IS_KAIZEN')) {
 }
 
 $page_title = 'Chiến lược Kaizen';
-preCheckUser();
+// preCheckUser();
 
 $action = $nv_Request->get_string('action', 'post/get', '');
 if (!empty($action)) {
