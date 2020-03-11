@@ -11,11 +11,9 @@
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <div class="text-center">
+          <p> Sau khi xác nhận, bản ghi sẽ biến mất, bạn có chắc chắn </p>
           <button class="btn btn-warning" onclick="doneSubmit()">
             Xác nhận
-          </button>
-          <button class="btn btn-info" data-dismiss="modal">
-            Hủy
           </button>
         </div>
       </div>
@@ -29,6 +27,7 @@
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <div class="text-center">
+          <p> Sau khi xác nhận, bản ghi sẽ biến mất, bạn có chắc chắn </p>
           <button class="btn btn-warning" onclick="doneCheckSubmit()">
             Xác nhận
           </button>
