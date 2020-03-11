@@ -10,6 +10,22 @@ if (!defined('NV_IS_MOD_QUANLY'))
   die('Stop!!!');
 quagio();
 
+// $sql = 'select * from `'. VAC_PREFIX .'_usg` order by id desc limit 100';
+// $query = $db->query($sql);
+
+// while ($row = $query->fetch()) {
+//   $sql = "select * from `". VAC_PREFIX ."_usg2` where id = $row[id]";
+//   $query2 = $db->query($sql);
+//   if (empty($query2->fetch())) {
+//     // insert
+//     $sql = "insert into `". VAC_PREFIX ."_usg2` (id, petid, doctorid, usgtime, expecttime, expectnumber, birthtime, number, vaccinetime, image, status, note, time) values ($row[id], $row[petid], $row[doctorid], $row[cometime], $row[calltime], $row[expectbirth], $row[birthday], $row[birth], $row[firstvac], '$row[image]', $row[status], '$row[note]', $row[ctime])";
+//     $db->query($sql);
+//   }
+//   else {
+//     // update
+//   }
+// }
+
 $filter = array(
   'keyword' => $nv_Request->get_string('keyword', 'get'),
   'order' => $nv_Request->get_int('order', 'get', 0),

@@ -301,7 +301,6 @@ $xtpl2 = new XTemplate("spa-check.tpl", NV_ROOTDIR . "/themes/" . $module_info['
 $index = 1;
 
 foreach ($spa_option as $key => $value) {
-  $xtpl2->assign("c_index", $index);
   $xtpl2->assign("c_content", $value);
   $xtpl2->assign("c_id", $key);
   $xtpl2->parse("main");

@@ -1,13 +1,8 @@
 <!-- BEGIN: main -->
-<tr>
-  <td>
-    {c_index}
-  </td>
-  <td>
+<div class="box">
+  <label>
+    <input type="checkbox" class="check" rel="{c_id}" {c_check}>
     {c_content}
-  </td>
-  <td>
-    <input type="checkbox" class="{c_id}" {c_check}>
-  </td>
-</tr>
+  </label>
+</div>
 <!-- END: main -->
