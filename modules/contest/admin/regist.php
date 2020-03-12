@@ -30,7 +30,7 @@ if (!empty($action)) {
     case 'get-info':
       $id = $nv_Request->get_int('id', 'post');
 
-      $sql = 'select * from `'. PREFIX .'row` where id = ' . $id;
+      $sql = 'select * from `'. PREFIX .'regist` where id = ' . $id;
       $query = $db->query($sql);
       if (!empty($row = $query->fetch())) {
         $result['status'] = 1;
@@ -41,7 +41,7 @@ if (!empty($action)) {
       $id = $nv_Request->get_int('id', 'post');
       $data = $nv_Request->get_array('data', 'post');
 
-      $sql = 'update `'. PREFIX .'row` set name = "'. $data['name'] .'", mobile = "'. $data['mobile'] .'", address = "'. $data['address'] .'" where id = ' . $id;
+      $sql = 'update `'. PREFIX .'regist` set name = "'. $data['name'] .'", mobile = "'. $data['mobile'] .'", address = "'. $data['address'] .'" where id = ' . $id;
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = courtRegistList($filter);
@@ -50,7 +50,7 @@ if (!empty($action)) {
     case 'remove': 
       $id = $nv_Request->get_int('id', 'post');
 
-      $sql = 'delete from `'. PREFIX .'row` where id = ' . $id;
+      $sql = 'delete from `'. PREFIX .'regist` where id = ' . $id;
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = courtRegistList($filter);
@@ -60,13 +60,41 @@ if (!empty($action)) {
       $id = $nv_Request->get_int('id', 'post', 0);
       $type = $nv_Request->get_int('type', 'post', 0);
 
-      $sql = 'update `'. PREFIX .'row` set active = ' . $type . ' where id = ' . $id;
+      $sql = 'update `'. PREFIX .'regist` set active = ' . $type . ' where id = ' . $id;
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = courtRegistList($filter);
       }
     break;
-  }
+    case 'get-court':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $sql = 'select * from `'. PREFIX .'court` where id = ' . $id;
+      $query = $db->query($sql);
+
+      if ($row = $query->fetch()) {
+        $result['data'] = $row;
+        $result['status'] = 1;
+      }
+    break;
+    case 'update-court':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $data = $nv_Request->get_array('data', 'post');
+
+      $sql = 'update `'. PREFIX .'court` set parent = '. $data['parent'] .', name = "'. $data['name'] .'", price = "'. $data['price'] .'", intro = "'. $data['intro'] .'" where id = ' . $id;
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = courtList();
+      }
+    break;
+    case 'insert-court':
+      $data = $nv_Request->get_array('data', 'post', 0);
+
+      $sql = 'insert into `'. PREFIX .'court` (name, price, intro, parent) values("'. $data['name'] .'", '. $data['price'] .', "'. $data['intro'] .'", '. $data['parent'] .')';
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = courtList();
+      }
+    break;  }
   echo json_encode($result);
   die();
 }

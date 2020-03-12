@@ -1063,6 +1063,8 @@ function modal() {
     $xtpl->parse('main.court');
   }
   
+  $xtpl->assign('subcount', subCount());
+  $xtpl->assign('court_content', courtList());
   $xtpl->parse('main');
   return $xtpl->text();
 }
