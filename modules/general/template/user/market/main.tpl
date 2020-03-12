@@ -54,15 +54,16 @@
         }
         catch (e) {
             console.log(e);
-            
+
             errorText('Lỗi rồi, tải lại trang hoặc báo với lập trình viên để sửa lại', 'content', 1000000)
         }
     })
 
     function checkInsertData() {
-        name = $("#insert-name").val(),
-            price = $("#insert-price").val(),
-            address = $("#insert-address").val()
+        name = $("#insert-name").val()
+        price = $("#insert-price").val()
+        unit = $("#insert-unit").val()
+        address = $("#insert-address").val()
         if (!name.length) {
             errorText('Nhập tên hàng trước khi lưu', 'insert-error')
         }
@@ -72,6 +73,7 @@
         else {
             return {
                 name: name,
+                unit: unit,
                 price: price,
                 address: address
             }
@@ -121,6 +123,7 @@
                 $("#insert-modal").modal('hide')
                 $("#insert-name").val('')
                 $("#insert-price").val('')
+                $("#insert-unit").val('')
                 $("#insert-address").val('')
             })
         }
@@ -128,9 +131,15 @@
 
     function edit(id) {
         global['id'] = id
-        $("#insert-btn").hide()
-        $("#edit-btn").show()
-        $("#insert-modal").modal('show')
+        vhttp.checkelse('', { action: 'get-edit', id: global['data'][global['index']]['id'] }).then(data => {
+            $("#insert-btn").hide()
+            $("#edit-btn").show()
+            $("#insert-name").val(data['name'])
+            $("#insert-price").val(data['price'])
+            $("#insert-unit").val(data['unit'])
+            $("#insert-address").val(data['address'])
+            $("#insert-modal").modal('show')
+        })
     }
 
     function editSubmit() {
@@ -159,7 +168,6 @@
             })
         }
         else list = global['data']
-        
 
         from = (global['page'] - 1) * global['limit']
         end = from + global['limit']
@@ -173,6 +181,7 @@
                     <tr>
                         <td> `+ (index++) + ` </td>
                         <td> `+ data['name'] + ` </td>
+                        <td> `+ data['unit'] + ` </td>
                         <td> `+ data['price'] + ` </td>
                         <td> `+ data['address'] + ` </td>
                         <td>
@@ -187,11 +196,12 @@
             }
         }
         $("#content").html(`
-            `+ (keyword.length ? '<p> Tìm kiếm '+ keyword +' được '+ list.length +' kết quả </p>' : '') +`
+            `+ (keyword.length ? '<p> Tìm kiếm ' + keyword + ' được ' + list.length + ' kết quả </p>' : '') + `
             <table class="table table-bordered table-hover">
                 <tr>
                     <th> STT </th>
                     <th> Tên hàng </th>
+                    <th> Đơn vị </th>
                     <th> Giá </th>
                     <th> Địa chỉ </th>
                     <th> </th>

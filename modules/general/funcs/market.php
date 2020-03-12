@@ -15,7 +15,7 @@ if (!empty($action)) {
     case 'insert':
         $data = $nv_Request->get_array('data', 'post');
 
-        $sql = 'insert into `'. PREFIX .'market` (doctor, name, address, price) values(0, "'. $data['name'] .'", "'. $data['address'] .'", "'. $data['price'] .'")';
+        $sql = 'insert into `'. PREFIX .'market` (doctor, name, unit, address, price) values(0, "'. $data['name'] .'", "'. $data['unit'] .'", "'. $data['address'] .'", "'. $data['price'] .'")';
 
         if ($db->query($sql)) {
             $result['status'] = 1;
