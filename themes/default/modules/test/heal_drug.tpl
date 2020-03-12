@@ -147,10 +147,12 @@
 </div>
   
 <!-- BEGIN: manager -->
-<ul class="nav nav-tabs">
-  <li class="active"><a data-toggle="tab" href="#home"> Thêm thuốc </a></li>
-  <li><a data-toggle="tab" href="#menu1"> Tra cứu </a></li>
-</ul>
+<div class="form-group">
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#home"> Thêm thuốc </a></li>
+    <li><a data-toggle="tab" href="#menu1"> Tra cứu </a></li>
+  </ul>
+</div>
 <!-- END: manager -->
 
 <div class="tab-content">
@@ -158,7 +160,7 @@
   <div id="home" class="tab-pane {active}">
     <div class="row">
       <div class="col-sm-8">
-        <div class="input-group form-group">
+        <div class="input-group">
           <input class="form-control"type="text" id="drug-search" placeholder="Từ khóa lọc tên thuốc">
           <div class="input-group-btn">
             <button class="btn btn-info" onclick="search()"> <span class="glyphicon glyphicon-search"></span> </button>
