@@ -161,13 +161,30 @@ if (!empty($action)) {
       $id = $nv_Request->get_int('id', 'post');
       $typeid = $nv_Request->get_int('typeid', 'post');
 
+      $sql = 'select * from `'. $db_config['prefix'] .'_config` where config_name = "blood_number"';
+      $query = $db->query($sql);
+      $number = $query->fetch()['config_value'];
+      
       if ($typeid) {
+        $sql = 'select * from `'. PREFIX .'blood_import` where id = ' . $id;
+        $query = $db->query($sql);
+        $number2 = $query->fetch()['number'];
+        $result['number'] = $number - $number2;
+
         $sql = 'delete from `'. PREFIX .'blood_import` where id = ' . $id;
+        $sql2 = 'update `'. $db_config['prefix'] .'_config` set config_value = ' . ($result['number']) . ' where config_name = "blood_number"';
       }
       else {
+        $sql = 'select * from `'. PREFIX .'blood_row` where id = ' . $id;
+        $query = $db->query($sql);
+        $number2 = $query->fetch()['number'];
+        $result['number'] = $number + $number2;
+
         $sql = 'delete from `'. PREFIX .'blood_row` where id = ' . $id;
+        $sql2 = 'update `'. $db_config['prefix'] .'_config` set config_value = ' . ($result['number']) . ' where config_name = "blood_number"';
       }
       $db->query($sql);
+      $db->query($sql2);
       $result['status'] = 1;
       $result['notify'] = 'Đã xóa phiếu';
       $result['html'] = bloodList();

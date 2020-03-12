@@ -357,6 +357,8 @@
             (reponse, status) => {
                 checkResult(reponse, status).then(data => {
                     $("#content").html(data['html'])
+                    $("#insert-start").val(data['number'])
+                    $("#insert-end").val(data['number'] - 1)
                     $("#remove-modal").modal('hide')
                 })
             }
