@@ -12,6 +12,17 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
+    case 'get-edit':
+        $id = $nv_Request->get_int('id', 'post');
+
+        $sql = 'select * from `'. PREFIX .'market` where id = ' . $id;
+        $query = $db->query($sql);
+        
+        if (!empty($row = $query->fetch())) {
+            $result['status'] = 1;
+            $result['data'] = $row;
+        }
+    break;
     case 'insert':
         $data = $nv_Request->get_array('data', 'post');
 
@@ -20,6 +31,16 @@ if (!empty($action)) {
         if ($db->query($sql)) {
             $result['status'] = 1;
             $result['id'] = $db->lastInsertId();
+        }
+    break;
+    case 'edit':
+        $id = $nv_Request->get_int('id', 'post');
+        $data = $nv_Request->get_array('data', 'post');
+
+        $sql = 'update `'. PREFIX .'market` set name = "'. $data['name'] .'", unit = "'. $data['unit'] .'", address = "'. $data['address'] .'", price = "'. $data['price'] .'" where id = ' . $id;
+
+        if ($db->query($sql)) {
+            $result['status'] = 1;
         }
     break;
     case 'remove':

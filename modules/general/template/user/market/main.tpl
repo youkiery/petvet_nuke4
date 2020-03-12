@@ -134,10 +134,10 @@
         vhttp.checkelse('', { action: 'get-edit', id: global['data'][global['index']]['id'] }).then(data => {
             $("#insert-btn").hide()
             $("#edit-btn").show()
-            $("#insert-name").val(data['name'])
-            $("#insert-price").val(data['price'])
-            $("#insert-unit").val(data['unit'])
-            $("#insert-address").val(data['address'])
+            $("#insert-name").val(data['data']['name'])
+            $("#insert-price").val(data['data']['price'])
+            $("#insert-unit").val(data['data']['unit'])
+            $("#insert-address").val(data['data']['address'])
             $("#insert-modal").modal('show')
         })
     }
