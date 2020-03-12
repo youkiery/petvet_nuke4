@@ -132,7 +132,6 @@ foreach ($system as $key => $row) {
 	$systemList .= '<div class="item-suggest sa" id="sa'.$row['id'].'" tag="1"> '.$row['name'].' <input type="checkbox" class="right s" id="s'.$row['id'].'" tag="1"> </div>';
 	$systemList2 .= '<li onclick="putSystem('.$row['id'].')"><a href="#">'.$row['name'].'</a></li>';
 }
-
 $diseaseList = '';
 $diseaseList2 = '';
 $diseaseList3 = '';
