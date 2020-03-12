@@ -8,7 +8,7 @@
             </div>
             <div class="panel-body">
                 <div class="form-group">
-                    <img src="/uploads/quan-ly-khoa-hoc/{img}" class="img-responsive" style="width: 100%;">
+                    <img src="/uploads/{module_name}/{img}" class="img-responsive" style="width: 100%;">
                 </div>
                 <p>
                     {short_intro}

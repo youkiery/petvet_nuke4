@@ -6,7 +6,7 @@
  * @Createdate Mon, 28 Oct 2019 15:00:00 GMT
  */
 
-if (!defined('NV_IS_MOD_CONGVAN')) die('Stop!!!');
+if (!defined('NV_IS_MOD_NEWS')) die('Stop!!!');
 
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
@@ -21,7 +21,7 @@ if (!empty($action)) {
         'no' => array()
       );
       foreach ($data['court'] as $key => $value) {
-        $query = $db->query("select * from `". PREFIX ."row` where mobile = '$data[mobile]' and court = $value");
+        $query = $db->query("select * from `". PREFIX ."regist` where mobile = '$data[mobile]' and court = $value");
         
         $courtData = checkCourt($value);
         $temp['list'][] = $courtData;
@@ -32,7 +32,7 @@ if (!empty($action)) {
       }
 
       foreach ($court as $value) {
-        $sql = "insert into `". PREFIX ."row` (name, address, mobile, court) values('$data[name]', '$dat[address]', '$data[mobile]', $value)";
+        $sql = "insert into `". PREFIX ."regist` (name, address, mobile, court) values('$data[name]', '$dat[address]', '$data[mobile]', $value)";
         $db->query($sql);
       }
       $result['status'] = 1;
@@ -43,6 +43,7 @@ if (!empty($action)) {
   die();
 }
 $xtpl = new XTemplate("main.tpl", PATH2);
+$xtpl->assign('module_name', $module_name);
 $page_title = 'Đăng ký khóa học thú y';
 
 // $sql = 'select * from `'. PREFIX .'court`';
@@ -54,7 +55,7 @@ $page_title = 'Đăng ký khóa học thú y';
 // }
 
 // $xtpl->assign('species', json_encode($species, JSON_UNESCAPED_UNICODE));
-$sql = 'select * from (select * from `pet_vi_quan_ly_khoa_hoc_2` order by id desc limit 4) a inner join `pet_vi_quan_ly_khoa_hoc_detail` b on a.id = b.id';
+$sql = 'select * from (select * from `pet_vi_contest_2` order by id desc limit 4) a inner join `pet_vi_contest_detail` b on a.id = b.id';
 $query = $db->query($sql);
 $row = $query->fetch();
 $xtpl->assign('title', $row['title']);
@@ -62,7 +63,7 @@ $xtpl->assign('content', $row['hometext']);
 $xtpl->assign('main_content', str_replace('"', '\'', $row['bodyhtml']));
 $xtpl->assign('img', $row['homeimgfile']);
 
-$sql = 'select * from (select * from `pet_vi_quan_ly_khoa_hoc_1` order by id desc limit 4) a inner join `pet_vi_quan_ly_khoa_hoc_detail` b on a.id = b.id';
+$sql = 'select * from (select * from `pet_vi_contest_1` order by id desc limit 4) a inner join `pet_vi_contest_detail` b on a.id = b.id';
 $query = $db->query($sql);
 $data = array();
 $index = 0;
@@ -74,7 +75,7 @@ while ($row = $query->fetch()) {
   $index++;
 }
 
-$sql = 'select * from (select * from `pet_vi_quan_ly_khoa_hoc_3` order by id desc limit 4) a inner join `pet_vi_quan_ly_khoa_hoc_detail` b on a.id = b.id';
+$sql = 'select * from (select * from `pet_vi_contest_3` order by id desc limit 4) a inner join `pet_vi_contest_detail` b on a.id = b.id';
 $query = $db->query($sql);
 $data = array();
 $index = 0;
@@ -86,7 +87,7 @@ while ($row = $query->fetch()) {
   $index++;
 }
 
-$sql = 'select * from (select * from `pet_vi_quan_ly_khoa_hoc_4` order by id desc limit 1) a inner join `pet_vi_quan_ly_khoa_hoc_detail` b on a.id = b.id';
+$sql = 'select * from (select * from `pet_vi_contest_4` order by id desc limit 1) a inner join `pet_vi_contest_detail` b on a.id = b.id';
 $query = $db->query($sql);
 $footer = $query->fetch();
 

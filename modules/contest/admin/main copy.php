@@ -6,7 +6,7 @@
  * @Createdate Mon, 28 Oct 2019 15:00:00 GMT
  */
 
-if (!defined('NV_IS_MOD_NEWS')) die('Stop!!!');
+if (!defined('NV_IS_MOD_CONGVAN')) die('Stop!!!');
 
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
@@ -21,7 +21,7 @@ if (!empty($action)) {
         'no' => array()
       );
       foreach ($data['court'] as $key => $value) {
-        $query = $db->query("select * from `". PREFIX ."regist` where mobile = '$data[mobile]' and court = $value");
+        $query = $db->query("select * from `". PREFIX ."row` where mobile = '$data[mobile]' and court = $value");
         
         $courtData = checkCourt($value);
         $temp['list'][] = $courtData;
@@ -32,7 +32,7 @@ if (!empty($action)) {
       }
 
       foreach ($court as $value) {
-        $sql = "insert into `". PREFIX ."regist` (name, address, mobile, court) values('$data[name]', '$dat[address]', '$data[mobile]', $value)";
+        $sql = "insert into `". PREFIX ."row` (name, address, mobile, court) values('$data[name]', '$dat[address]', '$data[mobile]', $value)";
         $db->query($sql);
       }
       $result['status'] = 1;

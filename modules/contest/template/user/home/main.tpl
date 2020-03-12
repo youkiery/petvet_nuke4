@@ -89,7 +89,7 @@
   </div>
 </nav>
 
-<div class="jumbotron" style="background: url('/uploads/quan-ly-khoa-hoc/{img}');">
+<div class="jumbotron" style="background-image: url('/uploads/{module_name}/{img}'); background-repeat: no-repeat;">
   <div class="container">
     <h1 style="text-shadow: black 1px 1px 0px; color: orange; " onclick="openMain()"> {title} </h1>
     <p style="text-shadow: black 1px 1px 0px; color: orange; " onclick="openMain()"> {content} </p>
