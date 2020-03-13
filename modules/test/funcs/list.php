@@ -10,6 +10,35 @@ $action = $nv_Request->get_string("action", "get/post", "");
 if (!empty($action)) {
 	$result = array("status" => 0);
 	switch ($action) {
+		case 'get-customer':
+			$id = $nv_Request->get_int('id', 'post');
+
+			$sql = 'select * from `'. VAC_PREFIX .'_customer` where id = '. $id;
+			$query = $db->query($sql);
+			if (!empty($row = $query->fetch())) {
+				$result['status'] = 1;
+				$result['data'] = $row;
+			}
+		break;
+		case 'edit-customer':
+			// kiểm tra thông tin số điện thoại người dùng, nếu có, báo lỗi, nếu không, cập nhật
+			$id = $nv_Request->get_int('id', 'post');
+			$data = $nv_Request->get_array('data', 'post');
+			
+			$sql = 'select * from `'. VAC_PREFIX .'_customer` where id <> '. $id .' and phone = "'. $data['phone'] . '"';
+			$query = $db->query($sql);
+			if (!empty($row = $query->fetch())) {
+				// Có sđt, báo lỗi
+				$result['data'] = 2;
+			}
+			else {
+				// cập nhật
+				$sql = "update `" . VAC_PREFIX . "_customer` set name = '$data[name]', phone = '$data[phone]', address = '$data[address]' where id = $id";
+				if ($db->query($sql)) {
+					$result['status'] = 1;
+				}
+			}
+		break;
 		case 'customer-suggest':
 			$keyword = $nv_Request->get_string('keyword', 'get/post', '');
 
@@ -17,7 +46,7 @@ if (!empty($action)) {
 			$query = $db->query($sql);
 			$html = '';
 			while ($customer = $query->fetch()) {
-				$html .= '<div class="item_suggest" onclick="parseKeyword(\''.$customer['name'].'\', \''.$customer['phone'].'\')">' . $customer['name'] . '<span class="right">' . $customer['phone'] . '</span></div>';
+				$html .= '<div class="hr"><div class="item_suggest item_suggest2" onclick="parseKeyword(\''.$customer['name'].'\', \''.$customer['phone'].'\')">' . $customer['name'] . ' <br>' . $customer['phone'] . '</div><div class="item_suggest3" onclick="editCustomer('. $customer['id'] .')"> E </div></div><div style="clear: both;"></div>';
 			}
 			$result['status'] = 1;
 			$result['html'] = $html;
@@ -258,7 +287,6 @@ while($row = $query->fetch()) {
 }
 
 $list = user_vaccine();
-
 $xtpl->assign("content", $list);
 
 $xtpl->parse("main");

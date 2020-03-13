@@ -1,16 +1,67 @@
 <!-- BEGIN: main -->
 <div id="msgshow" class="msgshow"></div>
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
+<script type="text/javascript"
+  src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
+<script src="/modules/core/js/vhttp.js"></script>
 
 <style>
   #ui-datepicker-div {
     z-index: 10000 !important;
   }
+
+  .item_suggest2 {
+    width: 90%;
+    float: left;
+  }
+
+  .item_suggest3 {
+    width: 10%;
+    float: left;
+  }
+
+  .hr {
+    border-bottom: 1px solid #eee;
+  }
+
+  .error { color: red; font-size: 1.2em; font-weight: bold; }
 </style>
-  
+
+<div id="customer-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
+
+        <div class="form-group row">
+          <div class="col-sm-12">
+            <label> Khách hàng </label>
+            <input type="text" class="form-control" id="customer-name">
+          </div>
+          <div class="col-sm-12">
+            <label> Số điện thoại </label>
+            <input type="text" class="form-control" id="customer-phone">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label> Địa chỉ </label>
+          <textarea type="text" class="form-control" id="customer-address"></textarea>
+        </div>
+
+        <div class="text-center">
+          <button class="btn btn-info" onclick="editCustomerSubmit()">
+            Chỉnh sửa thông tin khách hàng
+          </button>
+          <p class="error" id="customer-error"> </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="search-all" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -291,7 +342,7 @@
   var g_vacid = -1;
   var g_disease = -1;
   var g_petid = -1;
-  var g_customer  = -1;
+  var g_customer = -1;
   var page = '{page}';
   var refresh = 0
   var vaccineSearch = $("#vaccine-search")
@@ -305,6 +356,9 @@
   var note_s = 0;
   var searchInterval
   var searchAllTimeout
+  var global = {
+    id: 0
+  }
 
   $("#exall").click(() => {
     if (note_s) {
@@ -323,15 +377,15 @@
     $("#detail").modal("toggle")
     $.post(
       script_name,
-      {action: "vac_detail", id: id},
+      { action: "vac_detail", id: id },
       (response, status) => {
         var data = JSON.parse(response)
       }
     )
   })
-  
+
   $('#confirm_recall').datepicker({
-   	format: 'dd/mm/yyyy',
+    format: 'dd/mm/yyyy',
     changeMonth: true,
     changeYear: true
   });
@@ -343,15 +397,15 @@
   vaccineSearchAll.blur(() => {
     setTimeout(() => {
       searchAllSuggest.hide()
-    }, 100);
+    }, 300);
   })
-  
+
   vaccineSearchAll.keyup(() => {
     clearTimeout(searchAllTimeout)
     searchAllTimeout = setTimeout(() => {
       $.post(
         strHref,
-        {action: 'customer-suggest', keyword: vaccineSearchAll.val()},
+        { action: 'customer-suggest', keyword: vaccineSearchAll.val() },
         (response, status) => {
           checkResult(response, status).then(data => {
             searchAllSuggest.html(data['html'])
@@ -361,8 +415,54 @@
     }, 200);
   })
 
+  function editCustomer(id) {
+    vhttp.checkelse('', { action: 'get-customer', id: id }).then(data => {
+      global['id'] = id
+      $("#customer-name").val(data['data']['name'])
+      $("#customer-phone").val(data['data']['phone'])
+      $("#customer-address").val(data['data']['address'])
+      $("#customer-modal").modal('show')
+    })
+  }
+
+  function checkCustomerData() {
+    data = {
+      name: $("#customer-name").val(),
+      address: $("#customer-address").val(),
+      phone: $("#customer-phone").val()
+    }
+    if (!data['name'].length) {
+      errorText('customer-error', 'Nhập tên trước khi lưu')
+    }
+    else if ((!data['phone'].length)) {
+      errorText('customer-error', 'Nhập số điện thoại trước khi lưu')
+    }
+    else {
+      return data
+    }
+    return false
+  }
+
+  function editCustomerSubmit() {
+    sdata = checkCustomerData()
+    if (sdata) {
+      vhttp.check('', { action: 'edit-customer', id: global['id'], data: sdata }).then(data => {
+        $("#customer-modal").modal('hide')
+      }, (data) => {
+        errorText('customer-error', 'Số điện thoại này của người khác')
+      })
+    }
+  }
+
+  function errorText(id, text) {
+    $("#" + id).text(text)
+    $("#" + id).show()
+    $("#" + id).fadeOut(3000)
+  }
+
   function parseKeyword(name, phone) {
     var keyword = Number(vaccineSearchAll.val())
+
     if (Number.isFinite(keyword)) {
       vaccineSearchAll.val(phone)
     }
@@ -384,7 +484,7 @@
   //   if (!filter.length) {
   //     filter = "0";
   //   }
-    
+
   //   $.post(link + "main", 
   //   {action: "filter", keyword: $("#customer_key").val(), filter: filter, page: page},
   //   (response, status) => {
@@ -397,14 +497,14 @@
     e.preventDefault()
     $.post(
       strHref,
-      {action: 'search-all', keyword: vaccineSearchAll.val(), id: g_id, page: page, cnote: 0},
+      { action: 'search-all', keyword: vaccineSearchAll.val(), id: g_id, page: page, cnote: 0 },
       (response, status) => {
         checkResult(response, status).then(data => {
           searchAllContent.html(data['html'])
           searchAll.modal('show')
           // content.html(data['html'])
-        }, () => {})
-      } 
+        }, () => { })
+      }
     )
   }
 
@@ -424,7 +524,7 @@
     else {
       $.post(
         strHref,
-        {action: "change_custom", name: name, phone: phone, address: address, cid: g_miscustom, id: g_id, page: page, cnote: note_s},
+        { action: "change_custom", name: name, phone: phone, address: address, cid: g_miscustom, id: g_id, page: page, cnote: note_s },
         (response, status) => {
           var data = JSON.parse(response)
           if (data["status"]) {
@@ -442,24 +542,24 @@
 
   function change_data(id) {
     g_id = id;
-    $.post(link + "main", 
-    {action: "change_data", keyword: vaccineSearch.val(), id: g_id, page: page, cnote: 0},
-    (response, status) => {
-      var data = JSON.parse(response);
+    $.post(link + "main",
+      { action: "change_data", keyword: vaccineSearch.val(), id: g_id, page: page, cnote: 0 },
+      (response, status) => {
+        var data = JSON.parse(response);
 
-      $(".filter").removeClass("btn-info")
-      $("#chatter_" + id).addClass("btn-info")
-      $("#disease_display").html(data["data"]["html"])
-      note_s = 0
-      $("#exall").text(note[note_s])
-    })
+        $(".filter").removeClass("btn-info")
+        $("#chatter_" + id).addClass("btn-info")
+        $("#disease_display").html(data["data"]["html"])
+        note_s = 0
+        $("#exall").text(note[note_s])
+      })
   }
 
   function miscustom(id) {
     g_vacid = id
     $.post(
       strHref,
-      {action: "get_miscustom", id: id},
+      { action: "get_miscustom", id: id },
       (response, status) => {
         var data = JSON.parse(response)
         if (data["status"]) {
@@ -475,7 +575,7 @@
   function miscustom_submit() {
     $.post(
       script_name,
-      {action: "miscustom", vacid: g_vacid, id: g_id, page: page, cnote: note_s},
+      { action: "miscustom", vacid: g_vacid, id: g_id, page: page, cnote: note_s },
       (response, status) => {
         var data = JSON.parse(response)
         if (data["status"]) {
@@ -497,7 +597,7 @@
   function deadend_submit(id) {
     $.post(
       script_name,
-      {action: "deadend", vacid: g_vacid, id: g_id, page: page, cnote: note_s},
+      { action: "deadend", vacid: g_vacid, id: g_id, page: page, cnote: note_s },
       (response, status) => {
         var data = JSON.parse(response)
         if (data["status"]) {
@@ -517,14 +617,14 @@
     var value = document.getElementById("vac_confirm_" + diseaseid + "_" + index);
     value = trim(value.innerText)
     if (value == "Đã Gọi") {
-      recall(index, vacid, petid, diseaseid)      
+      recall(index, vacid, petid, diseaseid)
       $("#btn_save_vaccine").attr("disabled", "disabled");
       $("#vaccinedetail").modal("toggle")
     }
     else {
       $.post(
         link + "confirm",
-        {act: 'up', value: value, vacid: vacid, diseaseid: diseaseid, id: g_id, page: page, cnote: note_s},
+        { act: 'up', value: value, vacid: vacid, diseaseid: diseaseid, id: g_id, page: page, cnote: note_s },
         (response, status) => {
           response = JSON.parse(response);
           change_color(value, response, index, vacid, petid, diseaseid);
@@ -537,12 +637,12 @@
     var value = document.getElementById("vac_confirm_" + diseaseid + "_" + index);
     value = trim(value.innerText)
     if (value == "Đã Tiêm") {
-      
+
     }
     else {
       $.post(
         link + "confirm",
-        {act: 'low', value: value, vacid: vacid, diseaseid: diseaseid, id: g_id, page: page, cnote: note_s},
+        { act: 'low', value: value, vacid: vacid, diseaseid: diseaseid, id: g_id, page: page, cnote: note_s },
         (response, status) => {
           response = JSON.parse(response);
           change_color(value, response, index, vacid, petid, diseaseid);
@@ -563,45 +663,45 @@
   function save_form() {
     $.post(
       '',
-      {action: "save", petid: g_petid, recall: $("#confirm_recall").val(), doctor: $("#doctor_select").val(), vacid: g_vacid, diseaseid: g_disease, id: g_id, page: page, cnote: note_s},
+      { action: "save", petid: g_petid, recall: $("#confirm_recall").val(), doctor: $("#doctor_select").val(), vacid: g_vacid, diseaseid: g_disease, id: g_id, page: page, cnote: note_s },
       (data, status) => {
-				data = JSON.parse(data);
-				if (data["status"]) {
+        data = JSON.parse(data);
+        if (data["status"]) {
           $("#vaccinedetail").modal('hide')
           $("#disease_display").html(data["data"]["html"])
           alert_msg('{lang.saved}');
           // note_s = 0
           // $("#exall").text(note[note_s])
-					g_vacid = -1;
-					g_disease = -1;
-					g_petid = -1;
-					g_index = -1;
-				} else {
+          g_vacid = -1;
+          g_disease = -1;
+          g_petid = -1;
+          g_index = -1;
+        } else {
 
-				}
-			}
+        }
+      }
     )
   }
 
   function recall(index, vacid, petid, diseaseid) {
     $("#btn_save_vaccine").prop("disabled", true);
     $.post(
-			link + "main&act=post",
-      {action: "getrecall", vacid: vacid, diseaseid: diseaseid, id: g_id, page: page, cnote: note_s},
+      link + "main&act=post",
+      { action: "getrecall", vacid: vacid, diseaseid: diseaseid, id: g_id, page: page, cnote: note_s },
       (data, status) => {
-				data = JSON.parse(data);
-				g_vacid = vacid
-				g_disease = diseaseid
-				g_petid = petid
-				g_index = index
-				if (data["status"]) {
+        data = JSON.parse(data);
+        g_vacid = vacid
+        g_disease = diseaseid
+        g_petid = petid
+        g_index = index
+        if (data["status"]) {
           if (data["data"]["doctor"]) {
             $("#doctor_select").html(data["data"]["doctor"]);
             $("#confirm_recall").val(data["data"]["calltime"]);
             $("#btn_save_vaccine").prop("disabled", false);
           }
-				}
-			}
+        }
+      }
     )
   }
 
@@ -618,10 +718,10 @@
     if (answer) {
       $.post(
         link + "main&act=post",
-        {action: "editNote", note: answer, id: index, diseaseid: diseaseid},
+        { action: "editNote", note: answer, id: index, diseaseid: diseaseid },
         (data, status) => {
           data = JSON.parse(data);
-          if(data["status"]) {
+          if (data["status"]) {
             $("#note_v" + diseaseid + "_" + index).text(answer);
           }
         }
@@ -638,7 +738,7 @@
       refresh = 1
       $.post(
         strHref,
-        {action: "change_data", keyword: vaccineSearch.val(), id: g_id, page: page, cnote: note_s},
+        { action: "change_data", keyword: vaccineSearch.val(), id: g_id, page: page, cnote: note_s },
         (response, status) => {
           var data = JSON.parse(response);
           content.html(data["html"])
