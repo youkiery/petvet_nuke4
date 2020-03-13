@@ -46,7 +46,7 @@ if (!empty($action)) {
 			$query = $db->query($sql);
 			$html = '';
 			while ($customer = $query->fetch()) {
-				$html .= '<div class="hr"><div class="item_suggest item_suggest2" onclick="parseKeyword(\''.$customer['name'].'\', \''.$customer['phone'].'\')">' . $customer['name'] . ' <br>' . $customer['phone'] . '</div><div class="item_suggest3" onclick="editCustomer('. $customer['id'] .')"> E </div></div><div style="clear: both;"></div>';
+				$html .= '<div class="hr"><div class="item_suggest item_suggest2" onclick="parseKeyword(\''.$customer['name'].'\', \''.$customer['phone'].'\')">' . $customer['name'] . ' <br>' . $customer['phone'] . '</div><div class="item_suggest3" onclick="editCustomer('. $customer['id'] .')"> <p class="btn btn-info btn-xs"> sửa </p> </div></div><div style="clear: both;"></div>';
 			}
 			$result['status'] = 1;
 			$result['html'] = $html;
