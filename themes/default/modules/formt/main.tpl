@@ -3981,11 +3981,13 @@
             html = html.replace('(ireceive)', data['receive'])
             html = html.replace('(ireceiver)', data['ireceiveremploy'])
             examdate = data['examdate']
+            xdate = data['examdate']
             if (data['examdate2'] && data['examdate'] != data['examdate2']) {
               examdate = data['examdate'] + ' đến ' + data['examdate2']
+              xdate = data['examdate2']
             }
             html = html.replace('(examDate)', examdate)
-            examdate = data['examdate'].split('/')
+            examdate = xdate.split('/')
 
             // html = html.replace('(examDate)', data['examdate'])
             html = html.replace(/examdate-0/g, examdate[0])
