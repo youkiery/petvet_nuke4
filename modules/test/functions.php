@@ -35,7 +35,7 @@ if (!empty($user_info) && !empty($user_info['userid'])) {
         $check = true;
         $contents = '<p style="padding: 10px;">Tài khoản chưa có quyền truy cập nội dung này</p>';
       }
-      else if ($op == 'heal' || $op == 'heal_drug') {
+      else if ($op == 'heal' || $op == 'heal_drug' || $op == 'spa') {
           
       }
       else {
