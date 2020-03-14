@@ -1,12 +1,20 @@
-<?php
-  $db = new MYSQLI('localhost', 'root', '', 'petcoffee');
-  $db->set_charset('UTF8');
 
-  $query = $db->query('select * from pet_formt_notires');
-  while ($row = $query->fetch_assoc()) {
-    $data = str_replace('THTY-5', 'TYV5-TH', $row['data']);
-    // echo "update pet_formt_notires set data = '$data' where id = $row[id] <br>";
-    // $db->query("update pet_formt_notires set data = '$data' where id = $row[id]");
-  }
-  // str_replace()
-?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="text" class="number" id="number">
+
+  <script src="/modules/core/js/vnumber.js"></script>
+  <script src="/modules/core/js/vload.js"></script>
+  <script src="/assets/js/jquery/jquery.min.js"></script>
+  <script>
+    var number = new vload('number')
+    number.load()
+  </script>
+</body>
+</html>
