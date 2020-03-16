@@ -41,6 +41,7 @@
         index: 0,
         page: 1,
         limit: 100,
+        admin: '{admin}',
         notify: {
             insert: 'insert-error'
         },
@@ -183,15 +184,15 @@
                         <td> `+ data['name'] + ` </td>
                         <td> `+ data['unit'] + ` </td>
                         <td> `+ data['price'] + ` </td>
-                        <td> `+ data['address'] + ` </td>
-                        <td>
+                        <td> `+ data['address'] + ` </td>`
+                        + (global['admin'] ? `<td>
                             <button class="btn btn-info btn-sm" onclick="edit(`+ i + `)">
                                 Sửa
                             </button>
                             <button class="btn btn-danger btn-sm" onclick="remove(`+ i + `)">
                                 Xóa
                             </button>
-                        </td>
+                        </td>` : ``) + `
                     </tr>`
             }
         }
@@ -203,8 +204,8 @@
                     <th> Tên hàng </th>
                     <th> Đơn vị </th>
                     <th> Giá </th>
-                    <th> Địa chỉ </th>
-                    <th> </th>
+                    <th> Địa chỉ </th>`
+                    + (global['admin'] ? `<td></td>` : ``) + `
                 </tr>
                 `+ html + `
             </table>` + generate_nav(list.length, global['page'], global['limit']))

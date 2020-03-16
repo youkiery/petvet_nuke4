@@ -65,8 +65,13 @@ while ($row = $query->fetch()) {
     $data[]= $row;
 }
 
+// lấy dữ liệu phân quyền, chỉ quản trị mới nhất 
+if (!empty($user_info) && !empty($user_info['level'])) {
+    $xtpl->assign('admin', '1');
+} 
+
 $xtpl->assign('modal', marketModal());
-$xtpl->assign('content', marketContent());
+// $xtpl->assign('content', marketContent());
 $xtpl->assign('data', json_encode($data, JSON_UNESCAPED_UNICODE));
 $xtpl->parse('main');
 $contents = $xtpl->text();
