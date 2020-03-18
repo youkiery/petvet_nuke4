@@ -8,6 +8,11 @@
 
 if (!defined('NV_IS_FILE_ADMIN')) { die('Stop!!!'); }
 
+$filter = array(
+  'page' => $nv_Request->get_int('page', 'get', 1),
+  'limit' => $nv_Request->get_int('limit', 'get', 20)
+);
+
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
@@ -24,7 +29,7 @@ if (!empty($action)) {
         }
         $result['status'] = 1;
         $result['notify'] = 'Thêm hàng hóa thành công';
-        $result['html'] = priceContent();
+        $result['html'] = priceContent($filter);
       }
     break;
     case 'item-edit':
@@ -58,7 +63,7 @@ if (!empty($action)) {
         }
         $result['status'] = 1;
         $result['notify'] = 'Đã cập nhật thông tin';
-        $result['html'] = priceContent();
+        $result['html'] = priceContent($filter);
       }
     break;
     case 'item-get':
@@ -87,7 +92,7 @@ if (!empty($action)) {
       $sql2 = 'delete from `'. PREFIX .'price_detail` where itemid = ' . $id;
       if ($db->query($sql) && $db->query($sql2)) {
         $result['status'] = 1;
-        $result['html'] = priceContent();
+        $result['html'] = priceContent($filter);
         $result['notify'] = 'Đã xóa mặt hàng';
       }
     break;
@@ -132,7 +137,7 @@ if (!empty($action)) {
 $xtpl = new XTemplate("main.tpl", PATH);
 
 $xtpl->assign('modal', priceModal());
-$xtpl->assign('content', priceContent());
+$xtpl->assign('content', priceContent($filter));
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");

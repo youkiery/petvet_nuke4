@@ -329,3 +329,77 @@ function marketContent($filter) {
     // $xtpl->parse('main');
     // return $xtpl->text();
 }
+
+function priceContent($filter = array('page' => 1, 'limit' => 20)) {
+    global $db;
+    $xtpl = new XTemplate("list.tpl", PATH);
+    $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+    $category = priceCategoryList();
+
+    $sql = 'select count(*) as count from `'. PREFIX .'price_item` where (name like "%'. $filter['keyword'] .'%" or code like "%'. $filter['keyword'] .'%") '. ($filter['category'] ? 'and category = ' . $filter['category'] : '');
+    $query = $db->query($sql);
+    $number = $query->fetch()['count'];
+
+    $sql = 'select * from `'. PREFIX .'price_item` where (name like "%'. $filter['keyword'] .'%" or code like "%'. $filter['keyword'] .'%") '. ($filter['category'] ? 'and category = ' . $filter['category'] : '') .' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+    $query = $db->query($sql);
+
+    while ($item = $query->fetch()) {
+        $detailList = priceItemDetail($item['id']);
+        $count = count($detailList);
+        $xtpl->assign('index', $index ++);
+        $xtpl->assign('row', $count + 1);
+        $xtpl->assign('id', $item['id']);
+        $xtpl->assign('code', $item['code']);
+        $xtpl->assign('name', $item['name']);
+        $xtpl->assign('category', $category[$item['category']]['name']);
+
+        foreach ($detailList as $detail) {
+            $xtpl->assign('price', number_format($detail['price'], 0, '', ','));
+            $xtpl->assign('number', $detail['number']);
+            if ($count == 1) $xtpl->parse('main.row.section.p1');
+            else $xtpl->parse('main.row.section.p2');
+            $xtpl->parse('main.row.section');
+        }
+        $xtpl->parse('main.row');
+    }
+    $xtpl->assign('nav', nav_generater('/index.php?nv='. $module_name .'&op='. $op, $number, $filter['page'], $filter['limit']));
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function priceCategoryList() {
+    global $db;
+
+    $sql = 'select * from `'. PREFIX .'price_category`';
+    $query = $db->query($sql);
+    $list = array();
+
+    while ($row = $query->fetch()) {
+        $list[$row['id']] = $row;
+    }
+    return $list;
+}
+
+function priceItemDetail($id) {
+    global $db;
+    $sql = 'select * from `'. PREFIX .'price_detail` where itemid = ' . $id . ' order by number';
+    $query = $db->query($sql);
+    $list = array();
+
+    while ($row = $query->fetch()) {
+        $list[]= $row;
+    }
+    return $list;
+}
+
+function priceCategoryOption($categoryid = 0) {
+    $list = priceCategoryList();
+    $html = '';
+
+    foreach ($list as $category) {
+        $check = '';
+        if ($categoryid == $category['id']) $check = 'selected';
+        $html .= '<option value="'. $category['id'] .'" '. $check .'>' . $category['name'] . '</option>';
+    }
+    return $html;
+}
