@@ -26,10 +26,10 @@
     <tr>
         <td colspan="3">
             <!-- BEGIN: p1 -->
-            Giá sỉ: {price}
+            Giá sỉ: <span style="color: red;"> {price} VND </span>
             <!-- END: p1 -->
             <!-- BEGIN: p2 -->
-            Giá sỉ: {price} số lượng từ {number}
+            Giá sỉ: <span style="color: red;"> {price} VND </span> số lượng từ {number}
             <!-- END: p2 -->
         </td>
     </tr>

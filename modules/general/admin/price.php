@@ -49,12 +49,13 @@ if (!empty($action)) {
         while ($row = $query->fetch()) {
           if ($current < $count) {
             // cập nhật
-            $sql = "update `". PREFIX ."price_detail` set number = ". $section[$current]['number'] .", price = ". str_replace(',', '', $section[$current]['price']) ." where id = " . $id;
+            $sql = "update `". PREFIX ."price_detail` set number = ". $section[$current]['number'] .", price = ". str_replace(',', '', $section[$current]['price']) ." where id = " . $row['id'];
           }
           else {
             // xóa
-            $sql = "delete from `". PREFIX ."price_detail` where id = " . $id;
+            $sql = "delete from `". PREFIX ."price_detail` where id = " . $row['id'];
           }
+          // echo $sql . '<br>';
           $db->query($sql);
           $current ++;
         }

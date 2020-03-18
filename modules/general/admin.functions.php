@@ -92,7 +92,7 @@ function priceContent($filter = array('page' => 1, 'limit' => 20)) {
         foreach ($detailList as $detail) {
             $xtpl->assign('price', number_format($detail['price'], 0, '', ','));
             $xtpl->assign('number', $detail['number']);
-            if ($count == 1) $xtpl->parse('main.row.section.p1');
+            if ($count == 1 && $detail['number'] == 0) $xtpl->parse('main.row.section.p1');
             else $xtpl->parse('main.row.section.p2');
             $xtpl->parse('main.row.section');
         }
