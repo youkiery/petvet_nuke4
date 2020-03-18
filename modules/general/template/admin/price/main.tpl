@@ -8,6 +8,23 @@
 
 {modal}
 
+<form class="form-group row" method="get">
+    <div class="col-sm-8">
+        <input class="form-control" type="text" name="keyword" value="{keyword}" placeholder="Từ khóa">
+    </div>
+    <div class="col-sm-8">
+        <select class="form-control" name="category">
+            <option value="0"> Tất cả </option>
+            {category_option}
+        </select>
+    </div>
+    <input type="hidden" name="nv" value="{module_name}">
+    <input type="hidden" name="op" value="{op}">
+    <button class="btn btn-info">
+        <span class="glyphicon glyphicon-search"></span>
+    </button>
+</form>
+
 <div class="form-group row">
     <button class="btn btn-info" onclick="$('#category-modal').modal('show')">
         Danh mục

@@ -10,8 +10,8 @@
     <!-- BEGIN: row -->
     <tr>
         <td rowspan="{row}"> {index} </td>
-        <td> <input class="form-control" type="text" id="item-code-{id}" value="{code}"> </td>
-        <td> <input class="form-control" type="text" id="item-name-{id}" value="{name}"> </td>
+        <td> {code} </td>
+        <td> {name} </td>
         <td> {category} </td>
         <td rowspan="{row}" style="vertical-align: inherit;"> 
             <button class="btn btn-info btn-sm" onclick="itemEdit({id})">

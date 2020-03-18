@@ -9,6 +9,8 @@
 if (!defined('NV_IS_FILE_ADMIN')) { die('Stop!!!'); }
 
 $filter = array(
+  'keyword' => $nv_Request->get_string('keyword', 'get', ''),
+  'category' => $nv_Request->get_int('category', 'get', 0),
   'page' => $nv_Request->get_int('page', 'get', 1),
   'limit' => $nv_Request->get_int('limit', 'get', 20)
 );
@@ -136,7 +138,10 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("main.tpl", PATH);
 
+$xtpl->assign('module_name', $module_name);
+$xtpl->assign('op', $op);
 $xtpl->assign('modal', priceModal());
+$xtpl->assign('category_option', priceCategoryOption($filter['category']));
 $xtpl->assign('content', priceContent($filter));
 
 $xtpl->parse("main");

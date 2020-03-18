@@ -72,11 +72,11 @@ function priceContent($filter = array('page' => 1, 'limit' => 20)) {
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
     $category = priceCategoryList();
 
-    $sql = 'select count(*) as count from `'. PREFIX .'price_item`';
+    $sql = 'select count(*) as count from `'. PREFIX .'price_item` where (name like "%'. $filter['keyword'] .'%" or code like "%'. $filter['keyword'] .'%") '. ($filter['category'] ? 'and category = ' . $filter['category'] : '');
     $query = $db->query($sql);
     $number = $query->fetch()['count'];
 
-    $sql = 'select * from `'. PREFIX .'price_item` limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+    $sql = 'select * from `'. PREFIX .'price_item` where (name like "%'. $filter['keyword'] .'%" or code like "%'. $filter['keyword'] .'%") '. ($filter['category'] ? 'and category = ' . $filter['category'] : '') .' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
     $query = $db->query($sql);
 
     while ($item = $query->fetch()) {
@@ -139,14 +139,14 @@ function priceModal() {
     return $xtpl->text();
 }
 
-function priceCategoryOption() {
+function priceCategoryOption($categoryid = 0) {
     $list = priceCategoryList();
     $html = '';
 
     foreach ($list as $category) {
-        $html .= '<option value="'. $category['id'] .'">' . $category['name'] . '</option>';
+        $check = '';
+        if ($categoryid == $category['id']) $check = 'selected';
+        $html .= '<option value="'. $category['id'] .'" '. $check .'>' . $category['name'] . '</option>';
     }
     return $html;
 }
-
-

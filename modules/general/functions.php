@@ -362,7 +362,7 @@ function priceContent($filter = array('page' => 1, 'limit' => 20)) {
         }
         $xtpl->parse('main.row');
     }
-    $xtpl->assign('nav', nav_generater('/index.php?nv='. $module_name .'&op='. $op, $number, $filter['page'], $filter['limit']));
+    $xtpl->assign('nav', nav_generater('/'. $module_name .'/'. $op . '/?i=1', $number, $filter['page'], $filter['limit']));
     $xtpl->parse('main');
     return $xtpl->text();
 }

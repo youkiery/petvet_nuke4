@@ -9,8 +9,8 @@
 if (!defined('NV_IS_MOD_CONGVAN')) die('Stop!!!');
 
 $filter = array(
-  'keyword' => $nv_Request->get_string('keyword', 'get', 1),
-  'category' => $nv_Request->get_int('category', 'get', 1),
+  'keyword' => $nv_Request->get_string('keyword', 'get', ''),
+  'category' => $nv_Request->get_int('category', 'get', 0),
   'page' => $nv_Request->get_int('page', 'get', 1),
   'limit' => $nv_Request->get_int('limit', 'get', 20)
 );
@@ -35,6 +35,8 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("main.tpl", PATH);
 
+$xtpl->assign('module_name', $module_name);
+$xtpl->assign('op', $op);
 $xtpl->assign('keyword', $filter['keyword']);
 $xtpl->assign('category_option', priceCategoryOption($filter['category']));
 $xtpl->assign('content', priceContent($filter));
