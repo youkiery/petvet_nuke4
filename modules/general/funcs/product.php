@@ -11,7 +11,7 @@ if (!defined('NV_IS_MOD_CONGVAN')) die('Stop!!!');
 $url = '/index.php?nv=' . $module_name . '&op=' . $op;
 $filter = array(
   'page' => $nv_Request->get_int('page', 'get', 1),
-  'limit' => $nv_Request->get_int('limit', 'get', 20)
+  'limit' => $nv_Request->get_int('limit', 'get', 100)
 );
 
 $action = $nv_Request->get_string('action', 'post', '');

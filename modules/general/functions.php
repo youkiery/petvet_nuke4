@@ -267,7 +267,7 @@ function bloodModal() {
 //     return $xtpl->text();
 // }
 
-function productList($url, $filter = array('page' => 1, 'limit' => 20)) {
+function productList($url, $filter = array('page' => 1, 'limit' => 100)) {
     global $db;
 
     $xtpl = new XTemplate("list.tpl", PATH);
