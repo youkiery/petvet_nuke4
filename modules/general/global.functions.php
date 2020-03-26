@@ -308,3 +308,52 @@ function priceCategoryListReverse() {
   }
   return $list;
 }
+
+function checkRemind($name, $value) {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'device_remind` where name = "'. $name .'" and value = "'. $value .'"');
+
+  if (!($row = $query->fetch())) {
+    $query = $db->query('insert into `'. PREFIX .'device_remind` (name, value) values("'. $name .'", "'. $value .'")');
+  }
+  else {
+    $query = $db->query('update `'. PREFIX .'device_remind` set rate = rate + 1 where id = ' . $row['id']);
+  }
+}
+
+function getDeviceData($id) {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'device` where id = '. $id);
+  if ($row = $query->fetch()) {
+    $row['depart'] = json_decode($row['depart']);
+    return $row;
+  }
+  return false;
+}
+
+function checkDepartName($name, $id = 0) {
+  global $db;
+
+  if ($id) {
+    $query = $db->query('select * from `'. PREFIX .'device_depart` where name = "'. $name .'" and id <> ' . $id);
+  }
+  else {
+    $query = $db->query('select * from `'. PREFIX .'device_depart` where name = "'. $name .'"');
+  }
+  if ($query->fetch()) {
+    return true;
+  }
+  return false;
+}
+
+function checkDepartId($id) {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'device_depart` where id = ' . $id);
+  if ($row = $query->fetch()) {
+    return $row['name'];
+  }
+  return '';
+}

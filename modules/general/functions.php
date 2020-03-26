@@ -440,7 +440,7 @@ function deviceModal() {
 }
 
 function deviceList($filter) {
-  global $db, $module_file, $op, $nv_Request;
+  global $db, $allow;
   
   $xtpl = new XTemplate("device-list.tpl", PATH);
 
@@ -460,6 +460,8 @@ function deviceList($filter) {
   // die('select * from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
   $query = $db->query('select * from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+  if (!empty($allow)) $xtpl->parse('main.m1');
+
   while ($row = $query->fetch()) {
     $depart = json_decode($row['depart']);
     $list = array();
@@ -473,6 +475,7 @@ function deviceList($filter) {
     $xtpl->assign('company', $row['intro']);
     $xtpl->assign('status', $row['status']);
     $xtpl->assign('number', $row['number']);
+    if (!empty($allow)) $xtpl->parse('main.row.m2');
     $xtpl->parse('main.row');
   }
   $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));

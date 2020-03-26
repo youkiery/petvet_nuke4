@@ -1,18 +1,46 @@
 <!-- BEGIN: main -->
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
-<link rel="stylesheet" href="/modules/manage/src/style.css">
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
+
+<style>
+  label { text-align: left !important; padding-left: 10px; }
+  
+  .rows::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+
+  [class*="col-"] {
+    float: left;
+  }
+
+  .col-1 {width: 8.33%;}
+  .col-2 {width: 16.66%;}
+  .col-3 {width: 25%;}
+  .col-4 {width: 33.33%;}
+  .col-5 {width: 41.66%;}
+  .col-6 {width: 50%;}
+  .col-7 {width: 58.33%;}
+  .col-8 {width: 66.66%;}
+  .col-9 {width: 75%;}
+  .col-10 {width: 83.33%;}
+  .col-11 {width: 91.66%;}
+  .col-12 {width: 100%;}
+</style>
+
 {device_modal}
-{remove_modal}
-{remove_all_modal}
+
 <div id="msgshow"></div>
+<!-- BEGIN: m1 -->
 <div style="float: right;">
   <button class="btn btn-success" onclick="deviceInsert()">
-    <span class="glyphicon glyphicon-plus"></span>
+    Thêm thiết bị
   </button>
 </div>
+<!-- END: m1 -->
 <div class="form-group form-inline">
   Số dòng mỗi trang
   <div class="input-group">
@@ -35,21 +63,20 @@
   </div>
   <span id="filter-depart"></span>
 </div>
-<div class="form-group">
+<!-- <div class="form-group">
   <button class="btn btn-info" onclick="excel()"> Xuất excel </button>
-</div>
+</div> -->
 
 <div style="clear: both;"></div>
 <div id="content">
   {content}
 </div>
 
-<!-- <button class="btn btn-info">
-  edit all
-</button>   -->
+<!-- BEGIN: m2 -->
 <button class="btn btn-danger" onclick="removeAll()">
   Xóa mục đã chọn
 </button>  
+<!-- END: m2 -->
 <script src="/modules/manage/src/script.js"></script>
 <script>
   var global = {

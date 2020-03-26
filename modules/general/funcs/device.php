@@ -14,6 +14,12 @@ $filter = array(
   'limit' => $nv_Request->get_int('limit', 'get', 20),
 );
 
+if (!empty($user_info)) {
+  $sql = 'select * from `'. PREFIX .'price_allow` where userid = ' . $user_info['userid'];
+  $query = $db->query($sql);
+  $allow = $query->fetch();
+}
+
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
@@ -26,7 +32,7 @@ if (!empty($action)) {
         $result['notify'] = 'Đơn vị đã tồn tại';
       }
       else {
-        $query = $db->query('insert into `'. PREFIX .'depart` (name, update_time) values("'. $name .'", '. time() .')');
+        $query = $db->query('insert into `'. PREFIX .'device_depart` (name, update_time) values("'. $name .'", '. time() .')');
         if ($query) {
           $result['status'] = 1;
           $result['inserted'] = array('id' => $db->lastInsertId(), 'name' => $name);
@@ -118,6 +124,11 @@ $xtpl->assign('today', date('d/m/Y', time()));
 $xtpl->assign('depart', json_encode(getDepartList(), JSON_UNESCAPED_UNICODE));
 $xtpl->assign('remind', json_encode(getRemind(), JSON_UNESCAPED_UNICODE));
 $xtpl->assign('remindv2', json_encode(getRemindv2(), JSON_UNESCAPED_UNICODE));
+
+if (!empty($allow)) {
+  $xtpl->parse('main.m1');
+  $xtpl->parse('main.m2');
+}
 
 $xtpl->parse('main');
 $contents = $xtpl->text();
