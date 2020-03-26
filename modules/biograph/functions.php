@@ -79,9 +79,10 @@ function parseInfo($info) {
 }
 
 function userRowList($filter = array()) {
-  global $db, $user_info;
+  global $db, $user_info, $module_file;
 
   $xtpl = new XTemplate('user-list.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
   $sql = 'select * from `'. PREFIX .'_user` where fullname like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '');
   $query = $db->query($sql);
   $index = 1;
@@ -110,9 +111,10 @@ function userRowList($filter = array()) {
 }
 
 function userDogRow($userid = 0, $filter = array('keyword' => '', ), $limit = array('page' => 0, 'limit' => 10)) {
-  global $db, $user_info;
+  global $db, $user_info, $module_file;
   $index = 1;
   $xtpl = new XTemplate('dog-list.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
 
   $data = getUserPetList($userid, $filter, $limit);
 
@@ -174,11 +176,12 @@ function checkLogin($username, $password = '') {
 // }
 
 function breederList($petid) {
-  global $db;
+  global $db, $module_file;
 
   $sql = 'select * from `'. PREFIX .'_breeder` where petid = '. $petid .' order by time desc';
   $query = $db->query($sql);
   $xtpl = new XTemplate('breeder.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
   $index = 1;
 
   while (!empty($row = $query->fetch())) {
@@ -235,12 +238,12 @@ function getUserPetList($userid, $tabber, $filter) {
   global $db;
 
   $list = array();
-  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where id not in ( select id from ((select mid as id from `pet_biograph_pet`) union (select fid as id from `pet_biograph_pet`)) as a) and userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select count(*) as count from `'. PREFIX .'_pet` where id not in ( select id from ((select mid as id from `'. PREFIX .'_pet`) union (select fid as id from `'. PREFIX .'_pet`)) as a) and userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $count = $query->fetch();
 
   // $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
-  $sql = 'select * from `'. PREFIX .'_pet` where id not in ( select id from ((select mid as id from `pet_biograph_pet`) union (select fid as id from `pet_biograph_pet`)) as a) and userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'_pet` where id not in ( select id from ((select mid as id from `'. PREFIX .'_pet`) union (select fid as id from `'. PREFIX .'_pet`)) as a) and userid = ' . $userid . ' and type = 1 and name like "%'. $filter['keyword'] .'%" and breeder in ('. implode(', ', $tabber) .') order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   // die($sql);
   $query = $db->query($sql);
 

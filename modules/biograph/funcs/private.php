@@ -14,7 +14,7 @@ define('BUILDER_INSERT_NAME', 0);
 define('BUILDER_INSERT_VALUE', 1);
 define('BUILDER_EDIT', 2);
 
-$page_title = "autoload";
+$page_title = "Quản lý thú cưng";
 
 $action = $nv_Request->get_string('action', 'post', '');
 $userinfo = getUserInfo();
@@ -24,7 +24,7 @@ if (empty($userinfo)) {
 }
 else {
   if ($userinfo['center']) {
-    header('location: /biograph/center');
+    header('location: /'. $module_name .'/center');
   }
 }
 
@@ -222,12 +222,9 @@ if (!empty($action)) {
 			$html = '';
 			while ($row = $query->fetch()) {
 				$html .= '
-				<div class="suggest_item2" onclick="pickOwner(\''. $row['fullname'] .'\', '. $row['id'] .', '. $row['type'] .')">
+				<div class="suggest_item" onclick="pickOwner(\''. $row['fullname'] .'\', '. $row['id'] .', '. $row['type'] .')">
           <p>
 					'. $row['fullname'] .'
-          </p>
-          <p>
-					'. $row['mobile'] .'
           </p>
 				</div>
 				';
@@ -491,7 +488,7 @@ $id = $nv_Request->get_int('id', 'get', 0);
 $global = array();
 $global['login'] = 0;
 
-$xtpl = new XTemplate("private.tpl", "modules/biograph/template");
+$xtpl = new XTemplate("private.tpl", "modules/". $module_name ."/template");
 
 $xtpl->assign('userid', $userinfo['id']);
 $xtpl->assign('fullname', $userinfo['fullname']);
@@ -502,21 +499,16 @@ $xtpl->assign('remind', json_encode(getRemind()));
 $xtpl->assign('list', userDogRowByList($userinfo['id']));
 
 if (!$userinfo['center']) {
-	$xtpl->parse('main.log.center');
   $xtpl->assign('tabber', '0, 1, 2');
 }
 else {
   $xtpl->assign('tabber', '0');
-	$xtpl->parse('main.log.xcenter');
-	$xtpl->parse('main.log.tabber');
-	$xtpl->parse('main.log.breeder');
-	$xtpl->parse('main.log.breeder2');
 }
 $xtpl->assign('v', parseVaccineType($userinfo['id']));
 
 $xtpl->assign('today', date('d/m/Y', time()));
 $xtpl->assign('recall', date('d/m/Y', time() + 60 * 60 * 24 * 21));
-$xtpl->parse('main.log');
+$xtpl->assign('module_file', $module_file);
 
 // $xtpl->assign('today', date('d/m/Y', time()));
 // $sql = 'select * from `'. PREFIX .'_pet` where userid = ' . $userinfo['id'];
@@ -528,6 +520,6 @@ $xtpl->assign('origin', '/' . $module_name . '/' . $op . '/');
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
-include ("modules/biograph/layout/header.php");
+include ("modules/". $module_name ."/layout/header.php");
 echo $contents;
-include ("modules/biograph/layout/footer.php");
+include ("modules/". $module_name ."/layout/footer.php");

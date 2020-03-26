@@ -62,6 +62,7 @@ $xtpl->assign('atime', date('d/m/Y', $time - 60 * 60 * 24 * 30));
 $xtpl->assign('ztime', date('d/m/Y', $time));
 $xtpl->assign('content', requestList());
 
+$xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 

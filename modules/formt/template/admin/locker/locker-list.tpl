@@ -22,12 +22,12 @@
         <td>
             <!-- BEGIN: yes -->
             <button class="btn btn-warning btn-sm" onclick="lockSubmit({id}, 0)">
-                <img src="/assets/images/lock.png">
+                <span class="glyphicon glyphicon-lock"></span>
             </button>
             <!-- END: yes -->
             <!-- BEGIN: no -->
             <button class="btn btn-info btn-sm" onclick="lockSubmit({id}, 1)">
-                <img src="/assets/images/unlock.png">
+                <span class="glyphicon glyphicon-lock"></span>
             </button>
             <!-- END: no -->
         </td>

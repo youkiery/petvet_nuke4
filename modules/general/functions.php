@@ -267,24 +267,39 @@ function bloodModal() {
 //     return $xtpl->text();
 // }
 
-function productList($url, $filter = array('page' => 1, 'limit' => 100)) {
+function productCategory() {
     global $db;
+    $sql = 'select * from `'. PREFIX .'product_category` order by id';
+    $query = $db->query($sql);
+    $list = array();
+
+    while ($row = $query->fetch()) {
+        $list[$row['id']] = $row['name'];
+    }
+    return $list;
+}
+
+function productList($url, $filter) {
+    global $db;
+    $category = productCategory();
 
     $xtpl = new XTemplate("list.tpl", PATH);
-    $sql = 'select count(*) as count from `'. PREFIX .'product`';
+    $sql = 'select count(*) as count from `'. PREFIX .'product` where (code like "%'. $filter['keyword'] .'%" or name like "%'. $filter['keyword'] .'%") ' . (intval($filter['category']) ? 'and category = ' . $filter['category'] : '');
     $query = $db->query($sql);
     $number = $query->fetch()['count'];
 
-    $sql = 'select * from `'. PREFIX .'product` limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+    $sql = 'select * from `'. PREFIX .'product` where (code like "%'. $filter['keyword'] .'%" or name like "%'. $filter['keyword'] .'%") ' . (intval($filter['category']) ? 'and category = ' . $filter['category'] : '') . ' order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
 
     $query = $db->query($sql);
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
-    
+   
     while ($row = $query->fetch()) {
         $xtpl->assign('index', $index++);
         $xtpl->assign('id', $row['id']);
         $xtpl->assign('name', $row['name']);
         $xtpl->assign('code', $row['code']);
+        $xtpl->assign('categoryid', $row['category']);
+        $xtpl->assign('category', $category[$row['category']]);
         $xtpl->parse('main.row');
     }
     $xtpl->assign('nav', nav_generater($url, $number, $filter['page'], $filter['limit']));
@@ -294,6 +309,14 @@ function productList($url, $filter = array('page' => 1, 'limit' => 100)) {
 
 function productModal() {
     $xtpl = new XTemplate("modal.tpl", PATH);
+    $category = productCategory();
+    foreach ($category as $id => $name) {
+        $xtpl->assign('id', $id);
+        $xtpl->assign('name', $name);
+        $xtpl->assign('check', '');
+        if ($filter['category'] == $id) $xtpl->assign('check', 'selected');
+        $xtpl->parse('main.category');
+    }
     $xtpl->parse('main');
     return $xtpl->text();
 }
@@ -331,7 +354,7 @@ function marketContent($filter) {
 }
 
 function priceContent($filter = array('page' => 1, 'limit' => 20)) {
-    global $db;
+    global $db, $allow;
     $xtpl = new XTemplate("list.tpl", PATH);
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
     $category = priceCategoryList();
@@ -343,53 +366,59 @@ function priceContent($filter = array('page' => 1, 'limit' => 20)) {
     $sql = 'select * from `'. PREFIX .'price_item` where (name like "%'. $filter['keyword'] .'%" or code like "%'. $filter['keyword'] .'%") '. ($filter['category'] ? 'and category = ' . $filter['category'] : '') .' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
     $query = $db->query($sql);
 
+    if (!empty($allow)) $xtpl->parse('main.m1');
     while ($item = $query->fetch()) {
         $detailList = priceItemDetail($item['id']);
         $count = count($detailList);
-        $xtpl->assign('index', $index ++);
         $xtpl->assign('row', $count + 1);
+        $xtpl->assign('index', $index ++);
         $xtpl->assign('id', $item['id']);
         $xtpl->assign('code', $item['code']);
         $xtpl->assign('name', $item['name']);
         $xtpl->assign('category', $category[$item['category']]['name']);
 
-        foreach ($detailList as $detail) {
+        foreach ($detailList as $key => $detail) {
             $xtpl->assign('price', number_format($detail['price'], 0, '', ','));
-            $xtpl->assign('number', $detail['number']);
-            if ($count == 1) $xtpl->parse('main.row.section.p1');
-            else $xtpl->parse('main.row.section.p2');
+            if (!empty($detail['number'])) {
+                $xtpl->assign('number', $detail['number']);
+                $xtpl->parse('main.row.section.p2');
+            }
+            else $xtpl->parse('main.row.section.p1');
             $xtpl->parse('main.row.section');
+        }
+
+        if (!empty($allow)) {
+            $xtpl->parse('main.row.m2');
         }
         $xtpl->parse('main.row');
     }
-    $xtpl->assign('nav', nav_generater('/'. $module_name .'/'. $op . '/?i=1', $number, $filter['page'], $filter['limit']));
+    $xtpl->assign('nav', nav_generater('/admin/index.php?nv='. $module_name .'&op='. $op, $number, $filter['page'], $filter['limit']));
     $xtpl->parse('main');
     return $xtpl->text();
 }
 
-function priceCategoryList() {
-    global $db;
+function priceCategoryContent() {
+    $xtpl = new XTemplate("category-list.tpl", PATH);
+    $list = priceCategoryList();
+    $index = 1;
 
-    $sql = 'select * from `'. PREFIX .'price_category`';
-    $query = $db->query($sql);
-    $list = array();
-
-    while ($row = $query->fetch()) {
-        $list[$row['id']] = $row;
+    foreach ($list as $category) {
+        $xtpl->assign('index', $index ++);
+        $xtpl->assign('id', $category['id']);
+        $xtpl->assign('name', $category['name']);
+        $xtpl->assign('active', ($category['active'] ? 'warning' : 'info'));
+        $xtpl->parse('main.row');
     }
-    return $list;
+    $xtpl->parse('main');
+    return $xtpl->text();
 }
 
-function priceItemDetail($id) {
-    global $db;
-    $sql = 'select * from `'. PREFIX .'price_detail` where itemid = ' . $id . ' order by number';
-    $query = $db->query($sql);
-    $list = array();
-
-    while ($row = $query->fetch()) {
-        $list[]= $row;
-    }
-    return $list;
+function priceModal() {
+    $xtpl = new XTemplate("modal.tpl", PATH);
+    $xtpl->assign('category_option', priceCategoryOption());
+    $xtpl->assign('category_content', priceCategoryContent());
+    $xtpl->parse('main');
+    return $xtpl->text();
 }
 
 function priceCategoryOption($categoryid = 0) {

@@ -5,7 +5,7 @@
         <th> Mã hàng </th>
         <th> Tên hàng </th>
         <th> Loại hàng </th>
-        <th>  </th>
+        <th> </th>
     </tr>
     <!-- BEGIN: row -->
     <tr>
@@ -13,23 +13,23 @@
         <td> {code} </td>
         <td> {name} </td>
         <td> {category} </td>
-        <td rowspan="{row}" style="vertical-align: inherit;"> 
+        <td rowspan="{row}" style="vertical-align: inherit;">
             <button class="btn btn-info btn-sm" onclick="itemEdit({id})">
                 <span class="glyphicon glyphicon-edit"></span>
-            </button>    
+            </button>
             <button class="btn btn-danger btn-sm" onclick="itemRemove({id})">
                 <span class="glyphicon glyphicon-remove"></span>
-            </button>    
+            </button>
         </td>
     </tr>
     <!-- BEGIN: section -->
     <tr>
         <td colspan="3">
             <!-- BEGIN: p1 -->
-            Giá sỉ: <span style="color: red;"> {price} VND </span>
+            Giá <span style="color: red;"> {price} VND </span>
             <!-- END: p1 -->
             <!-- BEGIN: p2 -->
-            Giá sỉ: <span style="color: red;"> {price} VND </span> số lượng từ {number}
+            Số lượng <span style="color: red;"> {number} </span>, Giá <span style="color: red;"> {price} VND </span>
             <!-- END: p2 -->
         </td>
     </tr>

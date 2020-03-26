@@ -369,8 +369,8 @@
 </div>
 
 <div class="container" style="margin-top: 20px;">
-  <a href="/biograph/">
-    <img src="/modules/biograph/src/banner.png" style="width: 200px;">
+  <a href="/">
+    <img src="/modules/{module_file}/src/banner.png" style="width: 200px;">
   </a>
   <div style="clear: both;"></div>
   <a href="#" style="margin: 8px 0px; display: block;" onclick="goback()"> <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
@@ -397,6 +397,10 @@
       <span class="glyphicon glyphicon-floppy-disk"></span>
     </button>
   </div>
+
+  <h2>
+    Gia phả
+  </h2>
 
   <div id="wrapper" style="margin: 20px 0px;">
     <span class="label" style="line-height: 40px;"> {name} </span>
@@ -486,7 +490,7 @@
     </div>
   </div>
 </div>
-<script src="/modules/biograph/src/ckeditor/ckeditor.js"></script>
+<script src="/modules/{module_file}/src/ckeditor/ckeditor.js"></script>
 <script>
   var global = {
     id: '{id}',
@@ -1087,8 +1091,8 @@
   }
 
   function addVaccine(id) {
-    button['vaccine']['edit'].show()
-    button['vaccine']['insert'].hide()
+    button['vaccine']['edit'].hide()
+    button['vaccine']['insert'].show()
     petVaccine.modal('show')
   }
 

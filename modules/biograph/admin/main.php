@@ -18,6 +18,7 @@ $xtpl = new XTemplate("main.tpl", PATH);
 $step = $nv_Request->get_int('s', 'get', 1);
 
 // $xtpl->assign('remind', json_encode(getRemind()));
+$xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 

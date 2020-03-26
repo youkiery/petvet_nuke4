@@ -1544,7 +1544,7 @@ function user_vaccine($keyword = '') {
       if (empty($time)) {
         $time = 60 * 60 * 24 * 14;
       }
-      $from = $today - $time;
+      $from = $today;
       $end = $today + $time;
       $where = "where calltime between $from and $end and a.status = $id";
   }
@@ -1731,7 +1731,7 @@ function vaccine_list($vaclist, $order = 0) {
     $diseases = getDiseaseData();
   
     // $sql = 'select * from (select * from `'.VAC_PREFIX.'_vaccine` where (calltime < '.$fromtime.') and status = 0 order by calltime desc limit 20) a order by calltime asc';
-    $sql = 'select * from `'.VAC_PREFIX.'_vaccine` where (calltime < '.$fromtime.') and status = '.$id.' order by calltime desc limit 20';
+    $sql = 'select * from `'.VAC_PREFIX.'_vaccine` where (calltime < '.$today.') and status = '.$id.' order by calltime desc limit 20';
     // die($sql);
     $query = $db->query($sql);
     $index = 1;

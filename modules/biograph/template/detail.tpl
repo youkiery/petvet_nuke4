@@ -22,13 +22,12 @@
   }
 </style>
 <div class="container">
-  <a href="/biograph/">
-    <img src="/modules/biograph/src/banner.png" style="width: 200px;">
+  <a href="/">
+    <img src="/modules/{module_file}/src/banner.png" style="width: 200px;">
   </a>
-  <a href="#" style="margin: 8px 0px; display: block;" onclick="goback()"> <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
   <form style="width: 60%; float: right;">
     <label class="input-group">
-      <input type="hidden" name="nv" value="biograph">
+      <input type="hidden" name="nv" value="{module_file}">
       <input type="hidden" name="op" value="list">
       <input type="text" class="form-control" name="keyword" value="{keyword}" id="keyword" placeholder="Nhập tên hoặc mã số">
       <div class="input-group-btn">
@@ -36,10 +35,11 @@
       </div>
     </label>
   </form>
+  <a href="#" style="margin: 8px 0px; display: block;" onclick="goback()"> <span class="glyphicon glyphicon-chevron-left">  </span> Trở về </a>
   <div style="clear: both;"></div>
 
   <div class="row">
-    <div class="col-sm-4 thumbnail" id="avatar" style="width: 240px; height: 240px;">
+    <div class="col-sm-4 thumbnail" id="avatar" style="width: 240px; height: 240px; overflow: hidden;">
     </div>
     <div class="col-sm-8">
       <p> Tên: {name} </p>
@@ -48,14 +48,13 @@
       <p> Loài: {breed} </p>
       <p> Giới tính: {sex} </p>
       <p> Màu sắc: {color} </p>
-      <p> microchip: {microchip} </p>
+      <p> Microchip: {microchip} </p>
+      <p> Chủ nuôi: {owner} </p>
+      <p> CMND: {politic} </p>
     </div>
   </div>
 
-  <div class="panel panel-primary">
-    <div class="panel-heading"> Sơ yếu lý lịch </div>
-    <div class="panel-body"> {graph} </div>
-  </div>
+  <h2> Gia phả </h2>
 
   <div id="wrapper">
     <span class="label" style="line-height: 40px;"> {name} </span>
@@ -120,6 +119,14 @@
       </div>
     </div>
   </div>
+
+  <div style="margin: 20px;"></div>
+
+  <div class="panel panel-primary">
+    <div class="panel-heading"> Sơ yếu lý lịch </div>
+    <div class="panel-body"> {graph} </div>
+  </div>
+
 
 <script>
   var avatar = $("#avatar")

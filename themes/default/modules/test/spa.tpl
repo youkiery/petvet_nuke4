@@ -2,10 +2,6 @@
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <div class="msgshow" id="msgshow"></div>
 
-<style>
-  .box { float: left; width: 49%; }
-</style>
-
 <!-- <div style="width: 100%; height: 100%; top: 0px; left: 0px; position: fixed; background: black; opacity: 0.5; z-index: 2;">
 </div> -->
 
@@ -111,10 +107,32 @@
               <!-- END: doctor -->
             </select>
           </div>
-          <div id="insert_content">
-            {insert_content}
+          <div class="form-group">
+            <label>{lang.spa_doctor2}</label>
+            <select class="form-control" id="doctor2">
+              <!-- BEGIN: doctor2 -->
+              <option value="{doctor_value}">{doctor_name}</option>
+              <!-- END: doctor2 -->
+            </select>
           </div>
-          <div style="clear: both;"></div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>
+                  {lang.index}
+                </th>
+                <th>
+                  {lang.content}
+                </th>
+                <th>
+
+                </th>
+              </tr>
+            </thead>
+            <tbody id="insert_content">
+              {insert_content}
+            </tbody>
+          </table>
           <div class="form-group">
             <label>
               {lang.note}
@@ -159,14 +177,34 @@
           <label> {lang.spa_doctor2} </label>
           <select class="form-control" id="detail_doctor2"> </select>
         </div>
-        <div id="detail_content"></div>
-        <div style="clear: both;"></div>
-        <div class="form-group">
-          <label>
-            {lang.note}
-          </label>
-          <input type="text" class="form-control" id="c_note2">
-        </div>
+        <table class="table small">
+          <thead>
+            <tr>
+              <th>
+                {lang.index}
+              </th>
+              <th>
+                {lang.content}
+              </th>
+              <th>
+
+              </th>
+            </tr>
+          </thead>
+          <tbody id="detail_content">
+            
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>
+                {lang.note}
+              </td>
+              <td colspan="2">
+                  <input type="text" class="form-control" id="c_note2">
+              </td>
+            </tr>
+          </tfoot>
+        </table>
       </div>
       <div class="modal-footer">
         <button class="btn btn-info" onclick="update()" id="btn-detail">
@@ -334,9 +372,16 @@
     e.preventDefault()
     if (customer > 0) {
       var check = [];
-      var check = [];
-      $("#insert_content .check").each((index, item) => {
-        check.push({id: item.getAttribute('rel'), checking: item.checked})
+      $("#insert_content").each((index, element) => {
+        var length = element.children.length
+        for (var i = 0; i < length; i++) {
+          tr = element.children[i];
+          var input = tr.children[2].children[0]
+          var id = input.getAttribute("class")
+          var checking = input.checked
+
+          check.push({id: id, checking: checking})
+        } 
       })
       
       uploader().then(image => {
@@ -370,10 +415,18 @@
   function update() {
     if (g_id > 0) {
       var check = [];
-      $("#detail_content .check").each((index, item) => {
-        check.push({id: item.getAttribute('rel'), checking: item.checked})
+      $("#detail_content").each((index, element) => {
+        var length = element.children.length
+        for (var i = 0; i < length; i++) {
+          tr = element.children[i];
+          var input = tr.children[2].children[0]
+          var id = input.getAttribute("class")
+          var checking = input.checked
+
+          check.push({id: id, checking: checking})
+        } 
       })
-      
+
       uploader().then(image => {
         $.post(
           strHref,

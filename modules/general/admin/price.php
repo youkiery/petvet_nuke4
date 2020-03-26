@@ -26,7 +26,7 @@ if (!empty($action)) {
       if ($db->query($sql)) {
         $id = $db->lastInsertId();
         foreach ($data['section'] as $section) {
-          $sql = "insert into `". PREFIX ."price_detail` (itemid, number, price) values($id, $section[number], ". str_replace(',', '', $section['price']) .")";
+          $sql = "insert into `". PREFIX ."price_detail` (itemid, number, price) values($id, '$section[number]', ". str_replace(',', '', $section['price']) .")";
           $db->query($sql);
         }
         $result['status'] = 1;
@@ -49,7 +49,7 @@ if (!empty($action)) {
         while ($row = $query->fetch()) {
           if ($current < $count) {
             // cập nhật
-            $sql = "update `". PREFIX ."price_detail` set number = ". $section[$current]['number'] .", price = ". str_replace(',', '', $section[$current]['price']) ." where id = " . $row['id'];
+            $sql = "update `". PREFIX ."price_detail` set number = '". $section[$current]['number'] ."', price = ". str_replace(',', '', $section[$current]['price']) ." where id = " . $row['id'];
           }
           else {
             // xóa
@@ -61,7 +61,7 @@ if (!empty($action)) {
         }
         // thêm phần còn lại
         for ($i = $current; $i < $count; $i++) { 
-          $sql = "insert into `". PREFIX ."price_detail` (itemid, number, price) values($id, ". $section[$current]['number'] .", ". str_replace(',', '', $section[$current]['price']) .")";
+          $sql = "insert into `". PREFIX ."price_detail` (itemid, number, price) values($id, '". $section[$current]['number'] ."', ". str_replace(',', '', $section[$current]['price']) .")";
           $db->query($sql);
         }
         $result['status'] = 1;
@@ -131,6 +131,54 @@ if (!empty($action)) {
         $result['status'] = 1;
         $result['notify'] = 'Đã cập nhật';
       }
+    break;
+    case 'filter-user':
+      $name = $nv_Request->get_string('name', 'post');
+      
+      $result['status'] = 1;
+      $result['html'] = priceFilterUser($name);
+    break;
+    case 'insert-allower':
+      $id = $nv_Request->get_int('id', 'post');
+      $name = $nv_Request->get_string('name', 'post');
+      
+      $sql = 'insert into `'. PREFIX .'price_allow` (userid) values('. $id .')';
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = priceAllowerContent();
+        $result['html2'] = priceFilterUser($name);
+        $result['notify'] = 'Đã thêm quản lý';
+      }
+    break;
+    case 'remove-allower':
+      $id = $nv_Request->get_int('id', 'post');
+      $name = $nv_Request->get_string('name', 'post');
+      
+      $sql = 'delete from `'. PREFIX .'price_allow` where userid = '. $id;
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = priceAllowerContent();
+        $result['html2'] = priceFilterUser($name);
+        $result['notify'] = 'Đã xóa quản lý';
+      }
+    break;
+    case 'get-suggest':
+      $keyword = $nv_Request->get_string('keyword', 'post');
+      $xtpl = new XTemplate("item-suggest.tpl", PATH);
+      $sql = 'select * from `'. PREFIX .'catalog` where name like "%'. $keyword .'%" order by id desc limit 10';
+      $query = $db->query($sql);
+      
+      while ($row = $query->fetch()) {
+        $xtpl->assign('unit', '');
+        if (!empty($row['unit'])) $xtpl->assign('unit', '('. $row['unit'] .')');
+        $xtpl->assign('code', $row['code']);
+        $xtpl->assign('name', $row['name']);
+        $xtpl->assign('price', number_format($row['price'], 0, '', ','));
+        $xtpl->assign('categoryid', $row['categoryid']);
+        $xtpl->parse('main');
+      }
+      $result['status'] = 1;
+      $result['html'] = $xtpl->text();
     break;
   }
   echo json_encode($result);

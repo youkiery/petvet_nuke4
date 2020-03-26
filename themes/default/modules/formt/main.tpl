@@ -3582,15 +3582,9 @@
       formInsertMcode.val(data['form']['mcode'])
       $("#signer_xsign").prop('checked', Number(data['form']['xsign']))
       lock = Number(data['form']['locker'])
-      if (lock) {
-        $("#signer_locking").text('Đã khóa')
-        $("#locker_button").attr('class', 'btn btn-warning')
-      }
-      else {
-        $("#locker_button").attr('class', 'btn btn-info')
-        $("#signer_locking").text('Chưa khóa')
-      }
       $("#signer_locker").val(lock)
+      if (lock) $("#signer_locker").text('Đã khóa')
+      else $("#signer_locker").text('Chưa khóa')
     }
   }
 
@@ -3800,7 +3794,6 @@
           global_id = 0
           global_form = 5
           global_saved = 5
-          data['form']['locker'] = 0
           parseData(data)
           
           $('a[href="#menu1"]').tab('show')
@@ -3981,13 +3974,10 @@
             html = html.replace('(ireceive)', data['receive'])
             html = html.replace('(ireceiver)', data['ireceiveremploy'])
             examdate = data['examdate']
-            xdate = data['examdate']
             if (data['examdate2'] && data['examdate'] != data['examdate2']) {
               examdate = data['examdate'] + ' đến ' + data['examdate2']
-              xdate = data['examdate2']
             }
             html = html.replace('(examDate)', examdate)
-            examdate = xdate.split('/')
 
             // html = html.replace('(examDate)', data['examdate'])
             html = html.replace(/examdate-0/g, examdate[0])

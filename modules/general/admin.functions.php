@@ -53,19 +53,6 @@ function remindModal() {
     return $xtpl->text();
 }
 
-function priceCategoryList() {
-    global $db;
-
-    $sql = 'select * from `'. PREFIX .'price_category`';
-    $query = $db->query($sql);
-    $list = array();
-
-    while ($row = $query->fetch()) {
-        $list[$row['id']] = $row;
-    }
-    return $list;
-}
-
 function priceContent($filter = array('page' => 1, 'limit' => 20)) {
     global $db;
     $xtpl = new XTemplate("list.tpl", PATH);
@@ -89,11 +76,13 @@ function priceContent($filter = array('page' => 1, 'limit' => 20)) {
         $xtpl->assign('name', $item['name']);
         $xtpl->assign('category', $category[$item['category']]['name']);
 
-        foreach ($detailList as $detail) {
+        foreach ($detailList as $key => $detail) {
             $xtpl->assign('price', number_format($detail['price'], 0, '', ','));
-            $xtpl->assign('number', $detail['number']);
-            if ($count == 1 && $detail['number'] == 0) $xtpl->parse('main.row.section.p1');
-            else $xtpl->parse('main.row.section.p2');
+            if (!empty($detail['number'])) {
+                $xtpl->assign('number', $detail['number']);
+                $xtpl->parse('main.row.section.p2');
+            }
+            else $xtpl->parse('main.row.section.p1');
             $xtpl->parse('main.row.section');
         }
         $xtpl->parse('main.row');
@@ -101,18 +90,6 @@ function priceContent($filter = array('page' => 1, 'limit' => 20)) {
     $xtpl->assign('nav', nav_generater('/admin/index.php?nv='. $module_name .'&op='. $op, $number, $filter['page'], $filter['limit']));
     $xtpl->parse('main');
     return $xtpl->text();
-}
-
-function priceItemDetail($id) {
-    global $db;
-    $sql = 'select * from `'. PREFIX .'price_detail` where itemid = ' . $id . ' order by number';
-    $query = $db->query($sql);
-    $list = array();
-
-    while ($row = $query->fetch()) {
-        $list[]= $row;
-    }
-    return $list;
 }
 
 function priceCategoryContent() {
@@ -135,6 +112,7 @@ function priceModal() {
     $xtpl = new XTemplate("modal.tpl", PATH);
     $xtpl->assign('category_option', priceCategoryOption());
     $xtpl->assign('category_content', priceCategoryContent());
+    $xtpl->assign('allower_content', priceAllowerContent());
     $xtpl->parse('main');
     return $xtpl->text();
 }
@@ -149,4 +127,49 @@ function priceCategoryOption($categoryid = 0) {
         $html .= '<option value="'. $category['id'] .'" '. $check .'>' . $category['name'] . '</option>';
     }
     return $html;
+}
+
+function priceAllower() {
+    global $db, $db_config;
+    $sql = 'select userid, username, concat(last_name, " ", first_name) as fullname from `'. $db_config['prefix'] .'_users` where userid in (select userid from `'. PREFIX .'price_allow`)';
+    $query = $db->query($sql);
+    $list = array();
+
+    while ($row = $query->fetch()) {
+        $list[]= $row;
+    }
+    return $list;
+}
+
+function priceAllowerContent() {
+    $allower_list = priceAllower();
+    $xtpl = new XTemplate("allow-list.tpl", PATH);
+    $index = 1;
+    foreach ($allower_list as $allower) {
+        $xtpl->assign('index', $index++);
+        $xtpl->assign('id', $allower['userid']);
+        $xtpl->assign('username', $allower['username']);
+        $xtpl->assign('fullname', $allower['fullname']);
+        $xtpl->parse('main.row');
+    }
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function priceFilterUser($name) {
+    global $db, $db_config;
+    $allower_list = priceAllower();
+    $xtpl = new XTemplate("user-list.tpl", PATH);
+    $index = 1;
+    $sql = 'select userid, username, concat(last_name, " ", first_name) as fullname from `'. $db_config['prefix'] .'_users` where (last_name like "%'. $name .'%" or last_name like "%'. $name .'%" or username like "%'. $name .'%") and userid not in (select userid from `'. PREFIX .'price_allow`)';
+    $query = $db->query($sql);
+    while ($row = $query->fetch()) {
+        $xtpl->assign('index', $index++);
+        $xtpl->assign('id', $row['userid']);
+        $xtpl->assign('username', $row['username']);
+        $xtpl->assign('fullname', $row['fullname']);
+        $xtpl->parse('main.row');
+    }
+    $xtpl->parse('main');
+    return $xtpl->text();
 }

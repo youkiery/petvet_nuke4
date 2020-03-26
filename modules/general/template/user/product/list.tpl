@@ -2,17 +2,19 @@
 <table class="table table-bordered">
     <tr>
         <th> STT </th>
-        <th> <input type="checkbox" id="product-check-all"> </th>
+        <th> <input type="checkbox" class="check-product-all"> </th>
         <th> Mã hàng </th>
         <th> Tên hàng </th>
+        <th> Loại hàng </th>
         <th></th>
     </tr>
     <!-- BEGIN: row -->
     <tr>
         <td> {index} </td>
-        <td> <input type="checkbox" class="product-checkbox" id="product-check-{id}"> </td>
+        <td> <input type="checkbox" class="check-product" rel="{id}"> </td>
         <td> {code} </td>
         <td> {name} </td>
+        <td> {category} </td>
         <td> 
             <!-- <button class="btn btn-info">
                 <span class="glyphicon glyphicon-floppy-disk"></span>

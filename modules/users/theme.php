@@ -679,12 +679,6 @@ function user_info($data, $array_field_config, $custom_fields, $types, $data_que
         $xtpl->parse('main.tab_edit_password');
     }
 
-    if (in_array('address', $types)) {
-        $xtpl->assign('address', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=address', true));
-        $xtpl->parse('main.edit_address');
-        $xtpl->parse('main.tab_edit_address');
-    }
-
     if (in_array('2step', $types)) {
         $xtpl->assign('URL_2STEP', nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=two-step-verification', true));
         $xtpl->parse('main.2step');

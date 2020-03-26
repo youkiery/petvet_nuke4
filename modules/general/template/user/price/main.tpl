@@ -3,9 +3,12 @@
 
 <div id="msgshow"></div>
 <style>
-    a.btn { color: #333; }
     label { width: 100%; }
+    a.btn-default { color: #444; }
+    .table-box { border-bottom: 2px solid gray; }
 </style>
+
+{modal}
 
 <form class="form-group row" method="get">
     <div class="col-sm-8">
@@ -17,10 +20,28 @@
             {category_option}
         </select>
     </div>
+    <input type="hidden" name="nv" value="{module_name}">
+    <input type="hidden" name="op" value="{op}">
     <button class="btn btn-info">
         <span class="glyphicon glyphicon-search"></span>
     </button>
 </form>
+
+<!-- BEGIN: manager -->
+
+<div class="form-group row">
+    <button class="btn btn-info" onclick="$('#category-modal').modal('show')">
+        Danh mục
+    </button>
+    <div style="float: right;">
+        <button class="btn btn-success" onclick="itemModal()">
+            Thêm hàng
+        </button>
+    </div>
+    <div style="clear: both;"></div>
+</div>
+
+<!-- END: manager -->
 
 <div id="content">
     {content}
@@ -28,10 +49,29 @@
 
 <script src="/modules/core/js/vhttp.js"></script>
 <script src="/modules/core/js/vnumber.js"></script>
+<script src="/modules/core/js/vremind.js"></script>
 <script>
     var global = {
         id: 0,
         data: [{number: 0, price: 0}]
+    }
+
+    $(document).ready(() => {
+        vremind.install('#item-name', '#item-name-suggest', (keyword) => {
+            return new Promise(resolve => {
+                vhttp.checkelse('', { action: 'get-suggest', keyword: keyword }).then(data => {
+                    resolve(data['html'])
+                })
+            })
+        }, 500, 300)
+    })
+
+    function selectItem(code, name, price, category) {
+        $("#item-code").val(code)
+        $("#item-name").val(name)
+        $("#item-category").val(category)
+        global['data'] = [{number: 0, price: price}]
+        parseItemSection()
     }
 
     function categoryInsertSubmit() {
@@ -70,6 +110,9 @@
         global['data'] = [{number: 0, price: 0}]
         $("#item-insert-btn").show()
         $("#item-edit-btn").hide()
+        $("#item-code").val('')
+        $("#item-name").val('')
+        $("#item-category").val(0)
         parseItemSection()
         $('#item-modal').modal('show')
     }
@@ -142,14 +185,14 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <label>
-                            Giá sỉ
-                            <input class="form-control" id="item-price-`+ index +`" value="`+ item['price'] +`">
+                            Số lượng
+                            <input class="form-control" id="item-number-`+ index +`" value="`+ item['number'] +`">
                         </label>
                     </div>
                     <div class="col-sm-12">
                         <label>
-                            Số lượng
-                            <input class="form-control" id="item-number-`+ index +`" value="`+ item['number'] +`">
+                            Giá sỉ
+                            <input class="form-control" id="item-price-`+ index +`" value="`+ item['price'] +`">
                         </label>
                     </div>
                 </div>

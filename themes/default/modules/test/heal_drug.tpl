@@ -51,7 +51,7 @@
         <div class="row form-group">
           <label class="col-sm-6"> Điều trị bệnh </label>
           <div class="col-sm-8">
-            <div class="input-group form-group">
+            <div class="input-group">
               <div class="relative">
                 <input class="form-control" style="float: none;" type="text" id="drug-edit-disease">
                 <div class="suggest" id="drug-disease-suggest">
@@ -68,7 +68,7 @@
         <div class="row form-group">
           <label class="col-sm-6"> Thường điều trị </label>
           <div class="col-sm-8">
-            <div class="input-group form-group">
+            <div class="input-group">
               <div class="relative">
                 <input class="form-control" style="float: none;" type="text" id="drug-edit-effective">
                 <div class="suggest" id="drug-effective-suggest">
@@ -147,12 +147,10 @@
 </div>
   
 <!-- BEGIN: manager -->
-<div class="form-group">
-  <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#home"> Thêm thuốc </a></li>
-    <li><a data-toggle="tab" href="#menu1"> Tra cứu </a></li>
-  </ul>
-</div>
+<ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#home"> Thêm thuốc </a></li>
+  <li><a data-toggle="tab" href="#menu1"> Tra cứu </a></li>
+</ul>
 <!-- END: manager -->
 
 <div class="tab-content">
@@ -186,21 +184,21 @@
   <div id="menu1" class="tab-pane {active2}">
     <h2> Tra cứu </h2>
     <form class="form-inline" onsubmit="filter(event)">
-      <div class="input-group form-group">
+      <div class="input-group">
         <input type="text" class="form-control" id="drug-search-name" placeholder="Tên thuốc">
         <div class="input-group-btn">
           <button class="btn" onclick="clearName()"> <span class="glyphicon glyphicon-remove"></span> </button>
         </div>
       </div>
 
-      <div class="input-group form-group">
+      <div class="input-group">
         <input type="text" class="form-control" id="drug-search-effect" placeholder="Công dụng">
         <div class="input-group-btn">
           <button class="btn" onclick="clearEffect()"> <span class="glyphicon glyphicon-remove"></span> </button>
         </div>
       </div>
 
-      <div class="input-group form-group dropdown">
+      <div class="input-group dropdown">
         <input class="form-control dropdown-toggle" id="drug-search-system" type="button" data-toggle="dropdown" placeholder="Hệ thống">
         <div class="input-group-btn">
           <button class="btn" onclick="clearSystem()"> <span class="glyphicon glyphicon-remove"></span> </button>
@@ -210,8 +208,8 @@
         </ul>
       </div>
 
-      <div class="input-group form-group">
-        <div class="relative">
+      <div class="input-group">
+        <div class="form-group relative">
           <input type="text" class="form-control" id="drug-search-disease" style="float: none;" placeholder="Bệnh">
           <div class="suggest" id="drug-search-disease-suggest">
             {diseaseList3}

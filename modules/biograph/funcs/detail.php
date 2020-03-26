@@ -11,8 +11,6 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
-$page_title = "autoload";
-
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
 	$result = array('status' => 0);
@@ -33,20 +31,25 @@ if (!empty($action)) {
 
 $id = $nv_Request->get_int('id', 'get', 0);
 
-$xtpl = new XTemplate("detail.tpl", "modules/biograph/template");
+$xtpl = new XTemplate("detail.tpl", "modules/". $module_name ."/template");
 
 $sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
 $query = $db->query($sql);
 
+$page_title = "Thông tin thú cưng";
 if (!empty($row = $query->fetch())) {
+  $page_title = $row['name'] . " - Thông tin thú cưng";
+  $owner = getOwnerById($row['userid'], $row['type']);
 	$xtpl->assign('graph', $row['graph']);
 	$xtpl->assign('name', $row['name']);
-	$xtpl->assign('dob', $row['dateofbirth']);
+	$xtpl->assign('dob', date('d/m/Y', $row['dateofbirth']));
 	$xtpl->assign('breed', $row['breed']);
 	$xtpl->assign('species', $row['species']);
   $xtpl->assign('sex', $sex_array[$row['sex']]);
 	$xtpl->assign('color', $row['color']);
 	$xtpl->assign('microchip', $row['microchip']);
+	$xtpl->assign('owner', $owner['fullname']);
+	$xtpl->assign('politic', $owner['politic']);
 	$xtpl->assign('image', $row['image']);
 
   $relation = getPetRelation($id);
@@ -140,10 +143,11 @@ else {
 	$xtpl->parse("main.error");
 }
 
+$xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");
 
 $contents = $xtpl->text("main");
-include ("modules/biograph/layout/header.php");
+include ("modules/". $module_name ."/layout/header.php");
 echo $contents;
-include ("modules/biograph/layout/footer.php");
+include ("modules/". $module_name ."/layout/footer.php");
 

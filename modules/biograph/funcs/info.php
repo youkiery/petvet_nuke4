@@ -11,8 +11,6 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
-$page_title = "autoload";
-
 define('BUILDER_INSERT_NAME', 0);
 define('BUILDER_INSERT_VALUE', 1);
 define('BUILDER_EDIT', 2);
@@ -233,7 +231,7 @@ if (!empty($action)) {
 					<div class="xleft">
 					</div>
 					<div class="xright">
-						<p> '. $row['fullname'] .' ('. $row['mobile'] .') </p>
+						<p> '. $row['fullname'] .' </p>
 						<p> '. $row['name'] .' </p>
 					</div>
 				</div>
@@ -385,12 +383,15 @@ if (!empty($action)) {
 }
 
 $id = $nv_Request->get_int('id', 'get', 0);
-$xtpl = new XTemplate("info.tpl", "modules/biograph/template");
+$xtpl = new XTemplate("info.tpl", "modules/". $module_name ."/template");
 
 $sql = 'select * from `'. PREFIX .'_pet` where id = ' . $id;
 $query = $db->query($sql);
 
+$page_title = "Quản lý thú cưng";
+
 if (!empty($row = $query->fetch())) {
+  $page_title = $row['name'] . " - Quản lý thú cưng";
 	$xtpl->assign('name', $row['name']);
 	$xtpl->assign('dob', $row['dateofbirth']);
 	$xtpl->assign('breed', $row['breed']);
@@ -454,9 +455,10 @@ switch ($_REQUEST['target']) {
   break;
 }
 
+$xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
-include ("modules/biograph/layout/header.php");
+include ("modules/". $module_name ."/layout/header.php");
 echo $contents;
-include ("modules/biograph/layout/footer.php");
+include ("modules/". $module_name ."/layout/footer.php");
 

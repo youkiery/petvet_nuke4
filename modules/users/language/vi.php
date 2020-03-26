@@ -241,7 +241,6 @@ $lang_module['edit_login'] = 'Tên đăng nhập';
 $lang_module['edit_email'] = 'Email';
 $lang_module['edit_question'] = 'Câu hỏi bảo mật';
 $lang_module['edit_password'] = 'Mật khẩu';
-$lang_module['edit_address'] = 'Địa chỉ';
 $lang_module['edit_login_warning'] = 'Để thay đổi tên đăng nhập, bạn cần khai báo lại mật khẩu.';
 $lang_module['edit_email_warning'] = '<p>Để thay đổi email, bạn cần thực hiện tuần tự các bước sau đây:</p><p>1.Khai báo lại mật khẩu<br />2.Khai báo địa chỉ email mới<br />3.Click vào nút Gửi Mã xác minh<br />4.Kiểm tra mail thông báo Mã xác minh được gửi đến địa chỉ mà bạn vừa khai báo, sau đó nhập mã này vào ô Mã xác minh<br />5.Click vào nút Chấp nhận.</p>';
 $lang_module['edit_question_warning'] = 'Để thay đổi câu hỏi bảo mật, bạn cần khai báo lại mật khẩu.';

@@ -51,6 +51,19 @@ $vaccine_array = array(
   )
 );
 
+function parseAgeTime($datetime) {
+  $str = '';
+  $time = time() - $datetime;
+  $year = floor($time / 60 / 60 / 24 / 365.25);
+  $time -= $year * 60 * 60 * 24 * 365.25;
+  $month = round($time / 60 / 60 / 24 / 30);
+  if ($year > 0) {
+    $str .= $year . ' năm ';
+  }
+  $str .= $month . ' tháng';
+  return $str;
+}
+
 function checkObj($obj) {
   $check = true;
   foreach ($obj as $key => $value) {
@@ -178,6 +191,7 @@ function getOwnerById($id, $type = 1) {
     else {
       $sql = 'select * from `'. PREFIX .'_contact` where id = ' . $id;
     }
+    // die($sql);
     $query = $db->query($sql);
     return $query->fetch();
   }
@@ -291,7 +305,7 @@ function getPetActiveList($keyword = '', $page = 1, $limit = 10) {
   $query = $db->query($sql);
   $data['count'] = $query->fetch()['count'];
   
-  $sql = 'select * from `'. PREFIX .'_pet` where active > 0 and (name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%") limit ' . $limit . ' offset ' . (($page - 1) * $limit);
+  $sql = 'select * from `'. PREFIX .'_pet` where active > 0 and (name like "%'.$keyword.'%" or microchip like "%'.$keyword.'%") order by id desc limit ' . $limit . ' offset ' . (($page - 1) * $limit);
   $query = $db->query($sql);
 
   while($row = $query->fetch()) {

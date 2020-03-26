@@ -2,10 +2,8 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css">
 
 <script src="/modules/core/js/vhttp.js"></script>
-
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jszip.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/xlsx.js"></script>
-
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/shim.min.js"></script>
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/xlsx.full.min.js"></script>
 
@@ -14,16 +12,50 @@
     a.btn-default { color: #444 }
 </style>
 
+<div id="msgshow"></div>
+
 {modal}
 
-<div class="form-group row">
+<form class="form-group row">
+    <input type="hidden" name="nv" value="{nv}">
+    <input type="hidden" name="op" value="{op}">
     <div class="col-sm-6">
+        <input type="text" class="form-control" name="keyword" value="{keyword}" placeholder="Tìm kiếm theo tên hàng, mã hàng,...">
+    </div>
+    <div class="col-sm-6">
+        <select class="form-control" name="category">
+            <option value="0"> Tất cả </option>
+            <!-- BEGIN: category -->
+            <option value="{id}" {check}> {name} </option>
+            <!-- END: category -->
+        </select>
+    </div>
+    <div class="col-sm-6">
+        <select class="form-control" name="limit">
+            <option value="10" {check10}> 10 </option>
+            <option value="20" {check20}> 20 </option>
+            <option value="50" {check50}> 50 </option>
+            <option value="100" {check100}> 100 </option>  
+            <option value="200" {check200}> 200 </option>
+        </select>
+    </div>
+    <div class="col-sm-6">
+        <button class="btn btn-info">
+            Tìm kiếm
+        </button>
+    </div>
+</form>
+
+<div class="form-group row">
+    <div class="col-sm-12">
         <button class="btn btn-info" onclick="$('#insert-modal').modal('show')">
             Thêm mã
         </button>
+        <button class="btn btn-info" onclick="$('#category-modal').modal('show')">
+            Sửa loại hàng
+        </button>
     </div>
-    <div class="col-sm-12"></div>
-    <div class="col-sm-6">
+    <div class="col-sm-12">
         <div style="float: right;">
             <button class="btn btn-danger" onclick="removeItem()">
                 Xóa mã
@@ -42,12 +74,15 @@
         limit: 100,
         file: {},
         list: JSON.parse('{list}'),
-        data: []
+        data: [],
+        // allow: ['SHOP', 'SHOP>>Balo, giỏ xách', 'SHOP>>Bình xịt', 'SHOP>>Cát vệ sinh', 'SHOP>>Dầu tắm', 'SHOP>>Đồ chơi', 'SHOP>>Đồ chơi - vật dụng', 'SHOP>>Giỏ-nệm-ổ', 'SHOP>>Khay vệ sinh', 'SHOP>>Nhà, chuồng', 'SHOP>>Thuốc bán', 'SHOP>>Thuốc bán>>thuốc sát trung', 'SHOP>>Tô - chén', 'SHOP>>Vòng-cổ-khớp', 'SHOP>>Xích-dắt-yếm']
+        allow: ["SHOP", "SHOP>>Balo, giỏ xách", "SHOP>>Bình xịt", "SHOP>>Cát vệ sinh", "SHOP>>Dầu tắm", "SHOP>>Đồ chơi", "SHOP>>Đồ chơi - vật dụng", "SHOP>>Giỏ-nệm-ổ", "SHOP>>Khay vệ sinh", "SHOP>>Nhà, chuồng", "SHOP>>Thức ăn", "SHOP>>Thuốc bán", "SHOP>>Thuốc bán>>thuốc sát trung", "SHOP>>Tô - chén", "SHOP>>Vòng-cổ-khớp", "SHOP>>Xích-dắt-yếm"]
     }
 
     $(document).ready(() => {
         $("#insert-box-content").hide()
         installFile('insert')
+        installCheckbox('product')
     })
 
     function installFile(name) {
@@ -63,7 +98,7 @@
     function process(name) {
         $("#"+ name +"-notify").text('Đang xử lý')
 
-        if (!global['file'][name]['selected']) notify('Chọn file excel trước')
+        if (!global['file'][name]['selected']) alert_msg('Chọn file excel trước')
         else processExcel(name)
     }
 
@@ -88,7 +123,8 @@
                 object.forEach((item, index) => {
                     // global['list']
                     code = item['Mã hàng']
-                    if (!global['list'][item['Mã hàng']]) {
+                    category = item['Nhóm hàng(3 Cấp)']
+                    if (global['allow'].indexOf(category) >= 0 && !global['list'][code]) {
                         global['data'].push({
                             code: code,
                             name: item['Tên hàng'],
@@ -116,7 +152,6 @@
             data.push(global['data'][val])
             list.push(val)
         })
-        console.log(list);
         
         vhttp.checkelse('', { action: 'insert', data: data }).then(data => {
             // xóa data list trong global[data]
@@ -129,15 +164,30 @@
         })
     }
 
-    function removeItem() {
+    function checkSelectedItem() {
         list = []
-        $(".product-insert:checked").each((index, item) => {
+        $(".check-product:checked").each((index, item) => {
             val = item.getAttribute('rel')
-            data.push(global['data'][val])
+            list.push(val)
         })
+        return list
+    }
+
+    function removeItem() {
+        list = checkSelectedItem()
         
-        vhttp.checkelse('', { action: 'remove', data: data }).then(data => {
-            window.location.reload()
+        vhttp.checkelse('', { action: 'remove', list: list }).then(data => {
+            $("#content").html(data['html'])
+            installCheckbox('product')
+        })
+    }
+
+    function changeCategory() {
+        list = checkSelectedItem()
+        vhttp.checkelse('', { action: 'change-category', list: list, category: $("#category-type").val() }).then(data => {
+            $("#category-modal").modal('hide')
+            $("#content").html(data['html'])
+            installCheckbox('product')
         })
     }
 
@@ -153,13 +203,15 @@
         temp = ''
         for (i = from; i < end; i++) {
             item = global['data'][i];
-            temp += `
-            <tr>
-                <td> `+ i +` </td>
-                <td> <input type="checkbox" class="check-insert" rel="`+ i +`"> </td>
-                <td> `+ item['code'] +` </td>
-                <td> `+ item['name'] +` </td>
-            </tr>`
+            if (item) {
+                temp += `
+                <tr>
+                    <td> `+ i +` </td>
+                    <td> <input type="checkbox" class="check-insert" rel="`+ i +`"> </td>
+                    <td> `+ item['code'] +` </td>
+                    <td> `+ item['name'] +` </td>
+                </tr>`
+            }
         }
         nav = ''
         page = global['data'].length / global['limit'] + (global['data'].length % global['limit'] ? 1 : 0)
@@ -191,7 +243,7 @@
 
     function installCheckbox(name) {
         $(".check-" + name + "-all").change((e) => {
-            $(".check-insert").prop('checked', e.currentTarget.checked)
+            $(".check-" + name).prop('checked', e.currentTarget.checked)
         })
     }
 
@@ -200,6 +252,5 @@
         $("#" + id).show()
         $("#" + id).fadeOut(2000)
     }
-
 </script>
 <!-- END: main -->

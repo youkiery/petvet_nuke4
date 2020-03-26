@@ -310,7 +310,6 @@ $types = array('basic');
 if (!defined('ACCESS_EDITUS')) {
     $types[] = 'avatar';
     $types[] = 'question';
-    $types[] = 'address';
 }
 // Thành viên đổi mật khẩu hoặc trưởng nhóm có quyền đổi mật khẩu
 if (!defined('ACCESS_EDITUS') or (defined('ACCESS_EDITUS') and defined('ACCESS_PASSUS'))) {

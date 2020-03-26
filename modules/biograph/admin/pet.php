@@ -114,6 +114,7 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("pet.tpl", PATH);
 $xtpl->assign('list', userDogRow());
+$xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 

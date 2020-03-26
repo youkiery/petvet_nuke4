@@ -26,7 +26,7 @@
     <td> {target} </td>
     <td> {address} </td>
     <td> {mobile} </td>
-    <td> <a href="/biograph/detail/?id={id}"> {pet} </a> </td>
+    <td> <a href="/{module_file}/detail/?id={id}"> {pet} </a> </td>
     <td> {time} </td>
   </tr>
   <!-- END: row -->

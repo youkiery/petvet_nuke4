@@ -11,8 +11,6 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
-$page_title = "autoload";
-
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
 	$result = array('status' => 0);
@@ -37,16 +35,22 @@ if (!empty($action)) {
 	die();
 }
 
-$xtpl = new XTemplate("list.tpl", "modules/biograph/template");
+$xtpl = new XTemplate("list.tpl", "modules/". $module_name ."/template");
 
 $keyword = $nv_Request->get_string('keyword', 'get', '');
 
+$page_title = "Danh sách thú cưng";
+if (!empty($keyword)) {
+  $page_title = $keyword . " - Tìm kiếm thú cưng";
+}
+
 $xtpl->assign('keyword', $keyword);
 $xtpl->assign('content', mainPetList($keyword));
+$xtpl->assign('module_file', $module_file);
 
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
-include ("modules/biograph/layout/header.php");
+include ("modules/". $module_name ."/layout/header.php");
 echo $contents;
-include ("modules/biograph/layout/footer.php");
+include ("modules/". $module_name ."/layout/footer.php");
 

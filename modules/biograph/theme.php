@@ -12,9 +12,10 @@ if (!defined('PREFIX')) {
 }
 
 function transferqList($userid, $filter = array('page' => 1, 'limit' => 10)) {
-  global $db;
+  global $db, $module_file;
 
   $xtpl = new XTemplate('transferq-list.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
 
   $sql = 'select count(*) as count from `'. PREFIX .'_transfer_request` where userid = ' . $userid;
   $query = $db->query($sql);
@@ -45,8 +46,9 @@ function transferqList($userid, $filter = array('page' => 1, 'limit' => 10)) {
 }
 
 function vaccineList($petid) {
-  global $db, $vaccine_array;
+  global $db, $vaccine_array, $module_file;
   $xtpl = new XTemplate('vaccine.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
 
   $sql = 'select * from `'. PREFIX .'_vaccine` where petid = ' . $petid . ' order by id desc';
   $query = $db->query($sql);
@@ -80,8 +82,9 @@ function vaccineList($petid) {
 }
 
 function DiseaseList($petid) {
-  global $db, $request_array;
+  global $db, $request_array, $module_file;
   $xtpl = new XTemplate('disease.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
 
   $sql = 'select * from `'. PREFIX .'_disease` where petid = ' . $petid . ' order by id desc';
   $query = $db->query($sql);
@@ -104,8 +107,9 @@ function DiseaseList($petid) {
 }
 
 function requestDetail($petid) {
-  global $db, $request_array;
+  global $db, $request_array, $module_file;
   $xtpl = new XTemplate('request-detail.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
   $list = array();
 
   $sql = 'select * from `'. PREFIX .'_remind` where type = "request" and visible = 1';
@@ -167,9 +171,10 @@ function requestDetail($petid) {
 }
 
 function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('page' => 1, 'limit' => 10, 'keyword' => '')) {
-  global $db, $user_info, $sex_array;
+  global $db, $user_info, $sex_array, $module_file;
   $index = 1;
   $xtpl = new XTemplate('dog-owner-list.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
 
   $data = getUserPetList($userid, $tabber, $filter);
 
@@ -240,10 +245,11 @@ function userDogRowByList($userid, $tabber = array(0, 1, 2), $filter = array('pa
   return $xtpl->text();
 }
 
-function mainPetList($keyword = '', $page = 1, $filter = 10) {
-  global $db, $sex_array;
+function mainPetList($keyword = '', $page = 1, $filter = 12) {
+  global $db, $sex_array, $module_file;
   $index = ($page - 1) * $filter + 1;
   $xtpl = new XTemplate('dog-list.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
 
   $data = getPetActiveList($keyword, $page, $filter);
 
@@ -257,6 +263,8 @@ function mainPetList($keyword = '', $page = 1, $filter = 10) {
   $xtpl->assign('count', $count);
   $xtpl->assign('nav', navList($count, $page, $filter));
   $xtpl->parse('main.msg');
+  $time = time();
+  $year = 60 * 60 * 24 * 365.25;
 
   foreach ($data['list'] as $row) {
     // var_dump($row);die();
@@ -265,10 +273,13 @@ function mainPetList($keyword = '', $page = 1, $filter = 10) {
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('owner', $owner['fullname']);
     $xtpl->assign('id', $row['id']);
+    $xtpl->assign('image', $row['image']);
     $xtpl->assign('microchip', $row['microchip']);
-    $xtpl->assign('breed', $row['species']);
+    $xtpl->assign('breed', $row['breed']);
+    $xtpl->assign('species', $row['species']);
     $xtpl->assign('sex', $sex_array[$row['sex']]);
-    $xtpl->assign('dob', cdate($row['dateofbirth']));
+    $xtpl->assign('age', parseAgeTime($row['dateofbirth']));
+    // $xtpl->assign('dob', cdate($row['dateofbirth']));
     $xtpl->parse('main.row');
   }
   $xtpl->parse('main');
@@ -276,9 +287,10 @@ function mainPetList($keyword = '', $page = 1, $filter = 10) {
 }
 
 function transferList($userid, $filter = array('page' => 1, 'limit' => 10)) {
-  global $db;
+  global $db, $module_file;
 
   $xtpl = new XTemplate('transfer-list.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
 
   $sql = 'select count(*) as count from `'. PREFIX .'_transfer` where fromid = ' . $userid;
   $query = $db->query($sql);

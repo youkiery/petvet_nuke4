@@ -341,7 +341,7 @@ function checkPrinter($id, $form) {
 
 function precheck($data) {
 	$check = '';
-	$except = array('note', 'other', 'xnote', 'fax', 'owner', 'sampleplace', 'resend', 'iresend', 'xreceive', 'xreceiver', 'xsender', 'xsend', 'vnote', 'target', 'examdate', 'examdate2', 'ownerphone', 'ownermail', 'result', 'xresend', 'phone', 'mail', 'content', 'reformer', 'ownphone', 'ownaddress');
+	$except = array('note', 'other', 'xnote', 'fax', 'owner', 'sampleplace', 'resend', 'iresend', 'xreceive', 'xreceiver', 'xsender', 'xsend', 'vnote', 'target', 'ownerphone', 'ownermail', 'result', 'examdate', 'xresend', 'phone', 'mail', 'content', 'reformer', 'ownphone', 'ownaddress');
 	foreach ($data as $key => $row) {
 		// if ($key == 'page') {
 		// 	die("$row");
@@ -565,18 +565,3 @@ function deuft8($str) {
   //$str = str_replace(" ", "-", str_replace("&*#39;","",$str));
   return $str;
 }
-
-function nav_generater($url, $number, $page, $limit) {
-  $html = '';
-  $total = floor($number / $limit) + ($number % $limit ? 1 : 0);
-  for ($i = 1; $i <= $total; $i++) {
-    if ($page == $i) {
-  	$html .= '<a class="btn btn-default">' . $i . '</a>';
-    } 
-    else {
-  	$html .= '<a class="btn btn-info" href="'. $url .'page='. $i .'&limit='. $i .'">' . $i . '</a>';
-    }
-  }
-  return $html;
-}
-  

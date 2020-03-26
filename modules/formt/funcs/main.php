@@ -613,9 +613,7 @@ if (!empty($action)) {
         $result['form']['xsend'] = date('d/m/Y', $result['form']['xsend']);
 
         $result['form']['examdate'] = date('d/m/Y', $result['form']['examdate']);
-        
-        if (!empty($result['form']['examdate2'])) $result['form']['examdate2'] = date('d/m/Y', $result['form']['examdate2']);
-        else $result['form']['examdate2'] = '';
+        $result['form']['examdate2'] = date('d/m/Y', $result['form']['examdate2']);
         $result['form']['note'] = str_replace('<br />', '', $result['form']['note']);
 
         if ($result['form']['typeindex'] >= 0) {
@@ -694,8 +692,7 @@ if (!empty($action)) {
             $xresend = totime($data['xresend']);
             $xsend = totime($data['xsend']);
             $examdate = totime($data['examdate']);
-            $examdate2 = 0;
-            if (!empty($data['examdate2'])) $examdate2 = totime($data['examdate2']);
+            $examdate2 = totime($data['examdate2']);
             $sampleReceive = totime($data['samplereceive']);
             $receive = totime($data['receive']);          
             $resend = totime($data['resend']);
@@ -750,8 +747,8 @@ if (!empty($action)) {
             $ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
             $signer = json_encode($signer, JSON_UNESCAPED_UNICODE);
   
-            $sql = 'insert into `'. PREFIX .'_row` (code, sender, receive, resend, stateIndex, stateValue, receiver, ireceive, iresend, form, number, exam, sample, sampleCode, typeIndex, typeValue, time, xnote, numberword, xcode, isenderunit, ireceiverunit, xreceiver, xresender, xsender, xreceive, xresend, xsend, ig, examdate, examdate2, result, note, page2, xexam, vnote, page3, receiveHour, receiveMinute, sampleReceive, address, sampleReceiver, status, sampleCode5, xphone, ireceiveremploy, fax, page4, xaddress, examsample, noticetime, target, receiveDis, receiveLeader, sampleplace, owner, ownermail, ownerphone, mcode, signer, printer, xsign, locker) values("'. $data['code'] .'", "'. $data['sender'] .'", ' . totime($data['receive']) . ', ' . totime($data['resend']) . ', '. $data['state']['index'] .', "'. $data['state']['value'] . '", "' . $data['receiver'] . '", '. totime($data['ireceive']) . ',  '. totime($data['iresend']) . ', "'. implode(', ', $data['form']) .'", ' . $data['number'] .', \'' . $exam . '\', "'. $data['sample'] .'", "'. $data['samplecode'] .'", '. $data['type']['index'] .', "'. $data['type']['value'] .'", '. time() . ', "'. $data['xnote'] .'", "'. $data['numberword'] .'", "'. implode(',', $data['xcode']) .'", "'. $data['isenderunit'] .'", "'. $data['ireceiverunit'] .'", "'. $data['xreceiver'] .'", "'. $data['xresender'] .'", "'. $data['xsender'] .'", '. $xreceive .', "'. $xresend .'", '. $xsend .', \''. $ig .'\', '. $examdate .', '. $examdate2 .', "'. $data['result'] .'", "'.$note.'", "'. $data['page2'] .'", "'. $data['xexam'] .'", "'. $vnote .'", "'. $data['page3'] .'", '.$data['receivehour'].', '.$data['receiveminute'].', "'.$sampleReceive.'", "'.$data['address'].'", "'.$data['samplereceiver'].'", "'. $data['status']['index'] .'", "'. $data['samplecode5'] .'", "'. $data['xphone'] .'", "'. $data['ireceiveremploy'] .'", "'. $data['fax'] .'", "'. $data['page4'] .'", "'.$data['xaddress'].'", "'. $data['examsample'] .'", '. $resend .', "'. $data['target'].'", "'. $data['receivedis'] .'", "'. $data['receiveleader'] .'", "'. $data['sampleplace'] .'", "'. $data['owner'] .'", "'. $data['ownermail'] .'", "'. $data['ownerphone'] .'", "'. $data['mcode'] .'", \''. $signer .'\', 5, '. $data['xsign'] .', '. (empty($data['locker']) ? 0 : 1) .')';
-            
+            $sql = 'insert into `'. PREFIX .'_row` (code, sender, receive, resend, stateIndex, stateValue, receiver, ireceive, iresend, form, number, exam, sample, sampleCode, typeIndex, typeValue, time, xnote, numberword, xcode, isenderunit, ireceiverunit, xreceiver, xresender, xsender, xreceive, xresend, xsend, ig, examdate, result, note, page2, xexam, vnote, page3, receiveHour, receiveMinute, sampleReceive, address, sampleReceiver, status, sampleCode5, xphone, ireceiveremploy, fax, page4, xaddress, examsample, noticetime, target, receiveDis, receiveLeader, sampleplace, owner, ownermail, ownerphone, mcode, signer, printer, xsign) values("'. $data['code'] .'", "'. $data['sender'] .'", ' . totime($data['receive']) . ', ' . totime($data['resend']) . ', '. $data['state']['index'] .', "'. $data['state']['value'] . '", "' . $data['receiver'] . '", '. totime($data['ireceive']) . ',  '. totime($data['ireceive']) . ', "'. implode(', ', $data['form']) .'", ' . $data['number'] .', \'' . $exam . '\', "'. $data['sample'] .'", "'. $data['samplecode'] .'", '. $data['type']['index'] .', "'. $data['type']['value'] .'", '. time() . ', "'. $data['xnote'] .'", "'. $data['numberword'] .'", "'. implode(',', $data['xcode']) .'", "'. $data['isenderunit'] .'", "'. $data['ireceiverunit'] .'", "'. $data['xreceiver'] .'", "'. $data['xresender'] .'", "'. $data['xsender'] .'", '. $xreceive .', "'. $xresend .'", '. $xsend .', \''. $ig .'\', '. $examdate .', '. $examdate2 .', "'. $data['result'] .'", "'.$note.'", "'. $data['page2'] .'", "'. $data['xexam'] .'", "'. $vnote .'", "'. $data['page3'] .'", '.$data['receivehour'].', '.$data['receiveminute'].', "'.$sampleReceive.'", "'.$data['address'].'", "'.$data['samplereceiver'].'", "'. $data['status']['index'] .'", "'. $data['samplecode5'] .'", "'. $data['xphone'] .'", "'. $data['ireceiveremploy'] .'", "'. $data['fax'] .'", "'. $data['page4'] .'", "'.$data['xaddress'].'", "'. $data['examsample'] .'", '. $resend .', "'. $data['target'].'", "'. $data['receivedis'] .'", "'. $data['receiveleader'] .'", "'. $data['sampleplace'] .'", "'. $data['owner'] .'", "'. $data['ownermail'] .'", "'. $data['ownerphone'] .'", "'. $data['mcode'] .'", \''. $signer .'\', 5, '. $data['xsign'] .')';
+  
             $query = $db->query($sql);
             $result['id'] = $db->lastInsertId();
             
@@ -843,9 +840,7 @@ if (!empty($action)) {
                 $xresend = totime($data['xresend']);
                 $xsend = totime($data['xsend']);
                 $examdate = totime($data['examdate']);
-                $examdate2 = 0;
-                if (!empty($data['examdate2'])) $examdate2 = totime($data['examdate2']);
-            
+                $examdate2 = totime($data['examdate2']);
   
                 $ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
                 $signer = json_encode($signer, JSON_UNESCAPED_UNICODE);
@@ -908,9 +903,7 @@ if (!empty($action)) {
                 $sampleReceive = totime($data['samplereceive']);
                 $receive = totime($data['receive']);
                 $examDate = totime($data['examdate']);
-                $examdate2 = 0;
-                if (!empty($data['examdate2'])) $examdate2 = totime($data['examdate2']);
-            
+                $examDate2 = totime($data['examdate2']);
                 $note = nl2br($data['note']);
   
                 checkRemindv2($data['address'], 'address');
@@ -932,7 +925,7 @@ if (!empty($action)) {
                 $exam = json_encode($data['exam'],JSON_UNESCAPED_UNICODE);
                 $signer = json_encode($signer, JSON_UNESCAPED_UNICODE);
 
-                $sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(',', $data['xcode']) .'", receiveHour = '.$data['receivehour'].', receiveMinute = '.$data['receiveminute'].', sampleReceive = "'.$sampleReceive.'", address = "'.$data['address'].'", sampleReceiver = "'.$data['samplereceiver'].'", examdate = "'.$examDate.'", examdate2 = "'.$examdate2.'", result = "'. $data['result'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', status = "'. $data['status']['index'] .'", sampleCode5 = "'. $data['samplecode5'] .'", receive = '. $receive .', note = "'. $note .'", xphone = "'. $data['xphone'] .'", sample = "'. $data['sample'] .'", isenderUnit = "'. $data['isenderunit'] .'", ireceiverEmploy = "'. $data['ireceiveremploy'] .'", exam = \''. $exam .'\', numberword = "'. $data['numberword'] .'", fax = "'. $data['fax'] .'", page4 = "'. $data['page4'] .'", xexam = "'. $data['xexam'] .'", xresender = "'. $data['xresender'] .'", signer = \''. $signer .'\' where id = ' . $id;
+                $sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(',', $data['xcode']) .'", receiveHour = '.$data['receivehour'].', receiveMinute = '.$data['receiveminute'].', sampleReceive = "'.$sampleReceive.'", address = "'.$data['address'].'", sampleReceiver = "'.$data['samplereceiver'].'", examdate = "'.$examDate.'", examdate2 = "'.$examDate2.'", result = "'. $data['result'] .'", typeIndex = '. $data['type']['index'] .', typeValue = "'. $data['type']['value'] .'", number = '. $data['number'] .', status = "'. $data['status']['index'] .'", sampleCode5 = "'. $data['samplecode5'] .'", receive = '. $receive .', note = "'. $note .'", xphone = "'. $data['xphone'] .'", sample = "'. $data['sample'] .'", isenderUnit = "'. $data['isenderunit'] .'", ireceiverEmploy = "'. $data['ireceiveremploy'] .'", exam = \''. $exam .'\', numberword = "'. $data['numberword'] .'", fax = "'. $data['fax'] .'", page4 = "'. $data['page4'] .'", xexam = "'. $data['xexam'] .'", xresender = "'. $data['xresender'] .'", signer = \''. $signer .'\' where id = ' . $id;
                 $query = $db->query($sql);
                 if ($query) {
                   checkPrinter($id, $form);
@@ -1248,3 +1241,4 @@ $contents = $xtpl->text();
 include ( NV_ROOTDIR . "/includes/header.php" );
 echo nv_site_theme($contents);
 include ( NV_ROOTDIR . "/includes/footer.php" );
+

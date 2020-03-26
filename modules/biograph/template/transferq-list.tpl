@@ -2,7 +2,7 @@
 <!-- BEGIN: row -->
 <div class="thumb-gallery">
   <div class="xleft">
-    <img src="{image}" class="thumbnail">
+    <img src="{image}" class="transfer thumbnail">
   </div>
   <div class="xright">
     <p> Tên thú cưng: {name} </p>

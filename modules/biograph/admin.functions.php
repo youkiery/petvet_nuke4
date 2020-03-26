@@ -19,9 +19,10 @@ require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';
 $select_array = array('breed' => 'Loài', 'disease' => 'Bệnh', 'origin' => 'Nguồn gốc', 'request' => 'Yêu cầu', 'species' => 'Giống');
 
 function remindList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', 'status' => 0, 'type' => '')) {
-  global $db, $select_array;
+  global $db, $select_array, $module_file;
 
   $xtpl = new XTemplate('remind-list.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
 
   $filter['status'] = intval($filter['status']);
   if (empty($filter['status'])) {
@@ -65,9 +66,10 @@ function remindList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '',
 }
 
 function centerList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '', 'status' => 0)) {
-  global $db;
+  global $db, $module_file;
 
   $xtpl = new XTemplate('center-list.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
 
   $filter['status'] = intval($filter['status']);
   if (empty($filter['status'])) {
@@ -102,7 +104,7 @@ function centerList($filter = array('page' => 1, 'limit' => 10, 'keyword' => '',
 }
 
 function requestList($filter = array('keyword' => '', 'page' => 1, 'limit' => 10, 'status' => 0)) {
-  global $db, $request_array;
+  global $db, $request_array, $module_file;
 
   $time = time();
   if (empty($filter['atime'])) {    
@@ -115,6 +117,7 @@ function requestList($filter = array('keyword' => '', 'page' => 1, 'limit' => 10
   $filter['ztime'] = totime($filter['ztime']);
 
   $xtpl = new XTemplate('request-list.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
   // die(PATH);
 
   $filter['status'] = intval($filter['status']);
@@ -177,9 +180,10 @@ function requestList($filter = array('keyword' => '', 'page' => 1, 'limit' => 10
 }
 
 function userRowList($filter = array('keyword' => '', 'status' => 0, 'page' => 1, 'limit' => 10)) {
-  global $db, $user_info;
+  global $db, $user_info, $module_file;
 
   $xtpl = new XTemplate('user-list.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
   $sql = 'select count(*) as count from `'. PREFIX .'_user` where fullname like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '');
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
@@ -220,9 +224,10 @@ function getUserInfo($userid) {
 }
 
 function userDogRow($filter = array('keyword' => '', 'status' => 0, 'page' => 1, 'limit' => 10)) {
-  global $db, $user_info;
+  global $db, $user_info, $module_file;
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
   $xtpl = new XTemplate('pet-list.tpl', PATH);
+  $xtpl->assign('module_file', $module_file);
 
   $sql = 'select count(*) as count from `'. PREFIX .'_pet` where name like "%'. $filter['keyword'] .'%"' . ($filter['status'] > 0 ? ' and active = ' . ($filter['status'] - 1) : '');
   $query = $db->query($sql);

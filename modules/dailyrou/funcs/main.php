@@ -138,6 +138,7 @@ if (!empty($action)) {
           }
         }
       }
+
     break;
     case 'regist':
       $itemList = $nv_Request->get_array("itemList", "get/post", "");

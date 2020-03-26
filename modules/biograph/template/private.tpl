@@ -1,6 +1,6 @@
 <!-- Cá nhân -->
 <!-- BEGIN: main -->
-<link rel="stylesheet" href="/modules/biograph/src/glyphicons.css">
+<link rel="stylesheet" href="/modules/{module_file}/src/glyphicons.css">
 <style>
   .modal {
     overflow-y: auto;
@@ -8,7 +8,6 @@
 </style>
 
 <div class="container">
-  <!-- BEGIN: log -->
   <div class="modal" id="pet-vaccine" role="dialog">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -558,12 +557,12 @@
     </div>
   </div>
 
-  <a href="/biograph/">
-    <img src="/modules/biograph/src/banner.png" style="width: 200px;">
+  <a href="/">
+    <img src="/modules/{module_file}/src/banner.png" style="width: 200px;">
   </a>
 
   <div style="float: right;">
-    <a href="/biograph/logout"> Đăng xuất </a>
+    <a href="/{module_file}/logout"> Đăng xuất </a>
   </div>
 
   <h2> Thông tin cá nhân </h2>
@@ -582,8 +581,8 @@
     </button>
   </div>
   <div style="clear: left;"></div>
-  <p> <a href="/biograph/transfer"> Danh sách chuyển nhượng </a> </p>
-  <p> <a href="/biograph/transferq"> Yêu cầu chuyển nhượng </a> </p>
+  <p> <a href="/{module_file}/transfer"> Danh sách chuyển nhượng </a> </p>
+  <p> <a href="/{module_file}/transferq"> Yêu cầu chuyển nhượng </a> </p>
   <h2> Danh sách thú cưng </h2>
 
   <form onsubmit="filterS(event)">
@@ -724,7 +723,7 @@
   var canvas = document.createElement('canvas')
 
   var thumbnailImage = new Image()
-  thumbnailImage.src = '/modules/biograph/src/thumbnail.jpg'
+  thumbnailImage.src = '/modules/{module_file}/src/thumbnail.jpg'
   thumbnailImage.onload = (e) => {
     var context = canvas.getContext('2d')
     var width = thumbnailImage.width

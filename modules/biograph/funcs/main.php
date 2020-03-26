@@ -11,9 +11,9 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
-$page_title = "autoload";
+$page_title = "Vetvn.com - Nâng niu thú cưng Việt Nam";
 
-$xtpl = new XTemplate("main.tpl", "modules/biograph/template");
+$xtpl = new XTemplate("main.tpl", "modules/". $module_name ."/template");
 $userinfo = getUserInfo();
 
 if (!empty($userinfo)) {
@@ -28,9 +28,10 @@ else {
   $xtpl->parse("main.nolog");
 }
 
+$xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
-include ("modules/biograph/layout/header.php");
+include ("modules/". $module_name ."/layout/header.php");
 echo $contents;
-include ("modules/biograph/layout/footer.php");
+include ("modules/". $module_name ."/layout/footer.php");
 

@@ -8,8 +8,9 @@ var vremind = {
         input.keyup(() => {
             clearTimeout(delay)
             delay = setTimeout(() => {
-                html = excuteFunction(input.val())
-                suggest.html(html)
+                excuteFunction(input.val()).then((html) => {
+                    suggest.html(html)
+                })
             }, inputDelay);
         })
         input.focus(() => {

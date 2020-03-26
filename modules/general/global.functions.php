@@ -276,3 +276,41 @@ function nav_generater($url, $number, $page, $limit) {
   }
   return $html;
 }
+
+function priceItemDetail($id) {
+  global $db;
+  $sql = 'select * from `'. PREFIX .'price_detail` where itemid = ' . $id . ' order by id';
+  $query = $db->query($sql);
+  $list = array();
+
+  while ($row = $query->fetch()) {
+      $list[]= $row;
+  }
+  return $list;
+}
+
+function priceCategoryList() {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'price_category`';
+  $query = $db->query($sql);
+  $list = array();
+
+  while ($row = $query->fetch()) {
+      $list[$row['id']] = $row;
+  }
+  return $list;
+}
+
+function priceCategoryListReverse() {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'price_category`';
+  $query = $db->query($sql);
+  $list = array();
+
+  while ($row = $query->fetch()) {
+      $list[$row['name']] = $row['id'];
+  }
+  return $list;
+}

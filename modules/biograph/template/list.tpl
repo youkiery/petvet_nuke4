@@ -1,7 +1,7 @@
 <!-- BEGIN: main -->
 <div class="container">
-  <a href="/biograph/">
-    <img src="/modules/biograph/src/banner.png" style="width: 200px;">
+  <a href="/">
+    <img src="/modules/{module_file}/src/banner.png" style="width: 200px;">
   </a>
   <form style="width: 60%; float: right;">
     <label class="input-group">
@@ -15,7 +15,7 @@
   </form>
   <div style="clear: both;"></div>
 
-  <div id="content">
+  <div id="content" style="font-size: 0px;">
     {content}
   </div>
 </div>

@@ -11,7 +11,7 @@ if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
 
-$page_title = "autoload";
+$page_title = "Danh sách yêu cầu";
 
 $action = $nv_Request->get_string('action', 'post', '');
 $userinfo = getUserInfo();
@@ -66,14 +66,15 @@ if (!empty($action)) {
 	die();
 }
 
-$xtpl = new XTemplate("transferq.tpl", "modules/biograph/template");
+$xtpl = new XTemplate("transferq.tpl", "modules/". $module_name ."/template");
 
 $xtpl->assign('content', transferqList($userinfo['id']));
 $xtpl->assign('url', '/' . $module_name . '/' . $op . '/');
 $xtpl->assign('url', '/' . $module_name . '/' . $op . '/');
 
+$xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
-include ("modules/biograph/layout/header.php");
+include ("modules/". $module_name ."/layout/header.php");
 echo $contents;
-include ("modules/biograph/layout/footer.php");
+include ("modules/". $module_name ."/layout/footer.php");

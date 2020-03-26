@@ -38,6 +38,7 @@ if (!empty($action)) {
 $xtpl = new XTemplate("center.tpl", PATH);
 
 $xtpl->assign('content', centerList());
+$xtpl->assign('module_file', $module_file);
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 
