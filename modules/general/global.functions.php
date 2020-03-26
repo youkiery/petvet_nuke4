@@ -189,12 +189,6 @@ function bloodStatistic() {
   return $xtpl->text();
 }
 
-function parseFilter($filter) {
-  if (empty($filter['page'])) $filter['page']  = 1;
-  if (empty($filter['limit'])) $filter['limit']  = 10;
-  return $filter;
-}
-
 function nv_generate_page_shop($base_url, $num_items, $per_page, $start_item, $add_prevnext_text = true, $onclick = false, $js_func_name = 'nv_urldecode_ajax', $containerid = 'generate_page') {
   global $lang_global;
   $start_item = ($start_item - 1) * $per_page;
