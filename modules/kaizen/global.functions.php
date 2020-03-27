@@ -53,20 +53,20 @@ function checkRow($id) {
 function getRowList($userid = 0, $page = 1, $limit = 10) {
   global $db, $nv_Request, $db_config;
 
-  $list = array();
-  $extra_sql = '';
-  if (!empty($userid)) {
-    $sql = 'select * from `'. $db_config['prefix'] .'_rider_user` where user_id = ' . $userid . ' and kaizen = 1';
-    $query = $db->query($sql);
-    if (empty($row = $query->fetch())) {
-      $extra_sql = ' where userid = ' . $userid;
-    }
-  }
+  // $list = array();
+  // $extra_sql = '';
+  // if (!empty($userid)) {
+  //   $sql = 'select * from `'. $db_config['prefix'] .'_rider_user` where user_id = ' . $userid . ' and kaizen = 1';
+  //   $query = $db->query($sql);
+  //   if (empty($row = $query->fetch())) {
+  //     $extra_sql = ' where userid = ' . $userid;
+  //   }
+  // }
   
-  $sql = 'select count(id) as count from `'. PREFIX .'_row`' . $extra_sql;
+  $sql = 'select count(id) as count from `'. PREFIX .'_row` where userid = ' . $userid;
   $query = $db->query($sql);
   $count = $query->fetch();
-  $sql = 'select * from `'. PREFIX .'_row`' . $extra_sql . ' order by edit_time desc limit ' . $limit . ' offset ' . ($limit * ($page - 1));
+  $sql = 'select * from `'. PREFIX .'_row` where userid = ' . $userid . ' order by edit_time desc limit ' . $limit . ' offset ' . ($limit * ($page - 1));
   $query = $db->query($sql);
 
   while ($row = $query->fetch()) {

@@ -86,17 +86,10 @@ $xtpl = new XTemplate('main.tpl', NV_ROOTDIR . '/themes/' . $module_info['templa
 $sql = 'select * from `'. $db_config['prefix'] .'_users` where userid = ' . $user_info['userid'];
 $query = $db->query($sql);
 $users = $query->fetch();
-$users = explode(',', $users['in_groups']);
-if (in_array('1', $users)) {
-	$userid = 0;
-}
-else {
-	$userid = $user_info['userid'];
-}
 
 $xtpl->assign('page', 1);
 $xtpl->assign('limit', 10);
-$xtpl->assign('content', kaizenList($userid));
+$xtpl->assign('content', kaizenList($users['userid']));
 $xtpl->parse('main');
 $contents = $xtpl->text('main');
 

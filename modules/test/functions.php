@@ -568,3 +568,26 @@ function usgVaccineList($filter) {
 	$xtpl->parse('main');
 	return $xtpl->text();
 }
+
+function vaccineModal() {
+	global $db, $lang_module;
+	$xtpl = new XTemplate('modal.tpl', PATH2);
+	$xtpl->assign('lang', $lang_module);
+	$sql = "select * from " . VAC_PREFIX . "_doctor";
+	$query = $db->query($sql);
+	while($row = $query->fetch()) {
+	  $xtpl->assign("doctorid", $row["id"]);
+	  $xtpl->assign("doctorname", $row["name"]);
+	  $xtpl->parse("main.doctor");
+	}
+
+	$diseases = getDiseaseList();
+	foreach ($diseases as $key => $value) {
+	  $xtpl->assign("disease_id", $value["id"]);
+	  $xtpl->assign("disease_name", $value["name"]);
+	  $xtpl->parse("main.option");
+	}
+  
+	$xtpl->parse('main');
+	return $xtpl->text();
+}

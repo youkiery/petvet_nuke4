@@ -26,245 +26,82 @@
     border-bottom: 1px solid #eee;
   }
 
-  .error { color: red; font-size: 1.2em; font-weight: bold; }
+  .error {
+    color: red;
+    font-size: 1.2em;
+    font-weight: bold;
+  }
 
   th {
     position: sticky;
-    top: 0px;  /* 0px if you don't have a navbar, but something is required */
+    top: 0px;
+    /* 0px if you don't have a navbar, but something is required */
     background: white;
     z-index: 10;
     border-bottom: 1px solid black;
   }
+
+  .rows::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+
+  [class*="col-"] {
+    float: left;
+    padding: 5px;
+  }
+
+  .col-1 {
+    width: 8.33%;
+  }
+
+  .col-2 {
+    width: 16.66%;
+  }
+
+  .col-3 {
+    width: 25%;
+  }
+
+  .col-4 {
+    width: 33.33%;
+  }
+
+  .col-5 {
+    width: 41.66%;
+  }
+
+  .col-6 {
+    width: 50%;
+  }
+
+  .col-7 {
+    width: 58.33%;
+  }
+
+  .col-8 {
+    width: 66.66%;
+  }
+
+  .col-9 {
+    width: 75%;
+  }
+
+  .col-10 {
+    width: 83.33%;
+  }
+
+  .col-11 {
+    width: 91.66%;
+  }
+
+  .col-12 {
+    width: 100%;
+  }
 </style>
 
-<div id="customer-modal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
-
-        <div class="form-group row">
-          <div class="col-sm-12">
-            <label> Khách hàng </label>
-            <input type="text" class="form-control" id="customer-name">
-          </div>
-          <div class="col-sm-12">
-            <label> Số điện thoại </label>
-            <input type="text" class="form-control" id="customer-phone">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label> Địa chỉ </label>
-          <textarea type="text" class="form-control" id="customer-address"></textarea>
-        </div>
-
-        <div class="text-center">
-          <button class="btn btn-info" onclick="editCustomerSubmit()">
-            Chỉnh sửa thông tin khách hàng
-          </button>
-          <p class="error" id="customer-error"> </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="search-all" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-body">
-        <table class="table table-striped table-border">
-          <thead>
-            <tr>
-              <th colspan="9" class="vng_vacbox_title" style="text-align: center">
-                {title}
-              </th>
-            </tr>
-            <tr>
-              <th>
-                {lang.index}
-              </th>  
-              <th>
-                {lang.petname}
-              </th>  
-              <th>
-                {lang.customer}
-              </th>  
-              <th>
-                {lang.phone}
-              </th>  
-              <th>
-                {lang.disease}
-              </th>  
-              <th>
-                {lang.vaccome}
-              </th>  
-              <th>
-                {lang.vaccall}
-              </th>  
-              <th>
-                {lang.vacconfirm}
-              </th>
-            </tr>
-          </thead>
-          <tbody id="search-all-content">
-            <!-- {content} -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="miscustom" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <div>
-          {lang.miscustom_prequest}
-        </div>
-      </div>
-      <div class="modal-body">
-        <form onsubmit="return change_custom(event)">
-          <div class="row">
-            <div class="form-group col-md-12">
-              <label> {lang.customer} </label>
-              <input type="text" class="form-control" id="vaccustom">
-            </div>
-            <div class="form-group col-md-12">
-              <label> {lang.phone} </label>
-              <input type="text" class="form-control" id="vacphone">
-            </div>
-          </div>
-          <div class="form-group">
-            <label> {lang.address} </label>
-            <input type="text" class="form-control" id="vacaddress">
-          </div>
-          <button class="btn btn-info">
-            {lang.g_edit}
-          </button>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-info" data-dismiss="modal" onclick="miscustom_submit()">
-          {lang.submit}
-        </button>
-        <button class="btn btn-info" data-dismiss="modal">
-          {lang.cancel}
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="deadend" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <div>
-          {lang.deadend_prequest}
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button data-dismiss="modal" onclick="deadend_submit()">
-          {lang.submit}
-        </button>
-        <button data-dismiss="modal">
-          {lang.cancel}
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="detail" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-8">
-            {lang.customer}
-          </div>
-          <div class="col-md-16" id="detail_custom"> </div>
-        </div>
-        <div class="row">
-          <div class="col-md-8">
-            {lang.phone}
-          </div>
-          <div class="col-md-16" id="detail_phone"> </div>
-        </div>
-        <div class="row">
-          <div class="col-md-8">
-            {lang.petname}
-          </div>
-          <div class="col-md-16" id="detail_pet"> </div>
-        </div>
-        <div class="row">
-          <div class="col-md-8">
-            {lang.disease}
-          </div>
-          <div class="col-md-16" id="detail_disease"> </div>
-        </div>
-        <div class="row">
-          <div class="col-md-8">
-            {lang.doctor}
-          </div>
-          <div class="col-md-16" id="detail_doctor"> </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button data-dismiss="modal">
-          {lang.cancel}
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="vaccinedetail" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">{lang.confirm_mess}</h4>
-      </div>
-      <div class="modal-body">
-          <form>
-            <div class="form-group">
-              <label>{lang.recall}</label>
-              <div class="input-group date" data-provide="datepicker">
-                <input type="text" class="form-control" id="confirm_recall" readonly>
-                <div class="input-group-addon">
-                    <span class="glyphicon glyphicon-th"></span>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-      				<label>{lang.doctor}</label>
-              <select class="form-control" id="doctor_select">
-                <!-- BEGIN: doctor -->
-                <option value="{doctorid}">
-                  {doctorname}
-                </option>
-                <!-- END: doctor -->
-              </select>      
-            </div>
-            <div class="form-group text-center">
-              <input class="btn btn-info" id="btn_save_vaccine" type="button" onclick="save_form()" value="{lang.save}">
-            </div>
-          </form>
-      </div>
-      <div class="modal-footer">
-      </div>
-    </div>
-  </div>
-</div>
+{modal}
 
 <div class="row">
   <div class="col-sm-14">
@@ -284,7 +121,8 @@
   </div>
   <form class="col-sm-10 input-group" onsubmit="search(event)">
     <div class="relative">
-      <input type="text" class="form-control" id="vaccine-search-all" style="float:none;" placeholder="Số điện thoại hoặc tên khách hàng" autocomplete="off"> 
+      <input type="text" class="form-control" id="vaccine-search-all" style="float:none;"
+        placeholder="Số điện thoại hoặc tên khách hàng" autocomplete="off">
       <div class="suggest" id="search-all-suggest"></div>
     </div>
     <div class="input-group-btn">
@@ -293,43 +131,22 @@
   </form>
 </div>
 
-<!-- BEGIN: filter -->
-<button class="filter btn {check}" id="chatter_{ipd}" onclick="change_data({ipd})">
-  {vsname}
-</button>
-<!-- END: filter -->
-<div class="right">
-  <button class="btn btn-info" id="exall">
-    Hiện ghi chú
+<div class="form-group">
+  <!-- BEGIN: filter -->
+  <button class="filter btn {check}" id="chatter_{ipd}" onclick="change_data({ipd})">
+    {vsname}
   </button>
+  <!-- END: filter -->
+  <div class="right">
+    <button class="btn btn-info" id="exall">
+      Hiện ghi chú
+    </button>
+    <button class="btn btn-success" onclick="$('vaccine-modal').modal('show')">
+      Thêm tiêm phòng
+    </button>
+  </div>
 </div>
 
-<table class="table table-bordered">
-  <thead class="sticky-header">
-    <tr>
-      <th colspan="9" class="vng_vacbox_title" style="text-align: center">
-        {title}
-      </th>
-    </tr>
-    <tr>
-      <th>
-        {lang.customer}
-      </th>  
-      <th>
-        {lang.phone}
-      </th>  
-      <th>
-        {lang.disease}
-			</th>  
-      <th>
-        {lang.vaccall}
-      </th>  
-    </tr>
-  </thead>
-  <tbody id="disease_display">
-    {content}
-  </tbody>
-</table>
 <script>
   var link = "/index.php?" + nv_name_variable + "=" + nv_module_name + "&" + nv_fc_variable + "=";
   var g_miscustom = -1;
@@ -356,8 +173,8 @@
     id: 0
   }
 
-  $(document).ready(function(){
-    $(".sticky-header").floatThead({top:50});
+  $(document).ready(function () {
+    $(".sticky-header").floatThead({ top: 50 });
   });
 
   $("#exall").click(() => {
