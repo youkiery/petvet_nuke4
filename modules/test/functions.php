@@ -430,11 +430,13 @@ function vaccineContent($keyword = '') {
   
   switch ($filter['page']) {
     case 1:
-      $end = $today + 60 * 60 * 24;
+      // lọc thêm hôm nay
+      $end = $today + 60 * 60 * 24 - 1;
       $where = "where ctime between $today and $end and a.status = $filter[status]";
     break;
     case 2:
-      $end = $today + 60 * 60 * 24;
+      // lọc tái chủng hôm nay
+      $end = $today + 60 * 60 * 24 - 1;
       $where = "where calltime between $today and $end and a.status = $filter[status]";
     break;
     default:
@@ -444,7 +446,7 @@ function vaccineContent($keyword = '') {
         $time = 60 * 60 * 24 * 14;
       }
       $from = $today;
-      $end = $today + $time;
+      $end = $today + $time - 1;
       $where = "where calltime between $from and $end and a.status = $filter[status]";
   }
   

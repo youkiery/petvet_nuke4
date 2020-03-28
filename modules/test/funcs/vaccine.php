@@ -115,23 +115,27 @@ if (!empty($action)) {
       $data['cometime'] = totime($data['cometime']);
       $data['calltime'] = totime($data['calltime']);
       // kiểm tra $data, nếu customer trống, thêm khách hàng mới
-      if (empty($data['customer'])) {
-        // kiểm tra sđt có trùng không
-        // nếu trùng, lấy id
-        // nếu chưa, thêm mới
-        $sql = "select * from `" . VAC_PREFIX . "_customer` where phone = '$data[phone]'";
-        $query = $db->query($sql);
-        if (!empty($customer = $query->fetch())) {
-          $data['customer'] = $customer['id'];
-          $sql = "update `" . VAC_PREFIX . "_customer` set name = '$data[name]', address = '$data[address]' where phone = '$data[phone]'";
-          $db->query($sql);
-        }
-        else {
-          $sql = "insert into `" . VAC_PREFIX . "_customer` (name, phone, address) values ('$data[name]', '$data[phone]', '$data[address]');";
-          $db->query($sql);
-          $data['customer'] = $db->lastInsertId();
-        }
+
+      // kiểm tra sđt có trùng không
+      // nếu trùng, lấy id
+      // nếu chưa, thêm mới
+      $sql = "select * from `" . VAC_PREFIX . "_customer` where phone = '$data[phone]'";
+      $query = $db->query($sql);
+      if (!empty($customer = $query->fetch())) {
+        $data['customer'] = $customer['id'];
+        $sql = "update `" . VAC_PREFIX . "_customer` set name = '$data[name]', address = '$data[address]' where phone = '$data[phone]'";
+        $db->query($sql);
       }
+      else {
+        $sql = "insert into `" . VAC_PREFIX . "_customer` (name, phone, address) values ('$data[name]', '$data[phone]', '$data[address]');";
+        $db->query($sql);
+        $data['customer'] = $db->lastInsertId();
+        
+        $sql = "insert into `" . VAC_PREFIX . "_pet` (name, customerid) values ('Chưa đặt tên', $data[customer]);";
+        $db->query($sql);
+        $data['pet'] = $db->lastInsertId();
+      }
+      
       if (empty($data['pet'])) {
         // thêm thú cưng mặc định
         $sql = "insert into `" . VAC_PREFIX . "_pet` (name, customerid) values ('Chưa đặt tên', $data[customer]);";
