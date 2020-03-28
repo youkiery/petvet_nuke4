@@ -27,14 +27,6 @@
   }
 
   .error { color: red; font-size: 1.2em; font-weight: bold; }
-
-  th {
-    position: sticky;
-    top: 0px;  /* 0px if you don't have a navbar, but something is required */
-    background: white;
-    z-index: 10;
-    border-bottom: 1px solid black;
-  }
 </style>
 
 <div id="customer-modal" class="modal fade" role="dialog">
@@ -304,14 +296,20 @@
   </button>
 </div>
 
-<table class="table table-bordered">
-  <thead class="sticky-header">
+<table class="table table-striped table-border">
+  <thead>
     <tr>
       <th colspan="9" class="vng_vacbox_title" style="text-align: center">
         {title}
       </th>
     </tr>
     <tr>
+      <th>
+        {lang.index}
+      </th>  
+      <th>
+        {lang.petname}
+      </th>  
       <th>
         {lang.customer}
       </th>  
@@ -322,8 +320,14 @@
         {lang.disease}
 			</th>  
       <th>
+        {lang.vaccome}
+      </th>  
+      <th>
         {lang.vaccall}
       </th>  
+      <th>
+        {lang.vacconfirm}
+      </th>
     </tr>
   </thead>
   <tbody id="disease_display">
@@ -355,10 +359,6 @@
   var global = {
     id: 0
   }
-
-  $(document).ready(function(){
-    $(".sticky-header").floatThead({top:50});
-  });
 
   $("#exall").click(() => {
     if (note_s) {

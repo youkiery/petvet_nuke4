@@ -6,240 +6,167 @@
 * @Createdate 26-01-2011 14:43
 */
 if ( ! defined( 'NV_IS_MOD_QUANLY' ) ) die( 'Stop!!!' );
+
+$filter = array(
+  'page' => $nv_Request->get_int('page', 'get', 0),
+  'status' => $nv_Request->get_int('status', 'get', 0),
+  'keyword' => $nv_Request->get_string('keyword', 'get/post', '')
+);
+
 $action = $nv_Request->get_string("action", "get/post", "");
 if (!empty($action)) {
-	$result = array("status" => 0);
-	switch ($action) {
-		case 'get-customer':
-			$id = $nv_Request->get_int('id', 'post');
+  $result = array("status" => 0);
+  switch ($action) {
+    case 'get-customer':
+      $id = $nv_Request->get_int('id', 'post');
 
-			$sql = 'select * from `'. VAC_PREFIX .'_customer` where id = '. $id;
-			$query = $db->query($sql);
-			if (!empty($row = $query->fetch())) {
-				$result['status'] = 1;
-				$result['data'] = $row;
-			}
-		break;
-		case 'edit-customer':
-			// kiểm tra thông tin số điện thoại người dùng, nếu có, báo lỗi, nếu không, cập nhật
-			$id = $nv_Request->get_int('id', 'post');
-			$data = $nv_Request->get_array('data', 'post');
-			
-			$sql = 'select * from `'. VAC_PREFIX .'_customer` where id <> '. $id .' and phone = "'. $data['phone'] . '"';
-			$query = $db->query($sql);
-			if (!empty($row = $query->fetch())) {
-				// Có sđt, báo lỗi
-				$result['data'] = 2;
-			}
-			else {
-				// cập nhật
-				$sql = "update `" . VAC_PREFIX . "_customer` set name = '$data[name]', phone = '$data[phone]', address = '$data[address]' where id = $id";
-				if ($db->query($sql)) {
-					$result['status'] = 1;
-				}
-			}
-		break;
-		case 'customer-suggest':
-			$keyword = $nv_Request->get_string('keyword', 'get/post', '');
-
-			$sql = 'select * from `'. VAC_PREFIX .'_customer` where name like "%'.$keyword.'%" or phone like "%'.$keyword.'%" limit 20';
-			$query = $db->query($sql);
-			$html = '';
-			while ($customer = $query->fetch()) {
-				$html .= '<div class="hr"><div class="item_suggest item_suggest2" onclick="parseKeyword(\''.$customer['name'].'\', \''.$customer['phone'].'\')">' . $customer['name'] . ' <br>' . $customer['phone'] . '</div><div class="item_suggest3" onclick="editCustomer('. $customer['id'] .')"> <p class="btn btn-info btn-xs"> sửa </p> </div></div><div style="clear: both;"></div>';
-			}
-			$result['status'] = 1;
-			$result['html'] = $html;
-
-		break;
-		case 'change_data':
-			$page = $nv_Request->get_int('page', 'post/get', 0);
-			$keyword = $nv_Request->get_string('keyword', 'post/get', "");
-			$id = $nv_Request->get_int('id', 'post/get', 0);
-
-			$result['status'] = 1;
-			$result["html"] = user_vaccine($keyword);
-		break;
-		case 'search':
-			$keyword = $nv_Request->get_string('keyword', 'get/post', '');
-
-			$result['status'] = 1;
-			$result['html'] = user_vaccine($keyword);
-		break;
-		case 'search-all':
-			$keyword = $nv_Request->get_string('keyword', 'get/post', '');
-			$_POST['page'] = 'search-all';
-
-			$result['status'] = 1;
-			$result['html'] = user_vaccine($keyword);
-		break;
-		case 'change_custom':
-		$id = $nv_Request->get_string('cid', 'post/get', "");
-		$name = $nv_Request->get_string('name', 'post/get', "");
-		$phone = $nv_Request->get_string('phone', 'post/get', "");
-		$address = $nv_Request->get_string('address', 'post/get', "");
-		$keyword = $nv_Request->get_string('keyword', 'post/get', "");
-
-		if (!empty($name) && !empty($phone)) {
-				$sql = "update `" . VAC_PREFIX . "_customer` set name = '$name', phone = '$phone', address = '$address' where id = $id";
-				$query = $db->query($sql);
-				if ($query) {
-					$result["status"] = 1;
-					$result["notify"] = $lang_module["saved"];
-					$result["list"] = user_vaccine();
-				}
-		}
-		break;
-		case 'get_miscustom':
-			$id = $nv_Request->get_string('id', 'post/get', "");
-
-			if (!empty($id)) {
-				$sql = "select a.* from `" . VAC_PREFIX . "_customer` a inner join `" . VAC_PREFIX . "_pet` b on a.id = b.customerid inner join `" . VAC_PREFIX . "_vaccine` c on b.id = c.petid where c.id = '$id'";
-				$query = $db->query($sql);
-				$custom = $query->fetch();
-				if ($custom) {
-					$result["status"] = 1;
-					$result["id"] = $custom["id"];
-					$result["name"] = $custom["name"];
-					$result["phone"] = $custom["phone"];
-					$result["address"] = $custom["address"];
-				}
-			}
-		break;
-		case 'miscustom':
-			$id = $nv_Request->get_string("vacid", "get/post", "");
-			if (!empty($id)) {
-				$sql = "select * from `" . VAC_PREFIX . "_vaccine` where id = $id";
-				$vac_query = $db->query($sql);
-				$vac = $vac_query->fetch();
-
-				$sql = "select * from `" . VAC_PREFIX . "_pet` where id = $vac[petid]";
-				$pet_query = $db->query($sql);
-				$pet = array();
-				$customerid = 0;
-				while ($row = $pet_query->fetch()) {
-					$customerid = $row["customerid"];
-					$pet[] = $row["id"];
-				}
-				$pet = implode(", ", $pet);
-
-				$sql = "delete from `" . VAC_PREFIX . "_customer` where id = $customerid";
-				$custom_query = $db->query($sql);
-
-				$sql = "delete from `" . VAC_PREFIX . "_spa` where customerid = $customerid";
-				$spa_query = $db->query($sql);
-				
-				if (!empty($pet)) {
-					$sql = "delete from `" . VAC_PREFIX . "_pet` where id in ($pet)";
-					$pet_query = $db->query($sql);
-					
-					$sql = "delete from `" . VAC_PREFIX . "_vaccine` where petid in ($pet)";
-					$vac_query = $db->query($sql);
-					
-					$sql = "delete from `" . VAC_PREFIX . "_usg` where petid in ($pet)";
-					$usg_query = $db->query($sql);
-					
-					$sql = "select * from `" . VAC_PREFIX . "_treat` where id = $id";
-					$treat_query = $db->query($sql);
-					$treat = array();
-					while ($row = $treat_query->fetch()) {
-						$treat[] = $row;
-					}
-					$treat = implode(", ", $treat);
-
-					$sql = "delete from `" . VAC_PREFIX . "_treat` where petid in ($pet)";
-					$treat_query = $db->query($sql);
-
-					if (!empty($treat)) {
-						$sql = "delete from `" . VAC_PREFIX . "_treating` where treatid in ($treat)";
-						$treat_query = $db->query($sql);
-					}
-				}
-				
-				if ($custom_query) {
-					$result["status"] = 1;
-					$result["list"] = user_vaccine();
-				}
-			}
-			break;
-		case 'deadend':
-			$id = $nv_Request->get_string("vacid", "get/post", "");
-			if (!empty($id)) {
-				$sql = "select * from `" . VAC_PREFIX . "_vaccine` where id = $id";
-				$vac_query = $db->query($sql);
-				$vac = $vac_query->fetch();
-
-				$sql = "select * from `" . VAC_PREFIX . "_pet` where id = $vac[petid]";
-				$pet_query = $db->query($sql);
-				$pet = array();
-				while ($row = $pet_query->fetch()) {
-					$pet[] = $row["id"];
-				}
-				$pet = implode(", ", $pet);
-
-				if (!empty($pet)) {
-					$sql = "delete from `" . VAC_PREFIX . "_pet` where id in ($pet)";
-					$pet_query = $db->query($sql);
-					
-					$sql = "delete from `" . VAC_PREFIX . "_vaccine` where petid in ($pet)";
-					$vac_query = $db->query($sql);
-					
-					$sql = "delete from `" . VAC_PREFIX . "_usg` where petid in ($pet)";
-					$usg_query = $db->query($sql);
-					
-					$sql = "select * from `" . VAC_PREFIX . "_treat` where id = $id";
-					$treat_query = $db->query($sql);
-					$treat = array();
-					while ($row = $treat_query->fetch()) {
-						$treat[] = $row;
-					}
-					$treat = implode(", ", $treat);
-
-					$sql = "delete from `" . VAC_PREFIX . "_treat` where petid in ($pet)";
-					$treat_query = $db->query($sql);
-
-					if (!empty($treat)) {
-						$sql = "delete from `" . VAC_PREFIX . "_treating` where treatid in ($treat)";
-						$treat_query = $db->query($sql);
-					}
-					if ($pet_query) {
-						$result["status"] = 1;
-						$result["list"] = user_vaccine();
-					}
-				}
-			}
-		break;
-    case 'save':
-      $recall = $nv_Request->get_string('recall', 'post', '');
-      $doctor = $nv_Request->get_string('doctor', 'post', '');
-      $vacid = $nv_Request->get_string('vacid', 'post', '');
-      $diseaseid = $nv_Request->get_string('diseaseid', 'post', '');
-      $petid = $nv_Request->get_string('petid', 'post', '');
-
-      if (!(empty($petid) || empty($recall) || empty($doctor) || empty($vacid)) && $diseaseid >= 0) {
-        $cometime = strtotime(date('Y/m/d'));
-        $calltime = totime($recall);
-
-        $sql = "select * from `" . VAC_PREFIX . "_vaccine` where id = $vacid";
-        $query = $db->query($sql);
-        $vaccine = $query->fetch();
-
-        $sql = "update `" . VAC_PREFIX . "_vaccine` set status = 2, recall = $calltime, calltime = $calltime, doctorid = $doctor where id = $vacid";
-        // die($sql);
+      $sql = 'select * from `'. VAC_PREFIX .'_customer` where id = '. $id;
+      $query = $db->query($sql);
+      if (!empty($row = $query->fetch())) {
+        $result['status'] = 1;
+        $result['data'] = $row;
+      }
+    break;
+    case 'edit-customer':
+      // kiểm tra thông tin số điện thoại người dùng, nếu có, báo lỗi, nếu không, cập nhật
+      $id = $nv_Request->get_int('id', 'post');
+      $data = $nv_Request->get_array('data', 'post');
+      
+      $sql = 'select * from `'. VAC_PREFIX .'_customer` where id <> '. $id .' and phone = "'. $data['phone'] . '"';
+      $query = $db->query($sql);
+      if (!empty($row = $query->fetch())) {
+        // Có sđt, báo lỗi
+        $result['data'] = 2;
+      }
+      else {
+        // cập nhật
+        $sql = "update `" . VAC_PREFIX . "_customer` set name = '$data[name]', phone = '$data[phone]', address = '$data[address]' where id = $id";
         if ($db->query($sql)) {
-          $result["status"] = 1;
-          $result["data"]["html"] = user_vaccine();
-        }
-
-        if ($vaccine["recall"]) {
-          $sql = "insert into `" . VAC_PREFIX . "_vaccine` (petid, diseaseid, cometime, calltime, status, note, recall, doctorid, ctime) values ($petid, $diseaseid, $cometime, $calltime, 0, '', 0, 0, " . time() . ")";
-          $db->query($sql);
+          $result['status'] = 1;
         }
       }
+    break;
+    case 'customer-suggest':
+      $keyword = $nv_Request->get_string('keyword', 'get/post', '');
+
+      $sql = 'select * from `'. VAC_PREFIX .'_customer` where name like "%'.$keyword.'%" or phone like "%'.$keyword.'%" limit 20';
+      $query = $db->query($sql);
+      $html = '';
+      while ($customer = $query->fetch()) {
+        $html .= '<div class="hr"><div class="item_suggest item_suggest2" onclick="parseKeyword(\''.$customer['phone'].'\')">' . $customer['name'] . ' <br>' . $customer['phone'] . '</div><div class="item_suggest3" onclick="editCustomer('. $customer['id'] .')"> <p class="btn btn-info btn-xs"> sửa </p> </div></div><div style="clear: both;"></div>';
+      }
+      $result['status'] = 1;
+      $result['html'] = $html;
+    break;
+    case 'search-all':
+      $result['status'] = 1;
+      $result['html'] = vaccineSearchAll();
+    break;
+    case 'change_custom':
+    $id = $nv_Request->get_string('cid', 'post/get', "");
+    $name = $nv_Request->get_string('name', 'post/get', "");
+    $phone = $nv_Request->get_string('phone', 'post/get', "");
+    $address = $nv_Request->get_string('address', 'post/get', "");
+    $keyword = $nv_Request->get_string('keyword', 'post/get', "");
+
+    if (!empty($name) && !empty($phone)) {
+        $sql = "update `" . VAC_PREFIX . "_customer` set name = '$name', phone = '$phone', address = '$address' where id = $id";
+        $query = $db->query($sql);
+        if ($query) {
+          $result["status"] = 1;
+          $result["notify"] = $lang_module["saved"];
+          $result["list"] = user_vaccine();
+        }
+    }
+    break;
+    case 'customer-remind':
+      $name = $nv_Request->get_string('name', 'post', '');
+      $type = $nv_Request->get_int('type', 'post', '');
+
+      if ($type) {
+        $list = getcustomer('', $name);
+      }
+      else {
+        $list = getcustomer($name, '');
+      }
+
+      $html = '';
+      foreach ($list as $customer) {
+        $html .= '<div class="hr"><div class="item_suggest item_suggest2" onclick="selectCustomer('. $customer['id'] .', \''.$customer['name'].'\', \''.$customer['phone'].'\', `'. petOption($customer['id']) .'`)">' . $customer['name'] . ' <br>' . $customer['phone'] . '</div></div><div style="clear: both;"></div>';
+      }
+      $result["status"] = 1;
+      $result["html"] = $html;
+    break;
+    case 'insert-pet':
+      $name = $nv_Request->get_string('name', 'post', '');
+      $id = $nv_Request->get_int('id', 'post', '');
+
+      $sql = "insert into `". VAC_PREFIX ."_pet` (name, customerid) values('$name', $id)";
+      $db->query($sql);
+
+      $result["status"] = 1;
+      $result["id"] = $id;
+      $result["html"] = petOption($id);
+    break;
+    case 'insert-vaccine':
+      $data = $nv_Request->get_array('data', 'post');
+
+      // chuyển loại thời gian
+      $data['cometime'] = totime($data['cometime']);
+      $data['calltime'] = totime($data['calltime']);
+      // kiểm tra $data, nếu customer trống, thêm khách hàng mới
+      if (empty($data['customer'])) {
+        $sql = "insert into `" . VAC_PREFIX . "_customer` (name, phone, address) values ('$data[name]', '$data[phone]', '$data[address]');";
+        $db->query($sql);
+        $data['customer'] = $db->lastInsertId();
+
+        // thêm thú cưng mặc định
+        $sql = "insert into `" . VAC_PREFIX . "_pet` (name, customerid) values ('Chưa đặt tên', $data[customer]);";
+        $db->query($sql);
+        $data['pet'] = $db->lastInsertId();
+      }
+
+      // kiểm tra phiếu vaccine trước đó 
+      // nếu có, cập nhật trạng thái
+      $sql = "select * from " . VAC_PREFIX . "_vaccine where petid = $data[pet] order by id desc limit 1";
+      $query = $db->query($sql);
+      if ($row = $query->fetch()) {
+        $sql = "update " . VAC_PREFIX . "_vaccine set status = 2, recall = $data[calltime] where id = $row[id]";
+        $db->query($sql);
+      }
+          
+      // thêm phiếu vaccine
+      $sql = "insert into `" . VAC_PREFIX . "_vaccine` (petid, cometime, calltime, doctorid, note, status, diseaseid, recall, ctime) values ($data[pet], $data[cometime], $data[calltime], $data[doctor], '$data[note]', 0, $data[disease], 0, " . time() . ");";
+      $query = $db->query($sql);
+      $id = $db->lastInsertId();
+
+      if (!empty($data['phone'])) {
+        $sql = "update `" . VAC_PREFIX . "_customer` set name = '$data[name]', address = '$data[address]' where phone = '$data[phone]'";
+        $db->query($sql);
+      }
+      $result['status'] = 1;
+      $result['html'] = vaccineContent();
       break;
-	}
-	echo json_encode($result);
-	die();
+      case 'change-status':
+        $id = $nv_Request->get_int('id', 'post');
+        $type = $nv_Request->get_int('type', 'post');
+
+        $sql = "update `". VAC_PREFIX ."_vaccine` set status = ". ($filter['status'] + ($type ? 1 : -1)) ." where id = " . $id;
+        $db->query($sql);
+        $result['status']  = 1;
+        $result['html'] = vaccineContent();
+      break;
+      case 'edit-note':
+        $id = $nv_Request->get_int('id', 'post');
+        $text = $nv_Request->get_string('text', 'post');
+
+        $sql = "update `". VAC_PREFIX ."_vaccine` set note = '$text' where id = " . $id;
+        $db->query($sql);
+        $result['status'] = 1;
+      break;
+  }
+  echo json_encode($result);
+  die();
 }
 quagio();
 // initial
@@ -248,25 +175,25 @@ $page_title = $lang_module["main_title"];
 $xtpl->assign("lang", $lang_module);
 $xtpl->assign("nv", $module_name);
 $xtpl->assign("op", $op);
-// page
-$page = $nv_Request->get_string('page', 'get', '');
-$xtpl->assign("page", $page);
+
+$xtpl->assign("page", $filter['page']);
+$xtpl->assign("status", $filter['status']);
 // keyword
 $keyword = $nv_Request->get_string('keyword', 'get', '');
 $xtpl->assign("keyword", $keyword);
 // // status
 
 foreach ($lang_module["vacstatusname"] as $key => $value) {
-	if (!$key) {
-		$check = "btn-info";
-	}
-	else {
-		$check = "";
-	}
-	$xtpl->assign("check", $check);
-	$xtpl->assign("ipd", $key);
-	$xtpl->assign("vsname", $value);
-	$xtpl->parse("main.filter");
+  if ($key == $filter['status']) {
+    $check = "btn-info";
+  }
+  else {
+    $check = "btn-default";
+  }
+  $xtpl->assign("check", $check);
+  $xtpl->assign("ipd", $key);
+  $xtpl->assign("vsname", $value);
+  $xtpl->parse("main.filter");
 }
 // doctor
 $sql = "select * from " . VAC_PREFIX . "_doctor";
@@ -277,10 +204,8 @@ while($row = $query->fetch()) {
   $xtpl->parse("main.doctor");
 }
 
-$list = user_vaccine();
-$xtpl->assign("content", $list);
 $xtpl->assign("modal", vaccineModal());
-
+$xtpl->assign('content', vaccineContent());
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 

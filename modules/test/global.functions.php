@@ -712,9 +712,9 @@ function getvaccustomer($customer, $fromtime, $amount_time, $sort, $diseaseid, $
 function getcustomer($customer, $phone) {
   global $db, $db_config, $module_name;
   if (!empty($customer)) {
-    $sql = "select * from `" . VAC_PREFIX . "_customer` where name like '%$customer%' limit 50";
+    $sql = "select * from `" . VAC_PREFIX . "_customer` where name like '%$customer%' limit 20";
   } else {
-    $sql = "select * from `" . VAC_PREFIX . "_customer` where phone like '%$phone%' limit 50";
+    $sql = "select * from `" . VAC_PREFIX . "_customer` where phone like '%$phone%' limit 20";
   }
 
   $result = $db->query($sql);

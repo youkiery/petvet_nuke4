@@ -2,19 +2,14 @@
 <table class="table table-bordered">
   <thead class="sticky-header">
     <tr>
-      <th colspan="9" class="vng_vacbox_title" style="text-align: center">
-        {title}
-      </th>
-    </tr>
-    <tr>
       <th>
-        {lang.customer}
+        Họ tên
       </th>
       <th>
         {lang.phone}
       </th>
       <th>
-        {lang.disease}
+        Tiêm phòng
       </th>
       <th>
         {lang.vaccall}
@@ -36,42 +31,38 @@
       {calltime}
     </td>
   </tr>
-  <tr>
-    <td colspan="4" style="position: relative;">
-      <button class="btn left btn-sm" style="position: absolute; left: 0;"
-        onclick="confirm_lower({index}, {vacid}, {petid}, {diseaseid})">
+  <tr class="{brickcolor}">
+    <td colspan="2">
+      <!-- BEGIN: note -->
+      {note}
+      <!-- END: note -->
+      <!-- BEGIN: note2 -->
+      <span id="note_{vacid}">
+        {note}
+      </span>
+      <img class="mini-icon right" src="/themes/default/images/vaccine/note_add.png" alt="thêm ghi chú"
+        onclick="editNote({vacid})">
+      <!-- END: note2 -->
+    </td>
+    <td colspan="2" style="position: relative;">
+      <!-- BEGIN: left -->
+      <button class="btn btn-default btn-xs vaccine-left"
+        onclick="changeStatus({vacid}, 0)">
         &lt;
       </button>
-      <button class="btn right" style="position: absolute; right: 0;"
-        onclick="confirm_upper({index}, {vacid}, {petid}, {diseaseid})">
+      <!-- END: left -->
+      <!-- BEGIN: right -->
+      <button class="btn btn-default btn-xs vaccine-right"
+        onclick="changeStatus({vacid}, 1)">
         &gt;
       </button>
+      <!-- END: right -->
       <div style="clear: both;"></div>
-      <p class="text-center" id="vac_confirm_{diseaseid}_{index}">
-        Tình trạng:
-        <span style="color: {color};">
+      <p class="text-center">
+        <span class="text-{color}">
           {confirm}
         </span>
       </p>
-      <!-- BEGIN: recall_link -->
-      <button class="btn btn-info" id="recall_{index}" data-toggle="modal" data-target="#vaccinedetail"
-        onclick="recall({index}, {vacid}, {petid}, {diseaseid})">
-        {lang.recall}
-      </button>
-      <!-- END: recall_link -->
-    </td>
-  </tr>
-  <tr class="note" style="display: {cnote}" id="note_{diseaseid}_{vacid}">
-    <td colspan="9" id="note_v{diseaseid}_{vacid}">
-      {note}
-      <button class="btn btn-info right" onclick="deadend({vacid})">
-        {lang.deadend}
-      </button>
-      <button class="btn btn-info right" onclick="miscustom({vacid})">
-        {lang.miscustom}
-      </button>
-      <img class="mini-icon right" src="/themes/default/images/vaccine/note_add.png" alt="thêm ghi chú"
-        onclick="editNote({vacid}, {diseaseid})">
     </td>
   </tr>
   <!-- END: row -->

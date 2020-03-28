@@ -167,245 +167,6 @@ function overflowList($data = array()) {
 	return $xtpl->text();
 }
 
-// function usgRecallList() {
-// 	global $db, $filter, $lang_module, $order, $sort, $page, $status, $link, $filter_data, $vacconfigv2;
-// 	$xtpl = new XTemplate("recall-list.tpl", PATH2);
-// 	$xtpl->assign("lang", $lang_module);	
-
-// 	// if (empty($status)) $status = 0;
-
-// 	// $status_color = array("red", "yellow", "green", "gray");
-// 	// $status_list = array(0 => 'Chưa Gọi', 'Đã Gọi');
-
-// 	// $now = time();
-// 	// if (empty($vacconfigv2['usg_filter'])) $vacconfigv2['usg_filter'] = 60 * 60 * 24 * 28;
-// 	// $from = $now - $vacconfigv2['usg_filter'];
-// 	// $end = $now + $vacconfigv2['usg_filter'];
-
-// 	// foreach ($status_list as $statusid => $statusname) {
-// 	// 	if ($status == $statusid) $xtpl->assign('recall_select', 'btn-info');
-// 	// 	else $xtpl->assign('recall_select', 'btn-default');
-// 	// 	$filter_data['status'] = $statusid;
-// 	// 	$xtpl->assign('recall_link', "?" . http_build_query($filter_data));
-// 	// 	$xtpl->assign('recall_name', $statusname);
-// 	// 	$xtpl->parse('main.button');
-// 	// }
-
-// 	// $index = 1;
-// 	// $where = "where (c.name like '%$filter_data[keyword]%' or c.phone like '%$filter_data[keyword]%')";
-	
-// 	// $xtpl->assign("bgcolor", 'redbg');
-// 	// if ($status < 2) {
-// 	// 	$sql = 'select a.id, a.cometime, a.calltime, a.status, a.image, a.note, a.birthday, a.birth, a.expectbirth, a.doctorid, b.id as petid, b.name as petname, c.name as customer, c.phone from `' . VAC_PREFIX . '_usg` a inner join `' . VAC_PREFIX . '_pet` b on a.status = '. $status .' and a.petid = b.id inner join `' . VAC_PREFIX . '_customer` c on b.customerid = c.id '. $where .' and calltime < '. $from .' order by a.calltime desc';
-// 	// 	// die($sql);
-// 	// 	$query = $db->query($sql);
-// 	// 	while ($row = $query->fetch()) {
-// 	// 		$xtpl->assign("index", $index ++);
-// 	// 		$xtpl->assign("id", $row["id"]);
-// 	// 		$xtpl->assign("status_type", $row["status"]);
-// 	// 		$xtpl->assign("image", $row["image"]);
-// 	// 		$xtpl->assign("petname", $row["petname"]);
-// 	// 		$xtpl->assign("customer", $row["customer"]);
-// 	// 		$xtpl->assign("phone", $row["phone"]);
-// 	// 		$xtpl->assign("petid", $row["petid"]);
-// 	// 		$xtpl->assign("note", $row["note"]);
-// 	// 		$xtpl->assign("exbirth", $row["expectbirth"]);
-// 	// 		$xtpl->assign("birth", $row["birth"]);
-// 	// 		$xtpl->assign("sieuam", date("d/m/Y", $row["cometime"]));
-// 	// 		$xtpl->assign("dusinh", date("d/m/Y", $row["calltime"]));
-// 	// 		$xtpl->assign("color", $status_color[$row["status"]]);
-// 	// 		if (!empty($status_color[$row["status"]])) {
-// 	// 			$color = $status_color[$row["status"]];
-// 	// 		}
-// 	// 		else {
-// 	// 			$color = $status_color[0];
-// 	// 		}
-// 	// 		if ($row["status"] == 2) {
-// 	// 			$xtpl->assign("birth", $row["birth"]);
-// 	// 			$xtpl->parse("main.list.birth");
-// 	// 		}
-// 	// 		$xtpl->assign("status", $lang_module["confirm_value2"][$row["status"]]);
-// 	// 		$xtpl->assign("color", $color);
-// 	// 		$xtpl->parse("main.list");
-// 	// 		$xtpl->parse("main.row");
-// 	// 	}
-// 	// }
-
-// 	// $sql = "select a.id, a.cometime, a.calltime, a.status, a.image, a.note, a.birthday, a.birth, a.expectbirth, a.doctorid, b.id as petid, b.name as petname, c.name as customer, c.phone from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.status = $status and a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id $where and (calltime between $from and $end) order by a.calltime desc";
-// 	// // die($sql);
-// 	// $query = $db->query($sql);
-
-// 	// $xtpl->assign("bgcolor", '');
-// 	// while ($row = $query->fetch()) {
-// 	// 	$xtpl->assign("index", $index ++);
-// 	// 	$xtpl->assign("id", $row["id"]);
-// 	// 	$xtpl->assign("status_type", $row["status"]);
-// 	// 	$xtpl->assign("image", $row["image"]);
-// 	// 	$xtpl->assign("petname", $row["petname"]);
-// 	// 	$xtpl->assign("customer", $row["customer"]);
-// 	// 	$xtpl->assign("phone", $row["phone"]);
-// 	// 	$xtpl->assign("petid", $row["petid"]);
-// 	// 	$xtpl->assign("note", $row["note"]);
-// 	// 	$xtpl->assign("exbirth", $row["expectbirth"]);
-// 	// 	$xtpl->assign("birth", $row["birth"]);
-// 	// 	$xtpl->assign("sieuam", date("d/m/Y", $row["cometime"]));
-// 	// 	$xtpl->assign("dusinh", date("d/m/Y", $row["calltime"]));
-// 	// 	$xtpl->assign("color", $status_color[$row["status"]]);
-// 	// 	if (!empty($status_color[$row["status"]])) {
-// 	// 		$color = $status_color[$row["status"]];
-// 	// 	}
-// 	// 	else {
-// 	// 		$color = $status_color[0];
-// 	// 	}
-// 	// 	if ($row["status"] == 2) {
-// 	// 		$xtpl->assign("birth", $row["birth"]);
-// 	// 		$xtpl->parse("main.list.birth");
-// 	// 	}
-// 	// 	$xtpl->assign("status", $lang_module["confirm_value2"][$row["status"]]);
-// 	// 	$xtpl->assign("color", $color);
-// 	// 	$xtpl->parse("main.list");
-// 	// 	$xtpl->parse("main.row");
-// 	// }
-
-// 	$xtpl->parse("main");
-// 	return $xtpl->text("main");
-// }
-
-// function usgVaccineList() {
-// 	global $db, $filter, $lang_module, $order, $sort, $page, $status, $link, $filter_data, $vacconfigv2;
-// 	// initial
-// 	$xtpl = new XTemplate("vaccine-list.tpl", PATH2);
-// 	$xtpl->assign("lang", $lang_module);
-
-// 	$status_list = array(0 => 'Chưa Gọi', 'Đã Gọi', 'Đã tiêm');
-
-// 	foreach ($status_list as $statusid => $statusname) {
-// 		if ($status == $statusid) $xtpl->assign('recall_select', 'btn-info');
-// 		else $xtpl->assign('recall_select', 'btn-default');
-// 		$filter_data['status'] = $statusid;
-// 		$xtpl->assign('recall_link', "?" . http_build_query($filter_data));
-// 		$xtpl->assign('recall_name', $statusname);
-// 		$xtpl->parse('main.button');
-// 	}
-
-// 	$now = strtotime(date("y-m-d"));
-// 	$index = 1;
-// 	// filter type
-// 	$time = $vacconfigv2["usg_filter"];
-// 	if (empty($time)) {
-// 	  $time = 60 * 60 * 24 * 30;
-// 	}
-// 	$from = $now - $time;
-// 	$end = $now + $time;
-// 	// doctor
-// 	$sql = "select * from " . VAC_PREFIX . "_doctor";
-// 	$query = $db->query($sql);
-// 	$doctor = array();
-// 	while ($doctor_row = $query->fetch()) {
-// 	  $doctor[$doctor_row["id"]] = $doctor_row["name"];
-// 	}
-  
-// 	// update filter
-// 	// update_usg_filter($filter, $limit);
-  
-// 	// filter sql
-
-// 	$where = "where (c.name like '%$filter_data[keyword]%' or c.phone like '%$filter_data[keyword]%') and a.vaccine = $status and a.birthday > 0";
-// 	// list
-
-// 	if ($status < 2) {
-// 		$sql = "select a.id, a.birthday, a.birth, a.expectbirth, a.firstvac, a.recall, a.vaccine, a.doctorid, b.id as petid, b.name as petname, c.name as customer, c.phone from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id $where and (cbtime < $from) order by birthday";
-// 		$query = $db->query($sql);
-	
-// 		$xtpl->assign("bgcolor", "redbg");
-// 		while ($usg_row = $query->fetch()) {
-// 			if ($usg_row["doctorid"]) {
-// 			  $usg_row["doctor"] = $doctor[$usg_row["doctorid"]];
-// 			}
-// 			else {
-// 			  $usg_row["doctor"] = "";
-// 			}
-// 			$xtpl->assign("index", $index);
-// 			$xtpl->assign("id", $usg_row["id"]);
-// 			$xtpl->assign("confirm", $lang_module["confirm_" . $usg_row["vaccine"]]);
-// 			switch ($usg_row["vaccine"]) {
-// 			  case '1':
-// 				$xtpl->assign("color", "yellow");
-// 				break;
-// 			  case '2':
-// 				$xtpl->assign("color", "green");
-// 				break;
-// 			  case '4':
-// 				$xtpl->assign("color", "gray");
-// 				break;
-// 			  default:
-// 				$xtpl->assign("color", "red");
-// 			}
-		
-// 			$xtpl->assign("petid", $usg_row["petid"]);
-// 			$xtpl->assign("petname", $usg_row["petname"]);
-// 			$xtpl->assign("customer", $usg_row["customer"]);
-// 			$xtpl->assign("phone", $usg_row["phone"]);
-// 			$xtpl->assign("doctor", $usg_row["doctor"]);
-// 			$xtpl->assign("exbirth", $usg_row["expectbirth"]);
-// 			$xtpl->assign("birth", $usg_row["birth"]);
-// 			$xtpl->assign("birthday", date("d/m/Y", $usg_row["birthday"]));
-// 			$xtpl->assign("vacday", date("d/m/Y", $usg_row["firstvac"]));
-// 			if ($usg_row["vaccine"] > 1) {
-// 			  $xtpl->parse("main.list.recall_link");
-// 			}
-// 			$xtpl->parse("main.list");
-// 			$index ++;
-// 		}
-// 	}
-
-// 	$sql = "select a.id, a.birthday, a.birth, a.expectbirth, a.firstvac, a.recall, a.vaccine, a.doctorid, b.id as petid, b.name as petname, c.name as customer, c.phone from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id $where and (cbtime between $from and $end) order by birthday";
-// 	$query = $db->query($sql);
-  
-// 	$xtpl->assign("bgcolor", "");
-// 	while ($usg_row = $query->fetch()) {
-// 	  if ($usg_row["doctorid"]) {
-// 		$usg_row["doctor"] = $doctor[$usg_row["doctorid"]];
-// 	  }
-// 	  else {
-// 		$usg_row["doctor"] = "";
-// 	  }
-// 	  $xtpl->assign("index", $index);
-// 	  $xtpl->assign("id", $usg_row["id"]);
-// 	  $xtpl->assign("confirm", $lang_module["confirm_" . $usg_row["vaccine"]]);
-// 	  switch ($usg_row["vaccine"]) {
-// 		case '1':
-// 		  $xtpl->assign("color", "yellow");
-// 		  break;
-// 		case '2':
-// 		  $xtpl->assign("color", "green");
-// 		  break;
-// 		case '4':
-// 		  $xtpl->assign("color", "gray");
-// 		  break;
-// 		default:
-// 		  $xtpl->assign("color", "red");
-// 	  }
-  
-// 	  $xtpl->assign("petid", $usg_row["petid"]);
-// 	  $xtpl->assign("petname", $usg_row["petname"]);
-// 	  $xtpl->assign("customer", $usg_row["customer"]);
-// 	  $xtpl->assign("phone", $usg_row["phone"]);
-// 	  $xtpl->assign("doctor", $usg_row["doctor"]);
-// 	  $xtpl->assign("exbirth", $usg_row["expectbirth"]);
-// 	  $xtpl->assign("birth", $usg_row["birth"]);
-// 	  $xtpl->assign("birthday", date("d/m/Y", $usg_row["birthday"]));
-// 	  $xtpl->assign("vacday", date("d/m/Y", $usg_row["firstvac"]));
-// 	  if ($usg_row["vaccine"] > 1) {
-// 		$xtpl->parse("main.list.recall_link");
-// 	  }
-// 	  $xtpl->parse("main.list");
-// 	  $index ++;
-// 	}
-// 	$xtpl->parse("main");
-// 	return $xtpl->text();
-// }
-
 function usgManageList() {
 	global $db, $filter, $lang_module, $order, $sort, $page, $status, $link, $filter_data, $vacconfigv2;
 	$xtpl = new XTemplate("manage-list.tpl", PATH2);
@@ -570,15 +331,19 @@ function usgVaccineList($filter) {
 }
 
 function vaccineModal() {
-	global $db, $lang_module;
+  global $db, $lang_module, $vacconfigv2;
 	$xtpl = new XTemplate('modal.tpl', PATH2);
 	$xtpl->assign('lang', $lang_module);
 	$sql = "select * from " . VAC_PREFIX . "_doctor";
-	$query = $db->query($sql);
+  $query = $db->query($sql);
+  
+  $xtpl->assign("now", date('d/m/Y'));
+  $xtpl->assign("calltime", date('d/m/Y', time() + $vacconfigv2['recall']));
 	while($row = $query->fetch()) {
 	  $xtpl->assign("doctorid", $row["id"]);
 	  $xtpl->assign("doctorname", $row["name"]);
 	  $xtpl->parse("main.doctor");
+	  $xtpl->parse("main.doctor2");
 	}
 
 	$diseases = getDiseaseList();
@@ -590,4 +355,124 @@ function vaccineModal() {
   
 	$xtpl->parse('main');
 	return $xtpl->text();
+}
+
+function vaccineList($vaclist, $overdate = 0, $search = 0) {
+  global $db, $module_info, $module_file, $lang_module, $nv_Request, $vacconfigv2, $filter;
+  // initial
+  $xtpl = new XTemplate("list.tpl", PATH2);
+  $xtpl->assign("lang", $lang_module);
+  $now = strtotime(date("Y-m-d"));
+  $color = array('1' => 'yellow', '2' => 'green', '3' => 'gray');
+  $diseases = getDiseaseData();
+
+  $xtpl->assign('brickcolor', '');
+  if ($overdate) {
+    $xtpl->assign('brickcolor', 'orange');
+  }
+
+  foreach ($vaclist as $row) {
+    $pet = selectPetId($row['petid']);
+    $customer = selectCustomerId($pet['customerid']);
+
+    $xtpl->assign("petname", $pet["name"]);
+    $xtpl->assign("petid", $row["petid"]);
+    $xtpl->assign("vacid", $row["id"]);
+    $xtpl->assign("customer", $customer["name"]);
+    $xtpl->assign("phone", $customer["phone"]);
+    $xtpl->assign("diseaseid", $row["diseaseid"]);
+    $xtpl->assign("disease", $diseases[$row["diseaseid"]]);
+    $xtpl->assign("note", $row["note"]);
+    $xtpl->assign("confirm", $lang_module["confirm_" . $row["status"]]);
+    if ($search) {
+      $xtpl->parse('main.row.note');
+    }
+    else {
+      $xtpl->parse('main.row.note2');
+      if ($filter['status'] < 2) {
+        $xtpl->parse('main.row.right');
+      }
+      if ($filter['status'] == 1) {
+        $xtpl->parse('main.row.left');
+      }
+    }
+
+    $xtpl->assign("color", "red");
+    if (!empty($color[$row['status']])) {
+      $xtpl->assign("color", $color[$row['status']]);
+    }
+    $xtpl->assign("cometime", date("d/m/Y", $row["cometime"]));
+    if ($filter['status'] == 2) {
+      $xtpl->assign("calltime", date("d/m/Y", $row["recall"]));
+    }
+    else {
+      $xtpl->assign("calltime", date("d/m/Y", $row["calltime"]));
+    }
+    $xtpl->parse("main.row");
+  }
+  $xtpl->parse("main");
+  return $xtpl->text();
+}
+
+function vaccineSearchAll() {
+  global $db, $filter;
+  $sql = "select a.id, a.note, a.recall, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, ctime, a.status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id where (c.name like '%$filter[keyword]%' or c.phone like '%$filter[keyword]%')  order by calltime desc limit 50";
+  $query = $db->query($sql);
+  $list = fetchall($db, $query);
+  return vaccineList($list, 0, 1);
+}
+
+function vaccineContent($keyword = '') {
+  global $db, $vacconfigv2, $filter;
+  // initial
+  $today = strtotime(date("Y-m-d"));
+  $list = array();
+  
+  switch ($filter['page']) {
+    case 1:
+      $end = $today + 60 * 60 * 24;
+      $where = "where ctime between $today and $end and a.status = $filter[status]";
+    break;
+    case 2:
+      $end = $today + 60 * 60 * 24;
+      $where = "where calltime between $today and $end and a.status = $filter[status]";
+    break;
+    default:
+      // filter time
+      $time = $vacconfigv2["filter"];
+      if (empty($time)) {
+        $time = 60 * 60 * 24 * 14;
+      }
+      $from = $today;
+      $end = $today + $time;
+      $where = "where calltime between $from and $end and a.status = $filter[status]";
+  }
+  
+  $sql = "select a.id, a.note, a.recall, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, ctime, a.status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id $where order by calltime";
+  // die($sql);
+  $query = $db->query($sql);
+  $list = fetchall($db, $query);
+  // nếu status = chưa gọi hoặc đã gọi, hiển thị quá hạn
+  if ($filter['status'] < 2) {
+    $sql = "select a.id, a.note, a.recall, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, ctime, a.status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id where calltime < ". $today ." && a.status = $filter[status] order by calltime desc limit 50";
+    // die($sql);
+    $query = $db->query($sql);
+    $list2 = fetchall($db, $query);
+    if (count($list2)) return vaccineList($list2, 1) . vaccineList($list);
+  }
+  return vaccineList($list);
+}
+
+function petOption($id) {
+  global $db;
+
+  $sql = "select * from `". VAC_PREFIX ."_pet` where customerid = " . $id;
+  $query = $db->query($sql);
+  $xtpl = new XTemplate('option.tpl', PATH2);
+  while ($row = $query->fetch()) {
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('value', $row['id']);
+    $xtpl->parse('main');
+  }
+  return $xtpl->text();
 }
