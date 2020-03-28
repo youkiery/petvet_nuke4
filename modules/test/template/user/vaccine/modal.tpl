@@ -206,25 +206,25 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
-                <div class="rows">
-                    <div class="form-group col-3">
+                <div class="form-group rows">
+                    <div class="col-6">
                         <label>Họ tên</label>
                         <div class="relative">
                             <input class="form-control" id="customer_name" type="text" name="customer">
                             <div id="customer_name_suggest" class="suggest"></div>
                         </div>
                     </div>
-                    <div class="form-group col-3">
+                    <div class="col-6">
                         <label>{lang.phone}</label>
                         <div class="relative">
                             <input class="form-control" id="customer_phone" type="number" name="phone">
                             <div id="customer_phone_suggest" class="suggest"></div>
                         </div>
                     </div>
-                    <div class="form-group col-6">
-                        <label>{lang.address}</label>
-                        <input class="form-control" id="customer_address" type="text" name="address">
-                    </div>
+                </div>
+                <div class="rows">
+                    <label>{lang.address}</label>
+                    <input class="form-control" id="customer_address" type="text" name="address">
                 </div>
                 <div class="rows">
                     <div class="form-group col-6">

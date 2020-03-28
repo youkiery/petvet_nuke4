@@ -6,7 +6,7 @@
 <script type="text/javascript"
   src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <script src="/modules/core/js/vhttp.js"></script>
-<script src="/modules/core/js/vremind.js"></script>
+<script src="/modules/core/js/vremind-5.js"></script>
 
 <style>
   .item_suggest2 {
@@ -33,7 +33,7 @@
     color: red;
   }
   .text-yellow {
-    color: yellow;
+    color: orange;
   }
   .text-green {
     color: green;

@@ -18,7 +18,7 @@ var vremind = {
                 suggest.show()
             }, suggestDelay);
         })
-        $(document).on('focus', inputSelector, () => {
+        $(document).on('blur', inputSelector, () => {
             setTimeout(() => {
                 suggest.hide()
             }, suggestDelay);
