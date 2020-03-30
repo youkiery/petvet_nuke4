@@ -26,5 +26,6 @@ $submenu['heal_drug'] = 'Quản lý thuốc & tra cứu';
 $submenu['schedule'] = $lang_module["schedule_title"];
 $submenu['permission'] = 'Phân quyền';
 $submenu['config'] = $lang_module["doctor_config"];
+$submenu['setting'] = 'Cài đặt';
 
-$allow_func = array('main', "disease", "patient", "customer", "doctor", "vaccine", "sieuam", "treat", "spa", "drug", "redrug", "schedule", "config", "heal_drug", 'permission'); 
+$allow_func = array('main', "disease", "patient", "customer", "doctor", "vaccine", "sieuam", "treat", "spa", "drug", "redrug", "schedule", "config", "heal_drug", 'permission', 'setting'); 
