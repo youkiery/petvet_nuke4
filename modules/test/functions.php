@@ -477,3 +477,15 @@ function petOption($id) {
   }
   return $xtpl->text();
 }
+
+function checkPermission($module, $userid) {
+	global $db, $db_config, $module_name;
+	$sql = 'selct * from `'. $db_config['prefix'] .'_'. $module_name .'_setting` where module = "'. $module .'" and userid = ' . $userid;
+	$query = $db->query($sql);
+	$setting = $query->fetch();
+
+	if (empty($setting)) {
+		return 0; 
+	}
+	return $setting['type'];
+}
