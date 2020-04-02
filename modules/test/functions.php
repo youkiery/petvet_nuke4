@@ -489,3 +489,89 @@ function checkPermission($module, $userid) {
 	}
 	return $setting['type'];
 }
+
+function kaizenList($userid = 0) {
+  global $db, $db_config, $user_info, $filter, $module_name, $op;
+  
+  $index = 1;
+  $start = $filter['limit'] * ($filter['page'] - 1);
+  $xtpl = new XTemplate("list.tpl", PATH2);
+  $list = getRowList($userid, $filter['page'], $filter['limit']);
+  $user = getUserList();
+
+  $xtpl->assign('cell_1', 3);
+  $xtpl->assign('cell_2', 2);
+  if (empty($userid)) {
+    $xtpl->assign('cell_1', 2);
+    $xtpl->assign('cell_2', 1);
+  }
+  
+  if (!empty($userid)) {
+    $sql = 'select * from `'. $db_config['prefix'] .'_rider_user` where user_id = ' . $userid . ' and kaizen = 1';
+    $query = $db->query($sql);
+    if ($row = $query->fetch()) {
+      $userid = 0;
+      $xtpl->assign('cell_1', 2);
+      $xtpl->assign('cell_2', 1);
+    }
+  }
+  
+  if (count($list['data'])) {
+    foreach ($list['data'] as $row) {
+      $xtpl->assign('index', ($start + $index++));
+      $xtpl->assign('id', $row['id']);
+      $xtpl->assign('user', $user[$row['userid']]['first_name']);
+      $xtpl->assign('time', date('d/m/Y H:i', $row['edit_time']));
+      $xtpl->assign('problem', $row['problem']);
+      $xtpl->assign('solution', $row['solution']);
+      $xtpl->assign('result', $row['result']);
+      if (empty($userid)) {
+        $xtpl->parse('main.inbox.row.admin');
+      }
+      $xtpl->parse('main.inbox.row');
+    }
+    $xtpl->parse('main.inbox');
+  }
+  else {
+    $xtpl->parse('main.empty');
+  }
+
+  $xtpl->assign('count', $list['count']);
+  $xtpl->assign('nav', nav_generater("/index.php?nv=$module_name&op=$op", $list['count'], $filter['page'], $filter['limit']));
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function getUser($userid) {
+  global $db, $db_config;
+
+  $sql = 'select userid, first_name, last_name from `'. $db_config['prefix'] .'_users` where userid = '. $userid;
+  $query = $db->query($sql);
+
+  if ($row = $query->fetch()) {
+    return $row;
+  }
+  return array('userid' => 0, 'first_name' => '', 'last_name' => '');
+}
+
+function getRowList($userid = 0, $page = 1, $limit = 10) {
+  global $db, $nv_Request, $db_config;
+
+  $sql = 'select count(id) as count from `'. VAC_PREFIX .'_kaizen` where userid = ' . $userid;
+  $query = $db->query($sql);
+  $count = $query->fetch();
+  $sql = 'select * from `'. VAC_PREFIX .'_kaizen` where userid = ' . $userid . ' order by edit_time desc limit ' . $limit . ' offset ' . ($limit * ($page - 1));
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $list[] = $row;
+  }
+  return array('count' => $count['count'], 'data' => $list);
+}
+
+function kaizenModal() {
+  $xtpl = new XTemplate("modal.tpl", PATH2);
+  $xtpl->parse('main');
+  return $xtpl->text();
+}

@@ -38,6 +38,7 @@ $sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_treating`";
 $sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_usg`";
 $sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_usg2`";
 $sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_vaccine`";
+$sql_drop_module[] = "DROP TABLE IF EXISTS `" . VAC_PREFIX . "_kaizen`";
 $sql_create_module = $sql_drop_module;
 // $sql_create_module[] = "CREATE TABLE `" . VAC_PREFIX . "_cfg` (
 //   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -131,6 +132,16 @@ $sql_create_module[] = "CREATE TABLE `". VAC_PREFIX ."_heal_system` (
   `id` int(11) NOT NULL,
   `name` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+
+$sql_create_module[] = "CREATE TABLE `". VAC_PREFIX ."_kaizen` (
+  `id` int(11) NOT NULL,
+  `userid` int(11) NOT NULL,
+  `problem` varchar(500) NOT NULL,
+  `solution` varchar(500) NOT NULL,
+  `result` varchar(500) NOT NULL,
+  `post_time` int(11) NOT NULL,
+  `edit_time` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 
 $sql_create_module[] = "CREATE TABLE `". VAC_PREFIX ."_medicine` (
   `id` int(11) NOT NULL,
@@ -320,6 +331,9 @@ $sql_create_module[] = "ALTER TABLE `". VAC_PREFIX ."_heal_system`
 $sql_create_module[] = "ALTER TABLE `". VAC_PREFIX ."_medicine`
   ADD PRIMARY KEY (`id`)";
 
+$sql_create_module[] = "ALTER TABLE `". VAC_PREFIX ."_kaizen`
+  ADD PRIMARY KEY (`id`)";
+
 $sql_create_module[] = "ALTER TABLE `". VAC_PREFIX ."_pet`
   ADD PRIMARY KEY (`id`)";
 
@@ -387,6 +401,9 @@ $sql_create_module[] = "ALTER TABLE `". VAC_PREFIX ."_heal_medicine`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT";
 
 $sql_create_module[] = "ALTER TABLE `". VAC_PREFIX ."_heal_system`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT";
+
+$sql_create_module[] = "ALTER TABLE `". VAC_PREFIX ."_kaizen`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT";
 
 $sql_create_module[] = "ALTER TABLE `". VAC_PREFIX ."_medicine`

@@ -34,6 +34,9 @@
   border: 1px solid orange;
   display: none;
 }
+a.btn-default {
+  color: #444;
+}
 .msgshow {
   position: fixed;
   top: 0px;

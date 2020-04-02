@@ -2000,4 +2000,28 @@ function totime($time) {
   }
   return $time;
 }
-?>
+
+function getUserList() {
+  global $db, $db_config;
+
+  $sql = 'select userid, first_name, last_name from `'. $db_config['prefix'] .'_users`';
+  $query = $db->query($sql);
+  $list = array();
+
+  while ($row = $query->fetch()) {
+    $list[$row['userid']] = $row;
+  }
+  return $list;
+}
+
+function checkRow($module, $id) {
+  global $db;
+
+  $sql = 'select * from `'. VAC_PREFIX .'_'. $module .'` where id = '. $id;
+  $query = $db->query($sql);
+
+  if ($row = $query->fetch()) {
+    return $row;
+  }
+  return 0;
+}

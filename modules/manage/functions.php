@@ -11,8 +11,6 @@ define('NV_IS_MOD_CONGVAN', true);
 define('PATH', NV_ROOTDIR . "/modules/". $module_file ."/template/user/" . $op);
 include_once(NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php');
 
-
-
 function deviceModal() {
   $xtpl = new XTemplate("device-modal.tpl", PATH);
   $xtpl->parse('main');
