@@ -311,6 +311,17 @@ function nav_generater($url, $number, $page, $limit) {
   return $html;
 }
 
+function preventOutsiter() {
+  global $module_file;
+  $xtpl = new XTemplate('out.tpl', NV_ROOTDIR . '/modules/'. $module_file .'/template/');
+  $xtpl->parse('main');
+  $contents = $xtpl->text();
+
+  include (NV_ROOTDIR . '/includes/header.php');
+  echo nv_site_theme($contents);
+  include (NV_ROOTDIR . '/includes/footer.php');
+}
+
 // include_once(NV_ROOTDIR . "/modules/" . $module_file . "/modal/spa.php");
 // $spa = new Spa();
 // include_once(NV_ROOTDIR . "/modules/" . $module_file . "/modal/doctor.php");

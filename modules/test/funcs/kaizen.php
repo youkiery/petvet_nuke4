@@ -16,8 +16,13 @@ define('MODULE', 'kaizen');
 $page_title = 'Chiến lược Kaizen';
 $filter = array(
 	'page' => $nv_Request->get_int('page', 'get', 1),
-	'limit' => $nv_Request->get_int('limit', 'get', 10)
+	'limit' => $nv_Request->get_int('limit', 'get', 10),
+	'allow' => checkPermission(MODULE, $user_info['userid'])
 );
+
+if (!$filter['allow']) {
+	preventOutsiter();
+}
 
 $action = $nv_Request->get_string('action', 'post/get', '');
 if (!empty($action)) {
@@ -97,4 +102,3 @@ $contents = $xtpl->text('main');
 include ( NV_ROOTDIR . '/includes/header.php' );
 echo nv_site_theme($contents);
 include ( NV_ROOTDIR . '/includes/footer.php' );
-

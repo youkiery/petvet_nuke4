@@ -479,65 +479,69 @@ function petOption($id) {
 }
 
 function checkPermission($module, $userid) {
-	global $db, $db_config, $module_name;
-	$sql = 'selct * from `'. $db_config['prefix'] .'_'. $module_name .'_setting` where module = "'. $module .'" and userid = ' . $userid;
-	$query = $db->query($sql);
-	$setting = $query->fetch();
-
-	if (empty($setting)) {
-		return 0; 
-	}
-	return $setting['type'];
+  global $db, $db_config, $module_name;
+  
+  if (!empty($userid)) {
+    $sql = 'select * from `'. $db_config['prefix'] .'_'. $module_name .'_setting` where module = "'. $module .'" and userid = ' . $userid;
+    $query = $db->query($sql);
+    $setting = $query->fetch();
+    if (!empty($setting)) {
+      return $setting['type'];
+    }
+  }
+  return 0; 
 }
 
-function kaizenList($userid = 0) {
+function kaizenList($userid) {
   global $db, $db_config, $user_info, $filter, $module_name, $op;
   
   $index = 1;
   $start = $filter['limit'] * ($filter['page'] - 1);
   $xtpl = new XTemplate("list.tpl", PATH2);
-  $list = getRowList($userid, $filter['page'], $filter['limit']);
   $user = getUserList();
 
-  $xtpl->assign('cell_1', 3);
-  $xtpl->assign('cell_2', 2);
-  if (empty($userid)) {
-    $xtpl->assign('cell_1', 2);
-    $xtpl->assign('cell_2', 1);
+  $xtra = '';
+  if ($filter['allow'] < 2) {
+    $xtpl->assign('time_cell', 3);
+    $xtra = 'where userid = ' . $userid;
+  }
+  else {
+    $xtpl->assign('time_cell', 2);
+  }
+
+  $sql = 'select count(id) as count from `'. VAC_PREFIX .'_kaizen` ' . $xtra;
+  $query = $db->query($sql);
+  $count = $query->fetch()['count'];
+
+  $sql = 'select * from `'. VAC_PREFIX .'_kaizen` ' . $xtra . ' order by edit_time desc limit ' . $filter['limit'] . ' offset ' . ($filter['limit'] * ($filter['page'] - 1));
+  $query = $db->query($sql);
+  $check = false;
+  
+  while ($row = $query->fetch()) {
+    $check = true;
+    $xtpl->assign('index', ($start + $index++));
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('user', $user[$row['userid']]['first_name']);
+    $xtpl->assign('time', date('d/m/Y H:i', $row['edit_time']));
+    $xtpl->assign('problem', $row['problem']);
+    $xtpl->assign('solution', $row['solution']);
+    $xtpl->assign('result', $row['result']);
+    if ($filter['allow'] > 1) {
+      $xtpl->parse('main.inbox.row.manager');
+      $xtpl->parse('main.inbox.row.manager2');
+    } 
+    $xtpl->parse('main.inbox.row');
   }
   
-  if (!empty($userid)) {
-    $sql = 'select * from `'. $db_config['prefix'] .'_rider_user` where user_id = ' . $userid . ' and kaizen = 1';
-    $query = $db->query($sql);
-    if ($row = $query->fetch()) {
-      $userid = 0;
-      $xtpl->assign('cell_1', 2);
-      $xtpl->assign('cell_2', 1);
-    }
-  }
-  
-  if (count($list['data'])) {
-    foreach ($list['data'] as $row) {
-      $xtpl->assign('index', ($start + $index++));
-      $xtpl->assign('id', $row['id']);
-      $xtpl->assign('user', $user[$row['userid']]['first_name']);
-      $xtpl->assign('time', date('d/m/Y H:i', $row['edit_time']));
-      $xtpl->assign('problem', $row['problem']);
-      $xtpl->assign('solution', $row['solution']);
-      $xtpl->assign('result', $row['result']);
-      if (empty($userid)) {
-        $xtpl->parse('main.inbox.row.admin');
-      }
-      $xtpl->parse('main.inbox.row');
-    }
+  if ($check) {
     $xtpl->parse('main.inbox');
   }
   else {
     $xtpl->parse('main.empty');
   }
 
-  $xtpl->assign('count', $list['count']);
-  $xtpl->assign('nav', nav_generater("/index.php?nv=$module_name&op=$op", $list['count'], $filter['page'], $filter['limit']));
+  $xtpl->assign('count', $count);
+  $xtpl->assign('nav', nav_generater("/index.php?nv=$module_name&op=$op", $count, $filter['page'], $filter['limit']));
 
   $xtpl->parse('main');
   return $xtpl->text();
