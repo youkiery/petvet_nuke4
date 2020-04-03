@@ -116,6 +116,8 @@
           </label>
           <input type="text" class="form-control" id="c_note">
         </div>
+        
+        <!-- BEGIN: manager -->
         <div class="text-center">
           <button class="btn btn-info insert" onclick="insertSubmit()">
             Thêm phiếu
@@ -124,6 +126,7 @@
             Chỉnh sửa thông tin
           </button>
         </div>
+        <!-- END: manager -->
       </div>
     </div>
   </div>

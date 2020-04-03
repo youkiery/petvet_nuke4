@@ -170,6 +170,8 @@ if (!empty($action)) {
 $xtpl = new XTemplate("main.tpl", PATH2);
 $xtpl->assign("lang", $lang_module);
 
+if ($allow > 1) $xtpl->parse('main.manager');
+
 $xtpl->assign("modal", spaModal());
 $xtpl->assign("content", spaList());
 

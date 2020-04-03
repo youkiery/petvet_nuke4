@@ -10,11 +10,13 @@
   {content}
 </div>
 
+<!-- BEGIN: manager -->
 <div class="form-group">
   <button class="btn btn-info" onclick="insertModal()">
     {lang.add}
   </button>
 </div>
+<!-- END: manager -->
 
 <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-storage.js"></script>

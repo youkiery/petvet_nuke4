@@ -581,7 +581,7 @@ function kaizenModal() {
 }
 
 function spaModal() {
-  global $lang_module, $spa_option;
+  global $lang_module, $spa_option, $allow;
   $xtpl = new XTemplate("modal.tpl", PATH2);
   $xtpl->assign('lang', $lang_module);
 
@@ -598,12 +598,13 @@ function spaModal() {
     $xtpl->parse("main.box");
   }
 
+  if ($allow > 1) $xtpl->parse('main.manager');
   $xtpl->parse('main');
   return $xtpl->text();
 }
 
 function spaList() {
-  global $db, $lang_module, $global_config, $module_file;
+  global $db, $lang_module, $global_config, $module_file, $allow;
   $xtpl = new XTemplate("list.tpl", PATH2);
   $xtpl->assign("lang", $lang_module);
   $xtpl->assign("link", "/themes/" . $global_config["site_theme"] . "/images/" . $module_file . "/payment.gif");
@@ -622,21 +623,17 @@ function spaList() {
     $customer_query = $db->query($sql);
     $customer = $customer_query->fetch();
     $xtpl->assign("index", $index ++);
-    if ($row["done"] > 0) {
-      $xtpl->assign("spa_end", date("H:i:s", $row["done"]));
-    }
-    else {
-      $xtpl->assign("spa_end", 'Chưa xong');
-    }
+    if ($row["done"] > 0) $xtpl->assign("spa_end", date("H:i:s", $row["done"])); 
+    else $xtpl->assign("spa_end", 'Chưa xong');
+
     $xtpl->assign("id", $row["id"]);
-    $xtpl->assign("spa_doctor", $doctor[$row["doctorid"]]["name"]);
     $xtpl->assign("customer_name", $customer["name"]);
     $xtpl->assign("customer_number", $customer["phone"]);
     $xtpl->assign("spa_from", date("H:i:s", $row["time"]));
     $xtpl->assign("image", $row["image"]);
-    if (!$row['done']) $xtpl->parse('main.row.complete'); 
-    if (!$row['payment']) $xtpl->parse('main.row.paid'); 
-    else $xtpl->parse('main.row.confirm'); 
+    if ($allow > 1 && !$row['done']) $xtpl->parse('main.row.complete'); 
+    if ($row['payment']) $xtpl->parse('main.row.confirm');
+    else if ($allow > 1) $xtpl->parse('main.row.paid'); 
     $xtpl->parse("main.row");
   }
   $xtpl->parse("main");
