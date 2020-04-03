@@ -579,3 +579,67 @@ function kaizenModal() {
   $xtpl->parse('main');
   return $xtpl->text();
 }
+
+function spaModal() {
+  global $lang_module, $spa_option;
+  $xtpl = new XTemplate("modal.tpl", PATH2);
+  $xtpl->assign('lang', $lang_module);
+
+  $doctor_list = getdoctorlist();
+  foreach ($doctor_list as $doctor) {
+    $xtpl->assign("doctor_value", $doctor["id"]);
+    $xtpl->assign("doctor_name", $doctor["name"]);
+    $xtpl->parse("main.doctor");
+  }
+
+  foreach ($spa_option as $id => $option) {
+    $xtpl->assign("id", $id);
+    $xtpl->assign("name", $option);
+    $xtpl->parse("main.box");
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function spaList() {
+  global $db, $lang_module, $global_config, $module_file;
+  $xtpl = new XTemplate("list.tpl", PATH2);
+  $xtpl->assign("lang", $lang_module);
+  $xtpl->assign("link", "/themes/" . $global_config["site_theme"] . "/images/" . $module_file . "/payment.gif");
+  $status = array("Chưa xong", "Đã xong");
+  $from = strtotime(date("Y-m-d"));
+  $end = $from + 60 * 60 * 24;
+  $index = 1;
+
+  $doctor = getdoctorlist();
+  $doctor[0]['name'] = 'Chưa chọn';
+
+  $sql = "select * from `" . VAC_PREFIX . "_spa` where time between $from and $end order by id";
+  $query = $db->query($sql);
+  while ($row = $query->fetch()) {
+    $sql = "select * from `" . VAC_PREFIX . "_customer` where id = " . $row["customerid"];
+    $customer_query = $db->query($sql);
+    $customer = $customer_query->fetch();
+    $xtpl->assign("index", $index ++);
+    if ($row["done"] > 0) {
+      $xtpl->assign("spa_end", date("H:i:s", $row["done"]));
+    }
+    else {
+      $xtpl->assign("spa_end", 'Chưa xong');
+    }
+    $xtpl->assign("id", $row["id"]);
+    $xtpl->assign("spa_doctor", $doctor[$row["doctorid"]]["name"]);
+    $xtpl->assign("customer_name", $customer["name"]);
+    $xtpl->assign("customer_number", $customer["phone"]);
+    $xtpl->assign("spa_from", date("H:i:s", $row["time"]));
+    $xtpl->assign("image", $row["image"]);
+    if (!$row['done']) $xtpl->parse('main.row.complete'); 
+    if (!$row['payment']) $xtpl->parse('main.row.paid'); 
+    else $xtpl->parse('main.row.confirm'); 
+    $xtpl->parse("main.row");
+  }
+  $xtpl->parse("main");
+  $text = $xtpl->text();
+  return $text;
+}

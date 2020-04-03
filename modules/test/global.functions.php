@@ -600,7 +600,6 @@ function getVaccineTable($path, $lang, $key, $sort, $time) {
   return $xtpl->text("main");
 }
 
-
 function getdoctorlist() {
   global $db, $db_config, $module_name;
   $sql = "select * from " . VAC_PREFIX . "_doctor";
