@@ -9,6 +9,7 @@
 if (!defined('NV_IS_MOD_QUANLY')) {
   die('Stop!!!');
 }
+define('MODULE', 'spa');
 
 $spa_option = array(
   "wash_dog" => "Tắm chó",
@@ -27,6 +28,12 @@ $spa_option = array(
   "cut_ear" => "Cắt lông tai",
   "dismell" => "Vắt tuyết hôi"
 );
+
+$allow = checkPermission(MODULE, $user_info['userid']);
+
+if (!$allow) {
+	preventOutsiter($allow);
+}
 
 $action = $nv_Request->get_string("action", "get/post", "");
 if (!empty($action)) {
