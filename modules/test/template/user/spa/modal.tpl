@@ -8,7 +8,6 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
-        <form onsubmit="return customer_submit(event)">
           <div class="row">
             <div class="form-group col-md-12">
               <label>{lang.customer}</label>
@@ -23,15 +22,9 @@
             <label>{lang.address}</label>
             <input type="text" class="form-control" id="customer_address">
           </div>
-          <button class="btn btn-info">
+          <button class="btn btn-info" onclick="customer_submit()">
             {lang.submit}
           </button>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-info" data-dismiss="modal">
-          {lang.cancel}
-        </button>
       </div>
     </div>
   </div>

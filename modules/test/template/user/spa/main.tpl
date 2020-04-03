@@ -28,14 +28,14 @@
     messagingSenderId: "351569277407",
     appId: "1:351569277407:web:8ef565047997e013"
   };
-  
+
   firebase.initializeApp(firebaseConfig);
 
   var storage = firebase.storage();
   var storageRef = firebase.storage().ref();
   var fileInput = document.getElementById('file')
   var blah = document.getElementById('blah')
-  var file 
+  var file
   var filename
   var maxWidth = 480
   var maxHeight = 480
@@ -56,7 +56,7 @@
     setInterval(() => {
       if (!refresh) {
         refresh = 1
-        vhttp.checkelse('', {action: "refresh"} ).then(data => {
+        vhttp.checkelse('', { action: "refresh" }).then(data => {
           $("#content").html(data["list"])
           refresh = 0
         })
@@ -65,7 +65,7 @@
     // gợi ý khách hàng
     vremind.install('#customer', '#customer-suggest', (input) => {
       return new Promise((resolve) => {
-        vhttp.checkelse('', {action: "getcustomer", key: input}).then(data => {
+        vhttp.checkelse('', { action: "getcustomer", key: input }).then(data => {
           resolve(data['html'])
         })
       })
@@ -91,14 +91,16 @@
     idata = checkSpaData()
     if (!idata['customer']) alert_msg(idata)
     else {
+      freeze()
       uploader().then(image => {
-        vhttp.checkelse('', {action: "insert-spa", data: idata, image: image}).then(data => {
+        vhttp.check('', { action: "insert-spa", data: idata, image: image }).then(data => {
           customer = 0
           alert_msg('Đã lưu')
           $("#content").html(data["html"])
           $("#insert-modal").modal("hide")
           $(".box").prop('checked', false)
-        })
+          defreeze()
+        }, () => { defreeze() })
       })
     }
   }
@@ -106,12 +108,15 @@
   function editSubmit() {
     customer = 1
     idata = checkSpaData()
-    vhttp.checkelse('', {action: "update-spa", data: idata, id: g_id }).then(data => {
+
+    freeze()
+    vhttp.checkelse('', { action: "update-spa", data: idata, id: g_id }).then(data => {
       customer = 0
       alert_msg('Đã lưu')
       $("#content").html(data["html"])
       $("#insert-modal").modal("hide")
-    })
+      defreeze()
+    }, () => { defreeze() })
   }
 
   function insertModal() {
@@ -120,34 +125,26 @@
     $("#insert-modal").modal('show')
   }
 
-  function customer_submit(e) {
-    e.preventDefault()
+  function customer_submit() {
     var name = $("#customer_name").val()
     var phone = $("#customer_phone").val()
     var address = $("#customer_address").val()
-    
-    if (!name) {
-      alert_msg("{lang.no_custom_name}");
-    }
-    else if (!phone) {
-      alert_msg("{lang.no_custom_phone}");
-    }
+
+    if (!name) alert_msg("{lang.no_custom_name}");
+    else if (!phone) alert_msg("{lang.no_custom_phone}");
     else {
-      $.post(
-        strHref,
-        {action: "custom", name: name, phone: phone, address: address},
-        (response, status) => {
-          var data = JSON.parse(response)
-          if (data["status"]) {
-            customer = data["id"]
-            $("#customer_modal").modal("toggle")
-            $("#customer_name_info").text(name)
-            $("#customer_phone_info").text(phone)
-            alert_msg(data["notify"])
-          }
-          else {alert_msg(data["notify"])}
-        }
-      )
+      freeze()
+      vhttp.check('', { action: "custom", name: name, phone: phone, address: address }).then(data => {
+        customer = data["id"]
+        $("#customer_modal").modal("toggle")
+        $("#customer_name_info").text(name)
+        $("#customer_phone_info").text(phone)
+        alert_msg('Đã thêm khách hàng')
+        defreeze()
+      }, () => { 
+        alert_msg('Số điện thoại đã được sử dụng')
+        defreeze()
+      })
     }
   }
 
@@ -158,19 +155,24 @@
   }
 
   function complete(id) {
-    vhttp.checkelse('', {action: "complete", id: id} ).then(data => {
+    freeze()
+    vhttp.checkelse('', { action: "complete", id: id }).then(data => {
       $("#content").html(data["html"])
-    })
+      defreeze()
+    }, () => { defreeze() })
   }
 
   function paid(id) {
-    vhttp.checkelse('', {action: "paid", id: id} ).then(data => {
+    freeze()
+    vhttp.checkelse('', { action: "paid", id: id }).then(data => {
       $("#content").html(data["html"])
-    })
+      defreeze()
+    }, () => { defreeze() })
   }
 
   function view_detail(id) {
-    vhttp.checkelse('', {action: "get_detail", id: id}).then(data => {
+    freeze()
+    vhttp.checkelse('', { action: "get_detail", id: id }).then(data => {
       g_id = id
       $(".insert").hide()
       $(".edit").show()
@@ -184,7 +186,8 @@
       $("#image").attr('src', data['data']["image"])
       $("#time").text(data['data']["time"])
       $("#insert-modal").modal('show')
-    })
+      defreeze()
+    }, () => { defreeze() })
   }
 
   function onselected(input) {
@@ -194,40 +197,40 @@
       var name = Math.round(new Date().getTime() / 1000) + '_' + fullname.substr(0, fullname.lastIndexOf('.'))
       var extension = fullname.substr(fullname.lastIndexOf('.') + 1)
       filename = name + '.' + extension
-      
+
       reader.onload = function (e) {
-				var image = new Image();
-				image.src = e.target["result"];
-				image.onload = (e2) => {
-					var c = document.createElement("canvas")
-					var ctx = c.getContext("2d");
-					var ratio = 1;
-					if(image.width > maxWidth)
-						ratio = maxWidth / image.width;
-					else if(image.height > maxHeight)
-						ratio = maxHeight / image.height;
-					c.width = image["width"];
-					c.height = image["height"];
-					ctx.drawImage(image, 0, 0);
-					var cc = document.createElement("canvas")
-					var cctx = cc.getContext("2d");
-					cc.width = image.width * ratio;
-					cc.height = image.height * ratio;
-					cctx.fillStyle = "#fff";
-					cctx.fillRect(0, 0, cc.width, cc.height);
-					cctx.drawImage(c, 0, 0, c.width, c.height, 0, 0, cc.width, cc.height);
-					file = cc.toDataURL("image/jpeg")
-					blah.setAttribute('src', file)
-					file = file.substr(file.indexOf(',') + 1);
+        var image = new Image();
+        image.src = e.target["result"];
+        image.onload = (e2) => {
+          var c = document.createElement("canvas")
+          var ctx = c.getContext("2d");
+          var ratio = 1;
+          if (image.width > maxWidth)
+            ratio = maxWidth / image.width;
+          else if (image.height > maxHeight)
+            ratio = maxHeight / image.height;
+          c.width = image["width"];
+          c.height = image["height"];
+          ctx.drawImage(image, 0, 0);
+          var cc = document.createElement("canvas")
+          var cctx = cc.getContext("2d");
+          cc.width = image.width * ratio;
+          cc.height = image.height * ratio;
+          cctx.fillStyle = "#fff";
+          cctx.fillRect(0, 0, cc.width, cc.height);
+          cctx.drawImage(c, 0, 0, c.width, c.height, 0, 0, cc.width, cc.height);
+          file = cc.toDataURL("image/jpeg")
+          blah.setAttribute('src', file)
+          file = file.substr(file.indexOf(',') + 1);
         };
       };
 
       if (imageType.indexOf(extension) >= 0) {
-        
+
         reader.readAsDataURL(input.files[0]);
       }
     }
-	}
+  }
 
   function uploader() {
     return new Promise(resolve => {
@@ -237,7 +240,7 @@
       else {
         var uploadTask = storageRef.child('images/' + filename).putString(file, 'base64', metadata);
         uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
-          function(snapshot) {
+          function (snapshot) {
             var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             console.log('Upload is ' + progress + '% done');
             switch (snapshot.state) {
@@ -248,29 +251,29 @@
                 console.log('Upload is running');
                 break;
             }
-          }, function(error) {
+          }, function (error) {
             resolve('')
             switch (error.code) {
               case 'storage/unauthorized':
                 // User doesn't have permission to access the object
-              break;
+                break;
               case 'storage/canceled':
                 // User canceled the upload
-              break;
+                break;
               case 'storage/unknown':
                 // Unknown error occurred, inspect error.serverResponse
-              break;
+                break;
             }
-          }, function() {
+          }, function () {
             // Upload completed successfully, now we can get the download URL
-            uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
-            resolve(downloadURL)
-            console.log('File available at', downloadURL);
+            uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+              resolve(downloadURL)
+              console.log('File available at', downloadURL);
+            });
           });
-        });
       }
     })
-	}
+  }
 
 </script>
 <!-- END: main -->
