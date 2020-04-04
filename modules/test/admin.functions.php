@@ -77,6 +77,26 @@ function settingContent() {
   return $xtpl->text();
 }
 
+// function settingSystemContent() {
+//   global $db, $db_config, $filter;
+
+//   $xtpl = new XTemplate("system-list.tpl", PATH2);
+//   $index = 1;
+
+//   $sql = 'select * from `'. VAC_PREFIX .'_setting` where module like "system:%") order by module';
+//   $query = $db->query($sql);
+  
+//   while ($row = $query->fetch()) {
+//     $xtpl->assign('index', $index++);
+//     $xtpl->assign('id', $row['userid']);
+//     $xtpl->assign('username', $row['username']);
+//     $xtpl->assign('fullname', $row['fullname']);
+//     $xtpl->parse('main.row');
+//   }
+//   $xtpl->parse('main');
+//   return $xtpl->text();
+// }
+
 function employContentId($id, $name) {
   global $db, $db_config, $filter;
   $xtpl = new XTemplate("employ-list.tpl", PATH2);

@@ -6,6 +6,9 @@
 {modal}
 
 <div class="form-group">
+	<a href="/admin/index.php?nv={module_name}&op={op}&type=system" class="btn {type_default} btn-xs">
+		Hệ thống
+	</a>
 	<!-- BEGIN: option -->
 	<a href="/admin/index.php?nv={module_name}&op={op}&type={id}" class="btn {type} btn-xs">
 		{name}
