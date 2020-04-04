@@ -388,13 +388,15 @@ function vaccineList($vaclist, $overdate = 0, $search = 0) {
       $xtpl->parse('main.row.note');
     }
     else {
-      $xtpl->parse('main.row.note2');
-      if ($filter['status'] < 2) {
-        $xtpl->parse('main.row.right');
-      }
-      if ($filter['status'] == 1) {
-        $xtpl->parse('main.row.left');
-      }
+      if ($filter['allow'] > 1) {
+        $xtpl->parse('main.row.note2');
+        if ($filter['status'] < 2) {
+          $xtpl->parse('main.row.right');
+        }
+        if ($filter['status'] == 1) {
+          $xtpl->parse('main.row.left');
+        }
+      } 
     }
 
     $xtpl->assign("color", "red");

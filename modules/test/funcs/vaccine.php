@@ -6,12 +6,18 @@
 * @Createdate 26-01-2011 14:43
 */
 if ( ! defined( 'NV_IS_MOD_QUANLY' ) ) die( 'Stop!!!' );
+define('MODULE', 'vaccine');
 
 $filter = array(
   'page' => $nv_Request->get_int('page', 'get', 0),
   'status' => $nv_Request->get_int('status', 'get', 0),
-  'keyword' => $nv_Request->get_string('keyword', 'get/post', '')
+  'keyword' => $nv_Request->get_string('keyword', 'get/post', ''),
+  'allow' => checkPermission(MODULE, $user_info['userid'])
 );
+
+if (!$filter['allow']) {
+	preventOutsiter();
+}
 
 $action = $nv_Request->get_string("action", "get/post", "");
 if (!empty($action)) {
@@ -195,6 +201,13 @@ $keyword = $nv_Request->get_string('keyword', 'get', '');
 $xtpl->assign("keyword", $keyword);
 // // status
 
+$link = array('0', '1', '2');
+
+foreach ($link as $value) {
+  $xtpl->assign('btn' . $value, 'btn-default');
+  if ($value == $filter['page']) $xtpl->assign('btn' . $value, 'btn-info');
+}
+
 foreach ($lang_module["vacstatusname"] as $key => $value) {
   if ($key == $filter['status']) {
     $check = "btn-info";
@@ -214,6 +227,10 @@ while($row = $query->fetch()) {
   $xtpl->assign("doctorid", $row["id"]);
   $xtpl->assign("doctorname", $row["name"]);
   $xtpl->parse("main.doctor");
+}
+
+if ($filter['allow'] > 1) {
+  $xtpl->parse('main.manager');
 }
 
 $xtpl->assign("modal", vaccineModal());

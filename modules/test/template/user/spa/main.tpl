@@ -112,7 +112,7 @@
     idata = checkSpaData()
 
     freeze()
-    vhttp.checkelse('', { action: "update-spa", data: idata, id: g_id }).then(data => {
+    vhttp.check('', { action: "update-spa", data: idata, id: g_id }).then(data => {
       customer = 0
       alert_msg('Đã lưu')
       $("#content").html(data["html"])
@@ -158,7 +158,7 @@
 
   function complete(id) {
     freeze()
-    vhttp.checkelse('', { action: "complete", id: id }).then(data => {
+    vhttp.check('', { action: "complete", id: id }).then(data => {
       $("#content").html(data["html"])
       defreeze()
     }, () => { defreeze() })
@@ -166,7 +166,7 @@
 
   function paid(id) {
     freeze()
-    vhttp.checkelse('', { action: "paid", id: id }).then(data => {
+    vhttp.check('', { action: "paid", id: id }).then(data => {
       $("#content").html(data["html"])
       defreeze()
     }, () => { defreeze() })
@@ -174,7 +174,7 @@
 
   function view_detail(id) {
     freeze()
-    vhttp.checkelse('', { action: "get_detail", id: id }).then(data => {
+    vhttp.check('', { action: "get_detail", id: id }).then(data => {
       g_id = id
       $(".insert").hide()
       $(".edit").show()

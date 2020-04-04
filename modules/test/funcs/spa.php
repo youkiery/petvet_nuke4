@@ -32,7 +32,7 @@ $spa_option = array(
 $allow = checkPermission(MODULE, $user_info['userid']);
 
 if (!$allow) {
-	preventOutsiter($allow);
+	preventOutsiter();
 }
 
 $action = $nv_Request->get_string("action", "get/post", "");
