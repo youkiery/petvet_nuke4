@@ -6,7 +6,6 @@
 <table class="table table-bordered table-hover">
 	<thead>
 		<tr>
-			<th> STT </th>
 			<th> Thú cưng </th>
 			<th> Chủ nuôi </th>
 			<th> SĐT </th>
@@ -16,7 +15,6 @@
 	<tbody>
 		<!-- BEGIN: row -->
 		<tr>
-			<td> {index} </td>
 			<td> {petname} </td>
 			<td> {name} </td>
 			<td> {phone} </td>

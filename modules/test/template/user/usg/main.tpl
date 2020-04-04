@@ -7,9 +7,19 @@
 <div id="msgshow" class="msgshow"></div>
 
 <style>
-	.btn-default {
-		color: #333 !important;
+	td {
+		font-size: 0.8em;
 	}
+
+  th {
+    position: sticky;
+    top: 0px;
+    background: white;
+    z-index: 10;
+    border-bottom: 1px solid black;
+    text-align: center;
+    vertical-align: inherit !important;
+  }
 </style>
 
 {modal}
