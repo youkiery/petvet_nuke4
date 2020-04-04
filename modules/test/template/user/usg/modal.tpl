@@ -3,73 +3,43 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
-                <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
+                <div class="form-group">
+                    Cập nhật phiếu siêu âm
+                    <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
+                </div>
 
-                <div class="row">
-                    <div class="form-group col-md-8">
+                <div class="rows">
+                    <div class="form-group col-4">
                         <label>{lang.usgcome}</label>
-                        <div class="input-group" data-provide="datepicker">
-                            <input type="text" class="form-control date" id="cometime2" value="{now}">
-                            <div class="input-group-addon">
-                                <span class="glyphicon glyphicon-th"></span>
-                            </div>
-                        </div>
+                        <input type="text" class="form-control date" id="usgtime">
                     </div>
-                    <div class="form-group col-md-8">
+                    <div class="form-group col-4">
                         <label>{lang.usgcall}</label>
-                        <div class="input-group" data-provide="datepicker">
-                            <input type="text" class="form-control date" id="calltime2" value="{now}">
-                            <div class="input-group-addon">
-                                <span class="glyphicon glyphicon-th"></span>
-                            </div>
-                        </div>
+                        <input type="text" class="form-control date" id="expecttime">
                     </div>
-                    <div class="form-group col-md-8">
+                    <div class="form-group col-4">
                         <label>{lang.exbirth}</label>
-                        <input class="form-control" id="exbirth" type="number">
+                        <input class="form-control" id="expectnumber2" type="number">
                     </div>
                 </div>
-                <div class="row">
-                    <div class="form-group col-md-12">
+
+                <div class="rows">
+                    <div class="form-group col-4">
                         <label>{lang.birthday}</label>
-                        <div class="input-group" data-provide="datepicker">
-                            <input type="text" class="form-control date" id="birth" value="{now}">
-                            <div class="input-group-addon">
-                                <span class="glyphicon glyphicon-th"></span>
-                            </div>
-                        </div>
+                        <input type="text" class="form-control date" id="birthtime">
                     </div>
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-4">
                         <label>{lang.birth}</label>
                         <input class="form-control" id="birthnumber" type="number">
                     </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-8">
-                        <label>{lang.firstvac}</label>
-                        <div class="input-group" data-provide="datepicker">
-                            <input type="text" class="form-control date" id="firstvac" value="{now}">
-                            <div class="input-group-addon">
-                                <span class="glyphicon glyphicon-th"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group col-md-8">
-                        <label>{lang.vaccine}</label>
-                        <select class="form-control" id="vaccine_status"> </select>
-                    </div>
-                    <div class="form-group col-md-8">
-                        <label>{lang.recall}</label>
-                        <div class="input-group" data-provide="datepicker">
-                            <input type="text" class="form-control date" id="recall" value="{now}">
-                            <div class="input-group-addon">
-                                <span class="glyphicon glyphicon-th"></span>
-                            </div>
-                        </div>
+                    <div class="form-group col-4">
+                        <label> Ngày tái chủng </label>
+                        <input class="form-control date" id="vaccinetime">
                     </div>
                 </div>
+
                 <div class="form-group">
-                    <label>{lang.doctor}</label>
+                    <label> Bác sĩ </label>
                     <select class="form-control" name="doctor" id="doctor2">
                         <!-- BEGIN: doctor3 -->
                         <option value="{doctor_value}">{doctor_name}</option>
@@ -79,14 +49,6 @@
                 <div class="form-group">
                     <label>{lang.note}</label>
                     <textarea class="form-control" id="note2" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label> Loại tái chủng </label>
-                    <select class="form-control" name="disease" id="birth-disease">
-                        <!-- BEGIN: disease -->
-                        <option value="{id}">{name}</option>
-                        <!-- END: disease -->
-                    </select>
                 </div>
 
                 <div class="form-group text-center">
@@ -152,7 +114,7 @@
                         <div class="form-group col-md-6">
                             <label>{lang.usgcome}</label>
                             <div class="input-group" data-provide="datepicker">
-                                <input type="text" class="form-control date" id="ngaysieuam" value="{now}">
+                                <input type="text" class="form-control date" id="ngaysieuam">
                                 <div class="input-group-addon">
                                     <span class="glyphicon glyphicon-th"></span>
                                 </div>
@@ -178,7 +140,7 @@
                             <br>
                         </div> -->
                     <div class="row">
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-6">
                             <label>{lang.doctor}</label>
                             <select class="form-control" name="doctor" id="doctor">
                                 <!-- BEGIN: doctor -->
@@ -186,7 +148,7 @@
                                 <!-- END: doctor -->
                             </select>
                         </div>
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-6">
                             <label>{lang.note}</label>
                             <textarea class="form-control" id="ghichu" rows="3"></textarea>
                         </div>
@@ -245,7 +207,7 @@
 
                 <div class="form-group">
                     <label> Ngày tái chủng </label>
-                    <input type="text" class="form-control date" id="vaccine-time" value="{now}">
+                    <input type="text" class="form-control date" id="vaccine-time">
                 </div>
 
                 <div class="form-group">
@@ -287,106 +249,6 @@
                     <button class="btn btn-danger" onclick="rejectSubmit()">
                         Bỏ vaccine
                     </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="recall-modal" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-body">
-                <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
-
-                <div class="form-group">
-                    <label> Số lượng thai </label>
-                    <input type="text" class="form-control" id="recall-birth" value="1">
-                </div>
-
-                <div class="form-group">
-                    <label> Bác sĩ </label>
-                    <select class="form-control" name="doctor" id="recall-doctor">
-                        <!-- BEGIN: doctor4 -->
-                        <option value="{doctor_value}">{doctor_name}</option>
-                        <!-- END: doctor4 -->
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label> Ngày sinh </label>
-                    <input type="text" class="form-control date" id="recall-recall">
-                </div>
-
-                <div class="text-center">
-                    <button class="btn btn-success" onclick="recallSubmit()">
-                        Lưu dữ liệu
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="filter-modal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
-
-                <div class="form-group">
-                    <label> Từ khóa </label>
-                    <input type="text" class="form-control filter" name="keyword" id="filter-keyword" value="{keyword}"
-                        placeholder="Tên khách hàng, thú cưng">
-                </div>
-
-                <select class="form-control form-group filter" name="filter" id="filter-number">
-                    <option value="25" {filter25}>25</option>
-                    <option value="50" {filter50}>50</option>
-                    <option value="100" {filter100}>100</option>
-                    <option value="200" {filter200}>200</option>
-                    <option value="500" {filter500}>500</option>
-                </select>
-
-                <div class="text-center">
-                    <button class="btn btn-success" onclick="filterSubmit()">
-                        Lọc dữ liệu
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="overflow-modal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
-
-                <div class="form-group">
-                    <label> Từ khóa </label>
-                    <input type="text" class="form-control" id="overflow-keyword">
-                </div>
-
-                <div class="form-group">
-                    <label> Ngày bắt đầu </label>
-                    <input type="text" class="form-control date" id="overflow-from">
-                </div>
-
-                <div class="form-group">
-                    <label> Ngày kết thúc </label>
-                    <input type="text" class="form-control date" id="overflow-end">
-                </div>
-
-                <div class="text-center form-group">
-                    <button class="btn btn-success" onclick="overflowFilter()">
-                        Lọc dữ liệu
-                    </button>
-                </div>
-
-                <div id="overflow-content">
-                    {overflow_content}
                 </div>
             </div>
         </div>

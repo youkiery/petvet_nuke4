@@ -6,8 +6,8 @@
  * @Copyright (C) 2011
  * @Createdate 26-01-2011 14:43
  */
-if (!defined('NV_IS_MOD_QUANLY'))
-  die('Stop!!!');
+if (!defined('NV_IS_MOD_QUANLY')) die('Stop!!!');
+define('MODULE', 'usg');
 quagio();
 
 // $sql = 'select * from `'. VAC_PREFIX .'_usg` order by id desc limit 100';
@@ -27,72 +27,36 @@ quagio();
 // }
 
 $filter = array(
-  'keyword' => $nv_Request->get_string('keyword', 'get'),
+  'page' => $nv_Request->get_int('page', 'get', 1),
+  'keyword' => $nv_Request->get_string('keyword', 'get', ''),
   'order' => $nv_Request->get_int('order', 'get', 0),
   'type' => $nv_Request->get_int('type', 'get', 1),
-  'status' => $nv_Request->get_int('status', 'get', 0)
+  'status' => $nv_Request->get_int('status', 'get', 0),
+  'allow' => checkPermission(MODULE, $user_info['userid'])
 );
+
+if (!$filter['allow']) {
+	preventOutsiter();
+}
 
 $action = $nv_Request->get_string('action', 'post', "");
 if ($action) {
   $result = array("status" => 0, "data" => array());
   switch ($action) {
-    case 'update-usg':
-      $id = $nv_Request->get_int('id', 'post', 0);
-      $data = $nv_Request->get_array('data', 'post');
-      if ($data['cometime'])
-        $data['cometime'] = totime($data['cometime']);
-      if ($data['calltime'])
-        $data['calltime'] = totime($data['calltime']);
-      if ($data['recall'])
-        $data['recall'] = totime($data['recall']);
-      if ($data['birthday'])
-        $data['birthday'] = totime($data['birthday']);
-      if ($data['firstvac'])
-        $data['firstvac'] = totime($data['firstvac']);
-
-      $sql = 'update `' . VAC_PREFIX . '_usg` set cometime = "' . $data['cometime'] . '", calltime = "' . $data['calltime'] . '", doctorid = "' . $data['doctorid'] . '", note = "' . $data['note'] . '", image = "' . $data['image'] . '", birth = "' . $data['birth'] . '", expectbirth = "' . $data['expectbirth'] . '", recall = "' . $data['recall'] . '", vaccine = "' . $data['vaccine'] . '", birthday = "' . $data['birthday'] . '", firstvac = "' . $data['firstvac'] . '" where id = ' . $id;
-      if ($db->query($sql)) {
-        $resut['status'] = 1;
-      }
-      break;
     case 'get-update':
       $id = $nv_Request->get_string('id', 'post', "");
-      if (!empty($id)) {
-        $sql = "select * from " . VAC_PREFIX . "_usg where id = $id";
-        $query = $db->query($sql);
 
-        if ($query) {
-          $row = $query->fetch();
-          $sql = "select * from " . VAC_PREFIX . "_pet where id = $row[petid]";
-          $query = $db->query($sql);
-          $row2 = $query->fetch();
-          $result["status"] = 1;
-          $recall = 0;
-          if ($row["recall"]) {
-            $recall = date("d/m/Y", $row["recall"]);
-          }
-          $vaccine = "";
-          foreach ($lang_module["confirm_value"] as $key => $value) {
-            $select = "";
-            if ($row["vaccine"] == $key) {
-              $select = "selected";
-            }
-            $vaccine .= "<option value='$key' $select>$value</option>";
-          }
-          $birthday = "";
-          $firstvac = "";
-          if ($row["birthday"] > 0) {
-            $birthday = date("d/m/Y", $row["birthday"]);
-          }
-          if ($row["firstvac"] > 0) {
-            $firstvac = date("d/m/Y", $row["firstvac"]);
-          }
-          $result["data"] = array("calltime" => date("d/m/Y", $row["calltime"]), "cometime" => date("d/m/Y", $row["cometime"]), "doctorid" => $row["doctorid"], "note" => $row["note"], "image" => $row["image"], "customerid" => $row2["customerid"], "petid" => $row["petid"], "birth" => $row["birth"], "exbirth" => $row["expectbirth"], "recall" => $recall, "vaccine" => $vaccine, "vacid" => $row["vaccine"], "firstvac" => $firstvac, "birthday" => $birthday);
-          // var_dump($result);die();
-        }
-      }
-      break;
+      $sql = 'select * from `'. VAC_PREFIX .'_usg2` where id = ' . $id;
+      $query = $db->query($sql);
+      $usg = $query->fetch();
+      $usg['usgtime'] = ($usg['usgtime'] ? date('d/m/Y', $usg['usgtime']) : '');
+      $usg['expecttime'] = ($usg['expecttime'] ? date('d/m/Y', $usg['expecttime']) : '');
+      $usg['birthtime'] = ($usg['birthtime'] ? date('d/m/Y', $usg['birthtime']) : '');
+      $usg['vaccinetime'] = ($usg['vaccinetime'] ? date('d/m/Y', $usg['vaccinetime']) : '');
+
+      $result['status'] = 1;
+      $result['data'] = $usg;
+    break;
     case 'edit-note':
       $note = $nv_Request->get_string('note', 'post', '');
       $id = $nv_Request->get_int('id', 'post', '');
@@ -223,72 +187,16 @@ if ($action) {
         }
       }
       break;
-    case 'update_usg':
+    case 'update-usg':
       $id = $nv_Request->get_string('id', 'post', "");
-      $cometime = $nv_Request->get_string('cometime', 'post', "");
-      $calltime = $nv_Request->get_string('calltime', 'post', "");
-      $doctorid = $nv_Request->get_string('doctorid', 'post', "");
-      $birth = $nv_Request->get_string('birth', 'post', "");
-      $exbirth = $nv_Request->get_string('exbirth', 'post', "");
-      $recall = $nv_Request->get_string('recall', 'post', "");
-      $vaccine = $nv_Request->get_int('vaccine', 'post', 0);
-      $note = $nv_Request->get_string('note', 'post', "");
-      $image = $nv_Request->get_string('image', 'post', "");
-      $customer = $nv_Request->get_string('customer', 'post', "");
+      $data = $nv_Request->get_array('data', 'post');
 
-      $firstvac = $nv_Request->get_string('firstvac', 'post', "");
-      $birthday = $nv_Request->get_string('birthday', 'post', "");
-      if (!(empty($id) || empty($cometime) || empty($calltime) || empty($doctorid))) {
-        $cometime = totime($cometime);
-        $calltime = totime($calltime);
-        $sql = "select * from `" . VAC_PREFIX . "_usg` where id = $id";
-        $query = $db->query($sql);
-        $usg = $query->fetch();
-        // var_dump($usg);
-        $today = strtotime(date("Y-m-d"));
-        if (empty($firstvac)) {
-          $firstvac = $today;
-        } else {
-          $firstvac = totime($firstvac);
-        }
-        if (empty($birthday)) {
-          $birthday = $today;
-        } else {
-          $birthday = totime($birthday);
-        }
-        if ($usg["vaccine"] >= 2) {
-          $vaccine = 2;
-        }
-        if ($vaccine == 2) {
-          if ($recall == 0) {
-            $recall = strtotime(date("Y-m-d"));
-          } else {
-            $recall = totime($recall);
-          }
-          if ($usg["childid"] == 0 && $customer > 0) {
-            $sql = "insert into " . VAC_PREFIX . "_pet (name, customerid) values('" . date("d/m/Y", $calltime) . "', $customer)";
-            $query = $db->query($sql);
-            $pet_id = $db->lastInsertId();
-
-            if ($pet_id > 0) {
-              $sql = "update `" . VAC_PREFIX . "_usg` set childid = $pet_id, firstvac = $firstvac, birthday = $birthday, cbtime = " . time() . " where id = $id";
-              $query = $db->query($sql);
-            }
-
-            $sql = "insert into `" . VAC_PREFIX . "_vaccine` (petid, diseaseid, cometime, calltime, status, note, recall, doctorid, ctime) values ($pet_id, 0, $firstvac, $recall, 0, '', 0, $doctorid, " . time() . ");";
-            $query = $db->query($sql);
-          }
-        }
-        if ($recall == 0) {
-          $recall = 0;
-        }
-        $sql = "update " . VAC_PREFIX . "_usg set cometime = $cometime, calltime = $calltime, doctorid = $doctorid, note = '$note', image = '$image', birth = $birth, expectbirth = $exbirth, recall = $recall, vaccine = $vaccine, firstvac = $firstvac, birthday = $birthday  where id = $id";
-        $query = $db->query($sql);
-        if ($query) {
-          $result["status"] = 1;
-        }
+      $sql = 'update `'. VAC_PREFIX .'_usg2` set usgtime = "'. totime($data['usgtime']) .'", expecttime = "'. totime($data['expecttime']) .'", expectnumber = "'. $data['expectnumber'] .'", birthtime = "'. totime($data['birthtime']) .'", number = "'. $data['number'] .'", vaccinetime = "'. totime($data['vaccinetime']) .'", doctorid = "'. $data['doctorid'] .'", note = "'. $data['note'] .'" where id = ' . $id;
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = usgCurrentList($filter);
       }
-      break;
+    break;
     case 'insert-usg':
       $data = $nv_Request->get_array('data', 'post');
       // var_dump($_POST);
@@ -320,7 +228,7 @@ if ($action) {
       $number = $nv_Request->get_int('number', 'post', 0);
       $time = $nv_Request->get_string('time', 'post', 0);
 
-	  $sql = 'update `' . VAC_PREFIX . '_usg2` set number = ' . $number . ', birthtime = ' . totime($time) . ', status = 2 where id = ' . $id;
+  	  $sql = 'update `' . VAC_PREFIX . '_usg2` set number = ' . $number . ', birthtime = ' . totime($time) . ', status = 2 where id = ' . $id;
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = usgCurrentList($filter);
@@ -339,8 +247,8 @@ if ($action) {
       if ($row = $query->fetch()) {
         $time = totime($time);
 
-		$sql = "insert into `" . VAC_PREFIX . "_vaccine` (petid, cometime, calltime, doctorid, note, status, diseaseid, recall, ctime) values ($row[id], " . time() . ", $time, $doctor, '', 0, $disease, 0, " . time() . ");";
-		$sql2 = "update `" . VAC_PREFIX . "_usg2` set status = 3, vaccinetime = ". $time ." where id = $id";
+  		$sql = "insert into `" . VAC_PREFIX . "_vaccine` (petid, cometime, calltime, doctorid, note, status, diseaseid, recall, ctime) values ($row[id], " . time() . ", $time, $doctor, '', 0, $disease, 0, " . time() . ");";
+	  	$sql2 = "update `" . VAC_PREFIX . "_usg2` set status = 3, vaccinetime = ". $time ." where id = $id";
         if ($db->query($sql) && $db->query($sql2)) {
           $result['status'] = 1;
           $result['html'] = usgCurrentList($filter);
@@ -350,7 +258,7 @@ if ($action) {
     case 'reject':
       $id = $nv_Request->get_int('id', 'post');
 
-	  $sql = "update `" . VAC_PREFIX . "_usg2` set status = 3 where id = " . $id;
+  	  $sql = "update `" . VAC_PREFIX . "_usg2` set status = 3 where id = " . $id;
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = usgCurrentList($filter);
@@ -374,13 +282,11 @@ for ($i = 1; $i <= 4; $i++) {
   else
     $xtpl->assign('type_button' . $i, 'btn-default');
 }
+
 // Hiển thị tab quản lý
-if (!empty($user_info['in_groups']) && count($user_info['in_groups'])) {
-  $sql = 'select * from `' . VAC_PREFIX . '_heal_manager` where type = 7 and groupid in (' . implode(', ', $user_info['in_groups']) . ')';
-  $query = $db->query($sql);
-  if (!empty($query->fetch())) {
-    $xtpl->parse('main.manager');
-  }
+if ($filter['allow'] > 1) {
+  $xtpl->parse('main.manager');
+  $xtpl->parse('main.manager2');
 }
 
 $xtpl->assign('content', usgCurrentList($filter));
@@ -388,7 +294,6 @@ $xtpl->assign('content', usgCurrentList($filter));
 $xtpl->assign("modal", usgModal($lang_module));
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
-
 include (NV_ROOTDIR . "/includes/header.php");
 echo nv_site_theme($contents);
 include (NV_ROOTDIR . "/includes/footer.php");

@@ -42,8 +42,10 @@
 		<tr class="{bgcolor}" id="note_{id}">
 			<td colspan="3" id="note_v{id}">
 				{note}
+				<!-- BEGIN: note -->
 				<img class="mini-icon right" src="/themes/default/images/vaccine/note_add.png" alt="thêm ghi chú"
-					onclick="editNote({id})">
+				onclick="editNote({id})">
+				<!-- END: note -->
 			</td>
 		</tr>
 		<!-- END: row -->

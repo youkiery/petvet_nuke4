@@ -62,7 +62,7 @@ if($action) {
 	die();
 }
 
-$func = array('kaizen' => 'Kaizen', 'spa' => 'SPA', 'vaccine' => 'Vaccine');
+$func = array('kaizen' => 'Kaizen', 'spa' => 'SPA', 'vaccine' => 'Vaccine', 'usg' => 'Siêu âm');
 
 $xtpl = new XTemplate("main.tpl", PATH2);
 $xtpl->assign('module_name', $module_name);
