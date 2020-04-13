@@ -2211,6 +2211,10 @@
         var html3 = ''
         var noteX = -1
         resultX ++
+        if (!result['note']) result['note'] = [{
+          result: '',
+          note: ''
+        }]
             
         result['note'].forEach((note, noteIndex) => {
           noteX ++
@@ -3529,7 +3533,9 @@
       formInsertXcode3.val(xcode[2])
       formInsertIsenderUnit.val(data['form']['isenderunit'])
       formInsertIreceiverUnit.val(data['form']['ireceiverunit'])
+      
       parseField(JSON.parse(data['form']['ig']))
+      
       formInsertExamDate.val(data['form']['examdate'])
       $("#form-insert-exam-date-2").val(data['form']['examdate2'])
       formInsertIresend.val(data['form']['iresend'])
@@ -3586,6 +3592,7 @@
       if (lock) $("#signer_locker").text('Đã khóa')
       else $("#signer_locker").text('Chưa khóa')
     }
+    console.log(1);
   }
 
   function insertSubmit() {
