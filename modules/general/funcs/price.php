@@ -148,7 +148,7 @@ if (!empty($action)) {
     case 'get-suggest':
       $keyword = $nv_Request->get_string('keyword', 'post');
       $xtpl = new XTemplate("item-suggest.tpl", PATH);
-      $sql = 'select * from `'. PREFIX .'catalog` where name like "%'. $keyword .'%" order by id desc limit 10';
+      $sql = 'select * from `'. PREFIX .'catalog` where name like "%'. $keyword .'%" order by id desc limit 20';
       $query = $db->query($sql);
       
       while ($row = $query->fetch()) {
