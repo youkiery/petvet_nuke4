@@ -31,7 +31,7 @@ function doctorList() {
   global $db, $db_config;
   $list = array();
 
-  $sql = "select userid, username, last_name, first_name from `" .  $db_config["prefix"] . "_users` where userid in (select user_id from `" . $db_config["prefix"] . "_rider_user` where type = 1)";
+  $sql = "select userid, username, last_name, first_name from `" .  $db_config["prefix"] . "_users` where userid in (select user_id from `" . PREFIX . "_user` where type = 1)";
   $query = $db->query($sql);
 
   while ($row = $query->fetch()) {
@@ -69,7 +69,7 @@ function checkUser($userId) {
 function checkLimit($userid, $time, $type) {
   global $db, $db_config;
 
-  $sql = 'select count(*) as row from `'. PREFIX .'_row` where time = '. $time .' and type = '. $type .' and user_id not in (select user_id from `'. $db_config['prefix'] .'_rider_user` where type = 1 and except = 1)';
+  $sql = 'select count(*) as row from `'. PREFIX .'_row` where time = '. $time .' and type = '. $type .' and user_id not in (select user_id from `'. PREFIX . '_user` where type = 1 and except = 1)';
   $query = $db->query($sql);
   $row = $query->fetch();
   if ($row['row'] > 2) {

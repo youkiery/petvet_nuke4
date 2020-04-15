@@ -11,8 +11,9 @@ if (!defined('NV_ADMIN')) {
     die('Stop!!!');
 }
 
+$submenu['user'] = "Quản lý người dùng";
 $submenu['manager'] = "Người quản lý chấm công";
 $submenu['except'] = "Người ngoại lệ";
 $submenu['penety'] = "Nghỉ phạt";
 
-$allow_func = array('main', 'manager', 'except', 'penety'); 
+$allow_func = array('main', 'user', 'manager', 'except', 'penety'); 

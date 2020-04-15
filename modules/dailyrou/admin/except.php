@@ -29,7 +29,7 @@ if (!empty($action)) {
       }
 
 			if (checkUser($id)) {
-        $sql = "update `" . $db_config["prefix"] . "_rider_user` set except = $except where user_id = $id and type = 1";
+        $sql = "update `" . PREFIX . "_user` set except = $except where user_id = $id and type = 1";
 				if ($db->query($sql)) {
 					$result["status"] = 1;
 					$result["html"] = exceptUserList();

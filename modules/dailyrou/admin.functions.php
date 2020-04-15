@@ -13,6 +13,7 @@ if (! defined('NV_ADMIN') or ! defined('NV_MAINFILE') or ! defined('NV_IS_MODADM
 
 define('NV_IS_ADMIN_DAILY', true);
 define("PATH", NV_ROOTDIR . "/themes/" . $global_config['admin_theme'] . "/modules/" . $module_file);
+define("PATH2", NV_ROOTDIR . "/modules/" . $module_file . '/template/admin/' . $op);
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';
@@ -68,6 +69,83 @@ function penetyList($filter = array('page' => 1, 'limit' => 10, 'from' => '', 'e
       $xtpl->assign('type', 'Buổi chiều');
     }
     $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function memberuserList() {
+  global $db, $nv_Request, $db_config;
+
+  $xtpl = new XTemplate("member-list.tpl", PATH2);
+  $filter = $nv_Request->get_array('filter', 'post');
+  if (empty($filter['page'])) $filter['page'] = 1;
+  if (empty($filter['limit'])) $filter['limit'] = 10;
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+  $query = $db->query('select count(*) as number from `'. PREFIX .'_user`');
+  
+  $number = $query->fetch()['number'];
+  // die('select a.userid, a.level, a.depart, b.username, b.first_name from `'. PREFIX .'devicon` a inner join `'. $db_config['prefix'] .'users` b on a.userid = b.userid order by a.id desc');
+  $query = $db->query('select a.*, b.username, b.first_name, b.last_name from `'. PREFIX .'_user` a inner join `'. $db_config['prefix'] .'_users` b on a.userid = b.userid order by a.id desc');
+
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('userid', $row['userid']);
+    $xtpl->assign('name', $row['last_name'] . ' ' . $row['first_name']);
+    $xtpl->assign('username', $row['username']);
+    $xtpl->parse('main.row');
+  }
+  $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function memberFilter() {
+  global $db, $nv_Request, $db_config;
+
+  $xtpl = new XTemplate("member-modal-list.tpl", PATH2);
+  $filter = $nv_Request->get_array('memfilter', 'post');
+  if (empty($filter['page'])) $filter['page'] = 1;
+  if (empty($filter['limit'])) $filter['limit'] = 10;
+  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+  $query = $db->query('select count(*) as number from `'. $db_config['prefix'] .'_users` where (username like "%'. $filter['keyword'] .'%" or first_name like "%'. $filter['keyword'] .'%" or last_name like "%'. $filter['keyword'] .'%") and userid not in (select userid from `'. PREFIX .'_user`)');
+  
+  $number = $query->fetch()['number'];
+  // die('select userid, username, first_name, last_name from `'. $db_config['prefix'] .'_users` where (first_name like "%'. $filter['keyword'] .'%" or last_name like "%'. $filter['keyword'] .'%") and userid not in (select userid from `'. PREFIX .'devicon`) order by first_name');
+  $sql = 'select userid, username, first_name, last_name from `'. $db_config['prefix'] .'_users` where (username like "%'. $filter['keyword'] .'%" or first_name like "%'. $filter['keyword'] .'%" or last_name like "%'. $filter['keyword'] .'%") and userid not in (select userid from `'. PREFIX .'_user`) order by first_name limit '. $filter['limit'] .' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['userid']);
+    $xtpl->assign('username', $row['username']);
+    $xtpl->assign('name', $row['last_name'] . ' ' . $row['first_name']);
+    $xtpl->parse('main.row');
+  }
+  $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goMemPage'));
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function userModal() {
+  $xtpl = new XTemplate("modal.tpl", PATH2);
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function loadModal($name) {
+  $xtpl = new XTemplate($name . ".tpl", PATH2);
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function memberEditModal() {
+  $xtpl = new XTemplate("member-edit-modal.tpl", PATH2);
+  $depart = getDepartList();
+  foreach ($depart as $data) {
+    $xtpl->assign('id', $data['id']);
+    $xtpl->assign('name', $data['name']);
+    $xtpl->parse('main.depart');
   }
   $xtpl->parse('main');
   return $xtpl->text();

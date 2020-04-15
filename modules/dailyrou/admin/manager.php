@@ -29,7 +29,7 @@ if (!empty($action)) {
 					$type = 0;
 				}
 				
-				$sql = "update `" . $db_config["prefix"] . "_rider_user` set permission = $type where user_id = $id and type = 1";
+				$sql = "update `" . PREFIX . "_user` set permission = $type where user_id = $id and type = 1";
 				if ($db->query($sql)) {
 					$result["status"] = 1;
 					$result["html"] = doctorUserList();
