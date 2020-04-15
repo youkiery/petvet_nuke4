@@ -19,41 +19,56 @@ if (!empty($action)) {
 	switch ($action) {
 		case 'change':
 			$id = $nv_Request->get_string("id", "get/post", "");
-			$type = $nv_Request->get_int("type", "get/post", 0);
+			$sql = 'select * from `' . PREFIX . '_user` where userid = '.  $id;
+			$query = $db->query($sql);
+			$user = $query->fetch();
 
-			if (checkUser($id)) {
-				if (!$type) {
-					$type = 1;
-				}
-				else {
-					$type = 0;
-				}
-				
-				$sql = "update `" . PREFIX . "_user` set permission = $type where user_id = $id and type = 1";
-				if ($db->query($sql)) {
-					$result["status"] = 1;
-					$result["html"] = doctorUserList();
-				}
+			$sql = "update `" . PREFIX . "_user` set manager = ". intval(!$user['manager']) ." where userid = $id";
+			if ($db->query($sql)) {
+				$result["status"] = 1;
+				$result["html"] = doctorUserList();
 			}
 		break;
-		case 'remove':
-			$id = $nv_Request->get_string("id", "get/post", "");
+		case 'member-filter':
+      $result['status'] = 1;
+      $result['html'] = memberFilter();
+    break;
+    case 'insert-member':
+      $id = $nv_Request->get_int('id', 'post');
 
-			if (checkUser($id)) {
-				if ($db->query($sql)) {
-					$result["status"] = 1;
-					$result["html"] = doctorUserList();
-				}
-			}
+      $db->query('insert into `'. PREFIX .'_user` (userid, manager) values('. $id .', 1)');
+      $result['status'] = 1;
+      $result['html'] = memberFilter();
+      $result['html2'] = doctorUserList();
+    break;
+    case 'get-member':
+      $id = $nv_Request->get_int('id', 'post');
+
+      $query = $db->query('select * from `'. PREFIX .'_user` where userid = ' . $id);
+      $member = $query->fetch();
+
+      $result['status'] = 1;
+      $result['member'] = $member;
 		break;
+		case 'remove-member':
+      $id = $nv_Request->get_int('id', 'post');
+
+      $sql = 'update from `'. PREFIX .'_user` set manager = 1 where userid = ' . $id;
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['notify'] = 'Đã xóa';
+        $result['html'] = memberuserList();
+      }
+    break;
 	}
 
 	echo json_encode($result);
 	die();
 }
 
-$xtpl = new XTemplate("manager.tpl", PATH);
+$xtpl = new XTemplate("main.tpl", PATH2);
 
+$xtpl->assign('modal', managerModal());
 $xtpl->assign("content", doctorUserList());
 $xtpl->parse("main");
 

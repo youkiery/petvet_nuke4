@@ -133,6 +133,12 @@ function userModal() {
   return $xtpl->text();
 }
 
+function managerModal() {
+  $xtpl = new XTemplate("modal.tpl", PATH2);
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function loadModal($name) {
   $xtpl = new XTemplate($name . ".tpl", PATH2);
   $xtpl->parse('main');

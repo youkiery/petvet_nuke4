@@ -314,15 +314,15 @@ function adminSummary($startDate = 0, $endDate = 0) {
 
 function doctorUserList() {
   global $db, $db_config;
-  $xtpl = new XTemplate("manager_list.tpl", PATH);
+  $xtpl = new XTemplate("list.tpl", PATH2);
 
-  $sql = "select a.first_name, a.userid, b.permission from `" . $db_config["prefix"] . "_users` a inner join `" . $db_config["prefix"] . "_rider_user` b on b.type = 1 and a.userid = b.user_id order by permission desc";
+  $sql = "select a.first_name, b.* from `" . $db_config["prefix"] . "_users` a inner join `" . PREFIX . "_user` b on a.userid = b.userid order by userid desc";
   $query = $db->query($sql);
 
   while ($row = $query->fetch()) {
     $xtpl->assign("id", $row["userid"]);
     $xtpl->assign("username", $row["first_name"]);
-    if ($row["permission"]) {
+    if ($row["manager"]) {
       $xtpl->parse("main.manager");
     }
     else {
