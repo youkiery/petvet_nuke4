@@ -316,7 +316,7 @@ function doctorUserList() {
   global $db, $db_config;
   $xtpl = new XTemplate("list.tpl", PATH2);
 
-  $sql = "select a.first_name, b.* from `" . $db_config["prefix"] . "_users` a inner join `" . PREFIX . "_user` b on a.userid = b.userid order by userid desc";
+  $sql = "select a.first_name, b.* from `" . $db_config["prefix"] . "_users` a inner join `" . PREFIX . "_user` b on a.userid = b.userid order by manager, userid desc";
   $query = $db->query($sql);
 
   while ($row = $query->fetch()) {
@@ -335,9 +335,9 @@ function doctorUserList() {
 
 function exceptUserList() {
   global $db, $db_config;
-  $xtpl = new XTemplate("manager_list.tpl", PATH);
+  $xtpl = new XTemplate("list.tpl", PATH2);
 
-  $sql = "select a.first_name, a.userid, b.except from `" . $db_config["prefix"] . "_users` a inner join `" . $db_config["prefix"] . "_rider_user` b on b.type = 1 and a.userid = b.user_id order by except desc";
+  $sql = "select a.first_name, a.last_name, b.* from `" . $db_config["prefix"] . "_users` a inner join `" . PREFIX . "_user` b on a.userid = b.userid order by except, a.userid desc";
   $query = $db->query($sql);
 
   while ($row = $query->fetch()) {

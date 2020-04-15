@@ -139,6 +139,12 @@ function managerModal() {
   return $xtpl->text();
 }
 
+function exceptModal() {
+  $xtpl = new XTemplate("modal.tpl", PATH2);
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function loadModal($name) {
   $xtpl = new XTemplate($name . ".tpl", PATH2);
   $xtpl->parse('main');

@@ -19,41 +19,56 @@ if (!empty($action)) {
 	switch ($action) {
 		case 'change':
 			$id = $nv_Request->get_string("id", "get/post", "");
-      $except = $nv_Request->get_int("except", "get/post", 0);
-      
-      if ($except) {
-        $except = 0;
-      }
-      else {
-        $except = 1;
-      }
+			$sql = 'select * from `' . PREFIX . '_user` where userid = '.  $id;
+			$query = $db->query($sql);
+			$user = $query->fetch();
 
-			if (checkUser($id)) {
-        $sql = "update `" . PREFIX . "_user` set except = $except where user_id = $id and type = 1";
-				if ($db->query($sql)) {
-					$result["status"] = 1;
-					$result["html"] = exceptUserList();
-				}
+			$sql = "update `" . PREFIX . "_user` set except = ". intval(!$user['except']) ." where userid = $id";
+			if ($db->query($sql)) {
+				$result["status"] = 1;
+				$result["html"] = exceptUserList();
 			}
 		break;
-		case 'remove':
-			$id = $nv_Request->get_string("id", "get/post", "");
+		case 'member-filter':
+      $result['status'] = 1;
+      $result['html'] = memberFilter();
+    break;
+    case 'insert-member':
+      $id = $nv_Request->get_int('id', 'post');
 
-			if (checkUser($id)) {
-				if ($db->query($sql)) {
-					$result["status"] = 1;
-					$result["html"] = exceptUserList();
-				}
-			}
+      $db->query('insert into `'. PREFIX .'_user` (userid, manager) values('. $id .', 1)');
+      $result['status'] = 1;
+      $result['html'] = memberFilter();
+      $result['html2'] = exceptUserList();
+    break;
+    case 'get-member':
+      $id = $nv_Request->get_int('id', 'post');
+
+      $query = $db->query('select * from `'. PREFIX .'_user` where userid = ' . $id);
+      $member = $query->fetch();
+
+      $result['status'] = 1;
+      $result['member'] = $member;
 		break;
+		case 'remove-member':
+      $id = $nv_Request->get_int('id', 'post');
+
+      $sql = 'update from `'. PREFIX .'_user` set except = 1 where userid = ' . $id;
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['notify'] = 'Đã xóa';
+        $result['html'] = exceptUserList();
+      }
+    break;
 	}
 
 	echo json_encode($result);
 	die();
 }
 
-$xtpl = new XTemplate("except.tpl", PATH);
+$xtpl = new XTemplate("main.tpl", PATH2);
 
+$xtpl->assign("modal", exceptModal());
 $xtpl->assign("content", exceptUserList());
 $xtpl->parse("main");
 

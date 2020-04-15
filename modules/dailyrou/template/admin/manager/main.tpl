@@ -9,7 +9,7 @@
     Thêm nhân viên mới
   </button>
 </div>
-<h2> Thay đổi danh sách quản lý </h2>
+<h2> Thay đổi danh sách nhân viên ngoại lệ </h2>
 <div id="content">
   {content}
 </div>
@@ -25,7 +25,7 @@
     $(".btn").attr("disabled", true)
     $.post(
       strHref,
-      { action: "change", type: type, id: id },
+      { action: "change", except: type, id: id },
       (response, status) => {
         checkResult(response, status).then(data => {
           $(".btn").attr("disabled", false)
@@ -38,67 +38,67 @@
   }
 
   function removeMember(id) {
-        global['id'] = id
-        $("#remove-modal").modal('show')
-    }
+    global['id'] = id
+    $("#remove-modal").modal('show')
+  }
 
-    function removeSubmit() {
-        $.post(
-            '',
-            { action: 'remove-member', id: global['id'], filter: checkFilter() },
-            (response, status) => {
-                checkResult(response, status).then(data => {
-                    $("#content").html(data['html'])
-                    $("#remove-modal").modal('hide')
-                })
-            }
-        )
-    }
+  function removeSubmit() {
+    $.post(
+      '',
+      { action: 'remove-member', id: global['id'], filter: checkFilter() },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#content").html(data['html'])
+          $("#remove-modal").modal('hide')
+        })
+      }
+    )
+  }
 
-    function checkFilter() {
-        return {
-            page: global['page'],
-            limit: 10
-        }
+  function checkFilter() {
+    return {
+      page: global['page'],
+      limit: 10
     }
+  }
 
-    function insertMemberSubmit(id) {
-        $.post(
-            '',
-            { action: 'insert-member', id: id, filter: checkFilter(), memfilter: checkMemberFilter() },
-            (response, status) => {
-                checkResult(response, status).then(data => {
-                    $("#member-content").html(data['html'])
-                    $("#content").html(data['html2'])
-                })
-            }
-        )
-    }
+  function insertMemberSubmit(id) {
+    $.post(
+      '',
+      { action: 'insert-member', id: id, filter: checkFilter(), memfilter: checkMemberFilter() },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#member-content").html(data['html'])
+          $("#content").html(data['html2'])
+        })
+      }
+    )
+  }
 
-    function goMemPage(page) {
-        global['memberpage'] = page
-        $.post(
-            '',
-            { action: 'member-filter', memfilter: checkMemberFilter() },
-            (response, status) => {
-                checkResult(response, status).then(data => {
-                    $("#member-content").html(data['html'])
-                })
-            }
-        )
-    }
+  function goMemPage(page) {
+    global['memberpage'] = page
+    $.post(
+      '',
+      { action: 'member-filter', memfilter: checkMemberFilter() },
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $("#member-content").html(data['html'])
+        })
+      }
+    )
+  }
 
-    function insertMember() {
-        $("#member-modal").modal('show')
-    }
+  function insertMember() {
+    $("#member-modal").modal('show')
+  }
 
-    function checkMemberFilter() {
-        return {
-            page: global['memberpage'],
-            limit: 10,
-            keyword: $("#member-keyword").val()
-        }
+  function checkMemberFilter() {
+    return {
+      page: global['memberpage'],
+      limit: 10,
+      keyword: $("#member-keyword").val()
     }
+  }
 
 </script>
 <!-- END: main -->
