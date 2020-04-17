@@ -77,6 +77,7 @@ if (!empty($action)) {
     case 'wconfirmSubmit':
       $startDate = $nv_Request->get_string("startDate", "get/post", "");
       $data = $nv_Request->get_array("data", "get/post");
+      $day = date('w');
 
       $startDate = totime($startDate);
       if ($data) {       
@@ -89,7 +90,7 @@ if (!empty($action)) {
             if ($row["color"] == "yellow") {
               $sql = "insert into `" . PREFIX . "_row` (type, user_id, time) values ($row[type], $user[userid], $time)";
               if ($db->query($sql) && $row['type'] > 1) {
-                $sql = "select count(*) as count from `". PREFIX ."_row` where user_id not in (select user_id from `". PREFIX . "_user` where type = 1 and except = 1) and (time between $time and " . ($time + A_DAY - 1) . ") and type = " . ($row["type"]);
+                $sql = "select count(*) as count from `". PREFIX ."_row` where user_id not in (select userid from `". PREFIX . "_user` where except = 1) and (time between $time and " . ($time + A_DAY - 1) . ") and type = " . ($row["type"]);
                 $query = $db->query($sql);
                 $count = $query->fetch()['count'];
                 $limit = 2;
@@ -148,13 +149,13 @@ if (!empty($action)) {
 
       if ($itemList) {
         $unuse = array();
-        $sql = "select * from `" . PREFIX . "_user` where type = 1 and user_id = $user_info[userid]";
+        $sql = "select * from `" . PREFIX . "_user` where userid = $user_info[userid]";
         $query = $db->query($sql);
         $user = $query->fetch();
         foreach ($itemList as $itemData) {
           $date = totime($itemData["date"]);
           $day = date('w', $date);
-          if (($user["permission"] || $date >= $today) || $itemData['color'] == 'purple') {
+          if (($user["manager"] || $date >= $today) || $itemData['color'] == 'purple') {
             if ($itemData["color"] == "purple") {
               $sql = "delete from `". PREFIX ."_row` where user_id = $doctorId and (time between $date and " . ($date + A_DAY - 1) . ") and type = " . ($itemData["type"] - 2);
               if ($db->query($sql)) {
@@ -193,7 +194,7 @@ if (!empty($action)) {
       
       while ($row = $query->fetch()) {
         $use = 0;
-        if ($row["user"] == $user_info["userid"]) {
+        if ($row["user_id"] == $user_info["userid"]) {
           $use = 1;
         }
         $daily[] = array("date" => date("d/m/Y", $row["time"]), "type" => $row["type"], "use" => $use);
@@ -250,12 +251,12 @@ $xtpl->assign("data", "{}");
 $xtpl->assign("this_week", date("d/m/Y", $this_week));
 $xtpl->assign("date", date("Y-m-d"));
 
-$sql = "select a.*, b.permission from `" . $db_config["prefix"] . "_users` a inner join `" . PREFIX . "_user` b on user_id = $user_id and type = 1 and a.userid = b.user_id";
+$sql = "select b.* from `" . $db_config["prefix"] . "_users` a inner join `" . PREFIX . "_user` b on b.userid = $user_id and a.userid = b.userid";
 $query = $db->query($sql);
 // die($sql);
 $xtpl->assign("admin", "false");
 if ($userList = $query->fetch()) {
-  if ($userList["permission"]) {
+  if ($userList["manager"]) {
     $xtpl->assign("admin", "true");
     $userList = doctorList();
     $xtpl->assign("doctor", blockSelectDoctor($user_id, $userList));
@@ -286,20 +287,21 @@ while ($row = $query->fetch()) {
   $daily[] = array("userid" => $row["user_id"], "date" => date("d/m/Y", $row["time"]), "type" => $row["type"], "use" => $use);
 }
 
-$sql = "select * from `" . $db_config["prefix"] . "_users` where userid in (select id from `" . PREFIX . "_user` where type = 1 and user_id <> $user_info[userid])";
-// die($sql);
+$sql = "select * from `" . $db_config["prefix"] . "_users` where userid in (select id from `" . PREFIX . "_user` where userid <> $user_info[userid])";
+
 $query = $db->query($sql);
 while($row = $query->fetch()) {
   $xtpl->assign("doctor_value", $row["userid"]);
   $xtpl->assign("doctor_name", $row["last_name"] . " " . $row["first_name"]);
 }
 
-$sql = "select first_name from `" . $db_config["prefix"] . "_users` where userid in (select user_id from `" . PREFIX . "_user` where type = 1 and except = 1)";
+$sql = "select first_name from `" . $db_config["prefix"] . "_users` where userid in (select userid from `" . PREFIX . "_user` where except = 1)";
 $query = $db->query($sql);
 $except = array();
 while($row = $query->fetch()) {
   $except[] = $row['first_name'];
 }
+$time = time();
 
 if (date('N', $time) < 23) {
 	$time = time() - A_DAY * 23;

@@ -272,7 +272,7 @@ function adminSummary($startDate = 0, $endDate = 0) {
   $xtpl = new XTemplate("summary.tpl", PATH);
   $user = array();
 
-  $sql = "select * from `" . $db_config["prefix"] . "_users` where userid in (select user_id from `" . $db_config["prefix"] . "_rider_user` where type = 1)";
+  $sql = "select * from `" . $db_config["prefix"] . "_users` where userid in (select userid from `" . PREFIX . "_user`)";
   $query = $db->query($sql);
 
   $xtpl->assign("from", date("d/m/Y", $startDate));

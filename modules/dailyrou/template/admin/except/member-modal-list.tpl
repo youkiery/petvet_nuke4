@@ -17,7 +17,4 @@
   </tr>
   <!-- END: row -->
 </table>
-<div class="form-group">
-  {nav}
-</div>
 <!-- END: main -->

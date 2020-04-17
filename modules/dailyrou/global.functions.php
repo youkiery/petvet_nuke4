@@ -31,7 +31,7 @@ function doctorList() {
   global $db, $db_config;
   $list = array();
 
-  $sql = "select userid, username, last_name, first_name from `" .  $db_config["prefix"] . "_users` where userid in (select user_id from `" . PREFIX . "_user` where type = 1)";
+  $sql = "select userid, username, last_name, first_name from `" .  $db_config["prefix"] . "_users` where userid in (select userid from `" . PREFIX . "_user`)";
   $query = $db->query($sql);
 
   while ($row = $query->fetch()) {
