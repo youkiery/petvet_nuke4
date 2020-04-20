@@ -12,7 +12,10 @@
         Tiêm phòng
       </th>
       <th>
-        {lang.vaccall}
+        Ngày tiêm
+      </th>
+      <th>
+        Ngày tái chủng
       </th>
     </tr>
   </thead>
@@ -27,12 +30,11 @@
     <td>
       {disease}
     </td>
-    <td class="calltime">
-      {calltime}
-    </td>
+    <td> {cometime} </td>
+    <td> {calltime} </td>
   </tr>
   <tr class="{brickcolor}">
-    <td colspan="2">
+    <td colspan="3">
       <!-- BEGIN: note -->
       {note}
       <!-- END: note -->

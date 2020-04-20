@@ -3533,9 +3533,7 @@
       formInsertXcode3.val(xcode[2])
       formInsertIsenderUnit.val(data['form']['isenderunit'])
       formInsertIreceiverUnit.val(data['form']['ireceiverunit'])
-      
       parseField(JSON.parse(data['form']['ig']))
-      
       formInsertExamDate.val(data['form']['examdate'])
       $("#form-insert-exam-date-2").val(data['form']['examdate2'])
       formInsertIresend.val(data['form']['iresend'])
@@ -3588,11 +3586,16 @@
       formInsertMcode.val(data['form']['mcode'])
       $("#signer_xsign").prop('checked', Number(data['form']['xsign']))
       lock = Number(data['form']['locker'])
+      if (lock) {
+        $("#signer_locking").text('Đã khóa')
+        $("#locker_button").attr('class', 'btn btn-warning')
+      }
+      else {
+        $("#locker_button").attr('class', 'btn btn-info')
+        $("#signer_locking").text('Chưa khóa')
+      }
       $("#signer_locker").val(lock)
-      if (lock) $("#signer_locker").text('Đã khóa')
-      else $("#signer_locker").text('Chưa khóa')
     }
-    console.log(1);
   }
 
   function insertSubmit() {
@@ -3605,7 +3608,7 @@
     if (Object.keys(data).length) {
       $.post(
         strHref,
-        {action: 'insert', form: global_form, id: global_id, data: data, page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val(), other: getFilter(), clone: global_clone, signer: checkSigner()},
+        {action: 'insert', form: global_form, id: global_id, page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val(), other: getFilter(), clone: global_clone, signer: checkSigner(), data: data},
         (response, status) => {
           checkResult(response, status).then(data => {
             remind = JSON.parse(data['remind'])
@@ -3801,6 +3804,7 @@
           global_id = 0
           global_form = 5
           global_saved = 5
+          data['form']['locker'] = 0
           parseData(data)
           
           $('a[href="#menu1"]').tab('show')
@@ -3981,10 +3985,13 @@
             html = html.replace('(ireceive)', data['receive'])
             html = html.replace('(ireceiver)', data['ireceiveremploy'])
             examdate = data['examdate']
+            xdate = data['examdate']
             if (data['examdate2'] && data['examdate'] != data['examdate2']) {
               examdate = data['examdate'] + ' đến ' + data['examdate2']
+              xdate = data['examdate2']
             }
             html = html.replace('(examDate)', examdate)
+            examdate = xdate.split('/')
 
             // html = html.replace('(examDate)', data['examdate'])
             html = html.replace(/examdate-0/g, examdate[0])
