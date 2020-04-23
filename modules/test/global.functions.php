@@ -136,6 +136,17 @@ function selectPetId($petid) {
   return $pet;
 }
 
+function checkStorage($filter) {
+  global $db;
+
+  $sql = 'select * from `'. VAC_PREFIX .'_position` where id = ' . $filter['id'];
+  $query = $db->query($sql);
+  $position = $query->fetch();
+  
+  if (!empty($position)) return 1;
+  return 0;
+}
+
 function checkSpecies($name) {
   global $db;
 
