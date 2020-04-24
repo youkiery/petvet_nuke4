@@ -1089,10 +1089,12 @@ function happyContent() {
 
     $xtpl = new XTemplate("list.tpl", PATH2);
   
-    $query = $db->query("select count(*) as count from `". UPREFIX ."_happy`");
+    $status = $filter['status'] - 1;
+    $query = $db->query("select count(*) as count from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') " . ($status >= 0 ? ' and status = ' . $status : '')); 
     $number = $query->fetch()['count'];
   
-    $query = $db->query("select * from `". UPREFIX ."_happy` order by id desc limit 10 offset " . ($filter['page'] - 1) * $filter['limit']);
+    $sql = "select * from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') " . ($status >= 0 ? ' and status = ' . $status : '') . " order by status, id desc limit $filter[limit] offset " . ($filter['page'] - 1) * $filter['limit'];
+    $query = $db->query($sql);
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
     while ($row = $query->fetch()) {
@@ -1102,10 +1104,40 @@ function happyContent() {
       $xtpl->assign('name', $row['name']);
       $xtpl->assign('mobile', $row['mobile']);
       $xtpl->assign('address', $row['address']);
-      if (!$row['active']) $xtpl->parse('main.row.undone');
+      if (!$row['status']) $xtpl->parse('main.row.undone');
       $xtpl->parse('main.row');
     }
     $xtpl->assign('nav', nav_generater('/admin/index.php?language=vi&nv=register&op=happy', $number, $filter['page'], $filter['limit']));
     $xtpl->parse('main');
     return $xtpl->text();
-  }
+}
+
+function happyPreview($id) {
+    global $db;
+
+    $xtpl = new XTemplate("preview.tpl", PATH2);
+  
+    $query = $db->query("select * from `". UPREFIX ."_happy` where id = " . $id);
+    $happy = $query->fetch();
+
+    $images = explode(',', $happy['image']);
+    $xtpl->assign('fullname', $happy['fullname']);
+    $xtpl->assign('mobile', $happy['mobile']);
+    $xtpl->assign('address', $happy['address']);
+    $xtpl->assign('name', $happy['name']);
+    $xtpl->assign('species', $happy['species']);
+
+    foreach ($images as $img) {
+        $xtpl->assign('image', $img);
+        $xtpl->parse('main.img');
+    }
+
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function happyModal() {
+    $xtpl = new XTemplate("modal.tpl", PATH2);
+    $xtpl->parse('main');
+    return $xtpl->text();
+}

@@ -12,16 +12,28 @@ $filter = array(
   'page' => $nv_Request->get_int('page', 'get', 1),
   'limit' => $nv_Request->get_int('limit', 'get', 10),
   'keyword' => $nv_Request->get_string('keyword', 'get', ''),
-  'court' => $nv_Request->get_int('court', 'get', 0),
-  'active' => $nv_Request->get_int('active', 'get', 0)
+  'status' => $nv_Request->get_int('status', 'get', 0)
 );
 
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
-    case 'get-info':
+    case 'done':
+      $id = $nv_Request->get_int('id', 'post', 0);
+
+      $sql = 'update `'. UPREFIX .'_happy` set status = 1 where id = ' . $id;
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = happyContent();
+      }
     break;  
+    case 'preview':
+      $id = $nv_Request->get_int('id', 'post', 0);
+
+      $result['status'] = 1;
+      $result['html'] = happyPreview($id);
+  break;  
   }
   echo json_encode($result);
   die();
@@ -31,7 +43,7 @@ $xtpl = new XTemplate("main.tpl", PATH2);
 
 // Danh sách khóa học, xác nhận
 $xtpl->assign('keyword', $filter['keyword']);
-$xtpl->assign('active_' . $filter['active'], 'selected');
+$xtpl->assign('active_' . $filter['status'], 'selected');
 
 // $sql = 'select * from `'. PREFIX .'court` order by name';
 // $query = $db->query($sql);
@@ -43,8 +55,8 @@ $xtpl->assign('active_' . $filter['active'], 'selected');
 //   $xtpl->parse('main.court');
 // }
 
-// $xtpl->assign('modal', modal());
-$xtpl->assign('content', happyContent($filter));
+$xtpl->assign('modal', happyModal());
+$xtpl->assign('content', happyContent());
 
 $xtpl->parse('main');
 $contents = $xtpl->text();
