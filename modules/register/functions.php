@@ -18,6 +18,8 @@ if (!in_array($op, array(
     define('NV_IS_MOD_NEWS', true);
 }
 require_once NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
+define('PREFIX', $db_config['prefix'] . '_' . $module_name . '_');
+define('PATH', NV_ROOTDIR . "/modules/". $module_file ."/template");
 define('PATH2', NV_ROOTDIR . "/modules/". $module_file ."/template/user/". $op);
 
 global $global_array_cat;

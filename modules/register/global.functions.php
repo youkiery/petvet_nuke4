@@ -11,8 +11,7 @@
 if (!defined('NV_MAINFILE')) {
     die('Stop!!!');
 }
-define('PREFIX', $db_config['prefix'] . '_' . $module_name . '_');
-define('PATH', NV_ROOTDIR . "/modules/". $module_file ."/template");
+define('UPREFIX', $db_config['prefix'] . '_' . $module_name);
 
 $global_code_defined = array(
     'cat_visible_status' => array(1, 2),

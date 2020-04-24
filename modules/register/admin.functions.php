@@ -11,6 +11,7 @@
 if (! defined('NV_ADMIN') or ! defined('NV_MAINFILE') or ! defined('NV_IS_MODADMIN')) {
     die('Stop!!!');
 }
+define('PATH2', NV_ROOTDIR . "/modules/". $module_file ."/template/admin/". $op);
 
 if ($NV_IS_ADMIN_MODULE) {
     define('NV_IS_ADMIN_MODULE', true);
@@ -1082,3 +1083,29 @@ function subCount() {
   $xtpl->parse('main');
   return $xtpl->text();
 }
+
+function happyContent() {
+    global $filter, $db;
+
+    $xtpl = new XTemplate("list.tpl", PATH2);
+  
+    $query = $db->query("select count(*) as count from `". UPREFIX ."_happy`");
+    $number = $query->fetch()['count'];
+  
+    $query = $db->query("select * from `". UPREFIX ."_happy` order by id desc limit 10 offset " . ($filter['page'] - 1) * $filter['limit']);
+    $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+
+    while ($row = $query->fetch()) {
+      $xtpl->assign('index', $index ++);
+      $xtpl->assign('id', $row['id']);
+      $xtpl->assign('fullname', $row['fullname']);
+      $xtpl->assign('name', $row['name']);
+      $xtpl->assign('mobile', $row['mobile']);
+      $xtpl->assign('address', $row['address']);
+      if (!$row['active']) $xtpl->parse('main.row.undone');
+      $xtpl->parse('main.row');
+    }
+    $xtpl->assign('nav', nav_generater('/admin/index.php?language=vi&nv=register&op=happy', $number, $filter['page'], $filter['limit']));
+    $xtpl->parse('main');
+    return $xtpl->text();
+  }

@@ -66,10 +66,10 @@ if (defined('NV_IS_SPADMIN')) {
 }
 
 $allow_func = array( 'main', 'view', 'stop', 'publtime', 'waiting', 'declined', 're-published', 'content', 'rpc', 'del_content', 'alias', 'topicajax', 'sourceajax', 'tagsajax');
-$allow_func[] = 'regist';
+$allow_func[] = 'happy';
 // $allow_func[] = 'court';
 
-$submenu['regist'] = 'Danh sách đăng ký';
+$submenu['happy'] = 'Danh sách ngày yêu thương';
 // $submenu['court'] = 'Danh sách khóa học';
 if (! isset($site_mods['cms'])) {
     $submenu['content'] = $lang_module['content_add'];
