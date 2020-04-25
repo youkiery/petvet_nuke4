@@ -183,8 +183,7 @@
     <br>
   </div>
   <div class="box-bordered" id="notify-content" style="display: none; margin-bottom: 20px;">
-    <p>Bạn đã đăng ký thành công, chúng tôi sẽ liên hệ với bạn theo số điện thoại cung cấp
-      để thông báo về lịch học cùng các vấn đề liên quan</p>
+    <p> Bạn đã đăng ký thành công, chúng tôi sẽ liên hệ bạn trong thời gian sớm nhất có thể. </p>
     <p class="text-center">
       Bạn có thể muốn: <br>
       <a href="/{module_name}"> Đăng ký thêm </a>
@@ -227,6 +226,7 @@
     vimage.install('image', 640, 640, (list) => {
       refreshImage(list)
     })
+    vimage.data['image'] = []
     // $(".primary").change(e => {
     //   id = e.currentTarget.getAttribute('rel')
     //   $(".sub[rel="+ id +"]").prop('checked', false)

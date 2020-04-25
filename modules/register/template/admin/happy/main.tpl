@@ -18,11 +18,11 @@
         <option value="1" {active_1}> Chưa xác nhận </option>
         <option value="2" {active_2}> Đã xác nhận </option>
       </select>
-      <div class="col-4">
-        <button class="btn btn-info">
-          Lọc danh sách
-        </button>
-      </div>
+    </div>
+    <div class="col-4">
+      <button class="btn btn-info">
+        Lọc danh sách
+      </button>
     </div>
   </div>
 </form>

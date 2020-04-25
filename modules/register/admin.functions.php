@@ -1090,10 +1090,10 @@ function happyContent() {
     $xtpl = new XTemplate("list.tpl", PATH2);
   
     $status = $filter['status'] - 1;
-    $query = $db->query("select count(*) as count from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') " . ($status >= 0 ? ' and status = ' . $status : '')); 
+    $query = $db->query("select count(*) as count from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') " . ($status >= 0 ? ' and status = ' . $status : ''));
     $number = $query->fetch()['count'];
   
-    $sql = "select * from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') " . ($status >= 0 ? ' and status = ' . $status : '') . " order by status, id desc limit $filter[limit] offset " . ($filter['page'] - 1) * $filter['limit'];
+    $sql = "select * from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') " . ($status >= 0 ? ' and status = ' . $status : '') . " order by status desc, id desc limit $filter[limit] offset " . ($filter['page'] - 1) * $filter['limit'];
     $query = $db->query($sql);
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
