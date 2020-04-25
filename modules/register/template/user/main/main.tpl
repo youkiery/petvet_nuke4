@@ -1,5 +1,23 @@
 <!-- BEGIN: main -->
 <style>
+  .black-wag {
+    background: gray;
+    position: fixed;
+    z-index: 1051;
+    top: 0;
+    left: 0;
+    opacity: .2;
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+  }
+
+  .loading {
+    position: fixed;
+    top: calc(50% - 75px);
+    left: calc(50% - 75px);
+    z-index: 1052;
+  }
+
   .child {
     margin-left: 5px;
     padding-left: 5px;
@@ -55,20 +73,42 @@
   }
 
   .thumb {
-    width: 100px; height: 100px;
+    width: 100px;
+    height: 100px;
     display: inline-block;
     position: relative;
   }
+
   .thumb img {
-    max-width: 100px; max-height: 100px;
+    max-width: 100px;
+    max-height: 100px;
   }
+
   .close {
-    position: absolute; top: 0px; right: 0px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+  }
+
+  .highlight {
+    font-weight: bold;
+    margin: 14px;
+    font-size: 1.25em;
+    color: deepskyblue;
+    text-shadow: 2px 2px 6px;
+  }
+
+  .pv_right {
+    display: none;
   }
 
   @media screen and (max-width: 992px) {
     .p_left {
       display: none;
+    }
+
+    .pv_right {
+      display: block;
     }
 
     .vetleft,
@@ -103,6 +143,10 @@
   }
 </style>
 <div class="container" style="margin-top: 20px; margin-bottom: 20px; ">
+  <div id="loading" style="display:none;">
+    <div class="black-wag"> </div>
+    <img class="loading" src="/assets/images/loading.gif">
+  </div>
   <div id="msgshow"></div>
 
   <div id="content" style="position: relative;">
@@ -111,15 +155,14 @@
         <img src="/assets/images/1.jpg">
       </div>
       <div class="vetleft vblock">
-        <p class="p_left"
-          style="font-weight: bold; margin: 14px; font-size: 1.25em; color: deepskyblue; text-shadow: 2px 2px 6px;">
-          Ngày yêu thương </p>
+        <p class="p_left pv_left highlight"> Ngày yêu thương </p>
       </div>
       <div class="vetright">
         <img src="/assets/images/2.jpg">
       </div>
       <div class="vetright vetright_block vblock">
-        <p style="font-weight: bold; margin: 14px; font-size: 1.25em; color: deepskyblue; text-shadow: 2px 2px 6px;">
+        <p class="pv_right highlight"> SIÊU THỊ - BỆNH VIỆN THÚ CƯNG THANH XUÂN </p>
+        <p class="highlight">
           Cắt tỉa miễn phí </p>
       </div>
     </div>
@@ -196,6 +239,8 @@
     </div>
     <p>Địa chỉ: 12-14 Lê Đại Hành, Buôn Ma Thuột</p>
     <p>Số điện thoại: 02626.290.609</p>
+    <p>Facebook: <a href="https://facebook.com/benhvienthucungthanhxuan">Bệnh viện thú cưng</a>, <a
+        href="https://facebook.com/petcoffee.com.vn"> petcoffee.com </a> </p>
   </div>
 </div>
 <script src="/modules/core/js/vhttp.js"></script>
@@ -254,12 +299,14 @@
     sdata = checkData()
     if (!sdata['name']) notify(sdata)
     else {
+      freeze()
       upload('image').then(list => {
-        vhttp.checkelse('', { action: 'submit', data: sdata, list: list }).then(data => {
+        vhttp.check('', { action: 'submit', data: sdata, list: list }).then(data => {
           // hiển thị thông báo liên hệ
           $("#content").hide()
           $("#notify-content").show()
-        })
+          defreeze()
+        }, () => { defreeze() })
       })
     }
   }
@@ -309,7 +356,6 @@
                 break;
             }
           }, function (error) {
-            console.log(error);
             checker++
             if (checker == limit) {
               resolve(image_data)
@@ -326,5 +372,14 @@
       });
     })
   }
+
+  function freeze() {
+    $("#loading").show()
+  }
+
+  function defreeze() {
+    $("#loading").hide()
+  }
+
 </script>
 <!-- END: main -->
