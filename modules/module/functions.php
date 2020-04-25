@@ -11,5 +11,6 @@ if (!defined('NV_SYSTEM')) {
   die('Stop!!!');
 }
 
-define('NV_IS_FORM', true); 
+define('NV_IS_MODULE', true); 
 define("PATH", NV_ROOTDIR . '/modules/' . $module_file . '/template/user/' . $op);
+define("PREFIX", $db_config['prefix'] . "_" . $module_name);

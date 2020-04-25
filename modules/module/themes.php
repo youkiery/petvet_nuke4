@@ -10,3 +10,6 @@
 if (!defined('PREFIX')) {
   die('Stop!!!');
 }
+
+include_once(NV_ROOTDIR . '/modules/' . $module_file . '/global.function.php');
+
