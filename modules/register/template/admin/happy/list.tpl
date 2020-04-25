@@ -15,6 +15,9 @@
     <td> {mobile} </td>
     <td>
       <!-- BEGIN: undone -->
+      <button class="btn btn-info btn-xs" onclick="edit({id})">
+        sửa
+      </button>
       <button class="btn btn-info btn-xs" onclick="done({id})">
         xác nhận
       </button>

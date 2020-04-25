@@ -295,6 +295,13 @@
     $("#image-list").html(html)
   }
 
+  function removeImage(remove_index) {
+    vimage.data['image'] = vimage.data['image'].filter((item, index) => {
+      return index !== remove_index
+    })
+    refreshImage(vimage.data['image'])
+  }
+
   function submit() {
     sdata = checkData()
     if (!sdata['name']) notify(sdata)
