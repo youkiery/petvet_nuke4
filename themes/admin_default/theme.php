@@ -262,6 +262,21 @@ function nv_admin_theme($contents, $head_site = 1)
         }
 
         // Vertical menu
+        // $list = array(
+        //     array(
+        //         'title' => 'Quản lý bệnh viện',
+        //         'child' => array('test', 'vinh', 'danang', 'phuyen', 'vir')
+        //     ),
+        //     array(
+        //         'title' => 'Petcoffee',
+        //         'child' => array('dailyrou', 'exp', 'general', 'kaizen', 'petwork', 'register', 'rider')
+        //     ),
+        //     array(
+        //         'title' => 'khác',
+        //         'child' => array('about', 'banners', 'biograph', 'comment', 'contact', 'freecontent', 'siteterms', 'statistics', 'voting')
+        //     )
+        // );
+
         foreach ($admin_menu_mods as $m => $v) {
             $xtpl->assign('MENU_CLASS', (($module_name == $m) ? ' class="active"' : ''));
             $xtpl->assign('MENU_HREF', $m);

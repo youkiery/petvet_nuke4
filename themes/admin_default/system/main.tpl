@@ -139,7 +139,21 @@
 							<!-- END: submenu -->
 						</li>
 						<!-- END: current -->
-					<!-- END: menu_loop -->
+						<!-- BEGIN: shorten -->
+						<li {MENU_CLASS}>
+							{MENU_SUB_NAME}
+							<!-- BEGIN: submenu -->
+							<ul class="dropdown-menu">
+								<!-- BEGIN: loop -->
+								<li>
+									<a href="{NV_BASE_ADMINURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MENU_SUB_HREF}&amp;{NV_OP_VARIABLE}={CUR_SUB_OP}">{CUR_SUB_NAME}</a>
+								</li>
+								<!-- END: loop -->
+							</ul>
+							<!-- END: submenu -->
+						</li>
+						<!-- END: current -->
+					<!-- END: shorten -->
 				</ul>
 				<div class="clearfix"> </div>
 			</div>
