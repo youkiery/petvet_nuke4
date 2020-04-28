@@ -70,17 +70,11 @@
   function checkData() {
     var data = {
       fullname: $("#fullname").val(),
-      name: $("#name").val(),
-      species: $("#species").val(),
       address: $("#address").val(),
-      facebook: $("#facebook").val(),
-      target: $("#target").val(),
-      note: $("#note").val(),
-      mobile: $("#mobile").val()
+      mobile: $("#mobile").val(),
+      note: $("#note").val()
     }
-    if (!data.name.length) return 'Tên trại không được để trống'
     if (!data.mobile.length) return 'Số điện thoại không được để trống'
-    if (!data.target.length) return 'Mục đích không được để trống'
     return data
   }
 

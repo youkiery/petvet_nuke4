@@ -196,19 +196,12 @@
         <div class="text-center" style="font-size: 1.5em; color: green; margin-bottom: 20px;"> <b> Mẫu đăng ký </b>
         </div>
         <div class="form-group row-x">
-          <div class="col-3"> Chủ trại </div>
+          <div class="col-3"> Họ tên </div>
           <div class="col-9">
             <input type="text" class="form-control" id="fullname">
           </div>
         </div>
         
-        <div class="form-group row-x">
-          <div class="col-3"> Tên trại <span style="color:red; font-size: 1.2em">(*)</span> </div>
-          <div class="col-9">
-            <input type="text" class="form-control" id="name">
-          </div>
-        </div>
-
         <div class="form-group row-x">
           <div class="col-3"> Địa chỉ </div>
           <div class="col-9">
@@ -217,30 +210,9 @@
         </div>
 
         <div class="form-group row-x">
-          <div class="col-3"> Số lượng giống </div>
-          <div class="col-9">
-            <input type="text" class="form-control" id="species">
-          </div>
-        </div>
-
-        <div class="form-group row-x">
-          <div class="col-3"> facebook </div>
-          <div class="col-9">
-            <input type="text" class="form-control" id="facebook">
-          </div>
-        </div>
-
-        <div class="form-group row-x">
           <div class="col-3"> Số điện thoại <span style="color:red; font-size: 1.2em">(*)</span> </div>
           <div class="col-9">
             <input type="text" class="form-control" id="mobile">
-          </div>
-        </div>
-
-        <div class="form-group row-x">
-          <div class="col-3"> Mục đích học <span style="color:red; font-size: 1.2em">(*)</span> </div>
-          <div class="col-9">
-            <input type="text" class="form-control" id="target">
           </div>
         </div>
 
@@ -360,16 +332,10 @@
   function checkData() {
     var data = {
       fullname: $("#fullname").val(),
-      name: $("#name").val(),
-      species: $("#species").val(),
       address: $("#address").val(),
-      facebook: $("#facebook").val(),
-      target: $("#target").val(),
-      mobile: $("#mobile").val()
+      mobile: $("#mobile").val(),
     }
-    if (!data.name.length) return 'Tên trại không được để trống'
     if (!data.mobile.length) return 'Số điện thoại không được để trống'
-    if (!data.target.length) return 'Mục đích không được để trống'
     return data
   }
 
