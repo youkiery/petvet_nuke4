@@ -87,6 +87,18 @@ while ($row = $query->fetch()) {
   $index++;
 }
 
+$sql = 'select * from (select * from `pet_vi_contest_5` order by id desc limit 2) a inner join `pet_vi_contest_detail` b on a.id = b.id';
+$query = $db->query($sql);
+$data = array();
+$index = 0;
+while ($row = $query->fetch()) {
+  $xtpl->assign('id', $row['id']);
+  $xtpl->assign('5' . $index . 'a', $row['title']);
+  $xtpl->assign('5' . $index . 'b', $row['hometext']);
+  $xtpl->assign('5' . $index . 'c', str_replace('"', '\'', $row['bodyhtml']));
+  $index++;
+}
+
 $sql = 'select * from (select * from `pet_vi_contest_4` order by id desc limit 1) a inner join `pet_vi_contest_detail` b on a.id = b.id';
 $query = $db->query($sql);
 $footer = $query->fetch();
@@ -97,6 +109,7 @@ $xtpl->assign('time', time());
 $xtpl->assign('data', json_encode($data));
 $xtpl->assign('modal', homeModal());
 
+$xtpl->assign('edu_block', eduBlock());
 $xtpl->assign('court_block', courtBlock());
 $xtpl->assign('help_block', helpBlock());
 $xtpl->parse('main');
@@ -104,4 +117,4 @@ $contents = $xtpl->text();
 
 include NV_ROOTDIR . "/modules/$module_file/template/layout/header.php";
 echo $contents;
-include NV_ROOTDIR . "/module/$module_file/template/layout/footer.php";
+include NV_ROOTDIR . "/modules/$module_file/template/layout/footer.php";

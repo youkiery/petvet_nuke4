@@ -101,6 +101,17 @@
   <!-- Example row of columns -->
   <div class="text-center">
     <h2>
+      CÁC KHÓA HỌC MIỄN PHÍ
+    </h2>
+  </div>
+  <hr>
+
+  {edu_block}
+
+  <hr>
+
+  <div class="text-center">
+    <h2>
       CÁC KHÓA HỌC
     </h2>
   </div>
@@ -192,6 +203,18 @@
         subtitle: `{33b}`,
         content: `{33c}`,
       }
+    },
+    5: {
+      0: {
+        title: `{50a}`,
+        subtitle: `{50b}`,
+        content: `{50c}`,
+      },
+      1: {
+        title: `{51a}`,
+        subtitle: `{51b}`,
+        content: `{51c}`,
+      }
     }
   }
 
@@ -210,6 +233,13 @@
   }
 
   function openRow2(id, type) {
+    $("#info2-title").html(data[type][id]['title'])
+    $("#info2-subtitle").html(data[type][id]['subtitle'])
+    $("#info2-content").html(data[type][id]['content'])
+    $("#info2-modal").modal('show')
+  }
+
+  function openRow3(id, type) {
     $("#info2-title").html(data[type][id]['title'])
     $("#info2-subtitle").html(data[type][id]['subtitle'])
     $("#info2-content").html(data[type][id]['content'])

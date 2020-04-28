@@ -18,6 +18,8 @@ if (!in_array($op, array(
     define('NV_IS_MOD_NEWS', true);
 }
 require_once NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
+define('PREFIX', $db_config['prefix'] . '_' . $module_name . '_');
+define('PATH', NV_ROOTDIR . "/modules/". $module_file ."/template");
 define('PATH2', NV_ROOTDIR . "/modules/". $module_file ."/template/user/". $op);
 
 global $global_array_cat;
@@ -48,45 +50,45 @@ if ($module_info['rss']) {
     );
 }
 
-foreach ($global_array_cat as $catid_i => $array_cat_i) {
-    if ($catid_i > 0 and $array_cat_i['parentid'] == 0) {
-        $act = 0;
-        $submenu = array();
-        if ($catid_i == $catid or $catid_i == $parentid) {
-            $act = 1;
-            if (!empty($global_array_cat[$catid_i]['subcatid'])) {
-                $array_catid = explode(',', $global_array_cat[$catid_i]['subcatid']);
-                foreach ($array_catid as $sub_catid_i) {
-                    $array_sub_cat_i = $global_array_cat[$sub_catid_i];
-                    $sub_act = 0;
-                    if ($sub_catid_i == $catid) {
-                        $sub_act = 1;
-                    }
-                    $submenu[] = array(
-                        $array_sub_cat_i['title'],
-                        $array_sub_cat_i['link'],
-                        $sub_act
-                    );
-                }
-            }
-        }
-        $nv_vertical_menu[] = array(
-            $array_cat_i['title'],
-            $array_cat_i['link'],
-            $act,
-            'submenu' => $submenu
-        );
-    }
+// foreach ($global_array_cat as $catid_i => $array_cat_i) {
+//     if ($catid_i > 0 and $array_cat_i['parentid'] == 0) {
+//         $act = 0;
+//         $submenu = array();
+//         if ($catid_i == $catid or $catid_i == $parentid) {
+//             $act = 1;
+//             if (!empty($global_array_cat[$catid_i]['subcatid'])) {
+//                 $array_catid = explode(',', $global_array_cat[$catid_i]['subcatid']);
+//                 foreach ($array_catid as $sub_catid_i) {
+//                     $array_sub_cat_i = $global_array_cat[$sub_catid_i];
+//                     $sub_act = 0;
+//                     if ($sub_catid_i == $catid) {
+//                         $sub_act = 1;
+//                     }
+//                     $submenu[] = array(
+//                         $array_sub_cat_i['title'],
+//                         $array_sub_cat_i['link'],
+//                         $sub_act
+//                     );
+//                 }
+//             }
+//         }
+//         $nv_vertical_menu[] = array(
+//             $array_cat_i['title'],
+//             $array_cat_i['link'],
+//             $act,
+//             'submenu' => $submenu
+//         );
+//     }
 
-    //Xac dinh RSS
-    if ($catid_i and $module_info['rss']) {
-        $rss[] = array(
-            'title' => $module_info['custom_title'] . ' - ' . $array_cat_i['title'],
-            'src' => NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $module_info['alias']['rss'] . '/' . $array_cat_i['alias']
-        );
-    }
-}
-unset($result, $catid_i, $parentid_i, $title_i, $alias_i);
+//     //Xac dinh RSS
+//     if ($catid_i and $module_info['rss']) {
+//         $rss[] = array(
+//             'title' => $module_info['custom_title'] . ' - ' . $array_cat_i['title'],
+//             'src' => NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $module_info['alias']['rss'] . '/' . $array_cat_i['alias']
+//         );
+//     }
+// }
+// unset($result, $catid_i, $parentid_i, $title_i, $alias_i);
 
 $module_info['submenu'] = 0;
 
@@ -246,6 +248,26 @@ function helpBlock() {
   $sql = 'select * from pet_vi_contest_3 order by id desc limit 4';
   $query = $db->query($sql);
   $xtpl->assign('type', 3);
+  $index = 0;
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('title', $row['title']);
+    $xtpl->assign('img', $row['homeimgfile']);
+    $xtpl->assign('short_intro', $row['hometext']);
+    $xtpl->parse('main.block');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function eduBlock() {
+  global $db, $module_name;
+  $xtpl = new XTemplate("edu-block.tpl", PATH2);
+  $xtpl->assign('module_name', $module_name);
+
+  $sql = 'select * from pet_vi_contest_5 order by id desc limit 2';
+  $query = $db->query($sql);
+  $xtpl->assign('type', 5);
   $index = 0;
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index++);
