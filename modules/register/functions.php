@@ -266,3 +266,60 @@ function homeModal() {
   $xtpl->parse('main');
   return $xtpl->text();
 }
+
+function happyContent() {
+    global $filter, $db;
+
+    $xtpl = new XTemplate("list.tpl", PATH2);
+  
+    $status = $filter['status'] - 1;
+    $query = $db->query("select count(*) as count from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') " . ($status >= 0 ? ' and status = ' . $status : ''));
+    $number = $query->fetch()['count'];
+  
+    $sql = "select * from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') " . ($status >= 0 ? ' and status = ' . $status : '') . " order by status desc, id desc limit $filter[limit] offset " . ($filter['page'] - 1) * $filter['limit'];
+    $query = $db->query($sql);
+    $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+
+    while ($row = $query->fetch()) {
+      $xtpl->assign('index', $index ++);
+      $xtpl->assign('id', $row['id']);
+      $xtpl->assign('fullname', $row['fullname']);
+      $xtpl->assign('name', $row['name']);
+      $xtpl->assign('mobile', $row['mobile']);
+      $xtpl->assign('address', $row['address']);
+      $xtpl->parse('main.row');
+    }
+    $xtpl->assign('nav', nav_generater('/admin/index.php?language=vi&nv=register&op=happy', $number, $filter['page'], $filter['limit']));
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function happyPreview($id) {
+    global $db;
+
+    $xtpl = new XTemplate("preview.tpl", PATH2);
+  
+    $query = $db->query("select * from `". UPREFIX ."_happy` where id = " . $id);
+    $happy = $query->fetch();
+
+    $images = explode(',', $happy['image']);
+    $xtpl->assign('fullname', $happy['fullname']);
+    $xtpl->assign('mobile', $happy['mobile']);
+    $xtpl->assign('address', $happy['address']);
+    $xtpl->assign('name', $happy['name']);
+    $xtpl->assign('species', $happy['species']);
+
+    foreach ($images as $img) {
+        $xtpl->assign('image', $img);
+        $xtpl->parse('main.img');
+    }
+
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function happyModal() {
+    $xtpl = new XTemplate("modal.tpl", PATH2);
+    $xtpl->parse('main');
+    return $xtpl->text();
+}

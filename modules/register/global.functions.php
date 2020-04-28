@@ -565,6 +565,19 @@ function getSpecies($id) {
   return '';
 }
 
+function checkLevel($userid) {
+    global $db, $db_config, $module_name;
+
+    if (!empty($userid)) {
+        $sql = 'select * from `'. $db_config['prefix'] .'_config` where config_name = "'. $module_name .'_level" and config_value = ' . $userid;
+        $query = $db->query($sql);
+
+        if (!empty($query->fetch())) {
+            return true;
+        }
+    }
+    return false;
+}
 
 function nav_generater($url, $number, $page, $limit) {
     $html = '';

@@ -140,9 +140,10 @@
 						</li>
 						<!-- END: current -->
 						<!-- BEGIN: shorten -->
-						<li {MENU_CLASS}>
-							{MENU_SUB_NAME}
-							<!-- BEGIN: submenu -->
+						<li class="dropdown">
+							<a href="#">
+								{MENU_SUB_NAME}
+							</a>
 							<ul class="dropdown-menu">
 								<!-- BEGIN: loop -->
 								<li>
@@ -150,7 +151,6 @@
 								</li>
 								<!-- END: loop -->
 							</ul>
-							<!-- END: submenu -->
 						</li>
 						<!-- END: current -->
 					<!-- END: shorten -->
