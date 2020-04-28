@@ -16,7 +16,7 @@ if (!empty($action)) {
       $data = $nv_Request->get_array('data', 'post');
       $list = $nv_Request->get_array('list', 'post');
 
-      $sql = "insert into `". UPREFIX ."_row` (fullname, name, species, mobile, address, image) values('$data[fullname]', '$data[name]', '$data[species]', '$data[mobile]', '$data[address]', '". implode(',', $list) ."')";
+      $sql = "insert into `". PREFIX ."_row` (fullname, name, species, mobile, address, facebook, target, image) values('$data[fullname]', '$data[name]', '$data[species]', '$data[mobile]', '$data[address]', '$data[facebook]', '$data[target]',  '". implode(',', $list) ."')";
       
       if ($db->query($sql)) {
         $result['status'] = 1;
@@ -27,6 +27,7 @@ if (!empty($action)) {
   die();
 }
 
+$page_title = 'Đăng ký học miễn phí';
 $xtpl = new XTemplate("main.tpl", PATH);
 $xtpl->assign('module_name', $module_name);
 

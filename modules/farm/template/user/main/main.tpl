@@ -198,35 +198,49 @@
         <div class="form-group row-x">
           <div class="col-3"> Chủ trại </div>
           <div class="col-9">
-            <input type="text" class="form-control" id="signup-fullname">
+            <input type="text" class="form-control" id="fullname">
           </div>
         </div>
-
+        
         <div class="form-group row-x">
-          <div class="col-3"> Tên thú cưng </div>
+          <div class="col-3"> Tên trại <span style="color:red; font-size: 1.2em">(*)</span> </div>
           <div class="col-9">
-            <input type="text" class="form-control" id="signup-name">
-          </div>
-        </div>
-
-        <div class="form-group row-x">
-          <div class="col-3"> Giống loài </div>
-          <div class="col-9">
-            <input type="text" class="form-control" id="signup-species">
-          </div>
-        </div>
-
-        <div class="form-group row-x">
-          <div class="col-3"> Số điện thoại <span style="color:red; font-size: 1.2em">(*)</span> </div>
-          <div class="col-9">
-            <input type="text" class="form-control" id="signup-mobile">
+            <input type="text" class="form-control" id="name">
           </div>
         </div>
 
         <div class="form-group row-x">
           <div class="col-3"> Địa chỉ </div>
           <div class="col-9">
-            <input type="text" class="form-control" id="signup-address">
+            <input type="text" class="form-control" id="address">
+          </div>
+        </div>
+
+        <div class="form-group row-x">
+          <div class="col-3"> Số lượng giống </div>
+          <div class="col-9">
+            <input type="text" class="form-control" id="species">
+          </div>
+        </div>
+
+        <div class="form-group row-x">
+          <div class="col-3"> facebook </div>
+          <div class="col-9">
+            <input type="text" class="form-control" id="facebook">
+          </div>
+        </div>
+
+        <div class="form-group row-x">
+          <div class="col-3"> Số điện thoại <span style="color:red; font-size: 1.2em">(*)</span> </div>
+          <div class="col-9">
+            <input type="text" class="form-control" id="mobile">
+          </div>
+        </div>
+
+        <div class="form-group row-x">
+          <div class="col-3"> Mục đích học <span style="color:red; font-size: 1.2em">(*)</span> </div>
+          <div class="col-9">
+            <input type="text" class="form-control" id="target">
           </div>
         </div>
 
@@ -251,8 +265,8 @@
     <br>
   </div>
   <div class="box-bordered" id="notify-content" style="display: none; margin-bottom: 20px;">
-    <p> Bạn đã đăng ký thành công, chúng tôi sẽ liên hệ bạn trong thời gian sớm nhất có thể. </p>
     <p class="text-center">
+      <span> Bạn đã đăng ký thành công, chúng tôi sẽ liên hệ bạn trong thời gian sớm nhất có thể. </span>
       Bạn có thể muốn: <br>
       <a href="/{module_name}"> Đăng ký thêm </a>
     </p>
@@ -345,13 +359,17 @@
 
   function checkData() {
     var data = {
-      fullname: $("#signup-fullname").val(),
-      name: $("#signup-name").val(),
-      species: $("#signup-species").val(),
-      address: $("#signup-address").val(),
-      mobile: $("#signup-mobile").val()
+      fullname: $("#fullname").val(),
+      name: $("#name").val(),
+      species: $("#species").val(),
+      address: $("#address").val(),
+      facebook: $("#facebook").val(),
+      target: $("#target").val(),
+      mobile: $("#mobile").val()
     }
+    if (!data.name.length) return 'Tên trại không được để trống'
     if (!data.mobile.length) return 'Số điện thoại không được để trống'
+    if (!data.target.length) return 'Mục đích không được để trống'
     return data
   }
 

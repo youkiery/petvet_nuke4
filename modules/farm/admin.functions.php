@@ -17,7 +17,7 @@ include_once(NV_ROOTDIR . "/modules/". $module_file ."/global.functions.php");
 define('NV_IS_ADMIN_MODULE', true);
 define('PATH', NV_ROOTDIR . "/modules/". $module_file ."/template/admin/". $op);
 
-function happyContent() {
+function content() {
     global $filter, $db;
 
     $xtpl = new XTemplate("list.tpl", PATH);
@@ -45,7 +45,7 @@ function happyContent() {
     return $xtpl->text();
 }
 
-function happyPreview($id) {
+function preview($id) {
     global $db;
 
     $xtpl = new XTemplate("preview.tpl", PATH);
@@ -55,10 +55,13 @@ function happyPreview($id) {
 
     $images = explode(',', $happy['image']);
     $xtpl->assign('fullname', $happy['fullname']);
-    $xtpl->assign('mobile', $happy['mobile']);
-    $xtpl->assign('address', $happy['address']);
     $xtpl->assign('name', $happy['name']);
     $xtpl->assign('species', $happy['species']);
+    $xtpl->assign('address', $happy['address']);
+    $xtpl->assign('facebook', $happy['facebook']);
+    $xtpl->assign('target', $happy['target']);
+    $xtpl->assign('note', $happy['note']);
+    $xtpl->assign('mobile', $happy['mobile']);
 
     foreach ($images as $img) {
         $xtpl->assign('image', $img);
@@ -69,7 +72,7 @@ function happyPreview($id) {
     return $xtpl->text();
 }
 
-function happyModal() {
+function modal() {
     $xtpl = new XTemplate("modal.tpl", PATH);
     $xtpl->parse('main');
     return $xtpl->text();

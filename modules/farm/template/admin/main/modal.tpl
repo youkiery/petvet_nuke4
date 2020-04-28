@@ -3,7 +3,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
-        <div class="form-control">
+        <div class="form-group">
           Thông tin chi tiết
           <div type="button" class="close" data-dismiss="modal"> &times; </div>
         </div>
@@ -16,7 +16,7 @@
   </div>
 </div>
 
-<div class="modal" id="edit-modal" role="dialog">
+<div class="modal" id="modal" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
@@ -26,44 +26,58 @@
         </div>
 
         <div class="form-group row-x">
-          <div class="col-3"> Chủ nuôi </div>
+          <div class="col-3"> Chủ trại </div>
           <div class="col-9">
-            <input type="text" class="form-control" id="edit-fullname">
+            <input type="text" class="form-control" id="fullname">
           </div>
         </div>
-
+        
         <div class="form-group row-x">
-          <div class="col-3"> Tên thú cưng </div>
+          <div class="col-3"> Tên trại <span style="color:red; font-size: 1.2em">(*)</span> </div>
           <div class="col-9">
-            <input type="text" class="form-control" id="edit-name">
-          </div>
-        </div>
-
-        <div class="form-group row-x">
-          <div class="col-3"> Giống loài </div>
-          <div class="col-9">
-            <input type="text" class="form-control" id="edit-species">
-          </div>
-        </div>
-
-        <div class="form-group row-x">
-          <div class="col-3"> Số điện thoại <span style="color:red; font-size: 1.2em">(*)</span> </div>
-          <div class="col-9">
-            <input type="text" class="form-control" id="edit-mobile">
+            <input type="text" class="form-control" id="name">
           </div>
         </div>
 
         <div class="form-group row-x">
           <div class="col-3"> Địa chỉ </div>
           <div class="col-9">
-            <input type="text" class="form-control" id="edit-address">
+            <input type="text" class="form-control" id="address">
+          </div>
+        </div>
+
+        <div class="form-group row-x">
+          <div class="col-3"> Số lượng giống </div>
+          <div class="col-9">
+            <input type="text" class="form-control" id="species">
+          </div>
+        </div>
+
+        <div class="form-group row-x">
+          <div class="col-3"> facebook </div>
+          <div class="col-9">
+            <input type="text" class="form-control" id="facebook">
+          </div>
+        </div>
+
+        <div class="form-group row-x">
+          <div class="col-3"> Số điện thoại <span style="color:red; font-size: 1.2em">(*)</span> </div>
+          <div class="col-9">
+            <input type="text" class="form-control" id="mobile">
+          </div>
+        </div>
+
+        <div class="form-group row-x">
+          <div class="col-3"> Mục đích học <span style="color:red; font-size: 1.2em">(*)</span> </div>
+          <div class="col-9">
+            <input type="text" class="form-control" id="target">
           </div>
         </div>
 
         <div class="form-group row-x">
           <div class="col-3"> Ghi chú </div>
           <div class="col-9">
-            <textarea class="form-control" id="edit-note" rows="3"></textarea>
+            <textarea class="form-control" id="note" rows="3"></textarea>
           </div>
         </div>
 

@@ -34,11 +34,11 @@ if (!empty($action)) {
       $id = $nv_Request->get_int('id', 'post', 0);
       $data = $nv_Request->get_array('data', 'post');
 
-      $sql = 'update `'. PREFIX .'_row` set fullname = "'. $data['fullname'] .'", mobile = "'. $data['mobile'] .'", address = "'. $data['address'] .'", name = "'. $data['name'] .'", species = "'. $data['species'] .'", note = "'. $data['note'] .'" where id = ' . $id;
+      $sql = 'update `'. PREFIX .'_row` set fullname = "'. $data['fullname'] .'", mobile = "'. $data['mobile'] .'", address = "'. $data['address'] .'", name = "'. $data['name'] .'", species = "'. $data['species'] .'", facebook = "'. $data['facebook'] .'", target = "'. $data['target'] .'", note = "'. $data['note'] .'" where id = ' . $id;
       // die($sql);
       if ($db->query($sql)) {
         $result['status'] = 1;
-        $result['html'] = happyContent();
+        $result['html'] = content();
       }
     break;  
     case 'done':
@@ -47,14 +47,14 @@ if (!empty($action)) {
       $sql = 'update `'. PREFIX .'_row` set status = 1 where id = ' . $id;
       if ($db->query($sql)) {
         $result['status'] = 1;
-        $result['html'] = happyContent();
+        $result['html'] = content();
       }
     break;  
     case 'preview':
       $id = $nv_Request->get_int('id', 'post', 0);
 
       $result['status'] = 1;
-      $result['html'] = happyPreview($id);
+      $result['html'] = preview($id);
   break;  
   }
   echo json_encode($result);
@@ -77,8 +77,8 @@ $xtpl->assign('active_' . $filter['status'], 'selected');
 //   $xtpl->parse('main.court');
 // }
 
-$xtpl->assign('modal', happyModal());
-$xtpl->assign('content', happyContent());
+$xtpl->assign('modal', modal());
+$xtpl->assign('content', content());
 
 $xtpl->parse('main');
 $contents = $xtpl->text();

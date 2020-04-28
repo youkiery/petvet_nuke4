@@ -55,26 +55,32 @@
     vhttp.checkelse('', { action: 'get-info', id: id }).then(data => {
       global['id'] = id
       refreshImage(data['data']['image'])
-      $("#edit-fullname").val(data['data']['fullname'])
-      $("#edit-mobile").val(data['data']['mobile'])
-      $("#edit-address").val(data['data']['address'])
-      $("#edit-name").val(data['data']['name'])
-      $("#edit-species").val(data['data']['species'])
-      $("#edit-note").val(data['data']['note'])
-      $("#edit-modal").modal('show')
+      $("#fullname").val(data['data']['fullname'])
+      $("#mobile").val(data['data']['mobile'])
+      $("#address").val(data['data']['address'])
+      $("#name").val(data['data']['name'])
+      $("#species").val(data['data']['species'])
+      $("#facebook").val(data['data']['facebook'])
+      $("#target").val(data['data']['target'])
+      $("#note").val(data['data']['note'])
+      $("#modal").modal('show')
     })
   }
 
   function checkData() {
     var data = {
-      fullname: $("#edit-fullname").val(),
-      name: $("#edit-name").val(),
-      species: $("#edit-species").val(),
-      address: $("#edit-address").val(),
-      mobile: $("#edit-mobile").val(),
-      note: $("#edit-note").val()
+      fullname: $("#fullname").val(),
+      name: $("#name").val(),
+      species: $("#species").val(),
+      address: $("#address").val(),
+      facebook: $("#facebook").val(),
+      target: $("#target").val(),
+      note: $("#note").val(),
+      mobile: $("#mobile").val()
     }
+    if (!data.name.length) return 'Tên trại không được để trống'
     if (!data.mobile.length) return 'Số điện thoại không được để trống'
+    if (!data.target.length) return 'Mục đích không được để trống'
     return data
   }
 
@@ -84,7 +90,7 @@
     else {
       vhttp.checkelse('', { action: 'edit', data: sdata, id: global['id'] }).then(data => {
         $("#content").html(data['html'])
-        $("#edit-modal").modal('hide')
+        $("#smodal").modal('hide')
       })
     }
   }
