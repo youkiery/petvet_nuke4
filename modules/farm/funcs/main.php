@@ -6,7 +6,7 @@
  * @Createdate Mon, 28 Oct 2019 15:00:00 GMT
  */
 
-if (!defined('NV_IS_MOD_NEWS')) die('Stop!!!');
+if (!defined('NV_IS_MOD_MODULE')) die('Stop!!!');
 
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
@@ -27,7 +27,7 @@ if (!empty($action)) {
   die();
 }
 
-$xtpl = new XTemplate("main.tpl", PATH2);
+$xtpl = new XTemplate("main.tpl", PATH);
 $xtpl->assign('module_name', $module_name);
 
 $xtpl->parse('main');

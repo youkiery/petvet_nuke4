@@ -155,7 +155,7 @@
         <img src="/assets/images/1.jpg">
       </div>
       <div class="vetleft vblock">
-        <p class="p_left pv_left highlight"> Ngày yêu thương </p>
+        <p class="p_left pv_left highlight"> Kỹ thuật cơ bản  </p>
       </div>
       <div class="vetright">
         <img src="/assets/images/2.jpg">
@@ -163,7 +163,7 @@
       <div class="vetright vetright_block vblock">
         <p class="pv_right highlight"> SIÊU THỊ - BỆNH VIỆN THÚ CƯNG THANH XUÂN </p>
         <p class="highlight">
-          Cắt tỉa miễn phí </p>
+          Đăng ký học miễn phí </p>
       </div>
     </div>
     <div>
@@ -171,7 +171,7 @@
         <div class="text-center" style="font-size: 1.5em; color: green; margin-bottom: 20px;"> <b> Mẫu đăng ký </b>
         </div>
         <div class="form-group row-x">
-          <div class="col-3"> Chủ nuôi </div>
+          <div class="col-3"> Chủ trại </div>
           <div class="col-9">
             <input type="text" class="form-control" id="signup-fullname">
           </div>
