@@ -8,16 +8,10 @@
 <form>
   <input type="hidden" name="nv" value="register">
   <input type="hidden" name="op" value="happy">
+  <input type="hidden" name="status" value="{status}">
   <div class="form-group row-x">
     <div class="col-4">
       <input type="text" class="form-control" id="filter-keyword" value="{keyword}" placeholder="Nhập tên người, SĐT">
-    </div>
-    <div class="col-4">
-      <select class="form-control" name="status">
-        <option value="0" {active_0}> Tất cả </option>
-        <option value="1" {active_1}> Chưa xác nhận </option>
-        <option value="2" {active_2}> Đã xác nhận </option>
-      </select>
     </div>
     <div class="col-4">
       <button class="btn btn-info">
@@ -26,6 +20,11 @@
     </div>
   </div>
 </form>
+
+<ul class="nav nav-tabs">
+  <li class="{status0}"> <a href="/admin/index.php?nv={module_name}&op=happy&status=0"> Chưa duyệt </a></li>
+  <li class="{status1}"> <a href="/admin/index.php?nv={module_name}&op=happy&status=1"> Đã duyệt </a></li>
+</ul>
 
 <div id="content">
   {content}
@@ -38,8 +37,8 @@
     image: []
   }
 
-  function done(id) {
-    vhttp.checkelse('', { action: 'done', id: id }).then(data => {
+  function done(id, type) {
+    vhttp.checkelse('', { action: 'done', id: id, type: type }).then(data => {
       $("#content").html(data['html'])
     })
   }
@@ -62,6 +61,18 @@
       $("#edit-species").val(data['data']['species'])
       $("#edit-note").val(data['data']['note'])
       $("#edit-modal").modal('show')
+    })
+  }
+
+  function remove(id) {
+    global['id'] = id
+    $("#remove-modal").modal('show')
+  }
+
+  function removeSubmit(id) {
+    vhttp.checkelse('', { action: 'remove', id: global['id'] }).then(data => {
+      $("#content").html(data['html'])
+      $("#remove-modal").modal('hide')
     })
   }
 
@@ -94,7 +105,7 @@
     list.forEach((item, index) => {
       html += `
       <div class="thumb">
-        <img src="`+ item + `">
+        <img class="img-responsive" src="`+ item + `">
       </div>`
     })
     $("#image-list").html(html)

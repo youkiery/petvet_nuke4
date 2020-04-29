@@ -24,6 +24,7 @@ if ($NV_IS_ADMIN_FULL_MODULE) {
 define('NV_MIN_MEDIUM_SYSTEM_ROWS', 100000);
 define('PREFIX', $db_config['prefix'] . '_contest_');
 define('PATH', NV_ROOTDIR . '/modules/' . $module_file . '/template/admin/' . $op);
+$status_data = array(0 => 'xác nhận', 'chưa xác nhận');
 
 $array_viewcat_full = array(
     'viewcat_page_new' => $lang_module['viewcat_page_new'],
@@ -1085,18 +1086,21 @@ function subCount() {
 }
 
 function happyContent() {
-    global $filter, $db;
+    global $filter, $db, $status_data;
 
     $xtpl = new XTemplate("list.tpl", PATH2);
   
-    $status = $filter['status'] - 1;
-    $query = $db->query("select count(*) as count from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') " . ($status >= 0 ? ' and status = ' . $status : ''));
+    $query = $db->query("select count(*) as count from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') and status = " . $filter['status']);
     $number = $query->fetch()['count'];
   
-    $sql = "select * from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') " . ($status >= 0 ? ' and status = ' . $status : '') . " order by status desc, id desc limit $filter[limit] offset " . ($filter['page'] - 1) * $filter['limit'];
+    $sql = "select * from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') and status = " . $filter['status'] . " order by status desc, id desc limit $filter[limit] offset " . ($filter['page'] - 1) * $filter['limit'];
     $query = $db->query($sql);
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
+    $xtpl->assign('type', intval(!$filter['status']));
+    $xtpl->assign('done', $status_data[$filter['status']]);
+    if ($filter['status']) $xtpl->assign('done_btn', 'btn-warning');
+    else $xtpl->assign('done_btn', 'btn-info');
     while ($row = $query->fetch()) {
       $xtpl->assign('index', $index ++);
       $xtpl->assign('id', $row['id']);
@@ -1104,10 +1108,9 @@ function happyContent() {
       $xtpl->assign('name', $row['name']);
       $xtpl->assign('mobile', $row['mobile']);
       $xtpl->assign('address', $row['address']);
-      if (!$row['status']) $xtpl->parse('main.row.undone');
       $xtpl->parse('main.row');
     }
-    $xtpl->assign('nav', nav_generater('/admin/index.php?language=vi&nv=register&op=happy', $number, $filter['page'], $filter['limit']));
+    $xtpl->assign('nav', nav_generater('/admin/index.php?language=vi&nv=register&op=happy&status=' . $filter['status'], $number, $filter['page'], $filter['limit']));
     $xtpl->parse('main');
     return $xtpl->text();
 }

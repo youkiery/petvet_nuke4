@@ -14,14 +14,15 @@
     <td> {name} </td>
     <td> {mobile} </td>
     <td>
-      <!-- BEGIN: undone -->
       <button class="btn btn-info btn-xs" onclick="edit({id})">
         sửa
       </button>
-      <button class="btn btn-info btn-xs" onclick="done({id})">
-        xác nhận
+      <button class="btn btn-danger btn-xs" onclick="remove({id})">
+        xóa
       </button>
-      <!-- END: undone -->
+      <button class="btn {done_btn} btn-xs" onclick="done({id}, {type})">
+        {done}
+      </button>
       <button class="btn btn-info btn-xs" onclick="preview({id})">
         chi tiết
       </button>
