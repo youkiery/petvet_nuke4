@@ -173,8 +173,8 @@
           <div class="form-group">
             <a href="/{module_name}/list"> Danh sách đăng ký </a>
           </div>
-          <b> Mẫu đăng ký </b>
           <!-- END: manager -->
+          <b> Mẫu đăng ký </b>
         </div>
         <div class="form-group row-x">
           <div class="col-3"> Chủ nuôi </div>

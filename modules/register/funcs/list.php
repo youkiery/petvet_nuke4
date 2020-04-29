@@ -15,6 +15,11 @@ $filter = array(
   'status' => $nv_Request->get_int('status', 'get', 0)
 );
 
+
+if (empty($user_info) || !checkLevel($user_info['userid'])) {
+  header('location: /' . $module_name);
+}
+
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
@@ -61,10 +66,15 @@ if (!empty($action)) {
   die();
 }
 $xtpl = new XTemplate("main.tpl", PATH2);
+$xtpl->assign('module_name', $module_name);
+
+$page_title = "Danh sách đăng ký ngày yêu thương";
 
 // Danh sách khóa học, xác nhận
 $xtpl->assign('keyword', $filter['keyword']);
-$xtpl->assign('active_' . $filter['status'], 'selected');
+
+$xtpl->assign('status', $filter['status']);
+$xtpl->assign('status'. $filter['status'], 'active');
 
 $xtpl->assign('modal', happyModal());
 $xtpl->assign('content', happyContent());

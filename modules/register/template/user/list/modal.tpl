@@ -3,7 +3,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
-        <div class="form-control">
+        <div class="form-group">
           Thông tin chi tiết
           <div type="button" class="close" data-dismiss="modal"> &times; </div>
         </div>

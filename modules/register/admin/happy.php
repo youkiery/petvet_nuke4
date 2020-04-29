@@ -66,6 +66,35 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = happyPreview($id);
   break;  
+  case 'employ-filter':
+    $id = $nv_Request->get_int('id', 'post', '');
+    $name = $nv_Request->get_string('name', 'post', '');
+  
+    $result['status'] = 1;
+    $result['html'] = managerContentId($name);
+    break;
+  case 'insert-employ':
+    $id = $nv_Request->get_int('id', 'post', '');
+    $name = $nv_Request->get_string('name', 'post', '');
+  
+    $sql = 'select * from `'. $db_config['prefix'] .'_config` where config_name = "'. $module_name .'_level" and config_value = '. $id;
+    $query = $db->query($sql);
+    if (empty($row = $query->fetch())) {
+      $sql = 'insert into `'. $db_config['prefix'] .'_config` (lang, module, config_name, config_value) values("sys", "'. time() .'", "'. $module_name .'_level", "'. $id .'")';
+      $db->query($sql);
+    }
+    $result['status'] = 1;
+    $result['html'] = managerContent();
+    $result['html2'] = managerContentId($name);
+  break;
+  case 'remove-manager':
+    $id = $nv_Request->get_int('id', 'post', '');
+  
+    $sql = 'delete from `'. $db_config['prefix'] .'_config` where config_name = "'. $module_name .'_level" and config_value = '. $id;
+    $db->query($sql);
+    $result['status'] = 1;
+    $result['html'] = managerContent();
+  break;
   }
   echo json_encode($result);
   die();
@@ -75,17 +104,6 @@ $xtpl->assign('module_name', $module_name);
 
 // Danh sách khóa học, xác nhận
 $xtpl->assign('keyword', $filter['keyword']);
-$xtpl->assign('active_' . $filter['status'], 'selected');
-
-// $sql = 'select * from `'. PREFIX .'court` order by name';
-// $query = $db->query($sql);
-// while ($row = $query->fetch()) {
-//   $xtpl->assign('selected', '');
-//   if ($row['id'] == $filter['court']) $xtpl->assign('selected', 'selected');
-//   $xtpl->assign('id', $row['id']);
-//   $xtpl->assign('name', $row['name']);
-//   $xtpl->parse('main.court');
-// }
 
 $xtpl->assign('status', $filter['status']);
 $xtpl->assign('status'. $filter['status'], 'active');

@@ -1,7 +1,7 @@
 <!-- BEGIN: main -->
 <table class="table table-bordered table-hover">
   <tr>
-    <th> STT </th>
+    <th> Hình ảnh </th>
     <th> Chủ nuôi </th>
     <th> Tên thú cưng </th>
     <th> Số điện thoại </th>
@@ -9,7 +9,7 @@
   </tr>
   <!-- BEGIN: row -->
   <tr>
-    <td> {index} </td>
+    <td> <img src="{image}" class="img-responsive" style="max-width: 50px; max-height: 50px;"> </td>
     <td> {fullname} </td>
     <td> {name} </td>
     <td> {mobile} </td>

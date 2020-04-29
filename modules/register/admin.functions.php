@@ -1093,7 +1093,7 @@ function happyContent() {
     $query = $db->query("select count(*) as count from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') and status = " . $filter['status']);
     $number = $query->fetch()['count'];
   
-    $sql = "select * from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') and status = " . $filter['status'] . " order by status desc, id desc limit $filter[limit] offset " . ($filter['page'] - 1) * $filter['limit'];
+    $sql = "select * from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') and status = " . $filter['status'] . " order by id desc limit $filter[limit] offset " . ($filter['page'] - 1) * $filter['limit'];
     $query = $db->query($sql);
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
@@ -1141,6 +1141,43 @@ function happyPreview($id) {
 
 function happyModal() {
     $xtpl = new XTemplate("modal.tpl", PATH2);
+    $xtpl->assign('manager_content', managerContent());
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function managerContentId($name = "") {
+    global $db, $db_config, $filter, $module_name;
+    $xtpl = new XTemplate("employ-list.tpl", PATH2);
+
+    $sql = 'select userid, username, concat(last_name, " ", first_name) as fullname from `'. $db_config['prefix'] .'_users` where (last_name like "%'. $name .'%" or first_name like "%'. $name .'%" or username like "%'. $name .'%") and userid not in (select config_value from `'. $db_config['prefix'] .'_config` where config_name = "'. $module_name .'_level")';
+    $query = $db->query($sql);
+    $index = 1;
+    while ($row = $query->fetch()) {
+      $xtpl->assign('index', $index++);
+      $xtpl->assign('id', $row['userid']);
+      $xtpl->assign('username', $row['username']);
+      $xtpl->assign('fullname', $row['fullname']);
+      $xtpl->parse('main.row');
+    }
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+  
+function managerContent($name = "") {
+    global $db, $db_config, $filter, $module_name;
+    $xtpl = new XTemplate("manager-list.tpl", PATH2);
+
+    $sql = 'select userid, username, concat(last_name, " ", first_name) as fullname from `'. $db_config['prefix'] .'_users` where (last_name like "%'. $name .'%" or first_name like "%'. $name .'%" or username like "%'. $name .'%") and userid in (select config_value from `'. $db_config['prefix'] .'_config` where config_name = "'. $module_name .'_level")';
+    $query = $db->query($sql);
+    $index = 1;
+    while ($row = $query->fetch()) {
+      $xtpl->assign('index', $index++);
+      $xtpl->assign('id', $row['userid']);
+      $xtpl->assign('username', $row['username']);
+      $xtpl->assign('fullname', $row['fullname']);
+      $xtpl->parse('main.row');
+    }
     $xtpl->parse('main');
     return $xtpl->text();
 }
