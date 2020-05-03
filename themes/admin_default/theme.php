@@ -97,7 +97,7 @@ function nv_get_submenu_mod($module_name)
  */
 function nv_admin_theme($contents, $head_site = 1)
 {
-    global $global_config, $lang_global, $admin_mods, $site_mods, $admin_menu_mods, $module_name, $module_file, $module_info, $admin_info, $page_title, $submenu, $select_options, $op, $set_active_op, $array_lang_admin, $my_head, $my_footer, $array_mod_title, $array_url_instruction, $op, $client_info, $nv_plugin_area;
+    global $global_config, $lang_global, $admin_mods, $site_mods, $admin_menu_mods, $module_name, $module_file, $module_info, $admin_info, $page_title, $submenu, $select_options, $op, $set_active_op, $array_lang_admin, $my_head, $my_footer, $array_mod_title, $array_url_instruction, $op, $client_info, $nv_plugin_area, $db_config, $db;
 
     $dir_template = '';
 
@@ -262,20 +262,41 @@ function nv_admin_theme($contents, $head_site = 1)
         }
 
         // Vertical menu
-        $list = array(
-            array(
-                'title' => 'Quản lý bệnh viện',
-                'child' => array('test', 'vinh', 'danang', 'phuyen', 'vir')
-            ),
-            array(
-                'title' => 'Petcoffee',
-                'child' => array('dailyrou', 'exp', 'general', 'kaizen', 'petwork', 'register', 'rider')
-            ),
-            array(
-                'title' => 'khác',
-                'child' => array('about', 'banners', 'biograph', 'comment', 'contact', 'freecontent', 'siteterms', 'statistics', 'voting')
-            )
-        );
+        // $list = array(
+        //     'brand' => 
+        //     array(
+        //         'title' => 'Quản lý bệnh viện',
+        //         'child' => array('test', 'vinh', 'danang', 'phuyen', 'vir')
+        //     ),
+        //     'petcoffe' => 
+        //     array(
+        //         'title' => 'Petcoffee',
+        //         'child' => array('dailyrou', 'exp', 'general', 'kaizen', 'petwork', 'register', 'rider')
+        //     ),
+        //     'other' => 
+        //     array(
+        //         'title' => 'khác',
+        //         'child' => array('about', 'banners', 'biograph', 'comment', 'contact', 'freecontent', 'siteterms', 'statistics', 'voting')
+        //     )
+        // );
+        $sql = "select * from `". $db_config['prefix'] ."_together_row` where parentid = 0";
+        $query = $db->query($sql);
+      
+        while ($row = $query->fetch()) {
+          $list[$row['id']] = array(
+            'title' => $row['title'],
+            'child' => array()
+          );
+      
+          $sql = "select * from `". $db_config['prefix'] ."_together_row` where parentid = $row[id]";
+          $query2 = $db->query($sql);
+          while ($row2 = $query2->fetch()) {
+            $list[$row['id']]['child'] []= $row2['name'];
+          }
+        }
+        echo json_encode($list);
+        die();
+      
         $except = array();
 
         foreach ($list as $a) {
