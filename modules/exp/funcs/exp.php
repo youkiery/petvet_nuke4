@@ -141,7 +141,7 @@ if (!empty($action)) {
   echo json_encode($result);
   die();
 }
-$xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/exp");
+$xtpl = new XTemplate("main.tpl", PATH);
 $xtpl->assign('today', date('d/m/Y'));
 $xtpl->assign('items', json_encode(expIdList()));
 $xtpl->assign('item', getItemList());

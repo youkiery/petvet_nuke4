@@ -54,7 +54,8 @@ if (!empty($action)) {
   echo json_encode($result);
   die();
 }
-$xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/main");
+
+$xtpl = new XTemplate("main.tpl", PATH);
 $xtpl->assign('module_name', $module_name);
 $category = getCategoryList();
 foreach ($category as $row) {

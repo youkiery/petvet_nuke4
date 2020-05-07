@@ -60,7 +60,7 @@ if (!empty($action)) {
   die();
 }
 
-$xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/" . $module_file . "/template/excel");
+$xtpl = new XTemplate("main.tpl", PATH);
 $xtpl->assign('module_name', $module_name);
 
 $xtpl->parse('main');
