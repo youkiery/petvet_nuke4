@@ -1102,10 +1102,11 @@ function happyContent() {
     if ($filter['status']) $xtpl->assign('done_btn', 'btn-warning');
     else $xtpl->assign('done_btn', 'btn-info');
     while ($row = $query->fetch()) {
-      $xtpl->assign('index', $index ++);
+      $image = explode(',', $row['image']);
       $xtpl->assign('id', $row['id']);
       $xtpl->assign('fullname', $row['fullname']);
-      $xtpl->assign('name', $row['name']);
+      $xtpl->assign('image', $image[0]);
+      $xtpl->assign('species', $row['species']);
       $xtpl->assign('mobile', $row['mobile']);
       $xtpl->assign('address', $row['address']);
       $xtpl->parse('main.row');

@@ -1,5 +1,31 @@
 <!-- BEGIN: main -->
 {FILE "header.tpl"}
+
+<style>
+.shorten {
+	list-style-type: none;
+	padding: 0px;
+}
+
+.shorten div {
+	background: url(/themes/admin_default/images/vertical_menu_bg.jpg) no-repeat scroll left -75px #f5fbfe;
+  text-align: right;
+  font-weight: normal;
+  padding: 3px 0px;
+	border: 1px solid lightgray;
+  margin-top: 1px;
+}
+
+.shorten a {
+  color: #333;
+}
+
+.shorten a:hover {
+	color: #cb0000;
+	text-decoration: none;
+}
+</style>
+
 <div class="container-fluid nvwrap">
 	<div id="left-menu-bg"></div>
 	<header id="header" class="row">
@@ -140,17 +166,28 @@
 						</li>
 						<!-- END: current -->
 						<!-- BEGIN: shorten -->
-						<li class="dropdown">
-							<a href="#">
+						<li>
+							<a href="#" data-toggle="collapse" data-target="#{id}">
 								{MENU_SUB_NAME}
 							</a>
-							<ul class="dropdown-menu">
+							<div id="{id}" class="collapse shorten">
 								<!-- BEGIN: loop -->
-								<li>
-									<a href="{NV_BASE_ADMINURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MENU_SUB_HREF}&amp;{NV_OP_VARIABLE}={CUR_SUB_OP}">{CUR_SUB_NAME}</a>
-								</li>
+								<div class="{CLASS_MENU}">
+									<a href="{NV_BASE_ADMINURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={MENU_SHORT_HREF}&amp;{NV_OP_VARIABLE}=main">
+										{MENU_SHORT_NAME}
+									</a>
+									<!-- BEGIN: submenu -->
+									<ul class="dropdown-menu">
+										<!-- BEGIN: loop -->
+										<li>
+											<a href="{NV_BASE_ADMINURL}index.php?{NV_LANG_VARIABLE}={NV_LANG_DATA}&amp;{NV_NAME_VARIABLE}={SUB_SHORT_HREF}&amp;{NV_OP_VARIABLE}={SUB_SHORT_OP}">{SUB_SHORT_NAME}</a>
+										</li>
+										<!-- END: loop -->
+									</ul>
+									<!-- END: submenu -->
+								</div>
 								<!-- END: loop -->
-							</ul>
+							</div>
 						</li>
 						<!-- END: current -->
 					<!-- END: shorten -->

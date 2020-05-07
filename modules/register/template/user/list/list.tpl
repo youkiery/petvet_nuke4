@@ -3,15 +3,15 @@
   <tr>
     <th> Hình ảnh </th>
     <th> Chủ nuôi </th>
-    <th> Tên thú cưng </th>
+    <th> Giống loài </th>
     <th> Số điện thoại </th>
     <th></th>
   </tr>
   <!-- BEGIN: row -->
   <tr>
-    <td> <img src="{image}" class="img-responsive" style="max-width: 50px; max-height: 50px;"> </td>
+    <td> <img src="{image}" class="img-responsive" style="max-width: 50px; max-height: 50px; margin: auto;"> </td>
     <td> {fullname} </td>
-    <td> {name} </td>
+    <td> {species} </td>
     <td> {mobile} </td>
     <td>
       <button class="btn btn-info btn-xs" onclick="preview({id})">

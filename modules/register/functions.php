@@ -272,10 +272,10 @@ function happyContent() {
 
     $xtpl = new XTemplate("list.tpl", PATH2);
   
-    $query = $db->query("select count(*) as count from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') and status = " . $filter['status']);
+    $query = $db->query("select count(*) as count from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%' or species like '%$filter[keyword]%') and status = " . $filter['status']);
     $number = $query->fetch()['count'];
   
-    $sql = "select * from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') and status = " . $filter['status'] . " order by id desc limit $filter[limit] offset " . ($filter['page'] - 1) * $filter['limit'];
+    $sql = "select * from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%' or species like '%$filter[keyword]%') and status = " . $filter['status'] . " order by id desc limit $filter[limit] offset " . ($filter['page'] - 1) * $filter['limit'];
     $query = $db->query($sql);
     $query = $db->query($sql);
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
@@ -288,6 +288,7 @@ function happyContent() {
       $xtpl->assign('name', $row['name']);
       $xtpl->assign('mobile', $row['mobile']);
       $xtpl->assign('address', $row['address']);
+      $xtpl->assign('species', $row['species']);
       $xtpl->assign('image', $images[0]);
       $xtpl->parse('main.row');
     }

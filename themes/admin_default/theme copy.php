@@ -97,7 +97,7 @@ function nv_get_submenu_mod($module_name)
  */
 function nv_admin_theme($contents, $head_site = 1)
 {
-    global $global_config, $lang_global, $admin_mods, $site_mods, $admin_menu_mods, $module_name, $module_file, $module_info, $admin_info, $page_title, $submenu, $select_options, $op, $set_active_op, $array_lang_admin, $my_head, $my_footer, $array_mod_title, $array_url_instruction, $op, $client_info, $nv_plugin_area, $db_config, $db;
+    global $global_config, $lang_global, $admin_mods, $site_mods, $admin_menu_mods, $module_name, $module_file, $module_info, $admin_info, $page_title, $submenu, $select_options, $op, $set_active_op, $array_lang_admin, $my_head, $my_footer, $array_mod_title, $array_url_instruction, $op, $client_info, $nv_plugin_area;
 
     $dir_template = '';
 
@@ -262,117 +262,52 @@ function nv_admin_theme($contents, $head_site = 1)
         }
 
         // Vertical menu
-        // $list = array(
-        //     'brand' => 
-        //     array(
-        //         'title' => 'Quản lý bệnh viện',
-        //         'child' => array('test', 'vinh', 'danang', 'phuyen', 'vir')
-        //     ),
-        //     'petcoffe' => 
-        //     array(
-        //         'title' => 'Petcoffee',
-        //         'child' => array('dailyrou', 'exp', 'general', 'kaizen', 'petwork', 'register', 'rider')
-        //     ),
-        //     'other' => 
-        //     array(
-        //         'title' => 'khác',
-        //         'child' => array('about', 'banners', 'biograph', 'comment', 'contact', 'freecontent', 'siteterms', 'statistics', 'voting')
-        //     )
-        // );
-        $sql = "select * from `". $db_config['prefix'] ."_together_row` where parentid = 0";
-        $query = $db->query($sql);
-      
-        while ($row = $query->fetch()) {
-          $list[$row['id']] = array(
-            'title' => $row['title'],
-            'child' => array()
-          );
-      
-          $sql = "select * from `". $db_config['prefix'] ."_together_row` where parentid = $row[id]";
-          $query2 = $db->query($sql);
-          while ($row2 = $query2->fetch()) {
-            $list[$row['id']]['child'] []= $row2['name'];
-          }
-        }
-        // echo json_encode($list);
-        // die();
-      
-        $except = array();
-
-        foreach ($list as $aid => $a) {
-            $xtpl->assign('id', $aid);
-            $xtpl->assign('MENU_SUB_NAME', $a['title']);
-            foreach ($a['child'] as $b) {
-                $except[]= $b;
-                $submenu = nv_get_submenu_mod($b);
-
-                $xtpl->assign('MENU_SHORT_HREF', $b);
-                $xtpl->assign('MENU_SHORT_NAME', $admin_menu_mods[$b]);
-
-                $xtpl->assign('CLASS_MENU', '');
-                if (! empty($submenu)) {
-                    $xtpl->assign('CLASS_MENU', 'dropdown');
-                    foreach ($submenu as $n => $l) {
-                        $xtpl->assign('SUB_SHORT_HREF', $b);
-                        $xtpl->assign('SUB_SHORT_OP', $n);
-                        $xtpl->assign('SUB_SHORT_NAME', (is_array($l) and isset($l['title'])) ? $l['title'] : $l);
-                        $xtpl->parse('main.menu_loop.shorten.loop.submenu.loop');
-                    }
-                    $xtpl->parse('main.menu_loop.shorten.loop.submenu');
-                }
-                $xtpl->parse('main.menu_loop.shorten.loop');
-            }
-            $xtpl->parse('main.menu_loop.shorten');
-        }
-
         foreach ($admin_menu_mods as $m => $v) {
-            if (!in_array($m, $except) || $m === $module_name) {
-                $xtpl->assign('MENU_CLASS', (($module_name == $m) ? ' class="active"' : ''));
-                $xtpl->assign('MENU_HREF', $m);
-                $xtpl->assign('MENU_NAME', $v);
-    
-                if ($m != $module_name) {
-                    $submenu = nv_get_submenu_mod($m);
-    
-                    $xtpl->assign('MENU_CLASS', $submenu ? ' class="dropdown"' : '');
-    
-                    if (! empty($submenu)) {
-                        foreach ($submenu as $n => $l) {
-                            $xtpl->assign('MENU_SUB_HREF', $m);
-                            $xtpl->assign('MENU_SUB_OP', $n);
-                            $xtpl->assign('MENU_SUB_NAME', (is_array($l) and isset($l['title'])) ? $l['title'] : $l);
-                            $xtpl->parse('main.menu_loop.submenu.loop');
-                        }
-                        $xtpl->parse('main.menu_loop.submenu');
-                    }
-                } elseif (! empty($submenu)) {
+            $xtpl->assign('MENU_CLASS', (($module_name == $m) ? ' class="active"' : ''));
+            $xtpl->assign('MENU_HREF', $m);
+            $xtpl->assign('MENU_NAME', $v);
+
+            if ($m != $module_name) {
+                $submenu = nv_get_submenu_mod($m);
+
+                $xtpl->assign('MENU_CLASS', $submenu ? ' class="dropdown"' : '');
+
+                if (! empty($submenu)) {
                     foreach ($submenu as $n => $l) {
-                        if (is_array($l) and isset($l['submenu'])) {
-                            $_subtitle = $l['title'];
-                            $_submenu_i = $l['submenu'];
-                        } else {
-                            $_subtitle = $l;
-                            $_submenu_i = '';
-                        }
-                        $xtpl->assign('MENU_SUB_CURRENT', (((! empty($op) and $op == $n) or (! empty($set_active_op) and $set_active_op == $n)) ? 'subactive' : 'subcurrent'));
                         $xtpl->assign('MENU_SUB_HREF', $m);
                         $xtpl->assign('MENU_SUB_OP', $n);
-                        $xtpl->assign('MENU_SUB_NAME', $_subtitle);
-                        $xtpl->assign('MENU_CLASS', '');
-                        if (! empty($_submenu_i)) {
-                            $xtpl->assign('MENU_CLASS', ' class="dropdown"');
-                            foreach ($_submenu_i as $sn => $sl) {
-                                $xtpl->assign('CUR_SUB_OP', $sn);
-                                $xtpl->assign('CUR_SUB_NAME', $sl);
-                                $xtpl->parse('main.menu_loop.current.submenu.loop');
-                            }
-                            $xtpl->parse('main.menu_loop.current.submenu');
-                        }
-                        $xtpl->parse('main.menu_loop.current');
+                        $xtpl->assign('MENU_SUB_NAME', (is_array($l) and isset($l['title'])) ? $l['title'] : $l);
+                        $xtpl->parse('main.menu_loop.submenu.loop');
                     }
+                    $xtpl->parse('main.menu_loop.submenu');
                 }
-                $xtpl->parse('main.menu_loop');
+            } elseif (! empty($submenu)) {
+                foreach ($submenu as $n => $l) {
+                    if (is_array($l) and isset($l['submenu'])) {
+                        $_subtitle = $l['title'];
+                        $_submenu_i = $l['submenu'];
+                    } else {
+                        $_subtitle = $l;
+                        $_submenu_i = '';
+                    }
+                    $xtpl->assign('MENU_SUB_CURRENT', (((! empty($op) and $op == $n) or (! empty($set_active_op) and $set_active_op == $n)) ? 'subactive' : 'subcurrent'));
+                    $xtpl->assign('MENU_SUB_HREF', $m);
+                    $xtpl->assign('MENU_SUB_OP', $n);
+                    $xtpl->assign('MENU_SUB_NAME', $_subtitle);
+                    $xtpl->assign('MENU_CLASS', '');
+                    if (! empty($_submenu_i)) {
+                        $xtpl->assign('MENU_CLASS', ' class="dropdown"');
+                        foreach ($_submenu_i as $sn => $sl) {
+                            $xtpl->assign('CUR_SUB_OP', $sn);
+                            $xtpl->assign('CUR_SUB_NAME', $sl);
+                            $xtpl->parse('main.menu_loop.current.submenu.loop');
+                        }
+                        $xtpl->parse('main.menu_loop.current.submenu');
+                    }
+                    $xtpl->parse('main.menu_loop.current');
+                }
             }
+            $xtpl->parse('main.menu_loop');
         }
 
         // Notification icon

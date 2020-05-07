@@ -191,7 +191,7 @@
         </div>
 
         <div class="form-group row-x">
-          <div class="col-3"> Giống loài </div>
+          <div class="col-3"> Giống loài <span style="color:red; font-size: 1.2em">(*)</span></div>
           <div class="col-9">
             <input type="text" class="form-control" id="signup-species">
           </div>
@@ -232,11 +232,11 @@
     <br>
   </div>
   <div class="box-bordered" id="notify-content" style="display: none; margin-bottom: 20px;">
-    <p> Bạn đã đăng ký thành công, chúng tôi sẽ liên hệ bạn trong thời gian sớm nhất có thể. </p>
-    <p class="text-center">
+    <div class="text-center">
+      <p> Bạn đã đăng ký thành công, chúng tôi sẽ liên hệ bạn trong thời gian sớm nhất có thể. </p>
       Bạn có thể muốn: <br>
       <a href="/{module_name}"> Đăng ký thêm </a>
-    </p>
+    </div>
   </div>
   <div class="box-bordered" style="max-width: 500px;">
     <div class="text-center">
@@ -310,7 +310,7 @@
 
   function submit() {
     sdata = checkData()
-    if (!sdata['name']) notify(sdata)
+    if (!sdata['mobile']) notify(sdata)
     else {
       freeze()
       upload('image').then(list => {
@@ -332,7 +332,9 @@
       address: $("#signup-address").val(),
       mobile: $("#signup-mobile").val()
     }
-    if (!data.mobile.length) return 'Số điện thoại không được để trống'
+    if (!data.species.length) return 'Nhập giống loài trước khi thêm'
+    else if (!data.mobile.length) return 'Số điện thoại không được để trống'
+    else if (!vimage.data['image'].length) return 'Chọn ít nhất 1 ảnh'
     return data
   }
 
