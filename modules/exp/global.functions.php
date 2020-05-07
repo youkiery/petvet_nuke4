@@ -152,6 +152,15 @@ function checkCategoryNameId($id) {
   return 'Chưa phân loại';
 }
 
+function getFirstCateid() {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'item` limit 1';
+  $query = $db->query($sql);
+  if (!empty($item = $query->fetch())) return $item['id'];
+  return 0;
+}
+
 function getCategoryList() {
   global $db;
 

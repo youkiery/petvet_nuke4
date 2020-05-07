@@ -13,21 +13,27 @@ if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
     case 'insert':
-      $id = $nv_Request->get_string('id', 'post', '');
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $name = $nv_Request->get_string('name', 'post', '');
       $number = $nv_Request->get_int('number', 'post', 1);
       $date = $nv_Request->get_string('date', 'post', '');
 
       if (!checkItemId($id)) {
-        $result['notify'] = 'Hàng hoá không tồn tại';
+        $sql = 'insert into `'. PREFIX .'item` (name, code, number, cate_id, update_time) values("'. $name .'", "", "", '. getFirstCateid() .', '. time() .')';
+        $db->query($sql);
+        $id = $db->lastInsertId();
+        $result['item'] = array(
+          'id' => $id,
+          'name' => $name,
+          'key' => convert($name)
+        );
       }
-      else {
-        $query = $db->query('insert into `'. PREFIX .'row` (rid, exp_time, number, update_time) values('. $id .', "'. totime($date) .'", '. $number .', "'. time() .'")');
-        if ($query) {
-          $result['status'] = 1;
-          $result['notify'] = 'Đã thêm';
-          $result['list'] = expIdList();
-          $result['html'] = expList();
-        }
+      $query = $db->query('insert into `'. PREFIX .'row` (rid, exp_time, number, update_time) values('. $id .', "'. totime($date) .'", '. $number .', "'. time() .'")');
+      if ($query) {
+        $result['status'] = 1;
+        $result['notify'] = 'Đã thêm';
+        $result['list'] = expIdList();
+        $result['html'] = expList();
       }
     break;
     case 'update':
@@ -142,6 +148,7 @@ if (!empty($action)) {
   die();
 }
 $xtpl = new XTemplate("main.tpl", PATH);
+$xtpl->assign('modal', expModal());
 $xtpl->assign('today', date('d/m/Y'));
 $xtpl->assign('items', json_encode(expIdList()));
 $xtpl->assign('item', getItemList());

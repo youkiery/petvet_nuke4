@@ -55,6 +55,8 @@ function outdateList() {
     $p1 = $today + ($filter['to'] - $today) / 2;
   }
 
+  if (empty($filter['keyword'])) $filter['keyword'] = '';
+
   if (count($list)) {
     $list[]= 0;
     $list = implode(', ', $list);
@@ -114,6 +116,14 @@ function expContent() {
   return $xtpl->text();
 }
 
+function expModal() {
+  global $nv_Request, $module_file;
+  $xtpl = new XTemplate("modal.tpl", PATH);
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function expIdList() {
   global $db, $module_file, $nv_Request;
 
@@ -142,6 +152,7 @@ function expList() {
   if (empty($filter['type']) || $filter['type'] < 0 || $filter['type'] > 2) {
     $filter['type'] = 0;
   }
+  if (empty($filter['keyword'])) $filter['keyword'] = '';
 
   $filter['type'] = intval($filter['type']);
   $xtra = 'order by id desc';
@@ -168,6 +179,37 @@ function expList() {
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('number', $row['number']);
     $xtpl->assign('time', date('d/m/Y', $row['exp_time']));
+    $xtpl->parse('main.row');
+  }
+  $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function itemContent() {
+  global $db, $module_file, $nv_Request;
+
+  $filter = $nv_Request->get_array('filter', 'post');
+  if (empty($filter['page']) || $filter['page'] < 1) {
+    $filter['page'] = 1;
+  }
+  if (empty($filter['limit']) || $filter['limit'] < 10) {
+    $filter['limit'] = 10;
+  }
+
+  $xtpl = new XTemplate("item-list.tpl", PATH);
+  $query = $db->query('select count(*) as number from `'. PREFIX .'item`');
+  $number = $query->fetch()['number'];
+
+  $query = $db->query('select * from `'. PREFIX .'item` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+  $index = $filter['limit'] * ($filter['page'] - 1) + 1;
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('code', $row['code']);
+    $xtpl->assign('number', $row['number']);
+    $xtpl->assign('category', checkCategoryNameId($row['cate_id']));
     $xtpl->parse('main.row');
   }
   $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
