@@ -331,8 +331,8 @@ function nv_admin_theme($contents, $head_site = 1)
                 $xtpl->assign('MENU_HREF', $m);
                 $xtpl->assign('MENU_NAME', $v);
     
+                $submenu = nv_get_submenu_mod($m);
                 if ($m != $module_name) {
-                    $submenu = nv_get_submenu_mod($m);
     
                     $xtpl->assign('MENU_CLASS', $submenu ? ' class="dropdown"' : '');
     
