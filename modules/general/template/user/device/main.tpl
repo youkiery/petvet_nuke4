@@ -2,7 +2,6 @@
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 
 <style>
   label { text-align: left !important; padding-left: 10px; }
@@ -34,49 +33,12 @@
 {device_modal}
 
 <div id="msgshow"></div>
-<!-- BEGIN: m1 -->
-<div style="float: right;">
-  <button class="btn btn-success" onclick="deviceInsert()">
-    Thêm thiết bị
-  </button>
-</div>
-<!-- END: m1 -->
-<div class="form-group form-inline">
-  Số dòng mỗi trang
-  <div class="input-group">
-    <input type="text" class="form-control" id="filter-limit" value="10">
-    <div class="input-group-btn">
-      <button class="btn btn-info" onclick="goPage(1)"> Hiển thị </button>
-    </div>
-  </div>
-</div>
-<div class="form-group">
-  Lọc danh sách phòng ban
-  <div class="relative">
-    <div class="input-group">
-      <input type="text" class="form-control" id="filter-depart-input">
-      <div class="input-group-btn">
-        <button class="btn btn-info" onclick="goPage(1)"> Hiển thị </button>
-      </div>
-    </div>
-    <div class="suggest" id="filter-depart-suggest"></div>
-  </div>
-  <span id="filter-depart"></span>
-</div>
-<!-- <div class="form-group">
-  <button class="btn btn-info" onclick="excel()"> Xuất excel </button>
-</div> -->
 
 <div style="clear: both;"></div>
 <div id="content">
   {content}
 </div>
 
-<!-- BEGIN: m2 -->
-<button class="btn btn-danger" onclick="removeAll()">
-  Xóa mục đã chọn
-</button>  
-<!-- END: m2 -->
 <script src="/modules/manage/src/script.js"></script>
 <script>
   var global = {
@@ -98,93 +60,13 @@
   }
 
   $(document).ready(() => {
-    installCheckAll('device')
-    installRemindv2('device', 'name')
-    installRemindv2('device', 'intro')
-    installRemindv2('device', 'source')
-    installDepart('filter')
-    installDepart('device')
-    $("#device-import-time").datepicker({
-      format: 'dd/mm/yyyy',
-      changeMonth: true,
-      changeYear: true
-    });
+    // installCheckAll('device')
+    // installRemindv2('device', 'name')
+    // installRemindv2('device', 'intro')
+    // installRemindv2('device', 'source')
+    // installDepart('filter')
+    // installDepart('device')
   })
-
-  function excel() {
-    $.post(
-      '',
-      {action: 'excel'},
-      (response, status) => {
-    		window.open(strHref + '?excel=1')
-      }
-    )
-  }
-
-  function selectDepart(prefix, index) {
-    global['selected'][prefix][index] = 1
-    $("#"+ prefix +"-depart-input").val('')
-    val = []
-    for (const key in global['selected'][prefix]) {
-      if (global['selected'][prefix].hasOwnProperty(key)) {
-        val.push('<span class="btn btn-info btn-xs" onclick="deselectDepart(\''+ prefix +'\', '+ key +')"> '+ global['list'][key]['name'] +' </span>')
-      }
-    }
-    
-    $("#"+ prefix +"-depart").html(val.join(', '))
-  }
-
-  function deselectDepart(prefix, index) {
-    delete global['selected'][prefix][index]
-    val = []
-    for (const key in global['selected'][prefix]) {
-      if (global['selected'][prefix].hasOwnProperty(key)) {
-        val.push('<span class="btn btn-info btn-xs" onclick="deselectDepart(\''+ prefix +'\', '+ key +')"> '+ global['list'][key]['name'] +' </span>')
-      }
-    }
-
-    $("#"+ prefix +"-depart").html(val.join(', '))
-  }
-
-  function insertDepart() {
-    depart = $("#device-depart-input").val()
-    if (!depart.length) {
-      alert_msg('Điền tên đơn vị trước khi thêm mới')
-    }
-    else {
-      $.post(
-        '',
-        { action: 'insert-depart', name: depart },
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            global['depart']['list'].push(data['inserted'])
-            selectDepart('device', global['depart']['list'].length - 1)
-          }, () => {})
-        }
-      )
-    }
-  }
-
-  function checkFilter() {
-    limit = $("#filter-limit").val()
-    if (limit < 10) {
-      $("#filter-limit").val(10)
-    }
-    else if (limit > 200) {
-      $("#filter-limit").val(200)
-    }
-    list = []
-    for (const key in global['selected']['filter']) {
-      if (global['selected']['filter'].hasOwnProperty(key)) {
-        list.push(global['list'][key]['id'])
-      }
-    }
-    return {
-      page: global['page']['main'],
-      limit: $("#filter-limit").val(),
-      depart: list
-    }
-  }
 
   function checkDeviceData() {
     list = []
@@ -285,25 +167,17 @@
       (response, status) => {
         checkResult(response, status).then(data => {
           $("#content").html(data['html'])
-          $("#device-name").val(data['device']['name']),
-          $("#device-unit").val(data['device']['unit']),
-          $("#device-number").val(data['device']['number']),
-          $("#device-year").val(data['device']['year']),
-          $("#device-intro").val(data['device']['intro']),
-          $("#device-source").val(data['device']['source']),
-          $("#device-status").val(data['device']['status']),
-          $("#device-description").val(data['device']['description'])
-          $("#device-import-time").val(data['device']['import'])
+          $("#device-name").text(data['device']['name']),
+          $("#device-unit").text(data['device']['unit']),
+          $("#device-number").text(data['device']['number']),
+          $("#device-year").text(data['device']['year']),
+          $("#device-intro").text(data['device']['intro']),
+          $("#device-source").text(data['device']['source']),
+          $("#device-status").text(data['device']['status']),
+          $("#device-description").text(data['device']['description'])
+          $("#device-import-time").text(data['device']['import'])
           $("#device-insert").hide()
           $("#device-edit").show()
-          global['selected']['depart'] = {}
-          data['device']['depart'].forEach(depart => {
-            global['list'].forEach((item, index) => {
-              if (item['id'] == depart) {
-                selectDepart('device', index)
-              }
-            })
-          })
           global['id'] = id
           $('#device-modal').modal('show')
         }, () => {})

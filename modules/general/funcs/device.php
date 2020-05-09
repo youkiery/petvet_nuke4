@@ -9,10 +9,6 @@
 if (!defined('NV_IS_MOD_CONGVAN')) die('Stop!!!');
 
 $page_title = "Quản lý thiết bị";
-$filter = array(
-  'page' => $nv_Request->get_int('page', 'get', 1),
-  'limit' => $nv_Request->get_int('limit', 'get', 20),
-);
 
 if (!empty($user_info)) {
   $sql = 'select * from `'. PREFIX .'price_allow` where userid = ' . $user_info['userid'];
@@ -50,7 +46,7 @@ if (!empty($action)) {
         // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;
-          $result['html'] = deviceList($filter);
+          $result['html'] = deviceList();
           $result['notify'] = 'Đã thêm thiết bị';
         }
       // }
@@ -70,7 +66,7 @@ if (!empty($action)) {
         // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;
-          $result['html'] = deviceList($filter);
+          $result['html'] = deviceList();
           $result['notify'] = 'Đã thêm thiết bị';
         }
       // }
@@ -92,7 +88,7 @@ if (!empty($action)) {
       if ($db->query('delete from `'. PREFIX .'device` where id = ' . $id)) {
         $result['status'] = 1;
         $result['notify'] = 'Đã xóa';
-        $result['html'] = deviceList($filter);
+        $result['html'] = deviceList();
       }
     break;
     case 'remove-all-device':
@@ -107,19 +103,16 @@ if (!empty($action)) {
       }
       $result['status'] = 1;
       $result['notify'] = "Đã xóa $removed trong tổng số $count đã chọn";
-      $result['html'] = deviceList($filter);
-    break;
-    case 'filter':
-      $result['status'] = 1;
-      $result['html'] = deviceList($filter);
+      $result['html'] = deviceList();
     break;
   }
   echo json_encode($result);
   die();
 }
+
 $xtpl = new XTemplate("main.tpl", PATH);
 $xtpl->assign('device_modal', deviceModal());
-$xtpl->assign('content', deviceList($filter));
+$xtpl->assign('content', deviceList());
 $xtpl->assign('today', date('d/m/Y', time()));
 $xtpl->assign('depart', json_encode(getDepartList(), JSON_UNESCAPED_UNICODE));
 $xtpl->assign('remind', json_encode(getRemind(), JSON_UNESCAPED_UNICODE));
