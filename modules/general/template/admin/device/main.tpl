@@ -3,93 +3,314 @@
 
 <div id="msgshow"></div>
 <style>
-    label {
-        width: 100%;
-    }
+	label {
+		width: 100%;
+	}
 
-    .error {
-        color: red;
-        font-size: 1.2em;
-        font-weight: bold;
-    }
+	.error {
+		color: red;
+		font-size: 1.2em;
+		font-weight: bold;
+	}
 </style>
 
 <div id="modal">
-    {modal}
+	{modal}
 </div>
 
-<div class="form-group input-group">
+<!-- <div class="form-group input-group">
     <input type="text" class="form-control" id="name" placeholder="Nhập tên phòng ban">
     <div class="input-group-btn">
         <button class="btn btn-success" onclick="insertDepart()">
             Thêm phòng ban
         </button>
     </div>
+</div> -->
+
+<div class="form-group" style="float: right;">
+	<button class="btn btn-info" onclick="departList()">
+		Danh sách phòng
+	</button>
+	<button class="btn btn-success" onclick="deviceInsert()">
+		Thêm thiết bị
+	</button>
 </div>
 
 <div class="error" id="error"></div>
 
 <div id="content">
-    {content}
+	{content}
 </div>
 
 <script src="/modules/core/js/vhttp.js"></script>
+<script src="/modules/core/js/vremind-5.js"></script>
 <script>
-    var global = {
-        depart: 0
-    }
-    function editDepart(id) {
-        global['depart'] = id
-        vhttp.checkelse('', { action: 'get-depart', id: id }).then((data) => {
-            $("#depart-name").val(data['name'])
-            $("#depart-content").html(data['html'])
-            $("#depart-modal").modal('show')
-        })
-    }
+	var global = {
+		id: 0,
+		page: {
+			'main': 1
+		},
+		selected: {
+			filter: {},
+			device: {}
+		},
+		filter: {
+			selected: {}
+		},
+		list: JSON.parse('{depart}'),
+		today: '{today}',
+		remind: JSON.parse('{remind}'),
+		remindv2: JSON.parse('{remindv2}'),
+		depart: 0,
+		prefix: ''
+	}
+	installDepart = (input) => {
+		return new Promise(resolve => {
+			html = ''
+			count = 0
 
-    function removeDepart(id) {
+			global['list'].forEach((depart, index) => {
+				if (count < 30 && depart['name'].search(input) >= 0) {
+					count++
+					html += `
+							<div class="suggest-item" onclick="selectDepart('`+ global['prefix'] + `', ` + index + `)">
+								`+ depart['name'] + `
+							</div>`
+				}
+			})
+			if (!html.length) {
+				html = 'Không có kết quả'
+			}
+			resolve(html)
+		})
+	}
 
-    }
+	$(document).ready(() => {
+		vremind.install("#device-depart-input", "#device-depart-suggest", installDepart, 300, 300)
+		vremind.install("#detail-name", "#detail-name-suggest", input => {
+			return new Promise(resolve => {
+				vhttp.checkelse('', { action: 'get-employ', name: input }).then(data => {
+					resolve(data['html'])
+				})
+			})
+		}, 300, 300)
+	})
 
-    function insertDepart() {
-        name = $("#name").val()
-        if (!name.length) errorText('Nhập tên phòng trước khi thêm')
-        else {
-            vhttp.checkelse('', { action: 'insert-depart', name: name }).then((data) => {
-                $("#content").html(data['html'])
-            })
-        }
-    }
+	function editDepart(id) {
+		vhttp.checkelse('', { action: 'edit-depart', name: $("#depart-name-" + id).val(), id: id }).then((data) => {
+			global['list'] = data['json']
+			// do nothing
+		})
+	}
 
-    function employFilter() {
-        vhttp.checkelse('', { action: 'employ-filter', name: $("#employ-name").val() }).then((data) => {
-            $("#employ-content").html(data['html'])
-        })
-    }
+	function insertDepart() {
+		name = $("#device-depart-input").val()
+		if (!name.length) errorText('Nhập tên phòng trước khi thêm')
+		else {
+			vhttp.checkelse('', { action: 'insert-depart', name: name }).then((data) => {
+				global['list'] = data['json']
+				$("#content").html(data['html'])
+			})
+		}
+	}
 
-    function insertEmploy(id) {
-        vhttp.checkelse('', { action: 'insert-employ', id: id, name: $("#employ-name").val(), departid: global['depart'] }).then((data) => {
-            $("#depart-content").html(data['html'])
-            $("#employ-content").html(data['html2'])
-        })
-    }
+	function employFilter() {
+		vhttp.checkelse('', { action: 'employ-filter', name: $("#employ-name").val() }).then((data) => {
+			$("#employ-content").html(data['html'])
+		})
+	}
 
-    function removeEmploy(id) {
-        vhttp.checkelse('', { action: 'remove-employ', id: id, departid: global['depart'] }).then((data) => {
-            $("#depart-content").html(data['html'])
-        })
-    }
+	function insertEmploy(id) {
+		vhttp.checkelse('', { action: 'insert-employ', id: id, name: $("#detail-name").val(), departid: global['depart'] }).then((data) => {
+			$("#detail-content").html(data['html'])
+			$("#detail-name-suggest").html(data['html2'])
+		})
+	}
 
-    function updateDepartSubmit() {
-        vhttp.checkelse('', { action: 'update-depart', departid: global['depart'], name: $("#depart-name").val() }).then((data) => {
-            $("#content").html(data['html'])
-        })
-    }
+	function removeEmploy(id) {
+		vhttp.checkelse('', { action: 'remove-employ', id: id, departid: global['depart'] }).then((data) => {
+			$("#detail-content").html(data['html'])
+		})
+	}
 
-    function errorText(txt) {
-        $("#error").text(txt)
-        $("#error").show()
-        $("#error").fadeOut(3000)
-    }
+	function updateDepartSubmit() {
+		vhttp.checkelse('', { action: 'update-depart', departid: global['depart'], name: $("#depart-name").val() }).then((data) => {
+			$("#content").html(data['html'])
+		})
+	}
+
+	function errorText(txt) {
+		$("#error").text(txt)
+		$("#error").show()
+		$("#error").fadeOut(3000)
+	}
+
+	function deviceInsert() {
+		$("#device-name").val('')
+		$("#device-unit").val('')
+		$("#device-number").val('')
+		$("#device-year").val('')
+		$("#device-intro").val('')
+		$("#device-source").val('')
+		$("#device-status").val('')
+		$("#device-description").val('')
+		$("#device-import-time").val(global['today'])
+		$("#device-insert").show()
+		$("#device-edit").hide()
+		global['selected']['device'] = {}
+		global['prefix'] = 'device'
+		$("#device-depart").html('')
+		$('#device-modal').modal('show')
+	}
+
+	function deviceInsertSubmit() {
+		data = checkDeviceData()
+		if (!data['name']) alert_msg(data)
+		else {
+			vhttp.checkelse('', { action: 'insert-device', data: data }).then(data => {
+				$("#content").html(data['html'])
+				$("#device-name").val('')
+				$("#device-unit").val('')
+				$("#device-number").val('')
+				$("#device-year").val('')
+				$("#device-intro").val('')
+				$("#device-source").val('')
+				$("#device-status").val('')
+				$("#device-description").val('')
+				global['depart']['selected'] = {}
+				$("#device-depart").html('')
+				$('#device-modal').modal('hide')
+			})
+		}
+	}
+
+	function checkDeviceData() {
+		list = []
+		for (const key in global['selected']['device']) {
+			if (global['selected']['device'].hasOwnProperty(key)) {
+				list.push(global['list'][key]['id'])
+			}
+		}
+		name = $("#device-name").val()
+
+		if (!name.length) {
+			return 'Điền tên thiết bị'
+		}
+
+		return {
+			name: name,
+			unit: $("#device-unit").val(),
+			number: $("#device-number").val(),
+			year: $("#device-year").val(),
+			intro: $("#device-intro").val(),
+			source: $("#device-source").val(),
+			status: $("#device-status").val(),
+			depart: list,
+			description: $("#device-description").val(),
+			import: $("#device-import-time").val()
+		}
+	}
+
+	function loadDefault() {
+		$("#device-name").val()
+		$("#device-unit").val(global['remind']['unit'])
+		$("#device-number").val(global['remind']['number'])
+		$("#device-year").val(global['remind']['year'])
+		$("#device-intro").val(global['remind']['intro'])
+		$("#device-source").val(global['remind']['source'])
+		$("#device-status").val(global['remind']['status'])
+		$("#device-import-time").val(global['today'])
+		$("#device-import-description").val('')
+	}
+
+	function selectDepart(prefix, index) {
+		global['selected'][prefix][index] = 1
+		$("#" + prefix + "-depart-input").val('')
+		val = []
+		for (const key in global['selected'][prefix]) {
+			if (global['selected'][prefix].hasOwnProperty(key)) {
+				val.push('<span class="btn btn-info btn-xs" onclick="deselectDepart(\'' + prefix + '\', ' + key + ')"> ' + global['list'][key]['name'] + ' </span>')
+			}
+		}
+
+		$("#" + prefix + "-depart").html(val.join(', '))
+	}
+
+	function deselectDepart(prefix, index) {
+		delete global['selected'][prefix][index]
+		val = []
+		for (const key in global['selected'][prefix]) {
+			if (global['selected'][prefix].hasOwnProperty(key)) {
+				val.push('<span class="btn btn-info btn-xs" onclick="deselectDepart(\'' + prefix + '\', ' + key + ')"> ' + global['list'][key]['name'] + ' </span>')
+			}
+		}
+
+		$("#" + prefix + "-depart").html(val.join(', '))
+	}
+
+	function deviceEditSubmit() {
+		data = checkDeviceData()
+		if (!data['name']) alert_msg(data)
+		else {
+			vhttp.checkelse('', { action: 'edit-device', data: data, id: global['id'] }).then(data => {
+				$("#content").html(data['html'])
+				$('#device-modal').modal('hide')
+			})
+		}
+	}
+
+	function deviceEdit(id) {
+		vhttp.checkelse('', { action: 'get-device', id: id }).then(data => {
+			$("#content").html(data['html'])
+			$("#device-name").val(data['device']['name'])
+			$("#device-unit").val(data['device']['unit'])
+			$("#device-number").val(data['device']['number'])
+			$("#device-year").val(data['device']['year'])
+			$("#device-intro").val(data['device']['intro'])
+			$("#device-source").val(data['device']['source'])
+			$("#device-status").val(data['device']['status'])
+			$("#device-description").val(data['device']['description'])
+			$("#device-import-time").val(data['device']['import'])
+			$("#device-insert").hide()
+			$("#device-edit").show()
+			global['selected']['depart'] = {}
+			data['device']['depart'].forEach(depart => {
+				global['list'].forEach((item, index) => {
+					if (item['id'] == depart) {
+						selectDepart('device', index)
+					}
+				})
+			})
+			global['id'] = id
+			global['prefix'] = 'device'
+			$('#device-modal').modal('show')
+		})
+	}
+
+	function departList() {
+		$("#depart-modal").modal('show')
+	}
+
+	function detailDepart(id) {
+		vhttp.checkelse('', { action: 'get-detail', id: id }).then(data => {
+			global['depart'] = id
+			$("#detail-content").html(data['html'])
+			$("#detail-modal").modal('show')
+		})
+	}
+
+	function removeDepart(id) {
+		vhttp.checkelse('', { action: 'remove-depart', id: id }).then(data => {
+			global['list'] = data['json']
+			$("#depart-content").html(data['html'])
+		})
+	}
+
+	function insertDepartSubmit() {
+		vhttp.checkelse('', { action: 'insert-depart2', name: $("#depart-name").val() }).then(data => {
+			global['list'] = data['json']
+			$("#depart-content").html(data['html'])
+		})
+	}
 </script>
 <!-- END: main -->

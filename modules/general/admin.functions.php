@@ -207,7 +207,7 @@ function departContentId($id) {
     return $xtpl->text();
 }
 
-function employContentId($id, $name) {
+function employContentId($id, $name = "") {
     global $db, $db_config;
     $xtpl = new XTemplate("employ-list.tpl", PATH);
     $sql = 'select userid, username, concat(last_name, " ", first_name) as fullname from `'. $db_config['prefix'] .'_users` where (last_name like "%'. $name .'%" or last_name like "%'. $name .'%" or username like "%'. $name .'%") and userid not in (select userid from `'. PREFIX .'device_employ` where departid = '. $id .')';
@@ -218,14 +218,54 @@ function employContentId($id, $name) {
         $xtpl->assign('id', $row['userid']);
         $xtpl->assign('username', $row['username']);
         $xtpl->assign('fullname', $row['fullname']);
-        $xtpl->parse('main.row');
+        $xtpl->parse('main');
     }
+    return $xtpl->text();
+}
+
+function deviceModal() {
+    $xtpl = new XTemplate("modal.tpl", PATH);
+    $xtpl->assign('depart_content', departList());
     $xtpl->parse('main');
     return $xtpl->text();
 }
 
-function departModal() {
-    $xtpl = new XTemplate("modal.tpl", PATH);
+function deviceList() {
+    global $db, $filter;
+    $xtpl = new XTemplate("device-list.tpl", PATH);
+  
+    $xtra = '';
+    if (!empty($filter['depart'])) {
+      $list = array();
+      foreach ($filter['depart'] as $value) {
+        $list[]= 'depart like \'%"'. $value .'"%\'';
+      }
+      $xtra = ' where ('. implode(' or ', $list) .') ';
+    }
+
+    $query = $db->query('select count(*) as count from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit']);
+    $count = $query->fetch();
+    $number = $count['count'];
+    // die('select * from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+    $query = $db->query('select * from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+    $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+    while ($row = $query->fetch()) {
+      $depart = json_decode($row['depart']);
+      $list = array();
+      foreach ($depart as $value) {
+        $list[]= checkDepartId($value);
+      }
+      $xtpl->assign('index', $index++);
+      $xtpl->assign('id', $row['id']);
+      $xtpl->assign('name', $row['name']);
+      $xtpl->assign('depart', implode(', ', $list));
+      $xtpl->assign('company', $row['intro']);
+      $xtpl->assign('status', $row['status']);
+      $xtpl->assign('number', $row['number']);
+      $xtpl->parse('main.row');
+    }
+    $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
     $xtpl->parse('main');
     return $xtpl->text();
 }
+  

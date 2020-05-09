@@ -336,12 +336,9 @@ function getDeviceData($id) {
 function checkDepartName($name, $id = 0) {
   global $db;
 
-  if ($id) {
-    $query = $db->query('select * from `'. PREFIX .'device_depart` where name = "'. $name .'" and id <> ' . $id);
-  }
-  else {
-    $query = $db->query('select * from `'. PREFIX .'device_depart` where name = "'. $name .'"');
-  }
+  if ($id) $sql = 'select * from `'. PREFIX .'device_depart` where name = "'. $name .'" and id <> ' . $id;
+  else $sql = 'select * from `'. PREFIX .'device_depart` where name = "'. $name .'"';
+  $query = $db->query($sql);
   if ($query->fetch()) {
     return true;
   }
@@ -356,4 +353,39 @@ function checkDepartId($id) {
     return $row['name'];
   }
   return '';
+}
+
+function getDepartList() {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'device_depart`');
+  $list = array();
+
+  while($row = $query->fetch()) {
+    $list []= $row;
+  }
+  return $list;
+}
+
+function getRemind() {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'remind` group by name order by rate desc');
+  $list = array();
+  while ($row = $query->fetch()) {
+    $list[$row['name']] = $row['value'];
+  }
+  return $list;
+}
+
+function getRemindv2() {
+  global $db;
+
+  $query = $db->query('select * from `'. PREFIX .'remind`');
+  $list = array();
+  while ($row = $query->fetch()) {
+    if (empty($list[$row['name']])) $list[$row['name']] = array();
+    $list[$row['name']][] = $row['value'];
+  }
+  return $list;
 }

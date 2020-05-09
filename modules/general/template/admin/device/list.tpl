@@ -8,12 +8,15 @@
     <!-- BEGIN: row -->
     <tr>
         <td> {index} </td>
-        <td> {name} </td>
+        <td> <input type="text" class="form-control" id="depart-name-{id}" value="{name}"> </td>
         <td>
-            <button class="btn btn-info btn-sm" onclick="editDepart({id})">
-                sửa
+            <button class="btn btn-info btn-xs" onclick="editDepart({id})">
+                cập nhật
             </button>    
-            <button class="btn btn-danger btn-sm" onclick="removeDepart({id})">
+            <button class="btn btn-info btn-xs" onclick="detailDepart({id})">
+                chi tiết
+            </button>    
+            <button class="btn btn-danger btn-xs" onclick="removeDepart({id})">
                 xóa
             </button>    
         </td>
