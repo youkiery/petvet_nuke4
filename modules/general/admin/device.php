@@ -44,13 +44,13 @@ if (!empty($action)) {
       $name = $nv_Request->get_string('name', 'post', '');
       $departid = $nv_Request->get_int('departid', 'post', '');
 
-      $sql = 'select * from `'. PREFIX .'device_employ` where userid = '. $id .' and departid = '. $departid;
+      $sql = 'select * from `'. PREFIX .'device_employ` where userid = '. $id .' and itemid = '. $departid;
       $query = $db->query($sql);
       if (empty($row = $query->fetch())) {
-        $sql = 'insert into `'. PREFIX .'device_employ` (userid, departid) values('. $id .', '. $departid .')';
+        $sql = 'insert into `'. PREFIX .'device_employ` (userid, itemid) values('. $id .', '. $departid .')';
         $db->query($sql);
         $result['status'] = 1;
-        $result['html'] = departContentId($departid);
+        $result['html'] = itemContentId($departid);
         $result['html2'] = employContentId($departid, $name);
       }
     break;
@@ -63,7 +63,7 @@ if (!empty($action)) {
 
       $result['status'] = 1;
       $result['name'] = $depart['name'];
-      $result['html'] = departContentId($id);
+      $result['html'] = itemContentId($id);
     break;
     case 'employ-filter':
       $id = $nv_Request->get_int('id', 'post', '');
@@ -85,10 +85,10 @@ if (!empty($action)) {
       $id = $nv_Request->get_int('id', 'post', '');
       $departid = $nv_Request->get_int('departid', 'post', '');
 
-      $sql = 'delete from `'. PREFIX .'device_employ` where departid = '. $departid .' and userid = ' . $id;
+      $sql = 'delete from `'. PREFIX .'device_employ` where itemid = '. $departid .' and userid = ' . $id;
       $db->query($sql);
       $result['status'] = 1;
-      $result['html'] = departContentId($departid);
+      $result['html'] = itemContentId($departid);
     break;
     case 'edit-depart':
       $name = $nv_Request->get_string('name', 'post', '');
@@ -144,7 +144,7 @@ if (!empty($action)) {
       $id = $nv_Request->get_int('id', 'post', 0);
 
       $result['status'] = 1;
-      $result['html'] = departContentId($id);
+      $result['html'] = itemContentId($id);
     break;
     case 'get-employ':
       $id = $nv_Request->get_int('id', 'post', 0);

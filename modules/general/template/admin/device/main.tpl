@@ -291,7 +291,7 @@
 		$("#depart-modal").modal('show')
 	}
 
-	function detailDepart(id) {
+	function itemDetail(id) {
 		vhttp.checkelse('', { action: 'get-detail', id: id }).then(data => {
 			global['depart'] = id
 			$("#detail-content").html(data['html'])

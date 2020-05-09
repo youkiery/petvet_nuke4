@@ -13,9 +13,6 @@
             <button class="btn btn-info btn-xs" onclick="editDepart({id})">
                 cập nhật
             </button>    
-            <button class="btn btn-info btn-xs" onclick="detailDepart({id})">
-                chi tiết
-            </button>    
             <button class="btn btn-danger btn-xs" onclick="removeDepart({id})">
                 xóa
             </button>    

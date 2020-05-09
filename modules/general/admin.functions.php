@@ -190,10 +190,10 @@ function departList() {
     return $xtpl->text();
 }
 
-function departContentId($id) {
+function itemContentId($id) {
     global $db, $db_config;
     $xtpl = new XTemplate("depart-list.tpl", PATH);
-    $sql = 'select userid, username, concat(last_name, " ", first_name) as fullname from `'. $db_config['prefix'] .'_users` where userid in (select userid from `'. PREFIX .'device_employ` where departid = '. $id .')';
+    $sql = 'select userid, username, concat(last_name, " ", first_name) as fullname from `'. $db_config['prefix'] .'_users` where userid in (select userid from `'. PREFIX .'device_employ` where itemid = '. $id .')';
     $query = $db->query($sql);
     $index = 1;
     while ($row = $query->fetch()) {
@@ -210,7 +210,7 @@ function departContentId($id) {
 function employContentId($id, $name = "") {
     global $db, $db_config;
     $xtpl = new XTemplate("employ-list.tpl", PATH);
-    $sql = 'select userid, username, concat(last_name, " ", first_name) as fullname from `'. $db_config['prefix'] .'_users` where (last_name like "%'. $name .'%" or last_name like "%'. $name .'%" or username like "%'. $name .'%") and userid not in (select userid from `'. PREFIX .'device_employ` where departid = '. $id .')';
+    $sql = 'select userid, username, concat(last_name, " ", first_name) as fullname from `'. $db_config['prefix'] .'_users` where (last_name like "%'. $name .'%" or last_name like "%'. $name .'%" or username like "%'. $name .'%") and userid not in (select userid from `'. PREFIX .'device_employ` where itemid = '. $id .') limit 10';
     $query = $db->query($sql);
     $index = 1;
     while ($row = $query->fetch()) {
