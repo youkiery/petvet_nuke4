@@ -1,4 +1,35 @@
 <!-- BEGIN: main -->
+<div class="modal" id="detail-modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="form-group">
+          Cập nhật thiết bị
+          <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
+        </div>
+
+        <div class="form-group rows">
+          <label class="col-4"> Tình trạng </label>
+          <div class="col-8">
+            <input type="text" class="form-control" id="detail-status">
+          </div>
+        </div>
+
+        <div class="form-group rows">
+          <label class="col-4"> Ghi chú </label>
+          <div class="col-8">
+            <textarea class="form-control" id="detail-note" rows="5"></textarea>
+          </div>
+        </div>
+
+        <div class="form-group text-center" onclick="detailSubmit()">
+          <button type="submit" class="btn btn-info"> Cập nhật </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="depart-modal" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">

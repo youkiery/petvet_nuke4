@@ -442,19 +442,11 @@ function deviceModal() {
 function deviceList() {
   global $db, $allow, $user_info;
   
+  $xtpl = new XTemplate("device-list.tpl", PATH);
   if (empty($user_info)) $xtpl->parse('main.no');
   else {
-    $xtpl = new XTemplate("device-list.tpl", PATH);
 
-    $sql = 'select * from `'. PREFIX .'device_employ` where userid = ' . $user_info['userid'];
-    $query = $db->query($sql);
-    $xtra = array();
-
-    while ($row = $query->fetch()) $xtra []= ' depart like \'%"'. $row['departid'] .'"%\' ';
-    if (count($xtra)) $xtra = ' where (' . implode(' or ', $xtra) . ')';
-    else $xtra = '';
-  
-    $sql = 'select * from `'. PREFIX .'device` '. $xtra .' order by update_time desc';
+    $sql = 'select * from `'. PREFIX .'device` where id in (select itemid from `'. PREFIX .'device_employ` where userid = '. $user_info['userid'] .')';
     $query = $db->query($sql);
     $index = 1;
   

@@ -105,6 +105,19 @@ if (!empty($action)) {
       $result['notify'] = "Đã xóa $removed trong tổng số $count đã chọn";
       $result['html'] = deviceList();
     break;
+    case 'insert-detail':
+      $id = $nv_Request->get_int('id', 'post', '');
+      $status = $nv_Request->get_string('status', 'post', '');
+      $note = $nv_Request->get_string('note', 'post', '');
+
+      $sql = 'insert into `'. PREFIX .'device_detail` (itemid, status, note, time) values('. $id .', "'. $status .'", "'. $note .'", '. time() .')';
+      $sql2 = 'update `'. PREFIX .'device` set status = "'. $status .'", description = "'. $note .'" where id = ' . $id;
+      if ($db->query($sql) && $db->query($sql2)) {
+        $result['status'] = 1;
+        $result['notify'] = "Đã cập nhật";
+        $result['html'] = deviceList();
+      }
+    break;
   }
   echo json_encode($result);
   die();

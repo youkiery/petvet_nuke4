@@ -40,6 +40,7 @@
 </div>
 
 <script src="/modules/manage/src/script.js"></script>
+<script src="/modules/core/js/vhttp.js"></script>
 <script>
   var global = {
     id: 0,
@@ -336,6 +337,20 @@
 
   function selectRemindv2(prefix, type, value) {
     $("#" + prefix + "-" + type).val(value)
+  }
+
+  function deviceDetail(id) {
+    global['id'] = id
+    $("#detail-status").val('')
+    $("#detail-note").val('')
+    $("#detail-modal").modal('show')
+  }
+
+  function detailSubmit() {
+    vhttp.checkelse('', { action: 'insert-detail', status: $("#detail-status").val(), note: $("#detail-note").val(), id: global['id'] }).then(data => {
+      $("#content").html(data['html'])
+      $("#detail-modal").modal('hide')
+    })
   }
 </script>
 <!-- END: main -->

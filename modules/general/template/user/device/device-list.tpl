@@ -18,8 +18,11 @@
       <td> {status} </td>
       <td> {number} </td>
       <td> 
-        <button class="btn btn-info btn-sm" onclick="deviceEdit({id})">
-          <span class="glyphicon glyphicon-edit"></span>
+        <button class="btn btn-info btn-xs" onclick="deviceDetail({id})">
+          cập nhật
+        </button>  
+        <button class="btn btn-info btn-xs" onclick="deviceEdit({id})">
+          chi tiết
         </button>  
       </td>
     </tr>
