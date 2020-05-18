@@ -39,7 +39,7 @@ function content() {
       if (!$row['status']) $xtpl->parse('main.row.undone');
       $xtpl->parse('main.row');
     }
-    $xtpl->assign('nav', nav_generater('/admin/index.php?language=vi&nv=register&op=happy', $number, $filter['page'], $filter['limit']));
+    $xtpl->assign('nav', nav_generater('/admin/index.php?language=vi&nv=marketing', $number, $filter['page'], $filter['limit']));
     $xtpl->parse('main');
     return $xtpl->text();
 }
