@@ -22,8 +22,8 @@
           </div>
         </div>
 
-        <div class="form-group text-center" onclick="detailSubmit()">
-          <button type="submit" class="btn btn-info"> Cập nhật </button>
+        <div class="form-group text-center">
+          <button type="submit" class="btn btn-info" onclick="detailSubmit()"> Cập nhật </button>
         </div>
       </div>
     </div>

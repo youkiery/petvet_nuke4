@@ -370,7 +370,8 @@ function getDepartList() {
 function getRemind() {
   global $db;
 
-  $query = $db->query('select * from `'. PREFIX .'remind` group by name order by rate desc');
+  $sql = 'select * from `'. PREFIX .'remind` group by name order by rate desc';
+  $query = $db->query($sql);
   $list = array();
   while ($row = $query->fetch()) {
     $list[$row['name']] = $row['value'];

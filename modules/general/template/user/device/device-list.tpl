@@ -18,7 +18,7 @@
       <td> {status} </td>
       <td> {number} </td>
       <td> 
-        <button class="btn btn-info btn-xs" onclick="deviceDetail({id})">
+        <button class="btn btn-info btn-xs" onclick="deviceDetail({id}, `{status}`, `{note}`)">
           cập nhật
         </button>  
         <button class="btn btn-info btn-xs" onclick="deviceEdit({id})">

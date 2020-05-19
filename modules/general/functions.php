@@ -445,7 +445,6 @@ function deviceList() {
   $xtpl = new XTemplate("device-list.tpl", PATH);
   if (empty($user_info)) $xtpl->parse('main.no');
   else {
-
     $sql = 'select * from `'. PREFIX .'device` where id in (select itemid from `'. PREFIX .'device_employ` where userid = '. $user_info['userid'] .')';
     $query = $db->query($sql);
     $index = 1;
@@ -454,8 +453,8 @@ function deviceList() {
       $xtpl->assign('index', $index++);
       $xtpl->assign('id', $row['id']);
       $xtpl->assign('name', $row['name']);
-      $xtpl->assign('company', $row['intro']);
       $xtpl->assign('status', $row['status']);
+      $xtpl->assign('note', $row['description']);
       $xtpl->assign('number', $row['number']);
       $xtpl->parse('main.yes.row');
     }
