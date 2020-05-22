@@ -28,12 +28,28 @@
 </div> -->
 
 <div class="form-group" style="float: right;">
+	<button class="btn btn-info" onclick="managerList()">
+		Quản lý
+	</button>
 	<button class="btn btn-info" onclick="departList()">
-		Danh sách phòng
+		Phòng, tầng
 	</button>
 	<button class="btn btn-success" onclick="deviceInsert()">
 		Thêm thiết bị
 	</button>
+</div>
+
+<div style="clear: both;"></div>
+
+<div class="form-group">
+	<div class="input-group">
+		<input type="text" class="form-control" id="config" placeholder="Số ngày báo cáo" value="{config}">
+		<div class="input-group-btn">
+			<button class="btn btn-info" onclick="saveConfig()">
+				Lưu cấu hình
+			</button>
+		</div>
+	</div>
 </div>
 
 <div class="error" id="error"></div>
@@ -94,6 +110,13 @@
 				})
 			})
 		}, 300, 300)
+		vremind.install("#manager-name", "#manager-name-suggest", input => {
+			return new Promise(resolve => {
+				vhttp.checkelse('', { action: 'get-manager', name: input }).then(data => {
+					resolve(data['html'])
+				})
+			})
+		}, 300, 300)
 	})
 
 	function editDepart(id) {
@@ -124,6 +147,20 @@
 		vhttp.checkelse('', { action: 'insert-employ', id: id, name: $("#detail-name").val(), departid: global['depart'] }).then((data) => {
 			$("#detail-content").html(data['html'])
 			$("#detail-name-suggest").html(data['html2'])
+		})
+	}
+
+	function insertManager(id) {
+		vhttp.checkelse('', { action: 'insert-manager', id: id, name: $("#manager-name").val() }).then((data) => {
+			$("#manager-content").html(data['html'])
+			$("#manager-name-suggest").html(data['html2'])
+		})
+	}
+
+	function removeManager(id) {
+		vhttp.checkelse('', { action: 'remove-manager', id: id, name: $("#manager-name").val() }).then((data) => {
+			$("#manager-content").html(data['html'])
+			$("#manager-name-suggest").html(data['html2'])
 		})
 	}
 
@@ -291,6 +328,10 @@
 		$("#depart-modal").modal('show')
 	}
 
+	function managerList() {
+		$("#manager-modal").modal('show')
+	}
+
 	function itemDetail(id) {
 		vhttp.checkelse('', { action: 'get-detail', id: id }).then(data => {
 			global['depart'] = id
@@ -310,6 +351,12 @@
 		vhttp.checkelse('', { action: 'insert-depart2', name: $("#depart-name").val() }).then(data => {
 			global['list'] = data['json']
 			$("#depart-content").html(data['html'])
+		})
+	}
+
+	function saveConfig() {
+		vhttp.checkelse('', { action: 'save-config', value: $("#config").val() }).then(data => {
+			// do nothing
 		})
 	}
 </script>

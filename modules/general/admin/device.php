@@ -17,6 +17,43 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
+    case 'save-config':
+      $value = $nv_Request->get_int('value', 'post', 14);
+      if (intval($value) < 14) $value = 14; 
+
+      $sql = 'select * from `'. $db_config['prefix'] .'_config` where config_name = "device_config"';
+      $query = $db->query($sql);
+      if (empty($query->fetch())) {
+        $sql = 'insert into  `'. $db_config['prefix'] .'_config` (lang, module, config_name, config_value) values ("sys", "site", "device_config", "'. $value .'")';
+      }
+      else {
+        $sql = 'update `'. $db_config['prefix'] .'_config` set config_name update config_value = "'. $value .'" where config_name = "device_config"';
+      }
+      $db->query($sql);
+      $result['status'] = 1;
+    break;
+    case 'remove-manager':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $name = $nv_Request->get_string('name', 'post', '');
+
+      $sql = 'delete from `'. PREFIX .'device_manager` where userid = '. $id;
+      $db->query($sql);
+      $result['status'] = 1;
+      $result['html'] = managerContent();
+      $result['html2'] = managerContentId($name);
+    break;
+    case 'insert-manager':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $name = $nv_Request->get_string('name', 'post', '');
+
+      if (!checkDeviceManagerId($id)) {
+        $sql = 'insert into `'. PREFIX .'device_manager` (userid, type) values("'. $id .'", 1)';
+        $db->query($sql);
+        $result['status'] = 1;
+        $result['html'] = managerContent();
+        $result['html2'] = managerContentId($name);
+      }
+    break;
     case 'insert-depart':
       $name = $nv_Request->get_string('name', 'post', '');
 
@@ -153,6 +190,12 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = employContentId($id, $name);
     break;
+    case 'get-manager':
+      $name = $nv_Request->get_string('name', 'post', '');
+
+      $result['status'] = 1;
+      $result['html'] = managerContentId($name);
+    break;
   }
   echo json_encode($result);
   die();
@@ -160,6 +203,8 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("main.tpl", PATH);
 
+$config = checkDeviceConfig();
+$xtpl->assign('config', $config);
 $xtpl->assign('modal', deviceModal());
 $xtpl->assign('content', deviceList());
 

@@ -223,8 +223,42 @@ function employContentId($id, $name = "") {
     return $xtpl->text();
 }
 
+function managerContentId($name = "") {
+    global $db, $db_config;
+    $xtpl = new XTemplate("manager-list.tpl", PATH);
+    $sql = 'select userid, username, concat(last_name, " ", first_name) as fullname from `'. $db_config['prefix'] .'_users` where (last_name like "%'. $name .'%" or last_name like "%'. $name .'%" or username like "%'. $name .'%") and userid not in (select userid from `'. PREFIX .'device_manager`) limit 10';
+    $query = $db->query($sql);
+    $index = 1;
+    while ($row = $query->fetch()) {
+        $xtpl->assign('index', $index++);
+        $xtpl->assign('id', $row['userid']);
+        $xtpl->assign('username', $row['username']);
+        $xtpl->assign('fullname', $row['fullname']);
+        $xtpl->parse('main');
+    }
+    return $xtpl->text();
+}
+
+function managerContent() {
+    global $db, $db_config;
+    $xtpl = new XTemplate("manager-content.tpl", PATH);
+    $sql = 'select userid, username, concat(last_name, " ", first_name) as fullname from `'. $db_config['prefix'] .'_users` where userid in (select userid from `'. PREFIX .'device_manager`)';
+    $query = $db->query($sql);
+    $index = 1;
+    while ($row = $query->fetch()) {
+        $xtpl->assign('index', $index++);
+        $xtpl->assign('id', $row['userid']);
+        $xtpl->assign('username', $row['username']);
+        $xtpl->assign('fullname', $row['fullname']);
+        $xtpl->parse('main.row');
+    }
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
 function deviceModal() {
     $xtpl = new XTemplate("modal.tpl", PATH);
+    $xtpl->assign('manager_content', managerContent());
     $xtpl->assign('depart_content', departList());
     $xtpl->parse('main');
     return $xtpl->text();
@@ -269,3 +303,14 @@ function deviceList() {
     return $xtpl->text();
 }
   
+function checkDeviceConfig() {
+    global $db, $db_config;
+
+    $sql = 'select * from `'. $db_config['prefix'] .'_config` where config_name = "device_config"';
+    $query = $db->query($sql);
+    if (empty($config = $query->fetch())) {
+        // 2 weeks
+        return 14;
+    }
+    return $config['config_value'];
+}

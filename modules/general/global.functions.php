@@ -345,6 +345,17 @@ function checkDepartName($name, $id = 0) {
   return false;
 }
 
+function checkDeviceManagerId($id = 0) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'device_manager` where id = '. $id;
+  $query = $db->query($sql);
+  if ($query->fetch()) {
+    return true;
+  }
+  return false;
+}
+
 function checkDepartId($id) {
   global $db;
 
