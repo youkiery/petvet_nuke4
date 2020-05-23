@@ -1,30 +1,14 @@
 <!-- BEGIN: main -->
-<div class="modal" id="detail-modal" role="dialog">
+<div class="modal" id="report-modal" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">
         <div class="form-group">
-          Cập nhật thiết bị
+          Chi tiết báo cáo 
           <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
         </div>
 
-        <div class="form-group rows">
-          <label class="col-4"> Tình trạng </label>
-          <div class="col-8">
-            <input type="text" class="form-control" id="detail-status">
-          </div>
-        </div>
-
-        <div class="form-group rows">
-          <label class="col-4"> Ghi chú </label>
-          <div class="col-8">
-            <textarea class="form-control" id="detail-note" rows="5"></textarea>
-          </div>
-        </div>
-
-        <div class="form-group text-center">
-          <button type="submit" class="btn btn-info" onclick="detailSubmit()"> Cập nhật </button>
-        </div>
+        <div class="form-group" id="report-content"> </div>
       </div>
     </div>
   </div>
@@ -220,9 +204,30 @@
             </b>
             <span id="device-description"></span>
           </div>
+
+          <hr>
           <div class="form-group text-center">
-            <button type="submit" class="btn btn-info" id="device-edit" onclick="deviceEditSubmit()"> cập nhật
-            </button>
+            <b> Báo cáo định kỳ </b>
+            <div class="form-group" id="detail-msg"></div>
+          </div>
+
+
+          <div class="form-group rows">
+            <label class="col-4"> Tình trạng </label>
+            <div class="col-8">
+              <input type="text" class="form-control" id="detail-status">
+            </div>
+          </div>
+  
+          <div class="form-group rows">
+            <label class="col-4"> Ghi chú </label>
+            <div class="col-8">
+              <textarea class="form-control" id="detail-note" rows="5"></textarea>
+            </div>
+          </div>
+  
+          <div class="form-group text-center">
+            <button type="submit" class="btn btn-info" onclick="detailSubmit()"> Gửi báo cáo </button>
           </div>
         </div>
       </div>

@@ -10,6 +10,7 @@ if (!defined('NV_SYSTEM')) die('Stop!!!');
 define('NV_IS_MOD_CONGVAN', true);
 define('PATH', NV_ROOTDIR . '/modules/' . $module_file . '/template/user/' . $op);
 include_once(NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php');
+$check_image = '<img src="/assets/images/ok.png">';
 
 function excelModal() {
     $xtpl = new XTemplate("excel-modal.tpl", PATH);
@@ -439,8 +440,37 @@ function deviceModal() {
   return $xtpl->text();
 }
 
+function deviceManagerList() {
+  global $db, $start;
+  
+  $xtpl = new XTemplate("device-manager-list.tpl", PATH);
+  $sql = 'select * from `'. PREFIX .'device` order by id desc';
+  $query = $db->query($sql);
+  $index = 1;
+  $depart = getDeviceDepartList();
+
+  while ($row = $query->fetch()) {
+    $sql = 'select time from `'. PREFIX .'device_detail` where itemid = ' . $row['id'] . ' and time > '. $start .' limit 1';
+    $detail_query = $db->query($sql);
+    $detail = $detail_query->fetch();
+    $xtpl->assign('date', date('d/m/Y', $detail['time']));
+    if (!empty($detail)) $xtpl->parse('main.row.yes');
+    else $xtpl->parse('main.row.no');
+
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('depart', checkDeviceDepart(json_decode($row['depart']), $depart));
+    $xtpl->assign('employ', checkDeviceEmploy($row['id']));
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function deviceList() {
-  global $db, $allow, $user_info;
+  global $db, $allow, $user_info, $start, $check_image;
   
   $xtpl = new XTemplate("device-list.tpl", PATH);
   if (empty($user_info)) $xtpl->parse('main.no');
@@ -450,6 +480,12 @@ function deviceList() {
     $index = 1;
   
     while ($row = $query->fetch()) {
+      $sql = 'select * from `'. PREFIX .'device_detail` where itemid = ' . $row['id'] . ' and time >= '. $start .' order by id desc limit 1';
+      $detail_query = $db->query($sql);
+      $detail = $detail_query->fetch();
+      $xtpl->assign('check', '');
+      if (!empty($detail)) $xtpl->assign('check', $check_image);
+
       $xtpl->assign('index', $index++);
       $xtpl->assign('id', $row['id']);
       $xtpl->assign('name', $row['name']);
@@ -463,4 +499,34 @@ function deviceList() {
 
   $xtpl->parse('main');
   return $xtpl->text();
+}
+
+function getDeviceDepartList() {
+    global $db;
+
+    $sql = 'select * from `'. PREFIX .'device_depart`';
+    $query = $db->query($sql);
+    $list = array();
+
+    while($row = $query->fetch()) $list[$row['id']] = $row['name'];
+    return $list;
+}
+
+function checkDeviceDepart($depart_list, $depart) {
+    $list = array();
+    foreach ($depart_list as $departid) {
+        $list []= $depart[$departid];
+    }
+    return implode(', ', $list);
+}
+
+function checkDeviceEmploy($itemid) {
+    global $db, $db_config;
+
+    $sql = 'select concat(last_name, " ", first_name) as fullname from `'. $db_config['prefix'] .'_users` where userid in (select userid from `'. PREFIX .'device_employ` where itemid = ' . $itemid . ')';
+    $query = $db->query($sql);
+    $list = array();
+
+    while($row = $query->fetch()) $list[] = $row['fullname'];
+    return implode(', ', $list);
 }

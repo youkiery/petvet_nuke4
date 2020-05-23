@@ -303,14 +303,3 @@ function deviceList() {
     return $xtpl->text();
 }
   
-function checkDeviceConfig() {
-    global $db, $db_config;
-
-    $sql = 'select * from `'. $db_config['prefix'] .'_config` where config_name = "device_config"';
-    $query = $db->query($sql);
-    if (empty($config = $query->fetch())) {
-        // 2 weeks
-        return 14;
-    }
-    return $config['config_value'];
-}

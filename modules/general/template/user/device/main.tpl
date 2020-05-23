@@ -35,8 +35,39 @@
 <div id="msgshow"></div>
 
 <div style="clear: both;"></div>
-<div id="content">
-  {content}
+
+<!-- BEGIN: m1 -->
+<div class="form-group">
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#content"> Danh sách </a></li>
+    <li><a data-toggle="tab" href="#manager"> Quản lý </a></li>
+  </ul>
+</div>
+<!-- END: m1 -->
+
+<div class="tab-content">
+  <div id="content" class="tab-pane fade in active">
+    {content}
+  </div>
+  <div id="manager" class="tab-pane fade">
+    <div class="rows form-group">
+      <div class="col-6">
+        <input type="text" class="form-control" id="date" value="{today}">
+      </div>
+      <div class="col-6">
+        &nbsp;
+        <button class="btn btn-info" onclick="changeDate(-1)">
+          &lt;
+        </button>    
+        <button class="btn btn-info" onclick="changeDate(1)">
+          &gt;
+        </button>    
+      </div>
+    </div>
+    <div id="manager-content">
+      {manager_content}
+    </div>
+  </div>
 </div>
 
 <script src="/modules/manage/src/script.js"></script>
@@ -57,7 +88,9 @@
     list: JSON.parse('{depart}'),
     today: '{today}',
     remind: JSON.parse('{remind}'),
-    remindv2: JSON.parse('{remindv2}')
+    remindv2: JSON.parse('{remindv2}'),
+    time: Number('{time}') * 1000,
+    config: Number('{config}') * 60 * 60 * 24 * 1000
   }
 
   $(document).ready(() => {
@@ -175,8 +208,11 @@
           $("#device-intro").text(data['device']['intro']),
           $("#device-source").text(data['device']['source']),
           $("#device-status").text(data['device']['status']),
-          $("#device-description").text(data['device']['description'])
           $("#device-import-time").text(data['device']['import'])
+          $("#device-description").text(data['device']['description'])
+          $("#detail-msg").text(data['data']['msg'])
+          $("#detail-note").val(data['data']['note'])
+          $("#detail-status").val(data['data']['status'])
           $("#device-insert").hide()
           $("#device-edit").show()
           global['id'] = id
@@ -349,8 +385,31 @@
   function detailSubmit() {
     vhttp.checkelse('', { action: 'insert-detail', status: $("#detail-status").val(), note: $("#detail-note").val(), id: global['id'] }).then(data => {
       $("#content").html(data['html'])
-      $("#detail-modal").modal('hide')
+      $("#device-modal").modal('hide')
     })
+  }
+
+  function reportDetail(id) {
+    vhttp.checkelse('', { action: 'report-detail', id: id, date: Number(datetime) / 1000 }).then(data => {
+      $("#report-content").html(data['html'])
+      $("#report-modal").modal('show')
+    })
+  }
+
+  function changeDate(multipie) {
+    datetime = global['time'] + global['config'] * multipie
+    vhttp.checkelse('', { action: 'change-date', date: Number(datetime) / 1000 }).then(data => {
+      global['time'] = datetime
+      $("#date").val(parseDate(new Date(global['time'])))
+      $("#manager-content").html(data['html'])
+    })
+  }
+
+  function parseDate(datetime) {
+    date = datetime.getDate()
+    month = datetime.getMonth() + 1
+    year = datetime.getFullYear()
+    return (date < 10 ? '0' : '') + date + '/' + (month < 10 ? '0' : '') + month + '/' + year
   }
 </script>
 <!-- END: main -->

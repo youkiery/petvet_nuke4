@@ -15,11 +15,20 @@ if (!empty($user_info)) {
   $query = $db->query($sql);
   $allow = $query->fetch();
 }
+$date = $nv_Request->get_int('date', 'post', time());
+$config = checkDeviceConfig();
+$period = $config * 60 * 60 * 24;
+$start = floor($date / $period) * $period;
+$start2 = floor(time() / $period) * $period;
 
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
+    case 'change-date':
+      $result['status'] = 1;
+      $result['html'] = deviceManagerList();
+    break;
     case 'insert-depart':
       $name = $nv_Request->get_string('name', 'post', '');
       $name = ucwords($name);
@@ -74,12 +83,23 @@ if (!empty($action)) {
     case 'get-device':
       $id = $nv_Request->get_int('id', 'post');
 
-      if ($data = getDeviceData($id)) {
-        $data['import'] = date('d/m/Y', $data['import_time']);
-        unset($data['import_time']);
-        unset($data['update_time']);
+      if ($device = getDeviceData($id)) {
+        $sql = 'select * from `'. PREFIX .'device_detail` where itemid = ' . $id . ' and time >= '. $start2 .' order by id desc limit 1';
+        $detail_query = $db->query($sql);
+        $detail = $detail_query->fetch();
+        $data = array(
+          'note' => $detail['note'],
+          'status' => $detail['status'],
+          'msg' => ''
+        );
+        if (!empty($detail)) $data['msg'] = 'Gửi lúc ' . date('d/m/Y', $detail['time']);
+
+        $device['import'] = date('d/m/Y', $device['import_time']);
+        unset($device['import_time']);
+        unset($device['update_time']);
         $result['status'] = 1;
-        $result['device'] = $data;
+        $result['device'] = $device;
+        $result['data'] = $data;
       }
     break;
     case 'remove-device':
@@ -118,6 +138,22 @@ if (!empty($action)) {
         $result['html'] = deviceList();
       }
     break;
+    case 'report-detail':
+      $id = $nv_Request->get_int('id', 'post', '');
+
+      $xtpl = new XTemplate("report-list.tpl", PATH);
+      $sql = 'select * from `'. PREFIX .'device_detail` where itemid = ' . $id . ' and (time between '. $start .' and '. ($start + $period) .') order by time desc';
+      $query = $db->query($sql);
+      while($detail = $query->fetch()) {
+        $xtpl->assign('time', date('d/m/Y', $detail['time']));
+        $xtpl->assign('note', $detail['note']);
+        $xtpl->assign('status', $detail['status']);
+        $xtpl->parse('main');
+      }
+      
+      $result['status'] = 1;
+      $result['html'] = $xtpl->text();
+    break;
   }
   echo json_encode($result);
   die();
@@ -125,15 +161,18 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("main.tpl", PATH);
 $xtpl->assign('device_modal', deviceModal());
-$xtpl->assign('content', deviceList());
+$xtpl->assign('config', $config);
+$xtpl->assign('time', time());
 $xtpl->assign('today', date('d/m/Y', time()));
 $xtpl->assign('depart', json_encode(getDepartList(), JSON_UNESCAPED_UNICODE));
 $xtpl->assign('remind', json_encode(getRemind(), JSON_UNESCAPED_UNICODE));
 $xtpl->assign('remindv2', json_encode(getRemindv2(), JSON_UNESCAPED_UNICODE));
 
+$xtpl->assign('content', deviceList());
 if (!empty($allow)) {
+  $manager = checkDeviceManagerId($user_info['userid']);
+  $xtpl->assign('manager_content', deviceManagerList());
   $xtpl->parse('main.m1');
-  $xtpl->parse('main.m2');
 }
 
 $xtpl->parse('main');

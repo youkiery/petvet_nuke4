@@ -4,7 +4,7 @@
   <thead>
     <tr>
       <th> STT </th>
-      <th> Tên thiết bị </th>
+      <th> Thiết bị </th>
       <th> Tình trạng </th>
       <th> Số lượng </th>
       <th></th>
@@ -14,15 +14,12 @@
     <!-- BEGIN: row -->
     <tr>
       <td> {index} </td>
-      <td> {name} </td>
+      <td> {name} {check} </td>
       <td> {status} </td>
       <td> {number} </td>
       <td> 
-        <button class="btn btn-info btn-xs" onclick="deviceDetail({id}, `{status}`, `{note}`)">
-          cập nhật
-        </button>  
         <button class="btn btn-info btn-xs" onclick="deviceEdit({id})">
-          chi tiết
+          báo cáo
         </button>  
       </td>
     </tr>
