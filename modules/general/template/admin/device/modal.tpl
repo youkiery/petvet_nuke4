@@ -1,4 +1,24 @@
 <!-- BEGIN: main -->
+<div class="modal" id="remove-modal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-group">
+                    <b> Xác nhận xóa thiết bị </b>
+                    <div class="close" type="button" data-dismiss="modal"> &times; </div>
+                </div>
+
+                <div class="text-center">
+                    <p> Thiết bị sau khi xác nhận sẽ bị xóa vĩnh viễn, bạn có chắc chắn chứ? </p>
+                    <button class="btn btn-danger" onclick="removeDeviceSubmit()">
+                        Xác nhận
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal" id="depart-modal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">

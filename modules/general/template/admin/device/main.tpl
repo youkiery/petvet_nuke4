@@ -359,5 +359,17 @@
 			// do nothing
 		})
 	}
+
+	function deviceRemove(id) {
+		global['id'] = id
+		$("#remove-modal").modal('show')
+	}
+
+	function removeDeviceSubmit() {
+		vhttp.checkelse('', { action: 'remove-device', id: global['id'] }).then(data => {
+			$("#content").html(data['html'])
+			$("#remove-modal").modal('hide')
+		})
+	}
 </script>
 <!-- END: main -->

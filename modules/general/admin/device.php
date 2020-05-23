@@ -27,7 +27,7 @@ if (!empty($action)) {
         $sql = 'insert into  `'. $db_config['prefix'] .'_config` (lang, module, config_name, config_value) values ("sys", "site", "device_config", "'. $value .'")';
       }
       else {
-        $sql = 'update `'. $db_config['prefix'] .'_config` set config_name update config_value = "'. $value .'" where config_name = "device_config"';
+        $sql = 'update `'. $db_config['prefix'] .'_config` set config_value = "'. $value .'" where config_name = "device_config"';
       }
       $db->query($sql);
       $result['status'] = 1;
@@ -41,6 +41,14 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = managerContent();
       $result['html2'] = managerContentId($name);
+    break;
+    case 'remove-device':
+      $id = $nv_Request->get_int('id', 'post', 0);
+
+      $sql = 'delete from `'. PREFIX .'device` where userid = '. $id;
+      $db->query($sql);
+      $result['status'] = 1;
+      $result['html'] = deviceList();
     break;
     case 'insert-manager':
       $id = $nv_Request->get_int('id', 'post', 0);

@@ -11,7 +11,7 @@ if (!defined('NV_IS_MOD_CONGVAN')) die('Stop!!!');
 $page_title = "Quản lý thiết bị";
 
 if (!empty($user_info)) {
-  $sql = 'select * from `'. PREFIX .'price_allow` where userid = ' . $user_info['userid'];
+  $sql = 'select * from `'. PREFIX .'device_manager` where userid = ' . $user_info['userid'];
   $query = $db->query($sql);
   $allow = $query->fetch();
 }
