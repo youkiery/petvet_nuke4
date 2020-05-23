@@ -441,7 +441,7 @@ function deviceModal() {
 }
 
 function deviceManagerList() {
-  global $db, $start;
+  global $db, $start, $config;
   
   $xtpl = new XTemplate("device-manager-list.tpl", PATH);
   $sql = 'select * from `'. PREFIX .'device` order by id desc';
@@ -450,11 +450,12 @@ function deviceManagerList() {
   $depart = getDeviceDepartList();
 
   while ($row = $query->fetch()) {
-    $sql = 'select time from `'. PREFIX .'device_detail` where itemid = ' . $row['id'] . ' and time > '. $start .' limit 1';
+    $sql = 'select time from `'. PREFIX .'device_detail` where itemid = ' . $row['id'] . ' and (time between '. $start .' and '. ($start + $config * 60 * 60 * 24) .') order by id desc limit 1';
+    
     $detail_query = $db->query($sql);
     $detail = $detail_query->fetch();
     $xtpl->assign('date', date('d/m/Y', $detail['time']));
-    if (!empty($detail)) $xtpl->parse('main.row.yes');
+    if (!empty($detail)) {$xtpl->parse('main.row.yes');}
     else $xtpl->parse('main.row.no');
 
     $xtpl->assign('index', $index++);

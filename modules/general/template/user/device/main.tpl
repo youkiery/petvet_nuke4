@@ -4,6 +4,9 @@
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
 
 <style>
+  .red {
+    background: pink;
+  }
   label { text-align: left !important; padding-left: 10px; }
   
   .rows::after {
@@ -62,6 +65,9 @@
         <button class="btn btn-info" onclick="changeDate(1)">
           &gt;
         </button>    
+        <button class="btn btn-info" onclick="reportContent()">
+          Báo cáo
+        </button>            
       </div>
     </div>
     <div id="manager-content">
@@ -390,7 +396,7 @@
   }
 
   function reportDetail(id) {
-    vhttp.checkelse('', { action: 'report-detail', id: id, date: Number(datetime) / 1000 }).then(data => {
+    vhttp.checkelse('', { action: 'report-detail', id: id, date: Number(global['time']) / 1000 }).then(data => {
       $("#report-content").html(data['html'])
       $("#report-modal").modal('show')
     })
@@ -402,6 +408,13 @@
       global['time'] = datetime
       $("#date").val(parseDate(new Date(global['time'])))
       $("#manager-content").html(data['html'])
+    })
+  }
+
+  function reportContent() {
+    vhttp.checkelse('', { action: 'report-content', date: Number(global['time']) / 1000 }).then(data => {
+      $("#report-content-content").html(data['html'])
+      $("#report-content-modal").modal('show')
     })
   }
 

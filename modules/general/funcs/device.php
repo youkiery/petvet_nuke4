@@ -154,6 +154,30 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = $xtpl->text();
     break;
+    case 'report-content':
+      $xtpl = new XTemplate("report-content.tpl", PATH);
+      $sql = 'select * from `'. PREFIX .'device` order by name';
+      $query = $db->query($sql);
+      $end = $start + $period;
+      $depart = getDeviceDepartList();
+
+      while ($device = $query->fetch()) {
+        $sql = 'select * from `'. PREFIX .'device_detail` where itemid = ' . $device['id'] . ' and (time between '. $start .' and '. $end .') order by time desc limit 1';
+        $detail_query = $db->query($sql);
+        $detail = $detail_query->fetch();
+        $xtpl->assign('class', '');
+        if (empty($detail)) $xtpl->assign('class', 'red');
+        $xtpl->assign('name', $device['name']);
+        $xtpl->assign('depart', checkDeviceDepart(json_decode($device['depart']), $depart));
+        $xtpl->assign('note', $detail['note']);
+        $xtpl->assign('status', $detail['status']);
+        $xtpl->parse('main.row');
+      }
+      
+      $xtpl->parse('main');
+      $result['status'] = 1;
+      $result['html'] = $xtpl->text();
+    break;
   }
   echo json_encode($result);
   die();
