@@ -355,7 +355,7 @@ function marketContent($filter) {
 }
 
 function priceContent($filter = array('page' => 1, 'limit' => 20)) {
-    global $db, $allow;
+    global $db, $allow, $module_name, $op;
     $xtpl = new XTemplate("list.tpl", PATH);
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
     $category = priceCategoryList();
@@ -393,7 +393,7 @@ function priceContent($filter = array('page' => 1, 'limit' => 20)) {
         }
         $xtpl->parse('main.row');
     }
-    $xtpl->assign('nav', nav_generater('/admin/index.php?nv='. $module_name .'&op='. $op, $number, $filter['page'], $filter['limit']));
+    $xtpl->assign('nav', nav_generater('/index.php?nv='. $module_name .'&op='. $op, $number, $filter['page'], $filter['limit']));
     $xtpl->parse('main');
     return $xtpl->text();
 }
