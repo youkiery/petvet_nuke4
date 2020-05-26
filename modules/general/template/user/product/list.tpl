@@ -2,23 +2,23 @@
 <table class="table table-bordered">
     <tr>
         <th> STT </th>
-        <th> <input type="checkbox" class="check-product-all"> </th>
+        <!-- <th> <input type="checkbox" class="check-product-all"> </th> -->
         <th> Mã hàng </th>
         <th> Tên hàng </th>
-        <th> Loại hàng </th>
+        <th> Giới hạn </th>
         <th></th>
     </tr>
     <!-- BEGIN: row -->
     <tr>
         <td> {index} </td>
-        <td> <input type="checkbox" class="check-product" rel="{id}"> </td>
+        <!-- <td> <input type="checkbox" class="check-product" rel="{id}"> </td> -->
         <td> {code} </td>
         <td> {name} </td>
-        <td> {category} </td>
+        <td> {low} </td>
         <td> 
-            <!-- <button class="btn btn-info">
-                <span class="glyphicon glyphicon-floppy-disk"></span>
-            </button>     -->
+          <button class="btn btn-info btn-xs" onclick="editProduct({id})">
+            sửa
+          </button>    
         </td>
     </tr>
     <!-- END: row -->

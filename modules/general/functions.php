@@ -282,14 +282,13 @@ function productCategory() {
 
 function productList($url, $filter) {
     global $db;
-    $category = productCategory();
 
     $xtpl = new XTemplate("list.tpl", PATH);
-    $sql = 'select count(*) as count from `'. PREFIX .'product` where (code like "%'. $filter['keyword'] .'%" or name like "%'. $filter['keyword'] .'%") ' . (intval($filter['category']) ? 'and category = ' . $filter['category'] : '');
+    $sql = 'select count(a.id) as count from `'. PREFIX .'product` a inner join `'. PREFIX .'catalog` b on a.itemid = b.id where (b.code like "%'. $filter['keyword'] .'%" or b.name like "%'. $filter['keyword'] .'%") ' . (intval($filter['category']) ? 'and b.category = ' . $filter['category'] : '');
     $query = $db->query($sql);
     $number = $query->fetch()['count'];
 
-    $sql = 'select * from `'. PREFIX .'product` where (code like "%'. $filter['keyword'] .'%" or name like "%'. $filter['keyword'] .'%") ' . (intval($filter['category']) ? 'and category = ' . $filter['category'] : '') . ' order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+    $sql = 'select b.*, a.id, a.low from `'. PREFIX .'product` a inner join `'. PREFIX .'catalog` b on a.itemid = b.id where (b.code like "%'. $filter['keyword'] .'%" or b.name like "%'. $filter['keyword'] .'%") ' . (intval($filter['category']) ? 'and b.category = ' . $filter['category'] : '') . ' order by a.id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
 
     $query = $db->query($sql);
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
@@ -299,8 +298,7 @@ function productList($url, $filter) {
         $xtpl->assign('id', $row['id']);
         $xtpl->assign('name', $row['name']);
         $xtpl->assign('code', $row['code']);
-        $xtpl->assign('categoryid', $row['category']);
-        $xtpl->assign('category', $category[$row['category']]);
+        $xtpl->assign('low', $row['low']);
         $xtpl->parse('main.row');
     }
     $xtpl->assign('nav', nav_generater($url, $number, $filter['page'], $filter['limit']));
@@ -308,18 +306,73 @@ function productList($url, $filter) {
     return $xtpl->text();
 }
 
+function productSuggest($keyword) {
+  global $db;
+
+  $xtpl = new XTemplate("product-suggest.tpl", PATH);
+  $sql = 'select * from `'. PREFIX .'catalog` where lower(name) like "%'. $keyword .'%" and id not in (select itemid from `'. PREFIX .'product`) order by name desc limit 20';
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('code', $row['code']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->parse('main');
+  }
+  return $xtpl->text();
+}
+
 function productModal() {
     $xtpl = new XTemplate("modal.tpl", PATH);
-    $category = productCategory();
-    foreach ($category as $id => $name) {
-        $xtpl->assign('id', $id);
-        $xtpl->assign('name', $name);
-        $xtpl->assign('check', '');
-        if ($filter['category'] == $id) $xtpl->assign('check', 'selected');
-        $xtpl->parse('main.category');
-    }
+    // $category = productCategory();
+    // foreach ($category as $id => $name) {
+    //     $xtpl->assign('id', $id);
+    //     $xtpl->assign('name', $name);
+    //     $xtpl->assign('check', '');
+    //     if ($filter['category'] == $id) $xtpl->assign('check', 'selected');
+    //     $xtpl->parse('main.category');
+    // }
     $xtpl->parse('main');
     return $xtpl->text();
+}
+
+function productStatisticContent($keyword, $tags) {
+  global $db;
+  $xtpl = new XTemplate("statistic.tpl", PATH);
+  $xtra = array();
+  foreach ($tags as $tag) {
+    if (strlen($tag)) $xtra []= 'a.tag like \'%"'. $tag .'"%\'';
+  }
+  $sql = 'select b.*, a.id, a.low, a.n1, a.n2 from `'. PREFIX .'product` a inner join `'. PREFIX .'catalog` b on a.itemid = b.id where b.name like "%'. $keyword .'%" and ((a.n2 > 0 and a.n1 < a.low) or (a.n2 + a.n1 < a.low)) ' . (count($xtra) ? ' and ' : '') . implode(' or ', $xtra) . ' limit 20';
+  $query = $db->query($sql);
+  while ($row = $query->fetch()) {
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('number', $row['n1'] + $row['n2']);
+    $xtpl->assign('low', $row['low']);
+    $xtpl->assign('action', '');
+    if ($row['n2'] > 0 && $row['n1'] < $row['low']) {
+      $xtpl->assign('action', 'Chuyển hàng');
+    }
+    else if ($row['n1'] + $row['n2'] < $row['low']) {
+      $xtpl->assign('action', 'Nhập hàng');
+    }
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function getProductTagId($id) {
+  global $db;
+
+  $tags = array();
+  $sql = 'select b.* from `'. PREFIX .'product_tag` a inner join `'. PREFIX .'tag` b where a.tagid = b.id and a.productid = ' . $id;
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $tags []= $row['name'];
+  }
+  return $tags;
 }
 
 function marketModal() {

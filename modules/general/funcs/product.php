@@ -32,14 +32,30 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
-    case 'insert':
-      $data = $nv_Request->get_array('data', 'post');
+    case 'statistic':
+      $keyword = $nv_Request->get_string('keyword', 'post', '');
+      $tag = $nv_Request->get_array('tag', 'post');
 
-      foreach ($data as $item) {
-        $sql = 'insert into `'. PREFIX .'product` (code, name, category, price, least, image, contact, parent, exchange, active) values("'. $item['code'] .'", "'. $item['name'] .'", 0, "'. $item['price'] .'", 10, "'. $item['image'] .'", 0, 0, 0, 1)';
-        $db->query($sql);
-      }
       $result['status'] = 1;
+      $result['html'] = productStatisticContent($keyword, $tag);
+    break;
+    case 'insert-product':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $low = $nv_Request->get_int('low', 'post', 0);
+      $keyword = mb_strtolower($nv_Request->get_string('keyword', 'post', ''));
+
+      $sql = 'insert into `'. PREFIX .'product` (itemid, low, tag) values ('. $id .', '. $low .', \''. json_encode(array()) .'\')';
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = productList($url, $filter);
+        $result['html2'] = productSuggest($keyword);
+      }
+    break;
+    case 'product-suggest':
+      $keyword = mb_strtolower($nv_Request->get_string('keyword', 'post', ''));
+
+      $result['status'] = 1;
+      $result['html'] = productSuggest($keyword);
     break;
     case 'remove':
       $list = $nv_Request->get_array('list', 'post');
@@ -64,6 +80,30 @@ if (!empty($action)) {
       $result['notify'] = 'Đã lưu thông tin sản phẩm';
       $result['html'] = productList($url, $filter);
     break;
+    case 'get-product':
+      $id = $nv_Request->get_int('id', 'post', 0);
+
+      $sql = 'select b.*, a.id, a.low, a.tag from `'. PREFIX .'product` a inner join `'. PREFIX .'catalog` b on a.itemid = b.id where a.id = '. $id;
+      $query = $db->query($sql);
+      $product = $query->fetch();
+      $result = array(
+        'status' => 1,
+        'name' => $product['name'],
+        'code' => $product['code'],
+        'low' => $product['low'],
+        'tag' => json_decode($product['tag'])
+      );
+    break;
+    case 'edit-product':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $low = $nv_Request->get_int('low', 'post', 0);
+      $tags = $nv_Request->get_array('tag', 'post');
+
+      $sql = 'update `'. PREFIX .'product` set low = ' . $low . ', tag = \''. json_encode($tags, JSON_UNESCAPED_UNICODE) .'\' where id = ' . $id;
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+      }
+    break;
   }
   echo json_encode($result);
   die();
@@ -83,16 +123,16 @@ $xtpl->assign('check' . $filter['limit'], 'selected');
 //   $list[$row['code']] = 1;
 // }
 
-$sql = 'select * from `'. PREFIX .'product_category`';
-$query = $db->query($sql);
+// $sql = 'select * from `'. PREFIX .'product_category`';
+// $query = $db->query($sql);
 
-while($row = $query->fetch()) {
-  $xtpl->assign('id', $row['id']);
-  $xtpl->assign('name', $row['name']);
-  $xtpl->assign('check', '');
-  if ($filter['category'] == $row['id']) $xtpl->assign('check', 'selected');
-  $xtpl->parse('main.category');
-}
+// while($row = $query->fetch()) {
+//   $xtpl->assign('id', $row['id']);
+//   $xtpl->assign('name', $row['name']);
+//   $xtpl->assign('check', '');
+//   if ($filter['category'] == $row['id']) $xtpl->assign('check', 'selected');
+//   $xtpl->parse('main.category');
+// }
 
 $xtpl->assign('content', productList($url, $filter));
 
@@ -101,7 +141,6 @@ $xtpl->assign('list', json_encode($list));
 
 $xtpl->parse('main');
 $contents = $xtpl->text();
-
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_site_theme($contents);
 include NV_ROOTDIR . '/includes/footer.php';

@@ -413,3 +413,13 @@ function checkDeviceConfig() {
   }
   return $config['config_value'];
 }
+
+function getItemId($itemid) {
+  global $db;
+  $sql = 'select * from `'. PREFIX .'catalog` where id = '. $itemid;
+  $query = $db->query($sql);
+  if (empty($item = $query->fetch())) {
+      return array();
+  }
+  return $item;
+}
