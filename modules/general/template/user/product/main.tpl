@@ -86,39 +86,55 @@
   .col-12 {
     width: 100%;
   }
+
+  .upload {
+    background: #eee;
+    height: 100px;
+    width: 100px;
+    font-size: 50px;
+    border-radius: 10%;
+    line-height: 100px;
+    color: green;
+  }
 </style>
 
 <div id="msgshow"></div>
 
 {modal}
 
-<form class="form-group rows">
-  <input type="hidden" name="nv" value="{nv}">
-  <input type="hidden" name="op" value="{op}">
-  <div class="col-3">
-    <input type="text" class="form-control" name="keyword" value="{keyword}"
-      placeholder="Tìm kiếm theo tên hàng, mã hàng,...">
-  </div>
-  <div class="col-3">
-    <select class="form-control" name="limit">
-      <option value="10" {check10}> 10 </option>
-      <option value="20" {check20}> 20 </option>
-      <option value="50" {check50}> 50 </option>
-      <option value="100" {check100}> 100 </option>
-      <option value="200" {check200}> 200 </option>
-    </select>
-  </div>
-  <div class="col-3">
-    <button class="btn btn-info">
-      Tìm kiếm
-    </button>
-  </div>
-  <div class="col-3" style="text-align: right;">
+<div class="rows form-group">
+  <form>
+    <input type="hidden" name="nv" value="{nv}">
+    <input type="hidden" name="op" value="{op}">
+    <div class="col-3">
+      <input type="text" class="form-control" name="keyword" value="{keyword}"
+        placeholder="Tìm kiếm theo tên hàng, mã hàng,...">
+    </div>
+    <div class="col-2">
+      <input type="text" class="form-control" id="tag" placeholder="VD: dây dắt, vòng cổ, xích inox, cổ xanh đỏ đen,...">
+      <input type="hidden" name="tag" value="{tag}">
+    </div>
+    <div class="col-2">
+      <select class="form-control" name="limit">
+        <option value="10" {check10}> 10 </option>
+        <option value="20" {check20}> 20 </option>
+        <option value="50" {check50}> 50 </option>
+        <option value="100" {check100}> 100 </option>
+        <option value="200" {check200}> 200 </option>
+      </select>
+    </div>
+    <div class="col-2">
+      <button class="btn btn-info">
+        <span class="glyphicon glyphicon-search"></span>
+      </button>
+    </div>
+  </form>
+  <div class="col-2" style="text-align: right;">
     <button class="btn btn-info" onclick="$('#statistic-modal').modal('show')">
       Thống kê
     </button>
   </div>
-</form>
+</div>
 
 <div class="form-group rows">
   <div class="relative col-6">
@@ -130,28 +146,10 @@
   </div>
   <div class="col-3" style="text-align: right;">
     <button class="btn btn-info" onclick="$('#insert-modal').modal('show')">
-      Cập nhật Excel
+      Cập nhật
     </button>
   </div>
 </div>
-
-<!-- <div class="form-group row">
-    <div class="col-sm-12">
-        <button class="btn btn-info" onclick="$('#insert-modal').modal('show')">
-            Thêm mã
-        </button>
-        <button class="btn btn-info" onclick="$('#category-modal').modal('show')">
-            Sửa loại hàng
-        </button>
-    </div>
-    <div class="col-sm-12">
-        <div style="float: right;">
-            <button class="btn btn-danger" onclick="removeItem()">
-                Xóa mã
-            </button>
-        </div>
-    </div>
-</div> -->
 
 <div id="content">
   {content}
@@ -225,26 +223,37 @@
         global['data'] = []
         global['file'][name]['selected'] = null
 
-        object.forEach((item, index) => {
-          // global['list']
-          code = item['Mã hàng']
-          category = item['Nhóm hàng(3 Cấp)']
-          if (global['allow'].indexOf(category) >= 0 && !global['list'][code]) {
-            global['data'].push({
-              code: code,
-              name: item['Tên hàng'],
-              number: item['Tồn kho'],
-              image: item['Hình ảnh (url1,url2...)'],
-              price: item['Giá bán']
+        // kiểm tra cấu trúc dữ liệu
+        // kiểm tra nếu file quá dài, giới hạn 1000 trường
+        first = object[0]
+        if (first.hasOwnProperty('code') && first.hasOwnProperty('name') && first.hasOwnProperty('n1') && first.hasOwnProperty('n2')) {
+          // tách dữ liệu
+          list = {}
+          length = object.length
+          for (let index = 0; index < length; index++) {
+            hundred = Math.floor(index / 100)
+            unit = index - hundred * 100
+            if (!list[hundred]) list[hundred] = {}
+            list[hundred][unit] = object[index]
+            delete object[index]
+          }
+
+          // gửi dữ liệu tuần tự
+          for (let index = 0; index < hundred; index++) {
+            vhttp.checkelse('', { action: 'update', data: list[index], check: Number($("#insert-check").prop('checked')) }).then(data => {
+              index--
+              if (index == 0) $("#insert-modal").modal('hide')
             })
           }
-        })
-        $("#" + name + "-content").html(goPage(name, 1))
-        installCheckbox(name)
-        $("#" + name + "-box-content").show()
-        $("#" + name + "-box").hide()
+
+        }
+        else {
+          errorText(name + "-notify", 'Không đúng cấu trúc file Excel hoặc file quá lớn')
+        }
       } catch (error) {
-        $("#" + name + "-notify").text('Có lỗi xảy ra')
+        console.log(error);
+
+        errorText(name + "-notify", 'Có lỗi xảy ra')
       }
     }
   }
@@ -348,15 +357,6 @@
     list = checkSelectedItem()
 
     vhttp.checkelse('', { action: 'remove', list: list }).then(data => {
-      $("#content").html(data['html'])
-      installCheckbox('product')
-    })
-  }
-
-  function changeCategory() {
-    list = checkSelectedItem()
-    vhttp.checkelse('', { action: 'change-category', list: list, category: $("#category-type").val() }).then(data => {
-      $("#category-modal").modal('hide')
       $("#content").html(data['html'])
       installCheckbox('product')
     })

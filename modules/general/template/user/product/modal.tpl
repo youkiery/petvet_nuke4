@@ -83,19 +83,9 @@
       <div class="modal-body">
         <div type="button" class="close" data-dismiss="modal"> &times; </div> <br><br>
 
-        <div id="insert-box-content">
-          <div class="text-center">
-            <button class="btn btn-info" onclick="insertSubmit()">
-              Thêm mục đã chọn
-            </button>
-          </div>
-          <div id="insert-content"> </div>
-        </div>
-
         <div class="text-center" id="insert-box" style="margin: auto;">
           <label class="filebutton">
-            <div
-              style="background: #eee; height: 200px; width: 200px; font-size: 100px; border-radius: 10%; line-height: 200px; color: green;">
+            <div class="upload">
               +
             </div>
 
@@ -105,7 +95,11 @@
             </span>
           </label>
           <br>
-          File excel bệnh viện
+          Chọn file Excel
+          <br>
+          <label>  
+            <input type="checkbox" id="insert-check"> Thêm mặt hàng chưa có
+          </label>
           <br>
           <button class="btn btn-info" onclick="process('insert')">
             Xử lý

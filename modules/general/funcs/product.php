@@ -32,6 +32,36 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
+    case 'update':
+      $check = $nv_Request->get_int('check', 'post', 0);
+      $data = $nv_Request->get_array('data', 'post');
+
+      foreach ($data as $item) {
+        $sql = 'select * from `'. PREFIX .'catalog` where code = "'. $item['code'] .'"';
+        $query = $db->query($sql);
+        $row = $query->fetch();
+        if (empty($row)) {
+          // insert catalog
+          $sql = 'insert into `'. PREFIX .'catalog` (code, name, unit, categoryid, price) values("'. $item['code'] .'", "'. $item['name'] .'", "", 0, 0)';
+          $db->query($sql);
+          $row['id'] = $db->lastInsertId();
+        }
+        $sql = 'select * from `'. PREFIX .'product` where itemid = ' . $row['id'];
+        $query = $db->query($sql);
+        $product = $query->fetch();
+        if (empty($product)) {
+          if ($check) {
+            $sql = 'insert into `'. PREFIX .'product` (itemid, tag, low, n1, n2) values('. $row['id'] .', \''. json_encode(array()) .'\', 0, '. $item['n1'] .', '. $item['n2'] .')';
+            $db->query($sql);
+          }
+        }
+        else {
+          $sql = 'update `'. PREFIX .'product` set n1 = '. $item['n1'] .', n2 = '. $item['n2'] .' where id = ' . $product['id'];
+          $db->query($sql);
+        }
+      }
+      $result['status'] = 1;
+    break;
     case 'statistic':
       $keyword = $nv_Request->get_string('keyword', 'post', '');
       $tag = $nv_Request->get_array('tag', 'post');
