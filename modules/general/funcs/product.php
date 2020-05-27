@@ -51,12 +51,12 @@ if (!empty($action)) {
         $product = $query->fetch();
         if (empty($product)) {
           if ($check) {
-            $sql = 'insert into `'. PREFIX .'product` (itemid, tag, low, n1, n2) values('. $row['id'] .', \''. json_encode(array()) .'\', 0, '. $item['n1'] .', '. $item['n2'] .')';
+            $sql = 'insert into `'. PREFIX .'product` (itemid, tag, pos, low, n1, n2) values('. $row['id'] .', \''. json_encode(array()) .'\', "'. $item['pos'] .'", 0, '. $item['n1'] .', '. $item['n2'] .')';
             $db->query($sql);
           }
         }
         else {
-          $sql = 'update `'. PREFIX .'product` set n1 = '. $item['n1'] .', n2 = '. $item['n2'] .' where id = ' . $product['id'];
+          $sql = 'update `'. PREFIX .'product` set pos = "'. $item['pos'] .'", low = '. $item['low'] .', n1 = '. $item['n1'] .', n2 = '. $item['n2'] .' where id = ' . $product['id'];
           $db->query($sql);
         }
       }

@@ -129,7 +129,7 @@
       </button>
     </div>
   </form>
-  <div class="col-2" style="text-align: right;">
+  <div class="col-3" style="text-align: right;">
     <button class="btn btn-info" onclick="$('#statistic-modal').modal('show')">
       Thống kê
     </button>
@@ -137,14 +137,17 @@
 </div>
 
 <div class="form-group rows">
-  <div class="relative col-6">
+  <div class="relative col-4">
     <input type="text" class="form-control" id="product-insert-input" placeholder="Thêm mặt hàng">
     <div class="suggest" id="product-insert-input-suggest"></div>
   </div>
-  <div class="col-3">
+  <div class="col-2">
     <input type="text" class="form-control" id="product-insert-input-low" placeholder="Giới hạn">
   </div>
-  <div class="col-3" style="text-align: right;">
+  <div class="col-6" style="text-align: right;">
+    <button class="btn btn-danger" onclick="removeItem()">
+      Xóa
+    </button>
     <button class="btn btn-info" onclick="$('#insert-modal').modal('show')">
       Cập nhật
     </button>
@@ -185,6 +188,7 @@
     vhttp.checkelse('', { action: 'insert-product', keyword: $("#product-insert-input").val(), id: id, low: $("#product-insert-low").val() }).then(data => {
       $('#content').html(data['html'])
       $('#product-insert-input-suggest').html(data['html2'])
+      installCheckbox('product')
     })
   }
 
@@ -224,9 +228,8 @@
         global['file'][name]['selected'] = null
 
         // kiểm tra cấu trúc dữ liệu
-        // kiểm tra nếu file quá dài, giới hạn 1000 trường
         first = object[0]
-        if (first.hasOwnProperty('code') && first.hasOwnProperty('name') && first.hasOwnProperty('n1') && first.hasOwnProperty('n2')) {
+        if (first.hasOwnProperty('low') && first.hasOwnProperty('code') && first.hasOwnProperty('name') && first.hasOwnProperty('n1') && first.hasOwnProperty('n2')) {
           // tách dữ liệu
           list = {}
           length = object.length
@@ -239,10 +242,10 @@
           }
 
           // gửi dữ liệu tuần tự
-          for (let index = 0; index < hundred; index++) {
+          for (let index = 0; index <= hundred; index++) {
             vhttp.checkelse('', { action: 'update', data: list[index], check: Number($("#insert-check").prop('checked')) }).then(data => {
               index--
-              if (index == 0) $("#insert-modal").modal('hide')
+              if (index == 0) window.location.reload()
             })
           }
 
@@ -360,11 +363,6 @@
       $("#content").html(data['html'])
       installCheckbox('product')
     })
-  }
-
-  function clear(name) {
-    $("#" + name + "-content").hide()
-    $("#" + name + "-box").show()
   }
 
   function goPage(name, page) {

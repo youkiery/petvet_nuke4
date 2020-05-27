@@ -5,18 +5,20 @@
       Tên hàng
     </th>
     <th> 
-      Số lượng
+      BV-KHO
     </th>
     <th>
       Hành động
     </th>
   </tr>
   <!-- BEGIN: row -->
-  <tr>
-    <td> {name} </td>
-    <td> {number} / {low} </td>
-    <td> {action} </td>
-  </tr>
+  <tbody class="small">
+    <tr>
+      <td> {name} </td>
+      <td> {n1}-{n2} </td>
+      <td> {action} </td>
+    </tr>
+  </tbody>
   <!-- END: row -->
 </table>
 <!-- END: main -->

@@ -2,8 +2,8 @@
 <table class="table table-bordered">
     <tr>
         <th> STT </th>
-        <!-- <th> <input type="checkbox" class="check-product-all"> </th> -->
-        <th> Mã hàng </th>
+        <th> <input type="checkbox" class="check-product-all"> </th>
+        <!-- <th> Mã hàng </th> -->
         <th> Tên hàng </th>
         <th> Giới hạn </th>
         <th></th>
@@ -11,8 +11,8 @@
     <!-- BEGIN: row -->
     <tr>
         <td> {index} </td>
-        <!-- <td> <input type="checkbox" class="check-product" rel="{id}"> </td> -->
-        <td> {code} </td>
+        <td> <input type="checkbox" class="check-product" rel="{id}"> </td>
+        <!-- <td> {code} </td> -->
         <td> {name} </td>
         <td> {low} </td>
         <td> 
