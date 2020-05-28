@@ -56,7 +56,7 @@ if (!empty($action)) {
           }
         }
         else {
-          $sql = 'update `'. PREFIX .'product` set pos = "'. $item['pos'] .'", low = '. $item['low'] .', n1 = '. $item['n1'] .', n2 = '. $item['n2'] .' where id = ' . $product['id'];
+          $sql = 'update `'. PREFIX .'product` set '. (strlen($item['pos']) ? 'pos = "'. $item['pos'] .'",' : '') .' '. (strlen($item['low']) ? 'low = '. $item['low'] . ', ' : '') .' n1 = '. $item['n1'] .', n2 = '. $item['n2'] .' where id = ' . $product['id'];
           $db->query($sql);
         }
       }

@@ -78,7 +78,7 @@
 
 
 <div id="insert-modal" class="modal" role="dialog">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-body">
         <div type="button" class="close" data-dismiss="modal"> &times; </div> <br><br>

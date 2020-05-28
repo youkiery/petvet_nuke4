@@ -344,7 +344,7 @@ function productStatisticContent($keyword, $tags) {
   foreach ($tags as $tag) {
     if (strlen($tag)) $xtra []= 'a.tag like \'%"'. $tag .'"%\'';
   }
-  $sql = 'select b.*, a.id, a.low, a.n1, a.n2, a.pos from `'. PREFIX .'product` a inner join `'. PREFIX .'catalog` b on a.itemid = b.id where b.name like "%'. $keyword .'%" and ((a.n2 > 0 and a.n1 < a.low) or (a.n2 + a.n1 < a.low)) ' . (count($xtra) ? ' and ' : '') . implode(' or ', $xtra) . ' limit 20';
+  $sql = 'select b.*, a.id, a.low, a.n1, a.n2, a.pos from `'. PREFIX .'product` a inner join `'. PREFIX .'catalog` b on a.itemid = b.id where b.name like "%'. $keyword .'%" and ((a.n2 > 0 and a.n1 < a.low) or (a.n2 + a.n1 < a.low)) ' . (count($xtra) ? ' and ' : '') . implode(' or ', $xtra) . ' limit 100';
   $query = $db->query($sql);
   while ($row = $query->fetch()) {
     $xtpl->assign('name', $row['name']);

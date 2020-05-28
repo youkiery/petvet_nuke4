@@ -229,7 +229,7 @@
 
         // kiểm tra cấu trúc dữ liệu
         first = object[0]
-        if (first.hasOwnProperty('low') && first.hasOwnProperty('code') && first.hasOwnProperty('name') && first.hasOwnProperty('n1') && first.hasOwnProperty('n2')) {
+        if (first.hasOwnProperty('code') && first.hasOwnProperty('name') && first.hasOwnProperty('n1') && first.hasOwnProperty('n2')) {
           // tách dữ liệu
           list = {}
           length = object.length
