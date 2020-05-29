@@ -906,7 +906,7 @@ function courtRegistList($filter) {
     $xtra[]= 'active = ' . $filter['active'];
   }
 
-  $sql = 'select * from `'. PREFIX .'regist` '. (count($xtra) ? 'where ' . implode(' and ', $xtra) : '') .' limit '. $filter['limit'] .' offset ' . $filter['limit'] * ($filter['page'] - 1);
+  $sql = 'select * from `'. PREFIX .'regist` '. (count($xtra) ? 'where ' . implode(' and ', $xtra) : '') .' order by id desc limit '. $filter['limit'] .' offset ' . $filter['limit'] * ($filter['page'] - 1);
   $query = $db->query($sql);
   $number = 0;
   while ($row = $query->fetch()) {
@@ -1016,7 +1016,7 @@ function contestList() {
 
   $xtpl = new XTemplate("contest-list.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/" . $op);
 
-  $query = $db->query("select count(*) as count from `". PREFIX ."regist`  ". ($xtra ? " where " . $xtra : "") ." order by id desc");
+  $query = $db->query("select count(*) as count from `". PREFIX ."regist`  ". ($xtra ? " where " . $xtra : ""));
   $number = $query->fetch()['count'];
 
   $query = $db->query("select * from `". PREFIX ."regist`  where ". ($xtra ?  $xtra . ' and ' : "") ." parent = 0 order by id desc limit 10 offset " . ($filter['page'] - 1) * $filter['limit']);

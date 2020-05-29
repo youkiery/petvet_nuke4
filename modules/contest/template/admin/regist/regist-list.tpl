@@ -14,19 +14,19 @@
     <td> {mobile} </td>
     <td> {court} </td>  
     <td>
-      <button class="btn btn-info" onclick="edit({id})">
+      <button class="btn btn-xs btn-info" onclick="edit({id})">
         <span class="glyphicon glyphicon-edit"></span>
       </button>
-      <button class="btn btn-danger" onclick="remove({id})">
+      <button class="btn btn-xs btn-danger" onclick="remove({id})">
         <span class="glyphicon glyphicon-remove"></span>
       </button>
       <!-- BEGIN: yes -->
-      <button class="btn btn-warning" rel="{id}" onclick="activeSubmit({id}, 0)">
+      <button class="btn btn-xs btn-warning" rel="{id}" onclick="activeSubmit({id}, 0)">
         Hủy xác nhận
       </button>
       <!-- END: yes -->
       <!-- BEGIN: no -->
-      <button class="btn btn-info" rel="{id}" onclick="activeSubmit({id}, 1)">
+      <button class="btn btn-xs btn-info" rel="{id}" onclick="activeSubmit({id}, 1)">
         Xác nhận
       </button>
       <!-- END: no -->
