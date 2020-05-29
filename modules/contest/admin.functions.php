@@ -827,12 +827,18 @@ function courtList() {
   $query = $db->query($sql);
   while ($row = $query->fetch()) {
     // cắt ngắn giới thiệu
-    $pos = strpos($row['intro'], ' ', 100);
-    $dot = true;
-    if ($pos <= 0) {
-      $dot = false;
-      $pos = strlen($row['intro']);
-    } 
+    if (strlen($row['intro'])) {
+      $pos = strpos($row['intro'], ' ', 100);
+      $dot = true;
+      if ($pos <= 0) {
+        $dot = false;
+        $pos = strlen($row['intro']);
+        $intro = substr($row['intro'], 0, $pos) . ($dot ? '...' : '');
+      } 
+    }
+    else {
+      $intro = '';
+    }
     // tách người thực hiện
     // $performer = array();
     // $performer_list = explode(',', $row['performer']);
@@ -848,25 +854,31 @@ function courtList() {
     $xtpl->assign('name', $row['name']);
     // $xtpl->assign('performer', implode(', ', $performer));
     $xtpl->assign('price', number_format($row['price'], 0, '', ',') . ' VND');
-    $xtpl->assign('intro', substr($row['intro'], 0, $pos) . ($dot ? '...' : ''));
+    $xtpl->assign('intro', $intro);
     $xtpl->parse('main.row');
 
     // Danh sách khóa học con
     $sql = "select * from `". PREFIX ."court`  where parent = $row[id] order by id desc";
     $query2 = $db->query($sql);
     while ($row2 = $query2->fetch()) {
-      $pos = strpos($row2['intro'], ' ', 100);
-      $dot = true;
-      if ($pos <= 0) {
-        $dot = false;
-        $pos = strlen($row2['intro']);
-      } 
-  
+      if (strlen($row2['intro'])) {
+        $pos = strpos($row2['intro'], ' ', 100);
+        $dot = true;
+        if ($pos <= 0) {
+          $dot = false;
+          $pos = strlen($row2['intro']);
+          $intro = substr($row2['intro'], 0, $pos) . ($dot ? '...' : '');
+        } 
+      }
+      else {
+        $intro = '';
+      }
+    
       $xtpl->assign('index', '');
       $xtpl->assign('id', $row2['id']);
       $xtpl->assign('name', $row2['name']);
       $xtpl->assign('price', number_format($row2['price'], 0, '', ',') . ' VND');
-      $xtpl->assign('intro', substr($row2['intro'], 0, $pos) . ($dot ? '...' : ''));
+      $xtpl->assign('intro', $intro);
       $xtpl->parse('main.row');
     }
   }
@@ -896,7 +908,7 @@ function courtRegistList($filter) {
 
   $sql = 'select * from `'. PREFIX .'regist` '. (count($xtra) ? 'where ' . implode(' and ', $xtra) : '') .' limit '. $filter['limit'] .' offset ' . $filter['limit'] * ($filter['page'] - 1);
   $query = $db->query($sql);
-  $numer = 0;
+  $number = 0;
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
