@@ -228,6 +228,13 @@
     )
   }
 
+  function manual(id) {
+    vhttp.checkelse('', {action: 'get-manual', id: id}).then(data => {
+      $("#manual-content").html(data['manual'])
+      $("#manual-modal").modal('show')
+    })
+  }
+
   function loadDefault() {
     $("#device-name").val(),
     $("#device-unit").val(global['remind']['unit']),

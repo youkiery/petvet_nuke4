@@ -178,6 +178,14 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = $xtpl->text();
     break;
+    case 'get-manual':
+      $id = $nv_Request->get_int('id', 'post', 0);
+
+      $manual = getDeviceManual($id);
+
+      $result['status'] = 1;
+      $result['manual'] = $manual['manual'];
+    break;
   }
   echo json_encode($result);
   die();

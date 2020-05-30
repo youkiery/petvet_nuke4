@@ -110,6 +110,8 @@ function lowitemList() {
     $index = 1;
     $xtpl = new XTemplate("lowitem-list.tpl", PATH);
 
+    $query = $db->query('select count(id) from `'. PREFIX .'item` where active = 1 and name like "%'. $filter['keyword'] .'%" and ((bound = 0 and number < '. $filter['limit'] .') or (bound > 0 and number <= bound)) '. $xtra);
+    $number = $query->fetch();
     $query = $db->query('select * from `'. PREFIX .'item` where active = 1 and name like "%'. $filter['keyword'] .'%" and ((bound = 0 and number < '. $filter['limit'] .') or (bound > 0 and number <= bound)) '. $xtra .' order by time desc');
     // $query = $db->query('select * from `'. PREFIX .'item` where active = 1 and ((bound = 0 and number < '. $filter['limit'] .') or (bound > 0 and number <= bound)) '. $xtra .' order by time desc');
     while ($row = $query->fetch()) {
@@ -547,10 +549,12 @@ function deviceList() {
       $xtpl->assign('status', $row['status']);
       $xtpl->assign('note', $row['description']);
       $xtpl->assign('number', $row['number']);
+      $manual = getDeviceManual($row['id']);
+      if (!empty($manual)) $xtpl->parse('main.yes.row.manual');
       $xtpl->parse('main.yes.row');
     }
     $xtpl->parse('main.yes');
-  }
+}
 
   $xtpl->parse('main');
   return $xtpl->text();

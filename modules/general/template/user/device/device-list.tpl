@@ -21,6 +21,11 @@
         <button class="btn btn-info btn-xs" onclick="deviceEdit({id})">
           báo cáo
         </button>  
+        <!-- BEGIN: manual -->
+        <button class="btn btn-info btn-xs" onclick="manual({id})">
+          HDSD
+        </button>  
+        <!-- END: manual -->
       </td>
     </tr>
     <!-- END: row -->

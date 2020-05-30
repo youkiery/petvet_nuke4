@@ -7,7 +7,7 @@
  */
 
 $action = $nv_Request->get_string('action', 'post', '');
-$manual = getManualDevice($id);
+$manual = getDeviceManual($id);
 
 if (!empty($action)) {
   $result = array('status' => 0);
