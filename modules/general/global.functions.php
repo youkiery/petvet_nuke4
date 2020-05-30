@@ -322,6 +322,16 @@ function checkRemind($name, $value) {
   }
 }
 
+function getManualDevice($id) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'device_manual` where deviceid = ' . $id;
+  $query = $db->query($sql);
+  $data = $query->fetch();
+
+  return $data;
+}
+
 function getDeviceData($id) {
   global $db;
 

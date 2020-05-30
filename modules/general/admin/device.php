@@ -13,6 +13,13 @@ $filter = array(
   'limit' => $nv_Request->get_int('page', 'get', 10)
 );
 
+$act = $nv_Request->get_string('act', 'get', '');
+$id = $nv_Request->get_int('id', 'get', 0);
+if (!empty($act) && $act == 'manual' && $id > 0) {
+  include_once('manual.php');
+  exit();
+}
+
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);

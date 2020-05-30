@@ -24,6 +24,10 @@
         <button class="btn btn-info btn-xs" onclick="deviceEdit({id})">
           sửa
         </button>  
+        <a class="btn btn-info btn-xs" href="{url}"> HDSD </a>
+        <button class="btn btn-info btn-xs" onclick="itemDetail({id})">
+          phân quyền
+        </button>  
         <button class="btn btn-info btn-xs" onclick="itemDetail({id})">
           phân quyền
         </button>  

@@ -54,7 +54,7 @@ function remindModal() {
 }
 
 function priceContent($filter = array('page' => 1, 'limit' => 20)) {
-    global $db;
+    global $db, $module_name, $op;
     $xtpl = new XTemplate("list.tpl", PATH);
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
     $category = priceCategoryList();
@@ -265,7 +265,7 @@ function deviceModal() {
 }
 
 function deviceList() {
-    global $db, $filter;
+    global $db, $module_name, $op, $filter;
     $xtpl = new XTemplate("device-list.tpl", PATH);
   
     $xtra = '';
@@ -283,6 +283,7 @@ function deviceList() {
     // die('select * from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
     $query = $db->query('select * from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+    $link = '/admin/index.php?nv=' . $module_name . '&op=' . $op . '&' . http_build_query($filter) .'&act=manual';
     while ($row = $query->fetch()) {
       $depart = json_decode($row['depart']);
       $list = array();
@@ -295,6 +296,7 @@ function deviceList() {
       $xtpl->assign('depart', implode(', ', $list));
       $xtpl->assign('company', $row['intro']);
       $xtpl->assign('status', $row['status']);
+      $xtpl->assign('url', $link . '&id='. $row['id']);
       $xtpl->assign('number', $row['number']);
       $xtpl->parse('main.row');
     }
