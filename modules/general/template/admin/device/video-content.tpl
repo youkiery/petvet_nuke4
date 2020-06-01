@@ -11,7 +11,7 @@
   <div class="col-2 td"> {size} </div>
   <div class="col-3 td"> {time} </div>
   <div class="col-2 td">
-    <button class="btn btn-info btn-xs" onclick="selectVideo('{name}', '{url}')">
+    <button class="btn btn-info btn-xs" onclick="selectVideo('{url}')">
       chọn
     </button>
   </div>

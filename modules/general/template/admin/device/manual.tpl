@@ -14,7 +14,8 @@
     border-left: 1px solid;
   }
 
-  .th, .td {
+  .th,
+  .td {
     border-right: 1px solid;
     height: 30px;
   }
@@ -150,8 +151,9 @@
   var storageRef = firebase.storage().ref().child('/videos');
 
   $(document).ready(() => {
+    CKEDITOR.config.extraPlugins = 'video'
     CKEDITOR.replace('content')
-    CKEDITOR.instances.content.setData('{data}')
+    CKEDITOR.instances.content.setData(`{data}`)
   })
 
   function videoModal() {
@@ -165,9 +167,9 @@
     })
   }
 
-  function selectVideo(name, url) {
+  function selectVideo(url) {
     data = CKEDITOR.instances.content.getData()
-    data += ''
+    data += '<video style="width: 100%" controls name="media"><source src="' + url + '" type="video/mp4"></video>'
     CKEDITOR.instances.content.setData(data)
   }
 
