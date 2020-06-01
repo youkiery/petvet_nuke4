@@ -53,6 +53,29 @@ function remindModal() {
     return $xtpl->text();
 }
 
+function manualModal() {
+  $xtpl = new XTemplate("manual-modal.tpl", PATH);
+  $xtpl->assign('video_content', videoContent());
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function videoContent() {
+  global $db;
+  $xtpl = new XTemplate("video-content.tpl", PATH);
+  $sql = 'select * from `'. PREFIX .'video` order by id desc';
+  $query = $db->query($sql);
+  while ($row = $query->fetch()) {
+    $xtpl->assign('name', substr($row['name'], 0, 18) . '...');
+    $xtpl->assign('size', $row['size']);
+    $xtpl->assign('url', $row['url']);
+    $xtpl->assign('time', date('d/m/Y', $row['time']));
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function priceContent($filter = array('page' => 1, 'limit' => 20)) {
     global $db, $module_name, $op;
     $xtpl = new XTemplate("list.tpl", PATH);

@@ -714,9 +714,6 @@
   var maxWidth = 512
   var maxHeight = 512
   var imageType = ["jpeg", "jpg", "png", "bmp", "gif"]
-  var metadata = {
-    contentType: 'image/jpeg',
-  };
   var file, filename
   remind = JSON.parse('{remind}')
   var thumbnail
@@ -740,6 +737,9 @@
     thumbnail = canvas.toDataURL("image/jpeg")
   }
 
+  var metadata = {
+    contentType: 'image/jpeg',
+  };
   var firebaseConfig = {
     apiKey: "AIzaSyAgxaMbHnlYbUorxXuDqr7LwVUJYdL2lZo",
     authDomain: "petcoffee-a3cbc.firebaseapp.com",

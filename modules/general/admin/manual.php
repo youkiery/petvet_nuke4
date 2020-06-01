@@ -14,17 +14,30 @@ if (!empty($action)) {
   switch ($action) {
     case 'save-manual':
       $data = $nv_Request->get_string('data', 'post', '');
-
+      
+      $data = str_replace('\'', '"', $data);
       if (!empty($manual)) {
-        $sql = 'update `'. PREFIX .'device_manual` set manual = "' . $data . '" where id = ' . $id;
+        $sql = 'update `'. PREFIX .'device_manual` set manual = \'' . $data . '\' where deviceid = ' . $id;
       }
       else {
-        $sql = 'insert into `'. PREFIX .'device_manual` (deviceid, manual) values('. $id .', "'. $data .'")';
+        $sql = 'insert into `'. PREFIX .'device_manual` (deviceid, manual) values('. $id .', \''. $data .'\')';
       }
       $db->query($sql);
 
       $result['status'] = 1;
-      $result['url'] = '/admin/index.php?nv=' . $module_name . '&op=' . $op . '&' . http_build_query($filter);
+      $url = '/admin/index.php?nv=' . $module_name . '&op=' . $op . '&' . http_build_query($filter);
+      $result['url'] = $url;
+    break;
+    case 'insert-video':
+      $name = $nv_Request->get_string('name', 'post', '');
+      $size = $nv_Request->get_string('size', 'post', '');
+      $url = $nv_Request->get_string('url', 'post', '');
+
+      $sql = 'insert into `'. PREFIX .'video` (name, size, url, time) values("'. $name .'", "'. parseSize($size) .'", "'. $url .'", '. time() .')';
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = videoContent();
+      }
     break;
   }
   echo json_encode($result);
@@ -34,6 +47,7 @@ if (!empty($action)) {
 $xtpl = new XTemplate("manual.tpl", PATH);
 
 $device = getDeviceData($id);
+$xtpl->assign('modal', manualModal());
 $xtpl->assign('device_name', $device['name']);
 $xtpl->assign('data', $manual['manual']);
 $xtpl->parse("main");

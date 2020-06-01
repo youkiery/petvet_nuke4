@@ -433,3 +433,14 @@ function getItemId($itemid) {
   }
   return $item;
 }
+
+function parseSize($number) {
+  $size = array();
+  $unit = array(0 => 'byte', 'kb', 'mb', 'gb', 'tb', 'pb');
+  $size []= round($number, 2);
+  while (($number = $number / 1024) > 1) {
+    $size []= round($number, 2);
+  }
+
+  return $size[count($size) - 1] . $unit[count($size) - 1];
+}

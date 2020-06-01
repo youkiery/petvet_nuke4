@@ -10,7 +10,7 @@ if (!defined('NV_IS_FILE_ADMIN')) { die('Stop!!!'); }
 
 $filter = array(
   'page' => $nv_Request->get_int('page', 'get', 1),
-  'limit' => $nv_Request->get_int('page', 'get', 10)
+  'limit' => $nv_Request->get_int('limit', 'get', 10)
 );
 
 $act = $nv_Request->get_string('act', 'get', '');
