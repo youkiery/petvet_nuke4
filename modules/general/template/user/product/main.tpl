@@ -111,8 +111,10 @@
         placeholder="Tìm kiếm theo tên hàng, mã hàng,...">
     </div>
     <div class="col-2">
-      <input type="text" class="form-control" id="tag" placeholder="VD: dây dắt, vòng cổ, xích inox, cổ xanh đỏ đen,...">
-      <input type="hidden" name="tag" value="{tag}">
+      <div class="relative">
+        <input type="text" class="form-control" id="tag" name="tag" value="{tag}" placeholder="VD: dây dắt, vòng cổ, xích inox, cổ xanh đỏ đen,...">
+        <div class="suggest" id="tag-suggest"> </div>
+      </div>
     </div>
     <div class="col-2">
       <select class="form-control" name="limit">
@@ -166,6 +168,7 @@
     limit: 100,
     file: {},
     list: JSON.parse('{list}'),
+    tags: JSON.parse('{tags}'),
     data: [],
     // allow: ['SHOP', 'SHOP>>Balo, giỏ xách', 'SHOP>>Bình xịt', 'SHOP>>Cát vệ sinh', 'SHOP>>Dầu tắm', 'SHOP>>Đồ chơi', 'SHOP>>Đồ chơi - vật dụng', 'SHOP>>Giỏ-nệm-ổ', 'SHOP>>Khay vệ sinh', 'SHOP>>Nhà, chuồng', 'SHOP>>Thuốc bán', 'SHOP>>Thuốc bán>>thuốc sát trung', 'SHOP>>Tô - chén', 'SHOP>>Vòng-cổ-khớp', 'SHOP>>Xích-dắt-yếm']
     allow: ["SHOP", "SHOP>>Balo, giỏ xách", "SHOP>>Bình xịt", "SHOP>>Cát vệ sinh", "SHOP>>Dầu tắm", "SHOP>>Đồ chơi", "SHOP>>Đồ chơi - vật dụng", "SHOP>>Giỏ-nệm-ổ", "SHOP>>Khay vệ sinh", "SHOP>>Nhà, chuồng", "SHOP>>Thức ăn", "SHOP>>Thuốc bán", "SHOP>>Thuốc bán>>thuốc sát trung", "SHOP>>Tô - chén", "SHOP>>Vòng-cổ-khớp", "SHOP>>Xích-dắt-yếm"]
@@ -180,9 +183,52 @@
         })
       })
     }, 500, 500)
+    vremind.install('#tag', '#tag-suggest', (input) => {
+      return new Promise(resolve => {
+        html = ''
+        tags = searchtag(convert(input))
+        tags.forEach(tag => {
+          html += `
+          <div class="suggest-item" onclick="selectTag('`+ tag +`', '#tag')"> 
+              `+ tag +`
+            </div>`        
+        });
+        resolve(html)
+      })
+    }, 500, 500)
+    vremind.install('#statistic-tag', '#statistic-tag-suggest', (input) => {
+      return new Promise(resolve => {
+        html = ''
+        tags = searchtag(convert(input))
+        tags.forEach(tag => {
+          html += `
+            <div class="suggest-item" onclick="selectTag('`+ tag +`', '#statistic-tag')"> 
+              `+ tag +`
+            </div>`        
+        });
+        resolve(html)
+      })
+    }, 500, 500)
     installFile('insert')
     installCheckbox('product')
   })
+
+  function selectTag(tag, selector) {
+    $(selector).val(tag)
+  }
+
+  function searchtag(keyword) {
+    data = []
+    for (const key in global['tags']) {
+      if (global['tags'].hasOwnProperty(key)) {
+        if (key.search(keyword) >= 0) {
+          data.push(global['tags'][key])
+        }
+      }
+    }
+    console.log(data);
+    return data
+  }
 
   function insertProduct(id) {
     vhttp.checkelse('', { action: 'insert-product', keyword: $("#product-insert-input").val(), id: id, low: $("#product-insert-low").val() }).then(data => {
@@ -246,10 +292,12 @@
           }
 
           // gửi dữ liệu tuần tự
+          console.log(hundred);
+          
           for (let index = 0; index <= hundred; index++) {
             vhttp.checkelse('', { action: 'update', data: list[index], check: Number($("#insert-check").prop('checked')) }).then(data => {
-              index--
               if (index == 0) window.location.reload()
+              index--
             })
           }
 
@@ -314,7 +362,7 @@
     if (tag.length) {
       // kiểm tra có phải danh sách không
       list = tag.split(', ')
-      if (list.length > 1) {
+      if (list.length > 0) {
         list.forEach(item => {
           if (checkTag(item)) global['tag'].push(item)
         })
@@ -332,10 +380,11 @@
   }
 
   function checkTag(name) {
+    check = true
     global['tag'].forEach((item) => {
-      if (item == name) return false
+      if (item === name) check = false
     })
-    return true
+    return check
   }
 
   function removeTag(id) {
@@ -424,6 +473,19 @@
     $("#" + id).text(text)
     $("#" + id).show()
     $("#" + id).fadeOut(2000)
+  }
+
+  function convert(str) {
+    str = str.toLowerCase();
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a"); 
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e"); 
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g,"i"); 
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g,"o"); 
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"u"); 
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y"); 
+    str = str.replace(/đ/g,"d");
+    str = str.trim(); 
+    return str;
   }
 </script>
 <!-- END: main -->

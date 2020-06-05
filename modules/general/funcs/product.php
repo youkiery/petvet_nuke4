@@ -12,11 +12,11 @@ $filter = array(
   'page' => $nv_Request->get_int('page', 'get', 1),
   'limit' => $nv_Request->get_int('limit', 'get', 20),
   'keyword' => $nv_Request->get_string('keyword', 'get', ''),
-  'category' => $nv_Request->get_int('category', 'get', 0),
+  'tag' => $nv_Request->get_string('tag', 'get', '')
 );
 $http = array(
   'keyword' => $filter['keyword'],
-  'category' => $filter['category']
+  'tag' => $nv_Request->get_string('tag', 'get', '')
 );
 
 $url = '/index.php?nv=' . $module_name . '&op=' . $op .'&' . http_build_query($http);
@@ -27,6 +27,8 @@ $url = '/index.php?nv=' . $module_name . '&op=' . $op .'&' . http_build_query($h
 //   $db->query($sql);
 // }
 // die();
+$tag_data = getTagList();
+$tag_search_data = getTagSearchList();
 
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
@@ -37,6 +39,13 @@ if (!empty($action)) {
       $data = $nv_Request->get_array('data', 'post');
 
       foreach ($data as $item) {
+        $item['code'] = (empty($item['code']) ? '' : $item['code']);
+        $item['name'] = (empty($item['name']) ? '' : $item['name']);
+        $item['n1'] = (empty($item['n1']) ? 0 : $item['n1']);
+        $item['n2'] = (empty($item['n2']) ? 0 : $item['n2']);
+        $item['low'] = (empty($item['low']) ? 0 : $item['low']);
+        $item['pos'] = (empty($item['pos']) ? '' : $item['pos']);
+        $item['tag'] = (empty($item['tag']) ? array() : $item['tag']);
         $sql = 'select * from `'. PREFIX .'catalog` where code = "'. $item['code'] .'"';
         $query = $db->query($sql);
         $row = $query->fetch();
@@ -51,7 +60,7 @@ if (!empty($action)) {
         $product = $query->fetch();
         if (empty($product)) {
           if ($check) {
-            $sql = 'insert into `'. PREFIX .'product` (itemid, tag, pos, low, n1, n2) values('. $row['id'] .', \''. json_encode(array()) .'\', "'. $item['pos'] .'", 0, '. $item['n1'] .', '. $item['n2'] .')';
+            $sql = 'insert into `'. PREFIX .'product` (itemid, tag, pos, low, n1, n2) values('. $row['id'] .', \''. json_encode(array()) .'\', "'. $item['pos'] .'", "'. $item['low'] .'", '. $item['n1'] .', '. $item['n2'] .')';
             $db->query($sql);
           }
         }
@@ -59,7 +68,8 @@ if (!empty($action)) {
           $xtra = '';
           if (!empty($item['tag']) && strlen($item['tag'])) {
             $tag = explode(', ', $item['tag']);
-            $xtra .= 'tag = "'. json_encode($item['tag'], JSON_UNESCAPED_UNICODE) .'", ';
+            checkTag($tag, $tag_data);
+            $xtra .= 'tag = \''. json_encode($item['tag'], JSON_UNESCAPED_UNICODE) .'\', ';
           }
           if (!empty($item['pos']) && strlen($item['pos'])) $xtra .= 'pos = "'. $item['pos'] .'", ';
           if (!empty($item['low']) && strlen($item['low'])) $xtra .= 'low = "'. $item['low'] .'", ';
@@ -139,6 +149,7 @@ if (!empty($action)) {
 
       $sql = 'update `'. PREFIX .'product` set low = ' . $low . ', tag = \''. json_encode($tags, JSON_UNESCAPED_UNICODE) .'\' where id = ' . $id;
       if ($db->query($sql)) {
+        checkTag($tags, $tag_data);
         $result['status'] = 1;
       }
     break;
@@ -151,6 +162,8 @@ $xtpl = new XTemplate("main.tpl", PATH);
 $xtpl->assign('nv', $module_name);
 $xtpl->assign('op', $op);
 $xtpl->assign('keyword', $filter['keyword']);
+$xtpl->assign('tag', $filter['tag']);
+$xtpl->assign('tags', json_encode($tag_search_data, JSON_UNESCAPED_UNICODE));
 $xtpl->assign('check' . $filter['limit'], 'selected');
 
 // $sql = 'select * from `'. PREFIX .'product`';
@@ -177,7 +190,6 @@ $xtpl->assign('content', productList($url, $filter));
 
 $xtpl->assign('modal', productModal());
 $xtpl->assign('list', json_encode($list));
-
 $xtpl->parse('main');
 $contents = $xtpl->text();
 include NV_ROOTDIR . '/includes/header.php';

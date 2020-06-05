@@ -11,6 +11,43 @@ define('PREFIX', $db_config['prefix'] . '_' . $module_name . '_');
 define('BLOCK', NV_ROOTDIR . '/modules/' . $module_file . '/template/block/');
 $remind_title = array('blood' => 'Xét nghiệm máu');
 
+function getTagList() {
+  global $db;
+
+  $tags = array();
+  $sql = 'select * from `'. PREFIX .'tag` order by name';
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $tags []= $row['name'];
+  }
+  return $tags;
+}
+
+function getTagSearchList() {
+  global $db;
+
+  $tags = array();
+  $sql = 'select * from `'. PREFIX .'tag` order by name';
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $tags [convert($row['name'])]= $row['name'];
+  }
+  return $tags;
+}
+
+function checkTag($tags, $tag_data) {
+  global $db;
+  foreach ($tags as $tag) {
+    if (in_array($tag, $tag_data) === false) {
+      $sql = 'insert into `'. PREFIX .'tag` (name) values ("'. $tag .'")';
+      $db->query($sql);
+      $tag_data []= $tag;
+    }
+  }
+}
+
 function getProductTagId($id) {
   global $db;
 

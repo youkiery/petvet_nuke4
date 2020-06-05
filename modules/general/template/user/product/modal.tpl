@@ -13,7 +13,10 @@
             <input type="text" class="form-control" id="statistic-keyword" placeholder="Tìm kiếm theo tên">
           </div>
           <div class="col-6">
-            <input type="text" class="form-control" id="statistic-tag" placeholder="VD: dây dắt, vòng cổ, xích inox, cổ xanh đỏ đen,...">
+            <div class="relative">
+              <input type="text" class="form-control" id="statistic-tag" placeholder="VD: dây dắt, vòng cổ, xích inox, cổ xanh đỏ đen,...">
+              <div class="suggest" id="statistic-tag-suggest"></div>
+            </div>
           </div>
           <div class="col-3">
             <button class="btn btn-info" onclick="statisticContent()">
