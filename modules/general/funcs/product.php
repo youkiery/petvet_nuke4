@@ -56,7 +56,15 @@ if (!empty($action)) {
           }
         }
         else {
-          $sql = 'update `'. PREFIX .'product` set '. (strlen($item['pos']) ? 'pos = "'. $item['pos'] .'",' : '') .' '. (strlen($item['low']) ? 'low = '. $item['low'] . ', ' : '') .' n1 = '. $item['n1'] .', n2 = '. $item['n2'] .' where id = ' . $product['id'];
+          $xtra = '';
+          if (!empty($item['tag']) && strlen($item['tag'])) {
+            $tag = explode(', ', $item['tag']);
+            $xtra .= 'tag = "'. json_encode($item['tag'], JSON_UNESCAPED_UNICODE) .'", ';
+          }
+          if (!empty($item['pos']) && strlen($item['pos'])) $xtra .= 'pos = "'. $item['pos'] .'", ';
+          if (!empty($item['low']) && strlen($item['low'])) $xtra .= 'low = "'. $item['low'] .'", ';
+
+          $sql = 'update `'. PREFIX .'product` set '. (strlen($xtra) ? $xtra : '') .' n1 = '. $item['n1'] .', n2 = '. $item['n2'] .' where id = ' . $product['id'];
           $db->query($sql);
         }
       }

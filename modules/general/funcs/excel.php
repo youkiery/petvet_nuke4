@@ -9,7 +9,7 @@
 if (!defined('NV_IS_MOD_CONGVAN')) die('Stop!!!');
 
 $xco = array(1 => 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
-$title = array(1 => 'STT', 'name', 'n1', 'n2', 'low', 'pos', 'tag');
+$title = array(1 => 'code', 'name', 'n1', 'n2', 'low', 'pos', 'tag');
 
 include 'PHPExcel/IOFactory.php';
 $fileType = 'Excel2007';
@@ -26,13 +26,14 @@ $j++;
 $sql = 'select * from `'. PREFIX .'product`';
 $query = $db->query($sql);
 
+$index = 1;
 while ($row = $query->fetch()) {
   $i = 1;
   $tag = getProductTagId($row['id']);
   $product = getProductId($row['itemid']);
   $objPHPExcel
   ->setActiveSheetIndex(0)
-  ->setCellValue($xco[$i++] . $j, $index++)
+  ->setCellValue($xco[$i++] . $j, $product['code'])
   ->setCellValue($xco[$i++] . $j, $product['name'])
   ->setCellValue($xco[$i++] . $j, $row['n1'])
   ->setCellValue($xco[$i++] . $j, $row['n2'])
