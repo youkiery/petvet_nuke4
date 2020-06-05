@@ -11,6 +11,30 @@ define('PREFIX', $db_config['prefix'] . '_' . $module_name . '_');
 define('BLOCK', NV_ROOTDIR . '/modules/' . $module_file . '/template/block/');
 $remind_title = array('blood' => 'Xét nghiệm máu');
 
+function getProductTagId($id) {
+  global $db;
+
+  $tags = array();
+  $sql = 'select b.* from `'. PREFIX .'product_tag` a inner join `'. PREFIX .'tag` b where a.tagid = b.id and a.productid = ' . $id;
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $tags []= $row['name'];
+  }
+  return $tags;
+}
+
+function getProductId($id) {
+  global $db;
+
+  $tags = array();
+  $sql = 'select * from `'. PREFIX .'catalog` where id = ' . $id;
+  $query = $db->query($sql);
+  $product = $query->fetch();
+
+  return $product;
+}
+
 function checkCode($code) {
   global $db;
 

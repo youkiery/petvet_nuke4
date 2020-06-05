@@ -76,7 +76,6 @@
   </div>
 </div>
 
-
 <div id="insert-modal" class="modal" role="dialog">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -100,6 +99,10 @@
           <label>  
             <input type="checkbox" id="insert-check"> Thêm mặt hàng chưa có
           </label>
+          <br>
+          <button class="btn btn-info" onclick="excel()">
+            Tải excel
+          </button>
           <br>
           <button class="btn btn-info" onclick="process('insert')">
             Xử lý

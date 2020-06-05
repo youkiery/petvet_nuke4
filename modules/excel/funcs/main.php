@@ -8,7 +8,7 @@
 
 if (!defined('NV_IS_MOD_CONGVAN')) die('Stop!!!');
 
-$xtpl = new XTemplate($op . ".tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . 
+$xtpl = new XTemplate($op . ".tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/");
 
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_site_theme($contents);

@@ -365,19 +365,6 @@ function productStatisticContent($keyword, $tags) {
   return $xtpl->text();
 }
 
-function getProductTagId($id) {
-  global $db;
-
-  $tags = array();
-  $sql = 'select b.* from `'. PREFIX .'product_tag` a inner join `'. PREFIX .'tag` b where a.tagid = b.id and a.productid = ' . $id;
-  $query = $db->query($sql);
-
-  while ($row = $query->fetch()) {
-    $tags []= $row['name'];
-  }
-  return $tags;
-}
-
 function marketModal() {
     $xtpl = new XTemplate("modal.tpl", PATH);
     $xtpl->parse('main');

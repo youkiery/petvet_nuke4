@@ -209,6 +209,10 @@
     else processExcel(name)
   }
 
+  function excel() {
+    window.open('{excelurl}')
+  }
+
   function processExcel(name) {
     var reader = new FileReader();
     var rABS = !!reader.readAsBinaryString;

@@ -164,6 +164,7 @@ $xtpl->assign('check' . $filter['limit'], 'selected');
 //   $xtpl->parse('main.category');
 // }
 
+$xtpl->assign('excelurl', '/index.php?nv=' . $module_name . '&op=excel');
 $xtpl->assign('content', productList($url, $filter));
 
 $xtpl->assign('modal', productModal());
