@@ -28,9 +28,6 @@
         <button class="btn btn-info btn-xs" onclick="itemDetail({id})">
           phân quyền
         </button>  
-        <button class="btn btn-info btn-xs" onclick="itemDetail({id})">
-          phân quyền
-        </button>  
         <button class="btn btn-danger btn-xs" onclick="deviceRemove({id})">
           xóa
         </button>  
