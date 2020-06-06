@@ -45,7 +45,7 @@ if (!empty($action)) {
         $item['n2'] = (empty($item['n2']) ? 0 : $item['n2']);
         $item['low'] = (empty($item['low']) ? 0 : $item['low']);
         $item['pos'] = (empty($item['pos']) ? '' : $item['pos']);
-        $item['tag'] = (empty($item['tag']) ? array() : $item['tag']);
+        $item['tag'] = (empty($item['tag']) ? array() : explode(', ', $item['tag']));
         $sql = 'select * from `'. PREFIX .'catalog` where code = "'. $item['code'] .'"';
         $query = $db->query($sql);
         $row = $query->fetch();
@@ -66,11 +66,11 @@ if (!empty($action)) {
         }
         else {
           $xtra = '';
-          if (!empty($item['tag']) && strlen($item['tag'])) {
+          if (!count($item['tag'])) {
             $tag = explode(', ', $item['tag']);
             checkTag($tag, $tag_data);
-            $xtra .= 'tag = \''. json_encode($item['tag'], JSON_UNESCAPED_UNICODE) .'\', ';
           }
+          $xtra .= 'tag = \''. json_encode($item['tag'], JSON_UNESCAPED_UNICODE) .'\', ';
           if (!empty($item['pos']) && strlen($item['pos'])) $xtra .= 'pos = "'. $item['pos'] .'", ';
           if (!empty($item['low']) && strlen($item['low'])) $xtra .= 'low = "'. $item['low'] .'", ';
 
