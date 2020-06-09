@@ -290,16 +290,16 @@ function productList($url, $filter) {
     $query = $db->query($sql);
     $number = $query->fetch()['count'];
 
-    $sql = 'select b.*, a.id, a.low from `'. PREFIX .'product` a inner join `'. PREFIX .'catalog` b on a.itemid = b.id where '. (strlen($filter['tag']) ? 'a.tag like \'%"'. $filter['tag'] .'"%\' and' : '') .' (b.code like "%'. $filter['keyword'] .'%" or b.name like "%'. $filter['keyword'] .'%") order by a.id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+    $sql = 'select b.*, a.id, a.itemid, a.low, a.pos from `'. PREFIX .'product` a inner join `'. PREFIX .'catalog` b on a.itemid = b.id where '. (strlen($filter['tag']) ? 'a.tag like \'%"'. $filter['tag'] .'"%\' and' : '') .' (b.code like "%'. $filter['keyword'] .'%" or b.name like "%'. $filter['keyword'] .'%") order by a.id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
 
     $query = $db->query($sql);
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
    
     while ($row = $query->fetch()) {
         $xtpl->assign('index', $index++);
-        $xtpl->assign('id', $row['id']);
+        $xtpl->assign('id', $row['itemid']);
         $xtpl->assign('name', $row['name']);
-        $xtpl->assign('code', $row['code']);
+        $xtpl->assign('pos', $row['pos']);
         $xtpl->assign('low', $row['low']);
         $xtpl->parse('main.row');
     }

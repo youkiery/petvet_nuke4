@@ -131,26 +131,43 @@ if (!empty($action)) {
     case 'get-product':
       $id = $nv_Request->get_int('id', 'post', 0);
 
-      $sql = 'select b.*, a.id, a.low, a.tag from `'. PREFIX .'product` a inner join `'. PREFIX .'catalog` b on a.itemid = b.id where a.id = '. $id;
+      $sql = 'select b.*, a.pos, a.id, a.low, a.tag from `'. PREFIX .'product` a inner join `'. PREFIX .'catalog` b on a.itemid = b.id where a.itemid = '. $id;
       $query = $db->query($sql);
       $product = $query->fetch();
       $result = array(
         'status' => 1,
         'name' => $product['name'],
         'code' => $product['code'],
+        'pos' => $product['pos'],
         'low' => $product['low'],
         'tag' => json_decode($product['tag'])
       );
     break;
     case 'edit-product':
-      $id = $nv_Request->get_int('id', 'post', 0);
-      $low = $nv_Request->get_int('low', 'post', 0);
-      $tags = $nv_Request->get_array('tag', 'post');
+      $data = $nv_Request->get_array('data', 'post');
+      if (empty($data['tag'])) $data['tag'] = array();
 
-      $sql = 'update `'. PREFIX .'product` set low = ' . $low . ', tag = \''. json_encode($tags, JSON_UNESCAPED_UNICODE) .'\' where id = ' . $id;
-      if ($db->query($sql)) {
-        checkTag($tags, $tag_data);
+      $sql = 'update `'. PREFIX .'product` set pos = "'. $data['pos'] .'", low = ' . $data['low'] . ', tag = \''. json_encode($data['tag'], JSON_UNESCAPED_UNICODE) .'\' where itemid = ' . $data['id'];
+      $sql2 = 'update `'. PREFIX .'catalog` set name = "'. $data['name'] .'", code = "' . $data['code'] . '" where id = ' . $data['id'];
+      if ($db->query($sql) && $db->query($sql2)) {
+        checkTag($data['tag'], $tag_data);
         $result['status'] = 1;
+        $result['html'] = productList($url, $filter);
+      }
+    break;
+    case 'insert-item':
+      // nếu rồi, kiểm tra item có trong product chưa
+      // nếu rồi, bỏ qua bước này
+      // xong, thêm item vào product
+      $code = $nv_Request->get_string('code', 'post', '');
+      $name = $nv_Request->get_string('name', 'post', '');
+      
+      // kiểm tra trong catalog có mã hàng chưa
+      $sql = 'select * from `'. PREFIX .'catalog` where code = "'. $code .'"';
+      $query = $db->query($sql);
+      if (empty($row = $query->fetch())) {
+        // nếu chưa thêm vào catalog
+        $sql = 'insert into `'. PREFIX .'`';
       }
     break;
   }

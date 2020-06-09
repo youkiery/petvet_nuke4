@@ -140,7 +140,14 @@
 
 <div class="form-group rows">
   <div class="relative col-4">
-    <input type="text" class="form-control" id="product-insert-input" placeholder="Thêm mặt hàng">
+    <div class="input-group">
+      <input type="text" class="form-control" id="product-insert-input" placeholder="Thêm mặt hàng">
+      <div class="input-group-btn">
+        <button class="btn btn-success" onclick="insertItem()">
+          <span class="glyphicon glyphicon-plus"></span>
+        </button>
+      </div>
+    </div>
     <div class="suggest" id="product-insert-input-suggest"></div>
   </div>
   <div class="col-2">
@@ -234,6 +241,19 @@
     vhttp.checkelse('', { action: 'insert-product', keyword: $("#product-insert-input").val(), id: id, low: $("#product-insert-low").val() }).then(data => {
       $('#content').html(data['html'])
       $('#product-insert-input-suggest').html(data['html2'])
+      installCheckbox('product')
+    })
+  }
+
+  function insertItem() {
+    $("#item-code").val('')
+    $("#item-name").val('')
+    $("#item-modal").modal('show')
+  }
+
+  function insertItemSubmit() {
+    vhttp.checkelse('', { action: 'insert-item', code: $("#item-code").val(), code: $("#item-code").val() }).then(data => {
+      $('#content').html(data['html'])
       installCheckbox('product')
     })
   }
@@ -336,9 +356,10 @@
   function editProduct(id) {
     vhttp.checkelse('', { action: 'get-product', id: id }).then(data => {
       global['id'] = id
-      $("#product-code").text(data['code'])
-      $("#product-name").text(data['name'])
+      $("#product-code").val(data['code'])
+      $("#product-name").val(data['name'])
       $("#product-low").val(data['low'])
+      $("#product-pos").val(data['pos'])
       if (!data['tag'].length) global['tag'] = []
       else global['tag'] = data['tag']
       parseTag()
@@ -373,8 +394,20 @@
     }
   }
 
+  function getProductData() {
+    return {
+      id: global['id'],
+      code: $("#product-code").val(),
+      name: $("#product-name").val(),
+      low: $("#product-low").val(),
+      pos: $("#product-pos").val(),
+      tag: global['tag']
+    }
+  }
+
   function editProductSubmit() {
-    vhttp.checkelse('', { action: 'edit-product', id: global['id'], low: $("#product-low").val(), tag: global['tag'] }).then(data => {
+    vhttp.checkelse('', { action: 'edit-product', data: getProductData() }).then(data => {
+      $("#content").html(data['html'])
       $("#product-modal").modal('hide')
     })
   }

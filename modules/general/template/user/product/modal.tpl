@@ -9,12 +9,47 @@
         </div>
 
         <div class="form-group rows">
+          <div class="col-3"> Mã hàng </div>
+          <div class="col-9">
+            <input type="text" class="form-control" id="item-code">
+          </div>
+        </div>
+
+        <div class="form-group rows">
+          <div class="col-3"> Tên hàng </div>
+          <div class="col-9">
+            <input type="text" class="form-control" id="item-name">
+          </div>
+        </div>
+
+        <div class="text-center">
+          <button class="btn btn-success" onclick="insertItemSubmit()">
+            Thêm mặt hàng
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="statistic-modal" class="modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="form-group">
+          Thống kê
+          <div type="button" class="close" data-dismiss="modal"> &times; </div> <br><br>
+        </div>
+
+        <div class="form-group rows">
           <div class="col-3">
             <input type="text" class="form-control" id="statistic-keyword" placeholder="Tìm kiếm theo tên">
           </div>
           <div class="col-6">
             <div class="relative">
-              <input type="text" class="form-control" id="statistic-tag" placeholder="VD: dây dắt, vòng cổ, xích inox, cổ xanh đỏ đen,...">
+              <input type="text" class="form-control" id="statistic-tag"
+                placeholder="VD: dây dắt, vòng cổ, xích inox, cổ xanh đỏ đen,...">
               <div class="suggest" id="statistic-tag-suggest"></div>
             </div>
           </div>
@@ -41,16 +76,31 @@
           <div type="button" class="close" data-dismiss="modal"> &times; </div> <br><br>
         </div>
 
-        <p>
-          <b> Mã hàng: </b> <span id="product-code"></span>
-        </p>
-        <p>
-          <b> Tên hàng: </b> <span id="product-name"></span>
-        </p>
+        <div class="form-group rows">
+          <div class="col-3"> Mã hàng </div>
+          <div class="col-9">
+            <input type="text" class="form-control" id="product-code">
+          </div>
+        </div>
+
+        <div class="form-group rows">
+          <div class="col-3"> Tên hàng </div>
+          <div class="col-9">
+            <input type="text" class="form-control" id="product-name">
+          </div>
+        </div>
+
         <div class="form-group rows">
           <div class="col-3"> Giới hạn </div>
           <div class="col-9">
             <input type="text" class="form-control" id="product-low">
+          </div>
+        </div>
+
+        <div class="form-group rows">
+          <div class="col-3"> Vị trí </div>
+          <div class="col-9">
+            <input type="text" class="form-control" id="product-pos">
           </div>
         </div>
 
@@ -99,7 +149,7 @@
           <br>
           Chọn file Excel
           <br>
-          <label>  
+          <label>
             <input type="checkbox" id="insert-check"> Thêm mặt hàng chưa có
           </label>
           <br>
