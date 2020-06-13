@@ -350,16 +350,16 @@ function productTagContent()
   global $db, $filter, $link;
 
   $xtpl = new XTemplate("tag-content.tpl", PATH);
-  $sql = 'select count(id) as number from `'. PREFIX .'tag`';
+  $sql = 'select count(id) as number from `' . PREFIX . 'tag`';
   $query = $db->query($sql);
   $number = $query->fetch()['number'];
 
-  $sql = 'select * from `'. PREFIX .'tag` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `' . PREFIX . 'tag` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
   while ($tag = $query->fetch()) {
-    $xtpl->assign('index', $index ++);
+    $xtpl->assign('index', $index++);
     $xtpl->assign('id', $tag['id']);
     $xtpl->assign('name', $tag['name']);
     $xtpl->parse('main.row');
@@ -369,8 +369,70 @@ function productTagContent()
   return $xtpl->text();
 }
 
-function productTagModal() {
+function productTagModal()
+{
   $xtpl = new XTemplate("tag-modal.tpl", PATH);
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function productUserContent()
+{
+  global $db, $db_config;
+  $type_data = array(
+    0 => array(
+      'btn_type' => 'btn-info',
+      'name' => 'nhân viên'
+    ),
+    array(
+      'btn_type' => 'btn-warning',
+      'name' => 'quản lý'
+    )
+  );
+
+  $xtpl = new XTemplate("user-content.tpl", PATH);
+
+  $sql = 'select b.userid, username, concat(first_name, last_name) as fullname, a.type from `' . PREFIX . 'permit` a inner join `' . $db_config['prefix'] . '_users` b on a.userid = b.userid order by id desc';
+  $query = $db->query($sql);
+  $index = 1;
+
+  while ($user = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $user['userid']);
+    $xtpl->assign('username', $user['username']);
+    $xtpl->assign('fullname', $user['fullname']);
+    $xtpl->assign('btn_type', $type_data[$user['type']]['btn_type']);
+    $xtpl->assign('name', $type_data[$user['type']]['name']);
+    $xtpl->assign('type', intval(!$user['type']));
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function productUserSuggest($keyword)
+{
+  global $db, $db_config;
+
+  $xtpl = new XTemplate("user-suggest.tpl", PATH);
+  $sql = 'select userid, username, concat(first_name, last_name) as fullname from `' . $db_config['prefix'] . '_users` where userid not in (select userid from `'. PREFIX .'permit`) limit 10';
+  $query = $db->query($sql);
+  $index = 1;
+
+  while ($user = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $user['userid']);
+    $xtpl->assign('username', $user['username']);
+    $xtpl->assign('fullname', $user['fullname']);
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function productUserModal()
+{
+  $xtpl = new XTemplate("user-modal.tpl", PATH);
   $xtpl->parse('main');
   return $xtpl->text();
 }

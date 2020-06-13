@@ -54,8 +54,6 @@
 </div>
 
 <script src="/modules/core/js/vhttp.js"></script>
-<script src="/modules/core/js/vnumber.js"></script>
-<script src="/modules/core/js/vremind.js"></script>
 <script>
   function insertSubmit() {
     vhttp.checkelse('', { action: 'insert', name: $('#insert-tag').val() }).then(data => {

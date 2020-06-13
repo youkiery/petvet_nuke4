@@ -48,6 +48,12 @@ function checkTag($tags, $tag_data) {
   }
 }
 
+function getTagPermit($db) {
+  global $db;
+
+  $sql = 'select ';
+}
+
 function checkProductTag($name) {
   global $db;
 
