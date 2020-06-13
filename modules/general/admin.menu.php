@@ -13,7 +13,7 @@ if (!defined('NV_ADMIN')) die('Stop!!!');
 // $submenu['exp'] = 'Quản lý hạn sử dụng';
 $submenu['price'] = 'Quản lý giá sỉ';
 $submenu['blood'] = 'Quản lý xét nghiệm máu';
-$submenu['product'] = 'Quản lý danh mục hàng';
+$submenu['product'] = 'Quản lý hàng hóa';
 $submenu['device'] = 'Quản lý thiết bị';
 $submenu['remind'] = 'Quản lý gợi ý';
 $submenu['config'] = 'Phân quyền';

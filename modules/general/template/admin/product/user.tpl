@@ -7,14 +7,10 @@
 {modal}
 
 <ul class="nav nav-tabs">
-  <li class="active"> <a href="#">Quản lý mặt hàng</a> </li>
+  <li> <a href="{link}"> Quản lý mặt hàng </a> </li>
   <li> <a href="{link}&sub=tag"> Quản lý tag </a> </li>
-  <li> <a href="{link}&sub=user"> Quản lý người dùng </a> </li>
+  <li class="active"> <a href="#"> Quản lý người dùng </a> </li>
 </ul>
-
-<div id="content">
-  {content}
-</div>
 
 <script src="/modules/core/js/vhttp.js"></script>
 <script src="/modules/core/js/vnumber.js"></script>

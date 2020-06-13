@@ -8,20 +8,6 @@
 
 if (!defined('NV_IS_FILE_ADMIN')) { die('Stop!!!'); }
 
-$link = '/admin/index.php?nv='. $module_name . '&op='. $op;
-$action = $nv_Request->get_string('action', 'post', '');
-$filter = array(
-  'page' => $nv_Request->get_int('page', 'get', 1),
-  'limit' => $nv_Request->get_int('limit', 'get', 10)
-);
-
-$sub = $nv_Request->get_string('sub', 'get', '');
-$sub_op = array('tag', 'user');
-if (in_array($sub, $sub_op)) {
-  include_once(NV_ROOTDIR . '/modules/'. $module_file .'/admin/product-'. $sub . '.php');
-  exit();
-}
-
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
@@ -36,8 +22,8 @@ if (!empty($action)) {
   die();
 }
 
-$xtpl = new XTemplate("main.tpl", PATH);
-$xtpl->assign("link", $link);
+$xtpl = new XTemplate("user.tpl", PATH);
+$xtpl->assign("link", '/admin/index.php?nv='. $module_name . '&op='. $op);
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 

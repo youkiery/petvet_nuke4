@@ -48,6 +48,16 @@ function checkTag($tags, $tag_data) {
   }
 }
 
+function checkProductTag($name) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'tag` where name = "'. $name .'"';
+  $query = $db->query($sql);
+
+  if (empty($tag = $query->fetch())) return array();
+  return $tag;
+}
+
 function getProductTagId($id) {
   global $db;
 
@@ -505,3 +515,4 @@ function parseSize($number) {
 
   return $size[count($size) - 1] . $unit[count($size) - 1];
 }
+
