@@ -14,8 +14,8 @@ if (!defined('NV_ADMIN') or !defined('NV_MAINFILE')) {
 
 $module_version = array(
     'name' => 'Users',
-    'modfuncs' => 'main, luubenh, danhsachluubenh, spa, redrug, process, heal, heal_drug, usg, vaccine, kaizen',
-    'submenu' => 'main, luubenh, danhsachluubenh, spa, redrug, heal, heal_drug, usg, vaccine, kaizen',
+    'modfuncs' => 'main, luubenh, danhsachluubenh, spa, redrug, process, heal, heal_drug, usg, vaccine, kaizen, xray',
+    'submenu' => 'main, luubenh, danhsachluubenh, spa, redrug, heal, heal_drug, usg, vaccine, kaizen, xray',
     'is_sysmod' => 1,
     'virtual' => 1,
     'version' => '4.3.04',
