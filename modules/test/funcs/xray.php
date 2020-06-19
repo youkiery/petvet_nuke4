@@ -9,13 +9,9 @@
 if (!defined('NV_IS_MOD_QUANLY'))
   die('Stop!!!');
 $action = $nv_Request->get_string('action', 'post/get', '');
-$ret = array("status" => 0, "data" => "");
-
-quagio();
-$status_option = array("Bình thường", "Hơi yếu", "Yếu", "Sắp chết", "Đã chết");
-$export = array("Lưu bệnh", "Đã điều trị", "Đã chết");
 
 if (!empty($action)) {
+  $result = array('status' => 1);
   switch ($action) {
     case 'filter':
       $ret["data"]["html"] = user_treat();
@@ -153,7 +149,7 @@ if (!empty($action)) {
   die();
 }
 
-$xtpl = new XTemplate("luubenh.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
+$xtpl = new XTemplate("main.tpl", PATH2);
 $xtpl->assign("lang", $lang_module);
 
 $today = date("d/m/Y", NV_CURRENTTIME);
@@ -211,5 +207,3 @@ function displayRed($list, $path, $lang_module, $index, $nav) {
 	$xtpl->parse("main");
 	return $xtpl->text("main");
 }
-
-?>

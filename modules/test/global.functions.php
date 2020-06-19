@@ -642,7 +642,7 @@ function doctorlist($path, $lang) {
 
 function getrecentlist($fromtime, $amount_time, $sort, $keyword, $filter) {
   global $db, $db_config, $module_name;
-  return $ret;
+  return 0;
 }
 
 function filterVac($fromtime, $amount_time, $sort, $keyword, $filter) {
@@ -1298,6 +1298,7 @@ function user_treat() {
   $xtpl->assign("lang", $lang_module);
   
   $limit_option = array(10, 20, 30, 40, 50, 75, 100); 
+  $keyword = '';
   $today = strtotime(date("y-m-d"));
   $index = 1;
   $page = $nv_Request->get_string('page', 'get/post', '');
