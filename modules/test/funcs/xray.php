@@ -10,9 +10,29 @@ if (!defined('NV_IS_MOD_QUANLY'))
   die('Stop!!!');
 $action = $nv_Request->get_string('action', 'post/get', '');
 
+$url = "/$module_name/$op";
+$filter = array(
+  'page' => $nv_Request->get_int('page', 'get', 1),
+  'limit' => $nv_Request->get_int('limit', 'get', 10)
+);
+
 if (!empty($action)) {
   $result = array('status' => 1);
   switch ($action) {
+    case 'insert-xray':
+      $data = $nv_Request->get_array('data', 'post');
+      $data['cometime'] = totime($data['cometime']);
+
+      $sql = 'INSERT INTO `' . VAC_PREFIX . '_xray` (petid, doctorid, cometime, insult, ctime) VALUES ('. $data['pet'] .', '. $data['doctor'] .', '. $data['cometime'] .', 0, ' . time() . ')';
+      $db->query($sql);
+      $id = $db->lastInsertId();
+
+      $sql = 'INSERT INTO `' . VAC_PREFIX . '_xray_row` (xrayid, temperate, eye, other, treating, examine, image, time, `condition`, doctor) VALUES ('. $id .', "'. $data['temperate'] .'", "'. $data['eye'] .'", "'. $data['other'] .'", "'. $data['treating'] .'", 0, "", '. $data['cometime'] .', '. $data['condition'] .', '. $data['doctor'] .')';
+      $db->query($sql);
+
+      $result['status'] = 1;
+      $result['html'] = xrayContent();
+    break;
     case 'filter':
       $ret["data"]["html"] = user_treat();
     break;
@@ -144,38 +164,15 @@ if (!empty($action)) {
       }
     break;
   }
-
-  echo json_encode($ret);
+  echo json_encode($result);
   die();
 }
 
 $xtpl = new XTemplate("main.tpl", PATH2);
 $xtpl->assign("lang", $lang_module);
 
-$today = date("d/m/Y", NV_CURRENTTIME);
-// echo $thongbao; die();
-
-$xtpl->assign("now", $today);
-
-$sql = "select * from " .  VAC_PREFIX . "_doctor";
-$result = $db->query($sql);
-
-while ($row = $result->fetch()) {
-  $xtpl->assign("doctor_value", $row["id"]);
-  $xtpl->assign("doctor_name", $row["name"]);
-  $xtpl->parse("main.doctor");
-}
-
-// var_dump($status_option);
-
-foreach ($status_option as $key => $value) {
-  // echo $value;
-  $xtpl->assign("status_value", $key);
-  $xtpl->assign("status_name", $value);
-  $xtpl->parse("main.status");
-}
-// die();
-
+$xtpl->assign("modal", xrayModal());
+$xtpl->assign("content", xrayContent());
 $xtpl->parse("main");
 
 $contents = $xtpl->text("main");
