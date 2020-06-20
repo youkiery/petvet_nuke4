@@ -11,7 +11,7 @@
   </thead>
   <tbody>
     <!-- BEGIN: row -->  
-    <tr>
+    <tr class="{color}">
       <td> {customer} </td>
       <td> {phone} </td>
       <td> {cometime} </td>

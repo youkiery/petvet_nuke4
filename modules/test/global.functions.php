@@ -189,7 +189,10 @@ function getXrayTreat($xrayid)
   $query = $db->query($sql);
   $list = array();
 
-  while ($row = $query->fetch()) $list[] = $row;
+  while ($row = $query->fetch()) {
+    $row['image'] = explode(',', $row['image']);
+    $list[] = $row;
+  }
   return $list;
 }
 

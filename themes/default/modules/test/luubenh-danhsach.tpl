@@ -1,13 +1,14 @@
 <!-- BEGIN: main -->
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
+<script type="text/javascript"
+  src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <div id="msgshow" class="msgshow"></div>
 <style>
-		#ui-datepicker-div {
-			z-index: 10000 !important;
-		}
-	</style>
+  #ui-datepicker-div {
+    z-index: 10000 !important;
+  }
+</style>
 
 <div id="vac_notify"></div>
 <div id="reman"></div>
@@ -18,8 +19,8 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body">
-          <div id="vac2_header"></div>
-          <div id="vac2_body"></div>
+        <div id="vac2_header"></div>
+        <div id="vac2_body"></div>
       </div>
     </div>
   </div>
@@ -33,33 +34,33 @@
       <div class="modal-body">
         <div id="info">
           <p>
-            {lang.petname}: 
+            {lang.petname}:
             <span id="petname"></span>
           </p>
           <p>
-            {lang.customer}: 
+            {lang.customer}:
             <span id="customer"></span>
           </p>
           <p>
-            {lang.phone}: 
+            {lang.phone}:
             <span id="phone"></span>
           </p>
           <p>
-            {lang.treatcome}: 
+            {lang.treatcome}:
             <span id="luubenh"></span>
           </p>
           <p>
-            {lang.doctor2}: 
+            {lang.doctor2}:
             <span id="doctor"></span>
           </p>
         </div>
         <div class="treating">
           <span id="treating" style="float: right;"></span>
           <form onsubmit="return themtreating(event)">
-       			<div class="input-group date" data-provide="datepicker">
+            <div class="input-group date" data-provide="datepicker">
               <input type="text" class="form-control" id="timetreating" value="{now}" readonly>
               <div class="input-group-addon">
-                  <span class="glyphicon glyphicon-th"></span>
+                <span class="glyphicon glyphicon-th"></span>
               </div>
             </div>
             <button class="submitbutton btn btn-info">
@@ -77,7 +78,7 @@
               </div>
               <div>
                 <label for="doctorx">{lang.doctor}</label>
-                <select class="form-control" name="doctorx" id="doctorx"> 
+                <select class="form-control" name="doctorx" id="doctorx">
                   <!-- BEGIN: doctor -->
                   <option value="{doctorid}"> {doctorname} </option>
                   <!-- END: doctor -->
@@ -85,7 +86,7 @@
               </div>
               <div>
                 <label for="status">{lang.status}</label>
-                <select class="form-control" name="status" id="status2"> 
+                <select class="form-control" name="status" id="status2">
                   <!-- BEGIN: status_option -->
                   <option value="{status_value}"> {status_name} </option>
                   <!-- END: status_option -->
@@ -93,7 +94,7 @@
               </div>
               <div>
                 <label for="xetnhiem">{lang.examine}</label>
-                <select class="form-control" name="examine" id="examine"> 
+                <select class="form-control" name="examine" id="examine">
                   <option value="0"> {lang.non} </option>
                   <option value="1"> {lang.have} </option>
                 </select>
@@ -103,13 +104,14 @@
               </button>
               <input type="button" class="btn btn-info" onclick="ketthuc(1)" value="{lang.treated}">
               <input type="button" class="btn btn-info" onclick="ketthuc(2)" value="{lang.dead}">
-              <input type="button" class="btn btn-info" onclick="tongket(1)" value="{lang.summary}" data-toggle="modal" data-target="#treatinsult">
+              <input type="button" class="btn btn-info" onclick="tongket(1)" value="{lang.summary}" data-toggle="modal"
+                data-target="#treatinsult">
             </form>
           </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </div>
 <!-- <form class="vac_form" method="GET">
   <input type="hidden" name="nv" value="vac">
@@ -144,7 +146,7 @@
     <tr>
       <th>
         {lang.index}
-      </th>  
+      </th>
       <th>
         {lang.petname}
       </th>
@@ -153,7 +155,7 @@
       </th>
       <th>
         {lang.doctor2}
-      </th>  
+      </th>
       <th>
         {lang.treatcome}
       </th>
@@ -193,7 +195,7 @@
   //   if (!filter.length) {
   //     filter = "0";
   //   }
-    
+
   //   $.post(link + "luubenh", 
   //   {action: "filter", keyword: $("#keyword").val(), filter: filter},
   //   (response, status) => {
@@ -204,15 +206,15 @@
 
   function change_data(id) {
     g_filter = id;
-    $.post(link + "luubenh", 
-    {action: "filter", keyword: $("#customer_key").val(), filter: g_filter},
-    (response, status) => {
-      var data = JSON.parse(response);
+    $.post(link + "luubenh",
+      { action: "filter", keyword: $("#customer_key").val(), filter: g_filter },
+      (response, status) => {
+        var data = JSON.parse(response);
 
-      $(".filter").removeClass("btn-info")
-      $("#chatter_" + id).addClass("btn-info")
-      $("#disease_display").html(data["data"]["html"])
-    })
+        $(".filter").removeClass("btn-info")
+        $("#chatter_" + id).addClass("btn-info")
+        $("#disease_display").html(data["data"]["html"])
+      })
   }
 
 
@@ -227,7 +229,7 @@
     vac_index = 1;
     $.post(
       link + "luubenh",
-      {action: "thongtinluubenh", id: lid},
+      { action: "thongtinluubenh", id: lid },
       (response, status) => {
         response = JSON.parse(response)
         if (response["status"]) {
@@ -239,7 +241,7 @@
           $("#doctor").text(data["doctor"])
           var h_treating = ""
           g_insult = data["insult"];
-          
+
           if (data["treating"]) {
             if (data["insult"] > 0) {
               $("#qltreating input").attr("disabled", "disabled");
@@ -255,11 +257,11 @@
             d_treating = data["treating"]
             $("#dstreating").html("")
             data["treating"].forEach(e => {
-              select ++
+              select++
               var time = e["time"] * 1000;
               g_ltid = e["id"]
               g_id = select
-              html = "<span onclick='xemtreating(" + g_ltid + ", " + select +")'>" + e["time"] + "</span> ";
+              html = "<span onclick='xemtreating(" + g_ltid + ", " + select + ")'>" + e["time"] + "</span> ";
               $("#dstreating").html($("#dstreating").html() + html)
             })
             $("#temperate").val(data["treating"][select]["temperate"])
@@ -277,7 +279,7 @@
             $("#qltreating input").attr("disabled", "disabled");
             $("#qltreating select").attr("disabled", "disabled");
             $("#dstreating").html("")
-            
+
             $("#temperate").val("")
             $("#rate").val("")
             $("#other").val("")
@@ -297,9 +299,9 @@
     var addition = "<p><b>{lang.totaltreat} " + d_treating.length + " </b></p>"
     d_treating.forEach((treating, index) => {
       body += "<tr><td style='width: 20%'>" + treating["time"] + "</td><td style='width: 50%'><b>{lang.temperate}</b>: " + treating["temperate"] + "<br><b>{lang.eye}</b>: " + treating["eye"] + "<br><b>{lang.other}</b>: " + treating["other"] + "</td><td style='width: 30%'>" + treating["treating"] + "</td></tr>"
-    }) 
-    var html = 
-    "<table class='table table-border'><thead><tr style='height: 32px;'><th><span id='tk_otherhhang'>" + $("#customer").text() + "</span> / <span id='tk_thucung'>" + $("#petname").text() + "</span></th><th>{lang.eviden}</th><th>{lang.treating}</th></tr></thead><tbody>" + body + "</tbody><tfoot><tr><td colspan='3'>" + addition + "</td></tr></tfoot></table>"
+    })
+    var html =
+      "<table class='table table-border'><thead><tr style='height: 32px;'><th><span id='tk_otherhhang'>" + $("#customer").text() + "</span> / <span id='tk_thucung'>" + $("#petname").text() + "</span></th><th>{lang.eviden}</th><th>{lang.treating}</th></tr></thead><tbody>" + body + "</tbody><tfoot><tr><td colspan='3'>" + addition + "</td></tr></tfoot></table>"
     $("#vac2_body").html(html)
   }
 
@@ -307,7 +309,7 @@
     e.preventDefault();
     $.post(
       link + "luubenh",
-      {action: "themtreating", time: $("#timetreating").val(), id: lid},
+      { action: "themtreating", time: $("#timetreating").val(), id: lid },
       (response, status) => {
         response = JSON.parse(response)
         switch (response["status"]) {
@@ -331,11 +333,11 @@
             $("#dstreating").html($("#dstreating").html() + html)
             $("#qltreating input").removeAttr("disabled", "");
             $("#qltreating select").removeAttr("disabled", "");
-          break;
+            break;
           case 2:
             // đã tồn tại ngày hôm nay
-            
-          break;
+
+            break;
           default:
         }
         // if () {
@@ -347,7 +349,7 @@
   function xemtreating(ltid, id) {
     g_ltid = ltid;
     g_id = id;
-    
+
     $("#temperate").val(d_treating[id]["temperate"])
     $("#eye").val(d_treating[id]["eye"])
     $("#other").val(d_treating[id]["other"])
@@ -361,7 +363,7 @@
   function ketthuc(val) {
     $.post(
       link + "luubenh",
-      {action: "trihet", id: lid, val: val},
+      { action: "trihet", id: lid, val: val },
       (response, status) => {
         response = JSON.parse(response);
         if (response["status"]) {
@@ -370,7 +372,7 @@
           $("#treatdetail").modal("toggle")
         }
       }
-    )    
+    )
   }
 
   function luutreating(e) {
@@ -382,10 +384,10 @@
     var treating = $("#treating2").val();
     var status = $("#status2").val();
     var doctorx = $("#doctorx").val();
-    
+
     $.post(
       link + "luubenh",
-      {action: "luutreating", id: g_ltid, temperate: temperate, eye: eye, other: other, examine: examine, treating: treating, status: status, doctorx: doctorx},
+      { action: "luutreating", id: g_ltid, temperate: temperate, eye: eye, other: other, examine: examine, treating: treating, status: status, doctorx: doctorx },
       (response, status) => {
         response = JSON.parse(response);
         if (response["status"]) {
@@ -401,15 +403,15 @@
           d_treating[g_id]["doctorx"] = doctorx
         }
       }
-    )    
+    )
   }
-  
+
   setInterval(() => {
     if (!refresh) {
       refresh = 1
       $.post(
-        link + "luubenh", 
-        {action: "filter", keyword: $("#customer_key").val(), filter: g_filter},
+        link + "luubenh",
+        { action: "filter", keyword: $("#customer_key").val(), filter: g_filter },
         (response, status) => {
           var data = JSON.parse(response);
           $("#disease_display").html(data["data"]["html"])

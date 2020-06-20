@@ -622,6 +622,9 @@ function xrayContent()
     $xtpl->assign('phone', $customer['phone']);
     $xtpl->assign('cometime', date('d/m/Y', $xray['cometime']));
     $xtpl->assign('condition', $status_option[$last_treat['condition']]);
+    $xtpl->assign('color', '');
+    if ($xray['insult']) $xtpl->assign('color', 'pink');
+
     $xtpl->parse('main.row');
   }
   $xtpl->assign('nav', nav_generater($url . '?', $number, $filter['page'], $filter['limit']));
