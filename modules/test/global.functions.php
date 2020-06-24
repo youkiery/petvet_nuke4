@@ -1705,7 +1705,7 @@ function admin_spa()
     $doctor[$doctor_row["id"]] = $doctor_row;
   }
 
-  $sql = "select * from `" . VAC_PREFIX . "_spa` order by id";
+  $sql = "select * from `" . VAC_PREFIX . "_spa` order by id limit 100";
   $query = $db->query($sql);
   while ($row = $query->fetch()) {
     $sql = "select * from `" . VAC_PREFIX . "_customer` where id = " . $row["customerid"];
