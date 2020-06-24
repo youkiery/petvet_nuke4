@@ -196,6 +196,18 @@ function getXrayTreat($xrayid)
   return $list;
 }
 
+function getXrayTreatId($treatid)
+{
+  global $db;
+
+  $sql = 'select * from `' . VAC_PREFIX . '_xray_row` where id = ' . $treatid;
+  $query = $db->query($sql);
+  $treat = $query->fetch();
+  $treat['image'] = explode(',', $treat['image']);
+
+  return $treat;
+}
+
 function selectSpeciesId($id = 0)
 {
   global $db;

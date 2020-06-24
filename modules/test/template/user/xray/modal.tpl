@@ -3,10 +3,8 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body">
-        <div class="form-group">
-          <b> X-Quang </b>
-          <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
-        </div>
+        <b> X-Quang </b>
+        <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
 
         <div class="insert">
           <div style="float: right;">
@@ -23,7 +21,7 @@
           </div>
           <br>
           <br>
-          <div class="form-group rows">
+          <div class="rows">
             <div class="col-4">
               {lang.customer}
               <div class="relative">
@@ -45,7 +43,7 @@
             </div>
           </div>
 
-          <div class="rows form-group">
+          <div class="rows">
             <div class="col-6">
               <label>{lang.petname}</label>
               <select class="form-control" id="pet_info" style="text-transform: capitalize;" name="petname"></select>
@@ -74,7 +72,7 @@
             </button>
           </div>
         </div>
-        <div class="rows form-group">
+        <div class="rows">
           <div class="col-6">
             <label>{lang.temperate} </label>
             <input class="insult form-control" type="text" id="temperate">
@@ -84,19 +82,19 @@
             <input class="insult form-control" type="text" id="eye">
           </div>
         </div>
-        <div class="rows form-group">
+        <div class="rows">
           <div class="col-12">
             <label>{lang.other} </label>
             <input class="insult form-control" type="text" id="other">
           </div>
         </div>
-        <div class="rows form-group">
+        <div class="rows">
           <div class="col-12">
             <label>{lang.treating} </label>
             <input class="insult form-control" type="text" id="treating">
           </div>
         </div>
-        <div class="rows form-group">
+        <div class="rows">
           <div class="col-6">
             <label>{lang.doctor2} </label>
             <select class="insult form-control" name="doctor" id="doctor">
@@ -122,14 +120,14 @@
 
         <div style="clear: both;"></div>
 
-        <div class="form-group text-center">
+        <div class="text-center">
           <div class="insert">
             <input class="btn btn-info" type="submit" value="{lang.submit}" onclick="insertXraySubmit()">
           </div>
           <div class="edit">
             <button class="insult btn btn-info" onclick="editSubmit(0)"> Lưu phiếu điều trị </button>
             <button class="insult btn btn-info" onclick="editSubmit(1)"> Điều trị xong </button>
-            <button class="btn btn-info" onclick="summary()"> Tổng kết </button>
+            <!-- <button class="btn btn-info" onclick="summary()"> Tổng kết </button> -->
           </div>
         </div>
       </div>

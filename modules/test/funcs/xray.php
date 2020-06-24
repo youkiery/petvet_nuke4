@@ -33,21 +33,30 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = xrayContent();
       break;
+    case 'insert-treat':
+      $id = $nv_Request->get_int('id', 'post', '');
+      $condition = $nv_Request->get_int('condition', 'post', 0);
+      $doctor = $nv_Request->get_int('doctor', 'post', 0);
+
+      $sql = 'select * from `' . VAC_PREFIX . '_xray_row` where xrayid = ' . $id . ' order by id desc';
+      $query = $db->query($sql);
+      $treat = $query->fetch();
+
+      $sql = 'INSERT INTO `' . VAC_PREFIX . '_xray_row` (xrayid, temperate, eye, other, treating, image, time, `condition`, doctor) VALUES (' . $id . ', "", "", "", "", "", ' . ($treat['time'] + 60 * 60 * 24) . ', ' . $condition . ', ' . $doctor . ')';
+      $db->query($sql);
+
+      $result['status'] = 1;
+      $result['data'] = getXrayTreatId($db->lastInsertId());
+      break;
     case 'edit':
       $id = $nv_Request->get_int('id', 'post', 0);
       $type = $nv_Request->get_int('type', 'post', 0);
-      $data = $nv_Request->get_array('data', 'post');
+      $xray = $nv_Request->get_array('data', 'post');
+      if (empty($xray['image'])) $xray['image'] = array();
 
-      foreach ($data as $xray) {
-        // nếu chưa có id thì insert
-        if (!$xray['id']) {
-          $sql = 'INSERT INTO `' . VAC_PREFIX . '_xray_row` (xrayid, temperate, eye, other, treating, image, time, `condition`, doctor) VALUES (' . $id . ', "' . $xray['temperate'] . '", "' . $xray['eye'] . '", "' . $xray['other'] . '", "' . $xray['treating'] . '", "'. implode(',', $xray['image']) .'", ' . $xray['time'] . ', ' . $xray['condition'] . ', ' . $xray['doctor'] . ')';
-        }
-        else {
-          $sql = 'update `' . VAC_PREFIX . '_xray_row` set temperate = "' . $xray['temperate'] . '", eye = "' . $xray['eye'] . '", other = "' . $xray['other'] . '", treating = "' . $xray['treating'] . '", image = "'. implode(',', $xray['image']) .'" time = ' . $xray['time'] . ', `condition` = ' . $xray['condition'] . ', doctor = ' . $xray['doctor'] . ' where id = ' . $xray['id'];
-        }
-        $db->query($sql);
-      }
+      $sql = 'update `' . VAC_PREFIX . '_xray_row` set temperate = "' . $xray['temperate'] . '", eye = "' . $xray['eye'] . '", other = "' . $xray['other'] . '", treating = "' . $xray['treating'] . '", image = "' . implode(',', $xray['image']) . '", time = ' . $xray['time'] . ', `condition` = ' . $xray['condition'] . ', doctor = ' . $xray['doctor'] . ' where id = ' . $xray['id'];
+      $db->query($sql);
+
       $sql = 'update `' . VAC_PREFIX . '_xray` set insult = '. $type .' where id = ' . $id;
       $db->query($sql);
 
@@ -68,7 +77,7 @@ if (!empty($action)) {
       $xray['name'] = $customer['name'];
       $xray['phone'] = $customer['phone'];
       $xray['list'] = getXrayTreat($xray['id']);
-        
+
       $result["status"] = 1;
       $result["data"] = $xray;
       break;

@@ -186,13 +186,17 @@
       changeMonth: true,
       changeYear: true
     });
-    vimage.install('image', 960, 960, (list) => { parseImage(list, 'image') })
+    vimage.install('image', 960, 960, (list) => { parseImage('image') })
     $('#image-input').hide()
   })
 
-  function parseImage(list, name) {
+  function parseImage(name) {
     html = ''
-    list.forEach((item, index) => {
+    vimage['data'][name] = vimage['data'][name].filter(item => {
+      return item.length > 10
+    })
+    global['list'][global['index']][image] = vimage['name']
+    vimage['data'][name].forEach((item, index) => {
       html += `
       <div class="box">
         <img class="image" src="`+ item + `">
@@ -206,7 +210,7 @@
     vimage['data'][name] = vimage['data'][name].filter((item, index) => {
       return index !== remove_index
     })
-    parseImage(vimage['data'][name], name)
+    parseImage(name)
   }
 
   function checkXray() {
@@ -273,19 +277,11 @@
   function insertTreat() {
     last = global['list'].length - 1
     last_treat = global['list'][last]
-    global['list'].push({
-      id: 0,
-      condition: last_treat['condition'],
-      doctor: last_treat['doctor'],
-      temperate: '',
-      other: '',
-      eye: '',
-      treating: '',
-      time: last_treat['time'] + 60 * 60 * 24,
-      image: vimage['data']['image'],
+    vhttp.checkelse('', { action: 'insert-treat', id: global['id'], doctor: $('#doctor').val(), condition: $('#condition').val() }).then(data => {
+      global['list'].push(data['data'])
+      parseTreat()
+      selectTreat(last + 1)
     })
-    parseTreat()
-    selectTreat(last + 1)
   }
 
   function selectTreat(index) {
@@ -301,7 +297,7 @@
     $('#doctor').val(treat['doctor'])
     $('#condition').val(treat['condition'])
     vimage['data']['image'] = treat['image']
-    parseImage(vimage['data']['image'], 'image')
+    parseImage('image')
   }
 
   function changeTreat(index) {
@@ -315,7 +311,7 @@
       eye: $('#eye').val(),
       treating: $('#treating').val(),
       time: global['list'][global['index']]['time'],
-      image: [],
+      image: vimage.data['image'],
     }
     selectTreat(index)
     treat = global['list'][index]
@@ -360,20 +356,28 @@
 
   function editSubmit(type) {
     changeTreat(global['index'])
-    count = 0
-    global['list'].forEach((item, item_index) => {
-      item['image'].forEach((image, image_index) => {
+    current = global['list'][global['index']]
+
+    checkUploadImage(current['image']).then(() => {
+      vhttp.checkelse('', { action: 'edit', id: global['id'], type: type, data: current }).then(data => {
+        $('#content').html(data['html'])
+        $('#insert-modal').modal('hide')
+      })
+    })
+  }
+
+  function checkUploadImage(images) {
+    return new Promise((resolve) => {
+      if (!images.length) resolve()
+      count = 0
+      images.forEach((image, image_index) => {
         if (image.length > 5000) {
           count++
-          uploadImage(image, item_index, image_index).then((url) => {
-            global['list'][item_index]['image'][image_index] = url
+          uploadImages(image, image_index).then((url) => {
+            global['list'][global['index']]['image'][image_index] = url
             count--
-            console.log(count);
             if (count == 0) {
-              vhttp.checkelse('', { action: 'edit', id: global['id'], type: type, data: global['list'] }).then(data => {
-                $('#content').html(data['html'])
-                $('#insert-modal').modal('hide')
-              })
+              resolve()
             }
           })
         }
@@ -381,13 +385,14 @@
     })
   }
 
-  function uploadImages(base64, item_index, image_index) {
+  function uploadImages(image_base64, image_index) {
     return new Promise(resolve => {
-      var uploadTask = storageRef.child('images/' + new Date().getTime() + '-'+ item_index +'-'+ image_index +'.jpg').putString(base64, 'base64', metadata);
+      base64 = image_base64.substr(image_base64.indexOf(',') + 1);
+      var uploadTask = storageRef.child('images/' + new Date().getTime() + '-' + image_index + '.jpg').putString(base64, 'base64', metadata);
       uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
         function (snapshot) {
           var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done', item_index, image_index);
+          // console.log('Upload is ' + progress + '% done', image_index);
         }, function (error) {
           resolve("")
         }, function () {
