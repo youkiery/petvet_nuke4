@@ -16,6 +16,12 @@ $filter = array(
   'limit' => $nv_Request->get_int('limit', 'get', 10)
 );
 
+if (!checkXrayPermit()) {
+  include(NV_ROOTDIR . "/includes/header.php");
+  echo nv_site_theme('Người dùng chưa đăng nhập, hoặc không được cấp quyền truy cập');
+  include(NV_ROOTDIR . "/includes/footer.php");
+}
+
 if (!empty($action)) {
   $result = array('status' => 1);
   switch ($action) {

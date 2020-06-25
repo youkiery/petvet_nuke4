@@ -632,3 +632,13 @@ function xrayContent()
   $xtpl->parse('main');
   return $xtpl->text();
 }
+
+function checkXrayPermit() {
+  global $db, $user_info;
+
+  if (empty($user_info)) return false;
+  if (empty($user_info['userid'])) return false;
+  $sql = 'select * from `'. VAC_PREFIX .'_xray_user` where userid = '. $user_info['userid'];
+  $query = $db->query($sql);
+  if (!empty($query->fetch())) return true;
+}

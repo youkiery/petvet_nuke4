@@ -176,3 +176,47 @@ function storageList() {
   $xtpl->parse('main');
   return $xtpl->text();
 }
+
+function xrayModal()
+{
+  $xtpl = new XTemplate("modal.tpl", PATH2);
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function xrayUserContent()
+{
+  global $db, $db_config;
+  $xtpl = new XTemplate("user-list.tpl", PATH2);
+
+  $sql = 'select userid, username, concat(last_name, " ", first_name) as fullname from `' . $db_config['prefix'] . '_users` where userid in (select userid from `' . VAC_PREFIX . '_xray_user`)';
+  $query = $db->query($sql);
+  $index = 1;
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['userid']);
+    $xtpl->assign('username', $row['username']);
+    $xtpl->assign('fullname', $row['fullname']);
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function xrayUserSuggest($name = "")
+{
+  global $db, $db_config;
+  $xtpl = new XTemplate("user-suggest.tpl", PATH2);
+  $name = mb_strtolower($name);
+  $sql = 'select userid, username, concat(last_name, " ", first_name) as fullname from `' . $db_config['prefix'] . '_users` where (LOWER(first_name) like "%' . $name . '%" or LOWER(last_name) like "%' . $name . '%" or LOWER(username) like "%' . $name . '%") and userid not in (select userid from `' . VAC_PREFIX . '_xray_user`) limit 10';
+  $query = $db->query($sql);
+  $index = 1;
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['userid']);
+    $xtpl->assign('username', $row['username']);
+    $xtpl->assign('fullname', $row['fullname']);
+    $xtpl->parse('main');
+  }
+  return $xtpl->text();
+}
