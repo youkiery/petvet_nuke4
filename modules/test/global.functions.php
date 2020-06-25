@@ -181,33 +181,6 @@ function insertSpecies($name)
   return 0;
 }
 
-function getXrayTreat($xrayid)
-{
-  global $db;
-
-  $sql = 'select * from `' . VAC_PREFIX . '_xray_row` where xrayid = ' . $xrayid;
-  $query = $db->query($sql);
-  $list = array();
-
-  while ($row = $query->fetch()) {
-    $row['image'] = explode(',', $row['image']);
-    $list[] = $row;
-  }
-  return $list;
-}
-
-function getXrayTreatId($treatid)
-{
-  global $db;
-
-  $sql = 'select * from `' . VAC_PREFIX . '_xray_row` where id = ' . $treatid;
-  $query = $db->query($sql);
-  $treat = $query->fetch();
-  $treat['image'] = explode(',', $treat['image']);
-
-  return $treat;
-}
-
 function selectSpeciesId($id = 0)
 {
   global $db;
@@ -2113,4 +2086,31 @@ function getPetById($id)
   $sql = "select * from `". VAC_PREFIX ."_pet` where id = " . $id;
   $query = $db->query($sql);
   return $query->fetch();
+}
+
+function getXrayTreat($xrayid)
+{
+  global $db;
+
+  $sql = 'select * from `' . VAC_PREFIX . '_xray_row` where xrayid = ' . $xrayid;
+  $query = $db->query($sql);
+  $list = array();
+
+  while ($row = $query->fetch()) {
+    $row['image'] = explode(',', $row['image']);
+    $list[] = $row;
+  }
+  return $list;
+}
+
+function getXrayTreatId($treatid)
+{
+  global $db;
+
+  $sql = 'select * from `' . VAC_PREFIX . '_xray_row` where id = ' . $treatid;
+  $query = $db->query($sql);
+  $treat = $query->fetch();
+  $treat['image'] = explode(',', $treat['image']);
+
+  return $treat;
 }
