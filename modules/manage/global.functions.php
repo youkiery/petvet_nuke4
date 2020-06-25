@@ -255,7 +255,7 @@ function checkItemId($item_id, $item_date, $item_status) {
   if ($row = $query->fetch()) {
     return $row['id'];
   }
-  $query = $db->query('insert into `'. PREFIX .'item_detail` (item_id, number, date, status) values ('. $item_id .', 0, '. $item_date .', "'. $data['status'] .'")');
+  $query = $db->query('insert into `'. PREFIX .'item_detail` (item_id, number, date, status) values ('. $item_id .', 0, '. $item_date .', "'. $row['status'] .'")');
   if ($query) return $db->lastInsertId();  
   return 0;
 }
@@ -299,7 +299,7 @@ function getUserDepartList() {
   $user = $query->fetch();
   $author = json_decode($user['author']);
 
-  $xtra = ' where id in ('. implode(', ', $author->{depart}) .') ';
+  $xtra = ' where id in ('. implode(', ', $author->{'depart'}) .') ';
   
   $list = array();
   $query = $db->query('select * from `'. PREFIX .'depart`'. $xtra);
@@ -423,7 +423,7 @@ function deviceParseExcel($depart) {
 }
 
 function materialOverlowList() {
-  global $db;
+  global $db, $filter;
 
   $type_list = array(0 => 'Vật tư', 1 => 'Hóa chất');
 

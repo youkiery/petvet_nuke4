@@ -132,7 +132,8 @@ function deviceList() {
   // die('select * from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
   $query = $db->query('select * from `'. PREFIX .'device` '. $xtra .' order by update_time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
-  if ($authors->{device} == 2) $xtpl->parse('main.v1');
+  $authors = new object();
+  if ($authors->{'device'} == 2) $xtpl->parse('main.v1');
   while ($row = $query->fetch()) {
     $depart = json_decode($row['depart']);
     $list = array();
@@ -225,6 +226,7 @@ function reportList() {
     $xtpl->parse('main.row');
   }
 
+  $number = 0;
   $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goReportPage'));
 
   $xtpl->parse('main');
@@ -279,13 +281,13 @@ function checkMember() {
     $query = $db->query('select * from `'. PREFIX .'member` where userid = '. $user_info['userid']);
     $user = $query->fetch();
     $authors = json_decode($user['author']);
-    if ($op == 'device' && $authors->{device}) {
+    if ($op == 'device' && $authors->{'device'}) {
       // ok
     }
-    else if ($op == 'material' && $authors->{material}) {
+    else if ($op == 'material' && $authors->{'material'}) {
       // ok
     }
-    else if ($op == 'main' && ($authors->{device} || $authors->{material})) {
+    else if ($op == 'main' && ($authors->{'device'} || $authors->{'material'})) {
       // ok
     }
     else {
