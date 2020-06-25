@@ -324,7 +324,7 @@ function materialList() {
     // echo json_encode($row);
     // echo '<br>';
     $xtpl->assign('index', $index++);
-    $xtpl->assign('type', $type_list[$row['type']]);
+    $xtpl->assign('type', $type_list[intval(boolval($row['type']))]);
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('number', $row['number']);
     $xtpl->assign('description', $row['description']);
@@ -332,7 +332,6 @@ function materialList() {
     else $xtpl->assign('unit', '');
     $xtpl->parse('main.row');
   }
-  // die();
   $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
 
   $xtpl->parse('main');

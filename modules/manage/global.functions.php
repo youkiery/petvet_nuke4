@@ -8,7 +8,7 @@
 
 if (!defined('NV_MAINFILE')) { die('Stop!!!'); }
 define('PREFIX', $db_config['prefix'] . '_' . $module_name . '_');
-define('PATH', NV_ROOTDIR . "/modules/". $module_file ."/template");
+define('PATH2', NV_ROOTDIR . "/modules/". $module_file ."/template");
 
 function loadModal($name) {
   $xtpl = new XTemplate($name . ".tpl", PATH);

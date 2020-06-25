@@ -572,12 +572,12 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("main.tpl", PATH);
 $xtpl->assign('content', materialList());
+// die();
 $xtpl->assign('modal', materialModal());
 $xtpl->assign('material', json_encode(getMaterialDataList(), JSON_UNESCAPED_UNICODE));
 
 $xtpl->parse('main');
 $contents = $xtpl->text();
-
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_site_theme($contents);
 include NV_ROOTDIR . '/includes/footer.php';
