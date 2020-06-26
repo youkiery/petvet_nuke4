@@ -146,24 +146,27 @@
           <div class="input-group">
             <input type="text" class="form-control" id="import-item-finder">
             <div class="input-group-btn">
-              <button class="btn btn-success" onclick="materialModal()">
+              <button class="btn btn-success" onclick="materialModal('import')">
                 <span class="glyphicon glyphicon-plus"></span>
               </button>
             </div>
           </div>
           <div id="import-item-finder-suggest" class="suggest"></div>
         </div>
-        <div id="import-insert-modal-content" style="margin-top: 10px;">
+        <div style="margin-top: 10px;">
           <table class="table table-bordered">
             <thead>
               <tr>
                 <th class="cell-center"> STT </th>
-                <th class="cell-center"> Tên thiết bị </th>
-                <th class="cell-center"> Ngày hết hạn </th>
-                <th class="cell-center"> Số lượng </th>
+                <th class="cell-center"> Loại hóa chất </th>
+                <th class="cell-center"> Ngày nhập </th>
+                <th class="cell-center"> Nguồn </th>
+                <th class="cell-center"> SL </th>
+                <th class="cell-center"> HSD </th>
                 <th class="cell-center"> Ghi chú </th>
               </tr>
             </thead>
+            <tbody id="import-insert-modal-content"></tbody>
           </table>
         </div>
         <div class="text-center">
@@ -257,7 +260,7 @@
           <div class="input-group">
             <input type="text" class="form-control" id="export-item-finder">
             <div class="input-group-btn">
-              <button class="btn btn-success" onclick="materialModal()">
+              <button class="btn btn-success" onclick="materialModal('export')">
                 <span class="glyphicon glyphicon-plus"></span>
               </button>
             </div>

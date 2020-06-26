@@ -571,10 +571,11 @@ if (!empty($action)) {
 }
 
 $xtpl = new XTemplate("main.tpl", PATH);
-$xtpl->assign('content', materialList());
 // die();
-$xtpl->assign('modal', materialModal());
+$xtpl->assign('today', date('d/m/Y', time()));
 $xtpl->assign('material', json_encode(getMaterialDataList(), JSON_UNESCAPED_UNICODE));
+$xtpl->assign('modal', materialModal());
+$xtpl->assign('content', materialList());
 
 $xtpl->parse('main');
 $contents = $xtpl->text();

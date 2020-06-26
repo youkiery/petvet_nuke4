@@ -362,7 +362,9 @@ function getMaterialDataList() {
   $query = $db->query('select * from `'. PREFIX .'material`');
   // insert link
   while ($row = $query->fetch()) {
-    $row['link'] = $link[$row['id']];
+    if (!empty($link[$row['id']])) $row['link'] = $link[$row['id']];
+    else $row['link'] = '';
+    $row['alias'] = simplize($row['name']);
     $list []= $row;
   }
   return $list;
