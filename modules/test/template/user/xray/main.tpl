@@ -73,6 +73,7 @@
   .col-11,
   .col-12 {
     float: left;
+    padding: 5px;
   }
 
   .col-1 {
@@ -220,7 +221,7 @@
       temperate: $('#temperate').val(),
       eye: $('#eye').val(),
       other: $('#other').val(),
-      treating: $('#treating2').val(),
+      treating: $('#treating').val(),
       doctor: $('#doctor').val(),
       condition: $('#condition').val()
     }
@@ -244,6 +245,7 @@
 
   function insertXray() {
     clearXray()
+    $('.insult').prop('disabled', false)
     $('.insert').show()
     $('.edit').hide()
     $('#insert-modal').modal('show')
@@ -325,7 +327,7 @@
   function edit(lid) {
     vhttp.checkelse('', { action: 'get-info', id: lid }).then(data => {
       global['id'] = lid
-      if (data['data']['insult']) $('.insult').prop('disabled', true)
+      if (Number(data['data']['insult'])) $('.insult').prop('disabled', true)
       else $('.insult').prop('disabled', false)
       clearXray()
       $("#edit-pet").text(data['data']["pet"])
