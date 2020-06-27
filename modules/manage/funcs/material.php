@@ -6,7 +6,9 @@
  * @Createdate Mon, 28 Oct 2019 15:00:00 GMT
  */
 
-if (!defined('NV_IS_MOD_CONGVAN')) { die('Stop!!!'); }
+if (!defined('NV_IS_MOD_CONGVAN')) {
+  die('Stop!!!');
+}
 $page_title = "Quản lý vật tư, hóa chất";
 $excel = $nv_Request->get_int('excel', 'get');
 if ($nv_Request->get_int('excel', 'get')) {
@@ -19,9 +21,9 @@ if (!empty($action)) {
     case 'report-excel':
       $xco = array(1 => 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
       //   // Tìm kiếm số lượng tồn kho trước 1 thời điểm
-      
+
       include NV_ROOTDIR . '/PHPExcel/IOFactory.php';
-      $fileType = 'Excel2007'; 
+      $fileType = 'Excel2007';
 
       $id = $nv_Request->get_int('id', 'post');
       $filter = $nv_Request->get_array('filter', 'post');
@@ -33,14 +35,14 @@ if (!empty($action)) {
       if (empty($filter['end'])) $filter['end'] = strtotime(date('Y/m/d')) + 60 * 60 * 24 - 1;
       else $filter['end'] = totime($filter['end']) + 60 * 60 * 24 - 1;
 
-      $sql = 'select * from `'. PREFIX .'material_link` where item_id = ' . $id . ' or link_id = ' . $id;
+      $sql = 'select * from `' . PREFIX . 'material_link` where item_id = ' . $id . ' or link_id = ' . $id;
       $query = $db->query($sql);
       if (empty($link_data = $query->fetch())) {
         // không phải vật liệu liên kết
         // loại 1
         $objPHPExcel = PHPExcel_IOFactory::load(NV_ROOTDIR . '/assets/excel-material-template.xlsx');
 
-        $sql = 'select * from ((select a.number, b.export_date as time, 0 as type, a.note from `'. PREFIX .'export_detail` a inner join `'. PREFIX .'export` b on a.item_id = '. $id .' and a.export_id = b.id) union (select a.number, b.import_date as time, 1 as type, a.note from `'. PREFIX .'import_detail` a inner join `'. PREFIX .'import` b on a.item_id = '. $id .' and a.import_id = b.id)) as a where time between '. $filter['start'] .' and '. $filter['end'] .' order by time desc';
+        $sql = 'select * from ((select a.number, b.export_date as time, 0 as type, a.note from `' . PREFIX . 'export_detail` a inner join `' . PREFIX . 'export` b on a.item_id = ' . $id . ' and a.export_id = b.id) union (select a.number, b.import_date as time, 1 as type, a.note from `' . PREFIX . 'import_detail` a inner join `' . PREFIX . 'import` b on a.item_id = ' . $id . ' and a.import_id = b.id)) as a where time between ' . $filter['start'] . ' and ' . $filter['end'] . ' order by time desc';
         $query = $db->query($sql);
         $summary = array(
           'import' => 0,
@@ -50,14 +52,13 @@ if (!empty($action)) {
 
         while ($row = $query->fetch()) {
           $temp = array(
-            'import_date' => '', 'export_date' => '', 'import' => 0, 'export' => 0, 'note' => $row['note'] 
+            'import_date' => '', 'export_date' => '', 'import' => 0, 'export' => 0, 'note' => $row['note']
           );
           if ($row['type']) {
             $summary['import'] += $row['number'];
             $temp['import_date'] = date('d/m/Y', $row['time']);
             $temp['import'] = $row['number'];
-          } 
-          else {
+          } else {
             $summary['export'] += $row['number'];
             $temp['export_date'] = date('d/m/Y', $row['time']);
             $temp['export'] = $row['number'];
@@ -66,31 +67,30 @@ if (!empty($action)) {
         }
 
         $objPHPExcel
-        ->setActiveSheetIndex(0)
-        ->setCellValue($xco[5] . 2, $summary['import'])
-        ->setCellValue($xco[6] . 2, $summary['export'])
-        ->setCellValue($xco[7] . 2, $summary['import'] - $summary['export']);
+          ->setActiveSheetIndex(0)
+          ->setCellValue($xco[5] . 2, $summary['import'])
+          ->setCellValue($xco[6] . 2, $summary['export'])
+          ->setCellValue($xco[7] . 2, $summary['import'] - $summary['export']);
 
         foreach ($data as $key => $data_row) {
           $j = 1;
-  
+
           $objPHPExcel
-          ->setActiveSheetIndex(0)
-          ->setCellValue($xco[$j++] . $i, $index++) // STT
-          ->setCellValue($xco[$j++] . $i, $data_row['import_date']) // Ngày nhập
-          ->setCellValue($xco[$j++] . $i, $data_row['export_date']) // Ngày xuất
-          ->setCellValue($xco[$j++] . $i, $data_row['import']) // nhập
-          ->setCellValue($xco[$j++] . $i, $data_row['export']) // xuất
-          ->setCellValue($xco[$j++] . $i, $summary['import'] -= $data_row['export']) // tồn
-          ->setCellValue($xco[$j++] . $i, $data_row['note']);  // ghi chú
+            ->setActiveSheetIndex(0)
+            ->setCellValue($xco[$j++] . $i, $index++) // STT
+            ->setCellValue($xco[$j++] . $i, $data_row['import_date']) // Ngày nhập
+            ->setCellValue($xco[$j++] . $i, $data_row['export_date']) // Ngày xuất
+            ->setCellValue($xco[$j++] . $i, $data_row['import']) // nhập
+            ->setCellValue($xco[$j++] . $i, $data_row['export']) // xuất
+            ->setCellValue($xco[$j++] . $i, $summary['import'] -= $data_row['export']) // tồn
+            ->setCellValue($xco[$j++] . $i, $data_row['note']);  // ghi chú
           $i++;
         }
-      }
-      else {
+      } else {
         // loại 2
         $objPHPExcel = PHPExcel_IOFactory::load(NV_ROOTDIR . '/assets/excel-material-template-2.xlsx');
 
-        $sql = 'select * from ((select a.id, b.export_date as time, 0 as type, a.note from `'. PREFIX .'export_detail` a inner join `'. PREFIX .'export` b on (a.item_id = '. $link_data['item_id'] .' or a.item_id = '. $link_data['link_id'] .') and a.export_id = b.id) union (select a.id, b.import_date as time, 1 as type, a.note from `'. PREFIX .'import_detail` a inner join `'. PREFIX .'import` b on (a.item_id = '. $link_data['item_id'] .' or a.item_id = '. $link_data['link_id'] .') and a.import_id = b.id)) as a where time between '. $filter['start'] .' and '. $filter['end'] .' order by time desc';
+        $sql = 'select * from ((select a.id, b.export_date as time, 0 as type, a.note from `' . PREFIX . 'export_detail` a inner join `' . PREFIX . 'export` b on (a.item_id = ' . $link_data['item_id'] . ' or a.item_id = ' . $link_data['link_id'] . ') and a.export_id = b.id) union (select a.id, b.import_date as time, 1 as type, a.note from `' . PREFIX . 'import_detail` a inner join `' . PREFIX . 'import` b on (a.item_id = ' . $link_data['item_id'] . ' or a.item_id = ' . $link_data['link_id'] . ') and a.import_id = b.id)) as a where time between ' . $filter['start'] . ' and ' . $filter['end'] . ' order by time desc';
         $query = $db->query($sql);
 
         $summary = array(
@@ -103,16 +103,15 @@ if (!empty($action)) {
 
         while ($row = $query->fetch()) {
           $temp = array(
-            'import_date' => '', 'export_date' => '', 'import' => 0, 'export' => 0, 'note' => '', 'import2' => 0, 'export2' => 0, 'note' => $row['note'] 
+            'import_date' => '', 'export_date' => '', 'import' => 0, 'export' => 0, 'note' => '', 'import2' => 0, 'export2' => 0, 'note' => $row['note']
           );
 
           if ($row['type']) {
-            $sql = 'select * from `'. PREFIX .'import_detail` where import_id = ' . $row['id'] . ' and item_id = ' . $link_data['item_id'];
-            $sql2 = 'select * from `'. PREFIX .'import_detail` where import_id = ' . $row['id'] . ' and item_id = ' . $link_data['link_id'];
-          }
-          else {
-            $sql = 'select * from `'. PREFIX .'export_detail` where export_id = ' . $row['id'] . ' and item_id = ' . $link_data['item_id'];
-            $sql2 = 'select * from `'. PREFIX .'export_detail` where export_id = ' . $row['id'] . ' and item_id = ' . $link_data['link_id'];
+            $sql = 'select * from `' . PREFIX . 'import_detail` where import_id = ' . $row['id'] . ' and item_id = ' . $link_data['item_id'];
+            $sql2 = 'select * from `' . PREFIX . 'import_detail` where import_id = ' . $row['id'] . ' and item_id = ' . $link_data['link_id'];
+          } else {
+            $sql = 'select * from `' . PREFIX . 'export_detail` where export_id = ' . $row['id'] . ' and item_id = ' . $link_data['item_id'];
+            $sql2 = 'select * from `' . PREFIX . 'export_detail` where export_id = ' . $row['id'] . ' and item_id = ' . $link_data['link_id'];
           }
 
           $item = array('number' => 0, 'note' => '');
@@ -124,7 +123,7 @@ if (!empty($action)) {
           if (!empty($link_data['link_id'])) {
             $link_query = $db->query($sql2);
             $link = $link_query->fetch();
-          }         
+          }
 
           if ($row['type']) {
             $summary['import'] += $item['number'];
@@ -132,43 +131,42 @@ if (!empty($action)) {
             $temp['import_date'] = date('d/m/Y', $row['time']);
             $temp['import'] = $item['number'];
             $temp['import2'] = $link['number'];
-          }
-          else {
+          } else {
             $summary['export'] += $item['number'];
             $summary['export2'] += $link['number'];
             $temp['export_date'] = date('d/m/Y', $row['time']);
             $temp['export'] = $item['number'];
             $temp['export2'] = $link['number'];
           }
-          $data[]= $temp;
+          $data[] = $temp;
         }
 
         $objPHPExcel
-        ->setActiveSheetIndex(0)
-        ->setCellValue($xco[4] . 2, $summary['import'])
-        ->setCellValue($xco[5] . 2, $summary['export'])
-        ->setCellValue($xco[6] . 2, $summary['import'] - $summary['export'])
-        ->setCellValue($xco[7] . 2, $summary['import2'])
-        ->setCellValue($xco[8] . 2, $summary['export2'])
-        ->setCellValue($xco[9] . 2, $summary['import2'] - $summary['export2']);
+          ->setActiveSheetIndex(0)
+          ->setCellValue($xco[4] . 2, $summary['import'])
+          ->setCellValue($xco[5] . 2, $summary['export'])
+          ->setCellValue($xco[6] . 2, $summary['import'] - $summary['export'])
+          ->setCellValue($xco[7] . 2, $summary['import2'])
+          ->setCellValue($xco[8] . 2, $summary['export2'])
+          ->setCellValue($xco[9] . 2, $summary['import2'] - $summary['export2']);
 
         foreach ($data as $key => $data_row) {
           $j = 1;
- 
+
           $summary['import'] -= $data_row['export'];
           $summary['import2'] -= $data_row['export2'];
           $objPHPExcel
-          ->setActiveSheetIndex(0)
-          ->setCellValue($xco[$j++] . $i, $index++) // STT
-          ->setCellValue($xco[$j++] . $i, $data_row['import_date']) // Ngày nhập
-          ->setCellValue($xco[$j++] . $i, $data_row['export_date']) // Ngày xuất
-          ->setCellValue($xco[$j++] . $i, $data_row['import']) // nhập
-          ->setCellValue($xco[$j++] . $i, $data_row['export']) // xuất
-          ->setCellValue($xco[$j++] . $i, $summary['import']) // tồn
-          ->setCellValue($xco[$j++] . $i, $data_row['import2']) // nhập
-          ->setCellValue($xco[$j++] . $i, $data_row['export2']) // xuất
-          ->setCellValue($xco[$j++] . $i, $summary['import2']) // tồn
-          ->setCellValue($xco[$j++] . $i, $data_row['note']);  // ghi chú
+            ->setActiveSheetIndex(0)
+            ->setCellValue($xco[$j++] . $i, $index++) // STT
+            ->setCellValue($xco[$j++] . $i, $data_row['import_date']) // Ngày nhập
+            ->setCellValue($xco[$j++] . $i, $data_row['export_date']) // Ngày xuất
+            ->setCellValue($xco[$j++] . $i, $data_row['import']) // nhập
+            ->setCellValue($xco[$j++] . $i, $data_row['export']) // xuất
+            ->setCellValue($xco[$j++] . $i, $summary['import']) // tồn
+            ->setCellValue($xco[$j++] . $i, $data_row['import2']) // nhập
+            ->setCellValue($xco[$j++] . $i, $data_row['export2']) // xuất
+            ->setCellValue($xco[$j++] . $i, $summary['import2']) // tồn
+            ->setCellValue($xco[$j++] . $i, $data_row['note']);  // ghi chú
           $i++;
         }
       }
@@ -178,12 +176,12 @@ if (!empty($action)) {
       $objPHPExcel->disconnectWorksheets();
       unset($objWriter, $objPHPExcel);
       $result['status'] = 1;
-    break;
+      break;
       // $objPHPExcel = PHPExcel_IOFactory::load(NV_ROOTDIR . '/assets/excel-material-template.xlsx');
 
       // $i = 1;
       // $j = 1;
-    
+
       // $id = $nv_Request->get_int('id', 'post');
       // $filter = $nv_Request->get_array('filter', 'post');
 
@@ -261,10 +259,10 @@ if (!empty($action)) {
       //     ->setActiveSheetIndex(0)
       //     ->setCellValue($xco[$j++] . $i, $value);
       //   }
-  
+
       //   $sql = 'select * from ((select a.number, b.export_date as time, 0 as type, a.note from `'. PREFIX .'export_detail` a inner join `'. PREFIX .'export` b on a.item_id = '. $id .' and a.export_id = b.id) union (select a.number, b.import_date as time, 1 as type, a.note from `'. PREFIX .'import_detail` a inner join `'. PREFIX .'import` b on a.item_id = '. $id .' and a.import_id = b.id)) as a where time between '. $filter['start'] .' and '. $filter['end'] .' order by time desc';
       //   $query = $db->query($sql);
-        
+
       //   $summary = array('import' => 0, 'export' => 0);
       //   $i = 4;
       //   $index = 1;
@@ -281,7 +279,7 @@ if (!empty($action)) {
       //       $a = date('d/m/Y', $row['time']);
       //       $c = $row['number'];
       //     }
-  
+
       //     $objPHPExcel
       //     ->setActiveSheetIndex(0)
       //     ->setCellValue($xco[$j++] . $i, $index++)
@@ -292,64 +290,62 @@ if (!empty($action)) {
       //     ->setCellValue($xco[$j++] . $i, $row['note']);
       //     $i++;
       //   }
-  
+
       //   $objPHPExcel
       //   ->setActiveSheetIndex(0)
       //   ->setCellValue($xco[4] . 2, $summary['import'])
       //   ->setCellValue($xco[5] . 2, $summary['export'])
       //   ->setCellValue($xco[6] . 2, $summary['import'] - $summary['export']);
       // }
-    
+
       // $sql = 'select * from '
-    //   $filter = $nv_Request->get_array('filter', 'post');
-    //   if (empty($filter['start'])) $filter['start'] = strtotime(date('Y/m/d', time() - (date('d') - 1) * 60 * 60 * 24));
-    //   else $filter['start'] = totime($filter['start']);
-    //   if (empty($filter['end'])) $filter['end'] = strtotime(date('Y/m/d')) + 60 * 60 * 24 - 1;
-    //   else $filter['end'] = totime($filter['end']) + 60 * 60 * 24 - 1;
-    
-    //   $sql = 'select * from ((select a.number, b.export_date as time, 0 as type from `'. PREFIX .'export_detail` a inner join `'. PREFIX .'export` b on a.item_id = '. $id .' and a.export_id = b.id) union (select a.number, b.import_date as time, 1 as type from `'. PREFIX .'import_detail` a inner join `'. PREFIX .'import` b on a.item_id = '. $id .' and a.import_id = b.id)) as a order by time asc';
-    //   $query = $db->query($sql);
-    //   $i = 1; $j = 0;
-    //   $index = 1;
+      //   $filter = $nv_Request->get_array('filter', 'post');
+      //   if (empty($filter['start'])) $filter['start'] = strtotime(date('Y/m/d', time() - (date('d') - 1) * 60 * 60 * 24));
+      //   else $filter['start'] = totime($filter['start']);
+      //   if (empty($filter['end'])) $filter['end'] = strtotime(date('Y/m/d')) + 60 * 60 * 24 - 1;
+      //   else $filter['end'] = totime($filter['end']) + 60 * 60 * 24 - 1;
 
-    //   foreach ($title as $value) {
-    //     $objPHPExcel
-    //     ->setActiveSheetIndex(0)
-    //     ->setCellValue($xco[$j++] . $i, $value);
-    //   }
+      //   $sql = 'select * from ((select a.number, b.export_date as time, 0 as type from `'. PREFIX .'export_detail` a inner join `'. PREFIX .'export` b on a.item_id = '. $id .' and a.export_id = b.id) union (select a.number, b.import_date as time, 1 as type from `'. PREFIX .'import_detail` a inner join `'. PREFIX .'import` b on a.item_id = '. $id .' and a.import_id = b.id)) as a order by time asc';
+      //   $query = $db->query($sql);
+      //   $i = 1; $j = 0;
+      //   $index = 1;
 
-    //   while ($row = $query->fetch()) {
-    //     $j = 0;
-    //     $i ++;
+      //   foreach ($title as $value) {
+      //     $objPHPExcel
+      //     ->setActiveSheetIndex(0)
+      //     ->setCellValue($xco[$j++] . $i, $value);
+      //   }
 
-    //     // $objPHPExcel
-    //     // ->setActiveSheetIndex(0)
-    //     // ->setCellValue($xco[$j++] . $i, $index ++)
-    //     // ->setCellValue($xco[$j++] . $i, $index +);
-    //   }
+      //   while ($row = $query->fetch()) {
+      //     $j = 0;
+      //     $i ++;
 
-    //   $objPHPExcel
-    //   ->setActiveSheetIndex(0)
-    //   ->setCellValue($xco[$j++] . $i, $value);
+      //     // $objPHPExcel
+      //     // ->setActiveSheetIndex(0)
+      //     // ->setCellValue($xco[$j++] . $i, $index ++)
+      //     // ->setCellValue($xco[$j++] . $i, $index +);
+      //   }
 
-    //   $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-    //   $objWriter->save(NV_ROOTDIR . '/assets/excel-material.xlsx');
-    //   $objPHPExcel->disconnectWorksheets();
-    //   unset($objWriter, $objPHPExcel);
-    //   $result['status'] = 1;
-    // break;
+      //   $objPHPExcel
+      //   ->setActiveSheetIndex(0)
+      //   ->setCellValue($xco[$j++] . $i, $value);
+
+      //   $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
+      //   $objWriter->save(NV_ROOTDIR . '/assets/excel-material.xlsx');
+      //   $objPHPExcel->disconnectWorksheets();
+      //   unset($objWriter, $objPHPExcel);
+      //   $result['status'] = 1;
+      // break;
     case 'insert-material':
       $data = $nv_Request->get_array('data', 'post');
 
       if (!strlen($data['name'])) {
         $result['notify'] = 'Tên vật tư trống';
-      }
-      else if (checkMaterialName($data['name'])) {
+      } else if (checkMaterialName($data['name'])) {
         $result['notify'] = 'Trùng tên vật tư';
-      }
-      else {
+      } else {
         // insert
-        $sql = 'insert into `'. PREFIX .'material` (name, type, number, unit, description) values("'. $data['name'] .'", "'. $data['type'] .'", "'. $data['number'] .'", "'. $data['unit'] .'", "'. $data['description'] .'")';
+        $sql = 'insert into `' . PREFIX . 'material` (name, type, number, unit, description) values("' . $data['name'] . '", "' . $data['type'] . '", "' . $data['number'] . '", "' . $data['unit'] . '", "' . $data['description'] . '")';
         // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;
@@ -359,114 +355,115 @@ if (!empty($action)) {
           $result['json'] = array('id' => $db->lastInsertId(), 'name' => $data['name'], 'type' => $data['type'], 'unit' => $data['unit'], 'description' => $data['description']);
         }
       }
-    break;
+      break;
     case 'filter':
       $result['status'] = 1;
       $result['html'] = deviceList();
-    break;
+      break;
     case 'insert-import':
       $data = $nv_Request->get_array('data', 'post');
 
-      if (!($total = count($data))) {
-        $result['notify'] = 'Chưa có hàng hóa nhập';
-      }
-      else {
-        // insert
-        $query = $db->query('insert into `'. PREFIX .'import` (import_date, note) values('. time().', "")');
-        if ($query) {
-          $count = 0;
-          $id = $db->lastInsertId();
-          // check item, status, expiry
-          foreach ($data as $row) {
-            $row['date'] = totimev2($row['date']);
-            $sql = 'insert into `'. PREFIX .'import_detail` (import_id, item_id, number, date, note) values('. $id .', '. $row['id'] .', '. $row['number'] .', '. $row['date'] .', "'. $row['status'] .'")';
-            $sql2 = 'update `'. PREFIX .'material` set number = number + '. $row['number'] .' where id = ' . $row['id'];
-            if ($db->query($sql) && $db->query($sql2)) {
-              $count ++;
-            }
-          }
-          if ($total > 0) {
-            $result['status'] = 1;
-            $result['html'] = importList();
-            $result['html2'] = materialList();
-            if ($count == $total) {
-              $result['notify'] = 'Đã lưu nhập thiết bị';
-            }
-            else {
-              $result['notify'] = "Đã lưu $count/$total";
-            }
-          }
+      // b1: thêm vào import
+      // b2: kiểm tra từng item, type, source, expire từ detail
+      // b3: nếu không tồn tại, thêm vào detail
+      // b4: lấy importid, detailid thêm vào import detail
+      // b5: cập nhật material
 
+      // b1
+      $sql = 'insert into `' . PREFIX . 'material_import` (time) values(' . time() . ')';
+      $query = $db->query($sql);
+      $importid = $db->lastInsertId();
+
+      // b2
+      foreach ($data as $row) {
+        $row['date'] = totime($row['date']);
+        $row['expire'] = totime($row['expire']);
+        $sql = 'select * from `' . PREFIX . 'material_detail` where materialid = ' . $row['id'] . ' and type = ' . $row['type'] . ' and source = ' . $row['source'] . ' and expire = ' . $row['expire'];
+        $query = $db->query($sql);
+        if (empty($detail = $query->fetch())) {
+          // b3
+          $sql = 'insert into `' . PREFIX . 'material_detail` (materialid, expire, number, type, source) values(' . $row['id'] . ', ' . $row['expire'] . ', ' . $row['number'] . ', ' . $row['type'] . ', ' . $row['source'] . ')';
+          $db->query($sql);
+          $detail = array('id' => $db->lastInsertId());
         }
+
+        // b4
+        $sql = 'insert into `' . PREFIX . 'material_import_detail` (importid, detailid, number, note, expire, date) values (' . $importid . ', ' . $detail['id'] . ', ' . $row['number'] . ', "' . $row['note'] . '", ' . $row['expire'] . ', ' . $row['date'] . ')';
+        $db->query($sql);
+
+        // b5
+        $sql2 = 'update `' . PREFIX . 'material` set number = number + ' . $row['number'] . ' where id = ' . $row['id'];
       }
-    break;
-    // case 'edit-import':
-    //   $data = $nv_Request->get_array('data', 'post');
+      $result['status'] = 1;
+      $result['html'] = materialList();
+      break;
+      // case 'edit-import':
+      //   $data = $nv_Request->get_array('data', 'post');
 
-    //   if (!($count = count($data))) {
-    //     $result['notify'] = 'Chưa có hàng hóa nhập';
-    //   }
-    //   else {
-    //     $query = $db->query('insert into `'. PREFIX .'import` (import_date, note) values('. time().', "")');
-    //     if ($query) {
-    //       $total = 0;
-    //       $id = $db->lastInsertId();
-    //       foreach ($data as $row) {
-    //         $row['date'] = totimev2($row['date']);
-    //         if (!($item_id = checkItemId($row['id'], $row['date'], $row['status']))) {
-    //           $result['notify'] = 'Lỗi hệ thống';
-    //         }
-    //         else {
-    //           $sql = 'insert into `'. PREFIX .'import_detail` (import_id, item_id, number, note) values('. $id .', '. $item_id .', '. $row['number'] .', "")';
-    //           if ($query) {
-    //             $total ++;
-    //           }
-    //         }
-    //       }
-    //       if ($total > 0) {
-    //         $result['status'] = 1;
-    //         $result['html'] = importList();
-    //         if ($count == $total) {
-    //           $result['notify'] = 'Đã lưu nhập thiết bị';
-    //         }
-    //         else {
-    //           $result['notify'] = "Đã lưu $total/$count";
-    //         }
-    //       }
+      //   if (!($count = count($data))) {
+      //     $result['notify'] = 'Chưa có hàng hóa nhập';
+      //   }
+      //   else {
+      //     $query = $db->query('insert into `'. PREFIX .'import` (import_date, note) values('. time().', "")');
+      //     if ($query) {
+      //       $total = 0;
+      //       $id = $db->lastInsertId();
+      //       foreach ($data as $row) {
+      //         $row['date'] = totimev2($row['date']);
+      //         if (!($item_id = checkItemId($row['id'], $row['date'], $row['status']))) {
+      //           $result['notify'] = 'Lỗi hệ thống';
+      //         }
+      //         else {
+      //           $sql = 'insert into `'. PREFIX .'import_detail` (import_id, item_id, number, note) values('. $id .', '. $item_id .', '. $row['number'] .', "")';
+      //           if ($query) {
+      //             $total ++;
+      //           }
+      //         }
+      //       }
+      //       if ($total > 0) {
+      //         $result['status'] = 1;
+      //         $result['html'] = importList();
+      //         if ($count == $total) {
+      //           $result['notify'] = 'Đã lưu nhập thiết bị';
+      //         }
+      //         else {
+      //           $result['notify'] = "Đã lưu $total/$count";
+      //         }
+      //       }
 
-    //     }
-    //   }
-    // break;
+      //     }
+      //   }
+      // break;
     case 'remove-import':
       $id = $nv_Request->get_int('id', 'post', 0);
 
       // ktb: lấy số lượng nhập, giảm số lượng kho
-      $query = $db->query('select * from `'. PREFIX .'import_detail` where import_id = ' . $id);
+      $query = $db->query('select * from `' . PREFIX . 'import_detail` where import_id = ' . $id);
       $count = 0;
       $total = 0;
       while ($row = $query->fetch()) {
-        if ($db->query('update `'.  PREFIX .'material` set number = number - '. $row['number'] .' where id = ' . $row['item_id'])) {
-          $count ++;
+        if ($db->query('update `' .  PREFIX . 'material` set number = number - ' . $row['number'] . ' where id = ' . $row['item_id'])) {
+          $count++;
         }
-        $total ++;
+        $total++;
       }
 
-      if ($db->query('delete from `'.  PREFIX .'import` where id = ' . $id)) {
+      if ($db->query('delete from `' .  PREFIX . 'import` where id = ' . $id)) {
         $result['status'] = 1;
         $result['notify'] = 'Đã xóa phiếu nhập';
         $result['html'] = importList();
         $result['html2'] = materialList();
       }
-    break;
+      break;
     case 'get-import':
       $id = $nv_Request->get_int('id', 'post');
 
-      $query = $db->query('select * from `'. PREFIX .'import_detail` where import_id = ' . $id);
+      $query = $db->query('select * from `' . PREFIX . 'import_detail` where import_id = ' . $id);
       $list = array();
       $item = getMaterialDataList();
       while ($row = $query->fetch()) {
         $index = checkItemIndex($item, $row['item_id']);
-        
+
         if ($itemData = getItemDatav2($row['item_id'])) {
           $list[] = array(
             'index' => $index,
@@ -480,26 +477,25 @@ if (!empty($action)) {
 
       $result['status'] = 1;
       $result['import'] = $list;
-    break;
+      break;
     case 'insert-export':
       $data = $nv_Request->get_array('data', 'post');
 
       if (!($total = count($data))) {
         $result['notify'] = 'Chưa có hàng hóa nhập';
-      }
-      else {
+      } else {
         // insert
-        $query = $db->query('insert into `'. PREFIX .'export` (export_date, note) values('. time().', "")');
+        $query = $db->query('insert into `' . PREFIX . 'export` (export_date, note) values(' . time() . ', "")');
         if ($query) {
           $count = 0;
           $id = $db->lastInsertId();
           // check item, status, expiry
           foreach ($data as $row) {
             $row['date'] = totimev2($row['date']);
-            $sql = 'insert into `'. PREFIX .'export_detail` (export_id, item_id, number, note) values('. $id .', '. $row['id'] .', '. $row['number'] .', "'. $row['status'] .'")';
-            $sql2 = 'update `'. PREFIX .'material` set number = number - '. $row['number'] .' where id = ' . $row['id'];
+            $sql = 'insert into `' . PREFIX . 'export_detail` (export_id, item_id, number, note) values(' . $id . ', ' . $row['id'] . ', ' . $row['number'] . ', "' . $row['status'] . '")';
+            $sql2 = 'update `' . PREFIX . 'material` set number = number - ' . $row['number'] . ' where id = ' . $row['id'];
             if ($db->query($sql) && $db->query($sql2)) {
-              $count ++;
+              $count++;
             }
           }
           if ($total > 0) {
@@ -508,63 +504,87 @@ if (!empty($action)) {
             $result['html2'] = materialList();
             if ($count == $total) {
               $result['notify'] = 'Đã lưu phiếu xuất thiết bị';
-            }
-            else {
+            } else {
               $result['notify'] = "Đã lưu $count/$total";
             }
           }
-
         }
       }
-    break;
+      break;
     case 'remove-export':
       $id = $nv_Request->get_int('id', 'post', 0);
 
       // ktb: lấy số lượng nhập, giảm số lượng kho
-      $query = $db->query('select * from `'. PREFIX .'export_detail` where export_id = ' . $id);
+      $query = $db->query('select * from `' . PREFIX . 'export_detail` where export_id = ' . $id);
       $count = 0;
       $total = 0;
       while ($row = $query->fetch()) {
-        if ($db->query('update `'.  PREFIX .'material` set number = number + '. $row['number'] .' where id = ' . $row['item_id'])) {
-          $count ++;
+        if ($db->query('update `' .  PREFIX . 'material` set number = number + ' . $row['number'] . ' where id = ' . $row['item_id'])) {
+          $count++;
         }
-        $total ++;
+        $total++;
       }
 
-      if ($db->query('delete from `'.  PREFIX .'export` where id = ' . $id)) {
+      if ($db->query('delete from `' .  PREFIX . 'export` where id = ' . $id)) {
         $result['status'] = 1;
         $result['notify'] = 'Đã xóa phiếu nhập';
         $result['html'] = exportList();
         $result['html2'] = materialList();
       }
-    break;
+      break;
     case 'filter-report':
       $result['status'] = 1;
       $result['html'] = reportList();
-    break;
+      break;
     case 'report':
       $result['status'] = 1;
       $result['html'] = reportDetail();
-    break;
+      break;
     case 'overlow':
       $result['status'] = 1;
       $result['html'] = materialOverlowList();
-    break;
+      break;
     case 'expire-filter':
       $limit = $nv_Request->get_int('limit', 'post', 0);
       $result['status'] = 1;
       $result['html'] = expireList($limit);
-    break;
+      break;
     case 'expire':
       $id = $nv_Request->get_int('id', 'post', 0);
       $limit = $nv_Request->get_int('limit', 'post', 0);
 
-      $sql = "update `". PREFIX ."import_detail` set expire = 1 where id = $id";
+      $sql = "update `" . PREFIX . "import_detail` set expire = 1 where id = $id";
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = expireList($limit);
       }
-    break;
+      break;
+    case 'insert-type':
+      $name = $nv_Request->get_string('name', 'post', '');
+
+      $sql = 'select * from `' . PREFIX . 'material_type` where name = "' . $name . '"';
+      $query = $db->query($sql);
+      if (empty($query->fetch)) {
+        $sql = 'insert into `' . PREFIX . 'material_type` (name) values ("' . $name . '")';
+        $db->query($sql);
+        $result['status'] = 1;
+        $result['id'] = $db->lastInsertId();
+        $result['html'] = typeOptionList();
+      }
+      break;
+    case 'insert-source':
+      $name = $nv_Request->get_string('name', 'post', '');
+
+      $sql = 'select * from `' . PREFIX . 'material_source` where name = "' . $name . '"';
+      $query = $db->query($sql);
+      if (empty($query->fetch)) {
+        $sql = 'insert into `' . PREFIX . 'material_source` (name) values ("' . $name . '")';
+        $db->query($sql);
+        $result['status'] = 1;
+        $result['id'] = $db->lastInsertId();
+        $result['html'] = sourceOptionList();
+      }
+      break;
   }
   echo json_encode($result);
   die();
@@ -574,6 +594,8 @@ $xtpl = new XTemplate("main.tpl", PATH);
 // die();
 $xtpl->assign('today', date('d/m/Y', time()));
 $xtpl->assign('material', json_encode(getMaterialDataList(), JSON_UNESCAPED_UNICODE));
+$xtpl->assign('type', typeOptionList());
+$xtpl->assign('source', sourceOptionList());
 $xtpl->assign('modal', materialModal());
 $xtpl->assign('content', materialList());
 

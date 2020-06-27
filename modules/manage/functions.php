@@ -389,10 +389,6 @@ function materialModal() {
 
   $xtpl->assign('start', $start);
   $xtpl->assign('end', $end);
-  $xtpl->assign('overlow_content', materialOverlowList());
-  $xtpl->assign('import_content', importList());
-  $xtpl->assign('export_content', exportList());
-  $xtpl->assign('expire_content', expireList());
 
   $xtpl->parse('main');
   return $xtpl->text();
@@ -452,4 +448,30 @@ function exportList() {
   }
   $xtpl->parse('main');
   return $xtpl->text();
+}
+
+function typeOptionList() {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'material_type` order by name';
+  $query = $db->query($sql);
+  $html = '';
+
+  while ($row = $query->fetch()) {
+    $html .= '<option value="'. $row['id'] .'">' . $row['name'] . '</option>';
+  }
+  return $html;
+}
+
+function sourceOptionList() {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'material_source` order by name';
+  $query = $db->query($sql);
+  $html = '';
+
+  while ($row = $query->fetch()) {
+    $html .= '<option value="'. $row['id'] .'">' . $row['name'] . '</option>';
+  }
+  return $html;
 }

@@ -314,6 +314,7 @@ function materialList() {
   if (empty($filter['type'])) {
     $filter['type'] = array(0, 1);
   }
+  $filter['keyword'] = '';
 
   $xtpl = new XTemplate("material-list.tpl", PATH);
 
@@ -371,12 +372,12 @@ function memberList() {
   while($row = $query->fetch()) {
     $authors = json_decode($row['author']);
     $author = '';
-    if (!empty($authors->{depart})) {
-      if (!empty($authors->{device}) || !empty($authors->{device})) {
+    if (!empty($authors->{'depart'})) {
+      if (!empty($authors->{'device'}) || !empty($authors->{'device'})) {
         $depart = array();
-        $query2 = $db->query('select * from `'. PREFIX .'depart` where id in (' . implode(', ', $authors->{depart}) . ')');
+        $query2 = $db->query('select * from `'. PREFIX .'depart` where id in (' . implode(', ', $authors->{'depart'}) . ')');
         while ($row2 = $query2->fetch()) $depart[]= '[' .$row2['name'] . ']';
-        $author =  ($authors->{device} ? ' [' . $allowance[$authors->{device}] . '] thiết bị' : '') . ($authors->{material} ? ' [' . $allowance[$authors->{material}] . '] vật tư' : '') . ' của phòng ban ' . implode(', ', $depart);
+        $author =  ($authors->{'device'} ? ' [' . $allowance[$authors->{'device'}] . '] thiết bị' : '') . ($authors->{'material'} ? ' [' . $allowance[$authors->{'material'}] . '] vật tư' : '') . ' của phòng ban ' . implode(', ', $depart);
       }
     }
     $xtpl->assign('index', $index++);

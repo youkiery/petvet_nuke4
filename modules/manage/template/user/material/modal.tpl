@@ -1,4 +1,44 @@
 <!-- BEGIN: main -->
+<div class="modal" id="type-modal" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
+
+        <div class="form-group">
+          Loại hóa chất
+          <input type="text" class="form-control" id="type-name">
+        </div>
+        <div class="text-center">
+          <button class="btn btn-success" onclick="insertTypeSubmit()">
+            Thêm loại hóa chất
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="source-modal" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
+
+        <div class="form-group">
+          Nguồn gốc
+          <input type="text" class="form-control" id="source-name">
+        </div>
+        <div class="text-center">
+          <button class="btn btn-success" onclick="insertSourceSubmit()">
+            Thêm nguồn gốc
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="report-modal" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -157,10 +197,10 @@
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th class="cell-center"> STT </th>
-                <th class="cell-center"> Loại hóa chất </th>
+                <th class="cell-center"> Hóa chất </th>
+                <th class="cell-center" style="width: 20%;"> Loại </th>
                 <th class="cell-center"> Ngày nhập </th>
-                <th class="cell-center"> Nguồn </th>
+                <th class="cell-center" style="width: 20%;"> Nguồn </th>
                 <th class="cell-center"> SL </th>
                 <th class="cell-center"> HSD </th>
                 <th class="cell-center"> Ghi chú </th>
@@ -197,7 +237,8 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
 
         <div class="text-center form-group">
-          <input type="text" class="form-control form-group" id="filter-keyword" placeholder="Nhập tên vật tư tìm kiếm...">
+          <input type="text" class="form-control form-group" id="filter-keyword"
+            placeholder="Nhập tên vật tư tìm kiếm...">
           <div class="row-x form-group">
             <div class="col-6">
               <input type="text" class="form-control date" id="filter-start" value="{start}">

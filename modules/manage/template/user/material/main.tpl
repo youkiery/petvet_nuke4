@@ -8,6 +8,16 @@
 
 {modal}
 
+<style>
+  select.form-control {
+    padding: 0px;
+  }
+
+  .suggest {
+    z-index: 10;
+  }
+</style>
+
 <div id="msgshow"></div>
 
 <div class="form-group">
@@ -45,56 +55,81 @@
       'import': [],
       'export': []
     },
-    'type': {
-      0: 'Nope'
-    },
+    'ia': 0,
+    'index': 0,
     'name': '',
-    'today': '{today}'
+    'today': '{today}',
+    'type': '{type}',
+    'source': '{source}'
   }
-  var parseLine = {
-    'import': () => {
-      html = ''
-      global['selected']['import'].forEach((item, index) => {
-        html += `
-          <tr class="import" index="`+ index +`">
-            <th> `+ (index + 1) +` </th>
-            <th> <input type="text" class="form-control" id="import-type-`+ index +`" value="`+ (global['type'][item['type']]) +`"> </th>
-            <th> <input type="text" class="form-control date" id="import-date-`+ index +`" value="`+ item['date'] +`"> </th>
-            <th> <input type="text" class="form-control" id="import-source-`+ index +`" value="`+ item['source'] +`"> </th>
-            <th> <input type="text" class="form-control" id="import-number-`+ index +`" value="`+ item['number'] +`"> </th>
-            <th> <input type="text" class="form-control date" id="import-expire-`+ index +`" value="`+ item['expire'] +`"> </th>
-            <th> <input type="text" class="form-control" id="import-note-`+ index +`" value="`+ item['note'] +`"> </th>
-          </tr>`
-      })
-      $('#import-insert-modal-content').html(html)
+  var insertLine = {
+    'import': (index) => {
+      $(`
+        <tbody class="import" index="`+ index + `" ia="` + global['ia'] + `">
+          <tr>
+            <td>
+              `+ global['material'][index]['name'] + `
+            </td>
+            <td>
+              <div class="input-group">
+                <select class="form-control" id="import-type-`+ global['ia'] + `">
+                  `+ global['type'] + `
+                </select>
+                <div class="input-group-btn">
+                  <button class="btn btn-success" onclick="insertType('import', `+ global['ia'] + `)">
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+                </div>
+              </div>
+            </td>
+            <td> <input class="form-control date" id="import-date-`+ global['ia'] + `" value="` + global['today'] + `"> </td>
+            <td> 
+              <div class="input-group">
+                <select class="form-control" id="import-source-`+ global['ia'] + `">
+                  `+ global['source'] + `
+                </select>
+                <div class="input-group-btn">
+                  <button class="btn btn-success" onclick="insertSource('import', `+ global['ia'] + `)">
+                    <span class="glyphicon glyphicon-plus"></span>
+                  </button>
+                </div>
+              </div>
+            </td>
+            <td> <input class="form-control" id="import-number-`+ global['ia'] + `" value="0"> </td>
+            <td> <input class="form-control date" id="import-expire-`+ global['ia'] + `" value="` + global['today'] + `"> </td>
+            <td> <input class="form-control" id="import-note-`+ global['ia'] + `"> </td>
+          </tr>
+        </tbody>
+      `).insertAfter('#import-insert-modal-content')
       $(".date").datepicker({
         format: 'dd/mm/yyyy',
         changeMonth: true,
         changeYear: true
       });
     },
-    'export': () => {
+    'export': (index) => {
 
-    }
+    },
   }
 
   var getLine = {
     'import': () => {
       data = []
       $(".import").each((index, item) => {
+        ia = trim(item.getAttribute('ia'))
         indexX = trim(item.getAttribute('index'))
         data.push({
           index: indexX,
           id: global['material'][indexX]['id'],
-          type: $('#import-type-'+ indexX).val(),
-          date: $('#import-date-'+ indexX).val(),
-          source: $('#import-source-'+ indexX).val(),
-          number: $('#import-number-'+ indexX).val(),
-          expire: $('#import-expire-'+ indexX).val(),
-          note: $('#import-note-'+ indexX).val()
+          type: $('#import-type-' + ia).val(),
+          date: $('#import-date-' + ia).val(),
+          source: $('#import-source-' + ia).val(),
+          number: $('#import-number-' + ia).val(),
+          expire: $('#import-expire-' + ia).val(),
+          note: $('#import-note-' + ia).val()
         })
       })
-      global['selected']['import'] = data
+      return data
     },
     'export': () => {
       data = []
@@ -157,10 +192,11 @@
   //   $("#import-modal").modal('show')
   // }
   function importModal() {
-    $("#import-button").show()
-    $("#edit-import-button").hide()
-    global['selected']['import'] = []
-    parseFormLine('import')
+    // $("#import-button").show()
+    // $("#edit-import-button").hide()
+    // global['selected']['import'] = []
+    // parseFormLine('import')
+    global['ia'] = 0
     $("#import-modal-insert").modal('show')
   }
   function exportModal() {
@@ -263,6 +299,38 @@
     )
   }
 
+  function insertType(name, index) {
+    global['name'] = name
+    global['index'] = index
+    $('#type-name').val('')
+    $('#type-modal').modal('show')
+  }
+
+  function insertTypeSubmit() {
+    vhttp.checkelse('', { action: 'insert-type', name: $('#type-name').val() }).then(data => {
+      global['type'] = data['html']
+      $('#' + global['name'] + '-type-' + global['index']).html(global['type'])
+      $('#' + global['name'] + '-type-' + global['index']).val(data['id'])
+      $('#type-modal').modal('hide')
+    })
+  }
+
+  function insertSource(name, index) {
+    global['name'] = name
+    global['index'] = index
+    $('#source-name').val('')
+    $('#source-modal').modal('show')
+  }
+
+  function insertSourceSubmit() {
+    vhttp.checkelse('', { action: 'insert-source', name: $('#source-name').val() }).then(data => {
+      global['source'] = data['html']
+      $('#' + global['name'] + '-source-' + global['index']).html(global['source'])
+      $('#' + global['name'] + '-source-' + global['index']).val(data['id'])
+      $('#source-modal').modal('hide')
+    })
+  }
+
   function insertMaterial() {
     sdata = checkMaterialData()
     vhttp.checkelse('', { action: 'insert-material', data: sdata, filter: checkFilter() }).then(data => {
@@ -271,23 +339,17 @@
       $("#material-unit").val('')
       $("#material-number").val('')
       $("#material-description").val('')
-      $("#" + global['name'] + "-item-finder").val(sdata['name'])
-      parseLine(global['name'])
       $("#content").html(data['html'])
+      selectItem(global['name'], global['material'].length - 1)
       $("#material-modal").modal('hide')
     })
   }
 
   function selectItem(name, index) {
+    global['ia']++
     selected = global['material'][index]
     $("#" + name + "-item-finder").val(selected['name'])
-    getLine[name]()
-    checkSelected(name, global['material'][index]['id'])
-    parseLine[name]()
-    // if (global['material'][index]['link']) {
-    //   checkSelected(name, global['material'][index]['link'])
-    // }
-    // parseFormLine(name)
+    insertLine[name](index)
   }
 
   function checkSelected(name, id) {
@@ -445,26 +507,18 @@
   }
 
   function importSubmit() {
-    getFormLine('import')
-    if (!global['selected']['import'].length) {
-      alert_msg('Chưa nhập hàng hóa')
-    }
+    sdata = getLine['import']()
+    if (!sdata.length) alert_msg('Chưa nhập hàng hóa')
     else {
-      $.post(
-        "",
-        { action: 'insert-import', data: global['selected']['import'], filter: checkFilter() },
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            $("#material-content").html(data['html'])
-            $("#content").html(data['html2'])
-            $('#import-modal-insert').modal('hide')
-            global['selected']['import'] = []
-            parseFormLine('import')
-            // do nothing
-            // return inserted item_id
-          }, () => { })
-        }
-      )
+      vhttp.checkelse(
+        '',
+        { action: 'insert-import', data: sdata }
+      ).then(data => {
+        alert_msg('Đã thêm toa nhập')
+        $("#content").html(data['html'])
+        $('#import-modal-insert').modal('hide')
+        $('.import').remove()
+      })
     }
   }
 

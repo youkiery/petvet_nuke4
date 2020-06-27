@@ -21,11 +21,11 @@
       <td> {bound} </td>
       <td> {description} </td>
       <td>
-        <button class="btn btn-info" onclick="editMaterial({id})">
-          <span class="glyphicon glyphicon-edit"></span>
+        <button class="btn btn-info btn-xs" onclick="editMaterial({id})">
+          sửa
         </button>
-        <button class="btn btn-danger" onclick="removeMaterial({id})">
-          <span class="glyphicon glyphicon-remove"></span>
+        <button class="btn btn-danger btn-xs" onclick="removeMaterial({id})">
+          xóa
         </button>
       </td>
     </tr>
