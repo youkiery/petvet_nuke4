@@ -356,10 +356,6 @@ if (!empty($action)) {
         }
       }
       break;
-    case 'filter':
-      $result['status'] = 1;
-      $result['html'] = deviceList();
-      break;
     case 'insert-import':
       $data = $nv_Request->get_array('data', 'post');
 
@@ -396,6 +392,34 @@ if (!empty($action)) {
         $db->query($sql);
       }
       $result['status'] = 1;
+      $result['material'] = json_encode(getMaterialDataList(), JSON_UNESCAPED_UNICODE);
+      $result['html'] = materialList();
+      break;
+    case 'insert-export':
+      $data = $nv_Request->get_array('data', 'post');
+
+      // b1: thêm phiếu xuất
+      // b2: thêm import_detail
+      // b3: cập nhật số lượng detail
+
+      // b1
+      $sql = 'insert into `' . PREFIX . 'material_export` (time) values (' . time() . ')';
+      $db->query($sql);
+      $exportid = $db->lastInsertId();
+
+      foreach ($data as $row) {
+        $row['date'] = totime($row['date']);
+
+        // b2
+        $sql = 'insert into `' . PREFIX . 'material_export_detail` (exportid, detailid, number, note, date) values (' . $exportid . ', ' . $row['id'] . ', ' . $row['number'] . ', "' . $row['note'] . '", ' . $row['date'] . ')';
+        $db->query($sql);
+
+        // b3
+        $sql = 'update `' . PREFIX . 'material_detail` set number = number - ' . $row['number'] . ' where id = ' . $row['id'];
+        $db->query($sql);
+      }
+      $result['status'] = 1;
+      $result['material'] = json_encode(getMaterialDataList(), JSON_UNESCAPED_UNICODE);
       $result['html'] = materialList();
       break;
       // case 'edit-import':
@@ -435,144 +459,111 @@ if (!empty($action)) {
       //     }
       //   }
       // break;
-    case 'remove-import':
-      $id = $nv_Request->get_int('id', 'post', 0);
+    // case 'remove-import':
+    //   $id = $nv_Request->get_int('id', 'post', 0);
 
-      // ktb: lấy số lượng nhập, giảm số lượng kho
-      $query = $db->query('select * from `' . PREFIX . 'import_detail` where import_id = ' . $id);
-      $count = 0;
-      $total = 0;
-      while ($row = $query->fetch()) {
-        if ($db->query('update `' .  PREFIX . 'material` set number = number - ' . $row['number'] . ' where id = ' . $row['item_id'])) {
-          $count++;
-        }
-        $total++;
-      }
+    //   // ktb: lấy số lượng nhập, giảm số lượng kho
+    //   $query = $db->query('select * from `' . PREFIX . 'import_detail` where import_id = ' . $id);
+    //   $count = 0;
+    //   $total = 0;
+    //   while ($row = $query->fetch()) {
+    //     if ($db->query('update `' .  PREFIX . 'material` set number = number - ' . $row['number'] . ' where id = ' . $row['item_id'])) {
+    //       $count++;
+    //     }
+    //     $total++;
+    //   }
 
-      if ($db->query('delete from `' .  PREFIX . 'import` where id = ' . $id)) {
-        $result['status'] = 1;
-        $result['notify'] = 'Đã xóa phiếu nhập';
-        $result['html'] = importList();
-        $result['html2'] = materialList();
-      }
-      break;
-    case 'get-import':
-      $id = $nv_Request->get_int('id', 'post');
+    //   if ($db->query('delete from `' .  PREFIX . 'import` where id = ' . $id)) {
+    //     $result['status'] = 1;
+    //     $result['notify'] = 'Đã xóa phiếu nhập';
+    //     $result['html'] = importList();
+    //     $result['html2'] = materialList();
+    //   }
+    //   break;
+    // case 'get-import':
+    //   $id = $nv_Request->get_int('id', 'post');
 
-      $query = $db->query('select * from `' . PREFIX . 'import_detail` where import_id = ' . $id);
-      $list = array();
-      $item = getMaterialDataList();
-      while ($row = $query->fetch()) {
-        $index = checkItemIndex($item, $row['item_id']);
+    //   $query = $db->query('select * from `' . PREFIX . 'import_detail` where import_id = ' . $id);
+    //   $list = array();
+    //   $item = getMaterialDataList();
+    //   while ($row = $query->fetch()) {
+    //     $index = checkItemIndex($item, $row['item_id']);
 
-        if ($itemData = getItemDatav2($row['item_id'])) {
-          $list[] = array(
-            'index' => $index,
-            'id' => $itemData['id'],
-            'date' => $row['date'] ? date('d/m/Y', $row['date']) : '',
-            'number' => $row['number'],
-            'status' => $itemData['description']
-          );
-        }
-      }
+    //     if ($itemData = getItemDatav2($row['item_id'])) {
+    //       $list[] = array(
+    //         'index' => $index,
+    //         'id' => $itemData['id'],
+    //         'date' => $row['date'] ? date('d/m/Y', $row['date']) : '',
+    //         'number' => $row['number'],
+    //         'status' => $itemData['description']
+    //       );
+    //     }
+    //   }
 
-      $result['status'] = 1;
-      $result['import'] = $list;
-      break;
-    case 'insert-export':
-      $data = $nv_Request->get_array('data', 'post');
+    //   $result['status'] = 1;
+    //   $result['import'] = $list;
+    //   break;
+    // case 'remove-export':
+    //   $id = $nv_Request->get_int('id', 'post', 0);
 
-      if (!($total = count($data))) {
-        $result['notify'] = 'Chưa có hàng hóa nhập';
-      } else {
-        // insert
-        $query = $db->query('insert into `' . PREFIX . 'export` (export_date, note) values(' . time() . ', "")');
-        if ($query) {
-          $count = 0;
-          $id = $db->lastInsertId();
-          // check item, status, expiry
-          foreach ($data as $row) {
-            $row['date'] = totimev2($row['date']);
-            $sql = 'insert into `' . PREFIX . 'export_detail` (export_id, item_id, number, note) values(' . $id . ', ' . $row['id'] . ', ' . $row['number'] . ', "' . $row['status'] . '")';
-            $sql2 = 'update `' . PREFIX . 'material` set number = number - ' . $row['number'] . ' where id = ' . $row['id'];
-            if ($db->query($sql) && $db->query($sql2)) {
-              $count++;
-            }
-          }
-          if ($total > 0) {
-            $result['status'] = 1;
-            $result['html'] = exportList();
-            $result['html2'] = materialList();
-            if ($count == $total) {
-              $result['notify'] = 'Đã lưu phiếu xuất thiết bị';
-            } else {
-              $result['notify'] = "Đã lưu $count/$total";
-            }
-          }
-        }
-      }
-      break;
-    case 'remove-export':
-      $id = $nv_Request->get_int('id', 'post', 0);
+    //   // ktb: lấy số lượng nhập, giảm số lượng kho
+    //   $query = $db->query('select * from `' . PREFIX . 'export_detail` where export_id = ' . $id);
+    //   $count = 0;
+    //   $total = 0;
+    //   while ($row = $query->fetch()) {
+    //     if ($db->query('update `' .  PREFIX . 'material` set number = number + ' . $row['number'] . ' where id = ' . $row['item_id'])) {
+    //       $count++;
+    //     }
+    //     $total++;
+    //   }
 
-      // ktb: lấy số lượng nhập, giảm số lượng kho
-      $query = $db->query('select * from `' . PREFIX . 'export_detail` where export_id = ' . $id);
-      $count = 0;
-      $total = 0;
-      while ($row = $query->fetch()) {
-        if ($db->query('update `' .  PREFIX . 'material` set number = number + ' . $row['number'] . ' where id = ' . $row['item_id'])) {
-          $count++;
-        }
-        $total++;
-      }
+    //   if ($db->query('delete from `' .  PREFIX . 'export` where id = ' . $id)) {
+    //     $result['status'] = 1;
+    //     $result['notify'] = 'Đã xóa phiếu nhập';
+    //     $result['html'] = exportList();
+    //     $result['html2'] = materialList();
+    //   }
+    //   break;
+    // case 'filter-report':
+    //   $result['status'] = 1;
+    //   $result['html'] = reportList();
+    //   break;
+    // case 'report':
+    //   $result['status'] = 1;
+    //   $result['html'] = reportDetail();
+    //   break;
+    // case 'overlow':
+    //   $result['status'] = 1;
+    //   $result['html'] = materialOverlowList();
+    //   break;
+    // case 'expire-filter':
+    //   $limit = $nv_Request->get_int('limit', 'post', 0);
+    //   $result['status'] = 1;
+    //   $result['html'] = expireList($limit);
+    //   break;
+    // case 'expire':
+    //   $id = $nv_Request->get_int('id', 'post', 0);
+    //   $limit = $nv_Request->get_int('limit', 'post', 0);
 
-      if ($db->query('delete from `' .  PREFIX . 'export` where id = ' . $id)) {
-        $result['status'] = 1;
-        $result['notify'] = 'Đã xóa phiếu nhập';
-        $result['html'] = exportList();
-        $result['html2'] = materialList();
-      }
-      break;
-    case 'filter-report':
-      $result['status'] = 1;
-      $result['html'] = reportList();
-      break;
-    case 'report':
-      $result['status'] = 1;
-      $result['html'] = reportDetail();
-      break;
-    case 'overlow':
-      $result['status'] = 1;
-      $result['html'] = materialOverlowList();
-      break;
-    case 'expire-filter':
-      $limit = $nv_Request->get_int('limit', 'post', 0);
-      $result['status'] = 1;
-      $result['html'] = expireList($limit);
-      break;
-    case 'expire':
-      $id = $nv_Request->get_int('id', 'post', 0);
-      $limit = $nv_Request->get_int('limit', 'post', 0);
+    //   $sql = "update `" . PREFIX . "import_detail` set expire = 1 where id = $id";
+    //   if ($db->query($sql)) {
+    //     $result['status'] = 1;
+    //     $result['html'] = expireList($limit);
+    //   }
+    //   break;
+    // case 'insert-type':
+    //   $name = $nv_Request->get_string('name', 'post', '');
 
-      $sql = "update `" . PREFIX . "import_detail` set expire = 1 where id = $id";
-      if ($db->query($sql)) {
-        $result['status'] = 1;
-        $result['html'] = expireList($limit);
-      }
-      break;
-    case 'insert-type':
-      $name = $nv_Request->get_string('name', 'post', '');
-
-      $sql = 'select * from `' . PREFIX . 'material_type` where name = "' . $name . '"';
-      $query = $db->query($sql);
-      if (empty($query->fetch)) {
-        $sql = 'insert into `' . PREFIX . 'material_type` (name) values ("' . $name . '")';
-        $db->query($sql);
-        $result['status'] = 1;
-        $result['id'] = $db->lastInsertId();
-        $result['html'] = typeOptionList();
-      }
-      break;
+    //   $sql = 'select * from `' . PREFIX . 'material_type` where name = "' . $name . '"';
+    //   $query = $db->query($sql);
+    //   if (empty($query->fetch)) {
+    //     $sql = 'insert into `' . PREFIX . 'material_type` (name) values ("' . $name . '")';
+    //     $db->query($sql);
+    //     $result['status'] = 1;
+    //     $result['id'] = $db->lastInsertId();
+    //     $result['html'] = typeOptionList();
+    //   }
+    //   break;
     case 'insert-source':
       $name = $nv_Request->get_string('name', 'post', '');
       $note = $nv_Request->get_string('note', 'post', '');

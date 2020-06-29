@@ -1,27 +1,29 @@
 var vremind = {
-    install: (inputSelector, suggestSelector, excuteFunction, inputDelay = 0, suggestDelay = 0) => {
-        var input = $(inputSelector)
-        var suggest = $(suggestSelector)
-        suggest.hide()
-        var delay = 0
+  install: (inputSelector, suggestSelector, excuteFunction, inputDelay = 0, suggestDelay = 0) => {
+    var input = $(inputSelector)
+    var suggest = $(suggestSelector)
+    suggest.hide()
+    var delay = 0
 
-        $(document).on('keyup', inputSelector, () => {
-            clearTimeout(delay)
-            delay = setTimeout(() => {
-                excuteFunction(input.val()).then((html) => {
-                    suggest.html(html)
-                })
-            }, inputDelay);
+    $(document).on('keyup', inputSelector, () => {
+      clearTimeout(delay)
+      delay = setTimeout(() => {
+        excuteFunction(input.val()).then((html) => {
+          console.log(suggest, html);
+          
+          suggest.html(html)
         })
-        $(document).on('focus', inputSelector, () => {
-            setTimeout(() => {
-                suggest.show()
-            }, suggestDelay);
-        })
-        $(document).on('blur', inputSelector, () => {
-            setTimeout(() => {
-                suggest.hide()
-            }, suggestDelay);
-        })
-    }
+      }, inputDelay);
+    })
+    $(document).on('focus', inputSelector, () => {
+      setTimeout(() => {
+        suggest.show()
+      }, suggestDelay);
+    })
+    $(document).on('blur', inputSelector, () => {
+      setTimeout(() => {
+        suggest.hide()
+      }, suggestDelay);
+    })
+  }
 }

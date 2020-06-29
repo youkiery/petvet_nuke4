@@ -354,13 +354,14 @@ function getMaterialDataList() {
   $query = $db->query($sql);
   // insert link
   while ($row = $query->fetch()) {
-    $sql = 'select * from `'. PREFIX .'material_detail` where materialid = '. $row['id'];
+    $sql = 'select * from `'. PREFIX .'material_detail` where number > 0 and materialid = '. $row['id'];
     $detail_query = $db->query($sql);
     $detail_list = array();
 
     while ($detail = $detail_query->fetch()) {
       $detail_list []= $detail;
     }
+    // var_dump($detail_list);die();
     $row['detail'] = $detail_list;
     $row['alias'] = simplize($row['name']);
     $list []= $row;

@@ -120,49 +120,30 @@
     },
     'export': (index) => {
       global['ia']++
-      $(`
-        <tbody class="export" index="`+ index + `" ia="` + global['ia'] + `">
-          <tr>
-            <td>
-              `+ global['material'][index]['name'] + `
-            </td>
-            <td>
-              <div class="input-group">
-                <select class="form-control" id="import-type-`+ global['ia'] + `">
-                  `+ global['type_option'] + `
-                </select>
-                <div class="input-group-btn">
-                  <button class="btn btn-success" onclick="insertType('import', `+ global['ia'] + `)">
-                    <span class="glyphicon glyphicon-plus"></span>
-                  </button>
-                </div>
-              </div>
-            </td>
-            <td> <input class="form-control date" id="import-date-`+ global['ia'] + `" value="` + global['today'] + `"> </td>
-            <td> 
-              <div class="input-group">
-                <select class="form-control" id="import-source-`+ global['ia'] + `">
-                  `+ global['source_option'] + `
-                </select>
-                <div class="input-group-btn">
-                  <button class="btn btn-success" onclick="insertSource('import', `+ global['ia'] + `)">
-                    <span class="glyphicon glyphicon-plus"></span>
-                  </button>
-                </div>
-              </div>
-            </td>
-            <td> <input class="form-control" id="import-number-`+ global['ia'] + `" value="0"> </td>
-            <td> <input class="form-control date" id="import-expire-`+ global['ia'] + `" value="` + global['today'] + `"> </td>
-            <td> <input class="form-control" id="import-note-`+ global['ia'] + `"> </td>
-          </tr>
-        </tbody>
-      `).insertAfter('#export-insert-modal-content')
-      $(".date").datepicker({
-        format: 'dd/mm/yyyy',
-        changeMonth: true,
-        changeYear: true
+      console.log(global['material'][index]);
+      
+      global['material'][index]['detail'].forEach((detail) => {
+        $(`
+          <tbody class="export" index="`+ detail['id'] + `" ia="` + global['ia'] + `">
+            <tr>
+              <td>
+                `+ global['material'][index]['name'] + `
+              </td>
+              <td> <input class="form-control date-`+ global['ia'] + `" id="export-date-`+ global['ia'] + `" value="` + global['today'] + `"> </td>
+              <td> `+ global['source'][detail['source']]['name'] +` </td>
+              <td> <input class="form-control" id="export-number-`+ global['ia'] + `" value="`+ detail['number'] +`"> </td>
+              <td> `+ parseTime(detail['expire']) +` </td>
+              <td> <input class="form-control" id="export-note-`+ global['ia'] + `"> </td>
+            </tr>
+          </tbody>
+        `).insertAfter('#export-insert-modal-content')
+        $(".date-" + global['ia']).datepicker({
+          format: 'dd/mm/yyyy',
+          changeMonth: true,
+          changeYear: true
+        });
       });
-    },
+    }
   }
 
   var getLine = {
@@ -172,7 +153,7 @@
       $(".import").each((index, item) => {
         ia = trim(item.getAttribute('ia'))
         temp = {
-          id: $('#import-type-val-' + ia).val(),
+          id: global['material'][$('#import-type-val-' + ia).val()]['id'],
           date: $('#import-date-' + ia).val(),
           source: $('#import-source-val-' + ia).val(),
           number: $('#import-number-' + ia).val(),
@@ -189,18 +170,22 @@
     },
     'export': () => {
       data = []
-      $("." + name).each((index, item) => {
-        indexX = trim(item.getAttribute('index'))
-        // indexX = trim(item.getAttribute('id').replace('import-index-', ''))
-        data.push({
-          index: indexX,
-          id: global['material'][indexX]['id'],
-          date: $("#" + name + "-date-" + index).val(),
-          number: $("#" + name + "-number-" + index).val(),
-          status: $("#" + name + "-status-" + index).val()
-        })
+      msg = ''
+      $(".export").each((index, item) => {
+        ia = trim(item.getAttribute('ia'))
+        id = trim(item.getAttribute('index'))
+        temp = {
+          id: id,
+          date: $("#export-date-" + ia).val(),
+          number: $("#export-number-" + ia).val(),
+          note: $("#export-note-" + ia).val()
+        }
+        if (temp['number'] < 0) return msg = 'Số lượng đang âm'
+        data.push(temp)
       })
-      global['selected']['export'] = data
+      if (msg.length) return msg
+      if (!data.length) return 'Chưa nhập mục nào'
+      return data
     }
   }
 
@@ -216,6 +201,24 @@
             <div class="suggest-item" onclick="selectItem('`+ name + `', ` + index + `, ` + ia + `)">
               `+ item['name'] + `
             </div>`
+      }
+    })
+    if (!html.length) return 'Không có kết quả'
+    return html
+  }
+
+  function searchAvaiableMaterial(keyword, name) {
+    keyword = convert(keyword)
+    html = ''
+    count = 0
+
+    global['material'].forEach((item, index) => {
+      if (count < 30 && item['alias'].search(keyword) >= 0 && item['detail'].length > 0) {
+        count++
+        html += `
+          <div class="suggest-item" onclick="insertLine.export(` + index + `)">
+            `+ item['name'] + `
+          </div>`
       }
     })
     if (!html.length) return 'Không có kết quả'
@@ -243,7 +246,7 @@
   $(document).ready(() => {
     vremind.install('#export-item-finder', '#export-item-finder-suggest', (input => {
       return new Promise(resolve => {
-        resolve(searchMaterial(input, 'export'))
+        resolve(searchAvaiableMaterial(input, 'export'))
       })
     }), 300, 300)
     $(".date").datepicker({
@@ -273,66 +276,17 @@
     global['ia'] = 0
     $("#import-modal-insert").modal('show')
   }
+
   function exportModal() {
+    global['ia'] = 0
     $("#export-button").show()
     $("#edit-export-button").hide()
+    $("#export-insert-modal-content").html('')
     $("#export-modal-insert").modal('show')
   }
   // function exportModal() {
   //   $("#export-modal").modal('show')
   // }
-
-  function filter() {
-    $("#filter-modal").modal('show')
-  }
-
-  function checkFilterReport() {
-    return {
-      page: global['page']['report'],
-      limit: 10,
-      keyword: $("#filter-keyword").val(),
-      start: $("#filter-start").val(),
-      end: $("#filter-end").val()
-    }
-  }
-
-  function report(id) {
-    $.post(
-      "",
-      { action: 'report', id: id, filter: checkFilterReport() },
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          $("#report-content").html(data['html'])
-          $("#report-modal").modal('show')
-        })
-      }
-    )
-  }
-
-  function reportExcel(id) {
-    $.post(
-      "",
-      { action: 'report-excel', id: id, filter: checkFilterReport() },
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          window.open('/assets/excel-material.xlsx?t=' + new Date())
-        })
-      }
-    )
-  }
-
-  function goReportPage(page) {
-    global['page']['report'] = page
-    $.post(
-      "",
-      { action: 'filter-report', filter: checkFilterReport() },
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          $("#filter-content").html(data['html'])
-        })
-      }
-    )
-  }
 
   function checkMaterialData() {
     name = $("#material-name").val()
@@ -346,41 +300,6 @@
       unit: unit,
       description: description
     }
-  }
-
-  function checkFilter() {
-    return {
-      page: global['page']['main'],
-      limit: $("#filter-limit").val()
-    }
-  }
-
-  function goPage(page) {
-    $.post(
-      "",
-      { action: 'insert-material', filter: checkFilter() },
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          $("#content").html(data['html'])
-        })
-      }
-    )
-  }
-
-  function insertType(name, index) {
-    global['name'] = name
-    global['index'] = index
-    $('#type-name').val('')
-    $('#type-modal').modal('show')
-  }
-
-  function insertTypeSubmit() {
-    vhttp.checkelse('', { action: 'insert-type', name: $('#type-name').val() }).then(data => {
-      global['type_option'] = data['html']
-      $('#' + global['name'] + '-type-' + global['index']).html(global['type_option'])
-      $('#' + global['name'] + '-type-' + global['index']).val(data['id'])
-      $('#type-modal').modal('hide')
-    })
   }
 
   function insertSource(name, index) {
@@ -424,102 +343,33 @@
     $("#" + name + "-source-" + ia).val(selected['name'])
   }
 
-  function checkSelected(name, id) {
-    checker = false
-    checker2 = false
-    // tìm index của id trong global.material
-    // tìm trong danh sách selected có chứa item có index trên không
-    // nếu có, đưa lên đầu
-    // nếu không, thêm mới
-    global['material'].forEach((item, index) => {
-      if (item['id'] == id) {
-        checker = index
-      }
-    });
-
-    global['selected'][name].forEach((item, index) => {
-      if (item['index'] == checker) {
-        checker2 = true
-        // đẩy item về đầu
-        for (let i = index; i > 0; i--) {
-          swapItem(name, i, i - 1)
-        }
-        global['selected'][0] = item
-      }
-    })
-
-    if (!checker2) {
-      // chưa swap, chỉ cần thêm mới
-      global['selected'][name].push({
-        index: checker,
-        id: global['material'][checker]['id'],
-        type: 0,
-        date: global['today'],
-        source: 0,
-        number: 0,
-        expire: global['today'],
-        note: ''
-      })
-      // đẩy item về đầu
-      for (let i = global['selected'][name].length - 1; i > 0; i--) {
-        swapItem(name, i, i - 1)
-      }
-    }
-  }
-
-  function expireSubmit(id) {
-    $.post(
-      '', { action: 'expire', id: id, limit: $("#expire-limit").val() },
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          $("#expire-content").html(data['html'])
-        })
-      }
-    )
-  }
-
-  function expireFilter() {
-    $.post(
-      '', { action: 'expire-filter', limit: $("#expire-limit").val() },
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          $("#expire-content").html(data['html'])
-        })
-      }
-    )
-  }
-
   function exportSubmit() {
-    getFormLine('export')
-    if (!global['selected']['export'].length) {
-      alert_msg('Chưa nhập hàng hóa')
-    }
+    sdata = getLine['export']()
+    if (typeof (sdata) !== 'object') alert_msg(sdata)
     else {
-      $.post(
-        "",
-        { action: 'insert-export', data: global['selected']['export'], filter: checkFilter() },
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            $("#export-content").html(data['html'])
-            $("#content").html(data['html2'])
-            $('#export-modal-insert').modal('hide')
-            global['selected']['export'] = []
-            parseFormLine('export')
-          }, () => { })
-        }
-      )
+      vhttp.checkelse(
+        '',
+        { action: 'insert-export', data: sdata }
+      ).then(data => {
+        alert_msg('Đã thêm toa xuất')
+        global['material'] = data['material']
+        $("#content").html(data['html'])
+        $('#export-modal-insert').modal('hide')
+        $('.export').remove()
+      })
     }
   }
 
   function importSubmit() {
     sdata = getLine['import']()
-    if (typeof(sdata) !== 'object') alert_msg(sdata)
+    if (typeof (sdata) !== 'object') alert_msg(sdata)
     else {
       vhttp.checkelse(
         '',
         { action: 'insert-import', data: sdata }
       ).then(data => {
         alert_msg('Đã thêm toa nhập')
+        global['material'] = data['material']
         $("#content").html(data['html'])
         $('#import-modal-insert').modal('hide')
         $('.import').remove()
@@ -527,96 +377,12 @@
     }
   }
 
-  function importRemoveSubmit() {
-    $.post(
-      "",
-      { action: 'remove-import', id: global['id'], filter: checkFilter() },
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          $("#material-content").html(data['html'])
-          $("#content").html(data['html2'])
-          $('#import-modal-remove').modal('hide')
-          // do nothing
-          // return inserted item_id
-        }, () => { })
-      }
-    )
-  }
-
-  function importRemove(id) {
-    global['id'] = id
-    $('#import-modal-remove').modal('show')
-  }
-
-  function exportRemove(id) {
-    global['id'] = id
-    $('#export-modal-remove').modal('show')
-  }
-
-  function exportRemoveSubmit() {
-    $.post(
-      "",
-      { action: 'remove-export', id: global['id'], filter: checkFilter() },
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          $("#export-content").html(data['html'])
-          $("#content").html(data['html2'])
-          $('#export-modal-remove').modal('hide')
-          // do nothing
-          // return inserted item_id
-        }, () => { })
-      }
-    )
-  }
-
-  function editImportSubmit() {
-    getFormLine('import')
-    if (!global['selected']['import'].length) {
-      alert_msg('Chưa nhập hàng hóa')
-    }
-    else {
-      $.post(
-        "",
-        { action: 'edit-import', data: global['selected']['import'] },
-        (response, status) => {
-          checkResult(response, status).then(data => {
-            $("#import-modal-content").html(data['html'])
-            $('#import-insert-modal').modal('hide')
-            // do nothing
-            // return inserted item_id
-          }, () => { })
-        }
-      )
-    }
-  }
-
-  function checkImport(id) {
-    $.post(
-      "",
-      { action: 'get-import', id: id },
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          global['import_id'] = id
-          global['selected']['import'] = data['import']
-          parseFormLine('import')
-          $("#import-button").hide()
-          $("#edit-import-button").show()
-          $('#import-modal-insert').modal('show')
-        }, () => { })
-      }
-    )
-  }
-
-  function overlowFilter() {
-    $.post(
-      "",
-      { action: 'overlow' },
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          $("#overlow-content").html(data['html'])
-        }, () => { })
-      }
-    )
+  function parseTime(time) {
+    datetime = new Date(time * 1000)
+    var date = datetime.getDate()
+    var month = datetime.getMonth() + 1
+    var year = datetime.getFullYear()
+    return (date < 10 ? '0' : '') + date + '/' + (month < 10 ? '0' : '') + month + '/' + year
   }
 </script>
 <!-- END: main -->
