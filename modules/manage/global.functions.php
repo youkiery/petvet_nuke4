@@ -349,24 +349,23 @@ function checkMaterialName($name, $id = 0) {
 function getMaterialDataList() {
   global $db;
 
-  $link = array();
-
-  $sql = 'select * from `'. PREFIX .'material_link`';
-  $query = $db->query($sql);
-  while ($row = $query->fetch()) {
-    $link[$row['link_id']]= $row['item_id'];
-    $link[$row['item_id']]= $row['link_id'];
-  }
-
   $list = array();
-  $query = $db->query('select * from `'. PREFIX .'material`');
+  $sql = 'select * from `'. PREFIX .'material`';
+  $query = $db->query($sql);
   // insert link
   while ($row = $query->fetch()) {
-    if (!empty($link[$row['id']])) $row['link'] = $link[$row['id']];
-    else $row['link'] = '';
+    $sql = 'select * from `'. PREFIX .'material_detail` where materialid = '. $row['id'];
+    $detail_query = $db->query($sql);
+    $detail_list = array();
+
+    while ($detail = $detail_query->fetch()) {
+      $detail_list []= $detail;
+    }
+    $row['detail'] = $detail_list;
     $row['alias'] = simplize($row['name']);
     $list []= $row;
   }
+  // var_dump($list);die();
   return $list;
 }
 
@@ -382,7 +381,7 @@ function checkItem($id) {
 }
 
 function deviceParseExcel($depart) {
-  global $db, $objPHPExcel, $i, $j, $xco, $title;
+  global $db, $objPHPExcel, $i, $j, $xco, $titles;
   $device_query = $db->query('select * from `'. PREFIX .'device` where depart like \'%"'. $depart['id'] .'"%\' limit 1');
   if ($device_query->fetch()) {
     $device_query = $db->query('select * from `'. PREFIX .'device` where depart like \'%"'. $depart['id'] .'"%\'');
@@ -392,7 +391,7 @@ function deviceParseExcel($depart) {
     ->setCellValue($xco['0'] . $i, 'DANH MUC TÀI SẢN KIỂM KÊ PHÒNG '. $depart['name'] .' NĂM ' . date('Y', time()));
     $i += 2;
 
-    foreach ($title as $value) {
+    foreach ($titles as $value) {
       $objPHPExcel
       ->setActiveSheetIndex(0)
       ->setCellValue($xco[$j++] . $i, $value);

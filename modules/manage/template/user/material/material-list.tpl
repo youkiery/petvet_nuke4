@@ -4,7 +4,6 @@
     <tr>
       <th> STT </th>
       <th> Tên mục hàng </th>
-      <th> Loại </th>
       <th> Số lượng </th>
       <th> Mô tả </th>
       <th>  </th>
@@ -15,7 +14,6 @@
     <tr>
       <td> {index} </td>
       <td> {name} {unit} </td>
-      <td> {type} </td>
       <td> {number} </td>
       <td> {description} </td>
       <td>  </td>

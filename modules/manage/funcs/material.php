@@ -345,14 +345,14 @@ if (!empty($action)) {
         $result['notify'] = 'Trùng tên vật tư';
       } else {
         // insert
-        $sql = 'insert into `' . PREFIX . 'material` (name, type, number, unit, description) values("' . $data['name'] . '", "' . $data['type'] . '", "' . $data['number'] . '", "' . $data['unit'] . '", "' . $data['description'] . '")';
+        $sql = 'insert into `' . PREFIX . 'material` (name, unit, description) values("' . $data['name'] . '", "' . $data['unit'] . '", "' . $data['description'] . '")';
         // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;
           $result['notify'] = 'Đã thêm';
           $result['html'] = materialList();
           $result['id'] = $db->lastInsertId();
-          $result['json'] = array('id' => $db->lastInsertId(), 'name' => $data['name'], 'type' => $data['type'], 'unit' => $data['unit'], 'description' => $data['description']);
+          $result['json'] = array('id' => $db->lastInsertId(), 'name' => $data['name'], 'unit' => $data['unit'], 'description' => $data['description']);
         }
       }
       break;
@@ -364,10 +364,10 @@ if (!empty($action)) {
       $data = $nv_Request->get_array('data', 'post');
 
       // b1: thêm vào import
-      // b2: kiểm tra từng item, type, source, expire từ detail
+      // b2: kiểm tra từng item, source, expire từ detail
       // b3: nếu không tồn tại, thêm vào detail
-      // b4: lấy importid, detailid thêm vào import detail
-      // b5: cập nhật material
+      // b4: nếu tồn tại, cập nhật số lượng
+      // b5: lấy importid, detailid thêm vào import detail
 
       // b1
       $sql = 'insert into `' . PREFIX . 'material_import` (time) values(' . time() . ')';
@@ -378,21 +378,23 @@ if (!empty($action)) {
       foreach ($data as $row) {
         $row['date'] = totime($row['date']);
         $row['expire'] = totime($row['expire']);
-        $sql = 'select * from `' . PREFIX . 'material_detail` where materialid = ' . $row['id'] . ' and type = ' . $row['type'] . ' and source = ' . $row['source'] . ' and expire = ' . $row['expire'];
+        $sql = 'select * from `' . PREFIX . 'material_detail` where materialid = ' . $row['id'] . ' and source = ' . $row['source'] . ' and expire = ' . $row['expire'];
+        die($sql);
         $query = $db->query($sql);
         if (empty($detail = $query->fetch())) {
           // b3
-          $sql = 'insert into `' . PREFIX . 'material_detail` (materialid, expire, number, type, source) values(' . $row['id'] . ', ' . $row['expire'] . ', ' . $row['number'] . ', ' . $row['type'] . ', ' . $row['source'] . ')';
+          $sql = 'insert into `' . PREFIX . 'material_detail` (materialid, expire, number, source) values(' . $row['id'] . ', ' . $row['expire'] . ', ' . $row['number'] . ', ' . $row['source'] . ')';
           $db->query($sql);
           $detail = array('id' => $db->lastInsertId());
+        } else {
+          // b4
+          $sql = 'update `' . PREFIX . 'material_detail` set number = number + ' . $row['number'] . ' where id = ' . $detail['id'];
+          $db->query($sql);
         }
 
-        // b4
+        // b5
         $sql = 'insert into `' . PREFIX . 'material_import_detail` (importid, detailid, number, note, expire, date) values (' . $importid . ', ' . $detail['id'] . ', ' . $row['number'] . ', "' . $row['note'] . '", ' . $row['expire'] . ', ' . $row['date'] . ')';
         $db->query($sql);
-
-        // b5
-        $sql2 = 'update `' . PREFIX . 'material` set number = number + ' . $row['number'] . ' where id = ' . $row['id'];
       }
       $result['status'] = 1;
       $result['html'] = materialList();
@@ -594,8 +596,7 @@ $xtpl = new XTemplate("main.tpl", PATH);
 // die();
 $xtpl->assign('today', date('d/m/Y', time()));
 $xtpl->assign('material', json_encode(getMaterialDataList(), JSON_UNESCAPED_UNICODE));
-$xtpl->assign('type', typeOptionList());
-$xtpl->assign('source', sourceOptionList());
+$xtpl->assign('source', json_encode(sourceDataList()));
 $xtpl->assign('modal', materialModal());
 $xtpl->assign('content', materialList());
 

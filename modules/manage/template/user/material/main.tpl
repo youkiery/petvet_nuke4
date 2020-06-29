@@ -59,13 +59,69 @@
     'index': 0,
     'name': '',
     'today': '{today}',
-    'type': '{type}',
-    'source': '{source}'
+    'source': JSON.parse('{source}')
   }
   var insertLine = {
-    'import': (index) => {
+    'import': () => {
+      global['ia']++
       $(`
-        <tbody class="import" index="`+ index + `" ia="` + global['ia'] + `">
+        <tbody class="import" ia="` + global['ia'] + `">
+          <tr>
+            <td>
+              <div class="relative">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="import-type-`+ global['ia'] + `">
+                  <input type="hidden" class="form-control" id="import-type-val-`+ global['ia'] + `">
+                  <div class="input-group-btn">
+                    <button class="btn btn-success" onclick="materialModal('import', `+ global['ia'] + `)">
+                      <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                  </div>
+                </div>
+                <div class="suggest" id="import-type-suggest-`+ global['ia'] + `"></div>
+              </div>
+            </td>
+            <td> <input class="form-control date-`+ global['ia'] + `" id="import-date-` + global['ia'] + `" value="` + global['today'] + `"> </td>
+            <td> 
+              <div class="relative">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="import-source-`+ global['ia'] + `">
+                  <input type="hidden" class="form-control" id="import-source-val-`+ global['ia'] + `">
+                  <div class="input-group-btn">
+                    <button class="btn btn-success" onclick="insertSource('import', `+ global['ia'] + `)">
+                      <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                  </div>
+                </div>
+                <div class="suggest" id="import-source-suggest-`+ global['ia'] + `"></div>
+              </div>
+            </td>
+            <td> <input class="form-control" id="import-number-`+ global['ia'] + `" value="0"> </td>
+            <td> <input class="form-control date-`+ global['ia'] + `" id="import-expire-` + global['ia'] + `" value="` + global['today'] + `"> </td>
+            <td> <input class="form-control" id="import-note-`+ global['ia'] + `"> </td>
+          </tr>
+        </tbody>
+      `).insertAfter('#import-insert-modal-content')
+      vremind.install('#import-type-' + global['ia'], '#import-type-suggest-' + global['ia'], (input => {
+        return new Promise(resolve => {
+          resolve(searchMaterial(input, 'import', global['ia']))
+        })
+      }), 300, 300)
+      vremind.install('#import-source-' + global['ia'], '#import-source-suggest-' + global['ia'], (input => {
+        return new Promise(resolve => {
+          resolve(searchSource(input, 'import', global['ia']))
+        })
+      }), 300, 300)
+      $(".date-" + global['ia']).datepicker({
+        format: 'dd/mm/yyyy',
+        changeMonth: true,
+        changeYear: true
+      });
+    },
+    'export': (index) => {
+      global['ia']++
+      $(`
+        <tbody class="export" index="`+ index + `" ia="` + global['ia'] + `">
           <tr>
             <td>
               `+ global['material'][index]['name'] + `
@@ -73,7 +129,7 @@
             <td>
               <div class="input-group">
                 <select class="form-control" id="import-type-`+ global['ia'] + `">
-                  `+ global['type'] + `
+                  `+ global['type_option'] + `
                 </select>
                 <div class="input-group-btn">
                   <button class="btn btn-success" onclick="insertType('import', `+ global['ia'] + `)">
@@ -86,7 +142,7 @@
             <td> 
               <div class="input-group">
                 <select class="form-control" id="import-source-`+ global['ia'] + `">
-                  `+ global['source'] + `
+                  `+ global['source_option'] + `
                 </select>
                 <div class="input-group-btn">
                   <button class="btn btn-success" onclick="insertSource('import', `+ global['ia'] + `)">
@@ -100,35 +156,35 @@
             <td> <input class="form-control" id="import-note-`+ global['ia'] + `"> </td>
           </tr>
         </tbody>
-      `).insertAfter('#import-insert-modal-content')
+      `).insertAfter('#export-insert-modal-content')
       $(".date").datepicker({
         format: 'dd/mm/yyyy',
         changeMonth: true,
         changeYear: true
       });
     },
-    'export': (index) => {
-
-    },
   }
 
   var getLine = {
     'import': () => {
       data = []
+      msg = ''
       $(".import").each((index, item) => {
         ia = trim(item.getAttribute('ia'))
-        indexX = trim(item.getAttribute('index'))
-        data.push({
-          index: indexX,
-          id: global['material'][indexX]['id'],
-          type: $('#import-type-' + ia).val(),
+        temp = {
+          id: $('#import-type-val-' + ia).val(),
           date: $('#import-date-' + ia).val(),
-          source: $('#import-source-' + ia).val(),
+          source: $('#import-source-val-' + ia).val(),
           number: $('#import-number-' + ia).val(),
           expire: $('#import-expire-' + ia).val(),
           note: $('#import-note-' + ia).val()
-        })
+        }
+        if (!temp['id']) return msg = 'Chưa chọn hóa chất'
+        if (!temp['source']) return msg = 'Chưa chọn nguồn cung'
+        data.push(temp)
       })
+      if (msg.length) return msg
+      if (!data.length) return 'Chưa nhập mục nào'
       return data
     },
     'export': () => {
@@ -148,7 +204,7 @@
     }
   }
 
-  function searchMaterial(keyword, name) {
+  function searchMaterial(keyword, name, ia) {
     keyword = convert(keyword)
     html = ''
     count = 0
@@ -157,7 +213,7 @@
       if (count < 30 && item['alias'].search(keyword) >= 0) {
         count++
         html += `
-            <div class="suggest-item" onclick="selectItem('`+ name + `', ` + index + `)">
+            <div class="suggest-item" onclick="selectItem('`+ name + `', ` + index + `, ` + ia + `)">
               `+ item['name'] + `
             </div>`
       }
@@ -166,12 +222,25 @@
     return html
   }
 
+  function searchSource(keyword, name, ia) {
+    keyword = convert(keyword)
+    html = ''
+    count = 0
+
+    global['source'].forEach((item, index) => {
+      if (count < 30 && item['alias'].search(keyword) >= 0) {
+        count++
+        html += `
+          <div class="suggest-item" onclick="selectSource('`+ name + `', ` + index + `, ` + ia + `)">
+            `+ item['name'] + `
+          </div>`
+      }
+    })
+    if (!html.length) return 'Không có kết quả'
+    return html
+  }
+
   $(document).ready(() => {
-    vremind.install('#import-item-finder', '#import-item-finder-suggest', (input => {
-      return new Promise(resolve => {
-        resolve(searchMaterial(input, 'import'))
-      })
-    }), 300, 300)
     vremind.install('#export-item-finder', '#export-item-finder-suggest', (input => {
       return new Promise(resolve => {
         resolve(searchMaterial(input, 'export'))
@@ -184,8 +253,13 @@
     });
   })
 
-  function materialModal(name) {
+  function materialModal(name, ia) {
     global['name'] = name
+    global['ia'] = ia
+    $("#material-name").val('')
+    $("#material-unit").val('')
+    $("#material-number").val('')
+    $("#material-description").val('')
     $("#material-modal").modal('show')
   }
   // function importModal() {
@@ -262,20 +336,14 @@
 
   function checkMaterialData() {
     name = $("#material-name").val()
-    number = $("#material-number").val()
     unit = $("#material-unit").val()
-    type = $("[name=type]")[1].checked
-    type = (type ? 1 : 0)
     description = $("#material-description").val()
 
     if (!name.length) alert_msg('Nhập tên trước khi thêm')
-    if (!number.length) number = 0
 
     return {
       name: name,
-      number: number,
       unit: unit,
-      type: type,
       description: description
     }
   }
@@ -308,8 +376,8 @@
 
   function insertTypeSubmit() {
     vhttp.checkelse('', { action: 'insert-type', name: $('#type-name').val() }).then(data => {
-      global['type'] = data['html']
-      $('#' + global['name'] + '-type-' + global['index']).html(global['type'])
+      global['type_option'] = data['html']
+      $('#' + global['name'] + '-type-' + global['index']).html(global['type_option'])
       $('#' + global['name'] + '-type-' + global['index']).val(data['id'])
       $('#type-modal').modal('hide')
     })
@@ -324,9 +392,9 @@
 
   function insertSourceSubmit() {
     vhttp.checkelse('', { action: 'insert-source', name: $('#source-name').val() }).then(data => {
-      global['source'] = data['html']
-      $('#' + global['name'] + '-source-' + global['index']).html(global['source'])
-      $('#' + global['name'] + '-source-' + global['index']).val(data['id'])
+      global['source_option'] = data['html']
+      $('#' + global['name'] + '-source-' + global['index']).val($('#source-name').val())
+      $('#' + global['name'] + '-source-val-' + global['index']).val(data['id'])
       $('#source-modal').modal('hide')
     })
   }
@@ -335,21 +403,24 @@
     sdata = checkMaterialData()
     vhttp.checkelse('', { action: 'insert-material', data: sdata, filter: checkFilter() }).then(data => {
       global['material'].push(data['json'])
-      $("#material-name").val('')
-      $("#material-unit").val('')
-      $("#material-number").val('')
-      $("#material-description").val('')
+      selected = global['material'][global['material'].length - 1]
+      $("#" + global['name'] + "-type-val-" + global['ia']).val(selected['id'])
+      $("#" + global['name'] + "-type-" + global['ia']).val(selected['name'])
       $("#content").html(data['html'])
-      selectItem(global['name'], global['material'].length - 1)
       $("#material-modal").modal('hide')
     })
   }
 
-  function selectItem(name, index) {
-    global['ia']++
+  function selectItem(name, index, ia) {
     selected = global['material'][index]
-    $("#" + name + "-item-finder").val(selected['name'])
-    insertLine[name](index)
+    $("#" + name + "-type-val-" + ia).val(selected['id'])
+    $("#" + name + "-type-" + ia).val(selected['name'])
+  }
+
+  function selectSource(name, index, ia) {
+    selected = global['source'][index]
+    $("#" + name + "-source-val-" + ia).val(selected['id'])
+    $("#" + name + "-source-" + ia).val(selected['name'])
   }
 
   function checkSelected(name, id) {
@@ -417,73 +488,6 @@
     )
   }
 
-  function swapItem(name, a, b) {
-    temp = global['selected'][name][a]
-    global['selected'][name][a] = global['selected'][name][b]
-    global['selected'][name][b] = temp
-  }
-
-  function parseFormLine(name) {
-    var html = ''
-    global['selected'][name].forEach((item, index) => {
-      html += `
-        <tbody class="`+ name + `" id="` + name + `-index-` + index + `" index="` + item['index'] + `">
-          <tr>
-            <td>
-              `+ (index + 1) + `
-            </td>
-            <td>
-              `+ (global['material'][item['index']]['name']) + `
-            </td>
-            <td>
-              <input class="form-control date" id="`+ name + `-date-` + index + `" value="` + (item['date']) + `">
-            </td>
-            <td>
-              <input class="form-control" id="`+ name + `-number-` + index + `" value="` + (item['number']) + `">
-            </td>
-            <td>
-              <input class="form-control" id="`+ name + `-status-` + index + `" value="` + (item['status']) + `">
-            </td>
-            <td>
-              <button class="btn btn-danger" onclick="removeFormLine('`+ name + `', ` + index + `)">
-                <span class="glyphicon glyphicon-remove"> <span>
-              </button>
-            </td>
-          </tr>
-        </tbody>`
-    })
-    $("#" + name + "-insert-modal-content").html(html)
-    $(".date").datepicker({
-      format: 'dd/mm/yyyy',
-      changeMonth: true,
-      changeYear: true
-    });
-  }
-
-  function getFormLine(name) {
-    data = []
-    $("." + name).each((index, item) => {
-      indexX = trim(item.getAttribute('index'))
-      // indexX = trim(item.getAttribute('id').replace('import-index-', ''))
-      data.push({
-        index: indexX,
-        id: global['material'][indexX]['id'],
-        date: $("#" + name + "-date-" + index).val(),
-        number: $("#" + name + "-number-" + index).val(),
-        status: $("#" + name + "-status-" + index).val()
-      })
-    })
-    global['selected'][name] = data
-  }
-
-  function removeFormLine(name, index) {
-    getFormLine(name)
-    global['selected'][name] = global['selected'][name].filter((item, itemIndex) => {
-      return itemIndex !== index
-    })
-    parseFormLine(name)
-  }
-
   function exportSubmit() {
     getFormLine('export')
     if (!global['selected']['export'].length) {
@@ -508,7 +512,7 @@
 
   function importSubmit() {
     sdata = getLine['import']()
-    if (!sdata.length) alert_msg('Chưa nhập hàng hóa')
+    if (typeof(sdata) !== 'object') alert_msg(sdata)
     else {
       vhttp.checkelse(
         '',

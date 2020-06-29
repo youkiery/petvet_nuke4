@@ -303,7 +303,7 @@ function checkMember() {
 }
 
 function materialList() {
-  global $db, $op, $module_file, $nv_Request;
+  global $db, $nv_Request;
 
   $filter = $nv_Request->get_array('filter', 'post');
   if (empty($filter['page'])) $filter['page'] = 1;
@@ -321,12 +321,16 @@ function materialList() {
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
 
   while($row = $query->fetch()) {
-    // echo json_encode($row);
-    // echo '<br>';
+    $number = 0;
+    $sql = 'select * from `'. PREFIX .'material_detail` where materialid = '. $row['id'];
+    $detail_query = $db->query($sql);
+    while ($detail = $detail_query->fetch()) {
+      $number += $detail['number'];
+    }
+
     $xtpl->assign('index', $index++);
-    $xtpl->assign('type', $type_list[intval(boolval($row['type']))]);
     $xtpl->assign('name', $row['name']);
-    $xtpl->assign('number', $row['number']);
+    $xtpl->assign('number', $number);
     $xtpl->assign('description', $row['description']);
     if ($row['unit']) $xtpl->assign('unit', "($row[unit])");
     else $xtpl->assign('unit', '');
@@ -474,4 +478,21 @@ function sourceOptionList() {
     $html .= '<option value="'. $row['id'] .'">' . $row['name'] . '</option>';
   }
   return $html;
+}
+
+function sourceDataList() {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'material_source` order by name';
+  $query = $db->query($sql);
+  $list = array();
+
+  while ($row = $query->fetch()) {
+    $list[] = array(
+      'id' => $row['id'],
+      'name' => $row['name'],
+      'alias' => simplize($row['name'])
+    );
+  }
+  return $list;
 }

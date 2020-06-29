@@ -81,7 +81,6 @@
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
         <div class="form-horizontal">
-
           <div class="form-group">
             <label class="control-label col-sm-6"> Tên mục hàng </label>
             <div class="col-sm-18">
@@ -89,20 +88,9 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-6"> Số lượng </label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" id="material-number">
-            </div>
             <label class="control-label col-sm-6"> Đơn vị </label>
             <div class="col-sm-6">
               <input type="text" class="form-control" id="material-unit">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="control-label col-sm-6"> Loại </label>
-            <div class="col-sm-18">
-              <label> <input name="type" type="radio" checked> Vật tư </label>
-              <label> <input name="type" type="radio"> Hóa chất </label>
             </div>
           </div>
           <div class="form-group">
@@ -182,23 +170,11 @@
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
 
-        <div class="relative">
-          <div class="input-group">
-            <input type="text" class="form-control" id="import-item-finder">
-            <div class="input-group-btn">
-              <button class="btn btn-success" onclick="materialModal('import')">
-                <span class="glyphicon glyphicon-plus"></span>
-              </button>
-            </div>
-          </div>
-          <div id="import-item-finder-suggest" class="suggest"></div>
-        </div>
-        <div style="margin-top: 10px;">
+        <div class="form-group">
           <table class="table table-bordered">
             <thead>
               <tr>
                 <th class="cell-center"> Hóa chất </th>
-                <th class="cell-center" style="width: 20%;"> Loại </th>
                 <th class="cell-center"> Ngày nhập </th>
                 <th class="cell-center" style="width: 20%;"> Nguồn </th>
                 <th class="cell-center"> SL </th>
@@ -209,6 +185,11 @@
             <tbody id="import-insert-modal-content"></tbody>
           </table>
         </div>
+        <div class="form-group">
+          <button class="btn btn-success" onclick="insertLine['import']()">
+            <span class="glyphicon glyphicon-plus"></span>
+          </button>
+        </div>
         <div class="text-center">
           <button class="btn btn-info" id="import-button" onclick="importSubmit()"> Thêm phiếu nhập </button>
           <!-- <button class="btn btn-info" id="edit-import-button" onclick="editImportSubmit()"> Sửa phiếu nhập </button> -->
@@ -218,17 +199,51 @@
   </div>
 </div>
 
-<!-- <div class="modal" id="import-modal" role="dialog">
-  <div class="modal-dialog">
+
+<div class="modal" id="export-modal-insert" role="dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
-        <div id="material-insert-content">
+
+        <div class="relative">
+          <input type="text" class="form-control" id="export-item-finder">
+          <div id="export-item-finder-suggest" class="suggest"></div>
+        </div>
+        <div style="margin-top: 10px;">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th class="cell-center"> Hóa chất </th>
+                <th class="cell-center"> Ngày xuất </th>
+                <th class="cell-center" style="width: 20%;"> Nguồn </th>
+                <th class="cell-center"> SL </th>
+                <th class="cell-center"> HSD </th>
+                <th class="cell-center"> Ghi chú </th>
+              </tr>
+            </thead>
+            <tbody id="export-insert-modal-content"></tbody>
+          </table>
+        </div>
+        <div class="text-center">
+          <button class="btn btn-info" id="export-button" onclick="exportSubmit()"> Thêm phiếu xuất </button>
+          <!-- <button class="btn btn-info" id="edit-export-button" onclick="editexportSubmit()"> Sửa phiếu xuất </button> -->
         </div>
       </div>
     </div>
   </div>
-</div> -->
+</div>
+
+<div class="modal" id="export-detail-modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
+        <div id="export-detail-content"> </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="modal" id="filter-modal" role="dialog">
   <div class="modal-dialog">
@@ -285,45 +300,6 @@
         <div class="text-center">
           <p> Sau khi xóa, phiếu xuất sẽ biến mất hoàn toàn </p>
           <button class="btn btn-danger" id="export-button" onclick="exportRemoveSubmit()"> Xóa phiếu xuất </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="export-modal-insert" role="dialog">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
-
-        <div class="relative">
-          <div class="input-group">
-            <input type="text" class="form-control" id="export-item-finder">
-            <div class="input-group-btn">
-              <button class="btn btn-success" onclick="materialModal('export')">
-                <span class="glyphicon glyphicon-plus"></span>
-              </button>
-            </div>
-          </div>
-          <div id="export-item-finder-suggest" class="suggest"></div>
-        </div>
-        <div id="export-insert-modal-content" style="margin-top: 10px;">
-          <table class="table table-bordered">
-            <thead>
-              <tr>
-                <th class="cell-center"> STT </th>
-                <th class="cell-center"> Tên thiết bị </th>
-                <th class="cell-center"> Ngày hết hạn </th>
-                <th class="cell-center"> Số lượng </th>
-                <th class="cell-center"> Ghi chú </th>
-              </tr>
-            </thead>
-          </table>
-        </div>
-        <div class="text-center">
-          <button class="btn btn-info" id="export-button" onclick="exportSubmit()"> Thêm phiếu xuất </button>
-          <!-- <button class="btn btn-info" id="edit-export-button" onclick="editexportSubmit()"> Sửa phiếu xuất </button> -->
         </div>
       </div>
     </div>
