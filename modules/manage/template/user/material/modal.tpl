@@ -29,6 +29,10 @@
           Nguồn gốc
           <input type="text" class="form-control" id="source-name">
         </div>
+        <div class="form-group">
+          Ghi chú
+          <textarea class="form-control" id="source-note" rows="3"></textarea>
+        </div>
         <div class="text-center">
           <button class="btn btn-success" onclick="insertSourceSubmit()">
             Thêm nguồn gốc

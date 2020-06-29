@@ -379,7 +379,6 @@ if (!empty($action)) {
         $row['date'] = totime($row['date']);
         $row['expire'] = totime($row['expire']);
         $sql = 'select * from `' . PREFIX . 'material_detail` where materialid = ' . $row['id'] . ' and source = ' . $row['source'] . ' and expire = ' . $row['expire'];
-        die($sql);
         $query = $db->query($sql);
         if (empty($detail = $query->fetch())) {
           // b3
@@ -576,11 +575,12 @@ if (!empty($action)) {
       break;
     case 'insert-source':
       $name = $nv_Request->get_string('name', 'post', '');
+      $note = $nv_Request->get_string('note', 'post', '');
 
       $sql = 'select * from `' . PREFIX . 'material_source` where name = "' . $name . '"';
       $query = $db->query($sql);
       if (empty($query->fetch)) {
-        $sql = 'insert into `' . PREFIX . 'material_source` (name) values ("' . $name . '")';
+        $sql = 'insert into `' . PREFIX . 'material_source` (name, note) values ("' . $name . '", "' . $note . '")';
         $db->query($sql);
         $result['status'] = 1;
         $result['id'] = $db->lastInsertId();

@@ -387,11 +387,12 @@
     global['name'] = name
     global['index'] = index
     $('#source-name').val('')
+    $('#source-note').val('')
     $('#source-modal').modal('show')
   }
 
   function insertSourceSubmit() {
-    vhttp.checkelse('', { action: 'insert-source', name: $('#source-name').val() }).then(data => {
+    vhttp.checkelse('', { action: 'insert-source', name: $('#source-name').val(), name: trim($('#source-note').val()) }).then(data => {
       global['source_option'] = data['html']
       $('#' + global['name'] + '-source-' + global['index']).val($('#source-name').val())
       $('#' + global['name'] + '-source-val-' + global['index']).val(data['id'])
