@@ -116,8 +116,8 @@
       });
     },
     'export': (index) => {
-      global['ia']++
       global['material'][index]['detail'].forEach((detail) => {
+        global['ia']++
         $(`
           <tbody class="export" index="`+ detail['id'] + `" ia="` + global['ia'] + `">
             <tr>
@@ -129,6 +129,11 @@
               <td> <input class="form-control" id="export-number-`+ global['ia'] + `" value="`+ detail['number'] +`"> </td>
               <td> `+ parseTime(detail['expire']) +` </td>
               <td> <input class="form-control" id="export-note-`+ global['ia'] + `"> </td>
+              <td>
+                <button class="btn btn-danger btn-xs" onclick="removeExportRow(`+ global['ia'] +`)">
+                  xóa
+                </button>
+              </td>
             </tr>
           </tbody>
         `).insertAfter('#export-insert-modal-content')
@@ -157,6 +162,7 @@
         }
         if (!temp['id']) return msg = 'Chưa chọn hóa chất'
         if (!temp['source']) return msg = 'Chưa chọn nguồn cung'
+        if (temp['number'] <= 0) return msg = 'Số lượng nhỏ hơn 0'
         data.push(temp)
       })
       if (msg.length) return msg
@@ -337,7 +343,7 @@
 
   function selectItem(name, index, ia) {
     selected = global['material'][index]
-    $("#" + name + "-type-val-" + ia).val(selected['id'])
+    $("#" + name + "-type-val-" + ia).val(index)
     $("#" + name + "-type-" + ia).val(selected['name'])
   }
 
@@ -353,6 +359,10 @@
       if (source['id'] == sourceid) return name = source['name']
     });
     return name
+  }
+
+  function removeExportRow(ia) {
+    $('tbody[ia='+ ia +']').remove()
   }
 
   function exportSubmit() {

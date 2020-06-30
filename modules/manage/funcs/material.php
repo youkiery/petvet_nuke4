@@ -399,8 +399,7 @@ if (!empty($action)) {
       $data = $nv_Request->get_array('data', 'post');
 
       // b1: thêm phiếu xuất
-      // b2: thêm import_detail
-      // b3: cập nhật số lượng detail
+      // b2: nếu number > 0, thêm import_detail, cập nhật số lượng detail
 
       // b1
       $sql = 'insert into `' . PREFIX . 'material_export` (time) values (' . time() . ')';
@@ -408,15 +407,16 @@ if (!empty($action)) {
       $exportid = $db->lastInsertId();
 
       foreach ($data as $row) {
-        $row['date'] = totime($row['date']);
-
-        // b2
-        $sql = 'insert into `' . PREFIX . 'material_export_detail` (exportid, detailid, number, note, date) values (' . $exportid . ', ' . $row['id'] . ', ' . $row['number'] . ', "' . $row['note'] . '", ' . $row['date'] . ')';
-        $db->query($sql);
-
-        // b3
-        $sql = 'update `' . PREFIX . 'material_detail` set number = number - ' . $row['number'] . ' where id = ' . $row['id'];
-        $db->query($sql);
+        if ($row['number'] > 0) {
+          // b2
+          $row['date'] = totime($row['date']);
+  
+          $sql = 'insert into `' . PREFIX . 'material_export_detail` (exportid, detailid, number, note, date) values (' . $exportid . ', ' . $row['id'] . ', ' . $row['number'] . ', "' . $row['note'] . '", ' . $row['date'] . ')';
+          $db->query($sql);
+  
+          $sql = 'update `' . PREFIX . 'material_detail` set number = number - ' . $row['number'] . ' where id = ' . $row['id'];
+          $db->query($sql);
+        }
       }
       $result['status'] = 1;
       $result['material'] = json_encode(getMaterialDataList(), JSON_UNESCAPED_UNICODE);
