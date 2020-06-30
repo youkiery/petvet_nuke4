@@ -570,12 +570,20 @@ if (!empty($action)) {
 
       $sql = 'select * from `' . PREFIX . 'material_source` where name = "' . $name . '"';
       $query = $db->query($sql);
-      if (empty($query->fetch)) {
+      if (!empty($source = $query->fetch())) {
+        $result['status'] = 1;
+        $result['id'] = $source['id'];
+      }
+      else {
         $sql = 'insert into `' . PREFIX . 'material_source` (name, note) values ("' . $name . '", "' . $note . '")';
         $db->query($sql);
         $result['status'] = 1;
+        $result['data'] = array(
+          'id' => $db->lastInsertId(),
+          'name' => $name,
+          'alias' => simplize($name)
+        );
         $result['id'] = $db->lastInsertId();
-        $result['html'] = sourceOptionList();
       }
       break;
   }

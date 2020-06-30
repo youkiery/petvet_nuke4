@@ -9,8 +9,6 @@ var vremind = {
       clearTimeout(delay)
       delay = setTimeout(() => {
         excuteFunction(input.val()).then((html) => {
-          console.log(suggest, html);
-          
           suggest.html(html)
         })
       }, inputDelay);

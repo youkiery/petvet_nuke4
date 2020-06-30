@@ -21,11 +21,8 @@
 <div id="msgshow"></div>
 
 <div class="form-group">
-  <button class="btn btn-info" onclick='$("#modal-expire").modal("show")'>
-    Danh sách vật tư hết hạn
-  </button>
-  <button class="btn btn-info" onclick='$("#overlow-modal").modal("show")'>
-    Danh sách vật tư hết
+  <button class="btn btn-info" onclick="reportModal()">
+    Thống kê
   </button>
   <button class="btn btn-info" onclick="importModal()">
     Phiếu nhập
@@ -120,8 +117,6 @@
     },
     'export': (index) => {
       global['ia']++
-      console.log(global['material'][index]);
-      
       global['material'][index]['detail'].forEach((detail) => {
         $(`
           <tbody class="export" index="`+ detail['id'] + `" ia="` + global['ia'] + `">
@@ -130,7 +125,7 @@
                 `+ global['material'][index]['name'] + `
               </td>
               <td> <input class="form-control date-`+ global['ia'] + `" id="export-date-`+ global['ia'] + `" value="` + global['today'] + `"> </td>
-              <td> `+ global['source'][detail['source']]['name'] +` </td>
+              <td> `+ parseSource(detail['source']) +` </td>
               <td> <input class="form-control" id="export-number-`+ global['ia'] + `" value="`+ detail['number'] +`"> </td>
               <td> `+ parseTime(detail['expire']) +` </td>
               <td> <input class="form-control" id="export-note-`+ global['ia'] + `"> </td>
@@ -187,6 +182,14 @@
       if (!data.length) return 'Chưa nhập mục nào'
       return data
     }
+  }
+
+  ///////////////////////////////
+  ///////////////////////////////
+  ///////////////////////////////
+
+  function reportModal() {
+    $('#report-modal').modal('show')
   }
 
   function searchMaterial(keyword, name, ia) {
@@ -311,8 +314,9 @@
   }
 
   function insertSourceSubmit() {
-    vhttp.checkelse('', { action: 'insert-source', name: $('#source-name').val(), name: trim($('#source-note').val()) }).then(data => {
-      global['source_option'] = data['html']
+    if (!$('#source-name').val().length) alert_msg('Nhập tên nguồn trước')
+    else vhttp.checkelse('', { action: 'insert-source', name: $('#source-name').val(), note: trim($('#source-note').val()) }).then(data => {
+      if (data['data']) global['source'].push(data['data'])      
       $('#' + global['name'] + '-source-' + global['index']).val($('#source-name').val())
       $('#' + global['name'] + '-source-val-' + global['index']).val(data['id'])
       $('#source-modal').modal('hide')
@@ -343,6 +347,14 @@
     $("#" + name + "-source-" + ia).val(selected['name'])
   }
 
+  function parseSource(sourceid) {
+    name = ''
+    global['source'].forEach(source => {
+      if (source['id'] == sourceid) return name = source['name']
+    });
+    return name
+  }
+
   function exportSubmit() {
     sdata = getLine['export']()
     if (typeof (sdata) !== 'object') alert_msg(sdata)
@@ -352,7 +364,7 @@
         { action: 'insert-export', data: sdata }
       ).then(data => {
         alert_msg('Đã thêm toa xuất')
-        global['material'] = data['material']
+        global['material'] = JSON.parse(data['material'])
         $("#content").html(data['html'])
         $('#export-modal-insert').modal('hide')
         $('.export').remove()
@@ -369,7 +381,7 @@
         { action: 'insert-import', data: sdata }
       ).then(data => {
         alert_msg('Đã thêm toa nhập')
-        global['material'] = data['material']
+        global['material'] = JSON.parse(data['material'])
         $("#content").html(data['html'])
         $('#import-modal-insert').modal('hide')
         $('.import').remove()
