@@ -44,11 +44,40 @@
 </div>
 
 <div class="modal" id="report-modal" role="dialog">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
 
+        <div class="rows">
+          <div class="col-4">
+            <input type="text" class="form-control date" id="report-date" value="{last_month}"> 
+          </div>
+          <div class="col-4">
+            <div class="relative">
+              <input type="text" class="form-control" id="report-type" placeholder="loại hóa chất"> 
+              <input type="hidden" id="report-type-val"> 
+              <div class="suggest" id="report-type-suggest"> </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="relative">
+              <input type="text" class="form-control" id="report-source" placeholder="nguồn gốc"> 
+              <input type="hidden" id="report-source-val"> 
+              <div class="suggest" id="report-source-suggest"> </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <div class="form-group">
+            <label> <input type="checkbox" name="tick" value="0" checked> Nhập </label>
+            <label> <input type="checkbox" name="tick" value="1" checked> Xuất </label>
+            <label> <input type="checkbox" name="tick" value="2" checked> Tồn </label>
+          </div>
+          <button class="btn btn-info" onclick="reportSubmit()">
+            Thống kê
+          </button>
+        </div>
         <div id="report-content"></div>
       </div>
     </div>
@@ -245,18 +274,6 @@
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
         <div id="export-detail-content"> </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="report-modal" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
-
-        
       </div>
     </div>
   </div>

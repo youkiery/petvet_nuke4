@@ -393,6 +393,7 @@ function materialModal() {
 
   $xtpl->assign('start', $start);
   $xtpl->assign('end', $end);
+  $xtpl->assign('last_month', date('d/m/Y', time() - $day * 30));
 
   $xtpl->parse('main');
   return $xtpl->text();

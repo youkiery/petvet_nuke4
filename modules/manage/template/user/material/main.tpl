@@ -190,12 +190,69 @@
     }
   }
 
-  ///////////////////////////////
-  ///////////////////////////////
-  ///////////////////////////////
+  $(document).ready(() => {
+    vremind.install('#export-item-finder', '#export-item-finder-suggest', (input => {
+      return new Promise(resolve => {
+        resolve(searchAvaiableMaterial(input, 'export'))
+      })
+    }), 300, 300)
+    vremind.install('#report-type', '#report-type-suggest', (input => {
+      return new Promise(resolve => {
+        keyword = convert(input)
+        html = ''
+        count = 0
+
+        global['material'].forEach((item, index) => {
+          if (count < 30 && item['alias'].search(keyword) >= 0) {
+            count++
+            html += `
+              <div class="suggest-item" onclick="pickSuggest('type', '` + item['id'] + `', '` + item['name'] + `')">
+                `+ item['name'] + `
+              </div>`
+          }
+        })
+        if (!html.length) return 'Không có kết quả'
+        resolve(html)
+      })
+    }), 300, 300)
+    vremind.install('#report-source', '#report-source-suggest', (input => {
+      return new Promise(resolve => {
+        keyword = convert(input)
+        html = ''
+        count = 0
+
+        global['source'].forEach((item, index) => {
+          if (count < 30 && item['alias'].search(keyword) >= 0) {
+            count++
+            html += `
+              <div class="suggest-item" onclick="pickSuggest('source', '` + item['id'] + `', '` + item['name'] + `')">
+                `+ item['name'] + `
+              </div>`
+          }
+        })
+        if (!html.length) return 'Không có kết quả'
+        resolve(html)
+      })
+    }), 300, 300)
+    $(".date").datepicker({
+      format: 'dd/mm/yyyy',
+      changeMonth: true,
+      changeYear: true
+    });
+  })
+
+  ////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////
 
   function reportModal() {
     $('#report-modal').modal('show')
+  }
+
+  function pickSuggest(type, index, name) {
+    $('#report-'+ type).val(name)
+    $('#report-'+ type +'-val').val(index)
   }
 
   function searchMaterial(keyword, name, ia) {
@@ -252,19 +309,6 @@
     return html
   }
 
-  $(document).ready(() => {
-    vremind.install('#export-item-finder', '#export-item-finder-suggest', (input => {
-      return new Promise(resolve => {
-        resolve(searchAvaiableMaterial(input, 'export'))
-      })
-    }), 300, 300)
-    $(".date").datepicker({
-      format: 'dd/mm/yyyy',
-      changeMonth: true,
-      changeYear: true
-    });
-  })
-
   function materialModal(name, ia) {
     global['name'] = name
     global['ia'] = ia
@@ -319,28 +363,6 @@
     $('#source-modal').modal('show')
   }
 
-  function insertSourceSubmit() {
-    if (!$('#source-name').val().length) alert_msg('Nhập tên nguồn trước')
-    else vhttp.checkelse('', { action: 'insert-source', name: $('#source-name').val(), note: trim($('#source-note').val()) }).then(data => {
-      if (data['data']) global['source'].push(data['data'])      
-      $('#' + global['name'] + '-source-' + global['index']).val($('#source-name').val())
-      $('#' + global['name'] + '-source-val-' + global['index']).val(data['id'])
-      $('#source-modal').modal('hide')
-    })
-  }
-
-  function insertMaterial() {
-    sdata = checkMaterialData()
-    vhttp.checkelse('', { action: 'insert-material', data: sdata, filter: checkFilter() }).then(data => {
-      global['material'].push(data['json'])
-      selected = global['material'][global['material'].length - 1]
-      $("#" + global['name'] + "-type-val-" + global['ia']).val(selected['id'])
-      $("#" + global['name'] + "-type-" + global['ia']).val(selected['name'])
-      $("#content").html(data['html'])
-      $("#material-modal").modal('hide')
-    })
-  }
-
   function selectItem(name, index, ia) {
     selected = global['material'][index]
     $("#" + name + "-type-val-" + ia).val(index)
@@ -363,6 +385,65 @@
 
   function removeExportRow(ia) {
     $('tbody[ia='+ ia +']').remove()
+  }
+
+  function parseTime(time) {
+    datetime = new Date(time * 1000)
+    var date = datetime.getDate()
+    var month = datetime.getMonth() + 1
+    var year = datetime.getFullYear()
+    return (date < 10 ? '0' : '') + date + '/' + (month < 10 ? '0' : '') + month + '/' + year
+  }
+
+  function checkReportData() {
+    tick = []
+    $("[name=tick]").each((index, item) => {
+      if (item.checked) tick.push(item.value)
+    })
+    data = {
+      date: $('#report-date').val(),
+      type: $('#report-type-val').val(),
+      source: $('#report-source-val').val(),
+      tick: tick
+    }
+    if (data['type'] <= 0) return 'Chưa chọn hóa chất'
+    if (!data['tick'].length) return 'Chọn ít nhất 1 loại phiếu'
+    return data
+  }
+
+  ////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////
+
+  function reportSubmit() {
+    sdata = checkReportData()
+    if (!sdata['type']) alert_msg(sdata)
+    vhttp.checkelse('', { action: 'report', data: sdata }).then(data => {
+      $('#report-content').html(data['html'])
+    })
+  }
+
+  function insertSourceSubmit() {
+    if (!$('#source-name').val().length) alert_msg('Nhập tên nguồn trước')
+    else vhttp.checkelse('', { action: 'insert-source', name: $('#source-name').val(), note: trim($('#source-note').val()) }).then(data => {
+      if (data['data']) global['source'].push(data['data'])      
+      $('#' + global['name'] + '-source-' + global['index']).val($('#source-name').val())
+      $('#' + global['name'] + '-source-val-' + global['index']).val(data['id'])
+      $('#source-modal').modal('hide')
+    })
+  }
+
+  function insertMaterial() {
+    sdata = checkMaterialData()
+    vhttp.checkelse('', { action: 'insert-material', data: sdata, filter: checkFilter() }).then(data => {
+      global['material'].push(data['json'])
+      selected = global['material'][global['material'].length - 1]
+      $("#" + global['name'] + "-type-val-" + global['ia']).val(selected['id'])
+      $("#" + global['name'] + "-type-" + global['ia']).val(selected['name'])
+      $("#content").html(data['html'])
+      $("#material-modal").modal('hide')
+    })
   }
 
   function exportSubmit() {
@@ -397,14 +478,6 @@
         $('.import').remove()
       })
     }
-  }
-
-  function parseTime(time) {
-    datetime = new Date(time * 1000)
-    var date = datetime.getDate()
-    var month = datetime.getMonth() + 1
-    var year = datetime.getFullYear()
-    return (date < 10 ? '0' : '') + date + '/' + (month < 10 ? '0' : '') + month + '/' + year
   }
 </script>
 <!-- END: main -->
