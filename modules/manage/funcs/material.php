@@ -356,7 +356,6 @@ if (!empty($action)) {
         // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;
-          $result['notify'] = 'Đã thêm';
           $result['id'] = $db->lastInsertId();
           $result['html'] = materialList();
           $result['json'] = array('id' => $result['id'], 'name' => $data['name'], 'unit' => $data['unit'], 'description' => $data['description']);
@@ -516,6 +515,59 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = $xtpl->text();;
       break;
+      case 'report_limit':
+        $data = $nv_Request->get_array('data', 'post');
+
+        $xtpl = new XTemplate("report-limit-list.tpl", PATH);
+        $sql = 'select * from `'. PREFIX .'material` order by name';
+        $query = $db->query($sql);
+        $index = 1;
+        
+        while($item = $query->fetch()) {
+          $number = 0;
+          $sql = 'select * from `'. PREFIX .'material_detail` where materialid = '. $item['id'];
+          $detailquery = $db->query($sql);
+          while($detail = $detailquery->fetch()) {
+            $number += $detail['number'];
+          }
+          if ($number <= 10) {
+            $xtpl->assign('index', $index++);
+            $xtpl->assign('name', $item['name']);
+            $xtpl->assign('number', $number);
+            $xtpl->assign('expire', '');
+            $xtpl->parse('main.row');
+          }
+        }
+        $xtpl->parse('main');
+        $result['status'] = 1;
+        $result['html'] = $xtpl->text();;
+        break;
+      case 'report_expire':
+        $data = $nv_Request->get_array('data', 'post');
+        $expire = time() + 60 * 60 * 24 * 30;
+
+        $xtpl = new XTemplate("report-expire-list.tpl", PATH);
+        $sql = 'select * from `'. PREFIX .'material` order by name';
+        $query = $db->query($sql);
+        $index = 1;
+        
+        while($item = $query->fetch()) {
+          $sql = 'select * from `'. PREFIX .'material_detail` where materialid = '. $item['id'];
+          $detailquery = $db->query($sql);
+          $xtpl->assign('name', $item['name']);
+          while($detail = $detailquery->fetch()) {
+            if ($detail['number'] > 0 && $detail['expire'] <= $expire) {
+              $xtpl->assign('index', $index++);
+              $xtpl->assign('number', $detail['number']);
+              $xtpl->assign('expire', date('d/m/Y', $detail['expire']));
+              $xtpl->parse('main.row');
+            }
+          }
+        }
+        $xtpl->parse('main');
+        $result['status'] = 1;
+        $result['html'] = $xtpl->text();;
+        break;
       // case 'edit-import':
       //   $data = $nv_Request->get_array('data', 'post');
 

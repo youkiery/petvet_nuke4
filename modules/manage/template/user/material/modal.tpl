@@ -68,12 +68,12 @@
             </div>
           </div>
         </div>
-        <div class="text-center">
-          <!-- <div class="form-group">
-            <label> <input type="checkbox" name="tick" value="0" checked> Nhập </label>
-            <label> <input type="checkbox" name="tick" value="1" checked> Xuất </label>
-            <label> <input type="checkbox" name="tick" value="2" checked> Tồn </label>
-          </div> -->
+        <div class="form-group text-center">
+          <div class="form-group">
+            <label> <input type="radio" name="tick" value="0" checked> Xuất nhập </label>
+            <label> <input type="radio" name="tick" value="1"> Hóa chất gần hết </label>
+            <label> <input type="radio" name="tick" value="2"> Hóa chất sắp hết hạn </label>
+          </div>
           <button class="btn btn-info" onclick="reportSubmit()">
             Thống kê
           </button>
@@ -213,6 +213,7 @@
                 <th class="cell-center"> SL </th>
                 <th class="cell-center"> HSD </th>
                 <th class="cell-center"> Ghi chú </th>
+                <th></th>
               </tr>
             </thead>
             <tbody id="import-insert-modal-content"></tbody>

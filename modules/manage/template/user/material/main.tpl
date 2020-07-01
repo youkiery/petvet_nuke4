@@ -56,6 +56,7 @@
       'import': [],
       'export': []
     },
+    report_action: ['report', 'report_limit', 'report_expire'],
     'ia': 0,
     'index': 0,
     'name': '',
@@ -100,6 +101,11 @@
             <td> <input class="form-control" id="import-number-`+ global['ia'] + `" value="0"> </td>
             <td> <input class="form-control date-`+ global['ia'] + `" id="import-expire-` + global['ia'] + `" value="` + global['today'] + `"> </td>
             <td> <input class="form-control" id="import-note-`+ global['ia'] + `"> </td>
+            <td>
+              <button class="btn btn-danger btn-xs" onclick="removeRow(`+ global['ia'] +`)">
+                xóa
+              </button>
+            </td>
           </tr>
         </tbody>
       `).insertAfter('#import-insert-modal-content')
@@ -134,7 +140,7 @@
               <td> `+ parseTime(detail['expire']) +` </td>
               <td> <input class="form-control" id="export-note-`+ global['ia'] + `"> </td>
               <td>
-                <button class="btn btn-danger btn-xs" onclick="removeExportRow(`+ global['ia'] +`)">
+                <button class="btn btn-danger btn-xs" onclick="removeRow(`+ global['ia'] +`)">
                   xóa
                 </button>
               </td>
@@ -387,7 +393,7 @@
     return name
   }
 
-  function removeExportRow(ia) {
+  function removeRow(ia) {
     $('tbody[ia='+ ia +']').remove()
   }
 
@@ -400,18 +406,13 @@
   }
 
   function checkReportData() {
-    tick = []
-    $("[name=tick]").each((index, item) => {
-      if (item.checked) tick.push(item.value)
-    })
     data = {
       date: $('#report-date').val(),
       type: $('#report-type-val').val(),
       source: $('#report-source-val').val(),
-      // tick: tick
+      tick: $("[name=tick]:checked").val()
     }
-    if (data['type'] <= 0) return 'Chưa chọn hóa chất'
-    if (!data['tick'].length) return 'Chọn ít nhất 1 loại phiếu'
+    if (data['tick'] == 0 && data['type'] <= 0) return 'Chưa chọn hóa chất'
     return data
   }
 
@@ -422,8 +423,8 @@
 
   function reportSubmit() {
     sdata = checkReportData()
-    if (!sdata['type']) alert_msg(sdata)
-    vhttp.checkelse('', { action: 'report', data: sdata }).then(data => {
+    if (typeof(sdata) == 'string') alert_msg(sdata)
+    else vhttp.checkelse('', { action: global['report_action'][sdata['tick']], data: sdata }).then(data => {
       $('#report-content').html(data['html'])
     })
   }
@@ -441,12 +442,17 @@
   function insertMaterial() {
     sdata = checkMaterialData()
     vhttp.checkelse('', { action: 'insert-material', data: sdata }).then(data => {
-      global['material'].push(data['json'])
-      last = global['material'].length - 1
-      $("#" + global['name'] + "-type-val-" + global['ia']).val(last)
-      $("#" + global['name'] + "-type-" + global['ia']).val(selected['name'])
-      $("#content").html(data['html'])
-      $("#material-modal").modal('hide')
+      if (data['notify']) alert_msg(data['notify'])
+      else {
+        alert_msg('Đã thêm')
+        global['material'].push(data['json'])
+        last = global['material'].length - 1
+        selected = global['material'][last]
+        $("#" + global['name'] + "-type-val-" + global['ia']).val(last)
+        $("#" + global['name'] + "-type-" + global['ia']).val(selected['name'])
+        $("#content").html(data['html'])
+        $("#material-modal").modal('hide')
+      }
     })
   }
 
