@@ -69,11 +69,11 @@
           </div>
         </div>
         <div class="text-center">
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label> <input type="checkbox" name="tick" value="0" checked> Nhập </label>
             <label> <input type="checkbox" name="tick" value="1" checked> Xuất </label>
             <label> <input type="checkbox" name="tick" value="2" checked> Tồn </label>
-          </div>
+          </div> -->
           <button class="btn btn-info" onclick="reportSubmit()">
             Thống kê
           </button>

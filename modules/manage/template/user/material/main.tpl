@@ -9,6 +9,10 @@
 {modal}
 
 <style>
+  a.btn-default {
+    color: #333;
+  }
+
   select.form-control {
     padding: 0px;
   }
@@ -327,14 +331,14 @@
     // global['selected']['import'] = []
     // parseFormLine('import')
     global['ia'] = 0
+    $('.import').remove()
+    insertLine['import']()
     $("#import-modal-insert").modal('show')
   }
 
   function exportModal() {
     global['ia'] = 0
-    $("#export-button").show()
-    $("#edit-export-button").hide()
-    $("#export-insert-modal-content").html('')
+    $('.export').remove()
     $("#export-modal-insert").modal('show')
   }
   // function exportModal() {
@@ -404,7 +408,7 @@
       date: $('#report-date').val(),
       type: $('#report-type-val').val(),
       source: $('#report-source-val').val(),
-      tick: tick
+      // tick: tick
     }
     if (data['type'] <= 0) return 'Chưa chọn hóa chất'
     if (!data['tick'].length) return 'Chọn ít nhất 1 loại phiếu'
@@ -436,10 +440,10 @@
 
   function insertMaterial() {
     sdata = checkMaterialData()
-    vhttp.checkelse('', { action: 'insert-material', data: sdata, filter: checkFilter() }).then(data => {
+    vhttp.checkelse('', { action: 'insert-material', data: sdata }).then(data => {
       global['material'].push(data['json'])
-      selected = global['material'][global['material'].length - 1]
-      $("#" + global['name'] + "-type-val-" + global['ia']).val(selected['id'])
+      last = global['material'].length - 1
+      $("#" + global['name'] + "-type-val-" + global['ia']).val(last)
       $("#" + global['name'] + "-type-" + global['ia']).val(selected['name'])
       $("#content").html(data['html'])
       $("#material-modal").modal('hide')

@@ -6,6 +6,7 @@
   <thead>
     <tr>
       <th> Phiếu </th>
+      <th> Ngày tạo </th>
       <th> Số lượng </th>
       <th> Tồn </th>
       <th> HSD </th>
@@ -16,6 +17,7 @@
   <tbody>
     <tr>
       <td> {type} </td>
+      <td> {date} </td>
       <td> {number} </td>
       <td> {remain} </td>
       <td> {expire} </td>

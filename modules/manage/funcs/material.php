@@ -10,6 +10,13 @@ if (!defined('NV_IS_MOD_CONGVAN')) {
   die('Stop!!!');
 }
 $page_title = "Quản lý vật tư, hóa chất";
+
+$url = "/$module_name/$op?";
+$filter = array(
+  'page' => $nv_Request->get_int('page', 'get', 1),
+  'limit' => $nv_Request->get_int('limit', 'get', 10)
+);
+
 $excel = $nv_Request->get_int('excel', 'get');
 if ($nv_Request->get_int('excel', 'get')) {
   header('location: /excel-output.xlsx?time=' . time());
@@ -350,9 +357,9 @@ if (!empty($action)) {
         if ($db->query($sql)) {
           $result['status'] = 1;
           $result['notify'] = 'Đã thêm';
-          $result['html'] = materialList();
           $result['id'] = $db->lastInsertId();
-          $result['json'] = array('id' => $db->lastInsertId(), 'name' => $data['name'], 'unit' => $data['unit'], 'description' => $data['description']);
+          $result['html'] = materialList();
+          $result['json'] = array('id' => $result['id'], 'name' => $data['name'], 'unit' => $data['unit'], 'description' => $data['description']);
         }
       }
       break;
@@ -388,7 +395,7 @@ if (!empty($action)) {
         }
 
         // b5
-        $sql = 'insert into `' . PREFIX . 'material_import_detail` (importid, detailid, number, note, expire, date) values (' . $importid . ', ' . $detail['id'] . ', ' . $row['number'] . ', "' . $row['note'] . '", ' . $row['expire'] . ', ' . $row['date'] . ')';
+        $sql = 'insert into `' . PREFIX . 'material_import_detail` (importid, detailid, number, note, date) values (' . $importid . ', ' . $detail['id'] . ', ' . $row['number'] . ', "' . $row['note'] . '", ' . $row['date'] . ')';
         $db->query($sql);
       }
       $result['status'] = 1;
@@ -428,7 +435,7 @@ if (!empty($action)) {
       $list = array();
 
       $xtpl = new XTemplate("report-list.tpl", PATH);
-      $sql = 'select * from `' . PREFIX . 'material` where id = ' . $data['type'];
+      $sql = 'select * from `' . PREFIX . 'material_detail` where materialid = ' . $data['type'];
       $query = $db->query($sql);
       $material = $query->fetch();
       $remain = $material['number'];
@@ -459,32 +466,45 @@ if (!empty($action)) {
       $ce = count($export) - 1;
       $count = $ci + $ce + 2;
       // chạy import_index, export_index, kiểm tra ngày nhỏ hơn, xuất dòng
-      // var_dump($import);
-      // var_dump($export);
-      // die();
       while ($count) {
         $count--;
-        if (!empty($export[$ce]) && (($import[$ci]['date'] > $export[$ce]['date']) || empty($import[$ci]))) {
-          $data = array(
-            'type' => 'Xuất',
-            'number' => $export[$ce]['number'],
-            'remain' => ($remain -= $export[$ce]['number']),
-            'expire' => date('d/m/Y', $export[$ce]['expire']),
-            'note' => $export[$ce]['note']
-          );
-          $ce--;
-        } else {
+        $check = true;
+        if ($ci >= 0) {
+          if ($import[$ci]['date'] <= $export[$ce]['date']) {
+
+          }
+          else {
+            $check = false;
+          }
+        }
+        else {
+          $check = false;
+        }
+
+        if ($check) {
           $data = array(
             'type' => 'Nhập',
+            'date' => date('d/m/Y', $import[$ci]['date']),
             'number' => $import[$ci]['number'],
             'remain' => ($remain += $import[$ci]['number']),
             'expire' => date('d/m/Y', $import[$ci]['expire']),
             'note' => $import[$ci]['note']
           );
           $ci--;
+        } else {
+          $data = array(
+            'type' => 'Xuất',
+            'date' => date('d/m/Y', $export[$ce]['date']),
+            'number' => $export[$ce]['number'],
+            'remain' => ($remain -= $export[$ce]['number']),
+            'expire' => date('d/m/Y', $export[$ce]['expire']),
+            'note' => $export[$ce]['note']
+          );
+          $ce--;
         }
 
         $xtpl->assign('type', $data['type']);
+        $xtpl->assign('date', $data['date']);
         $xtpl->assign('number', $data['number']);
         $xtpl->assign('remain', $data['remain']);
         $xtpl->assign('expire', $data['expire']);

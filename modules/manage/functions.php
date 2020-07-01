@@ -303,18 +303,13 @@ function checkMember() {
 }
 
 function materialList() {
-  global $db, $nv_Request;
+  global $db, $url, $filter, $nv_Request;
 
-  $filter = $nv_Request->get_array('filter', 'post');
-  if (empty($filter['page'])) $filter['page'] = 1;
-  if (empty($filter['limit'])) $filter['limit'] = 10;
-
-  $type_list = array(0 => 'Vật tư', 1 => 'Hóa chất');
   $xtpl = new XTemplate("material-list.tpl", PATH);
 
   $sql = 'select count(*) as count from `'. PREFIX .'material`';
   $query = $db->query($sql);
-  $number = $query->fetch()['count'];
+  $count = $query->fetch()['count'];
 
   $sql = 'select * from `'. PREFIX .'material` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
@@ -336,7 +331,7 @@ function materialList() {
     else $xtpl->assign('unit', '');
     $xtpl->parse('main.row');
   }
-  $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
+  $xtpl->assign('nav', nav_generater($url, $count, $filter['page'], $filter['limit']));
 
   $xtpl->parse('main');
   return $xtpl->text();

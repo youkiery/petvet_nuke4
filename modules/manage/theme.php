@@ -7,6 +7,21 @@
  */
 if (!defined('NV_IS_MOD_CONGVAN') or !defined('NV_IS_FILE_ADMIN')) {} else die('Stop!!!');
 
+
+function nav_generater($url, $number, $page, $limit) {
+  $html = '';
+  $total = floor($number / $limit) + ($number % $limit ? 1 : 0);
+  for ($i = 1; $i <= $total; $i++) {
+    if ($page == $i) {
+      $html .= '<a class="btn btn-default">' . $i . '</a>';
+    } 
+    else {
+      $html .= '<a class="btn btn-info" href="'. $url .'&page='. $i .'&limit='. $limit .'">' . $i . '</a>';
+    }
+  }
+  return $html;
+}
+
 function navList ($number, $page, $limit, $type) {
   global $lang_global;
   $total_pages = ceil($number / $limit);
