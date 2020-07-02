@@ -84,30 +84,6 @@
   </div>
 </div>
 
-<div class="modal" id="modal-expire" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br><br>
-        <select class="form-control form-group" id="expire-limit">
-          <!-- BEGIN: expire -->
-          <option value="{value}" {check}> {name} </option>
-          <!-- END: expire -->
-        </select>
-        <div class="form-group text-center">
-          <button class="btn btn-info" onclick="expireFilter()">
-            Lọc danh sách
-          </button>
-        </div>
-
-        <div id="expire-content">
-          {expire_content}
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="modal" id="material-modal" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -137,60 +113,6 @@
               Thêm mục hàng
             </button>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="overlow-modal" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
-
-        <div id="overlow-content">
-          {overlow_content}
-        </div>
-
-        <div class="text-center">
-          <button class="btn btn-info" onclick="overlowFilter()">
-            Tải lại
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div class="modal" id="import-modal" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
-        <div class="form-group">
-          <button class="btn btn-success" onclick="insertImportModal()">
-            <span class="glyphicon glyphicon-plus"></span>
-          </button>
-        </div>
-        <div id="material-content">
-          {import_content}
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="import-modal-remove" role="dialog">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
-
-        <div class="text-center">
-          <p> Sau khi xóa, phiếu nhập sẽ biến mất hoàn toàn </p>
-          <button class="btn btn-danger" id="import-button" onclick="importRemoveSubmit()"> Xóa phiếu nhập </button>
         </div>
       </div>
     </div>
@@ -233,7 +155,6 @@
   </div>
 </div>
 
-
 <div class="modal" id="export-modal-insert" role="dialog">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -263,50 +184,6 @@
         <div class="text-center">
           <button class="btn btn-info" id="export-button" onclick="exportSubmit()"> Thêm phiếu xuất </button>
           <!-- <button class="btn btn-info" id="edit-export-button" onclick="editexportSubmit()"> Sửa phiếu xuất </button> -->
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="export-detail-modal" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
-        <div id="export-detail-content"> </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="export-modal" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
-        <div class="form-group">
-          <button class="btn btn-success" onclick="insertExportModal()">
-            <span class="glyphicon glyphicon-plus"></span>
-          </button>
-        </div>
-        <div id="export-content">
-          {export_content}
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="export-modal-remove" role="dialog">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
-
-        <div class="text-center">
-          <p> Sau khi xóa, phiếu xuất sẽ biến mất hoàn toàn </p>
-          <button class="btn btn-danger" id="export-button" onclick="exportRemoveSubmit()"> Xóa phiếu xuất </button>
         </div>
       </div>
     </div>

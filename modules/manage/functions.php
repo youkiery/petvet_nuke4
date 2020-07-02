@@ -156,121 +156,6 @@ function deviceList() {
   return $xtpl->text();
 }
 
-function reportList() {
-  global $db, $op, $module_file, $nv_Request;
-  $type_list = array(0 => 'Vật tư', 1 => 'Hóa chất');
-
-  $filter = $nv_Request->get_array('filter', 'post');
-  if (empty($filter['page'])) $filter['page'] = 1;
-  if (empty($filter['limit'])) $filter['limit'] = 10;
-  if (empty($filter['start'])) $filter['start'] = strtotime(date('Y/m/d', time() - (date('d') - 1) * 60 * 60 * 24));
-  else $filter['start'] = totime($filter['start']);
-  if (empty($filter['end'])) $filter['end'] = strtotime(date('Y/m/d')) + 60 * 60 * 24 - 1;
-  else $filter['end'] = totime($filter['end']) + 60 * 60 * 24 - 1;
-
-  $xtpl = new XTemplate("report-list.tpl", PATH);
-  $data = array();
-
-  $xtpl->assign('from', date('d/m/Y', $filter['start']));
-  $xtpl->assign('end', date('d/m/Y', $filter['end']));
-
-  $sql = 'select * from `'. PREFIX .'export` where export_date between '. $filter['start'] .' and '. $filter['end'];
-  $query = $db->query($sql);
-
-  while ($row = $query->fetch()) {
-    $sql2 = 'select * from `'. PREFIX .'export_detail` where export_id = ' . $row['id'];
-    $query2 = $db->query($sql2);
-    
-    while ($export = $query2->fetch()) {
-      if (empty($data[$export['item_id']])) {
-        $data[$export['item_id']] = array(
-          'export' => 0,
-          'import' => 0
-        );
-      } 
-      $data[$export['item_id']]['export'] += $export['number'];
-    }
-  }
-
-  $sql = 'select * from `'. PREFIX .'import` where import_date between '. $filter['start'] .' and '. $filter['end'];
-  $query = $db->query($sql);
-
-  while ($row = $query->fetch()) {
-    $sql2 = 'select * from `'. PREFIX .'import_detail` where import_id = ' . $row['id'];
-    $query2 = $db->query($sql2);
-    
-    while ($import = $query2->fetch()) {
-      if (empty($data[$import['item_id']])) {
-        $data[$import['item_id']] = array(
-          'export' => 0,
-          'import' => 0
-        );
-      } 
-      $data[$import['item_id']]['import'] += $import['number'];
-    }
-  }
-
-  $index = 1;
-
-  foreach ($data as $itemid => $itemdata) {
-    $sql = 'select * from `'. PREFIX .'material` where id = ' . $itemid;
-    $query = $db->query($sql);
-    $material = $query->fetch();
-
-    $xtpl->assign('index', $index++);
-    $xtpl->assign('id', $itemid);
-    $xtpl->assign('name', $material['name']);
-    $xtpl->assign('type', $type_list[$material['type']]);
-    $xtpl->assign('import', $itemdata['import']);
-    $xtpl->assign('export', $itemdata['export']);
-    $xtpl->parse('main.row');
-  }
-
-  $number = 0;
-  $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goReportPage'));
-
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
-
-function reportDetail() {
-  global $db, $nv_Request;
-  $type_list = array('Phiếu xuất', 'Phiếu nhập');
-
-  $xtpl = new XTemplate("report-detail.tpl", PATH);
-  $id = $nv_Request->get_int('id', 'post');
-  $filter = $nv_Request->get_array('filter', 'post');
-  if (empty($filter['start'])) $filter['start'] = strtotime(date('Y/m/d', time() - (date('d') - 1) * 60 * 60 * 24));
-  else $filter['start'] = totime($filter['start']);
-  if (empty($filter['end'])) $filter['end'] = strtotime(date('Y/m/d')) + 60 * 60 * 24 - 1;
-  else $filter['end'] = totime($filter['end']) + 60 * 60 * 24 - 1;
-
-  $sql = 'select * from ((select a.number, b.export_date as time, 0 as type, a.note from `'. PREFIX .'export_detail` a inner join `'. PREFIX .'export` b on a.item_id = '. $id .' and a.export_id = b.id) union (select a.number, b.import_date as time, 1 as type, a.note from `'. PREFIX .'import_detail` a inner join `'. PREFIX .'import` b on a.item_id = '. $id .' and a.import_id = b.id)) as a where time between '. $filter['start'] .' and '. $filter['end'] .' order by time desc';
-  $query = $db->query($sql);
-  $index = 1;
-
-  $total = 0;
-  while ($row = $query->fetch()) {
-    if ($row['type']) {
-      $xtpl->assign('color', 'greenbg');
-      $total += $row['number'];
-    }
-    else {
-      $xtpl->assign('color', 'redbg');
-      $total -= $row['number'];
-    }
-    $xtpl->assign('index', $index ++);
-    $xtpl->assign('number', $row['number']);
-    $xtpl->assign('type', $type_list[$row['type']]);
-    $xtpl->assign('time', date('d/m/Y H:i', $row['time']));
-    $xtpl->assign('note', $row['note']);
-    $xtpl->parse('main.row');
-  }
-  $xtpl->assign('total', $total);
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
-
 function checkMember() {
   global $db, $user_info, $op;
 
@@ -303,7 +188,7 @@ function checkMember() {
 }
 
 function materialList() {
-  global $db, $url, $filter, $nv_Request;
+  global $db, $url, $filter;
 
   $xtpl = new XTemplate("material-list.tpl", PATH);
 
@@ -337,143 +222,14 @@ function materialList() {
   return $xtpl->text();
 }
 
-function expireList($limit = 5184000) {
-  global $db;
-
-  $xtpl = new XTemplate("expire-list.tpl", PATH);
-  $time = time() + $limit;
-  $index = 1;
-
-  $sql = "select * from `". PREFIX ."import_detail` where date > 0 && date < $time and expire = 0 order by date asc";
-  $query = $db->query($sql);
-
-  while ($row = $query->fetch()) {
-    $item = checkItem($row['item_id']);
-    $xtpl->assign('index', $index++);
-    $xtpl->assign('id', $row['id']);
-    $xtpl->assign('item', $item['name']);
-    $xtpl->assign('number', $row['number']);
-    $xtpl->assign('date', date('d/m/Y', $row['date']));
-    $xtpl->parse('main.row');
-  }
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
-
 function materialModal() {
   $xtpl = new XTemplate("modal.tpl", PATH);
  
-  $start = date('d/m/Y', time() - (date('d') - 1) * 60 * 60 * 24);
-  $end = date('d/m/Y');
   $day = 60 * 60 * 24;
-  $default = $day * 60;
-  $array = array(
-    'Một tuần' => $day * 7,
-    'Hai tuần' => $day * 14,
-    'Một tháng' => $day * 30,
-    'Hai tháng' => $day * 60,
-    'Một quý' => $day * 120,
-    'Nửa năm' => $day * 180,
-    'Một năm' => $day * 365,
-    'Hai năm' => $day * 730,
-    'Bốn năm' => $day * 1460
-  );
-  foreach ($array as $key => $value) {
-    if ($value == $default) $xtpl->assign('check', 'selected');
-    else $xtpl->assign('check', '');
-    $xtpl->assign('name', $key);
-    $xtpl->assign('value', $value);
-    $xtpl->parse('main.expire');
-  }
-
-  $xtpl->assign('start', $start);
-  $xtpl->assign('end', $end);
   $xtpl->assign('last_month', date('d/m/Y', time() - $day * 30));
 
   $xtpl->parse('main');
   return $xtpl->text();
-}
-
-function importList() {
-  global $db;
-
-  $filter = parseFilter('import');
-  $xtpl = new XTemplate("import-modal-list.tpl", PATH);
-
-  $query = $db->query('select count(*) as count from `'. PREFIX .'import`');
-  $number = $query->fetch();
-
-  // die('select * from `'. PREFIX .'import` limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
-  $query = $db->query('select * from `'. PREFIX .'import` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
-  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
-  while ($row = $query->fetch()) {
-    $id = $row['id'];
-    $importData = getImportData($row['id']);
-
-    // $xtpl->assign('id', 'ip' . spat(6 - strlen($row['id']), '0'));
-    $xtpl->assign('index', $index++);
-    $xtpl->assign('id', $row['id']);
-    $xtpl->assign('date', date('d/m/Y H:i', $row['import_date']));
-    $xtpl->assign('count', $importData['count']);
-    $xtpl->assign('total', $importData['total']);
-    $xtpl->parse('main.row');
-  }
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
-
-function exportList() {
-  global $db;
-
-  $filter = parseFilter('export');
-  $xtpl = new XTemplate("export-list.tpl", PATH);
-
-  $query = $db->query('select count(*) as count from `'. PREFIX .'export`');
-  $number = $query->fetch();
-
-  // die('select * from `'. PREFIX .'import` limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
-  $query = $db->query('select * from `'. PREFIX .'export` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
-  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
-  while ($row = $query->fetch()) {
-    $id = $row['id'];
-    $exportData = getExportData($row['id']);
-
-    // $xtpl->assign('id', 'ip' . spat(6 - strlen($row['id']), '0'));
-    $xtpl->assign('index', $index++);
-    $xtpl->assign('id', $row['id']);
-    $xtpl->assign('date', date('d/m/Y H:i', $row['export_date']));
-    $xtpl->assign('count', $exportData['count']);
-    $xtpl->assign('total', $exportData['total']);
-    $xtpl->parse('main.row');
-  }
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
-
-function typeOptionList() {
-  global $db;
-
-  $sql = 'select * from `'. PREFIX .'material_type` order by name';
-  $query = $db->query($sql);
-  $html = '';
-
-  while ($row = $query->fetch()) {
-    $html .= '<option value="'. $row['id'] .'">' . $row['name'] . '</option>';
-  }
-  return $html;
-}
-
-function sourceOptionList() {
-  global $db;
-
-  $sql = 'select * from `'. PREFIX .'material_source` order by name';
-  $query = $db->query($sql);
-  $html = '';
-
-  while ($row = $query->fetch()) {
-    $html .= '<option value="'. $row['id'] .'">' . $row['name'] . '</option>';
-  }
-  return $html;
 }
 
 function sourceDataList() {
