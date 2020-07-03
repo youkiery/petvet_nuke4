@@ -156,9 +156,10 @@ if (!empty($action)) {
       }
     break;
     case 'insert-item':
-      // nếu rồi, kiểm tra item có trong product chưa
-      // nếu rồi, bỏ qua bước này
+      // kiểm tra item có trong catalog chưa
+      // nếu chưa, thêm vào catalog 
       // xong, thêm item vào product
+
       $code = $nv_Request->get_string('code', 'post', '');
       $name = $nv_Request->get_string('name', 'post', '');
       
@@ -167,8 +168,15 @@ if (!empty($action)) {
       $query = $db->query($sql);
       if (empty($row = $query->fetch())) {
         // nếu chưa thêm vào catalog
-        $sql = 'insert into `'. PREFIX .'`';
+        $sql = 'insert into `'. PREFIX .'catalog` (code, name, unit, categoryid, price) values ("'. $code .'", "'. $name .'", "", "", "")';
+        $db->query($sql);
+        $row = array('id' => $db->lastInsertId());
       }
+      $sql = 'insert into `'. PREFIX .'product` (itemid, low, tag) values ('. $row['id'] .', 0, \''. json_encode(array()) .'\')';
+      $db->query($sql);
+
+      $result['status'] = 1;
+      $result['html'] = productList($url, $filter);
     break;
   }
   echo json_encode($result);

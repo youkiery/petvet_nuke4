@@ -24,68 +24,22 @@
     display: table;
   }
 
-  .col-1,
-  .col-2,
-  .col-3,
-  .col-4,
-  .col-5,
-  .col-6,
-  .col-7,
-  .col-8,
-  .col-9,
-  .col-10,
-  .col-11,
-  .col-12 {
+  .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
     float: left;
   }
 
-  .col-1 {
-    width: 8.33%;
-  }
-
-  .col-2 {
-    width: 16.66%;
-  }
-
-  .col-3 {
-    width: 25%;
-  }
-
-  .col-4 {
-    width: 33.33%;
-  }
-
-  .col-5 {
-    width: 41.66%;
-  }
-
-  .col-6 {
-    width: 50%;
-  }
-
-  .col-7 {
-    width: 58.33%;
-  }
-
-  .col-8 {
-    width: 66.66%;
-  }
-
-  .col-9 {
-    width: 75%;
-  }
-
-  .col-10 {
-    width: 83.33%;
-  }
-
-  .col-11 {
-    width: 91.66%;
-  }
-
-  .col-12 {
-    width: 100%;
-  }
+  .col-1 {width: 8.33%;}
+  .col-2 {width: 16.66%;}
+  .col-3 {width: 25%;}
+  .col-4 {width: 33.33%;}
+  .col-5 {width: 41.66%;}
+  .col-6 {width: 50%;}
+  .col-7 {width: 58.33%;}
+  .col-8 {width: 66.66%;}
+  .col-9 {width: 75%;}
+  .col-10 {width: 83.33%;}
+  .col-11 {width: 91.66%;}
+  .col-12 {width: 100%;}
 
   .upload {
     background: #eee;
@@ -112,7 +66,8 @@
     </div>
     <div class="col-2">
       <div class="relative">
-        <input type="text" class="form-control" id="tag" name="tag" value="{tag}" placeholder="VD: dây dắt, vòng cổ, xích inox, cổ xanh đỏ đen,...">
+        <input type="text" class="form-control" id="tag" name="tag" value="{tag}"
+          placeholder="VD: dây dắt, vòng cổ, xích inox, cổ xanh đỏ đen,...">
         <div class="suggest" id="tag-suggest"> </div>
       </div>
     </div>
@@ -132,26 +87,27 @@
     </div>
   </form>
   <div class="col-3" style="text-align: right;">
-    <button class="btn btn-info" onclick="$('#statistic-modal').modal('show')">
-      Thống kê
+    <button class="btn btn-success" onclick="insertItem()">
+      Thêm hàng hóa
     </button>
   </div>
 </div>
 
 <div class="form-group rows">
   <div class="relative col-4">
+    <input type="text" class="form-control" id="product-insert-input" placeholder="Thêm mặt hàng">
+    <input type="hidden" id="product-insert-input-val">
+    <div class="suggest" id="product-insert-input-suggest"></div>
+  </div>
+  <div class="col-2">
     <div class="input-group">
-      <input type="text" class="form-control" id="product-insert-input" placeholder="Thêm mặt hàng">
+      <input type="text" class="form-control" id="product-insert-input-low" placeholder="Giới hạn">
       <div class="input-group-btn">
-        <button class="btn btn-success" onclick="insertItem()">
+        <button class="btn btn-success" onclick="insertProduct()">
           <span class="glyphicon glyphicon-plus"></span>
         </button>
       </div>
     </div>
-    <div class="suggest" id="product-insert-input-suggest"></div>
-  </div>
-  <div class="col-2">
-    <input type="text" class="form-control" id="product-insert-input-low" placeholder="Giới hạn">
   </div>
   <div class="col-6" style="text-align: right;">
     <button class="btn btn-danger" onclick="removeItem()">
@@ -196,9 +152,9 @@
         tags = searchtag(convert(input))
         tags.forEach(tag => {
           html += `
-          <div class="suggest-item" onclick="selectTag('`+ tag +`', '#tag')"> 
-              `+ tag +`
-            </div>`        
+          <div class="suggest-item" onclick="selectTag('`+ tag + `', '#tag')"> 
+              `+ tag + `
+            </div>`
         });
         resolve(html)
       })
@@ -209,9 +165,9 @@
         tags = searchtag(convert(input))
         tags.forEach(tag => {
           html += `
-            <div class="suggest-item" onclick="selectTag('`+ tag +`', '#statistic-tag')"> 
-              `+ tag +`
-            </div>`        
+            <div class="suggest-item" onclick="selectTag('`+ tag + `', '#statistic-tag')"> 
+              `+ tag + `
+            </div>`
         });
         resolve(html)
       })
@@ -233,12 +189,19 @@
         }
       }
     }
-    console.log(data);
     return data
   }
 
-  function insertProduct(id) {
-    vhttp.checkelse('', { action: 'insert-product', keyword: $("#product-insert-input").val(), id: id, low: $("#product-insert-low").val() }).then(data => {
+  function selectProduct(name, id) {
+    $("#product-insert-input").val(name)
+    $("#product-insert-input-val").val(id)
+  }
+
+  function insertProduct() {
+    if (!$("#product-insert-input-val").val()) alert_msg('Chọn mặt hàng trước khi thêm')
+    else  vhttp.checkelse('', { action: 'insert-product', keyword: $("#product-insert-input").val(), id: $("#product-insert-input-val").val(), low: $("#product-insert-low").val() }).then(data => {
+      $("#product-insert-input").val('')
+      $("#product-insert-input-val").val('0')
       $('#content').html(data['html'])
       $('#product-insert-input-suggest').html(data['html2'])
       installCheckbox('product')
@@ -252,8 +215,9 @@
   }
 
   function insertItemSubmit() {
-    vhttp.checkelse('', { action: 'insert-item', code: $("#item-code").val(), code: $("#item-code").val() }).then(data => {
+    vhttp.checkelse('', { action: 'insert-item', name: $("#item-name").val(), code: $("#item-code").val() }).then(data => {
       $('#content').html(data['html'])
+      $("#item-modal").modal('show')
       installCheckbox('product')
     })
   }
@@ -313,7 +277,7 @@
 
           // gửi dữ liệu tuần tự
           console.log(hundred);
-          
+
           for (let index = 0; index <= hundred; index++) {
             vhttp.checkelse('', { action: 'update', data: list[index], check: Number($("#insert-check").prop('checked')) }).then(data => {
               if (index == 0) window.location.reload()
@@ -451,51 +415,6 @@
     })
   }
 
-  function goPage(name, page) {
-    global['page'] = page
-    from = (global['page'] - 1) * global['limit'] + 1
-    end = from + global['limit']
-    temp = ''
-    for (i = from; i < end; i++) {
-      item = global['data'][i];
-      if (item) {
-        temp += `
-                <tr>
-                    <td> `+ i + ` </td>
-                    <td> <input type="checkbox" class="check-insert" rel="`+ i + `"> </td>
-                    <td> `+ item['code'] + ` </td>
-                    <td> `+ item['name'] + ` </td>
-                </tr>`
-      }
-    }
-    nav = ''
-    page = global['data'].length / global['limit'] + (global['data'].length % global['limit'] ? 1 : 0)
-    for (i = 1; i <= page; i++) {
-      if (i == global['page']) {
-        nav += `<button class="btn btn-info"> ` + i + ` </button>`
-      }
-      else {
-        nav += `<button class="btn btn-default" onclick="goPage2('` + name + `', ` + i + `)"> ` + i + ` </button>`
-      }
-    }
-
-    return `
-        <table class="table table-bordered table-hover">
-            <tr>
-                <th> STT </th>
-                <th> <input type="checkbox" class="check-insert-all"> </th>
-                <th> Mã hàng </th>
-                <th> Tên hàng </th>
-            </tr>
-            `+ temp + `
-        </table>` + nav
-  }
-
-  function goPage2(name, page) {
-    $("#" + name + "-content").html(goPage(name, page))
-    installCheckbox(name)
-  }
-
   function installCheckbox(name) {
     $(".check-" + name + "-all").change((e) => {
       $(".check-" + name).prop('checked', e.currentTarget.checked)
@@ -510,14 +429,14 @@
 
   function convert(str) {
     str = str.toLowerCase();
-    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a"); 
-    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e"); 
-    str = str.replace(/ì|í|ị|ỉ|ĩ/g,"i"); 
-    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g,"o"); 
-    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"u"); 
-    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y"); 
-    str = str.replace(/đ/g,"d");
-    str = str.trim(); 
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+    str = str.replace(/đ/g, "d");
+    str = str.trim();
     return str;
   }
 </script>

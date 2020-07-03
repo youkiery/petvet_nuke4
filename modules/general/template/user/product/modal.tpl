@@ -1,23 +1,23 @@
 <!-- BEGIN: main -->
-<div id="statistic-modal" class="modal" role="dialog">
-  <div class="modal-dialog">
+<div id="item-modal" class="modal" role="dialog">
+  <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-body">
         <div class="form-group">
-          Thống kê
+          Hàng hóa
           <div type="button" class="close" data-dismiss="modal"> &times; </div> <br><br>
         </div>
 
         <div class="form-group rows">
-          <div class="col-3"> Mã hàng </div>
-          <div class="col-9">
+          <div class="col-4"> Mã hàng </div>
+          <div class="col-8">
             <input type="text" class="form-control" id="item-code">
           </div>
         </div>
 
         <div class="form-group rows">
-          <div class="col-3"> Tên hàng </div>
-          <div class="col-9">
+          <div class="col-4"> Tên hàng </div>
+          <div class="col-8">
             <input type="text" class="form-control" id="item-name">
           </div>
         </div>
