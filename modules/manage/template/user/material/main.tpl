@@ -51,7 +51,7 @@
   {content}
 </div>
 
-<script src="/modules/core/js/vremind-6.js"></script>
+<script src="/modules/core/js/vremind-7.js"></script>
 <script src="/modules/core/js/vhttp.js"></script>
 <script src="/modules/manage/src/script.js"></script>
 <script>
@@ -123,16 +123,16 @@
           </tr>
         </tbody>
       `).insertAfter('#import-insert-modal-content')
-      vremind.install('#import-type-' + global['ia'], '#import-type-suggest-' + global['ia'], (input => {
+      vremind.install('#import-type-' + global['ia'], '#import-type-suggest-' + global['ia'], ((input, ia) => {
         return new Promise(resolve => {
-          resolve(searchMaterial(input, 'import', global['ia']))
+          resolve(searchMaterial(input, 'import', ia))
         })
-      }), 300, 300)
-      vremind.install('#import-source-' + global['ia'], '#import-source-suggest-' + global['ia'], (input => {
+      }), 300, 300, 0, global['ia'])
+      vremind.install('#import-source-' + global['ia'], '#import-source-suggest-' + global['ia'], ((input, ia) => {
         return new Promise(resolve => {
-          resolve(searchSource(input, 'import', global['ia']))
+          resolve(searchSource(input, 'import', ia))
         })
-      }), 300, 300)
+      }), 300, 300, 0, global['ia'])
       $(".date-" + global['ia']).datepicker({
         format: 'dd/mm/yyyy',
         changeMonth: true,

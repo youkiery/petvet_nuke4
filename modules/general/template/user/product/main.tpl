@@ -50,6 +50,10 @@
     line-height: 100px;
     color: green;
   }
+
+  .suggest {
+    z-index: 10;
+  }
 </style>
 
 <div id="msgshow"></div>
@@ -123,13 +127,15 @@
   {content}
 </div>
 
-<script src="/modules/core/js/vremind-5.js"></script>
+<script src="/modules/core/js/vremind-6.js"></script>
 <script src="/modules/core/js/vhttp.js"></script>
 <script>
   var global = {
     page: 1,
     limit: 100,
     file: {},
+    tag: {},
+    statistic: {},
     list: JSON.parse('{list}'),
     tags: JSON.parse('{tags}'),
     data: [],
