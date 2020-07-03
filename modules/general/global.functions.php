@@ -48,10 +48,17 @@ function checkTag($tags, $tag_data) {
   }
 }
 
-function getTagPermit($db) {
+function getTagPermit($userid) {
   global $db;
+  $list = array();
 
-  $sql = 'select ';
+  $sql = 'select b.name from `'. PREFIX .'tag_permit` a inner join `'. PREFIX .'tag` b on a.tagid = b.id where a.userid = '. $userid;
+  $query = $db->query($sql);
+  while ($row = $query->fetch()) {
+    $list []= $row['name'];
+  }
+
+  return $list;
 }
 
 function checkProductTag($name) {
@@ -522,3 +529,26 @@ function parseSize($number) {
   return $size[count($size) - 1] . $unit[count($size) - 1];
 }
 
+function compareArray($source_arr, $target_arr) {
+  $list = array(
+    array(), // Giữ lại
+    array(), // Bỏ
+    array()  // Thêm
+  );
+  foreach ($source_arr as $value) {
+    if (in_array($value, $target_arr)) $list[0] []= $value;
+    else $list[1] []= $value;
+  }
+  foreach ($target_arr as $value) {
+    if (!in_array($value, $source_arr)) $list[2] []= $value;
+  }
+  return $list;
+}
+
+function getTagId($name) {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'tag` where name = "'. $name .'"';
+  $query = $db->query($sql);
+  return $query->fetch()['id'];
+}

@@ -415,7 +415,7 @@ function productUserSuggest($keyword)
   global $db, $db_config;
 
   $xtpl = new XTemplate("user-suggest.tpl", PATH);
-  $sql = 'select userid, username, concat(first_name, last_name) as fullname from `' . $db_config['prefix'] . '_users` where userid not in (select userid from `'. PREFIX .'permit`) limit 10';
+  $sql = 'select * from (select userid, username, concat(first_name, " ", last_name) as fullname from `' . $db_config['prefix'] . '_users` where userid not in (select userid from `'. PREFIX .'permit`)) as a where fullname like "%'. $keyword .'%" limit 10';
   $query = $db->query($sql);
   $index = 1;
 
