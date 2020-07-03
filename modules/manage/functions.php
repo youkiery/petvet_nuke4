@@ -227,6 +227,7 @@ function materialModal() {
  
   $day = 60 * 60 * 24;
   $xtpl->assign('last_month', date('d/m/Y', time() - $day * 30));
+  $xtpl->assign('next_half_year', date('d/m/Y', time() + $day * 30 * 6));
 
   $xtpl->parse('main');
   return $xtpl->text();
@@ -245,6 +246,19 @@ function sourceDataList() {
       'name' => $row['name'],
       'alias' => simplize($row['name'])
     );
+  }
+  return $list;
+}
+
+function sourceDataList2() {
+  global $db;
+
+  $sql = 'select * from `'. PREFIX .'material_source` order by name';
+  $query = $db->query($sql);
+  $list = array();
+
+  while ($row = $query->fetch()) {
+    $list[$row['id']] = $row['name'];
   }
   return $list;
 }

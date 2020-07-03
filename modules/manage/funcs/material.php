@@ -434,84 +434,96 @@ if (!empty($action)) {
       $list = array();
 
       $xtpl = new XTemplate("report-list.tpl", PATH);
-      $sql = 'select * from `' . PREFIX . 'material_detail` where materialid = ' . $data['type'];
-      $query = $db->query($sql);
-      $material = $query->fetch();
-      $remain = $material['number'];
 
-      // lấy dữ liệu trong khoảng thời gian, kiểm tra tick, xuất dữ liệu
-      // b1, lấy danh sách nhập, xuất
-      // b2, hợp danh sách, foreach, tính tồn đầu tiên
-      // b3, kiểm tra tick, xuất dữ liệu
-      $sql = 'select a.*, b.source, b.expire from `' . PREFIX . 'material_import_detail` a inner join `' . PREFIX . 'material_detail` b on a.detailid = b.id where b.materialid = ' . $data['type'] . ' and ' . ($data['source'] > 0 ? ' b.source = ' . $data['source'] . ' and ' : '') . ' a.date > ' . $data['date'] . ' and a.number > 0 order by date desc';
-      $query = $db->query($sql);
-      $import = array();
+      $source = sourceDataList2();
 
-      while ($row = $query->fetch()) {
-        // $remain -= $row['number'];
-        $import[] = $row;
-      }
+      foreach ($data['list'] as $type) {
+        $sql = 'select * from `' . PREFIX . 'material` where id = ' . $type;
+        $query = $db->query($sql);
+        $material = $query->fetch();
+        $xtpl->assign('name', $material['name']);
 
-      $sql = 'select a.*, b.source, b.expire from `' . PREFIX . 'material_export_detail` a inner join `' . PREFIX . 'material_detail` b on a.detailid = b.id where b.materialid = ' . $data['type'] . ' and ' . ($data['source'] > 0 ? ' b.source = ' . $data['source'] . ' and ' : '') . ' a.date > ' . $data['date'] . ' and a.number > 0 order by date desc';
-      $query = $db->query($sql);
-      $export = array();
-
-      while ($row = $query->fetch()) {
-        // $remain += $row['number'];
-        $export[] = $row;
-      }
-
-      $ci = count($import) - 1;
-      $ce = count($export) - 1;
-      $count = $ci + $ce + 2;
-      // chạy import_index, export_index, kiểm tra ngày nhỏ hơn, xuất dòng
-      while ($count) {
-        $count--;
-        $check = true;
-        if ($ci >= 0) {
-          if ($import[$ci]['date'] <= $export[$ce]['date']) {
-
+        $sql = 'select * from `' . PREFIX . 'material_detail` where materialid = ' . $type . ($data['source'] > 0 ? ' and source = ' . $data['source'] : '');
+        $query = $db->query($sql);
+        $remain = 0;
+        while ($material = $query->fetch()) $remain += $material['number'];
+  
+        // lấy dữ liệu trong khoảng thời gian, kiểm tra tick, xuất dữ liệu
+        // b1, lấy danh sách nhập, xuất
+        // b2, hợp danh sách, foreach, tính tồn đầu tiên
+        // b3, kiểm tra tick, xuất dữ liệu
+        $sql = 'select a.*, b.source, b.expire from `' . PREFIX . 'material_import_detail` a inner join `' . PREFIX . 'material_detail` b on a.detailid = b.id where b.materialid = ' . $type . ' and ' . ($data['source'] > 0 ? ' b.source = ' . $data['source'] . ' and ' : '') . ' a.date > ' . $data['date'] . ' and a.number > 0 order by date desc';
+        $query = $db->query($sql);
+        $import = array();
+  
+        while ($row = $query->fetch()) {
+          $remain -= $row['number'];
+          $import[] = $row;
+        }
+  
+        $sql = 'select a.*, b.source, b.expire from `' . PREFIX . 'material_export_detail` a inner join `' . PREFIX . 'material_detail` b on a.detailid = b.id where b.materialid = ' . $type . ' and ' . ($data['source'] > 0 ? ' b.source = ' . $data['source'] . ' and ' : '') . ' a.date > ' . $data['date'] . ' and a.number > 0 order by date desc';
+        $query = $db->query($sql);
+        $export = array();
+  
+        while ($row = $query->fetch()) {
+          $remain += $row['number'];
+          $export[] = $row;
+        }
+  
+        $ci = count($import) - 1;
+        $ce = count($export) - 1;
+        $count = $ci + $ce + 2;
+        // chạy import_index, export_index, kiểm tra ngày nhỏ hơn, xuất dòng
+        while ($count) {
+          $count--;
+          $check = true;
+          if ($ci >= 0) {
+            if ($ce > 0) {
+              if ($import[$ci]['date'] > $export[$ce]['date']) {
+                $check = false;
+              }
+            }
           }
           else {
             $check = false;
           }
+  
+          if ($check) {
+            $data = array(
+              'type' => 'Nhập',
+              'source' => $import[$ci]['source'],
+              'date' => date('d/m/Y', $import[$ci]['date']),
+              'number' => $import[$ci]['number'],
+              'remain' => ($remain += $import[$ci]['number']),
+              'expire' => date('d/m/Y', $import[$ci]['expire']),
+              'note' => $import[$ci]['note']
+            );
+            $ci--;
+          } else {
+            $data = array(
+              'type' => 'Xuất',
+              'source' => $export[$ce]['source'],
+              'date' => date('d/m/Y', $export[$ce]['date']),
+              'number' => $export[$ce]['number'],
+              'remain' => ($remain -= $export[$ce]['number']),
+              'expire' => date('d/m/Y', $export[$ce]['expire']),
+              'note' => $export[$ce]['note']
+            );
+            $ce--;
+          }
+  
+          $xtpl->assign('source', $source[$data['source']]);
+          $xtpl->assign('type', $data['type']);
+          $xtpl->assign('date', $data['date']);
+          $xtpl->assign('number', $data['number']);
+          $xtpl->assign('remain', $data['remain']);
+          $xtpl->assign('expire', $data['expire']);
+          $xtpl->assign('note', $data['note']);
+          $xtpl->parse('main.row');
         }
-        else {
-          $check = false;
-        }
-
-        if ($check) {
-          $data = array(
-            'type' => 'Nhập',
-            'date' => date('d/m/Y', $import[$ci]['date']),
-            'number' => $import[$ci]['number'],
-            'remain' => ($remain += $import[$ci]['number']),
-            'expire' => date('d/m/Y', $import[$ci]['expire']),
-            'note' => $import[$ci]['note']
-          );
-          $ci--;
-        } else {
-          $data = array(
-            'type' => 'Xuất',
-            'date' => date('d/m/Y', $export[$ce]['date']),
-            'number' => $export[$ce]['number'],
-            'remain' => ($remain -= $export[$ce]['number']),
-            'expire' => date('d/m/Y', $export[$ce]['expire']),
-            'note' => $export[$ce]['note']
-          );
-          $ce--;
-        }
-
-        $xtpl->assign('type', $data['type']);
-        $xtpl->assign('date', $data['date']);
-        $xtpl->assign('number', $data['number']);
-        $xtpl->assign('remain', $data['remain']);
-        $xtpl->assign('expire', $data['expire']);
-        $xtpl->assign('note', $data['note']);
-        $xtpl->parse('main.row');
+        $xtpl->parse('main');
       }
       // die();
-      $xtpl->parse('main');
       $result['status'] = 1;
       $result['html'] = $xtpl->text();;
       break;
@@ -519,18 +531,19 @@ if (!empty($action)) {
         $data = $nv_Request->get_array('data', 'post');
 
         $xtpl = new XTemplate("report-limit-list.tpl", PATH);
-        $sql = 'select * from `'. PREFIX .'material` order by name';
+        $sql = 'select * from `'. PREFIX .'material` where name like "%'. $data['keyword'] .'%" order by name';
         $query = $db->query($sql);
         $index = 1;
         
         while($item = $query->fetch()) {
           $number = 0;
-          $sql = 'select * from `'. PREFIX .'material_detail` where materialid = '. $item['id'];
+          $sql = 'select * from `'. PREFIX .'material_detail` where materialid = '. $item['id'] .' and number > 0';
+          // die($sql);
           $detailquery = $db->query($sql);
           while($detail = $detailquery->fetch()) {
             $number += $detail['number'];
           }
-          if ($number <= 10) {
+          if ($number <= $data['limit']) {
             $xtpl->assign('index', $index++);
             $xtpl->assign('name', $item['name']);
             $xtpl->assign('number', $number);
@@ -544,21 +557,24 @@ if (!empty($action)) {
         break;
       case 'report_expire':
         $data = $nv_Request->get_array('data', 'post');
-        $expire = time() + 60 * 60 * 24 * 30;
+        $expire = totime($data['expire']);
 
         $xtpl = new XTemplate("report-expire-list.tpl", PATH);
-        $sql = 'select * from `'. PREFIX .'material` order by name';
+        $sql = 'select * from `'. PREFIX .'material` where name like "%'. $data['keyword'] .'%" order by name';
         $query = $db->query($sql);
         $index = 1;
+
+        $source = sourceDataList2();
         
         while($item = $query->fetch()) {
-          $sql = 'select * from `'. PREFIX .'material_detail` where materialid = '. $item['id'];
+          $sql = 'select * from `'. PREFIX .'material_detail` where number > 0 and materialid = '. $item['id'] . ' and expire < ' . $expire;
           $detailquery = $db->query($sql);
           $xtpl->assign('name', $item['name']);
           while($detail = $detailquery->fetch()) {
-            if ($detail['number'] > 0 && $detail['expire'] <= $expire) {
+            if ($detail['number'] > 0) {
               $xtpl->assign('index', $index++);
               $xtpl->assign('number', $detail['number']);
+              $xtpl->assign('source', $source[$detail['source']]);
               $xtpl->assign('expire', date('d/m/Y', $detail['expire']));
               $xtpl->parse('main.row');
             }

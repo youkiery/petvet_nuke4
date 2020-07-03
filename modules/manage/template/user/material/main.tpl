@@ -20,6 +20,15 @@
   .suggest {
     z-index: 10;
   }
+
+  .suggest-box {
+    width: 100%;
+    margin-bottom: 0px;
+  }
+
+  .suggest-box:hover {
+    background: lightgreen;
+  }
 </style>
 
 <div id="msgshow"></div>
@@ -42,7 +51,7 @@
   {content}
 </div>
 
-<script src="/modules/core/js/vremind-5.js"></script>
+<script src="/modules/core/js/vremind-6.js"></script>
 <script src="/modules/core/js/vhttp.js"></script>
 <script src="/modules/manage/src/script.js"></script>
 <script>
@@ -56,12 +65,17 @@
       'import': [],
       'export': []
     },
-    report_action: ['report', 'report_limit', 'report_expire'],
+    report_action: {
+      'm1': 'report',
+      'm2': 'report_limit',
+      'm3': 'report_expire'
+    },
     'ia': 0,
     'index': 0,
     'name': '',
     'today': '{today}',
-    'source': JSON.parse('{source}')
+    'source': JSON.parse('{source}'),
+    'report': {}
   }
   var insertLine = {
     'import': () => {
@@ -102,7 +116,7 @@
             <td> <input class="form-control date-`+ global['ia'] + `" id="import-expire-` + global['ia'] + `" value="` + global['today'] + `"> </td>
             <td> <input class="form-control" id="import-note-`+ global['ia'] + `"> </td>
             <td>
-              <button class="btn btn-danger btn-xs" onclick="removeRow(`+ global['ia'] +`)">
+              <button class="btn btn-danger btn-xs" onclick="removeRow(`+ global['ia'] + `)">
                 xóa
               </button>
             </td>
@@ -134,13 +148,13 @@
               <td>
                 `+ global['material'][index]['name'] + `
               </td>
-              <td> <input class="form-control date-`+ global['ia'] + `" id="export-date-`+ global['ia'] + `" value="` + global['today'] + `"> </td>
-              <td> `+ parseSource(detail['source']) +` </td>
-              <td> <input class="form-control" id="export-number-`+ global['ia'] + `" value="`+ detail['number'] +`"> </td>
-              <td> `+ parseTime(detail['expire']) +` </td>
+              <td> <input class="form-control date-`+ global['ia'] + `" id="export-date-` + global['ia'] + `" value="` + global['today'] + `"> </td>
+              <td> `+ parseSource(detail['source']) + ` </td>
+              <td> <input class="form-control" id="export-number-`+ global['ia'] + `" value="` + detail['number'] + `"> </td>
+              <td> `+ parseTime(detail['expire']) + ` </td>
               <td> <input class="form-control" id="export-note-`+ global['ia'] + `"> </td>
               <td>
-                <button class="btn btn-danger btn-xs" onclick="removeRow(`+ global['ia'] +`)">
+                <button class="btn btn-danger btn-xs" onclick="removeRow(`+ global['ia'] + `)">
                   xóa
                 </button>
               </td>
@@ -215,16 +229,19 @@
         global['material'].forEach((item, index) => {
           if (count < 30 && item['alias'].search(keyword) >= 0) {
             count++
+            check = 0
+            if (global['report'][index]) check = 1
             html += `
-              <div class="suggest-item" onclick="pickSuggest('type', '` + item['id'] + `', '` + item['name'] + `')">
+              <label class="suggest-box" onclick="reloadReportSuggest()">
                 `+ item['name'] + `
-              </div>`
+                <input class="suggest_box" index="`+ index + `" type="checkbox" style="float: right;" ` + (check ? 'checked' : '') + `>
+              </label>`
           }
         })
-        if (!html.length) return 'Không có kết quả'
+        if (!html.length) html = 'Không có kết quả'
         resolve(html)
       })
-    }), 300, 300)
+    }), 300, 300, 1)
     vremind.install('#report-source', '#report-source-suggest', (input => {
       return new Promise(resolve => {
         keyword = convert(input)
@@ -240,8 +257,8 @@
               </div>`
           }
         })
-        if (!html.length) return 'Không có kết quả'
-        resolve(html)
+        if (!html.length) html = 'Không có kết quả'
+          resolve(html)
       })
     }), 300, 300)
     $(".date").datepicker({
@@ -250,6 +267,33 @@
       changeYear: true
     });
   })
+
+  function reloadReportSuggest() {
+    $('.suggest_box').each((index, item) => {
+      itemIndex = item.getAttribute('index')
+      itemCheck = item.checked
+      if (itemCheck) global['report'][itemIndex] = itemIndex
+      else delete global['report'][itemIndex]
+    })
+    list = []
+    for (const key in global['report']) {
+      if (global['report'].hasOwnProperty(key)) {
+        list.push(global['material'][key]['name'])        
+      }
+    }
+    $('#report-type-text').text(list.join(', '))
+  }
+
+  function clearReportType() {
+    global['report'] = {}
+    $('.suggest_box').prop('checked', false)
+    $('#report-type-text').text('')
+  }
+
+  function clearReportSource() {
+    $('#report-source').val('')
+    $('#report-source-val').val('0')
+  }
 
   ////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////
@@ -261,8 +305,8 @@
   }
 
   function pickSuggest(type, index, name) {
-    $('#report-'+ type).val(name)
-    $('#report-'+ type +'-val').val(index)
+    $('#report-' + type).val(name)
+    $('#report-' + type + '-val').val(index)
   }
 
   function searchMaterial(keyword, name, ia) {
@@ -394,7 +438,7 @@
   }
 
   function removeRow(ia) {
-    $('tbody[ia='+ ia +']').remove()
+    $('tbody[ia=' + ia + ']').remove()
   }
 
   function parseTime(time) {
@@ -410,10 +454,51 @@
       date: $('#report-date').val(),
       type: $('#report-type-val').val(),
       source: $('#report-source-val').val(),
-      tick: $("[name=tick]:checked").val()
+      tick: $('#report-tick > .active').attr('id')
     }
     if (data['tick'] == 0 && data['type'] <= 0) return 'Chưa chọn hóa chất'
     return data
+  }
+
+  var checkReportDataFunction = {
+    'm1': () => {
+      list = []
+      for (const key in global['report']) {
+        if (global['report'].hasOwnProperty(key)) {
+          if (global['report'][key]) list.push(global['material'][key]['id'])
+        }
+      }
+
+      data = {
+        tick: 'm1',
+        date: $('#report-date').val(),
+        list: list,
+        source: $('#report-source-val').val()
+      }
+      if (!list.length) return 'Chọn ít nhất 1 hóa chất'
+      return data
+    },
+    'm2': () => {
+      data = {
+        keyword: $('#report-m2-name').val(),
+        limit: $('#report-m2-limit').val(),
+        tick: 'm2'
+      }
+      return data
+    },
+    'm3': () => {
+      data = {
+        keyword: $('#report-m3-name').val(),
+        expire: $('#report-m3-expire').val(),
+        tick: 'm3'
+      }
+      return data
+    }
+  }
+
+  var checkReportData = () => {
+    tick = $('#report-tick > .active').attr('id')
+    return checkReportDataFunction[tick]()
   }
 
   ////////////////////////////////////////////////////////////////
@@ -423,16 +508,16 @@
 
   function reportSubmit() {
     sdata = checkReportData()
-    if (typeof(sdata) == 'string') alert_msg(sdata)
+    if (typeof (sdata) == 'string') alert_msg(sdata)
     else vhttp.checkelse('', { action: global['report_action'][sdata['tick']], data: sdata }).then(data => {
-      $('#report-content').html(data['html'])
+      $('#' + global['report_action'][sdata['tick']].replace('_', '-') + '-content').html(data['html'])
     })
   }
 
   function insertSourceSubmit() {
     if (!$('#source-name').val().length) alert_msg('Nhập tên nguồn trước')
     else vhttp.checkelse('', { action: 'insert-source', name: $('#source-name').val(), note: trim($('#source-note').val()) }).then(data => {
-      if (data['data']) global['source'].push(data['data'])      
+      if (data['data']) global['source'].push(data['data'])
       $('#' + global['name'] + '-source-' + global['index']).val($('#source-name').val())
       $('#' + global['name'] + '-source-val-' + global['index']).val(data['id'])
       $('#source-modal').modal('hide')

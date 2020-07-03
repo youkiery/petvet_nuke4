@@ -49,31 +49,86 @@
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
 
-        <div class="rows">
-          <div class="col-4">
-            <input type="text" class="form-control date" id="report-date" value="{last_month}"> 
-          </div>
-          <div class="col-4">
-            <div class="relative">
-              <input type="text" class="form-control" id="report-type" placeholder="loại hóa chất"> 
-              <input type="hidden" id="report-type-val"> 
-              <div class="suggest" id="report-type-suggest"> </div>
+        <ul class="nav nav-tabs form-group">
+          <li class="active"><a data-toggle="tab" href="#m1"> Xuất nhập </a></li>
+          <li><a data-toggle="tab" href="#m2"> Hóa chất gần hết </a></li>
+          <li><a data-toggle="tab" href="#m3"> Hóa chất sắp hết hạn </a></li>
+        </ul>
+
+        <div class="tab-content" id="report-tick">
+          <div id="m1" class="tab-pane fade in active">
+            <div class="rows">
+              <div class="col-4">
+                <input type="text" class="form-control date" id="report-date" value="{last_month}">
+              </div>
+              <div class="col-4">
+                <div class="relative">
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="report-type" placeholder="loại hóa chất">
+                    <div class="input-group-btn">
+                      <button class="btn btn-danger" onclick="clearReportType()">
+                        <span class="glyphicon glyphicon-remove"></span>
+                      </button>
+                    </div>
+                  </div>
+                  <input type="hidden" id="report-type-val">
+                  <div class="suggest" id="report-type-suggest"> </div>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="relative">
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="report-source" placeholder="nguồn gốc">
+                    <input type="hidden" id="report-source-val">
+                    <div class="suggest" id="report-source-suggest"> </div>
+                    <div class="input-group-btn">
+                      <button class="btn btn-danger" onclick="clearReportSource()">
+                        <span class="glyphicon glyphicon-remove"></span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="col-4">
-            <div class="relative">
-              <input type="text" class="form-control" id="report-source" placeholder="nguồn gốc"> 
-              <input type="hidden" id="report-source-val"> 
-              <div class="suggest" id="report-source-suggest"> </div>
+            <div class="rows form-group">
+              <div class="col-4"> </div>
+              <div class="col-4" id="report-type-text"> </div>
+              <div class="col-4"> </div>
             </div>
+
+            <div id="report-content"> </div>
+          </div>
+          <div id="m2" class="tab-pane fade">
+            <div class="form-group rows">
+              <div class="col-6">
+                Từ khóa
+                <input class="form-control" id="report-m2-name" type="text" placeholder="Từ khóa">
+              </div>
+              <div class="col-6">
+                Giới hạn thấp nhất
+                <input class="form-control" id="report-m2-limit" type="text" placeholder="Giới hạn thấp nhất" value="10">
+              </div>
+            </div>
+
+            <div id="report-limit-content"> </div>
+          </div>
+          <div id="m3" class="tab-pane fade">
+            <div class="form-group rows">
+              <div class="col-6">
+                Từ khóa
+                <input class="form-control" id="report-m3-name" type="text" placeholder="Từ khóa">
+              </div>
+              <div class="col-6">
+                Hết hạn trước
+                <input class="form-control date" id="report-m3-expire" type="text" placeholder="Hết hạn trước" value="{next_half_year}">
+              </div>
+            </div>
+
+            <div id="report-expire-content"> </div>
           </div>
         </div>
+
         <div class="form-group text-center">
-          <div class="form-group">
-            <label> <input type="radio" name="tick" value="0" checked> Xuất nhập </label>
-            <label> <input type="radio" name="tick" value="1"> Hóa chất gần hết </label>
-            <label> <input type="radio" name="tick" value="2"> Hóa chất sắp hết hạn </label>
-          </div>
           <button class="btn btn-info" onclick="reportSubmit()">
             Thống kê
           </button>

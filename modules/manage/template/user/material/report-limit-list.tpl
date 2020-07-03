@@ -2,6 +2,13 @@
 <table class="table table-bordered">
   <thead>
     <tr>
+      <td colspan="3" class="text-center">
+        Hóa chất gần hết
+      </td>
+    </tr>
+  </thead>
+  <thead>
+    <tr>
       <th> STT </th>
       <th> Hóa chất </th>
       <th> Số lượng </th>
