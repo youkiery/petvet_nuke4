@@ -29,6 +29,10 @@
   .suggest-box:hover {
     background: lightgreen;
   }
+
+  .red {
+    background: pink;
+  }
 </style>
 
 <div id="msgshow"></div>

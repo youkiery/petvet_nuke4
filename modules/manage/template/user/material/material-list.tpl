@@ -5,16 +5,18 @@
       <th> STT </th>
       <th> Tên mục hàng </th>
       <th> Số lượng </th>
+      <th> HSD </th>
       <th> Mô tả </th>
       <th>  </th>
     </tr>
   </thead>
   <!-- BEGIN: row -->
   <tbody>
-    <tr>
+    <tr class="{color}">
       <td> {index} </td>
       <td> {name} {unit} </td>
       <td> {number} </td>
+      <td> {expire} </td>
       <td> {description} </td>
       <td>  </td>
     </tr>

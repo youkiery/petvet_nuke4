@@ -199,15 +199,23 @@ function materialList() {
   $sql = 'select * from `'. PREFIX .'material` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+  $today = time();
 
   while($row = $query->fetch()) {
     $number = 0;
-    $sql = 'select * from `'. PREFIX .'material_detail` where materialid = '. $row['id'];
+    $sql = 'select * from `'. PREFIX .'material_detail` where number > 0 and materialid = '. $row['id'];
     $detail_query = $db->query($sql);
+    $expire = 9999999999;
     while ($detail = $detail_query->fetch()) {
+      if ($detail['expire'] < $expire) $expire = $detail['expire'];
+      // echo "$expire, ";
       $number += $detail['number'];
     }
 
+    $xtpl->assign('expire', '-');
+    $xtpl->assign('color', '');
+    if ($expire !== 9999999999) $xtpl->assign('expire', date('d/m/Y', $expire));
+    if ($expire < $today) $xtpl->assign('color', 'red');
     $xtpl->assign('index', $index++);
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('number', $number);
@@ -217,7 +225,7 @@ function materialList() {
     $xtpl->parse('main.row');
   }
   $xtpl->assign('nav', nav_generater($url, $count, $filter['page'], $filter['limit']));
-
+  // die();
   $xtpl->parse('main');
   return $xtpl->text();
 }
