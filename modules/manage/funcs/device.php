@@ -216,7 +216,7 @@ $user = $query->fetch();
 $authors = json_decode($user['author']);
 
 $xtpl = new XTemplate("main.tpl", PATH);
-if ($authors->{device} == 2) {
+if ($authors->{'device'} == 2) {
   $xtpl->assign('excel_modal', excelModal());
   $xtpl->assign('device_modal', deviceModal());
   $xtpl->assign('remove_modal', removeModal());

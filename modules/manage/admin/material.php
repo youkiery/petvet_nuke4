@@ -13,16 +13,43 @@ $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
-    case 'remove-link':
-      $id = $nv_Request->get_int('id', 'post');
+    case 'get-employ':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $name = $nv_Request->get_string('name', 'post', '');
 
-      $sql = 'delete from `'. PREFIX .'material_link` where id = ' . $id;
+      $result['status'] = 1;
+      $result['html'] = materialPermitSuggest($name);
+    break;
+    case 'insert-employ':
+      $id = $nv_Request->get_int('id', 'post', '');
+      $name = $nv_Request->get_string('name', 'post', '');
 
-      if ($db->query($sql)) {
+      $sql = 'select * from `'. PREFIX .'permit` where userid = '. $id;
+      $query = $db->query($sql);
+      if (empty($row = $query->fetch())) {
+        $sql = 'insert into `'. PREFIX .'permit` (userid, type) values('. $id .', 0)';
+        $db->query($sql);
         $result['status'] = 1;
-        $result['html'] = materialLinkList();
-        $result['notify'] = 'Xóa liên kết';
+        $result['html'] = materialPermitList();
+        $result['html2'] = materialPermitSuggest($name);
       }
+    break;
+    case 'remove-employ':
+      $id = $nv_Request->get_int('id', 'post', '');
+
+      $sql = 'delete from `'. PREFIX .'permit` where userid = ' . $id;
+      $db->query($sql);
+      $result['status'] = 1;
+      $result['html'] = materialPermitList();
+    break;
+    case 'change-permit':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $type = $nv_Request->get_int('type', 'post', 0);
+
+      $sql = 'update `'. PREFIX .'permit` set type = '. $type .' where userid = ' . $id;
+      $db->query($sql);
+      $result['status'] = 1;
+      $result['html'] = materialPermitList();
     break;
   }
   echo json_encode($result);
@@ -30,11 +57,10 @@ if (!empty($action)) {
 }
 $xtpl = new XTemplate("main.tpl", PATH);
 
-$xtpl->assign('content', materialList());
+$xtpl->assign('content', materialPermitList());
 
 $xtpl->parse('main');
 $contents = $xtpl->text();
-
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_admin_theme($contents);
 include NV_ROOTDIR . '/includes/footer.php';
