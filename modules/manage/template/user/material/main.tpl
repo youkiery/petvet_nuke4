@@ -370,6 +370,8 @@
   function materialModal(name, ia) {
     global['name'] = name
     global['ia'] = ia
+    $('.insert').show()
+    $('.update').hide()
     $("#material-name").val('')
     $("#material-unit").val('')
     $("#material-number").val('')
@@ -419,6 +421,26 @@
     $('#source-name').val('')
     $('#source-note').val('')
     $('#source-modal').modal('show')
+  }
+
+  function updateItem(id) {
+    global['id'] = id
+    vhttp.checkelse('', {action: 'get-item', id: id}).then(data => {
+      $('#material-name').val(data['data']['name'])
+      $('#material-unit').val(data['data']['unit'])
+      $('#material-description').val(data['data']['description'])
+      $('.insert').hide()
+      $('.update').show()
+      $('#material-modal').modal('show')
+    })
+  }
+
+  function findMaterialIndex(id) {
+    index = -1
+    global['material'].forEach((item, itemIndex) => {
+      if (item['id'] === id) return index = itemIndex
+    })
+    return index
   }
 
   function selectItem(name, index, ia) {
@@ -539,6 +561,21 @@
         selected = global['material'][last]
         $("#" + global['name'] + "-type-val-" + global['ia']).val(last)
         $("#" + global['name'] + "-type-" + global['ia']).val(selected['name'])
+        $("#content").html(data['html'])
+        $("#material-modal").modal('hide')
+      }
+    })
+  }
+
+  function updateMaterial() {
+    sdata = checkMaterialData()
+    vhttp.checkelse('', { action: 'update-material', data: sdata, id: global['id'] }).then(data => {
+      if (data['notify']) alert_msg(data['notify'])
+      else {
+        alert_msg('Đã cập nhật')
+        itemIndex = findMaterialIndex(global['id'])
+        global['material'][itemIndex] = data['json']
+        selected = global['material'][index]
         $("#content").html(data['html'])
         $("#material-modal").modal('hide')
       }

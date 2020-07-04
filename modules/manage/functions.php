@@ -217,6 +217,7 @@ function materialList() {
     if ($expire !== 9999999999) $xtpl->assign('expire', date('d/m/Y', $expire));
     if ($expire < $today) $xtpl->assign('color', 'red');
     $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
     $xtpl->assign('name', $row['name']);
     $xtpl->assign('number', $number);
     $xtpl->assign('description', $row['description']);

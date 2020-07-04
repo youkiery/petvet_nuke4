@@ -1,24 +1,4 @@
 <!-- BEGIN: main -->
-<div class="modal" id="type-modal" role="dialog">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-body">
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
-
-        <div class="form-group">
-          Loại hóa chất
-          <input type="text" class="form-control" id="type-name">
-        </div>
-        <div class="text-center">
-          <button class="btn btn-success" onclick="insertTypeSubmit()">
-            Thêm loại hóa chất
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="modal" id="source-modal" role="dialog">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -145,27 +125,30 @@
       <div class="modal-body">
         <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
         <div class="form-horizontal">
-          <div class="form-group">
-            <label class="control-label col-sm-6"> Tên mục hàng </label>
-            <div class="col-sm-18">
+          <div class="form-group rows">
+            <label class="control-label col-3"> Tên mục hàng </label>
+            <div class="col-9">
               <input type="text" class="form-control" id="material-name">
             </div>
           </div>
-          <div class="form-group">
-            <label class="control-label col-sm-6"> Đơn vị </label>
-            <div class="col-sm-6">
+          <div class="form-group rows">
+            <label class="control-label col-3"> Đơn vị </label>
+            <div class="col-9">
               <input type="text" class="form-control" id="material-unit">
             </div>
           </div>
-          <div class="form-group">
-            <label class="control-label col-sm-6"> Mô tả </label>
-            <div class="col-sm-18">
+          <div class="form-group rows">
+            <label class="control-label col-3"> Mô tả </label>
+            <div class="col-9">
               <textarea class="form-control" id="material-description" rows="5"></textarea>
             </div>
           </div>
           <div class="text-center">
-            <button class="btn btn-success" onclick="insertMaterial()">
+            <button class="btn btn-success insert" onclick="insertMaterial()">
               Thêm mục hàng
+            </button>
+            <button class="btn btn-success update" onclick="updateMaterial()">
+              Cập nhật thông tin
             </button>
           </div>
         </div>

@@ -362,6 +362,35 @@ if (!empty($action)) {
         }
       }
       break;
+    case 'update-material':
+      $id = $nv_Request->get_int('id', 'post');
+      $data = $nv_Request->get_array('data', 'post');
+
+      if (!strlen($data['name'])) {
+        $result['notify'] = 'Tên vật tư trống';
+      } else if (checkMaterialName($data['name'], $id)) {
+        $result['notify'] = 'Trùng tên vật tư';
+      } else {
+        // insert
+        $sql = 'update `' . PREFIX . 'material` set name = "' . $data['name'] . '", unit = "' . $data['unit'] . '", description = "' . $data['description'] . '" where id = '. $id;
+        // die($sql);
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+          $result['html'] = materialList();
+          $result['json'] = array('id' => $id, 'name' => $data['name'], 'unit' => $data['unit'], 'description' => $data['description']);
+        }
+      }
+      break;
+    case 'get-item':
+      $id = $nv_Request->get_int('id', 'post');
+
+      $sql = 'select * from `' . PREFIX . 'material` where id = '. $id;
+      $query = $db->query($sql);
+      $material = $query->fetch();
+
+      $result['status'] = 1;
+      $result['data'] = $material;
+      break;
     case 'insert-import':
       $data = $nv_Request->get_array('data', 'post');
 

@@ -18,7 +18,12 @@
       <td> {number} </td>
       <td> {expire} </td>
       <td> {description} </td>
-      <td>  </td>
+      <td>
+        <button class="btn btn-info btn-xs" onclick="updateItem({id})">
+          sửa
+        </button>  
+        <!-- xóa -->
+      </td>
     </tr>
   </tbody>
   <!-- END: row -->
