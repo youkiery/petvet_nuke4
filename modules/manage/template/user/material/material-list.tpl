@@ -19,10 +19,12 @@
       <td> {expire} </td>
       <td> {description} </td>
       <td>
+        <!-- BEGIN: manager -->
         <button class="btn btn-info btn-xs" onclick="updateItem({id})">
           sửa
         </button>  
         <!-- xóa -->
+        <!-- END: manager -->
       </td>
     </tr>
   </tbody>

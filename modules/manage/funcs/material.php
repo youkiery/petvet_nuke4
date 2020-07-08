@@ -17,6 +17,15 @@ $filter = array(
   'limit' => $nv_Request->get_int('limit', 'get', 10)
 );
 
+$permit = checkMaterialPermit();
+if ($permit === false) {
+  // không có quyền
+  $contents = 'Người dùng chưa đăng nhập hoặc chưa cấp quyền';
+  include NV_ROOTDIR . '/includes/header.php';
+  echo nv_site_theme($contents);
+  include NV_ROOTDIR . '/includes/footer.php';
+}
+
 $excel = $nv_Request->get_int('excel', 'get');
 if ($nv_Request->get_int('excel', 'get')) {
   header('location: /excel-output.xlsx?time=' . time());
@@ -783,6 +792,7 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("main.tpl", PATH);
 // die();
+
 $xtpl->assign('today', date('d/m/Y', time()));
 $xtpl->assign('material', json_encode(getMaterialDataList(), JSON_UNESCAPED_UNICODE));
 $xtpl->assign('source', json_encode(sourceDataList()));
