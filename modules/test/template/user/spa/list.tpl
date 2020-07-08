@@ -18,10 +18,10 @@
       </th>
     </tr>
   </thead>
-  <tbody>
-    <!-- BEGIN: row -->
+  <!-- BEGIN: row -->
+  <tbody style="border-bottom: 2px solid darkgray !important">
     <tr>
-      <td>
+      <td rowspan="2" class="cell-center">
         {index}
       </td>
       <td>
@@ -53,7 +53,10 @@
         <!-- END: confirm -->
       </td>
     </tr>
-    <!-- END: row -->
+    <tr>
+      <td colspan="4"> {note} </td>
+    </tr>
   </tbody>
+  <!-- END: row -->
 </table>
 <!-- END: main -->

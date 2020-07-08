@@ -187,8 +187,20 @@ function checkMember() {
   }
 }
 
+function checkMaterialPermit() {
+  global $db, $user_info;
+
+  if (empty($user_info)) return false;
+  if (empty($user_info['userid'])) return false;
+  $sql = 'select * from `'. PREFIX .'permit` where userid = '. $user_info['userid'];
+  $query = $db->query($sql);
+  $permit = $query->fetch();
+  if (empty($permit)) return false;
+  return $permit['type'];
+}
+
 function materialList() {
-  global $db, $url, $filter;
+  global $db, $url, $filter, $permit;
 
   $xtpl = new XTemplate("material-list.tpl", PATH);
 
@@ -223,6 +235,7 @@ function materialList() {
     $xtpl->assign('description', $row['description']);
     if ($row['unit']) $xtpl->assign('unit', "($row[unit])");
     else $xtpl->assign('unit', '');
+    if ($permit) $xtpl->parse('main.row.manager');
     $xtpl->parse('main.row');
   }
   $xtpl->assign('nav', nav_generater($url, $count, $filter['page'], $filter['limit']));

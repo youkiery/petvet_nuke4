@@ -552,6 +552,7 @@ function spaList()
     else $xtpl->assign("spa_end", 'Chưa xong');
 
     $xtpl->assign("id", $row["id"]);
+    $xtpl->assign("note", $row["note"]);
     $xtpl->assign("customer_name", $customer["name"]);
     $xtpl->assign("customer_number", $customer["phone"]);
     $xtpl->assign("spa_from", date("H:i:s", $row["time"]));

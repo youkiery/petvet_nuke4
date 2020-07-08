@@ -3,10 +3,10 @@
   <thead class="sticky-header">
     <tr>
       <th>
-        Họ tên
+        Thú cưng
       </th>
       <th>
-        {lang.phone}
+        SĐT
       </th>
       <th>
         Tiêm phòng
@@ -22,7 +22,7 @@
   <!-- BEGIN: row -->
   <tr style="text-transform: capitalize; border-top: 2px solid black" class="{brickcolor}">
     <td>
-      {customer}
+      {petname} ({customer})
     </td>
     <td>
       {phone}

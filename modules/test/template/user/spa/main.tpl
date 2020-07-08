@@ -4,6 +4,12 @@
 <script src="/modules/core/js/vremind-5.js"></script>
 <div class="msgshow" id="msgshow"></div>
 
+<style>
+  .cell-center {
+    vertical-align: inherit; text-align: center;
+  }
+</style>
+
 {modal}
 
 <div id="content">
