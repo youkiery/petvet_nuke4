@@ -5,7 +5,6 @@
       <th> STT </th>
       <th> <input type="checkbox" id="device-check-all"> </th>
       <th> Tên thiết bị </th>
-      <th> Phòng ban </th>
       <th> Công ty </th>
       <th> Tình trạng </th>
       <th> Số lượng </th>
@@ -18,16 +17,19 @@
       <td> {index} </td>
       <th> <input type="checkbox" class="device-checkbox" id="device-checkbox-{id}"> </th>
       <td> {name} </td>
-      <td> {depart} </td>
       <td> {company} </td>
       <td> {status} </td>
       <td> {number} </td>
       <td> 
-        <button class="btn btn-info" onclick="deviceEdit({id})">
-          <span class="glyphicon glyphicon-edit"></span>
+        <button class="btn btn-info btn-xs" onclick="deviceEdit({id})">
+          sửa
         </button>  
-        <button class="btn btn-danger" onclick="deviceRemove({id})">
-          <span class="glyphicon glyphicon-remove"></span>
+        <a class="btn btn-info btn-xs" href="{url}"> HDSD </a>
+        <button class="btn btn-info btn-xs" onclick="itemDetail({id})">
+          phân quyền
+        </button>  
+        <button class="btn btn-danger btn-xs" onclick="deviceRemove({id})">
+          xóa
         </button>  
       </td>
     </tr>

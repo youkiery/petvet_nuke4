@@ -7,147 +7,164 @@
  */
 
 if (!defined('NV_IS_FILE_ADMIN')) { die('Stop!!!'); }
-$page_title = "Quản lý thiết bị";
-$excel = $nv_Request->get_int('excel', 'get');
-$action = $nv_Request->get_string('action', 'post', '');
-if ($nv_Request->get_int('excel', 'get')) {
-  header('location: /excel-output.xlsx?t=' . time());
+
+$filter = array(
+  'page' => $nv_Request->get_int('page', 'get', 1),
+  'limit' => $nv_Request->get_int('limit', 'get', 10)
+);
+
+$act = $nv_Request->get_string('act', 'get', '');
+$id = $nv_Request->get_int('id', 'get', 0);
+if (!empty($act) && $act == 'manual' && $id > 0) {
+  include_once('manual.php');
+  exit();
 }
+
+$action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
   switch ($action) {
-    case 'excel':
-      $xco = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
-      $title = array('STT', 'Tài sản', 'Quy cách', 'ĐVT', 'Số lượng', 'Năm sử dụng', 'Nguồn cung cấp', 'Ghi chú');
+    case 'save-config':
+      $value = $nv_Request->get_int('value', 'post', 14);
+      if (intval($value) < 14) $value = 14; 
 
-      include NV_ROOTDIR . '/PHPExcel/IOFactory.php';
-      $fileType = 'Excel2007'; 
-      $objPHPExcel = PHPExcel_IOFactory::load(NV_ROOTDIR . '/excel.xlsx');
-    
-      $query = $db->query('select * from `'. PREFIX .'depart`');
-      $i = 1;
-      while ($depart = $query->fetch()) {
-        $device_query = $db->query('select * from `'. PREFIX .'device` where depart like \'%"'. $depart['id'] .'"%\' limit 1');
-        if ($device_query->fetch()) {
-          $device_query = $db->query('select * from `'. PREFIX .'device` where depart like \'%"'. $depart['id'] .'"%\'');
-          $j = 0;
-          $objPHPExcel
-          ->setActiveSheetIndex(0)
-          ->setCellValue($xco['0'] . $i, 'DANH MUC TÀI SẢN KIỂM KÊ PHÒNG '. $depart['name'] .' NĂM ' . date('Y', time()));
-          $i += 2;
- 
-          foreach ($title as $value) {
-            $objPHPExcel
-            ->setActiveSheetIndex(0)
-            ->setCellValue($xco[$j++] . $i, $value);
-          }
-          $i++;
-
-          $index = 1;
-          $count = 0;
-          while ($device = $device_query->fetch()) {
-            $j = 0;
-            $count += $device['number'];
-            $objPHPExcel
-            ->setActiveSheetIndex(0)
-            ->setCellValue($xco[$j++] . $i, $index++)
-            ->setCellValue($xco[$j++] . $i, $device['name'])
-            ->setCellValue($xco[$j++] . $i, $device['intro'])
-            ->setCellValue($xco[$j++] . $i, $device['unit'])
-            ->setCellValue($xco[$j++] . $i, $device['number'])
-            ->setCellValue($xco[$j++] . $i, $device['year'])
-            ->setCellValue($xco[$j++] . $i, $device['source'])
-            ->setCellValue($xco[$j++] . $i++, $device['description']);
-          }
-          $objPHPExcel
-          ->setActiveSheetIndex(0)
-          ->setCellValue($xco[0] . $i, 'Tổng cộng: ')
-          ->setCellValue($xco[4] . $i++, $count);
-          $i += 2;
-        }
-      }
-      $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, $fileType);
-      $objWriter->save(NV_ROOTDIR . '/excel-output.xlsx');
-      $objPHPExcel->disconnectWorksheets();
-      unset($objWriter, $objPHPExcel);
-    break;
-    // case 'insert-item':
-    //   $data = $nv_Request->get_array('data', 'post');
-
-    //   if (!strlen($data['name'])) {
-    //     $result['notify'] = 'Tên thiết bị trống';
-    //   }
-    //   else if (checkItemName($data['name'])) {
-    //     $result['notify'] = 'Trùng tên thiết bị';
-    //   }
-    //   else {
-    //     // insert
-    //     $sql = 'insert into `'. PREFIX .'item` (name, unit, company, description) values("'. $data['name'] .'", "'. $data['unit'] .'", "'. checkCompany($data['company']) .'", "'. $data['description'] .'")';
-    //     if ($query = $db->query($sql)) {
-    //       $id = $db->lastInsertId();
-    //       $sql = 'insert into `'. PREFIX .'item_detail` (item_id, number, date, status) values ('. $id .', '. $data['number'] .', '. strtotime(date('Y/m/d')) .', "'. $data['status'] .'")';
-    //       if ($db->query($sql)) {
-    //         $result['status'] = 1;
-    //         $result['notify'] = 'Đã thêm';
-    //         $result['id'] = $db->lastInsertId();
-    //       }
-    //     }
-    //   }
-    // break;
-    case 'insert-depart':
-      $name = $nv_Request->get_string('name', 'post', '');
-      $name = ucwords($name);
-       
-      if (checkDepartName($name)) {
-        $result['notify'] = 'Đơn vị đã tồn tại';
+      $sql = 'select * from `'. $db_config['prefix'] .'_config` where config_name = "device_config"';
+      $query = $db->query($sql);
+      if (empty($query->fetch())) {
+        $sql = 'insert into  `'. $db_config['prefix'] .'_config` (lang, module, config_name, config_value) values ("sys", "site", "device_config", "'. $value .'")';
       }
       else {
-        $query = $db->query('insert into `'. PREFIX .'depart` (name, update_time) values("'. $name .'", '. time() .')');
-        if ($query) {
-          $result['status'] = 1;
-          $result['inserted'] = array('id' => $db->lastInsertId(), 'name' => $name);
-          $result['notify'] = 'Đã thêm đơn vị';
-        }
+        $sql = 'update `'. $db_config['prefix'] .'_config` set config_value = "'. $value .'" where config_name = "device_config"';
       }
+      $db->query($sql);
+      $result['status'] = 1;
+    break;
+    case 'remove-manager':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $name = $nv_Request->get_string('name', 'post', '');
+
+      $sql = 'delete from `'. PREFIX .'device_manager` where userid = '. $id;
+      $db->query($sql);
+      $result['status'] = 1;
+      $result['html'] = managerContent();
+      $result['html2'] = managerContentId($name);
+    break;
+    case 'remove-device':
+      $id = $nv_Request->get_int('id', 'post', 0);
+
+      $sql = 'delete from `'. PREFIX .'device` where userid = '. $id;
+      $db->query($sql);
+      $result['status'] = 1;
+      $result['html'] = deviceList();
+    break;
+    case 'insert-manager':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $name = $nv_Request->get_string('name', 'post', '');
+
+      if (!checkDeviceManagerId($id)) {
+        $sql = 'insert into `'. PREFIX .'device_manager` (userid, type) values("'. $id .'", 1)';
+        $db->query($sql);
+        $result['status'] = 1;
+        $result['html'] = managerContent();
+        $result['html2'] = managerContentId($name);
+      }
+    break;
+    case 'insert-depart':
+      $name = $nv_Request->get_string('name', 'post', '');
+
+      if (!checkDepartName($name)) {
+        $sql = 'insert into `'. PREFIX .'device_depart` (name) values("'. $name .'")';
+        $db->query($sql);
+        $result['status'] = 1;
+        $result['json'] = getDepartList();
+        $result['html'] = deviceList();
+      }
+    break;
+    case 'insert-depart2':
+      $name = $nv_Request->get_string('name', 'post', '');
+
+      if (!checkDepartName($name)) {
+        $sql = 'insert into `'. PREFIX .'device_depart` (name) values("'. $name .'")';
+        $db->query($sql);
+        $result['status'] = 1;
+        $result['json'] = getDepartList();
+        $result['html'] = departList();
+      }
+    break;
+    case 'insert-employ':
+      $id = $nv_Request->get_int('id', 'post', '');
+      $name = $nv_Request->get_string('name', 'post', '');
+      $departid = $nv_Request->get_int('departid', 'post', '');
+
+      $sql = 'select * from `'. PREFIX .'device_employ` where userid = '. $id .' and itemid = '. $departid;
+      $query = $db->query($sql);
+      if (empty($row = $query->fetch())) {
+        $sql = 'insert into `'. PREFIX .'device_employ` (userid, itemid) values('. $id .', '. $departid .')';
+        $db->query($sql);
+        $result['status'] = 1;
+        $result['html'] = itemContentId($departid);
+        $result['html2'] = employContentId($departid, $name);
+      }
+    break;
+    case 'get-depart':
+      $id = $nv_Request->get_int('id', 'post', '');
+
+      $sql = 'select * from `'. PREFIX .'device_depart` where id = ' . $id;
+      $query = $db->query($sql);
+      $depart = $query->fetch();
+
+      $result['status'] = 1;
+      $result['name'] = $depart['name'];
+      $result['html'] = itemContentId($id);
+    break;
+    case 'employ-filter':
+      $id = $nv_Request->get_int('id', 'post', '');
+      $name = $nv_Request->get_string('name', 'post', '');
+
+      $result['status'] = 1;
+      $result['html'] = employContentId($id, $name);
+    break;
+    case 'remove-depart':
+      $id = $nv_Request->get_int('id', 'post', '');
+
+      $sql = 'delete from `'. PREFIX .'device_depart` where id = ' . $id;
+      $db->query($sql);
+      $result['status'] = 1;
+      $result['json'] = getDepartList();
+      $result['html'] = departList($id);
+    break;
+    case 'remove-employ':
+      $id = $nv_Request->get_int('id', 'post', '');
+      $departid = $nv_Request->get_int('departid', 'post', '');
+
+      $sql = 'delete from `'. PREFIX .'device_employ` where itemid = '. $departid .' and userid = ' . $id;
+      $db->query($sql);
+      $result['status'] = 1;
+      $result['html'] = itemContentId($departid);
+    break;
+    case 'edit-depart':
+      $name = $nv_Request->get_string('name', 'post', '');
+      $id = $nv_Request->get_int('id', 'post', '');
+
+      $sql = 'update `'. PREFIX .'device_depart` set name = "'. $name .'" where id = ' . $id;
+      $db->query($sql);
+      $result['status'] = 1;
+      $result['notify'] = 'Đã cập nhật';
+      $result['json'] = getDepartList();
+      $result['html'] = departList();
     break;
     case 'insert-device':
       $data = $nv_Request->get_array('data', 'post');
-      // if (checkDeviceName($data['name'])) {
-      //   $result['notify'] = 'Thiết bị đã tồn tại';
-      // }
-      // else {
-        foreach ($data as $name => $value) {
-          if (!($name == 'depart' || $name == 'description')) checkRemind($name, $value);
-        }
-        if (empty($data['depart'])) $data['depart'] = array();
-        $sql = 'insert into `'. PREFIX .'device` (name, unit, number, year, intro, status, depart, source, description, import_time, update_time) values("'. $data['name'] .'", "'. $data['unit'] .'", "'. $data['number'] .'", "'. $data['year'] .'", "'. $data['intro'] .'", "'. $data['status'] .'", \''. json_encode($data['depart']) .'\', "'. $data['source'] .'", "'. $data['description'] .'", '. totime($data['import']) .', '. time() .')';
-        // die($sql);
-        if ($db->query($sql)) {
-          $result['status'] = 1;
-          $result['html'] = deviceList();
-          $result['notify'] = 'Đã thêm thiết bị';
-        }
-      // }
-    break;
-    case 'edit-device':
-      $id = $nv_Request->get_int('id', 'post', 0);
-      $data = $nv_Request->get_array('data', 'post');
-      // if (checkDeviceName($data['name'], $id)) {
-      //   $result['notify'] = 'Thiết bị đã tồn tại';
-      // }
-      // else {
-        foreach ($data as $name => $value) {
-          if (!($name == 'depart' || $name == 'description')) checkRemind($name, $value);
-        }
-        if (empty($data['depart'])) $data['depart'] = array();
-        $sql = 'update `'. PREFIX .'device` set name = "'. $data['name'] .'", unit = "'. $data['unit'] .'", number = "'. $data['number'] .'", year = "'. $data['year'] .'", intro = "'. $data['intro'] .'", status = "'. $data['status'] .'", depart = \''. json_encode($data['depart']) .'\', source = "'. $data['source'] .'", description = "'. $data['description'] .'", import_time = "'. totime($data['import']) .'", update_time = '. time() .' where id = ' . $id;
-        // die($sql);
-        if ($db->query($sql)) {
-          $result['status'] = 1;
-          $result['html'] = deviceList();
-          $result['notify'] = 'Đã thêm thiết bị';
-        }
-      // }
+      foreach ($data as $name => $value) {
+        if (!($name == 'depart' || $name == 'description')) checkRemind($name, $value);
+      }
+      if (empty($data['depart'])) $data['depart'] = array();
+      $sql = 'insert into `'. PREFIX .'device` (name, unit, number, year, intro, status, depart, source, description, import_time, update_time) values("'. $data['name'] .'", "'. $data['unit'] .'", "'. $data['number'] .'", "'. $data['year'] .'", "'. $data['intro'] .'", "'. $data['status'] .'", \''. json_encode($data['depart']) .'\', "'. $data['source'] .'", "'. $data['description'] .'", '. totime($data['import']) .', '. time() .')';
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = deviceList();
+        $result['notify'] = 'Đã thêm thiết bị';
+      }
     break;
     case 'get-device':
       $id = $nv_Request->get_int('id', 'post');
@@ -160,55 +177,60 @@ if (!empty($action)) {
         $result['device'] = $data;
       }
     break;
-    case 'remove-device':
-      $id = $nv_Request->get_int('id', 'post');
+    case 'edit-device':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $data = $nv_Request->get_array('data', 'post');
 
-      if ($db->query('delete from `'. PREFIX .'device` where id = ' . $id)) {
+      foreach ($data as $name => $value) {
+        if (!($name == 'depart' || $name == 'description')) checkRemind($name, $value);
+      }
+      if (empty($data['depart'])) $data['depart'] = array();
+      $sql = 'update `'. PREFIX .'device` set name = "'. $data['name'] .'", unit = "'. $data['unit'] .'", number = "'. $data['number'] .'", year = "'. $data['year'] .'", intro = "'. $data['intro'] .'", status = "'. $data['status'] .'", depart = \''. json_encode($data['depart']) .'\', source = "'. $data['source'] .'", description = "'. $data['description'] .'", import_time = "'. totime($data['import']) .'", update_time = '. time() .' where id = ' . $id;
+      if ($db->query($sql)) {
         $result['status'] = 1;
-        $result['notify'] = 'Đã xóa';
         $result['html'] = deviceList();
+        $result['notify'] = 'Đã thêm thiết bị';
       }
     break;
-    case 'remove-all-device':
-      $list = $nv_Request->get_array('list', 'post');
-      $count = count($list);
-      $removed = 0;
+    case 'get-detail':
+      $id = $nv_Request->get_int('id', 'post', 0);
 
-      foreach ($list as $id) {
-        if ($db->query('delete from `'. PREFIX .'device` where id = ' . $id)) {
-          $removed ++;
-        }
-      }
       $result['status'] = 1;
-      $result['notify'] = "Đã xóa $removed trong tổng số $count đã chọn";
-      $result['html'] = deviceList();
+      $result['html'] = itemContentId($id);
     break;
-    case 'filter':
+    case 'get-employ':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $name = $nv_Request->get_string('name', 'post', '');
+
       $result['status'] = 1;
-      $result['html'] = deviceList();
+      $result['html'] = employContentId($id, $name);
+    break;
+    case 'get-manager':
+      $name = $nv_Request->get_string('name', 'post', '');
+
+      $result['status'] = 1;
+      $result['html'] = managerContentId($name);
     break;
   }
   echo json_encode($result);
   die();
 }
-$xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/". $module_file ."/template/admin/device");
 
-$xtpl->assign('device_modal', deviceModal());
-$xtpl->assign('remove_modal', removeModal());
-$xtpl->assign('remove_all_modal', removeAllModal());
+$xtpl = new XTemplate("main.tpl", PATH);
+
+$config = checkDeviceConfig();
+$xtpl->assign('config', $config);
+$xtpl->assign('modal', deviceModal());
 $xtpl->assign('content', deviceList());
+
 $xtpl->assign('today', date('d/m/Y', time()));
 $xtpl->assign('depart', json_encode(getDepartList(), JSON_UNESCAPED_UNICODE));
 $xtpl->assign('remind', json_encode(getRemind(), JSON_UNESCAPED_UNICODE));
 $xtpl->assign('remindv2', json_encode(getRemindv2(), JSON_UNESCAPED_UNICODE));
-// $xtpl->assign('depart_modal', departmodal());
-// $xtpl->assign('item', json_encode(getItemDataList(), JSON_UNESCAPED_UNICODE));
-// $xtpl->assign('import', importModal());
-// $xtpl->assign('import_insert', importInsertModal());
 
-$xtpl->parse('main');
-$contents = $xtpl->text();
+$xtpl->parse("main");
+$contents = $xtpl->text("main");
 
-include NV_ROOTDIR . '/includes/header.php';
+include (NV_ROOTDIR . "/includes/header.php");
 echo nv_admin_theme($contents);
-include NV_ROOTDIR . '/includes/footer.php';
+include (NV_ROOTDIR . "/includes/footer.php");
