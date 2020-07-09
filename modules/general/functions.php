@@ -541,7 +541,7 @@ function deviceList() {
       $xtpl->parse('main.yes.row');
     }
     $xtpl->parse('main.yes');
-}
+  }
 
   $xtpl->parse('main');
   return $xtpl->text();

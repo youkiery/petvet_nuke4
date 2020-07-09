@@ -87,10 +87,29 @@ function memberEditModal()
   return $xtpl->text();
 }
 
+function managerContent()
+{
+  global $db, $db_config;
+  $xtpl = new XTemplate("manager-content.tpl", PATH);
+  $sql = 'select userid, username, concat(last_name, " ", first_name) as fullname from `' . $db_config['prefix'] . '_users` where userid in (select userid from `' . PREFIX . 'device_manager`)';
+  $query = $db->query($sql);
+  $index = 1;
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['userid']);
+    $xtpl->assign('username', $row['username']);
+    $xtpl->assign('fullname', $row['fullname']);
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function deviceModal()
 {
-  global $module_file, $op;
-  $xtpl = new XTemplate("device-modal.tpl", PATH);
+  $xtpl = new XTemplate("modal.tpl", PATH);
+  $xtpl->assign('manager_content', managerContent());
+  $xtpl->assign('depart_content', departList());
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -290,18 +309,17 @@ function exportList()
 function departList()
 {
   global $db;
-
-  $xtpl = new XTemplate("depart-list.tpl", PATH);
-
-  $sql = 'select * from `' . PREFIX . 'depart`';
+  $xtpl = new XTemplate("list.tpl", PATH);
+  $sql = 'select * from `' . PREFIX . 'device_depart` order by id desc';
   $query = $db->query($sql);
-
+  $index = 1;
   while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('name', $row['name']);
-    $xtpl->parse('main');
+    $xtpl->parse('main.row');
   }
-
+  $xtpl->parse('main');
   return $xtpl->text();
 }
 

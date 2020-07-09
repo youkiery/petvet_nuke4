@@ -121,12 +121,9 @@ function getDeviceData($id) {
 function checkDepartName($name, $id = 0) {
   global $db;
 
-  if ($id) {
-    $query = $db->query('select * from `'. PREFIX .'depart` where name = "'. $name .'" and id <> ' . $id);
-  }
-  else {
-    $query = $db->query('select * from `'. PREFIX .'depart` where name = "'. $name .'"');
-  }
+  if ($id) $sql = 'select * from `'. PREFIX .'device_depart` where name = "'. $name .'" and id <> ' . $id;
+  else $sql = 'select * from `'. PREFIX .'device_depart` where name = "'. $name .'"';
+  $query = $db->query($sql);
   if ($query->fetch()) {
     return true;
   }
@@ -136,7 +133,7 @@ function checkDepartName($name, $id = 0) {
 function checkDepartId($id) {
   global $db;
 
-  $query = $db->query('select * from `'. PREFIX .'depart` where id = ' . $id);
+  $query = $db->query('select * from `'. PREFIX .'device_depart` where id = ' . $id);
   if ($row = $query->fetch()) {
     return $row['name'];
   }
@@ -312,7 +309,7 @@ function getUserDepartList() {
 function getDepartList() {
   global $db;
 
-  $query = $db->query('select * from `'. PREFIX .'depart`');
+  $query = $db->query('select * from `'. PREFIX .'device_depart`');
   $list = array();
 
   while($row = $query->fetch()) {
@@ -470,4 +467,16 @@ function getMaterialData($item_id) {
     return $row;
   }
   return array();
+}
+
+function checkDeviceConfig() {
+  global $db, $db_config;
+
+  $sql = 'select * from `'. $db_config['prefix'] .'_config` where config_name = "device_config"';
+  $query = $db->query($sql);
+  if (empty($config = $query->fetch())) {
+      // 2 weeks
+      return 14;
+  }
+  return $config['config_value'];
 }
