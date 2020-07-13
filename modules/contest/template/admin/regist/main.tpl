@@ -7,10 +7,14 @@
 </script>
 <div id="msgshow"></div>
 <style>
-  .form-group { clear: both; }
-  [class*="col-"] {
+  .rows::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+
+  .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
     float: left;
-    padding: 15px;
   }
 
   .col-1 {width: 8.33%;}
@@ -29,10 +33,18 @@
 
 {modal}
 
-<div class="form-group" style="float: right;" onclick="courtModal()">
-  <button class="btn btn-info">
-    Danh sách khóa học
-  </button>
+<div class="form-group rows">
+  <div class="col-6">
+    <label>
+      <input type="checkbox" id="free-change" onchange="changeFree()" {charge}>
+      Đào tạo miễn phí
+    </label>
+  </div>
+  <div class="col-6">
+    <button class="btn btn-info" style="float: right;" onclick="courtModal()">
+      Danh sách khóa học
+    </button>
+  </div>
 </div>
 <div style="clear: both;"></div>
 
@@ -100,6 +112,16 @@
       global['prv'] = e.currentTarget.value
     })
   })
+
+  function changeFree() {
+    $('#free-change').prop('disabled', true)
+    vhttp.check('', {action: 'free-change', type: Number($('#free-change').prop('checked')) }).then(data => {
+      alert_msg('Đã lưu')
+      $('#free-change').prop('disabled', false)
+    }, () => {
+      $('#free-change').prop('disabled', false)
+    })
+  }
 
   function courtModal() {
     $("#court-modal").modal('show')
@@ -224,10 +246,10 @@
     }
   }
 
-  function notify(text) {
-    $("#notify").show()
-    $("#notify").text(text)
-    $("#notify").delay(1000).fadeOut(1000)
+  function alert_msg(text) {
+    $("#msgshow").show()
+    $("#msgshow").text(text)
+    $("#msgshow").delay(1000).fadeOut(1000)
   }
 
 </script>

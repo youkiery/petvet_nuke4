@@ -6,7 +6,9 @@
  * @Createdate Mon, 28 Oct 2019 15:00:00 GMT
  */
 
-if (!defined('NV_IS_FILE_ADMIN')) { die('Stop!!!'); }
+if (!defined('NV_IS_FILE_ADMIN')) {
+  die('Stop!!!');
+}
 
 $xco = array(1 => 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH', 'AI', 'AJ', 'AK', 'AM', 'AN', 'AO', 'AP', 'AQ', 'AR', 'AS', 'AT', 'AU', 'AV', 'AW', 'AX', 'AY', 'AZ');
 $yco = array(1 => 'SBD', 'Tên Chủ nuôi', 'Địa chỉ', 'Số điện thoại', 'Tên thú cưng', 'Giống loài', 'Phần thi');
@@ -23,6 +25,10 @@ $filter = array(
   'active' => $nv_Request->get_int('active', 'get', 0)
 );
 
+$sql = 'select * from `'. $db_config['prefix'] .'_config` where config_name = "free-change"';
+$query = $db->query($sql);
+$free_config = intval($query->fetch()['config_value']);
+
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
@@ -30,71 +36,80 @@ if (!empty($action)) {
     case 'get-info':
       $id = $nv_Request->get_int('id', 'post');
 
-      $sql = 'select * from `'. PREFIX .'regist` where id = ' . $id;
+      $sql = 'select * from `' . PREFIX . 'regist` where id = ' . $id;
       $query = $db->query($sql);
       if (!empty($row = $query->fetch())) {
         $result['status'] = 1;
         $result['data'] = $row;
       }
-    break;
-    case 'edit': 
+      break;
+    case 'edit':
       $id = $nv_Request->get_int('id', 'post');
       $data = $nv_Request->get_array('data', 'post');
 
-      $sql = 'update `'. PREFIX .'regist` set name = "'. $data['name'] .'", mobile = "'. $data['mobile'] .'", address = "'. $data['address'] .'" where id = ' . $id;
+      $sql = 'update `' . PREFIX . 'regist` set name = "' . $data['name'] . '", mobile = "' . $data['mobile'] . '", address = "' . $data['address'] . '" where id = ' . $id;
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = courtRegistList($filter);
       }
-    break;
-    case 'remove': 
+      break;
+    case 'remove':
       $id = $nv_Request->get_int('id', 'post');
 
-      $sql = 'delete from `'. PREFIX .'regist` where id = ' . $id;
+      $sql = 'delete from `' . PREFIX . 'regist` where id = ' . $id;
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = courtRegistList($filter);
       }
-    break;
+      break;
     case 'active':
       $id = $nv_Request->get_int('id', 'post', 0);
       $type = $nv_Request->get_int('type', 'post', 0);
 
-      $sql = 'update `'. PREFIX .'regist` set active = ' . $type . ' where id = ' . $id;
+      $sql = 'update `' . PREFIX . 'regist` set active = ' . $type . ' where id = ' . $id;
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = courtRegistList($filter);
       }
-    break;
+      break;
     case 'get-court':
       $id = $nv_Request->get_int('id', 'post', 0);
-      $sql = 'select * from `'. PREFIX .'court` where id = ' . $id;
+      $sql = 'select * from `' . PREFIX . 'court` where id = ' . $id;
       $query = $db->query($sql);
 
       if ($row = $query->fetch()) {
         $result['data'] = $row;
         $result['status'] = 1;
       }
-    break;
+      break;
     case 'update-court':
       $id = $nv_Request->get_int('id', 'post', 0);
       $data = $nv_Request->get_array('data', 'post');
 
-      $sql = 'update `'. PREFIX .'court` set parent = '. $data['parent'] .', name = "'. $data['name'] .'", price = "'. $data['price'] .'", intro = "'. $data['intro'] .'" where id = ' . $id;
+      $sql = 'update `' . PREFIX . 'court` set parent = ' . $data['parent'] . ', name = "' . $data['name'] . '", price = "' . $data['price'] . '", intro = "' . $data['intro'] . '" where id = ' . $id;
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = courtList();
       }
-    break;
+      break;
     case 'insert-court':
       $data = $nv_Request->get_array('data', 'post', 0);
 
-      $sql = 'insert into `'. PREFIX .'court` (name, price, intro, parent) values("'. $data['name'] .'", '. $data['price'] .', "'. $data['intro'] .'", '. $data['parent'] .')';
+      $sql = 'insert into `' . PREFIX . 'court` (name, price, intro, parent) values("' . $data['name'] . '", ' . $data['price'] . ', "' . $data['intro'] . '", ' . $data['parent'] . ')';
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = courtList();
       }
-    break;  }
+      break;
+    case 'free-change':
+      $type = $nv_Request->get_int('type', 'post', 0);
+
+      $sql = 'update `'. $db_config['prefix'] .'_config` set config_value = "'. $type .'" where config_name = "free-change"';
+      $db->query($sql);
+
+      $result['status'] = 1;
+    break;
+  }
   echo json_encode($result);
   die();
 }
@@ -142,10 +157,12 @@ $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/modules/$module_file/template/a
 // $xtpl->parse('main');
 
 // Danh sách khóa học, xác nhận
+$xtpl->assign('charge', '');
+if ($free_config) $xtpl->assign('charge', 'checked');
 $xtpl->assign('keyword', $filter['keyword']);
 $xtpl->assign('active_' . $filter['active'], 'selected');
 
-$sql = 'select * from `'. PREFIX .'court` order by name';
+$sql = 'select * from `' . PREFIX . 'court` order by name';
 $query = $db->query($sql);
 while ($row = $query->fetch()) {
   $xtpl->assign('selected', '');
