@@ -116,6 +116,10 @@ function healFilter($cometime, $calltime, $customer, $pet, $gdoctor) {
     $sqlQuery2 = 'and doctorid = ' . $gdoctor;
   }
 
+  $STATUS_COLOR = array();
+  $page = 1;
+  $limit = 10;
+
   $sql = 'select * from  `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .') ' . $sqlQuery . ' ' . $sqlQuery2 . ' order by time desc';
   $query = $db->query($sql);
   $count = 0;
@@ -322,33 +326,24 @@ function preventOutsiter() {
   include (NV_ROOTDIR . '/includes/footer.php');
 }
 
-// include_once(NV_ROOTDIR . "/modules/" . $module_file . "/modal/spa.php");
-// $spa = new Spa();
-// include_once(NV_ROOTDIR . "/modules/" . $module_file . "/modal/doctor.php");
-// $doctor = new Doctor();
-// include_once(NV_ROOTDIR . "/modules/" . $module_file . "/modal/customer.php");
-// $customer = new Customer();
+function preCheckUser() {
+  global $db, $db_config, $user_info;
+  $check = false;
 
-// function spa_list($data_content, $compare_id, $html_pages = '') {
-//   global $spa, $doctor, $customer, $pet, $module_info, $lang_module, $module_file;
-//   $xtpl = new XTemplate('spa-list.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file);
-//   $index = 1;
-//   $spa_list = $spa->get_list();
-//   $doctor_list = $doctor->get_list();
-//   $xtpl->assign('lang', $lang_module);
-
-//   foreach ($spa_list as $spa_data) {
-//     $customer = $customer->get_by_id($spa_data["id"]);
-//     $xtpl->assign("index", $index);
-//     $xtpl->assign("doctor", $doctor_list[$spa_data["doctorid"]]);
-//     $xtpl->assign("customer_name", $customer["name"]);
-//     $xtpl->assign("customer_number", $customer["phone"]);
-//     $xtpl->assign("status", $lang_module["spa_status"][$spa_data["status"]]);
-
-//     $index ++;
-//   }
-
-//   $xtpl->parse('main');
-//   return $xtpl->text('main');
-//   return 1;
-// }
+  if ($user_info && $user_info["userid"]) {
+    $sql = "select * from `" . $db_config["prefix"] . "_rider_user` where type = 1 and user_id = $user_info[userid]";
+    $query = $db->query($sql);
+    if (empty($query->fetch())) {
+      $check = true;
+    }
+  }
+  else {
+    $check = true;
+  }
+  if ($check) {
+    $contents = "Bạn chưa đăng nhập hoặc tài khoản không có quyền truy cập";
+    include ( NV_ROOTDIR . "/includes/header.php" );
+    echo nv_site_theme($contents);
+    include ( NV_ROOTDIR . "/includes/footer.php" );
+  }
+}

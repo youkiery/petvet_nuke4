@@ -18,6 +18,19 @@ function fetch(url, data) {
 	})	
 }
 
+function dateToString(date) {
+  var day = date.getDate()
+  var month = date.getMonth()
+  var year = date.getFullYear()
+  if (day < 10) {
+    day = "0" + day
+  }
+  if (month < 10) {
+    month = "0" + month
+  }
+  return day + "/" + month + "/" + year
+}
+
 function alert_msg(msg) {
 	$("#e_notify").show();
 	$("#e_notify").text(msg);

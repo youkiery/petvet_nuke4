@@ -15,8 +15,6 @@ function fetch(url, data) {
 	})	
 }
 
-
-
 function showMsg(msg) {
 	$("#e_notify").show();
   $("#e_notify").text(msg);

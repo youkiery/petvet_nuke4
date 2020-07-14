@@ -615,6 +615,97 @@ function getdoctorlist() {
   return $doctor;
 }
 
+function blockSelectDoctor($doctorId, $userList) {
+  $xtpl = new XTemplate("block_select_doctor.tpl", PATH2);
+  
+  foreach ($userList as $userData) {
+    if ($doctorId == $userData["userid"]) {
+      $xtpl->assign("select", "selected");
+    }
+    else {
+      $xtpl->assign("select", "");
+    }
+    $xtpl->assign("doctor_value", $userData["userid"]);
+    $xtpl->assign("doctor_name", $userData["first_name"]);
+    $xtpl->parse("main.doctor");
+  }
+  $xtpl->parse("main");
+  return $xtpl->text();
+}
+
+function doctorList2() {
+  global $db, $db_config;
+  $list = array();
+
+  $sql = "select userid, username, last_name, first_name from `" .  $db_config["prefix"] . "_users` where userid in (select userid from `" .VAC_PREFIX . "_user`)";
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $list[$row["userid"]] = $row;
+  }
+
+  return $list;
+}
+
+function wconfirm($date, $doctorId, $userList) {
+  global $db, $db_config, $work;
+
+  $startDate = date ('N', $date) == 1 ? strtotime(date('Y-m-d', $date)) : strtotime('last monday', $date);
+  $endDate = strtotime('next monday', $date);
+  $xtpl = new XTemplate("ad_schedule_list.tpl", PATH2);
+  $user = array();
+
+  $sql = "select * from `" . $db_config["prefix"] . "_users` where userid in (select user_id from `" . $db_config["prefix"] . "_rider_user` where type = 1)";
+  $query = $db->query($sql);
+
+  $xtpl->assign("from", date("d/m/Y", $startDate));
+  $xtpl->assign("to", date("d/m/Y", $endDate - 1));
+  $xtpl->assign("c2", date("d/m", $startDate));
+  $xtpl->assign("c3", date("d/m", $startDate + A_DAY));
+  $xtpl->assign("c4", date("d/m", $startDate + A_DAY * 2));
+  $xtpl->assign("c5", date("d/m", $startDate + A_DAY * 3));
+  $xtpl->assign("c6", date("d/m", $startDate + A_DAY * 4));
+  $xtpl->assign("c7", date("d/m", $startDate + A_DAY * 5));
+  $xtpl->assign("c8", date("d/m", $startDate + A_DAY * 6));
+
+  $index = 1;
+  while ($row = $query->fetch()) {
+    $xtpl->assign("index", $index ++);
+    $xtpl->assign("username", $row["first_name"]);
+    $currentDate = $startDate;
+    $indexRou = 2;
+    $t = array(1 => 0, 0);
+
+    while ($indexRou > 1) {
+      if ($indexRou > 7) {
+        $indexRou = 0;
+      }
+      $sql = "select * from `" .VAC_PREFIX . "_row` where time = $currentDate and user_id = $row[userid] and type > 1 order by time, type asc";
+      $query2 = $db->query($sql);
+
+      $xtpl->assign("color_" . $indexRou . "1", "green");
+      $xtpl->assign("color_" . $indexRou . "2", "green");
+      $xtpl->assign("date_" . $indexRou . "1", $currentDate);
+      $xtpl->assign("date_" . $indexRou . "2", $currentDate);
+      $xtpl->assign("type_" . $indexRou . "1", 2);
+      $xtpl->assign("type_" . $indexRou . "2", 3);
+      while ($rou = $query2->fetch()) {
+        $xtpl->assign("color_" . $indexRou . ($rou["type"] - 1), "red");
+        $t[$rou["type"] - 1] ++;
+      }
+      $indexRou += 1;
+      $currentDate += A_DAY;
+    }
+    $xtpl->assign("t1", $t[1]);
+    $xtpl->assign("t2", $t[2]);
+    $xtpl->assign("t", $t[1] + $t[2]);
+    $xtpl->parse("main.row");
+  }
+  
+  $xtpl->parse("main");
+  return $xtpl->text();
+}
+
 function doctorlist($path, $lang) {
   $xtpl = new XTemplate("doctor-2.tpl", $path);
 
@@ -632,13 +723,8 @@ function doctorlist($path, $lang) {
   return $xtpl->text("main");
 }
 
-function getrecentlist($fromtime, $amount_time, $sort, $keyword, $filter) {
-  global $db, $db_config, $module_name;
-  return $ret;
-}
-
 function filterVac($fromtime, $amount_time, $sort, $keyword, $filter) {
-  global $db, $db_config, $module_name;
+  global $db;
   $endtime = $fromtime + $amount_time;
   $fromtime -= $amount_time;
 
@@ -1288,6 +1374,7 @@ function user_treat() {
   // initial
   $xtpl = new XTemplate("sieuam-birth-list.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
   $xtpl->assign("lang", $lang_module);
+  $keyword = '';
   
   $limit_option = array(10, 20, 30, 40, 50, 75, 100); 
   $today = strtotime(date("y-m-d"));
@@ -1829,6 +1916,136 @@ function vaccine_list($vaclist, $order = 0) {
   return $xtpl->text("disease");
 }
 
+function adminSummary($startDate = 0, $endDate = 0) {
+  global $db, $db_config;
+
+  if (empty($startDate) || empty($endDate)) {
+    $time = time();
+    if (date('N', $time) < 23) {
+      $time = time() - A_DAY * 23;
+    }
+    $startDate = strtotime(date("Y", $time) . "-" . date("m", $time) . "-24");
+    $endDate = strtotime(date("Y", $time) . "-" . (intval(date("m", $time)) + 1) . "-23");
+  }
+
+  $xtpl = new XTemplate("summary.tpl", PATH2);
+  $user = array();
+
+  $sql = "select * from `" . $db_config["prefix"] . "_users` where userid in (select userid from `" .VAC_PREFIX . "_user`)";
+  $query = $db->query($sql);
+
+  $xtpl->assign("from", date("d/m/Y", $startDate));
+  $xtpl->assign("to", date("d/m/Y", $endDate));
+
+  $index = 1;
+  while ($row = $query->fetch()) {
+    $xtpl->assign("index", $index++);
+    $xtpl->assign("username", $row["last_name"] . " " . $row["first_name"]);
+
+    $sql = "select count(*) as num from `" .VAC_PREFIX . "_row` where time between $startDate and ".($endDate + A_DAY - 1)." and user_id = $row[userid] and type > 1";
+    $query2 = $db->query($sql);
+    $count = $query2->fetch();
+    $sql = "select count(*) as num from `" .VAC_PREFIX . "_penety` where time between $startDate and ".($endDate + A_DAY - 1)." and userid = $row[userid]";
+    $query2 = $db->query($sql);
+    $count2 = $query2->fetch();
+    // $count['num'] += $count2['num'];
+
+    $sql2 = 'select time, type from `' .VAC_PREFIX . '_penety` where time between '. $startDate .' and '.($endDate + A_DAY - 1).' and userid = ' . $row['userid'];
+    $query2 = $db->query($sql2);
+    $list = array();
+    while ($row2 = $query2->fetch()) {
+      $list[] = $row2;
+    }
+
+    $total = round(($count2['num'] + $count['num']) / 2, 1);
+    $xtpl->assign("rest", round($count['num'] / 2, 1));
+    $xtpl->assign("overflow", round($count2['num'] / 2, 1));
+    $xtpl->assign("data", json_encode($list));
+
+    $xtpl->assign("total", $total);
+    $xtpl->assign("exceed", $total > 4 ? $total - 4 : 0);
+    $xtpl->parse("main.row");
+  }
+  
+  $xtpl->parse("main");
+  return $xtpl->text();
+}
+
+function scheduleList($startDate, $endDate) {
+  global $db, $datetime, $work;
+  // $startDate = strtotime("2019/05/01");
+  // $endDate = strtotime("2019/06/01");
+  // $endDate = totime($endDate) + A_DAY * 200;
+  $xtpl = new XTemplate("schedule_list.tpl", PATH2);
+
+  $userList = userList();
+  $date = $startDate;
+  $rest_list = array("morning_guard" => array(), "afternoon_guard" => array(), "morning_rest" => array(), "afternoon_rest" => array());
+  $check = true;
+
+  $sql = "select * from `" . VAC_PREFIX . "_row` where `time` between $startDate and $endDate order by time, type asc, user_id";
+  $query = $db->query($sql);
+  $currentRow = $query->fetch();
+  $count = 0;
+
+  while ($count < 7) {
+    // $xtpl->assign("date", date("d/m", $date) . " (" . $datetime[date("N", $date)] . ")");
+    $xtpl->assign("date", date("d/m/Y", $date));
+    $xtpl->assign("day", $datetime[date("N", $date)]);
+
+    if ($currentRow["time"] == $date) {
+      // var_dump($currentRow);
+      // echo "<br>";
+      switch ($currentRow["type"]) {
+        case '0':
+          $rest_list["morning_guard"][] = $userList[$currentRow["user_id"]]["first_name"];
+          $xtpl->assign("morning_guard", implode(", ", $rest_list["morning_guard"]));
+        break;
+        case '1':
+          $rest_list["afternoon_guard"][] = $userList[$currentRow["user_id"]]["first_name"];
+          $xtpl->assign("afternoon_guard", implode(", ", $rest_list["afternoon_guard"]));
+        break;
+        case '2':
+          $rest_list["morning_rest"][] = $userList[$currentRow["user_id"]]["first_name"];
+          $xtpl->assign("morning_rest", implode(", ", $rest_list["morning_rest"]));
+        break;
+        case '3':
+          $rest_list["afternoon_rest"][] = $userList[$currentRow["user_id"]]["first_name"];
+          $xtpl->assign("afternoon_rest", implode(", ", $rest_list["afternoon_rest"]));
+        break;
+      }
+      $currentRow = $query->fetch();
+      $currentRow["time"] = strtotime(date("Y-m-d", $currentRow["time"]));
+    }
+    else {
+      $rest_list = array("morning_guard" => array(), "afternoon_guard" => array(), "morning_rest" => array(), "afternoon_rest" => array());
+      $date += A_DAY;
+      $count ++;
+      $xtpl->parse("main.row");
+      $xtpl->assign("morning_guard", "");
+      $xtpl->assign("afternoon_guard", "");
+      $xtpl->assign("morning_rest", "");
+      $xtpl->assign("afternoon_rest", "");
+    }
+  }  
+  $xtpl->parse("main");
+  return $xtpl->text();
+}
+
+function userList() {
+  global $db, $db_config;
+  $list = array();
+
+  $sql = "select userid, username, last_name, first_name from `" .  $db_config["prefix"] . "_users`";
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $list[$row["userid"]] = $row;
+  }
+
+  return $list;
+}
+  
 function nv_generate_page_shop($base_url, $num_items, $per_page, $start_item, $add_prevnext_text = true, $onclick = false, $js_func_name = 'nv_urldecode_ajax', $containerid = 'generate_page') {
   global $lang_global;
   $start_item = ($start_item - 1) * $per_page;
