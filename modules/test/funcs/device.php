@@ -11,7 +11,7 @@ if (!defined('NV_IS_MOD_QUANLY')) die('Stop!!!');
 $page_title = "Quản lý thiết bị";
 
 if (!empty($user_info)) {
-  $sql = 'select * from `'. VAC_PREFIX .'device_manager` where userid = ' . $user_info['userid'];
+  $sql = 'select * from `'. VAC_PREFIX .'_device_manager` where userid = ' . $user_info['userid'];
   $query = $db->query($sql);
   $allow = $query->fetch();
 }
@@ -37,7 +37,7 @@ if (!empty($action)) {
         $result['notify'] = 'Đơn vị đã tồn tại';
       }
       else {
-        $query = $db->query('insert into `'. VAC_PREFIX .'device_depart` (name, update_time) values("'. $name .'", '. time() .')');
+        $query = $db->query('insert into `'. VAC_PREFIX .'_device_depart` (name, update_time) values("'. $name .'", '. time() .')');
         if ($query) {
           $result['status'] = 1;
           $result['inserted'] = array('id' => $db->lastInsertId(), 'name' => $name);
@@ -51,7 +51,7 @@ if (!empty($action)) {
           if (!($name == 'depart' || $name == 'description')) checkRemind($name, $value);
         }
         if (empty($data['depart'])) $data['depart'] = array();
-        $sql = 'insert into `'. VAC_PREFIX .'device` (name, unit, number, year, intro, status, depart, source, description, import_time, update_time) values("'. $data['name'] .'", "'. $data['unit'] .'", "'. $data['number'] .'", "'. $data['year'] .'", "'. $data['intro'] .'", "'. $data['status'] .'", \''. json_encode($data['depart']) .'\', "'. $data['source'] .'", "'. $data['description'] .'", '. totime($data['import']) .', '. time() .')';
+        $sql = 'insert into `'. VAC_PREFIX .'_device` (name, unit, number, year, intro, status, depart, source, description, import_time, update_time) values("'. $data['name'] .'", "'. $data['unit'] .'", "'. $data['number'] .'", "'. $data['year'] .'", "'. $data['intro'] .'", "'. $data['status'] .'", \''. json_encode($data['depart']) .'\', "'. $data['source'] .'", "'. $data['description'] .'", '. totime($data['import']) .', '. time() .')';
         // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;
@@ -71,7 +71,7 @@ if (!empty($action)) {
           if (!($name == 'depart' || $name == 'description')) checkRemind($name, $value);
         }
         if (empty($data['depart'])) $data['depart'] = array();
-        $sql = 'update `'. VAC_PREFIX .'device` set name = "'. $data['name'] .'", unit = "'. $data['unit'] .'", number = "'. $data['number'] .'", year = "'. $data['year'] .'", intro = "'. $data['intro'] .'", status = "'. $data['status'] .'", depart = \''. json_encode($data['depart']) .'\', source = "'. $data['source'] .'", description = "'. $data['description'] .'", import_time = "'. totime($data['import']) .'", update_time = '. time() .' where id = ' . $id;
+        $sql = 'update `'. VAC_PREFIX .'_device` set name = "'. $data['name'] .'", unit = "'. $data['unit'] .'", number = "'. $data['number'] .'", year = "'. $data['year'] .'", intro = "'. $data['intro'] .'", status = "'. $data['status'] .'", depart = \''. json_encode($data['depart']) .'\', source = "'. $data['source'] .'", description = "'. $data['description'] .'", import_time = "'. totime($data['import']) .'", update_time = '. time() .' where id = ' . $id;
         // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;
@@ -84,7 +84,7 @@ if (!empty($action)) {
       $id = $nv_Request->get_int('id', 'post');
 
       if ($device = getDeviceData($id)) {
-        $sql = 'select * from `'. VAC_PREFIX .'device_detail` where itemid = ' . $id . ' and time >= '. $start2 .' order by id desc limit 1';
+        $sql = 'select * from `'. VAC_PREFIX .'_device_detail` where itemid = ' . $id . ' and time >= '. $start2 .' order by id desc limit 1';
         $detail_query = $db->query($sql);
         $detail = $detail_query->fetch();
         $data = array(
@@ -105,7 +105,7 @@ if (!empty($action)) {
     case 'remove-device':
       $id = $nv_Request->get_int('id', 'post');
 
-      if ($db->query('delete from `'. VAC_PREFIX .'device` where id = ' . $id)) {
+      if ($db->query('delete from `'. VAC_PREFIX .'_device` where id = ' . $id)) {
         $result['status'] = 1;
         $result['notify'] = 'Đã xóa';
         $result['html'] = deviceList();
@@ -117,7 +117,7 @@ if (!empty($action)) {
       $removed = 0;
 
       foreach ($list as $id) {
-        if ($db->query('delete from `'. VAC_PREFIX .'device` where id = ' . $id)) {
+        if ($db->query('delete from `'. VAC_PREFIX .'_device` where id = ' . $id)) {
           $removed ++;
         }
       }
@@ -130,8 +130,8 @@ if (!empty($action)) {
       $status = $nv_Request->get_string('status', 'post', '');
       $note = $nv_Request->get_string('note', 'post', '');
 
-      $sql = 'insert into `'. VAC_PREFIX .'device_detail` (itemid, status, note, time) values('. $id .', "'. $status .'", "'. $note .'", '. time() .')';
-      $sql2 = 'update `'. VAC_PREFIX .'device` set status = "'. $status .'", description = "'. $note .'" where id = ' . $id;
+      $sql = 'insert into `'. VAC_PREFIX .'_device_detail` (itemid, status, note, time) values('. $id .', "'. $status .'", "'. $note .'", '. time() .')';
+      $sql2 = 'update `'. VAC_PREFIX .'_device` set status = "'. $status .'", description = "'. $note .'" where id = ' . $id;
       if ($db->query($sql) && $db->query($sql2)) {
         $result['status'] = 1;
         $result['notify'] = "Đã cập nhật";
@@ -142,7 +142,7 @@ if (!empty($action)) {
       $id = $nv_Request->get_int('id', 'post', '');
 
       $xtpl = new XTemplate("report-list.tpl", PATH2);
-      $sql = 'select * from `'. VAC_PREFIX .'device_detail` where itemid = ' . $id . ' and (time between '. $start .' and '. ($start + $period) .') order by time desc';
+      $sql = 'select * from `'. VAC_PREFIX .'_device_detail` where itemid = ' . $id . ' and (time between '. $start .' and '. ($start + $period) .') order by time desc';
       $query = $db->query($sql);
       while($detail = $query->fetch()) {
         $xtpl->assign('time', date('d/m/Y', $detail['time']));
@@ -156,13 +156,13 @@ if (!empty($action)) {
     break;
     case 'report-content':
       $xtpl = new XTemplate("report-content.tpl", PATH2);
-      $sql = 'select * from `'. VAC_PREFIX .'device` order by name';
+      $sql = 'select * from `'. VAC_PREFIX .'_device` order by name';
       $query = $db->query($sql);
       $end = $start + $period;
       $depart = getDeviceDepartList();
 
       while ($device = $query->fetch()) {
-        $sql = 'select * from `'. VAC_PREFIX .'device_detail` where itemid = ' . $device['id'] . ' and (time between '. $start .' and '. $end .') order by time desc limit 1';
+        $sql = 'select * from `'. VAC_PREFIX .'_device_detail` where itemid = ' . $device['id'] . ' and (time between '. $start .' and '. $end .') order by time desc limit 1';
         $detail_query = $db->query($sql);
         $detail = $detail_query->fetch();
         $xtpl->assign('class', '');

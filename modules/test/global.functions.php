@@ -2311,3 +2311,62 @@ function loadModal($file_name) {
   $xtpl->parse('main');
   return $xtpl->text();
 }
+
+function checkDeviceConfig() {
+  global $db, $db_config;
+
+  $sql = 'select * from `'. $db_config['prefix'] .'_config` where config_name = "device_config"';
+  $query = $db->query($sql);
+  if (empty($config = $query->fetch())) {
+      // 2 weeks
+      return 14;
+  }
+  return $config['config_value'];
+}
+
+function getDepartList() {
+  global $db;
+
+  $query = $db->query('select * from `'. VAC_PREFIX .'_device_depart`');
+  $list = array();
+
+  while($row = $query->fetch()) {
+    $list []= $row;
+  }
+  return $list;
+}
+
+function getRemind() {
+  global $db;
+
+  $sql = 'select * from `'. VAC_PREFIX .'_remind` group by name order by rate desc';
+  $query = $db->query($sql);
+  $list = array();
+  while ($row = $query->fetch()) {
+    $list[$row['name']] = $row['value'];
+  }
+  return $list;
+}
+
+function getRemindv2() {
+  global $db;
+
+  $query = $db->query('select * from `'. VAC_PREFIX .'_remind`');
+  $list = array();
+  while ($row = $query->fetch()) {
+    if (empty($list[$row['name']])) $list[$row['name']] = array();
+    $list[$row['name']][] = $row['value'];
+  }
+  return $list;
+}
+
+function checkDeviceManagerId($id = 0) {
+  global $db;
+
+  $sql = 'select * from `'. VAC_PREFIX .'_device_manager` where id = '. $id;
+  $query = $db->query($sql);
+  if ($query->fetch()) {
+    return true;
+  }
+  return false;
+}
