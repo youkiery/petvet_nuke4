@@ -317,13 +317,22 @@ function nav_generater($url, $number, $page, $limit) {
 
 function preventOutsiter() {
   global $module_file;
-  $xtpl = new XTemplate('out.tpl', NV_ROOTDIR . '/modules/'. $module_file .'/template/');
-  $xtpl->parse('main');
-  $contents = $xtpl->text();
+  $check = false;
+  if (!empty($user_info) && !empty($user_info['userid'])) {
+    if (!(in_array('1', $user_info['in_groups']) || in_array('2', $user_info['in_groups']))) {
 
-  include (NV_ROOTDIR . '/includes/header.php');
-  echo nv_site_theme($contents);
-  include (NV_ROOTDIR . '/includes/footer.php');
+    }
+  } 
+  else {
+    $check = true;
+    $contents = '<p style="padding: 10px;">Chỉ có thành viên được phân quyền mới có thể thấy được mục này</p>';
+  }
+  
+  if ($check) {
+    include ( NV_ROOTDIR . "/includes/header.php" );
+    echo nv_site_theme($contents);
+    include ( NV_ROOTDIR . "/includes/footer.php" );
+  }
 }
 
 function preCheckUser() {
