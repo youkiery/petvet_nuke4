@@ -15,7 +15,7 @@ if (!empty($action)) {
     case 'get-edit':
         $id = $nv_Request->get_int('id', 'post');
 
-        $sql = 'select * from `'. VAC_PREFIX .'market` where id = ' . $id;
+        $sql = 'select * from `'. VAC_PREFIX .'_market` where id = ' . $id;
         $query = $db->query($sql);
         
         if (!empty($row = $query->fetch())) {
@@ -26,7 +26,7 @@ if (!empty($action)) {
     case 'insert':
         $data = $nv_Request->get_array('data', 'post');
 
-        $sql = 'insert into `'. VAC_PREFIX .'market` (doctor, name, unit, address, price) values(0, "'. $data['name'] .'", "'. $data['unit'] .'", "'. $data['address'] .'", "'. $data['price'] .'")';
+        $sql = 'insert into `'. VAC_PREFIX .'_market` (doctor, name, unit, address, price) values(0, "'. $data['name'] .'", "'. $data['unit'] .'", "'. $data['address'] .'", "'. $data['price'] .'")';
 
         if ($db->query($sql)) {
             $result['status'] = 1;
@@ -37,7 +37,7 @@ if (!empty($action)) {
         $id = $nv_Request->get_int('id', 'post');
         $data = $nv_Request->get_array('data', 'post');
 
-        $sql = 'update `'. VAC_PREFIX .'market` set name = "'. $data['name'] .'", unit = "'. $data['unit'] .'", address = "'. $data['address'] .'", price = "'. $data['price'] .'" where id = ' . $id;
+        $sql = 'update `'. VAC_PREFIX .'_market` set name = "'. $data['name'] .'", unit = "'. $data['unit'] .'", address = "'. $data['address'] .'", price = "'. $data['price'] .'" where id = ' . $id;
 
         if ($db->query($sql)) {
             $result['status'] = 1;
@@ -46,7 +46,7 @@ if (!empty($action)) {
     case 'remove':
         $id = $nv_Request->get_int('id', 'post');
 
-        $sql = 'delete from `'. VAC_PREFIX .'market` where id = ' . $id;
+        $sql = 'delete from `'. VAC_PREFIX .'_market` where id = ' . $id;
         if ($db->query($sql)) {
             $result['status'] = 1;
         }
@@ -59,7 +59,7 @@ if (!empty($action)) {
 $xtpl = new XTemplate("main.tpl", PATH2);
 
 $data = array();
-$sql = 'select * from `'. VAC_PREFIX .'market`';
+$sql = 'select * from `'. VAC_PREFIX .'_market`';
 $query = $db->query($sql);
 while ($row = $query->fetch()) {
     $data[]= $row;
