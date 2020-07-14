@@ -16,6 +16,7 @@ define('NV_IS_MOD_QUANLY', true);
 define('PATH', NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file); 
 define('PATH2', NV_ROOTDIR . "/modules/" . $module_file . '/template/user/' . $op); 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
+$check_image = '<img src="/assets/images/ok.png">';
 // kiểm tra phân quyền
 
 $opType = array('main' => 1, 'confirm' => 1, 'list' => 1, 'vac_list' => 1, 'sieuam' => 2, 'danhsachsieuam' => 2, 'sieuam-birth' => 2, 'themsieuam' => 2, 'xacnhansieuam' => 2, 'luubenh' => 3, 'danhsachluubenh' => 3, 'themluubenh' => 3, 'spa' => 4, 'redrug' => 5, 'heal' => 6, 'heal_drug' => 6);
@@ -94,22 +95,6 @@ function usgModal($lang_module) {
     $xtpl->parse('main.doctor4');
   }
 
-  foreach ($sort_type as $key => $sort_name) {
-    $xtpl->assign("sort_name", $sort_name);
-    $xtpl->assign("sort_value", $key);
-    if ($key == $sort) $xtpl->assign("sort_check", "selected");
-    else $xtpl->assign("sort_check", "");
-    $xtpl->parse("main.sort");
-  }
-  
-  foreach ($filter_type as $filter_value) {
-    $xtpl->assign("time_value", $filter_value);
-    $xtpl->assign("time_name", $filter_value);
-    if ($filter_value == $filter) $xtpl->assign("time_check", "selected");
-    else $xtpl->assign("time_check", "");
-    $xtpl->parse("main.time");
-  }
-
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -118,7 +103,7 @@ function overflowList($data = array()) {
 	global $db;
 	$xtpl = new XTemplate("overflow-list.tpl", PATH2);
 
-	$tick;
+	$tick = 0;
 	if (empty($data['from'])) $tick += 1;
 	if (empty($data['end'])) $tick += 2;
 	$msg = '';
@@ -656,4 +641,652 @@ function checkXrayPermit() {
   $sql = 'select * from `'. VAC_PREFIX .'_xray_user` where userid = '. $user_info['userid'];
   $query = $db->query($sql);
   if (!empty($query->fetch())) return true;
+}
+
+function excelModal() {
+    $xtpl = new XTemplate("excel-modal.tpl", PATH2);
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function categoryModal() {
+    $xtpl = new XTemplate("category-modal.tpl", PATH2);
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function itemModal() {
+    $xtpl = new XTemplate("item-modal.tpl", PATH2);
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function lowitemModal() {
+    global $db;
+    $xtpl = new XTemplate("lowitem-modal.tpl", PATH2);
+    $query = $db->query('select * from `'. VAC_PREFIX .'_category` order by name');
+
+    while ($row = $query->fetch()) {
+        $xtpl->assign('id', $row['id']);
+        $xtpl->assign('name', $row['name']);
+        $xtpl->parse('main.category');
+    }
+    $xtpl->assign('content', lowitemList());
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function bloodInsertModal() {
+    global $db, $db_config, $user_info, $remind_title;
+
+    $xtpl = new XTemplate("insert-modal.tpl", PATH2);
+    $last = checkLastBlood();
+    $query = $db->query('select a.user_id, b.first_name from `'. $db_config['prefix'] .'_rider_user` a inner join `'. $db_config['prefix'] .'_users` b on a.user_id = b.userid where a.type = 1');
+    $xtpl->assign('today', date('d/m/Y'));
+    $xtpl->assign('last', $last);
+    $xtpl->assign('nextlast', $last - 1);
+
+    while ($row = $query->fetch()) {
+        $xtpl->assign('id', $row['user_id']);
+        $xtpl->assign('name', $row['first_name']);
+        if ($row['user_id'] == $user_info['userid']) $xtpl->assign('selected', 'selected');
+        else $xtpl->assign('selected', '');
+        $xtpl->parse('main.doctor');
+    }
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function bloodImportModal() {
+    global $db;
+
+    $xtpl = new XTemplate("import-modal.tpl", PATH2);
+    $xtpl->assign('today', date('d/m/Y'));
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function removeModal() {
+    $xtpl = new XTemplate("remove-modal.tpl", PATH2);
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function filterModal() {
+    global $db;
+    $xtpl = new XTemplate("filter-modal.tpl", PATH2);
+    $query = $db->query('select * from `'. VAC_PREFIX .'_category` order by name');
+
+    while ($row = $query->fetch()) {
+        $xtpl->assign('id', $row['id']);
+        $xtpl->assign('name', $row['name']);
+        $xtpl->parse('main.category');
+    }
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function lowitemList() {
+    global $db, $nv_Request;
+
+    $filter = $nv_Request->get_array('filter', 'post');
+    if (empty($filter['limit'])) $filter['limit'] = 10;
+    $xtra = '';
+    if (!empty($filter['_category'])) {
+        // $xtra = ' and category = ' . $filter['_category'];
+        $category = implode(', ', $filter['_category']);
+        $xtra= 'and category in ('. $category .')';
+    }
+    
+    $index = 1;
+    $xtpl = new XTemplate("lowitem-list.tpl", PATH2);
+
+    $query = $db->query('select count(id) from `'. VAC_PREFIX .'_item` where active = 1 and name like "%'. $filter['keyword'] .'%" and ((bound = 0 and number < '. $filter['limit'] .') or (bound > 0 and number <= bound)) '. $xtra);
+    $number = $query->fetch();
+    $query = $db->query('select * from `'. VAC_PREFIX .'_item` where active = 1 and name like "%'. $filter['keyword'] .'%" and ((bound = 0 and number < '. $filter['limit'] .') or (bound > 0 and number <= bound)) '. $xtra .' order by time desc');
+    // $query = $db->query('select * from `'. VAC_PREFIX .'_item` where active = 1 and ((bound = 0 and number < '. $filter['limit'] .') or (bound > 0 and number <= bound)) '. $xtra .' order by time desc');
+    while ($row = $query->fetch()) {
+        $xtpl->assign('index', $index++);
+        $xtpl->assign('name', $row['name']);
+        $xtpl->assign('_category', categoryName($row['_category']));
+        $xtpl->assign('number', $row['number']);
+        $xtpl->assign('limit', $row['limit']);
+        $xtpl->parse('main.row');
+    }
+    
+    $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function bloodList() {
+    global $db, $nv_Request, $type, $db_config;
+    $xtpl = new XTemplate("blood-list.tpl", PATH2);
+    $filter = $nv_Request->get_array('filter', 'post');
+    if ($type == 1) {
+        $xtpl->assign('show', 'hide');
+    }
+
+    if (empty($filter['page'])) {
+        $filter['page'] = 1;
+    }
+    if (empty($filter['limit'])) {
+        $filter['limit'] = 10;
+    }
+
+    $xtra = '';
+    if (!empty($filter['type'])) {
+        $xtra = 'where type in ('. implode(', ', $filter['type']) .')';
+    }
+
+    $target = array();
+    $sql = 'select * from `'. VAC_PREFIX .'_remind` where name = "blood" order by id';
+    $query = $db->query($sql);
+
+    while ($row = $query->fetch()) {
+        $target[$row['id']] = $row['value'];
+    }
+
+    $query = $db->query('select count(*) as num from ((select id, time, 0 as type, number from `'. VAC_PREFIX .'_blood_row`) union (select id, time, 1 as type, number from `'. VAC_PREFIX .'_blood_import`)) a '. $xtra);
+    $number = $query->fetch()['num'];
+
+    $query = $db->query('select * from ((select id, time, 0 as type, number, doctor, target from `'. VAC_PREFIX .'_blood_row`) union (select id, time, 1 as type, number, doctor, 0 as target from `'. VAC_PREFIX .'_blood_import`)) a '. $xtra .' order by time desc, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+    $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+    while ($row = $query->fetch()) {
+        $sql = 'select * from `'. $db_config['prefix'] .'_users` where userid = ' . $row['doctor'];
+        $user_query = $db->query($sql);
+        $user = $user_query->fetch();
+
+        $xtpl->assign('index', $index++);
+        $xtpl->assign('time', date('d-m-Y', $row['time']));
+        $xtpl->assign('target', (!empty($target[$row['target']]) ? $target[$row['target']] : ''));
+        $xtpl->assign('number', $row['number']);
+        $xtpl->assign('id', $row['id']);
+        $xtpl->assign('typeid', $row['type']);
+        $xtpl->assign('doctor', (!empty($user['first_name']) ? $user['first_name'] : ''));
+        if ($row['type']) $xtpl->assign('type', 'Phiếu nhập');
+        else $xtpl->assign('type', 'Phiếu xét nghiệm');
+        if ($type == 2) {
+            $xtpl->parse('main.row.test');
+        }
+        $xtpl->parse('main.row');
+    }
+    $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function itemList() {
+    global $db, $nv_Request;
+
+    $filter = $nv_Request->get_array('filter', 'post');
+    $xtra = '';
+    if (empty($filter['page'])) $filter['page'] = 1;
+    if (empty($filter['limit'])) $filter['limit'] = 10;
+    if (!empty($filter['_category'])) {
+        // $xtra = ' and category = ' . $filter['_category'];
+        $category = implode(', ', $filter['_category']);
+        $xtra= 'and category in ('. $category .')';
+    }
+
+    $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+    $xtpl = new XTemplate("item-list.tpl", PATH2);
+    $query = $db->query('select count(*) as count from `'. VAC_PREFIX .'_item` where active = 1 and name like "%'. $filter['keyword'] .'%" ' . $xtra);
+    $number = $query->fetch()['count'];
+
+    $query = $db->query('select * from `'. VAC_PREFIX .'_item` where active = 1 and name like "%'. $filter['keyword'] .'%" '. $xtra .' order by time desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+    while ($row = $query->fetch()) {
+        $xtpl->assign('index', $index++);
+        $xtpl->assign('id', $row['id']);
+        $xtpl->assign('name', $row['name']);
+        $xtpl->assign('_category', categoryName($row['_category']));
+        $xtpl->assign('number', $row['number']);
+        $xtpl->assign('number2', $row['number2']);
+        $xtpl->assign('bound', $row['bound']);
+        $xtpl->assign('limit', $row['limit']);
+        $xtpl->parse('main.row');
+    }
+    
+    $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function bloodModal() {
+    $xtpl = new XTemplate("modal.tpl", PATH2);
+    $xtpl->assign('statistic_content', bloodStatistic());
+
+    $time = strtotime(date('Y/m/d'));
+    // $time = strtotime(date('8/8/2019'));
+    $filter['from'] = $time - 60 * 60 * 24 * 15;
+    $filter['end'] = $time + 60 * 60 * 24 * 15;
+
+    $xtpl->assign('from', date('d/m/Y', $filter['from']));
+    $xtpl->assign('end', date('d/m/Y', $filter['end']));
+
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+// function productList($url, $filter = array('page' => 1, 'limit' => 10, 'brand' => 1)) {
+//     global $db;
+
+//     $xtpl = new XTemplate("product-list.tpl", PATH2);
+//     $sql = 'select count(*) as count from `'. VAC_PREFIX .'brand_product` where brandid = '. $filter['brand'];
+//     $query = $db->query($sql);
+//     $number = $query->fetch()['count'];
+
+//     $sql = 'select * from `'. VAC_PREFIX .'brand_product` where brandid = '. $filter['brand'] .' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+
+//     $query = $db->query($sql);
+//     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+    
+//     while ($row = $query->fetch()) {
+//         $sql = 'select * from `'. VAC_PREFIX .'_product` where id = '. $row['_productid'];
+//         $query = $db->query($sql);
+//         $product = $query->fetch();
+
+//         $sql = 'select * from `'. VAC_PREFIX .'_product_category` where id = '. $product['_category'];
+//         $query = $db->query($sql);
+//         $category = $query->fetch();
+
+//         $xtpl->assign('index', $index++);
+//         $xtpl->assign('_category', $category['name']);
+//         $xtpl->assign('_item', $product['name']);
+//         $xtpl->assign('number', $row['number']);
+//         $xtpl->parse('main.row');
+//     }
+//     $xtpl->assign('nav', nv_generate_page_shop($url, $number, $filter['limit'], $filter['page']));
+//     $xtpl->parse('main');
+//     return $xtpl->text();
+// }
+
+function productCategory() {
+    global $db;
+    $sql = 'select * from `'. VAC_PREFIX .'_product_category` order by id';
+    $query = $db->query($sql);
+    $list = array();
+
+    while ($row = $query->fetch()) {
+        $list[$row['id']] = $row['name'];
+    }
+    return $list;
+}
+
+function productList($url, $filter) {
+    global $db;
+
+    $xtpl = new XTemplate("list.tpl", PATH2);
+    $sql = 'select count(a.id) as count from `'. VAC_PREFIX .'_product` a inner join `'. VAC_PREFIX .'_catalog` b on a.itemid = b.id where '. (strlen($filter['tag']) ? 'a.tag like \'%"'. $filter['tag'] .'"%\' and' : '') .' (b.code like "%'. $filter['keyword'] .'%" or b.name like "%'. $filter['keyword'] .'%")';
+    $query = $db->query($sql);
+    $number = $query->fetch()['count'];
+
+    $sql = 'select b.*, a.id, a.itemid, a.low, a.pos from `'. VAC_PREFIX .'_product` a inner join `'. VAC_PREFIX .'_catalog` b on a.itemid = b.id where '. (strlen($filter['tag']) ? 'a.tag like \'%"'. $filter['tag'] .'"%\' and' : '') .' (b.code like "%'. $filter['keyword'] .'%" or b.name like "%'. $filter['keyword'] .'%") order by a.id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+
+    $query = $db->query($sql);
+    $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+   
+    while ($row = $query->fetch()) {
+        $xtpl->assign('index', $index++);
+        $xtpl->assign('id', $row['_itemid']);
+        $xtpl->assign('name', $row['name']);
+        $xtpl->assign('pos', $row['pos']);
+        $xtpl->assign('low', $row['low']);
+        $xtpl->parse('main.row');
+    }
+    $xtpl->assign('nav', nav_generater($url, $number, $filter['page'], $filter['limit']));
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function productSuggest($keyword) {
+  global $db;
+
+  $xtpl = new XTemplate("product-suggest.tpl", PATH2);
+  $sql = 'select * from `'. VAC_PREFIX .'_catalog` where lower(name) like "%'. $keyword .'%" and id not in (select itemid from `'. VAC_PREFIX .'_product`) order by name desc limit 20';
+  $query = $db->query($sql);
+
+  while ($row = $query->fetch()) {
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('code', $row['code']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->parse('main');
+  }
+  return $xtpl->text();
+}
+
+function productModal() {
+    $xtpl = new XTemplate("modal.tpl", PATH2);
+    // $category = productCategory();
+    // foreach ($category as $id => $name) {
+    //     $xtpl->assign('id', $id);
+    //     $xtpl->assign('name', $name);
+    //     $xtpl->assign('check', '');
+    //     if ($filter['_category'] == $id) $xtpl->assign('check', 'selected');
+    //     $xtpl->parse('main.category');
+    // }
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function productStatisticContent($keyword, $tags) {
+  global $db;
+  $xtpl = new XTemplate("statistic.tpl", PATH2);
+  $xtra = array();
+  foreach ($tags as $tag) {
+    if (strlen($tag)) $xtra []= 'a.tag like \'%"'. $tag .'"%\'';
+  }
+  $sql = 'select b.*, a.id, a.low, a.n1, a.n2, a.pos from `'. VAC_PREFIX .'_product` a inner join `'. VAC_PREFIX .'_catalog` b on a.itemid = b.id where b.name like "%'. $keyword .'%" and ((a.n2 > 0 and a.n1 < a.low) or (a.n2 + a.n1 < 2 * a.low)) ' . (count($xtra) ? ' and ' : '') . implode(' or ', $xtra) . ' limit 100';
+  $query = $db->query($sql);
+  while ($row = $query->fetch()) {
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('n1', $row['n1']);
+    $xtpl->assign('n2', $row['n2']);
+    $action = '';
+    if ($row['n2'] > 0 && $row['n1'] < $row['low']) {
+      $action .= 'Chuyển hàng: ' . $row['pos'];
+    }
+    else if ($row['n1'] + $row['n2'] < 2 * $row['low']) {
+      $action .= ' ∀ Nhập hàng';
+    }
+    $xtpl->assign('action', $action);
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function marketModal() {
+    $xtpl = new XTemplate("modal.tpl", PATH2);
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function marketContent($filter) {
+    global $db;
+
+    // $xtpl = new XTemplate("list.tpl", PATH2);
+    // $sql = 'select count(*) as number from `'. VAC_PREFIX .'_remind` '. $xtra;
+    // $query = $db->query($sql);
+    // $number = $query->fetch()['number'];
+
+    // $sql = 'select * from `'. VAC_PREFIX .'_remind` '. $xtra .' order by name, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['limit'] * ($filter['page'] - 1));
+    // $query = $db->query($sql);
+    // $index = $filter['limit'] * ($filter['page'] - 1) + 1;
+
+    // while ($row = $query->fetch()) {
+    //     $xtpl->assign('index', $index++);
+    //     $xtpl->assign('id', $row['id']);
+    //     $xtpl->assign('name', (!empty($remind_title[$row['name']]) ? $remind_title[$row['name']] : ''));
+    //     $xtpl->assign('value', $row['value']);
+    //     if ($row['active']) $xtpl->parse('main.row.yes');
+    //     else $xtpl->parse('main.row.no');
+    //     $xtpl->parse('main.row');
+    // }
+    // $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
+    // $xtpl->parse('main');
+    // return $xtpl->text();
+}
+
+function priceContent($filter = array('page' => 1, 'limit' => 20)) {
+    global $db, $allow, $module_name, $op;
+    $xtpl = new XTemplate("list.tpl", PATH2);
+    $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+    $category = priceCategoryList();
+
+    $sql = 'select count(*) as count from `'. VAC_PREFIX .'_price_item` where (name like "%'. $filter['keyword'] .'%" or code like "%'. $filter['keyword'] .'%") '. ($filter['_category'] ? 'and category = ' . $filter['_category'] : '');
+    $query = $db->query($sql);
+    $number = $query->fetch()['count'];
+
+    $sql = 'select * from `'. VAC_PREFIX .'_price_item` where (name like "%'. $filter['keyword'] .'%" or code like "%'. $filter['keyword'] .'%") '. ($filter['_category'] ? 'and category = ' . $filter['_category'] : '') .' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+    $query = $db->query($sql);
+
+    if (!empty($allow)) $xtpl->parse('main.m1');
+    while ($item = $query->fetch()) {
+        $detailList = priceItemDetail($item['id']);
+        $count = count($detailList);
+        $xtpl->assign('row', $count + 1);
+        $xtpl->assign('index', $index ++);
+        $xtpl->assign('id', $item['id']);
+        $xtpl->assign('code', $item['code']);
+        $xtpl->assign('name', $item['name']);
+        $xtpl->assign('_category', $category[$item['_category']]['name']);
+
+        foreach ($detailList as $key => $detail) {
+            $xtpl->assign('_price', number_format($detail['_price'], 0, '', ','));
+            if (!empty($detail['number'])) {
+                $xtpl->assign('number', $detail['number']);
+                $xtpl->parse('main.row.section.p2');
+            }
+            else $xtpl->parse('main.row.section.p1');
+            $xtpl->parse('main.row.section');
+        }
+
+        if (!empty($allow)) {
+            $xtpl->parse('main.row.m2');
+        }
+        $xtpl->parse('main.row');
+    }
+    $xtpl->assign('nav', nav_generater('/index.php?nv='. $module_name .'&op='. $op, $number, $filter['page'], $filter['limit']));
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function priceCategoryContent() {
+    $xtpl = new XTemplate("category-list.tpl", PATH2);
+    $list = priceCategoryList();
+    $index = 1;
+
+    foreach ($list as $category) {
+        $xtpl->assign('index', $index ++);
+        $xtpl->assign('id', $category['id']);
+        $xtpl->assign('name', $category['name']);
+        $xtpl->assign('active', ($category['active'] ? 'warning' : 'info'));
+        $xtpl->parse('main.row');
+    }
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function priceModal() {
+    $xtpl = new XTemplate("modal.tpl", PATH2);
+    $xtpl->assign('_category_option', priceCategoryOption());
+    $xtpl->assign('_category_content', priceCategoryContent());
+    $xtpl->parse('main');
+    return $xtpl->text();
+}
+
+function priceCategoryOption($categoryid = 0) {
+    $list = priceCategoryList();
+    $html = '';
+
+    foreach ($list as $category) {
+        $check = '';
+        if ($categoryid == $category['id']) $check = 'selected';
+        $html .= '<option value="'. $category['id'] .'" '. $check .'>' . $category['name'] . '</option>';
+    }
+    return $html;
+}
+
+function deviceModal() {
+  $xtpl = new XTemplate("modal.tpl", PATH2);
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function deviceManagerList() {
+  global $db, $start, $config;
+  
+  $xtpl = new XTemplate("device-manager-list.tpl", PATH2);
+  $sql = 'select * from `'. VAC_PREFIX .'_device` order by id desc';
+  $query = $db->query($sql);
+  $index = 1;
+  $depart = getDeviceDepartList();
+
+  while ($row = $query->fetch()) {
+    $sql = 'select time from `'. VAC_PREFIX .'_device_detail` where itemid = ' . $row['id'] . ' and (time between '. $start .' and '. ($start + $config * 60 * 60 * 24) .') order by id desc limit 1';
+    
+    $detail_query = $db->query($sql);
+    $detail = $detail_query->fetch();
+    $xtpl->assign('date', date('d/m/Y', $detail['time']));
+    if (!empty($detail)) {$xtpl->parse('main.row.yes');}
+    else $xtpl->parse('main.row.no');
+
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('depart', checkDeviceDepart(json_decode($row['depart']), $depart));
+    $xtpl->assign('employ', checkDeviceEmploy($row['id']));
+    $xtpl->parse('main.row');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function deviceList() {
+  global $db, $allow, $user_info, $start, $check_image;
+  
+  $xtpl = new XTemplate("device-list.tpl", PATH2);
+  if (empty($user_info)) $xtpl->parse('main.no');
+  else {
+    $sql = 'select * from `'. VAC_PREFIX .'_device` where id in (select itemid from `'. VAC_PREFIX .'_device_employ` where userid = '. $user_info['userid'] .')';
+    $query = $db->query($sql);
+    $index = 1;
+  
+    while ($row = $query->fetch()) {
+      $sql = 'select * from `'. VAC_PREFIX .'_device_detail` where itemid = ' . $row['id'] . ' and time >= '. $start .' order by id desc limit 1';
+      $detail_query = $db->query($sql);
+      $detail = $detail_query->fetch();
+      $xtpl->assign('check', '');
+      if (!empty($detail)) $xtpl->assign('check', $check_image);
+
+      $xtpl->assign('index', $index++);
+      $xtpl->assign('id', $row['id']);
+      $xtpl->assign('name', $row['name']);
+      $xtpl->assign('status', $row['status']);
+      $xtpl->assign('note', $row['description']);
+      $xtpl->assign('number', $row['number']);
+      $manual = getDeviceManual($row['id']);
+      if (!empty($manual)) $xtpl->parse('main.yes.row.manual');
+      $xtpl->parse('main.yes.row');
+    }
+    $xtpl->parse('main.yes');
+  }
+
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function getDeviceDepartList() {
+    global $db;
+
+    $sql = 'select * from `'. VAC_PREFIX .'_device_depart`';
+    $query = $db->query($sql);
+    $list = array();
+
+    while($row = $query->fetch()) $list[$row['id']] = $row['name'];
+    return $list;
+}
+
+function checkDeviceDepart($depart_list, $depart) {
+    $list = array();
+    foreach ($depart_list as $departid) {
+        $list []= $depart[$departid];
+    }
+    return implode(', ', $list);
+}
+
+function checkDeviceEmploy($itemid) {
+    global $db, $db_config;
+
+    $sql = 'select concat(last_name, " ", first_name) as fullname from `'. $db_config['prefix'] .'_users` where userid in (select userid from `'. VAC_PREFIX .'_device_employ` where itemid = ' . $itemid . ')';
+    $query = $db->query($sql);
+    $list = array();
+
+    while($row = $query->fetch()) $list[] = $row['fullname'];
+    return implode(', ', $list);
+}
+
+function bloodStatistic() {
+  global $db, $db_config, $module_name, $nv_Request;
+  $filter = $nv_Request->get_array('filter', 'post');
+  $total = array('import' => 0, 'number' => 0, 'count' => 0, 'real' => 0);
+
+  $check = 0;
+  if (empty($filter['from'])) {
+    $check += 1;
+  }
+  if (empty($filter['end'])) {
+    $check += 2;
+  }
+
+  switch ($check) {
+    case 1:
+      $filter['end'] = totime($filter['end']);
+      $filter['from'] = $filter['from'] - 60 * 60 * 24 * 30;
+    break;
+    case 2:
+      $filter['from'] = totime($filter['from']);
+      $filter['end'] = $filter['end'] + 60 * 60 * 24 * 30;
+    break;
+    case 3:
+      $time = strtotime(date('Y/m/d'));
+      $filter['from'] = $time - 60 * 60 * 24 * 15;
+      $filter['end'] = $time + 60 * 60 * 24 * 15;
+    break;
+    default:
+      $filter['from'] = totime($filter['from']);
+      $filter['end'] = totime($filter['end']);
+  }
+  
+  $xtpl = new XTemplate("statistic-list.tpl", BLOCK);
+  $xtpl->assign('from', date('d/m/Y', $filter['from']));
+  $xtpl->assign('end', date('d/m/Y', $filter['end']));
+  $doctor = getDoctorList2();
+
+  $sql = 'select * from `'. VAC_PREFIX .'_blood_row` where (time between '. $filter['from'] .' and '. $filter['end'] .')';
+  $query = $db->query($sql);
+  $data = array();
+  while ($row = $query->fetch()) {
+    if (empty($data[$row['doctor']])) {
+      $data[$row['doctor']]= array(
+        'number' => 0,
+        'real' => 0,
+        'count' => 0
+      );
+    }
+    $total['count'] ++;
+    $total['number'] += $row['number'];
+    $total['real'] += ($row['start'] - $row['end']);
+    $data[$row['doctor']]['count'] ++;
+    $data[$row['doctor']]['number'] += $row['number'];
+    $data[$row['doctor']]['real'] += ($row['start'] - $row['end']);
+  }
+
+  if (count($data)) {
+    foreach ($data as $doctorid => $counter) {
+      $xtpl->assign('doctor', $doctor[$doctorid]);
+      $xtpl->assign('number', $counter['number']);
+      $xtpl->assign('real', $counter['real']);
+      $xtpl->assign('count', $counter['count']);
+      $xtpl->parse('main.row');
+    }
+  }
+  else {
+    $xtpl->parse('main.non');
+  }
+
+  $sql = 'select * from `'. VAC_PREFIX .'_blood_import` where (time between '. $filter['from'] .' and '. $filter['end'] .')';
+  $query = $db->query($sql);
+  while ($row = $query->fetch()) {
+    $total['import'] += $row['number']; // tổng tiền nhập
+  }
+  $xtpl->assign('import', number_format($total['import'] * 1000, 0, '', ',') . ' VNĐ');
+  $xtpl->assign('count', $total['count']);
+  $xtpl->assign('number', $total['number']);
+  $xtpl->assign('real', $total['real']);
+
+  $xtpl->parse('main');
+  return $xtpl->text();
 }

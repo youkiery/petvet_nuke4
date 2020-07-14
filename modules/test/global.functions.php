@@ -69,6 +69,7 @@ if (!defined('NV_MAINFILE')) {
 define('VAC_PREFIX', $db_config['prefix'] . "_" . $module_name);
 define('NV_NEXTMONTH', 30 * 24 * 60 * 60);
 define('NV_NEXTWEEK', 7 * 24 * 60 * 60);
+define('BLOCK', NV_ROOTDIR . '/modules/' . $module_file . '/template/block/');
 $status_option = array("Bình thường", "Hơi yếu", "Yếu", "Sắp chết");
 $export = array("Lưu bệnh", "Xuất viện", "Đã chết");
 
@@ -602,6 +603,17 @@ function getVaccineTable($path, $lang, $key, $sort, $time) {
   return $xtpl->text("main");
 }
 
+
+function getDoctorList2() {
+  global $db, $db_config;
+
+  $list = array();
+  $query = $db->query('select a.userid, a.first_name from `'. $db_config['prefix'] .'_rider_user` b inner join `'. $db_config['prefix'] .'_users` a on a.userid = b.user_id where b.type = 1');
+  while ($row = $query->fetch()) {
+    $list[$row['userid']] = $row['first_name'];
+  }
+  return $list;
+}
 
 function getdoctorlist() {
   global $db, $db_config, $module_name;
@@ -2281,4 +2293,21 @@ function getPetById($id)
   $sql = "select * from `". VAC_PREFIX ."_pet` where id = " . $id;
   $query = $db->query($sql);
   return $query->fetch();
+}
+
+function checkLastBlood() {
+  global $db, $db_config;
+
+  $query = $db->query('select * from `'. $db_config['prefix'] .'_config` where config_name = "blood_number"');
+  if (!empty($row = $query->fetch())) {
+    return $row['config_value'];
+  }
+  $db->query('insert into `'. $db_config['prefix'] .'_config` (lang, module, config_name, config_value) values ("sys", "site", "blood_number", "1")');
+  return 1;
+}
+
+function loadModal($file_name) {
+  $xtpl = new XTemplate($file_name . '.tpl', PATH2);
+  $xtpl->parse('main');
+  return $xtpl->text();
 }
