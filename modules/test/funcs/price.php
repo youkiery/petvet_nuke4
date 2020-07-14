@@ -23,7 +23,7 @@ if (empty($user_info)) {
 }
 
 if (!empty($user_info)) {
-  $sql = 'select * from `'. VAC_PREFIX .'price_allow` where userid = ' . $user_info['userid'];
+  $sql = 'select * from `'. VAC_PREFIX .'_price_allow` where userid = ' . $user_info['userid'];
   $query = $db->query($sql);
   $allow = $query->fetch();
 }
@@ -35,11 +35,11 @@ if (!empty($action)) {
     case 'item-insert':
       $data = $nv_Request->get_array('data', 'post');
 
-      $sql = "insert into `". VAC_PREFIX ."price_item` (code, name, category) values('$data[code]', '$data[name]', '$data[category]')";
+      $sql = "insert into `". VAC_PREFIX ."_price_item` (code, name, category) values('$data[code]', '$data[name]', '$data[category]')";
       if ($db->query($sql)) {
         $id = $db->lastInsertId();
         foreach ($data['section'] as $section) {
-          $sql = "insert into `". VAC_PREFIX ."price_detail` (itemid, number, price) values($id, '$section[number]', ". str_replace(',', '', $section['price']) .")";
+          $sql = "insert into `". VAC_PREFIX ."_price_detail` (itemid, number, price) values($id, '$section[number]', ". str_replace(',', '', $section['price']) .")";
           $db->query($sql);
         }
         $result['status'] = 1;
@@ -53,20 +53,20 @@ if (!empty($action)) {
       $section = $data['section'];
       $count = count($section);
 
-      $sql = "update `". VAC_PREFIX ."price_item` set code = '$data[code]', name = '$data[name]', category = $data[category] where id = " . $id;
+      $sql = "update `". VAC_PREFIX ."_price_item` set code = '$data[code]', name = '$data[name]', category = $data[category] where id = " . $id;
       if ($db->query($sql)) {
-        $sql = "select * from `". VAC_PREFIX ."price_detail` where itemid = " . $id;
+        $sql = "select * from `". VAC_PREFIX ."_price_detail` where itemid = " . $id;
         $query = $db->query($sql);
         $current = 0;
 
         while ($row = $query->fetch()) {
           if ($current < $count) {
             // cập nhật
-            $sql = "update `". VAC_PREFIX ."price_detail` set number = '". $section[$current]['number'] ."', price = ". str_replace(',', '', $section[$current]['price']) ." where id = " . $row['id'];
+            $sql = "update `". VAC_PREFIX ."_price_detail` set number = '". $section[$current]['number'] ."', price = ". str_replace(',', '', $section[$current]['price']) ." where id = " . $row['id'];
           }
           else {
             // xóa
-            $sql = "delete from `". VAC_PREFIX ."price_detail` where id = " . $row['id'];
+            $sql = "delete from `". VAC_PREFIX ."_price_detail` where id = " . $row['id'];
           }
           // echo $sql . '<br>';
           $db->query($sql);
@@ -74,7 +74,7 @@ if (!empty($action)) {
         }
         // thêm phần còn lại
         for ($i = $current; $i < $count; $i++) { 
-          $sql = "insert into `". VAC_PREFIX ."price_detail` (itemid, number, price) values($id, '". $section[$current]['number'] ."', ". str_replace(',', '', $section[$current]['price']) .")";
+          $sql = "insert into `". VAC_PREFIX ."_price_detail` (itemid, number, price) values($id, '". $section[$current]['number'] ."', ". str_replace(',', '', $section[$current]['price']) .")";
           $db->query($sql);
         }
         $result['status'] = 1;
@@ -85,7 +85,7 @@ if (!empty($action)) {
     case 'item-get':
       $id = $nv_Request->get_int('id', 'post');
       
-      $sql = 'select * from `'. VAC_PREFIX .'price_detail` where itemid = ' . $id;
+      $sql = 'select * from `'. VAC_PREFIX .'_price_detail` where itemid = ' . $id;
       $query = $db->query($sql);
       $section = array();
       while ($row = $query->fetch()) {
@@ -93,7 +93,7 @@ if (!empty($action)) {
         $section[]= $row;
       }
 
-      $sql = 'select * from `'. VAC_PREFIX .'price_item` where id = ' . $id;
+      $sql = 'select * from `'. VAC_PREFIX .'_price_item` where id = ' . $id;
       $query = $db->query($sql);
       if ($row = $query->fetch()) {
         $row['section'] = $section;
@@ -104,8 +104,8 @@ if (!empty($action)) {
     case 'item-remove':
       $id = $nv_Request->get_int('id', 'post');
       
-      $sql = 'delete from `'. VAC_PREFIX .'price_item` where id = ' . $id;
-      $sql2 = 'delete from `'. VAC_PREFIX .'price_detail` where itemid = ' . $id;
+      $sql = 'delete from `'. VAC_PREFIX .'_price_item` where id = ' . $id;
+      $sql2 = 'delete from `'. VAC_PREFIX .'_price_detail` where itemid = ' . $id;
       if ($db->query($sql) && $db->query($sql2)) {
         $result['status'] = 1;
         $result['html'] = priceContent($filter);
@@ -115,7 +115,7 @@ if (!empty($action)) {
     case 'category-insert':
       $name = $nv_Request->get_string('name', 'post');
       
-      $sql = 'insert into `'. VAC_PREFIX .'price_category` (name) values("'. $name .'")';
+      $sql = 'insert into `'. VAC_PREFIX .'_price_category` (name) values("'. $name .'")';
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = priceCategoryContent();
@@ -125,11 +125,11 @@ if (!empty($action)) {
     case 'category-toggle':
       $id = $nv_Request->get_int('id', 'post');
       
-      $sql = 'select * from `'. VAC_PREFIX .'price_category` where id = ' . $id;
+      $sql = 'select * from `'. VAC_PREFIX .'_price_category` where id = ' . $id;
       $query = $db->query($sql);
       $category = $query->fetch();
 
-      $sql = 'update `'. VAC_PREFIX .'price_category` set active = '. (intval(!$category['active'])) .' where id = ' . $id;
+      $sql = 'update `'. VAC_PREFIX .'_price_category` set active = '. (intval(!$category['active'])) .' where id = ' . $id;
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = priceCategoryContent();
@@ -139,7 +139,7 @@ if (!empty($action)) {
       $id = $nv_Request->get_int('id', 'post');
       $name = $nv_Request->get_string('name', 'post');
       
-      $sql = 'update `'. VAC_PREFIX .'price_category` set name = "'. $name .'" where id = ' . $id;
+      $sql = 'update `'. VAC_PREFIX .'_price_category` set name = "'. $name .'" where id = ' . $id;
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['notify'] = 'Đã cập nhật';
@@ -148,7 +148,7 @@ if (!empty($action)) {
     case 'get-suggest':
       $keyword = $nv_Request->get_string('keyword', 'post');
       $xtpl = new XTemplate("item-suggest.tpl", PATH2);
-      $sql = 'select * from `'. VAC_PREFIX .'catalog` where name like "%'. $keyword .'%" order by id desc limit 20';
+      $sql = 'select * from `'. VAC_PREFIX .'_catalog` where name like "%'. $keyword .'%" order by id desc limit 20';
       $query = $db->query($sql);
       
       while ($row = $query->fetch()) {
