@@ -75,9 +75,11 @@ if (!empty($action)) {
       if (!checkDepartName($name)) {
         $sql = 'insert into `'. PREFIX .'device_depart` (name) values("'. $name .'")';
         $db->query($sql);
-        $result['status'] = 1;
         $result['json'] = getDepartList();
-        $result['html'] = deviceList();
+      }
+      else {
+        $result['status'] = 1;
+        $result['notify'] = 'Đơn vị đã tồn tại';
       }
     break;
     case 'insert-depart2':

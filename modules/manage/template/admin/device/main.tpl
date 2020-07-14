@@ -128,11 +128,18 @@
 
 	function insertDepart() {
 		name = $("#device-depart-input").val()
-		if (!name.length) errorText('Nhập tên phòng trước khi thêm')
+		if (!name.length) errorText('Nhập tên phòng trước khi thêm', 'depart')
 		else {
 			vhttp.checkelse('', { action: 'insert-depart', name: name }).then((data) => {
-				global['list'] = data['json']
-				$("#content").html(data['html'])
+        console.log(data);
+        if (data['notify']) errorText(data['notify'], 'depart')
+        else {
+          
+          global['list'] = data['json']
+          global['selectd']['device'][global['list'].length - 1] = 1
+          html = '<span class="btn btn-info btn-xs" onclick="deselectDepart(\'' + prefix + '\', ' + key + ')"> ' + global['list'][key]['name'] + ' </span>'
+      		$("#device-depart").html($("#" + prefix + "-depart").html() + html)
+        }
 			})
 		}
 	}
@@ -176,10 +183,12 @@
 		})
 	}
 
-	function errorText(txt) {
-		$("#error").text(txt)
-		$("#error").show()
-		$("#error").fadeOut(3000)
+	function errorText(txt, label = '') {
+    selector = 'error'
+    if (label) selector = label + '-' + selector
+		$("#" + selector).text(txt)
+		$("#" + selector).show()
+		$("#" + selector).fadeOut(3000)
 	}
 
 	function deviceInsert() {

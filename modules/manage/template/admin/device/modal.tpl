@@ -183,6 +183,7 @@
                         </div>
                         <div> Đã chọn: <span id="device-depart"> </span> </div>
                     </div>
+                    <div class="error" id="depart-error">  </div>
 
                     <div class="form-group">
                         <label class="control-label col-sm-4"> Ngày nhập </label>
