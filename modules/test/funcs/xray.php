@@ -98,7 +98,6 @@ $xtpl->assign("lang", $lang_module);
 $xtpl->assign("modal", xrayModal());
 $xtpl->assign("content", xrayContent());
 $xtpl->parse("main");
-
 $contents = $xtpl->text("main");
 include(NV_ROOTDIR . "/includes/header.php");
 echo nv_site_theme($contents);

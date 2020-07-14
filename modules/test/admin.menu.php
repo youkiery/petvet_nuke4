@@ -24,10 +24,9 @@ $submenu['drug'] = $lang_module["drug_title"];
 $submenu['redrug'] = $lang_module["redrug_title"];
 $submenu['heal_drug'] = 'Quản lý thuốc & tra cứu';
 $submenu['schedule'] = $lang_module["schedule_title"];
-$submenu['storage'] = 'Quản lý mặt hàng';
 $submenu['xray'] = 'Quản lý X quang';
 $submenu['permission'] = 'Phân quyền';
 $submenu['config'] = $lang_module["doctor_config"];
 $submenu['setting'] = 'Cài đặt';
 
-$allow_func = array('main', "disease", "patient", "customer", "doctor", "vaccine", "sieuam", "treat", "spa", "drug", "redrug", "schedule", "config", "heal_drug", 'permission', 'setting', 'storage', 'xray'); 
+$allow_func = array('main', "disease", "patient", "customer", "doctor", "vaccine", "sieuam", "treat", "spa", "drug", "redrug", "schedule", "config", "heal_drug", 'permission', 'setting', 'xray'); 

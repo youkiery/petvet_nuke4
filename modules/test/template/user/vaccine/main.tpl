@@ -39,6 +39,65 @@
     color: green;
   }
 
+  .rows::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+
+  .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
+    float: left;
+    padding: 5px;
+  }
+
+  .col-1 {
+    width: 8.33%;
+  }
+
+  .col-2 {
+    width: 16.66%;
+  }
+
+  .col-3 {
+    width: 25%;
+  }
+
+  .col-4 {
+    width: 33.33%;
+  }
+
+  .col-5 {
+    width: 41.66%;
+  }
+
+  .col-6 {
+    width: 50%;
+  }
+
+  .col-7 {
+    width: 58.33%;
+  }
+
+  .col-8 {
+    width: 66.66%;
+  }
+
+  .col-9 {
+    width: 75%;
+  }
+
+  .col-10 {
+    width: 83.33%;
+  }
+
+  .col-11 {
+    width: 91.66%;
+  }
+
+  .col-12 {
+    width: 100%;
+  }
+
   .vaccine-left {
     position: absolute;
     left: 5px;
@@ -47,6 +106,10 @@
   .vaccine-right {
     position: absolute;
     right: 5px;
+  }
+
+  a.btn-default {
+    color: #444;
   }
 
   td {
@@ -66,6 +129,24 @@
 
 {modal}
 
+<div class="row">
+  <div class="col-sm-14">
+    <ul style="list-style-type: circle; padding: 10px;">
+      <li>
+        <a href="/index.php?nv={nv}&op={op}&page=0&status={status}"> {lang.list} </a>
+      </li>
+      <li>
+        <a href="/index.php?nv={nv}&op={op}&page=1&status={status}"> {lang.list2} </a>
+        <img src="/themes/default/images/dispatch/new.gif">
+      </li>
+      <li>
+        <a href="/index.php?nv={nv}&op={op}&page=2&status={status}"> {lang.list3} </a>
+        <img src="/themes/default/images/dispatch/new.gif">
+      </li>
+    </ul>
+  </div>
+</div>
+
 <form class="col-sm-10 input-group form-group" onsubmit="search(event)">
   <div class="relative">
     <input type="text" class="form-control" id="vaccine-search-all" style="float:none;"
@@ -78,22 +159,14 @@
 </form>
 
 <div class="form-group">
-  <a class="btn btn-sm {btn0}" href="/index.php?nv={nv}&op={op}&page=0&status={status}"> {lang.list} </a>
-  <a class="btn btn-sm {btn1}" href="/index.php?nv={nv}&op={op}&page=1&status={status}"> {lang.list2} </a>
-  <a class="btn btn-sm {btn2}" href="/index.php?nv={nv}&op={op}&page=2&status={status}"> {lang.list3} </a>
-</div>
-
-<div class="form-group">
   <!-- BEGIN: filter -->
   <a class="btn btn-sm {check}" href="/index.php?nv={nv}&op={op}&page={page}&status={ipd}"> {vsname} </a>
   <!-- END: filter -->
-  <!-- BEGIN: manager -->
   <div class="right">
     <button class="btn btn-success" onclick="$('#vaccine-modal').modal('show')">
       Thêm
     </button>
   </div>
-  <!-- END: manager -->
 </div>
 
 <div id="content">
@@ -150,15 +223,13 @@
   });
 
   function editCustomer(id) {
-    freeze()
-    vhttp.check('', { action: 'get-customer', id: id }).then(data => {
+    vhttp.checkelse('', { action: 'get-customer', id: id }).then(data => {
       global['id'] = id
       $("#customer-name").val(data['data']['name'])
       $("#customer-phone").val(data['data']['phone'])
       $("#customer-address").val(data['data']['address'])
       $("#customer-modal").modal('show')
-      defreeze()
-    }, () => { defreeze() })
+    })
   }
 
   function checkCustomerData() {
@@ -182,12 +253,9 @@
   function editCustomerSubmit() {
     sdata = checkCustomerData()
     if (sdata) {
-      freeze()
       vhttp.check('', { action: 'edit-customer', id: global['id'], data: sdata }).then(data => {
         $("#customer-modal").modal('hide')
-        defreeze()
-      }, () => {
-        defreeze() 
+      }, (data) => {
         errorText('customer-error', 'Số điện thoại này của người khác')
       })
     }
@@ -253,11 +321,8 @@
   function editNote(id) {
     var answer = prompt("Ghi chú: ", trim($("#note_" + id).text()));
     if (answer) {
-      freeze()
-      vhttp.check('', {action: 'edit-note', id: id, text: answer}).then(data => {
+      vhttp.checkelse('', {action: 'edit-note', id: id, text: answer}).then(data => {
         $("#note_" + id).text(answer)
-      }, () => {
-        defreeze() 
       })
     }
   }
@@ -280,14 +345,11 @@
 
   function insertPetSubmit() {
     if (g_customer) {
-      freeze()
-      vhttp.check('', { action: 'insert-pet', name: $("#insert-pet-name").val() }).then(data => {
+      vhttp.checkelse('', { action: 'insert-pet', name: $("#insert-pet-name").val() }).then(data => {
         $("#pet_info").html(data['html'])
         $("#pet_info").val(data['id'])
 
         $("#insert-pet-modal").modal('hide')
-      }, () => {
-        defreeze() 
       })
     }
   }
@@ -319,8 +381,7 @@
     vaccine = checkVaccineData()
     if (!vaccine['phone']) alert_msg(vaccine)
     else {
-      freeze()
-      vhttp.check('', { action: 'insert-vaccine', data: vaccine }).then(data => {
+      vhttp.checkelse('', { action: 'insert-vaccine', data: vaccine }).then(data => {
         g_customer = 0
         $("#customer_name").val('')
         $("#customer_phone").val('')
@@ -329,18 +390,13 @@
         $("#pet_note").val('')
         $("#content").html(data['html'])
         alert_msg('Đã thêm phiếu tiêm phòng')
-      }, () => {
-        defreeze() 
       })
     }
   }
 
   function changeStatus(id, type) {
-    freeze()
-    vhttp.check('', { action: 'change-status', id: id, type: type }).then((data) => {
+    vhttp.checkelse('', { action: 'change-status', id: id, type: type }).then((data) => {
       $("#content").html(data['html'])
-    }, () => {
-      defreeze() 
     })
   }
 </script>

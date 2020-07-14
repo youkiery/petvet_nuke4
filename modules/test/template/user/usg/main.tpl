@@ -7,31 +7,25 @@
 <div id="msgshow" class="msgshow"></div>
 
 <style>
-	td {
-		font-size: 0.8em;
+	.btn-default {
+		color: #333 !important;
 	}
-
-  th {
-    position: sticky;
-    top: 0px;
-    background: white;
-    z-index: 10;
-    border-bottom: 1px solid black;
-    text-align: center;
-    vertical-align: inherit !important;
-  }
 </style>
 
 {modal}
 
-<!-- BEGIN: manager -->
 <div class="form-group" style="float: right;">
+	<!-- <button class="btn btn-info" onclick="overflowModal()">
+		Danh sách quá ngày
+	</button> -->
+	<!-- <button class="btn btn-info" onclick="filterModal()">
+		Lọc danh sách
+	</button> -->
 	<button class="btn btn-info" onclick="insertModal()">
 		Thêm phiếu siêu âm
 	</button>
 </div>
 <div style="clear: both;"></div>
-<!-- END: manager -->
 
 <div class="form-group">
 	<a href="/{module_name}/{op}/?type=1{filter_param}" class="{type_button1} btn" role="button">
@@ -43,14 +37,14 @@
 	<a href="/{module_name}/{op}/?type=3{filter_param}" class="{type_button3} btn" role="button">
 		Danh sách tiêm phòng
 	</a>
-	<!-- BEGIN: manager2 -->
+	<!-- BEGIN: manager -->
 	<a href="/{module_name}/{op}/?type=4{filter_param}" class="{type_button4} btn" role="button">
 		Danh sách quản lý
 	</a>
-	<!-- END: manager2 -->
+	<!-- END: manager -->
 </div>
 
-<div id="content">
+<div id="html_content">
 	{content}
 </div>
 <script>
@@ -84,6 +78,32 @@
 	function insertModal() {
 		$("#insert-modal").modal('show')
 	}
+	function filterModal() {
+		$("#filter-modal").modal('show')
+	}
+	function overflowModal() {
+		$("#overflow-modal").modal('show')
+	}
+
+	$("#vaccine_status").change((e) => {
+		if (e.currentTarget.value == 4) {
+			$("#recall").attr("disabled", false);
+		}
+		else {
+			$("#recall").attr("disabled", true);
+		}
+	})
+
+	$("#birthnumber").change((e) => {
+		if (e.currentTarget.value.length > 0) {
+			$("#firstvac").attr("disabled", false);
+			$("#vaccine_status").attr("disabled", false);
+		}
+	})
+
+	function noteToggle() {
+		$(".note").toggle()
+	}
 
 	function editNote(id) {
 		var answer = prompt("Ghi chú: ", trim($("#note_v" + id).text()));
@@ -100,6 +120,37 @@
 		}
 	}
 
+	function removeUsg(id) {
+		var answer = confirm("Xóa bản ghi này?");
+		if (answer) {
+			$.post(
+				"",
+				{ action: "remove-usg", id: id },
+				(response, status) => {
+					checkResult(response, status).then(data => {
+						$("#html_content").html(data['html'])
+					})
+				}
+			)
+		}
+	}
+
+	function overflowFilter() {
+		$.post(
+			"",
+			{ action: "overflow", data: {
+					keyword: $("#overflow-keyword").val(),
+					from: $("#overflow-from").val(),
+					end: $("#overflow-end").val()
+				} 
+			},
+			(response, status) => {
+				checkResult(response, status).then(data => {
+					$("#overflow-content").html(data['html'])
+				})
+			}
+		)
+	}
 
 	function checkData() {
 		return {
@@ -120,8 +171,7 @@
 		if (sdata['customer'] <= 0) alert_msg('Chưa chọn khách hàng')
 		else if (sdata['pet'] <= 0) alert_msg('Chưa chọn thú cưng')
 		else {
-			freeze()
-			vhttp.check('', { action: 'insert-usg', data: sdata }).then(data => {
+			vhttp.checkelse('', { action: 'insert-usg', data: sdata }).then(data => {
 				$("#content").html(data['html'])
 				// xóa dữ liệu
 				$("#customer_name").val('')
@@ -130,19 +180,16 @@
 				$("#pet_info").html('')
 				$("#ghichu").val('')
 				g_customer = -1
-				$("#content").html(data['html'])
+				$("#html_content").html(data['html'])
 				$("#insert-modal").modal('hide')
-				defreeze()
-			}, () => { defreeze() })
+			})
 		}
 	}
 
 	function changeRecall(id, type) {
-		freeze()
-		vhttp.check('', { action: 'change-recall', id: id, type: type }).then(data => {
-			$("#content").html(data['html'])
-			defreeze()
-		}, () => { defreeze() })
+		vhttp.checkelse('', { action: 'change-recall', id: id, type: type }).then(data => {
+			$("#html_content").html(data['html'])
+		})
 	}
 
 	function birth(id) {
@@ -151,8 +198,7 @@
 	}
 
 	function birthSubmit() {
-		freeze()
-		vhttp.check('',
+		vhttp.checkelse('',
 			{
 				action: 'birth',
 				id: global['id'],
@@ -160,10 +206,9 @@
 				time: $("#birth-time").val()
 			}
 		).then(data => {
-			$("#content").html(data['html'])
+			$("#html_content").html(data['html'])
 			$("#birth-modal").modal('hide')
-			defreeze()
-		}, () => { defreeze() })
+		})
 	}
 
 	function vaccineRecall(id) {
@@ -172,8 +217,7 @@
 	}
 
 	function vaccineSubmit() {
-		freeze()
-		vhttp.check('',
+		vhttp.checkelse('',
 			{
 				action: 'vaccine',
 				id: global['id'],
@@ -182,10 +226,9 @@
 				time: $("#birth-time").val()
 			}
 		).then(data => {
-			$("#content").html(data['html'])
+			$("#html_content").html(data['html'])
 			$("#vaccine-modal").modal('hide')
-			defreeze()
-		}, () => { defreeze() })
+		})
 	}
 
 	function rejectRecall(id) {
@@ -194,54 +237,192 @@
 	}
 
 	function rejectSubmit() {
-		freeze()
 		vhttp.checkelse('',
 			{
 				action: 'reject',
 				id: global['id']
 			}
 		).then(data => {
-			$("#content").html(data['html'])
+			$("#html_content").html(data['html'])
 			$("#reject-modal").modal('hide')
-			defreeze()
-		}, () => { defreeze() })
+		})
+	}
+
+	function changeStatus(id, type) {
+		if ((global['type'] == 0 && type == 0)) {
+			// alert_msg('');
+		}
+		else if ((global['type'] == 2 && type == 1)) {
+			recall(id)
+		}
+		else {
+			$.post(
+				"",
+				{ action: "change-status", data: {
+						id: id,
+						type: type
+					}
+				},
+				(response, status) => {
+					checkResult(response, status).then(data => {
+						alert_msg('Đã thay đổi trạng thái');
+						$("#html_content").html(data['html'])
+					})
+				}
+			)
+		}
+	}
+
+	function recall(id, disease) {
+		global.id = id
+		global.disease = disease
+		$("#recall-recall").val(global.recall)
+		$("#recall-modal").modal('show')
+	}
+
+	function recallSubmit() {
+		sdata = {
+			id: global.id,
+			birth: $("#recall-birth").val(),
+			doctor: $("#recall-doctor").val(),
+			recall: $("#recall-recall").val()
+		}
+		$.post(
+			"",
+			{ action: "recall", data: sdata
+			},
+			(response, status) => {
+				checkResult(response, status).then(data => {
+					alert_msg('Đã thay đổi trạng thái');
+					$("#html_content").html(data['html'])
+					$("#recall-modal").modal('hide')
+				})
+			}
+		)
+	}
+
+	function changeVaccineStatus(id, type) {
+		if (global['type'] == 0 && type == 0) {
+			// alert_msg('');
+		}
+		else if (global['type'] == 2 && type == 1) {
+			birth(id);
+			// $("#usgrecall").modal("toggle")
+		}
+		else {
+			$.post(
+				"",
+				{ action: "change-vaccine-status", data: {
+						id: id,
+						type: type
+					}
+				},
+				(response, status) => {
+					checkResult(response, status).then(data => {
+						alert_msg('Đã thay đổi trạng thái');
+						$("#html_content").html(data['html'])
+					})
+				}
+			)
+		}
+	}
+
+	function birthRecall() {
+		sdata = {
+			id: global.id,
+			doctor: $("#birth-doctor").val(),
+			disease: $("#birth-disease").val(),
+			petname: $("#birth-petname").val(),
+			recall: $("#birth-recall").val()
+		}
+		if (!sdata['petname'].length) {
+			sdata['petname'] = 'Chưa đề tên'
+		}
+		$.post(
+			"",
+			{ action: "birth-recall", data: sdata
+			},
+			(response, status) => {
+				checkResult(response, status).then(data => {
+					alert_msg('Đã thay đổi trạng thái');
+					$("#html_content").html(data['html'])
+					$("#birth-modal").modal('hide')
+				})
+			}
+		)
+	}
+
+	function filterSubmit() {
+		keyList = (window.location.search.slice(1, window.location.search.length)).split('&')
+		http = {}
+		keyList.forEach(keystring => {
+			data = keystring.split('=')
+			http[data[0]] = data[1]
+		});
+		$(".filter").each((index, item) => {
+			http[item.getAttribute('name')] = item.value
+			// http[item.getAttribute('name')] = item.value.replace(/\//g, '-')
+		})
+		
+		http = window.location.origin + window.location.pathname + '?' + Object.keys(http).map(k => esc(k) + '=' + esc(http[k])).join('&')
+		window.location.replace(http)
 	}
 
 	function update(id) {
 		global['id'] = id
-		freeze()
-		vhttp.check('', { action: "get-update", id: id }).then(data => {
-			$("#usgtime").val(data['data']['usgtime'])
-			$("#expecttime").val(data['data']['expecttime'])
-			$("#expectnumber2").val(data['data']['expectnumber'])
-			$("#birthtime").val(data['data']['birthtime'])
-			$("#birthnumber").val(data['data']['number'])
-			$("#vaccinetime").val(data['data']['vaccinetime'])
-			$("#doctor2").val(data['data']['doctorid'])
-			$("#note2").val(data['data']['note'])
-			$("#update-modal").modal('show')
-			defreeze()
-		}, () => { defreeze() })
+		$.post(
+			"",
+			{ action: "get-update", id: id },
+			(response, status) => {
+				checkResult(response, status).then(data => {
+					
+					$("#cometime2").val(data["data"]["cometime"])
+					$("#calltime2").val(data["data"]["calltime"])
+					$("#doctor2").val(data["data"]["doctorid"])
+					$("#note2").val(data["data"]["note"])
+					$("#image2").val(data["data"]["image"])
+					$("#birthnumber").val(data["data"]["birth"])
+					$("#birth").val(data["data"]["birthday"])
+					$("#exbirth").val(data["data"]["exbirth"])
+					$("#vaccine_status").html(data["data"]["vaccine"])
+					// if (data["data"]["birth"] > 0) {
+					// 	$("#firstvac").attr("disabled", false);
+						$("#firstvac").val(data["data"]["firstvac"]);
+					// 	$("#vaccine_status").attr("disabled", false);
+					// 	if (data["data"]["recall"] > 0 || data["data"]["vacid"] == 4) {
+					// 		$("#recall").attr("disabled", false);
+							$("#recall").val(data["data"]["recall"])
+					// 	}
+					// }
+					$("#update-modal").modal('show')
+				})
+			}
+		)
 	}
 
 	function update_usg() {
 		sdata = {
-			usgtime: $("#usgtime").val(),
-			expecttime: $("#expecttime").val(),
-			expectnumber: $("#expectnumber2").val(),
-			birthtime: $("#birthtime").val(),
-			number: $("#birthnumber").val(),
-			vaccinetime: $("#vaccinetime").val(),
+			cometime: $("#cometime2").val(),
+			calltime: $("#calltime2").val(),
 			doctorid: $("#doctor2").val(),
-			note: $("#note2").val()
+			note: $("#note2").val(),
+			birth: $("#birthnumber").val(),
+			expectbirth: $("#exbirth").val(),
+			recall: $("#recall").val(),
+			vaccine: $("#vaccine_status").val(),
+			birthday: $("#birth").val(),
+			firstvac: $("#firstvac").val()
 		}
-		freeze()
-		vhttp.check('', { action: "update-usg", id: global['id'], data: sdata }).then(data => {
-			alert_msg('Đã lưu thông tin')
-			$("#content").html(data['html'])
-			$("#update-modal").modal('hide')
-			defreeze()
-		}, () => { defreeze() })
+		$.post(
+			"",
+			{ action: "update-usg", id: global['id'], data: sdata },
+			(response, status) => {
+				var data = JSON.parse(response)
+				if (data["status"]) {
+					window.location.reload()
+				}
+			}
+		)
 	}
 
 	suggest_init()

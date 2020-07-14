@@ -119,8 +119,7 @@ function healFilter($cometime, $calltime, $customer, $pet, $gdoctor) {
   $sql = 'select * from  `'. VAC_PREFIX .'_heal` where (time between '. $cometime .' and '. $calltime .') ' . $sqlQuery . ' ' . $sqlQuery2 . ' order by time desc';
   $query = $db->query($sql);
   $count = 0;
-  $STATUS_COLOR = array();
-  $page = 1; $limit = 1;
+  $index = 1;
   while ($heal = $query->fetch()) {
     $count ++;
     $drug = implode(', ', getDrugIdList($heal['id']));

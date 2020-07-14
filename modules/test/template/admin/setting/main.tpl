@@ -6,9 +6,6 @@
 {modal}
 
 <div class="form-group">
-	<a href="/admin/index.php?nv={module_name}&op={op}&type=system" class="btn {type_default} btn-xs">
-		Hệ thống
-	</a>
 	<!-- BEGIN: option -->
 	<a href="/admin/index.php?nv={module_name}&op={op}&type={id}" class="btn {type} btn-xs">
 		{name}
@@ -48,16 +45,16 @@
         })
     }
 
-	function removeEmploy(id) {
-        vhttp.checkelse('', { action: 'remove-employ', id: id }).then((data) => {
-            $("#content").html(data['html'])
-        })
-	}
 	function changeEmploy(id, type) {
         vhttp.checkelse('', { action: 'change-employ', id: id, type: type }).then((data) => {
             $("#content").html(data['html'])
         })
 	}
 
+	function removeEmploy(id) {
+        vhttp.checkelse('', { action: 'remove-employ', id: id }).then((data) => {
+            $("#content").html(data['html'])
+        })
+	}
 </script>
 <!-- END: main -->

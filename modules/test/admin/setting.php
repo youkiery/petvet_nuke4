@@ -62,11 +62,13 @@ if($action) {
 	die();
 }
 
-$func = array('kaizen' => 'Kaizen', 'spa' => 'SPA', 'vaccine' => 'Vaccine', 'usg' => 'Siêu âm');
+$func = array('kaizen' => 'Kaizen');
 
 $xtpl = new XTemplate("main.tpl", PATH2);
 $xtpl->assign('module_name', $module_name);
 $xtpl->assign('op', $op);
+
+if ($func[$filter['type']]) $xtpl->parse('main.insert');
 
 foreach ($func as $key => $value) {
 	$xtpl->assign('id', $key);
@@ -76,17 +78,8 @@ foreach ($func as $key => $value) {
 	$xtpl->parse('main.option');
 }
 
-$xtpl->assign('type_default', 'btn-default');
-if ($func[$filter['type']]) {
-	$xtpl->parse('main.insert');
-	$xtpl->assign('content', settingContent());
-} 
-else {
-	$xtpl->assign('type_default', 'btn-info');
-	// $xtpl->assign('content', settingSystemContent());
-}
-
 $xtpl->assign("modal", settingModal());
+$xtpl->assign('content', settingContent());
 $xtpl->parse("main");
 $contents = $xtpl->text();
 

@@ -64,7 +64,7 @@
 
 // die();
 if (!defined('NV_MAINFILE')) {
-  die('Stop!!!');
+	die('Stop!!!');
 }
 define('VAC_PREFIX', $db_config['prefix'] . "_" . $module_name);
 define('NV_NEXTMONTH', 30 * 24 * 60 * 60);
@@ -83,83 +83,65 @@ while ($row = $query->fetch()) {
   $vacconfigv2[$row["name"]] = $row["value"];
 }
 
-function updateImage($image, $id)
-{
+function updateImage($image, $id) {
   global $db;
 
   if (!empty($image)) {
-    $sql = 'select * from `' . VAC_PREFIX . '_heal` where id = ' . $id;
+    $sql = 'select * from `'. VAC_PREFIX .'_heal` where id = ' . $id;
     die($sql);
     $query = $db->query($sql);
-
+  
     if (empty($row = $query->fetch()) || $row['image'] != $image) {
-      $sql = 'update `' . VAC_PREFIX . '_heal` set image = "' . $image . '" where id = ' . $id;
+      $sql = 'update `'. VAC_PREFIX .'_heal` set image = "'. $image .'" where id = ' . $id;
       $db->query($sql);
     }
   }
 }
 
-function updateImagev2($image, $id, $path)
-{
+function updateImagev2($image, $id, $path) {
   global $db;
 
   if (!empty($image)) {
-    $sql = 'select * from `' . $path . '` where id = ' . $id;
+    $sql = 'select * from `'. $path .'` where id = ' . $id;
     die($sql);
     $query = $db->query($sql);
-
+  
     if (empty($row = $query->fetch()) || $row['image'] != $image) {
-      $sql = 'update `' . $path . '` set image = "' . $image . '" where id = ' . $id;
+      $sql = 'update `'. $path .'` set image = "'. $image .'" where id = ' . $id;
       die($sql);
       $db->query($sql);
     }
   }
 }
 
-function selectHealInsultId($healid)
-{
+function selectHealInsultId($healid) {
   global $db;
-  $sql = 'select * from `' . VAC_PREFIX . '_heal_insult` where healid = ' . $healid;
+  $sql = 'select * from `'. VAC_PREFIX .'_heal_insult` where healid = '. $healid;
   $query = $db->query($sql);
   $insult = $query->fetch();
   return $insult;
 }
 
-function selectCustomerId($customerid)
-{
+function selectCustomerId($customerid) {
   global $db;
-  $sql = 'select * from `' . VAC_PREFIX . '_customer` where id = ' . $customerid;
+  $sql = 'select * from `'. VAC_PREFIX .'_customer` where id = '. $customerid;
   $query = $db->query($sql);
   $customer = $query->fetch();
   return $customer;
 }
 
-function selectPetId($petid)
-{
+function selectPetId($petid) {
   global $db;
-  $sql = 'select * from `' . VAC_PREFIX . '_pet` where id = ' . $petid;
+  $sql = 'select * from `'. VAC_PREFIX .'_pet` where id = '. $petid;
   $query = $db->query($sql);
   $pet = $query->fetch();
   return $pet;
 }
 
-function checkStorage($filter)
-{
+function checkSpecies($name) {
   global $db;
 
-  $sql = 'select * from `' . VAC_PREFIX . '_position` where id = ' . $filter['id'];
-  $query = $db->query($sql);
-  $position = $query->fetch();
-
-  if (!empty($position)) return 1;
-  return 0;
-}
-
-function checkSpecies($name)
-{
-  global $db;
-
-  $sql = 'select * from `' . VAC_PREFIX . '_species` where name = "' . $name . '"';
+  $sql = 'select * from `'. VAC_PREFIX .'_species` where name = "'. $name .'"';
   $query = $db->query($sql);
 
   if (empty($query->fetch())) {
@@ -168,11 +150,10 @@ function checkSpecies($name)
   return 1;
 }
 
-function insertSpecies($name)
-{
+function insertSpecies($name) {
   global $db;
 
-  $sql = 'insert into `' . VAC_PREFIX . '_species` (name) values("' . $name . '")';
+  $sql = 'insert into `'. VAC_PREFIX .'_species` (name) values("'.$name.'")';
   $query = $db->query($sql);
 
   if ($query) {
@@ -181,10 +162,9 @@ function insertSpecies($name)
   return 0;
 }
 
-function selectSpeciesId($id = 0)
-{
+function selectSpeciesId($id = 0) {
   global $db;
-  $sql = 'select * from `' . VAC_PREFIX . '_species`';
+  $sql = 'select * from `'. VAC_PREFIX .'_species`';
   $query = $db->query($sql);
   $html = '';
   while ($species = $query->fetch()) {
@@ -192,15 +172,14 @@ function selectSpeciesId($id = 0)
     if ($species['id'] == $id) {
       $check = 'selected';
     }
-    $html .= '<option value=' . $species['id'] . ' ' . $check . '>' . $species['name'] . '</option>';
+    $html .= '<option value='. $species['id'] .' '. $check .'>' . $species['name'] . '</option>';
   }
   return $html;
 }
 
-function getSystemId($id)
-{
+function getSystemId($id) {
   global $db;
-  $sql = 'select * from `' . VAC_PREFIX . '_system` where healid = ' . $id;
+  $sql = 'select * from `'. VAC_PREFIX .'_system` where healid = ' . $id;
   $query = $db->query($sql);
   $list = array();
   while ($system = $query->fetch()) {
@@ -209,10 +188,9 @@ function getSystemId($id)
   return $list;
 }
 
-function parseSystemId($id)
-{
+function parseSystemId($id) {
   global $db;
-  $sql = 'select * from `' . VAC_PREFIX . '_heal_system` where id in (select systemid from `' . VAC_PREFIX . '_system` where healid = ' . $id . ')';
+  $sql = 'select * from `'. VAC_PREFIX .'_heal_system` where id in (select systemid from `'. VAC_PREFIX .'_system` where healid = ' . $id . ')';
   $query = $db->query($sql);
   $list = array();
   while ($system = $query->fetch()) {
@@ -221,10 +199,9 @@ function parseSystemId($id)
   return implode(', ', $list);
 }
 
-function getDrugId($id)
-{
+function getDrugId($id) {
   global $db;
-  $sql = 'select * from `' . VAC_PREFIX . '_medicine` where healid = ' . $id;
+  $sql = 'select * from `'. VAC_PREFIX .'_medicine` where healid = ' . $id;
   $query = $db->query($sql);
   $list = array();
   while ($drug = $query->fetch()) {
@@ -233,10 +210,9 @@ function getDrugId($id)
   return $list;
 }
 
-function getDrugList()
-{
+function getDrugList() {
   global $db;
-  $sql = 'select * from `' . VAC_PREFIX . '_heal_medicine`';
+  $sql = 'select * from `'. VAC_PREFIX .'_heal_medicine`';
   $query = $db->query($sql);
   $list = array();
   while ($drug = $query->fetch()) {
@@ -248,8 +224,7 @@ function getDrugList()
   return $list;
 }
 
-function getDrugIdList($id)
-{
+function getDrugIdList($id) {
   global $db;
 
   $drugs = getDrugId($id);
@@ -261,35 +236,32 @@ function getDrugIdList($id)
   return $drug;
 }
 
-function getDrugDataId($id)
-{
+function getDrugDataId($id) {
   global $db;
 
-  $sql = 'select * from `' . VAC_PREFIX . '_heal_medicine` where id = ' . $id;
+  $sql = 'select * from `'. VAC_PREFIX .'_heal_medicine` where id = ' . $id;
   $query = $db->query($sql);
   return $query->fetch();
 }
 
-function passbyParam($list)
-{
+function passbyParam($list) {
   $temp = array();
-
+  
   foreach ($list as $key => $value) {
     if (!empty($key) || !empty($value)) {
       $temp[] = $key;
-    }
+    } 
   }
   // var_dump($temp);
   // die();
   return implode(',', $temp);
 }
 
-function diseaseList()
-{
+function diseaseList() {
   global $db;
 
   $list = array();
-  $sql = 'select * from `' . VAC_PREFIX . '_heal_disease`';
+  $sql = 'select * from `'. VAC_PREFIX .'_heal_disease`';
   $query = $db->query($sql);
 
   while ($disease = $query->fetch()) {
@@ -299,10 +271,9 @@ function diseaseList()
   return $list;
 }
 
-function getHealId($id)
-{
+function getHealId($id) {
   global $db;
-  $sql = 'select * from `' . VAC_PREFIX . '_heal` where id = ' . $id;
+  $sql = 'select * from `'. VAC_PREFIX .'_heal` where id = '. $id;
   $query = $db->query($sql);
   $heal = $query->fetch();
   $heal['pet'] = selectPetId($heal['petid']);
@@ -313,28 +284,26 @@ function getHealId($id)
   return $heal;
 }
 
-function selectDoctorId($id)
-{
+function selectDoctorId($id) {
   global $db, $db_config;
-
+  
   $sql = 'select * from `' . $db_config['prefix'] . '_users` where userid = ' . $id;
   $query = $db->query($sql);
 
   return $query->fetch();
 }
 
-function getCustomerData()
-{
+function getCustomerData() {
   global $db;
 
   $customer = array();
-  $sql = 'select id as a, name as b, phone as c from `' . VAC_PREFIX . '_customer`';
+  $sql = 'select id as a, name as b, phone as c from `'. VAC_PREFIX .'_customer`';
   $query = $db->query($sql);
 
   while ($customerData = $query->fetch()) {
-    $sql = 'select id as a, name as b from `' . VAC_PREFIX . '_pet` where customerid = ' . $customerData['a'];
+    $sql = 'select id as a, name as b from `'. VAC_PREFIX .'_pet` where customerid = ' . $customerData['a'];
     $petQuery = $db->query($sql);
-
+  
     $customer[] = $customerData;
     $count = count($customer) - 1;
     $customer[$count]['pet'] = array();
@@ -345,18 +314,17 @@ function getCustomerData()
   return json_encode($customer);
 }
 
-function getCustomerSuggestList($keyword)
-{
+function getCustomerSuggestList($keyword) {
   global $db;
 
   $customer = array();
-  $sql = 'select id, name, phone from `' . VAC_PREFIX . '_customer` where name like "%' . $keyword . '%" or phone like "%' . $keyword . '%" limit 20';
+  $sql = 'select id, name, phone from `'. VAC_PREFIX .'_customer` where name like "%'. $keyword .'%" or phone like "%'. $keyword .'%" limit 20';
   $query = $db->query($sql);
 
   while ($customerData = $query->fetch()) {
-    $sql = 'select id, name, weight, age, species from `' . VAC_PREFIX . '_pet` where customerid = ' . $customerData['id'];
+    $sql = 'select id, name, weight, age, species from `'. VAC_PREFIX .'_pet` where customerid = ' . $customerData['id'];
     $petQuery = $db->query($sql);
-
+  
     $customer[] = $customerData;
     $count = count($customer) - 1;
     $customer[$count]['pet'] = array();
@@ -368,12 +336,11 @@ function getCustomerSuggestList($keyword)
   return $customer;
 }
 
-function getSystemList()
-{
+function getSystemList() {
   global $db;
 
   $list = array();
-  $sql = 'select * from `' . VAC_PREFIX . '_heal_system`';
+  $sql = 'select * from `'. VAC_PREFIX .'_heal_system`';
   $query = $db->query($sql);
 
   while ($system = $query->fetch()) {
@@ -383,12 +350,11 @@ function getSystemList()
   return $list;
 }
 
-function getMedicineList()
-{
+function getMedicineList() {
   global $db;
 
   $list = array();
-  $sql = 'select * from `' . VAC_PREFIX . '_heal_medicine`';
+  $sql = 'select * from `'. VAC_PREFIX .'_heal_medicine`';
   $query = $db->query($sql);
 
   while ($medicine = $query->fetch()) {
@@ -398,17 +364,16 @@ function getMedicineList()
   return $list;
 }
 
-function interpolateQuery($query, $params)
-{
+function interpolateQuery($query, $params) {
   $keys = array();
 
   # build a regular expression for each parameter
   foreach ($params as $key => $value) {
-    if (is_string($key)) {
-      $keys[] = '/:' . $key . '/';
-    } else {
-      $keys[] = '/[?]/';
-    }
+      if (is_string($key)) {
+          $keys[] = '/:'.$key.'/';
+      } else {
+          $keys[] = '/[?]/';
+      }
   }
 
   $query = preg_replace($keys, $params, $query, 1, $count);
@@ -418,9 +383,8 @@ function interpolateQuery($query, $params)
   return $query;
 }
 
-function user_redrug()
-{
-  global $db, $nv_Request, $module_info, $module_file, $lang_module, $vacconfigv2;
+function user_redrug() {
+  global $db, $nv_Request, $module_info, $module_file, $lang_module, $vacconfigv2; 
   $xtpl = new XTemplate("redrug-list.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
   $today = strtotime(date("Y-m-d"));
   $index = 1;
@@ -432,7 +396,7 @@ function user_redrug()
   }
   $from = $today - $filter;
   $end = $today + $filter;
-
+  
   $filter_type = $nv_Request->get_string("filter", "get/post", "");
   if (empty($filter_type)) {
     $filter_type = 0;
@@ -441,7 +405,8 @@ function user_redrug()
   $page = $nv_Request->get_string("page", "get/post", "");
   if (empty($page)) {
     $type = "calltime";
-  } else {
+  }
+  else {
     $type = "cometime";
   }
   $xtpl->assign("lang", $lang_module);
@@ -473,15 +438,14 @@ function user_redrug()
     $xtpl->assign("drug_end", date("d/m/Y", $row["calltime"]));
     $xtpl->assign("note", $row["note"]);
     $xtpl->parse("main");
-    $index++;
+    $index ++;
   }
   $text = $xtpl->text();
   return $text;
 }
 
-function admin_redrug()
-{
-  global $db, $nv_Request, $module_info, $module_file, $lang_module, $vacconfigv2, $global_config;
+function admin_redrug() {
+  global $db, $nv_Request, $module_info, $module_file, $lang_module, $vacconfigv2, $global_config; 
   $xtpl = new XTemplate("redrug-list.tpl", NV_ROOTDIR . "/themes/" . $global_config['admin_theme'] . "/modules/" . $module_file);
   $today = strtotime(date("Y-m-d"));
   $index = 1;
@@ -493,7 +457,7 @@ function admin_redrug()
   }
   $from = $today - $filter;
   $end = $today + $filter;
-
+  
   $filter_type = $nv_Request->get_string("filter", "get/post", "");
   if (empty($filter_type)) {
     $filter_type = 0;
@@ -528,22 +492,20 @@ function admin_redrug()
     $xtpl->assign("drug_end", date("d/m/Y", $row["calltime"]));
     $xtpl->assign("note", $row["note"]);
     $xtpl->parse("main");
-    $index++;
+    $index ++;
   }
   $text = $xtpl->text();
   return $text;
 }
 
-function getDiseaseList()
-{
+function getDiseaseList() {
   global $db, $db_config, $module_name;
   $sql = "select * from " . VAC_PREFIX . "_disease";
   $result = $db->query($sql);
   return fetchall($db, $result);
 }
 
-function getDiseaseData()
-{
+function getDiseaseData() {
   global $db;
 
   $list = array();
@@ -556,8 +518,7 @@ function getDiseaseData()
   return $list;
 }
 
-function getCustomerList($key, $sort, $filter, $page)
-{
+function getCustomerList($key, $sort, $filter, $page) {
   global $db, $db_config, $module_name;
   $order = "order by name ";
   if ($sort == 1)
@@ -583,8 +544,7 @@ function getCustomerList($key, $sort, $filter, $page)
   return $customers;
 }
 
-function getVaccineTable($path, $lang, $key, $sort, $time)
-{
+function getVaccineTable($path, $lang, $key, $sort, $time) {
   // next a week
   global $db, $db_config, $module_name, $global_config, $lang_module;
   $fromtime = strtotime(date("Y-m-d", NV_CURRENTTIME)) - $time;
@@ -603,37 +563,37 @@ function getVaccineTable($path, $lang, $key, $sort, $time)
   $xtpl = new XTemplate("main-1.tpl", $path);
   $xtpl->assign("lang", $lang);
 
-  $sql = "SELECT a.id, p.id as petid, a.status, p.name as petname, c.id as customerid, c.name as customer, c.phone, cometime, calltime, a.status, dd.name as disease, d.name as doctor FROM " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_disease dd on calltime between " . $fromtime . " and " . $endtime . " and a.diseaseid = dd.id inner join " . VAC_PREFIX . "_pet p on a.petid = p.id inner join " . VAC_PREFIX . "_customer c on p.customerid = c.id inner join " . VAC_PREFIX . "_doctor d on a.doctorid = d.id where c.name like '%$key%' or phone like '%$key%' " . $order;
-  $result = $db->query($sql);
-  $sql = "SELECT a.id, p.id as petid, a.status, p.name as petname, c.id as customerid, c.name as customer, c.phone, cometime, calltime, a.status, dd.name as disease, d.name as doctor FROM " . VAC_PREFIX . "_vaccine a inner join (select 0 as id, 'Siêu Âm' as name from DUAL) dd on calltime between " . $fromtime . " and " . $endtime . " and a.diseaseid = dd.id inner join " . VAC_PREFIX . "_pet p on a.petid = p.id inner join " . VAC_PREFIX . "_customer c on p.customerid = c.id inner join " . VAC_PREFIX . "_doctor d on a.doctorid = d.id where c.name like '%$key%' or phone like '%$key%' " . $order;
-  $result2 = $db->query($sql);
-  $vaccines = array();
+    $sql = "SELECT a.id, p.id as petid, a.status, p.name as petname, c.id as customerid, c.name as customer, c.phone, cometime, calltime, a.status, dd.name as disease, d.name as doctor FROM " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_disease dd on calltime between " . $fromtime . " and " . $endtime . " and a.diseaseid = dd.id inner join " . VAC_PREFIX . "_pet p on a.petid = p.id inner join " . VAC_PREFIX . "_customer c on p.customerid = c.id inner join " . VAC_PREFIX . "_doctor d on a.doctorid = d.id where c.name like '%$key%' or phone like '%$key%' " . $order;
+    $result = $db->query($sql);
+    $sql = "SELECT a.id, p.id as petid, a.status, p.name as petname, c.id as customerid, c.name as customer, c.phone, cometime, calltime, a.status, dd.name as disease, d.name as doctor FROM " . VAC_PREFIX . "_vaccine a inner join (select 0 as id, 'Siêu Âm' as name from DUAL) dd on calltime between " . $fromtime . " and " . $endtime . " and a.diseaseid = dd.id inner join " . VAC_PREFIX . "_pet p on a.petid = p.id inner join " . VAC_PREFIX . "_customer c on p.customerid = c.id inner join " . VAC_PREFIX . "_doctor d on a.doctorid = d.id where c.name like '%$key%' or phone like '%$key%' " . $order;
+    $result2 = $db->query($sql);
+    $vaccines = array();
 
-  while ($row = $result->fetch()) {
-    $vaccines[] = $row;
-  }
-  while ($row = $result2->fetch()) {
-    $vaccines[] = $row;
-  }
+    while ($row = $result->fetch()) {
+      $vaccines[] = $row;
+    }
+    while ($row = $result2->fetch()) {
+      $vaccines[] = $row;
+    }
 
-  $i = 1;
-  foreach ($vaccines as $vac_index => $vac_data) {
-    $xtpl->assign("index", $i);
-    $xtpl->assign("petname", $vac_data["petname"]);
-    $xtpl->assign("customer", $vac_data["customer"]);
-    $xtpl->assign("pet_link", $link . "patient&petid=" . $vac_data["petid"]);
-    $xtpl->assign("customer_link", $link . "customer&customerid=" . $vac_data["customerid"]);
-    $xtpl->assign("phone", $vac_data["phone"]);
-    $xtpl->assign("disease", $vac_data["disease"]);
-    $xtpl->assign("confirm", $lang_module["confirm_value"][$vac_data["status"]]);
-    $xtpl->assign("doctor", $vac_data["doctor"]);
-    $xtpl->assign("cometime", date("d/m/Y", $vac_data["cometime"]));
-    $xtpl->assign("calltime", date("d/m/Y", $vac_data["calltime"]));
-    $i++;
-    $xtpl->parse("main.disease.vac_body");
-  }
+    $i = 1;
+    foreach ($vaccines as $vac_index => $vac_data) {
+      $xtpl->assign("index", $i);
+      $xtpl->assign("petname", $vac_data["petname"]);
+      $xtpl->assign("customer", $vac_data["customer"]);
+      $xtpl->assign("pet_link", $link . "patient&petid=" . $vac_data["petid"]);
+      $xtpl->assign("customer_link", $link . "customer&customerid=" . $vac_data["customerid"]);
+      $xtpl->assign("phone", $vac_data["phone"]);
+      $xtpl->assign("disease", $vac_data["disease"]);
+      $xtpl->assign("confirm", $lang_module["confirm_value"][$vac_data["status"]]);
+      $xtpl->assign("doctor", $vac_data["doctor"]);
+      $xtpl->assign("cometime", date("d/m/Y", $vac_data["cometime"]));
+      $xtpl->assign("calltime", date("d/m/Y", $vac_data["calltime"]));
+      $i++;
+      $xtpl->parse("main.disease.vac_body");
+    }
 
-  $xtpl->parse("main.disease");
+    $xtpl->parse("main.disease");
   $xtpl->parse("main");
 
 
@@ -642,8 +602,8 @@ function getVaccineTable($path, $lang, $key, $sort, $time)
   return $xtpl->text("main");
 }
 
-function getdoctorlist()
-{
+
+function getdoctorlist() {
   global $db, $db_config, $module_name;
   $sql = "select * from " . VAC_PREFIX . "_doctor";
   $result = $db->query($sql);
@@ -655,8 +615,7 @@ function getdoctorlist()
   return $doctor;
 }
 
-function doctorlist($path, $lang)
-{
+function doctorlist($path, $lang) {
   $xtpl = new XTemplate("doctor-2.tpl", $path);
 
   $xtpl->assign("lang", $lang);
@@ -664,7 +623,7 @@ function doctorlist($path, $lang)
   $doctors = getdoctorlist();
   foreach ($doctors as $key => $doctor_data) {
     echo
-      $xtpl->assign("index", $doctor_data["id"]);
+    $xtpl->assign("index", $doctor_data["id"]);
     $xtpl->assign("name", $doctor_data["name"]);
     $xtpl->parse("main.doctor");
   }
@@ -673,14 +632,12 @@ function doctorlist($path, $lang)
   return $xtpl->text("main");
 }
 
-function getrecentlist($fromtime, $amount_time, $sort, $keyword, $filter)
-{
+function getrecentlist($fromtime, $amount_time, $sort, $keyword, $filter) {
   global $db, $db_config, $module_name;
-  return 0;
+  return $ret;
 }
 
-function filterVac($fromtime, $amount_time, $sort, $keyword, $filter)
-{
+function filterVac($fromtime, $amount_time, $sort, $keyword, $filter) {
   global $db, $db_config, $module_name;
   $endtime = $fromtime + $amount_time;
   $fromtime -= $amount_time;
@@ -714,14 +671,13 @@ function filterVac($fromtime, $amount_time, $sort, $keyword, $filter)
   while ($row = $result2->fetch()) {
     $ret[] = $row;
   }
-  //   var_dump($ret);
-  //   die();
-
+//   var_dump($ret);
+//   die();
+  
   return $ret;
 }
 
-function getvaccustomer($customer, $fromtime, $amount_time, $sort, $diseaseid, $disease)
-{
+function getvaccustomer($customer, $fromtime, $amount_time, $sort, $diseaseid, $disease) {
   global $db, $db_config, $module_name;
   $endtime = $fromtime + $amount_time;
   $fromtime -= $amount_time;
@@ -755,8 +711,7 @@ function getvaccustomer($customer, $fromtime, $amount_time, $sort, $diseaseid, $
   return $ret;
 }
 
-function getcustomer($customer, $phone)
-{
+function getcustomer($customer, $phone) {
   global $db, $db_config, $module_name;
   if (!empty($customer)) {
     $sql = "select * from `" . VAC_PREFIX . "_customer` where name like '%$customer%' limit 20";
@@ -772,8 +727,7 @@ function getcustomer($customer, $phone)
   return $ret;
 }
 
-function getPatientsList($key, $sort, $filter, $page)
-{
+function getPatientsList($key, $sort, $filter, $page) {
   global $db, $db_config, $module_name;
   $patients = array();
   $patients["data"] = array();
@@ -804,8 +758,7 @@ function getPatientsList($key, $sort, $filter, $page)
   return $patients;
 }
 
-function getPatientsList2($customerid)
-{
+function getPatientsList2($customerid) {
   global $db, $db_config, $module_name;
   $sql = "select name as customer, phone, address from " . VAC_PREFIX . "_customer where id = $customerid";
   $result = $db->query($sql);
@@ -827,9 +780,10 @@ function getPatientsList2($customerid)
     $crow2 = $query->fetch();
 
     if ($crow["cometime"] > $crow2["cometime"]) {
-      $data = $crow;
-    } else {
-      $data = $crow2;
+        $data = $crow;
+    }
+    else {
+        $data = $crow2;
     }
     if ($data) {
       $patients["data"][] = array("petid" => $row["id"], "petname" => $row["petname"], "lastcome" => $crow["calltime"], "lastname" => $crow["disease"]);
@@ -841,8 +795,7 @@ function getPatientsList2($customerid)
   return $patients;
 }
 
-function getPatientDetail($petid)
-{
+function getPatientDetail($petid) {
   global $db, $db_config, $module_name;
   $sql = "select b.name as petname, c.name as customer, c.phone from " . VAC_PREFIX . "_pet b inner join " . VAC_PREFIX . "_customer c on b.id = $petid and b.customerid = c.id";
   $result = $db->query($sql);
@@ -855,30 +808,30 @@ function getPatientDetail($petid)
   $data = fetchall($db, $result);
   $data2 = fetchall($db, $result2);
   $patients["data"] = array_merge($data, $data2);
-
+  
   return $patients;
 }
 
-function usg_list($list)
-{
+function usg_list($list) {
   global $url, $count, $limit, $page, $module_info, $module_file, $lang_module, $nv_Request;
   // initial
-  $xtpl = new XTemplate("sieuam-hang.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
+	$xtpl = new XTemplate("sieuam-hang.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
   $xtpl->assign("lang", $lang_module);
-  $index = 1;
-  // $index = ($page - 1) * $limit + 1;
-  $hex = array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f");
+	$index = 1;
+	// $index = ($page - 1) * $limit + 1;
+	$hex = array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f");
   $status_color = array("red", "yellow", "green", "gray");
-  $status_array = array(array(), array(), array(), array()); // [[], [], [], []] from 0 -> 3
+	$status_array = array(array(), array(), array(), array()); // [[], [], [], []] from 0 -> 3
 
   // cnote
   $cnote = $nv_Request->get_string('cnote', 'get/post', "");
   if ($cnote == 0) {
     $xtpl->assign("cnote", "none");
-  } else {
+  }
+  else {
     $xtpl->assign("cnote", "table-row");
   }
-
+  
   // divide into 3 part
   foreach ($list as $key => $row) {
     $status_array[$row["status"]][] = $key;
@@ -890,8 +843,8 @@ function usg_list($list)
   foreach ($status_array as $akey => $status_list) {
     $price = array();
     foreach ($status_list as $lkey => $status_row) {
-      $price[$status_row] = $list[$status_row]['calltime'];
-    }
+			$price[$status_row] = $list[$status_row]['calltime'];
+		}
     arsort($price);
     foreach ($price as $key => $value) {
       $t_list[] = $key;
@@ -899,44 +852,44 @@ function usg_list($list)
   }
 
   // display
-  foreach ($t_list as $key => $list_data) {
+	foreach ($t_list as $key => $list_data) {
     $xtpl->assign("index", $index);
-    $xtpl->assign("image", $list[$list_data]["image"]);
-    $xtpl->assign("petname", $list[$list_data]["petname"]);
-    $xtpl->assign("customer", $list[$list_data]["customer"]);
-    $xtpl->assign("phone", $list[$list_data]["phone"]);
-    $xtpl->assign("vacid", $list[$list_data]["id"]);
-    $xtpl->assign("petid", $list[$list_data]["petid"]);
-    $xtpl->assign("note", $list[$list_data]["note"]);
-    $xtpl->assign("exbirth", $list[$list_data]["expectbirth"]);
-    $xtpl->assign("birth", $list[$list_data]["birth"]);
-    $xtpl->assign("sieuam", date("d/m/Y", $list[$list_data]["cometime"]));
-    $xtpl->assign("dusinh", date("d/m/Y", $list[$list_data]["calltime"]));
-    $xtpl->assign("color", $status_color[$list[$list_data]["status"]]);
-    if (!empty($status_color[$list[$list_data]["status"]])) {
-      $color = $status_color[$list[$list_data]["status"]];
-    } else {
-      $color = $status_color[0];
-    }
-    if ($list[$list_data]["status"] == 2) {
-      $xtpl->assign("birth", $list[$list_data]["birth"]);
-      $xtpl->parse("main.list.birth");
-    }
-    $xtpl->assign("status", $lang_module["confirm_value2"][$list[$list_data]["status"]]);
-    $xtpl->assign("color", $color);
-    $xtpl->parse("main.list");
-    $index++;
-  }
-  $xtpl->parse("main");
-  return $xtpl->text("main");
+		$xtpl->assign("image", $list[$list_data]["image"]);
+		$xtpl->assign("petname", $list[$list_data]["petname"]);
+		$xtpl->assign("customer", $list[$list_data]["customer"]);
+		$xtpl->assign("phone", $list[$list_data]["phone"]);
+		$xtpl->assign("vacid", $list[$list_data]["id"]);
+		$xtpl->assign("petid", $list[$list_data]["petid"]);
+		$xtpl->assign("note", $list[$list_data]["note"]);
+		$xtpl->assign("exbirth", $list[$list_data]["expectbirth"]);
+		$xtpl->assign("birth", $list[$list_data]["birth"]);
+		$xtpl->assign("sieuam", date("d/m/Y", $list[$list_data]["cometime"]));
+		$xtpl->assign("dusinh", date("d/m/Y", $list[$list_data]["calltime"]));
+		$xtpl->assign("color", $status_color[$list[$list_data]["status"]]);
+		if (!empty($status_color[$list[$list_data]["status"]])) {
+			$color = $status_color[$list[$list_data]["status"]];
+		}
+		else {
+			$color = $status_color[0];
+		}
+		if ($list[$list_data]["status"] == 2) {
+			$xtpl->assign("birth", $list[$list_data]["birth"]);
+			$xtpl->parse("main.list.birth");
+		}
+		$xtpl->assign("status", $lang_module["confirm_value2"][$list[$list_data]["status"]]);
+		$xtpl->assign("color", $color);
+		$xtpl->parse("main.list");
+		$index ++;
+	}
+	$xtpl->parse("main");
+	return $xtpl->text("main");
 }
 
-function user_usg()
-{
+function user_usg() {
   global $db, $nv_Request, $module_config, $module_name, $lang_module, $vacconfigv2;
   // initial
-  // $vaccine_config = get_user_config();
-  $limit_option = array(10, 20, 30, 40, 50, 75, 100);
+	// $vaccine_config = get_user_config();
+  $limit_option = array(10, 20, 30, 40, 50, 75, 100); 
   $now = strtotime(date("y-m-d"));
   // page
   $page = $nv_Request->get_string('page', 'get/post', "");
@@ -958,7 +911,7 @@ function user_usg()
   //   $_SESSION["usg_limit"] = $limit;
   // }
   // $limit_page = "limit " . $limit . " offset " . (($page - 1) * $limit);
-
+  
   // keyword
   $keyword = $nv_Request->get_string('keyword', 'get/post', '');
 
@@ -983,44 +936,46 @@ function user_usg()
   if (empty($time)) {
     $time = 60 * 60 * 24 * 30;
   }
-  $from = $now - $time;
-  $end = $now + $time;
+	$from = $now - $time;
+	$end = $now + $time;
   // doctor
   $sql = "select * from " . VAC_PREFIX . "_doctor";
-  $query = $db->query($sql);
-  $doctor = array();
-  while ($doctor_row = $query->fetch()) {
-    $doctor[$doctor_row["id"]] = $doctor_row["name"];
-  }
+	$query = $db->query($sql);
+	$doctor = array();
+	while ($doctor_row = $query->fetch()) {
+		$doctor[$doctor_row["id"]] = $doctor_row["name"];
+	}
 
   // update filter
   // update_usg_filter($filter, $limit);
 
   // filter sql
   $where = "where (c.name like '%$keyword%' or c.phone like '%$keyword%') and a.status in ($filter)";
-
+  
   // list
   // $sql = "select a.id, a.cometime, a.calltime, a.status, a.image, a.note, a.birthday, a.birth, a.expectbirth, a.doctorid, b.id as petid, b.name as petname, c.name as customer, c.phone from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.calltime between $from and $end and a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id $where order by calltime " . $limit_page;
   if ($page == "list") {
     $next = $now + 24 * 60 * 60;
     $time_sql = "(ctime between $now and $next)";
     $type = "ctime";
-  } else {
+  }
+  else {
     $time_sql = "(calltime between $from and $end)";
     $type = "calltime";
   }
   $sql = "select a.id, a.cometime, a.calltime, a.status, a.image, a.note, a.birthday, a.birth, a.expectbirth, a.doctorid, b.id as petid, b.name as petname, c.name as customer, c.phone from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on $time_sql and a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id $where order by a.$type";
-  $query = $db->query($sql);
-  $list = array();
-  while ($usg_row = $query->fetch()) {
-    if ($usg_row["doctorid"]) {
-      $usg_row["doctor"] = $doctor[$usg_row["doctorid"]];
-    } else {
-      $usg_row["doctor"] = "";
-    }
-    $list[] = $usg_row;
-  }
-
+	$query = $db->query($sql);
+	$list = array();
+	while ($usg_row = $query->fetch()) {
+		if ($usg_row["doctorid"]) {
+			$usg_row["doctor"] = $doctor[$usg_row["doctorid"]];
+		}
+		else {
+			$usg_row["doctor"] = "";
+		}
+		$list[] = $usg_row;
+	}
+  
   return usg_list($list);
 }
 
@@ -1081,19 +1036,18 @@ function user_usg()
 // 	$query = $db->query($sql);
 // 	$result = $query->fetch();
 //   $count = $result["count"];
-
+  
 //   $url = $link . $op . "&key=$keyword&page=$page&limit=$limit";
 //   $nav = nv_generate_page_shop($url, $count, $limit, $page);
 //   return $nav;
 // }
 
-function user_birth()
-{
+function user_birth() {
   global $db, $nv_Request, $module_config, $module_name, $lang_module, $module_info, $module_file, $vacconfigv2;
   // initial
   $xtpl = new XTemplate("sieuam-birth-list.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
   $xtpl->assign("lang", $lang_module);
-  // $vaccine_config = get_user_config();
+	// $vaccine_config = get_user_config();
   // $limit_option = array(10, 20, 30, 40, 50, 75, 100); 
   $now = strtotime(date("y-m-d"));
   // $index = ($page - 1) * $limit + 1;
@@ -1117,7 +1071,7 @@ function user_birth()
   // else {
   //   $_SESSION["usg_limit"] = $limit;
   // }
-  // $limit_page = "limit " . $limit . " offset " . (($page - 1) * $limit);
+	// $limit_page = "limit " . $limit . " offset " . (($page - 1) * $limit);
   // keyword
   $keyword = $nv_Request->get_string('keyword', 'get/post', '');
   // filter type
@@ -1142,15 +1096,15 @@ function user_birth()
   if (empty($time)) {
     $time = 60 * 60 * 24 * 30;
   }
-  $from = $now - $time;
-  $end = $now + $time;
+	$from = $now - $time;
+	$end = $now + $time;
   // doctor
   $sql = "select * from " . VAC_PREFIX . "_doctor";
-  $query = $db->query($sql);
-  $doctor = array();
-  while ($doctor_row = $query->fetch()) {
-    $doctor[$doctor_row["id"]] = $doctor_row["name"];
-  }
+	$query = $db->query($sql);
+	$doctor = array();
+	while ($doctor_row = $query->fetch()) {
+		$doctor[$doctor_row["id"]] = $doctor_row["name"];
+	}
 
   // update filter
   // update_usg_filter($filter, $limit);
@@ -1158,10 +1112,11 @@ function user_birth()
   // filter sql
   if ($page == "list") {
     $type = "cbtime";
-  } else {
+  }
+  else {
     $type = "birthday";
   }
-
+  
   $where = "where (c.name like '%$keyword%' or c.phone like '%$keyword%') and a.vaccine in ($filter) and a.birthday > 0 and ($type between $from and $end)";
   // list
   // $sql = "select a.id, a.birthday, a.birth, a.expectbirth, a.recall, a.vaccine, a.doctorid, b.id as petid, b.name as petname, c.name as customer, c.phone from `" . VAC_PREFIX . "_usg` a inner join `" . VAC_PREFIX . "_pet` b on a.petid = b.id inner join `" . VAC_PREFIX . "_customer` c on b.customerid = c.id $where order by birthday " . $limit_page;
@@ -1172,7 +1127,8 @@ function user_birth()
   foreach ($list as $usg_row) {
     if ($usg_row["doctorid"]) {
       $usg_row["doctor"] = $doctor[$usg_row["doctorid"]];
-    } else {
+    }
+    else {
       $usg_row["doctor"] = "";
     }
     $xtpl->assign("index", $index);
@@ -1205,7 +1161,7 @@ function user_birth()
       $xtpl->parse("main.list.recall_link");
     }
     $xtpl->parse("main.list");
-    $index++;
+    $index ++;
   }
   $xtpl->parse("main");
   return $xtpl->text();
@@ -1273,14 +1229,13 @@ function user_birth()
 //   return $nav;
 // }
 
-function treat_list($list)
-{
+function treat_list($list) {
   global $module_info, $module_file, $lang_module;
   // initial
   $xtpl = new XTemplate("luubenh-bang.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
   $status_option = array("Bình thường", "Hơi yếu", "Yếu", "Sắp chết");
   $export = array("Lưu bệnh", "Xuất viện", "Đã chết");
-  $status_array = array();
+	$status_array = array();
   $status_array[0] = array();
   $status_array[1] = array();
   $status_array[2] = array();
@@ -1298,14 +1253,14 @@ function treat_list($list)
   foreach ($status_array as $akey => $status_list) {
     $price = array();
     foreach ($status_list as $lkey => $status_row) {
-      $price[$status_row] = $list[$status_row]['cometime'];
-    }
+			$price[$status_row] = $list[$status_row]['cometime'];
+		}
     arsort($price);
     foreach ($price as $key => $value) {
       $t_list[] = $key;
     }
   }
-
+    
   // display
   foreach ($t_list as $key => $list_data) {
     // var_dump($list_data); die();
@@ -1321,22 +1276,20 @@ function treat_list($list)
     $xtpl->assign("bgcolor", mauluubenh($list[$list_data]["insult"], $list[$list_data]["status"]));
 
     $xtpl->parse("main.list");
-    $index++;
+    $index ++;
   }
 
   $xtpl->parse("main");
   return $xtpl->text("main");
 }
 
-function user_treat()
-{
+function user_treat() {
   global $db, $nv_Request, $module_config, $module_name, $lang_module, $module_info, $module_file, $vacconfigv2;
   // initial
   $xtpl = new XTemplate("sieuam-birth-list.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
   $xtpl->assign("lang", $lang_module);
-
-  $limit_option = array(10, 20, 30, 40, 50, 75, 100);
-  $keyword = '';
+  
+  $limit_option = array(10, 20, 30, 40, 50, 75, 100); 
   $today = strtotime(date("y-m-d"));
   $index = 1;
   $page = $nv_Request->get_string('page', 'get/post', '');
@@ -1344,10 +1297,10 @@ function user_treat()
   $filter = $nv_Request->get_int('filter', 'get/post', 0);
   // doctor
   $sql = "select * from " . VAC_PREFIX . "_doctor";
-  $query = $db->query($sql);
-  $doctor = array();
-  while ($doctor_row = $query->fetch()) {
-    $doctor[$doctor_row["id"]] = $doctor_row["name"];
+	$query = $db->query($sql);
+	$doctor = array();
+	while ($doctor_row = $query->fetch()) {
+		$doctor[$doctor_row["id"]] = $doctor_row["name"];
   }
   // filter query
   $where = "where (c.name like '%$keyword%' or c.phone like '%$keyword%' or b.name like '%$keyword%') and a.insult in ($filter) ";
@@ -1356,7 +1309,7 @@ function user_treat()
     case 'today':
       $end = $today + 60 * 60 * 24;
       $where .= "and ctime between $today and $end";
-      break;
+    break;
     default:
       $time = $vacconfigv2["filter"];
       if (empty($time)) {
@@ -1537,8 +1490,7 @@ function user_treat()
 //   return $xtpl->text();
 // }
 
-function update_vaccine_filter($filter, $limit)
-{
+function update_vaccine_filter($filter, $limit) {
   global $db, $user_info;
   $sql = "update `" . VAC_PREFIX . "_config` set vac_s = '$filter', vac_f = $limit where userid = " . $user_info["user_id"];
   $config_query = $db->query($sql);
@@ -1548,8 +1500,7 @@ function update_vaccine_filter($filter, $limit)
   return 0;
 }
 
-function update_usg_filter($filter, $limit)
-{
+function update_usg_filter($filter, $limit) {
   global $db, $user_info;
   $sql = "update `" . VAC_PREFIX . "_config` set usg_s = '$filter', usg_f = $limit where userid = " . $user_info["userid"];
   $config_query = $db->query($sql);
@@ -1559,8 +1510,7 @@ function update_usg_filter($filter, $limit)
   return 0;
 }
 
-function update_treat_filter($filter, $limit)
-{
+function update_treat_filter($filter, $limit) {
   global $db, $user_info;
   $sql = "update `" . VAC_PREFIX . "_config` set treat_s = '$filter', treat_f = $limit where userid = " . $user_info["user_id"];
   $config_query = $db->query($sql);
@@ -1570,27 +1520,26 @@ function update_treat_filter($filter, $limit)
   return 0;
 }
 
-function user_vaccine($keyword = '')
-{
+function user_vaccine($keyword = '') {
   global $nv_Request, $db, $module_config, $module_name, $module_info, $module_file, $lang_module, $vacconfigv2;
   // initial
   $today = strtotime(date("Y-m-d"));
   $page = $nv_Request->get_string('page', 'get/post', "");
   $id = $nv_Request->get_int('id', 'post/get', 0);
   $list = array();
-
+  
   switch ($page) {
     case 'today':
       $end = $today + 60 * 60 * 24;
       $where = "where ctime between $today and $end and a.status = $id";
-      break;
+    break;
     case 'retoday':
       $end = $today + 60 * 60 * 24;
       $where = "where calltime between $today and $end and a.status = $id";
-      break;
+    break;
     case 'search-all':
       $where = '';
-      break;
+    break;
     default:
       // filter time
       $time = $vacconfigv2["filter"];
@@ -1601,7 +1550,7 @@ function user_vaccine($keyword = '')
       $end = $today + $time;
       $where = "where calltime between $from and $end and a.status = $id";
   }
-
+  
   $sql = "select a.id, a.note, a.recall, b.id as petid, b.name as petname, c.id as customerid, c.name as customer, c.phone as phone, cometime, calltime, ctime, a.status, diseaseid, dd.name as disease from " . VAC_PREFIX . "_vaccine a inner join " . VAC_PREFIX . "_pet b on a.petid = b.id inner join " . VAC_PREFIX . "_customer c on b.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on a.diseaseid = dd.id $where and (c.name like '%$keyword%' or c.phone like '%$keyword%') order by calltime";
   // die($sql);
   $query = $db->query($sql);
@@ -1609,8 +1558,7 @@ function user_vaccine($keyword = '')
   return vaccine_list($list);
 }
 
-function spa_list()
-{
+function spa_list() {
   global $db, $module_info, $module_file, $lang_module, $global_config;
   $xtpl = new XTemplate("spa-list.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
   $status = array("Chưa xong", "Đã xong");
@@ -1639,12 +1587,14 @@ function spa_list()
     // die();
     if ($row["done"] > 0) {
       $row["done"] = date("H:i:s", $row["done"]);
-    } else {
+    }
+    else {
       $row["done"] = $status[0];
     }
     if ($row["payment"]) {
       $xtpl->assign("payment", $image);
-    } else {
+    }
+    else {
       $xtpl->assign("payment", "");
     }
     $xtpl->assign("id", $row["id"]);
@@ -1652,17 +1602,18 @@ function spa_list()
     $xtpl->assign("customer_name", $customer["name"]);
     $xtpl->assign("customer_number", $customer["phone"]);
     $xtpl->assign("spa_from", date("H:i:s", $row["time"]));
+    $xtpl->assign("note", $row["note"]);
     $xtpl->assign("spa_end", $row["done"]);
     $xtpl->assign("image", $row["image"]);
-    $xtpl->parse("main");
-    $index++;
+    $xtpl->parse("main.row");
+    $index ++;
   }
+  $xtpl->parse("main");
   $text = $xtpl->text();
   return $text;
 }
 
-function admin_spa()
-{
+function admin_spa() {
   global $db, $module_info, $module_file, $lang_module, $global_config;
   $xtpl = new XTemplate("spa-list.tpl", NV_ROOTDIR . "/themes/" . $global_config['module_theme'] . "/modules/" . $module_file);
   $status = array("Chưa xong", "Đã xong");
@@ -1678,7 +1629,7 @@ function admin_spa()
     $doctor[$doctor_row["id"]] = $doctor_row;
   }
 
-  $sql = "select * from `" . VAC_PREFIX . "_spa` order by id limit 100";
+  $sql = "select * from `" . VAC_PREFIX . "_spa` order by id";
   $query = $db->query($sql);
   while ($row = $query->fetch()) {
     $sql = "select * from `" . VAC_PREFIX . "_customer` where id = " . $row["customerid"];
@@ -1690,7 +1641,8 @@ function admin_spa()
     // die();
     if ($row["done"] > 0) {
       $row["done"] = date("H:i:s", $row["done"]);
-    } else {
+    }
+    else {
       $row["done"] = $status[0];
     }
     $xtpl->assign("id", $row["id"]);
@@ -1700,14 +1652,13 @@ function admin_spa()
     $xtpl->assign("spa_from", date("H:i:s", $row["time"]));
     $xtpl->assign("spa_end", $row["done"]);
     $xtpl->parse("main");
-    $index++;
+    $index ++;
   }
   $text = $xtpl->text();
   return $text;
 }
 
-function vaccine_list($vaclist, $order = 0)
-{
+function vaccine_list($vaclist, $order = 0) {
   global $db, $module_info, $module_file, $lang_module, $nv_Request, $vacconfigv2;
   // initial
   $hex = array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f");
@@ -1725,17 +1676,18 @@ function vaccine_list($vaclist, $order = 0)
   $cnote = $nv_Request->get_string('cnote', 'get/post', "");
   if ($cnote == 0) {
     $xtpl->assign("cnote", "none");
-  } else {
+  }
+  else {
     $xtpl->assign("cnote", "table-row");
   }
-
+  
   // page
   $page = $nv_Request->get_string('page', 'get/post', "");
   $sort_by = "calltime";
   if ($page == "today") {
     $sort_by = "cometime";
   }
-
+  
   // divide into 3 part
   foreach ($vaclist as $key => $row) {
     $status_array[$row["status"]][] = $key;
@@ -1755,7 +1707,8 @@ function vaccine_list($vaclist, $order = 0)
       foreach ($price as $lkey => $status_row) {
         if ($row[$sort_by] < $now) {
           $sort_order_right[] = $lkey;
-        } else {
+        }
+        else {
           $sort_order_left[] = $lkey;
         }
       }
@@ -1764,7 +1717,8 @@ function vaccine_list($vaclist, $order = 0)
       $sort = array();
       $sort = array_merge($sort_order_left, $sort_order_right);
       $t_list = array_merge($t_list, $sort);
-    } else {
+    }
+    else {
       arsort($price);
       foreach ($price as $key => $value) {
         $t_list[] = $key;
@@ -1779,18 +1733,18 @@ function vaccine_list($vaclist, $order = 0)
     $today = strtotime(date('Y/m/d'));
     $fromtime = $today - $vacconfigv2['filter'];
     $diseases = getDiseaseData();
-
+  
     // $sql = 'select * from (select * from `'.VAC_PREFIX.'_vaccine` where (calltime < '.$fromtime.') and status = 0 order by calltime desc limit 20) a order by calltime asc';
-    $sql = 'select * from `' . VAC_PREFIX . '_vaccine` where (calltime < ' . $today . ') and status = ' . $id . ' order by calltime desc limit 20';
+    $sql = 'select * from `'.VAC_PREFIX.'_vaccine` where (calltime < '.$today.') and status = '.$id.' order by calltime desc limit 20';
     // die($sql);
     $query = $db->query($sql);
     $index = 1;
     $xtpl->assign("brickcolor", "orange");
-
+  
     while ($row = $query->fetch()) {
       $pet = selectPetId($row['petid']);
       $customer = selectCustomerId($pet['customerid']);
-
+  
       $xtpl->assign("index", $index);
       $xtpl->assign("petname", $pet["name"]);
       $xtpl->assign("petid", $row["petid"]);
@@ -1801,7 +1755,7 @@ function vaccine_list($vaclist, $order = 0)
       $xtpl->assign("disease", $diseases[$row["diseaseid"]]);
       $xtpl->assign("note", $row["note"]);
       $xtpl->assign("confirm", $lang_module["confirm_" . $row["status"]]);
-
+  
       // if ($row["status"] > 1) {
       //   $xtpl->parse("disease.vac_body.recall_link");
       // }
@@ -1822,7 +1776,8 @@ function vaccine_list($vaclist, $order = 0)
       $xtpl->assign("cometime", date("d/m/Y", $row["cometime"]));
       if ($id == 2) {
         $xtpl->assign("calltime", date("d/m/Y", $row["recall"]));
-      } else {
+      }
+      else {
         $xtpl->assign("calltime", date("d/m/Y", $row["calltime"]));
       }
       $index++;
@@ -1830,7 +1785,7 @@ function vaccine_list($vaclist, $order = 0)
     }
   }
   $xtpl->assign("brickcolor", "");
-
+  
   foreach ($t_list as $key => $value) {
     $xtpl->assign("index", $index);
     $xtpl->assign("petname", $vaclist[$value]["petname"]);
@@ -1863,7 +1818,8 @@ function vaccine_list($vaclist, $order = 0)
     $xtpl->assign("cometime", date("d/m/Y", $vaclist[$value]["cometime"]));
     if ($id == 2) {
       $xtpl->assign("calltime", date("d/m/Y", $vaclist[$value]["recall"]));
-    } else {
+    }
+    else {
       $xtpl->assign("calltime", date("d/m/Y", $vaclist[$value]["calltime"]));
     }
     $index++;
@@ -1873,8 +1829,7 @@ function vaccine_list($vaclist, $order = 0)
   return $xtpl->text("disease");
 }
 
-function nv_generate_page_shop($base_url, $num_items, $per_page, $start_item, $add_prevnext_text = true, $onclick = false, $js_func_name = 'nv_urldecode_ajax', $containerid = 'generate_page')
-{
+function nv_generate_page_shop($base_url, $num_items, $per_page, $start_item, $add_prevnext_text = true, $onclick = false, $js_func_name = 'nv_urldecode_ajax', $containerid = 'generate_page') {
   global $lang_global;
   $start_item = ($start_item - 1) * $per_page;
 
@@ -1885,42 +1840,42 @@ function nv_generate_page_shop($base_url, $num_items, $per_page, $start_item, $a
   $amp = preg_match("/\?/", $base_url) ? "&amp;" : "?";
   $page_string = "";
   if ($total_pages > 10) {
-    $init_page_max = ($total_pages > 3) ? 3 : $total_pages;
-    for ($i = 1; $i <= $init_page_max; $i++) {
-      $href = !$onclick ? "href=\"" . $base_url . $amp . "page=" . ($i) . "\"" : "href=\"javascript:void(0)\" onclick=\"" . $js_func_name . "('" . rawurlencode(nv_unhtmlspecialchars($base_url . $amp . "page=" . ($i))) . "','" . $containerid . "')\"";
-      $page_string .= ($i == $on_page) ? "<strong>" . $i . "</strong>" : "<a " . $href . ">" . $i . "</a>";
+    $init_page_max = ( $total_pages > 3 ) ? 3 : $total_pages;
+    for ($i = 1; $i <= $init_page_max; $i ++) {
+      $href = !$onclick ? "href=\"" . $base_url . $amp . "page=" . ( $i ) . "\"" : "href=\"javascript:void(0)\" onclick=\"" . $js_func_name . "('" . rawurlencode(nv_unhtmlspecialchars($base_url . $amp . "page=" . ( $i ))) . "','" . $containerid . "')\"";
+      $page_string .= ( $i == $on_page ) ? "<strong>" . $i . "</strong>" : "<a " . $href . ">" . $i . "</a>";
       if ($i < $init_page_max)
         $page_string .= " ";
     }
     if ($total_pages > 3) {
       if ($on_page > 1 && $on_page < $total_pages) {
-        $page_string .= ($on_page > 5) ? " ... " : ", ";
-        $init_page_min = ($on_page > 4) ? $on_page : 5;
-        $init_page_max = ($on_page < $total_pages - 4) ? $on_page : $total_pages - 4;
-        for ($i = $init_page_min - 1; $i < $init_page_max + 2; $i++) {
-          $href = !$onclick ? "href=\"" . $base_url . $amp . "page=" . ($i) . "\"" : "href=\"javascript:void(0)\" onclick=\"" . $js_func_name . "('" . rawurlencode(nv_unhtmlspecialchars($base_url . $amp . "page=" . ($i))) . "','" . $containerid . "')\"";
-          $page_string .= ($i == $on_page) ? "<strong>" . $i . "</strong>" : "<a " . $href . ">" . $i . "</a>";
+        $page_string .= ( $on_page > 5 ) ? " ... " : ", ";
+        $init_page_min = ( $on_page > 4 ) ? $on_page : 5;
+        $init_page_max = ( $on_page < $total_pages - 4 ) ? $on_page : $total_pages - 4;
+        for ($i = $init_page_min - 1; $i < $init_page_max + 2; $i ++) {
+          $href = !$onclick ? "href=\"" . $base_url . $amp . "page=" . ( $i ) . "\"" : "href=\"javascript:void(0)\" onclick=\"" . $js_func_name . "('" . rawurlencode(nv_unhtmlspecialchars($base_url . $amp . "page=" . ( $i ))) . "','" . $containerid . "')\"";
+          $page_string .= ( $i == $on_page ) ? "<strong>" . $i . "</strong>" : "<a " . $href . ">" . $i . "</a>";
           if ($i < $init_page_max + 1) {
             $page_string .= " ";
           }
         }
-        $page_string .= ($on_page < $total_pages - 4) ? " ... " : ", ";
+        $page_string .= ( $on_page < $total_pages - 4 ) ? " ... " : ", ";
       } else {
         $page_string .= " ... ";
       }
 
-      for ($i = $total_pages - 2; $i < $total_pages + 1; $i++) {
-        $href = !$onclick ? "href=\"" . $base_url . $amp . "page=" . ($i) . "\"" : "href=\"javascript:void(0)\" onclick=\"" . $js_func_name . "('" . rawurlencode(nv_unhtmlspecialchars($base_url . $amp . "page=" . ($i))) . "','" . $containerid . "')\"";
-        $page_string .= ($i == $on_page) ? "<strong>" . $i . "</strong>" : "<a " . $href . ">" . $i . "</a>";
+      for ($i = $total_pages - 2; $i < $total_pages + 1; $i ++) {
+        $href = !$onclick ? "href=\"" . $base_url . $amp . "page=" . ( $i ) . "\"" : "href=\"javascript:void(0)\" onclick=\"" . $js_func_name . "('" . rawurlencode(nv_unhtmlspecialchars($base_url . $amp . "page=" . ( $i ))) . "','" . $containerid . "')\"";
+        $page_string .= ( $i == $on_page ) ? "<strong>" . $i . "</strong>" : "<a " . $href . ">" . $i . "</a>";
         if ($i < $total_pages) {
           $page_string .= " ";
         }
       }
     }
   } else {
-    for ($i = 1; $i < $total_pages + 1; $i++) {
-      $href = !$onclick ? "href=\"" . $base_url . $amp . "page=" . ($i) . "\"" : "href=\"javascript:void(0)\" onclick=\"" . $js_func_name . "('" . rawurlencode(nv_unhtmlspecialchars($base_url . $amp . "page=" . ($i - 1))) . "','" . $containerid . "')\"";
-      $page_string .= ($i == $on_page) ? "<strong>" . $i . "</strong>" : "<a " . $href . ">" . $i . "</a>";
+    for ($i = 1; $i < $total_pages + 1; $i ++) {
+      $href = !$onclick ? "href=\"" . $base_url . $amp . "page=" . ( $i ) . "\"" : "href=\"javascript:void(0)\" onclick=\"" . $js_func_name . "('" . rawurlencode(nv_unhtmlspecialchars($base_url . $amp . "page=" . ( $i - 1 ))) . "','" . $containerid . "')\"";
+      $page_string .= ( $i == $on_page ) ? "<strong>" . $i . "</strong>" : "<a " . $href . ">" . $i . "</a>";
       if ($i < $total_pages) {
         $page_string .= " ";
       }
@@ -1942,8 +1897,7 @@ function nv_generate_page_shop($base_url, $num_items, $per_page, $start_item, $a
   return $page_string;
 }
 // Nếu quá giờ làm việc sẽ chặn đường vào
-function quagio()
-{
+function quagio() {
   global $module_config, $admin_info, $module_info, $module_name, $module_file, $lang_module;
   // $today = strtotime(date("Y-m-d"));
   // $worktime = 0;
@@ -1979,24 +1933,22 @@ function quagio()
   //   include ( NV_ROOTDIR . "/includes/footer.php" );
   // }
 }
-function fetchall($db, $query)
-{
+function fetchall($db, $query) {
   $result = array();
   while ($row = $query->fetch()) {
-    $result[] = $row;
+      $result[] = $row;
   }
   return $result;
 }
 // Thay đổi màu trong lưu bệnh
-function mauluubenh($ketqua, $tinhtrang)
-{
+function mauluubenh($ketqua, $tinhtrang) {
   switch ($ketqua) {
     case 1:
       $color = "#ccc";
-      break;
+    break;
     case 2:
       $color = "#f44";
-      break;
+    break;
     default:
       switch ($tinhtrang) {
         case 0:
@@ -2016,8 +1968,7 @@ function mauluubenh($ketqua, $tinhtrang)
   return $color;
 }
 
-function get_user_config()
-{
+function get_user_config() {
   global $db, $user_info;
   if (empty($user_info)) {
     return array('id' => 0, 'userid' => 0, 'vac_s' => '0124', 'usg_s' => '012', 'treat_s' => '012', 'vac_f' => '20', 'usg_f' => '20', 'treat_f' => '20');
@@ -2027,36 +1978,37 @@ function get_user_config()
   $config = $config_query->fetch();
   if ($config) {
     return $config;
-  } else {
+  }
+  else {
     $sql = "insert into `" . VAC_PREFIX . "_config` (userid, vac_s, usg_s, treat_s, vac_f, usg_f, treat_f) values (" . $user_info["userid"] . ", '012', '012', '012', '20', '20', '20')";
     $config_query = $db->query($sql);
     $sql = "select * from `" . VAC_PREFIX . "_config` limit 0";
     $config_query = $db->query($sql);
-    $config = $config_query->fetch();
+    $config = $config_query->fetch();  
     if ($config && $config_query) {
       return $config;
-    } else {
+    }
+    else {
       return array('id' => 0, 'userid' => 0, 'vac_s' => '0124', 'usg_s' => '012', 'treat_s' => '012', 'vac_f' => '20', 'usg_f' => '20', 'treat_f' => '20');
     }
   }
 }
 
 
-function totime($time)
-{
+function totime($time) {
   if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
     $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);
-  } else {
+  }
+  else {
     $time = time();
   }
   return $time;
 }
 
-function getUserList()
-{
+function getUserList() {
   global $db, $db_config;
 
-  $sql = 'select userid, first_name, last_name from `' . $db_config['prefix'] . '_users`';
+  $sql = 'select userid, first_name, last_name from `'. $db_config['prefix'] .'_users`';
   $query = $db->query($sql);
   $list = array();
 
@@ -2066,26 +2018,16 @@ function getUserList()
   return $list;
 }
 
-function checkRow($module, $id)
-{
+function checkRow($module, $id) {
   global $db;
 
-  $sql = 'select * from `' . VAC_PREFIX . '_' . $module . '` where id = ' . $id;
+  $sql = 'select * from `'. VAC_PREFIX .'_'. $module .'` where id = '. $id;
   $query = $db->query($sql);
 
   if ($row = $query->fetch()) {
     return $row;
   }
   return 0;
-}
-
-function getPetById($id)
-{
-  global $db;
-
-  $sql = "select * from `". VAC_PREFIX ."_pet` where id = " . $id;
-  $query = $db->query($sql);
-  return $query->fetch();
 }
 
 function getXrayTreat($xrayid)
@@ -2113,4 +2055,13 @@ function getXrayTreatId($treatid)
   $treat['image'] = explode(',', $treat['image']);
 
   return $treat;
+}
+
+function getPetById($id)
+{
+  global $db;
+
+  $sql = "select * from `". VAC_PREFIX ."_pet` where id = " . $id;
+  $query = $db->query($sql);
+  return $query->fetch();
 }

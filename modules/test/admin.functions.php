@@ -77,26 +77,6 @@ function settingContent() {
   return $xtpl->text();
 }
 
-// function settingSystemContent() {
-//   global $db, $db_config, $filter;
-
-//   $xtpl = new XTemplate("system-list.tpl", PATH2);
-//   $index = 1;
-
-//   $sql = 'select * from `'. VAC_PREFIX .'_setting` where module like "system:%") order by module';
-//   $query = $db->query($sql);
-  
-//   while ($row = $query->fetch()) {
-//     $xtpl->assign('index', $index++);
-//     $xtpl->assign('id', $row['userid']);
-//     $xtpl->assign('username', $row['username']);
-//     $xtpl->assign('fullname', $row['fullname']);
-//     $xtpl->parse('main.row');
-//   }
-//   $xtpl->parse('main');
-//   return $xtpl->text();
-// }
-
 function employContentId($id, $name) {
   global $db, $db_config, $filter;
   $xtpl = new XTemplate("employ-list.tpl", PATH2);
@@ -110,69 +90,6 @@ function employContentId($id, $name) {
     $xtpl->assign('fullname', $row['fullname']);
     $xtpl->parse('main.row');
   }
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
-
-function storageSelectContent() {
-  global $filter;
-  $storage = checkStorage($filter);
-  if ($storage) {
-    return array(
-      'type' => 1,
-      'content' => storageList()
-    );
-  }
-  return array(
-    'type' => 0,
-    'content' => storageContent()
-  );
-}
-
-function storageContent() {
-  global $db, $filter;
-  $xtpl = new XTemplate("content.tpl", PATH2);
-  
-  $sql = 'select count(*) as count from `'. VAC_PREFIX .'_position`';
-  $query = $db->query($sql);
-  $number = $query->fetch()['count'];
-
-  $sql = 'select * from `'. VAC_PREFIX .'_position` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
-  $query = $db->query($sql);
-  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
-
-  while ($row = $query->fetch()) {
-    $xtpl->assign('index', $index++);
-    $xtpl->assign('id', $row['id']);
-    $xtpl->assign('name', $row['name']);
-    $xtpl->parse('main.row');
-  }
-
-  $xtpl->assign('nav', nav_generater('/admin/index.php?nv=test&op=storage', $number, $filter['page'], $filter['limit']));
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
-
-function storageList() {
-  global $db, $filter;
-  $xtpl = new XTemplate("list.tpl", PATH2);
-  
-  $sql = 'select count(*) as count from `'. VAC_PREFIX .'_item` where posid = ' . $filter['id'];
-  $query = $db->query($sql);
-  $number = $query->fetch()['count'];
-
-  $sql = 'select * from `'. VAC_PREFIX .'_item` where posid = ' . $filter['id'] . ' order by name limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
-  $query = $db->query($sql);
-  $index = ($filter['page'] - 1) * $filter['limit'] + 1;
-
-  while ($row = $query->fetch()) {
-    $xtpl->assign('index', $index++);
-    $xtpl->assign('id', $row['id']);
-    $xtpl->assign('name', $row['name']);
-    $xtpl->parse('main.row');
-  }
-
-  $xtpl->assign('nav', nav_generater('/admin/index.php?nv=test&op=storage&id=' . $filter['id'], $number, $filter['page'], $filter['limit']));
   $xtpl->parse('main');
   return $xtpl->text();
 }
