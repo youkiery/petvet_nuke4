@@ -18,6 +18,63 @@ define('PATH2', NV_ROOTDIR . "/modules/" . $module_file . '/template/admin/' . $
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 require NV_ROOTDIR . '/modules/' . $module_file . '/theme.php';
 
+function userContent() {
+  global $db, $db_config;
+
+  $xtpl = new XTemplate("list.tpl", PATH2);
+  $sql = 'select * from `'. VAC_PREFIX .'_user` order by id desc';
+  $query = $db->query($sql);
+
+  $index = 1;
+  while ($row = $query->fetch()) {
+    $sql2 = 'select concat(last_name, " ", first_name) as fullname, username from `'. $db_config['prefix'] .'_users` where userid = ' . $row['userid'];
+    $query2 = $db->query($sql2);
+    $info = $query2->fetch();
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['userid']);
+    $xtpl->assign('username', $info['username']);
+    $xtpl->assign('fullname', $info['fullname']);
+    $xtpl->assign('manager_value', intval(!$row['manager']));
+    $xtpl->assign('except_value', intval(!$row['except']));
+    if ($row['manager']) $xtpl->assign('btn_manager', 'btn-warning');
+    else $xtpl->assign('btn_manager', 'btn-info');
+    if ($row['except']) $xtpl->assign('btn_except', 'btn-warning');
+    else $xtpl->assign('btn_except', 'btn-info');
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function userContentSuggest($keyword = '') {
+  global $db, $db_config;
+
+  $xtpl = new XTemplate("suggest.tpl", PATH2);
+  $sql = 'select * from `'. VAC_PREFIX .'_user` order by id desc';
+  $query = $db->query($sql);
+
+  $list = array();
+  while ($row = $query->fetch()) {
+    $list []= $row['userid'];
+  }
+  $list_s = implode(', ', $list);
+  $keyword = mb_strtolower($keyword);
+
+  $sql = 'select userid, concat(last_name, " ", first_name) as fullname, username from `'. $db_config['prefix'] .'_users` where userid not in ('. $list_s .') and (LOWER(last_name) like "%'. $keyword .'%" or LOWER(first_name) like "%'. $keyword .'%" or LOWER(username) like "%'. $keyword .'%")';
+  $query = $db->query($sql);
+  $check = true;
+  while ($info = $query->fetch()) {
+    $check = false;
+    $xtpl->assign('id', $info['userid']);
+    $xtpl->assign('username', $info['username']);
+    $xtpl->assign('fullname', $info['fullname']);
+    $xtpl->parse('main.row');
+  }
+  if ($check) $xtpl->parse('main.no');
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function admin_schedule() {
   global $db, $global_config, $module_file, $lang_module, $db_config;
   $xtpl = new XTemplate("schedule-list.tpl", NV_ROOTDIR . "/themes/" . $global_config['admin_theme'] . "/modules/" . $module_file);
