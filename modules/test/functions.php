@@ -282,14 +282,14 @@ function vaccineModal()
   global $db, $lang_module, $vacconfigv2;
   $xtpl = new XTemplate('modal.tpl', PATH2);
   $xtpl->assign('lang', $lang_module);
-  $sql = "select * from " . VAC_PREFIX . "_doctor";
-  $query = $db->query($sql);
 
   $xtpl->assign("now", date('d/m/Y'));
   $xtpl->assign("calltime", date('d/m/Y', time() + $vacconfigv2['recall']));
-  while ($row = $query->fetch()) {
-    $xtpl->assign("doctorid", $row["id"]);
-    $xtpl->assign("doctorname", $row["name"]);
+
+  $list = getdoctorlist3();
+  foreach ($list as $doctor) {
+    $xtpl->assign("doctorid", $doctor["userid"]);
+    $xtpl->assign("doctorname", $doctor["fullname"]);
     $xtpl->parse("main.doctor");
     $xtpl->parse("main.doctor2");
   }
@@ -370,12 +370,13 @@ function vaccineSearchAll()
   return vaccineList($list, 0, 1);
 }
 
-function vaccineContent($keyword = '')
+function vaccineContent()
 {
   global $db, $vacconfigv2, $filter;
   // initial
   $today = strtotime(date("Y-m-d"));
   $list = array();
+  $where = '';
 
   switch ($filter['page']) {
     case 1:
@@ -1087,27 +1088,29 @@ function priceModal()
   return $xtpl->text();
 }
 
-function priceCategoryList() {
+function priceCategoryList()
+{
   global $db;
 
-  $sql = 'select * from `'. VAC_PREFIX .'_price_category`';
+  $sql = 'select * from `' . VAC_PREFIX . '_price_category`';
   $query = $db->query($sql);
   $list = array();
 
   while ($row = $query->fetch()) {
-      $list[$row['id']] = $row;
+    $list[$row['id']] = $row;
   }
   return $list;
 }
 
-function priceItemDetail($id) {
+function priceItemDetail($id)
+{
   global $db;
-  $sql = 'select * from `'. VAC_PREFIX .'_price_detail` where itemid = ' . $id . ' order by id';
+  $sql = 'select * from `' . VAC_PREFIX . '_price_detail` where itemid = ' . $id . ' order by id';
   $query = $db->query($sql);
   $list = array();
 
   while ($row = $query->fetch()) {
-      $list[]= $row;
+    $list[] = $row;
   }
   return $list;
 }
@@ -1315,7 +1318,8 @@ function bloodStatistic()
   return $xtpl->text();
 }
 
-function checkUserPermit($overclock = 0) {
+function checkUserPermit($overclock = 0)
+{
   global $db, $user_info, $vacconfigv2;
   $check = false;
 
@@ -1325,26 +1329,24 @@ function checkUserPermit($overclock = 0) {
     if (empty($query->fetch())) {
       $check = true;
       $contents = "Tài khoản không có quyền truy cập";
-    }
-    else if ($overclock) {
+    } else if ($overclock) {
       $today = strtotime(date('Y/m/d'));
       $time = time();
       $fromTime = $today + $vacconfigv2['hour_from'] * 60 * 60 + $vacconfigv2['minute_from'] * 60;
       $endTime = $today + $vacconfigv2['hour_end'] * 60 * 60 + $vacconfigv2['minute_end'] * 60;
-  
+
       if ($time < $fromTime || $time > $endTime) {
         $check = true;
         $contents = '<p style="padding: 10px;">Đã quá thời gian làm việc, xin vui lòng quay lại sau</p>';
       }
     }
-  }
-  else {
+  } else {
     $check = true;
     $contents = "Bạn chưa đăng nhập";
   }
   if ($check) {
-    include ( NV_ROOTDIR . "/includes/header.php" );
+    include(NV_ROOTDIR . "/includes/header.php");
     echo nv_site_theme($contents);
-    include ( NV_ROOTDIR . "/includes/footer.php" );
+    include(NV_ROOTDIR . "/includes/footer.php");
   }
 }

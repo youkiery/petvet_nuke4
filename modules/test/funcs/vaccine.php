@@ -209,14 +209,6 @@ foreach ($lang_module["vacstatusname"] as $key => $value) {
   $xtpl->parse("main.filter");
 }
 // doctor
-$sql = "select * from " . VAC_PREFIX . "_doctor";
-$query = $db->query($sql);
-while($row = $query->fetch()) {
-  $xtpl->assign("doctorid", $row["id"]);
-  $xtpl->assign("doctorname", $row["name"]);
-  $xtpl->parse("main.doctor");
-}
-
 $xtpl->assign("modal", vaccineModal());
 $xtpl->assign('content', vaccineContent());
 $xtpl->parse("main");

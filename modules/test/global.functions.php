@@ -615,9 +615,23 @@ function getDoctorList2() {
   return $list;
 }
 
+function getdoctorlist3() {
+  global $db, $db_config;
+  $sql = "select a.userid, b.username, concat(b.last_name, ' ', b.first_name) as fullname from " . VAC_PREFIX . "_user a inner join `". $db_config['prefix'] ."_users` b on a.userid = b.userid";
+
+  $result = $db->query($sql);
+  $doctor = array();
+
+  while ($row = $result->fetch()) {
+    $doctor[] = $row;
+  }
+  return $doctor;
+}
+
 function getdoctorlist() {
-  global $db, $db_config, $module_name;
-  $sql = "select * from " . VAC_PREFIX . "_doctor";
+  global $db, $db_config;
+  $sql = "select * from " . VAC_PREFIX . "_user a inner join `". $db_config['prefix'] ."` b on a.userid = b.userid";
+
   $result = $db->query($sql);
   $doctor = array();
 
