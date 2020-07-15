@@ -11,27 +11,12 @@ checkUserPermit(OVERCLOCK);
 
 $type = 0;
 if (!empty($user_info)) {
-  $sql = 'select * from `'. $db_config['prefix'] .'_users` where userid = ' . $user_info['userid'];
+  $sql = 'select * from `'. VAC_PREFIX .'_user` where userid = ' . $user_info['userid'];
   $query = $db->query($sql);
   $user = $query->fetch();
-  $group = explode(',', $user['in_groups']);
-  if (in_array('1', $group)) {
-    // do nothing
-    $type = 2;
-  }
-  else {
-    $sql = 'select * from `'. VAC_PREFIX .'_config` where name = "config" and type = 2 and groupid in ('. $user['in_groups'] .')';
-    $query = $db->query($sql);
-    if (!empty($query->fetch())) {
-      $type = 2;
-    }
-    else {
-      $sql = 'select * from `'. VAC_PREFIX .'_config` where name = "config" and type = 1 and groupid in ('. $user['in_groups'] .')';
-      $query = $db->query($sql);
-      if (!empty($query->fetch())) {
-        $type = 1;
-      }
-    }
+  if (!empty($user)) {
+    if ($user['manager']) $type = 2;
+    else $type = 1;
   }
 }
 
@@ -220,9 +205,6 @@ if ($type) {
   $xtpl->assign('remind_data', json_encode($list));
   
   $xtpl->assign('modal', bloodModal());
-  $xtpl->assign('insert_modal', bloodInsertModal());
-  $xtpl->assign('import_modal', bloodImportModal());
-  $xtpl->assign('remove_modal', loadModal('remove-modal'));
   
   $xtpl->assign('content', bloodList());
   $xtpl->parse('main');

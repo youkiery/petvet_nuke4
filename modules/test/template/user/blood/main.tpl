@@ -16,9 +16,6 @@
 <div id="msgshow"></div>
 
 {modal}
-{insert_modal}
-{import_modal}
-{remove_modal}
 
 <div class="form-group" style="float: right">
   <button class="btn btn-info" onclick="loadModal('statistic-modal')">

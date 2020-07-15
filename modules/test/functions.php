@@ -652,34 +652,35 @@ function lowitemModal()
   return $xtpl->text();
 }
 
-function bloodInsertModal()
+function bloodModal()
 {
   global $db, $db_config, $user_info, $remind_title;
+  $xtpl = new XTemplate("modal.tpl", PATH2);
+  $xtpl->assign('statistic_content', bloodStatistic());
 
-  $xtpl = new XTemplate("insert-modal.tpl", PATH2);
+  $time = strtotime(date('Y/m/d'));
+  // $time = strtotime(date('8/8/2019'));
+  $filter['from'] = $time - 60 * 60 * 24 * 15;
+  $filter['end'] = $time + 60 * 60 * 24 * 15;
+
+  $xtpl->assign('from', date('d/m/Y', $filter['from']));
+  $xtpl->assign('end', date('d/m/Y', $filter['end']));
+
   $last = checkLastBlood();
-  $query = $db->query('select a.user_id, b.first_name from `' . $db_config['prefix'] . '_rider_user` a inner join `' . $db_config['prefix'] . '_users` b on a.user_id = b.userid where a.type = 1');
   $xtpl->assign('today', date('d/m/Y'));
   $xtpl->assign('last', $last);
   $xtpl->assign('nextlast', $last - 1);
-
-  while ($row = $query->fetch()) {
-    $xtpl->assign('id', $row['user_id']);
+  
+  $list = getdoctorlist3();
+  foreach ($list as $row) {
+    $xtpl->assign('id', $row['userid']);
     $xtpl->assign('name', $row['first_name']);
-    if ($row['user_id'] == $user_info['userid']) $xtpl->assign('selected', 'selected');
+    if ($row['userid'] == $user_info['userid']) $xtpl->assign('selected', 'selected');
     else $xtpl->assign('selected', '');
     $xtpl->parse('main.doctor');
   }
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
-
-function bloodImportModal()
-{
-  global $db;
-
-  $xtpl = new XTemplate("import-modal.tpl", PATH2);
   $xtpl->assign('today', date('d/m/Y'));
+
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -831,23 +832,6 @@ function itemList()
   }
 
   $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
-  $xtpl->parse('main');
-  return $xtpl->text();
-}
-
-function bloodModal()
-{
-  $xtpl = new XTemplate("modal.tpl", PATH2);
-  $xtpl->assign('statistic_content', bloodStatistic());
-
-  $time = strtotime(date('Y/m/d'));
-  // $time = strtotime(date('8/8/2019'));
-  $filter['from'] = $time - 60 * 60 * 24 * 15;
-  $filter['end'] = $time + 60 * 60 * 24 * 15;
-
-  $xtpl->assign('from', date('d/m/Y', $filter['from']));
-  $xtpl->assign('end', date('d/m/Y', $filter['end']));
-
   $xtpl->parse('main');
   return $xtpl->text();
 }

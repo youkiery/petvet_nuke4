@@ -617,7 +617,7 @@ function getDoctorList2() {
 
 function getdoctorlist3() {
   global $db, $db_config;
-  $sql = "select a.userid, b.username, concat(b.last_name, ' ', b.first_name) as fullname from " . VAC_PREFIX . "_user a inner join `". $db_config['prefix'] ."_users` b on a.userid = b.userid";
+  $sql = "select a.userid, b.username, first_name, concat(b.last_name, ' ', b.first_name) as fullname from " . VAC_PREFIX . "_user a inner join `". $db_config['prefix'] ."_users` b on a.userid = b.userid";
 
   $result = $db->query($sql);
   $doctor = array();
