@@ -44,7 +44,7 @@ $weight_option = array(
   "> 100 kg"
 );
 
-$action = $nv_Request->get_string("action", "get/post", "");
+$action = $nv_Request->get_string("action", "post", "");
 if (!empty($action)) {
   $result = array("status" => 0, "notify" => $lang_module["error"]);
   switch ($action) {
@@ -52,7 +52,7 @@ if (!empty($action)) {
       $result["list"] = spa_list();
     break;
     case "payment":
-      $id = $nv_Request->get_string("id", "get/post", "");
+      $id = $nv_Request->get_string("id", "post", "");
       if (!empty($id)) {
         $sql = "update `" . VAC_PREFIX . "_spa` set payment = 1, done = " . time() . " where id = $id";
         $query = $db->query($sql);
@@ -67,9 +67,9 @@ if (!empty($action)) {
       }
     break;
     case "custom":
-      $name = $nv_Request->get_string("name", "get/post", "");
-      $phone = $nv_Request->get_string("phone", "get/post", "");
-      $address = $nv_Request->get_string("address", "get/post", "");
+      $name = $nv_Request->get_string("name", "post", "");
+      $phone = $nv_Request->get_string("phone", "post", "");
+      $address = $nv_Request->get_string("address", "post", "");
 
       if (!(empty($name) || empty($phone))) {
         $sql = "select * from `" . VAC_PREFIX . "_customer` where phone = '$phone'";
@@ -95,8 +95,8 @@ if (!empty($action)) {
       }
     break;
     case 'getcustomer':
-      $key = $nv_Request->get_string("key", "get/post", "");
-        $xtpl = new XTemplate("spa-suggest.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
+      $key = $nv_Request->get_string("key", "post", "");
+        $xtpl = new XTemplate("suggest.tpl", PATH2);
 
         $sql = "select * from `" . VAC_PREFIX . "_customer` where name like '%$key%' or phone like '%$key%' limit 50";
         $customer_query = $db->query($sql);
@@ -112,9 +112,9 @@ if (!empty($action)) {
         $result["list"] = $xtpl->text();
     break;
     case 'get_detail':
-      $id = $nv_Request->get_int("id", "get/post", 0);
+      $id = $nv_Request->get_int("id", "post", 0);
       if (!empty($id)) {
-        $xtpl = new XTemplate("spa-check.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
+        $xtpl = new XTemplate("check.tpl", PATH2);
         $index = 1;
 
         $sql = "select * from `" . VAC_PREFIX . "_spa` where id = " . $id;
@@ -122,35 +122,6 @@ if (!empty($action)) {
         $result["list"] = "";
         $spa = $spa_query->fetch();
 
-        $html = "";
-        $key = 1;
-        if (!empty($spa["doctor"])) {
-          $key = $spa["doctor"];
-        }
-        else if (!empty($spa["doctorid"])) {
-          $key = $spa["doctorid"];
-        }
-        else {
-          $key = 1;
-        }
-        $sql = "select * from `" . VAC_PREFIX . "_doctor`";
-        $doctor_query = $db->query($sql);
-        while ($doctor = $doctor_query->fetch()) {
-          $check = "";
-          if ($doctor["id"] == $key) {
-            $check = "selected";
-          }
-          $html .= "<option value='" . $doctor["id"] . "' " . $check . ">" . $doctor["name"] . "</option>";
-        }
-        $weight = "";
-        foreach ($weight_option as $key => $value) {
-          $check = "";
-          if ($spa["weight"] == $key) {
-            $check = "selected";
-          }
-          $weight .= "<option value='" . $key . "' " . $check . ">" . $value . "</option>";
-        }
-  
         foreach ($spa_option as $key => $value) {
           $tick = "";
           if ($spa[$key] > 0) {
@@ -174,19 +145,19 @@ if (!empty($action)) {
         $result["payment"] = $spa["payment"];
         $result["note"] = $spa["note"];
         $result["doctor"] = $doctor["name"];
-        $result["html"] = $html;
-        $result["weight"] = $weight;
+        $result["weight"] = $spa['weight'];
+        $result["doctorid"] = $spa['doctorid'];
         $result["from"] = date("d/m/Y H:i:s", $spa["time"]);
       }
     break;
     case 'insert':
-      $customer = $nv_Request->get_string("customer", "get/post", "");
-      $doctor = $nv_Request->get_int("doctor", "get/post", 1);
-      $doctor2 = $nv_Request->get_int("doctor2", "get/post", 1);
-      $check = $nv_Request->get_array("check", "get/post");
-      $weight = $nv_Request->get_string("weight", "get/post", "");
-      $note = $nv_Request->get_string("note", "get/post");
-      $image = $nv_Request->get_string("image", "get/post", '');
+      $customer = $nv_Request->get_string("customer", "post", "");
+      $doctor = $nv_Request->get_int("doctor", "post", 1);
+      $doctor2 = $nv_Request->get_int("doctor2", "post", 1);
+      $check = $nv_Request->get_array("check", "post");
+      $weight = $nv_Request->get_string("weight", "post", "");
+      $note = $nv_Request->get_string("note", "post");
+      $image = $nv_Request->get_string("image", "post", '');
       
       if (!empty($customer) && !empty($check) && !empty($weight_option[$weight])) {
         $id = array();
@@ -210,11 +181,12 @@ if (!empty($action)) {
       }
     break;
     case 'update':
-      $customer = $nv_Request->get_string("customer", "get/post", "");
-      $check = $nv_Request->get_array("check", "get/post");
-      $weight = $nv_Request->get_string("weight", "get/post", "");
-      $note = $nv_Request->get_string("note", "get/post", "");
-      $doctor = $nv_Request->get_int("doctor", "get/post", 1);
+      $customer = $nv_Request->get_string("customer", "post", "");
+      $check = $nv_Request->get_array("check", "post");
+      $weight = $nv_Request->get_string("weight", "post", "");
+      $note = $nv_Request->get_string("note", "post", "");
+      $image = $nv_Request->get_string("image", "post", "");
+      $doctor = $nv_Request->get_int("doctor", "post", 1);
       if (!empty($customer) && !empty($check) && !empty($doctor) && !empty($weight_option[$weight])) {
         $val_list = array();
         foreach ($check as $key => $value) {
@@ -238,10 +210,10 @@ if (!empty($action)) {
       }
     break;
     case 'confirm':
-    $customer = $nv_Request->get_string("customer", "get/post", "");
-    $check = $nv_Request->get_array("check", "get/post");
-    $note = $nv_Request->get_string("note", "get/post");
-    $doctor = $nv_Request->get_int("doctor", "get/post", 1);
+    $customer = $nv_Request->get_string("customer", "post", "");
+    $check = $nv_Request->get_array("check", "post");
+    $note = $nv_Request->get_string("note", "post");
+    $doctor = $nv_Request->get_int("doctor", "post", 1);
     if (!empty($customer) && !empty($check) && !empty($doctor)) {
       $val_list = array();
       foreach ($check as $key => $value) {
@@ -280,25 +252,26 @@ if (!empty($action)) {
   die();
 }
 
-$xtpl = new XTemplate("spa.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
+$xtpl = new XTemplate("main.tpl", PATH2);
 $xtpl->assign("lang", $lang_module);
 
-$sql = "select * from `" . VAC_PREFIX . "_doctor`";
-$doctor_query = $db->query($sql);
-while ($doctor = $doctor_query->fetch()) {
-  $xtpl->assign("doctor_value", $doctor["id"]);
-  $xtpl->assign("doctor_name", $doctor["name"]);
+$list = getdoctorlist3();
+foreach ($list as $doctor) {
+  $xtpl->assign("doctor_value", $doctor["userid"]);
+  $xtpl->assign("doctor_name", $doctor["fullname"]);
   $xtpl->parse("main.doctor");
   $xtpl->parse("main.doctor2");
+  $xtpl->parse("main.doctor3");
 }
 
 foreach ($weight_option as $key => $value) {
   $xtpl->assign("weight_value", $key);
   $xtpl->assign("weight_name", $value);
   $xtpl->parse("main.weight");
+  $xtpl->parse("main.weight2");
 }
 
-$xtpl2 = new XTemplate("spa-check.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
+$xtpl2 = new XTemplate("check.tpl", PATH2);
 $index = 1;
 
 foreach ($spa_option as $key => $value) {

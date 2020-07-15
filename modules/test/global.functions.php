@@ -1655,7 +1655,7 @@ function user_vaccine($keyword = '') {
 
 function spa_list() {
   global $db, $module_info, $module_file, $lang_module, $global_config;
-  $xtpl = new XTemplate("spa-list.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
+  $xtpl = new XTemplate("list.tpl", PATH2);
   $status = array("Chưa xong", "Đã xong");
   $from = strtotime(date("Y-m-d"));
   $end = $from + 60 * 60 * 24;
@@ -1663,11 +1663,10 @@ function spa_list() {
   $image = "<img src='/themes/" . $global_config["site_theme"] . "/images/" . $module_file . "/payment.gif'>";
   $xtpl->assign("lang", $lang_module);
 
-  $sql = "select * from `" . VAC_PREFIX . "_doctor`";
-  $doctor_query = $db->query($sql);
+  $doctor_list = getdoctorlist3();
   $doctor = array();
-  while ($doctor_row = $doctor_query->fetch()) {
-    $doctor[$doctor_row["id"]] = $doctor_row;
+  foreach ($doctor_list as $row) {
+    $doctor[$row["userid"]] = $row;
   }
 
   $sql = "select * from `" . VAC_PREFIX . "_spa` where time between $from and $end order by id";
@@ -1693,7 +1692,7 @@ function spa_list() {
       $xtpl->assign("payment", "");
     }
     $xtpl->assign("id", $row["id"]);
-    $xtpl->assign("spa_doctor", $doctor[$row["doctorid"]]["name"]);
+    $xtpl->assign("spa_doctor", $doctor[$row["doctorid"]]["fullname"]);
     $xtpl->assign("customer_name", $customer["name"]);
     $xtpl->assign("customer_number", $customer["phone"]);
     $xtpl->assign("spa_from", date("H:i:s", $row["time"]));
