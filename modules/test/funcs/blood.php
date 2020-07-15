@@ -216,7 +216,7 @@ if ($type) {
     $list[$row['id']] = $row['value'];
   }
   
-  $xtpl->assign('_remind_data', json_encode($list));
+  $xtpl->assign('remind_data', json_encode($list));
   
   $xtpl->assign('modal', bloodModal());
   $xtpl->assign('insert_modal', bloodInsertModal());
