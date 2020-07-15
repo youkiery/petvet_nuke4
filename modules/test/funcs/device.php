@@ -9,6 +9,7 @@
 if (!defined('NV_IS_MOD_QUANLY')) die('Stop!!!');
 
 $page_title = "Quản lý thiết bị";
+checkUserPermit(OVERCLOCK);
 
 if (!empty($user_info)) {
   $sql = 'select * from `'. VAC_PREFIX .'_device_manager` where userid = ' . $user_info['userid'];

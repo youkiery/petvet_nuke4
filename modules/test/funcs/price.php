@@ -14,6 +14,7 @@ $filter = array(
   'page' => $nv_Request->get_int('page', 'get', 1),
   'limit' => $nv_Request->get_int('limit', 'get', 20)
 );
+checkUserPermit(OVERCLOCK);
 
 if (empty($user_info)) {
   include (NV_ROOTDIR . "/includes/header.php");

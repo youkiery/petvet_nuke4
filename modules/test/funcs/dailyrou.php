@@ -13,7 +13,7 @@ if (!defined('NV_IS_MOD_QUANLY')) {
 
 define("A_DAY", 60 * 60 * 24);
 $page_title = "Đăng ký lịch nghỉ/trực";
-preCheckUser();
+checkUserPermit(NO_OVERCLOCK);
 
 $date = strtotime(date('Y/m/d'));
 $itemData["type"] = 3;

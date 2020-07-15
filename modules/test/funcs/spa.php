@@ -10,6 +10,8 @@ if (!defined('NV_IS_MOD_QUANLY')) {
   die('Stop!!!');
 }
 
+checkUserPermit(OVERCLOCK);
+
 $spa_option = array(
   "wash_dog" => "Tắm chó",
   "wash_cat" => "Tắm mèo",

@@ -15,51 +15,11 @@ if (!defined('NV_SYSTEM')) {
 define('NV_IS_MOD_QUANLY', true);
 define('PATH', NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
 define('PATH2', NV_ROOTDIR . "/modules/" . $module_file . '/template/user/' . $op);
+define('OVERCLOCK', 1);
+define('NO_OVERCLOCK', 0);
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 $check_image = '<img src="/assets/images/ok.png">';
 // kiểm tra phân quyền
-
-$opType = array('main' => 1, 'confirm' => 1, 'list' => 1, 'vac_list' => 1, 'sieuam' => 2, 'danhsachsieuam' => 2, 'sieuam-birth' => 2, 'themsieuam' => 2, 'xacnhansieuam' => 2, 'luubenh' => 3, 'danhsachluubenh' => 3, 'themluubenh' => 3, 'spa' => 4, 'redrug' => 5, 'heal' => 6, 'heal_drug' => 6);
-
-$check = false;
-if (!empty($user_info) && !empty($user_info['userid'])) {
-  $sql = 'select * from `' . $db_config['prefix'] . '_users` where userid = ' . $user_info['userid'];
-  $query = $db->query($sql);
-  $user = $query->fetch();
-  $group = explode(',', $user['in_groups']);
-  if (!(in_array('1', $group) || in_array('2', $group))) {
-    if ($op !== 'proces' && !empty($opType[$op])) {
-      $sql = 'select * from `pet_test_heal_manager` where groupid in (' . implode(',', $user_info['in_groups']) . ') and type = ' . $opType[$op];
-      $query = $db->query($sql);
-
-      if (empty($query->fetch())) {
-        $check = true;
-        $contents = '<p style="padding: 10px;">Tài khoản chưa có quyền truy cập nội dung này</p>';
-      } else if ($op == 'heal' || $op == 'heal_drug' || $op == 'spa') {
-      } else {
-        $today = strtotime(date('Y/m/d'));
-        $time = time();
-        $fromTime = $today + $vacconfigv2['hour_from'] * 60 * 60 + $vacconfigv2['minute_from'] * 60;
-        $endTime = $today + $vacconfigv2['hour_end'] * 60 * 60 + $vacconfigv2['minute_end'] * 60;
-
-        if ($time < $fromTime || $time > $endTime) {
-          $check = true;
-          $contents = '<p style="padding: 10px;">Đã quá thời gian làm việc, xin vui lòng quay lại sau</p>';
-        }
-      }
-    }
-  }
-} else {
-  $check = true;
-  $contents = '<p style="padding: 10px;">Chỉ có thành viên được phân quyền mới có thể thấy được mục này</p>';
-}
-
-if ($check) {
-  include(NV_ROOTDIR . "/includes/header.php");
-  echo nv_site_theme($contents);
-  include(NV_ROOTDIR . "/includes/footer.php");
-  die();
-}
 
 function usgModal($lang_module)
 {
@@ -223,9 +183,9 @@ function usgCurrentList($filter)
   }
 }
 
-function usgRecallList($filter)
+function usgRecallList()
 {
-  global $db, $module_name, $op, $vacconfigv2, $lang_module;
+  global $db, $module_name, $op, $vacconfigv2, $lang_module, $filter;
 
   $status_list = array('Chưa gọi', 'Đã gọi');
   $xtpl = new XTemplate("recall-list.tpl", PATH2);
@@ -291,9 +251,9 @@ function usgBirthList($filter)
   return $xtpl->text();
 }
 
-function usgVaccineList($filter)
+function usgVaccineList()
 {
-  global $db, $module_name, $op, $vacconfigv2;
+  global $db, $module_name, $op, $vacconfigv2, $filter;
 
   $xtpl = new XTemplate("vaccine-list.tpl", PATH2);
   $index = 1;
@@ -1353,4 +1313,38 @@ function bloodStatistic()
 
   $xtpl->parse('main');
   return $xtpl->text();
+}
+
+function checkUserPermit($overclock = 0) {
+  global $db, $user_info, $vacconfigv2;
+  $check = false;
+
+  if ($user_info && $user_info["userid"]) {
+    $sql = "select * from `" . VAC_PREFIX . "_user` where userid = $user_info[userid]";
+    $query = $db->query($sql);
+    if (empty($query->fetch())) {
+      $check = true;
+      $contents = "Tài khoản không có quyền truy cập";
+    }
+    else if ($overclock) {
+      $today = strtotime(date('Y/m/d'));
+      $time = time();
+      $fromTime = $today + $vacconfigv2['hour_from'] * 60 * 60 + $vacconfigv2['minute_from'] * 60;
+      $endTime = $today + $vacconfigv2['hour_end'] * 60 * 60 + $vacconfigv2['minute_end'] * 60;
+  
+      if ($time < $fromTime || $time > $endTime) {
+        $check = true;
+        $contents = '<p style="padding: 10px;">Đã quá thời gian làm việc, xin vui lòng quay lại sau</p>';
+      }
+    }
+  }
+  else {
+    $check = true;
+    $contents = "Bạn chưa đăng nhập";
+  }
+  if ($check) {
+    include ( NV_ROOTDIR . "/includes/header.php" );
+    echo nv_site_theme($contents);
+    include ( NV_ROOTDIR . "/includes/footer.php" );
+  }
 }

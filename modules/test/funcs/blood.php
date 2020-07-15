@@ -7,6 +7,7 @@
  */
 
 if (!defined('NV_IS_MOD_QUANLY')) die('Stop!!!');
+checkUserPermit(OVERCLOCK);
 
 $type = 0;
 if (!empty($user_info)) {

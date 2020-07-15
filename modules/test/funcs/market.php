@@ -8,6 +8,7 @@
 
 if (!defined('NV_IS_MOD_QUANLY')) die('Stop!!!');
 
+checkUserPermit(NO_OVERCLOCK);
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);

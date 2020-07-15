@@ -13,6 +13,8 @@ $filter = array(
   'keyword' => $nv_Request->get_string('keyword', 'get/post', '')
 );
 
+checkUserPermit(OVERCLOCK);
+
 $action = $nv_Request->get_string("action", "get/post", "");
 if (!empty($action)) {
   $result = array("status" => 0);
@@ -180,7 +182,6 @@ if (!empty($action)) {
   echo json_encode($result);
   die();
 }
-quagio();
 // initial
 $xtpl = new XTemplate("main.tpl", PATH2);
 $page_title = $lang_module["main_title"];
