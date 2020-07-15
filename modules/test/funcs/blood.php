@@ -10,14 +10,12 @@ if (!defined('NV_IS_MOD_QUANLY')) die('Stop!!!');
 checkUserPermit(OVERCLOCK);
 
 $type = 0;
-if (!empty($user_info)) {
-  $sql = 'select * from `'. VAC_PREFIX .'_user` where userid = ' . $user_info['userid'];
-  $query = $db->query($sql);
-  $user = $query->fetch();
-  if (!empty($user)) {
-    if ($user['manager']) $type = 2;
-    else $type = 1;
-  }
+$sql = 'select * from `'. VAC_PREFIX .'_user` where userid = ' . $user_info['userid'];
+$query = $db->query($sql);
+$user = $query->fetch();
+if (!empty($user)) {
+  if ($user['manager']) $type = 2;
+  else $type = 1;
 }
 
 $action = $nv_Request->get_string('action', 'post', '');

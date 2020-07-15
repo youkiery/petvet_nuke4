@@ -16,17 +16,12 @@ $filter = array(
 );
 checkUserPermit(OVERCLOCK);
 
-if (empty($user_info)) {
-  include (NV_ROOTDIR . "/includes/header.php");
-  echo nv_site_theme("Đăng nhập trước khi sử dụng chức năng");
-  include (NV_ROOTDIR . "/includes/footer.php");
-  die();  
-}
-
-if (!empty($user_info)) {
-  $sql = 'select * from `'. VAC_PREFIX .'_price_allow` where userid = ' . $user_info['userid'];
-  $query = $db->query($sql);
-  $allow = $query->fetch();
+$type = 0;
+$sql = 'select * from `'. VAC_PREFIX .'_user` where userid = ' . $user_info['userid'];
+$query = $db->query($sql);
+$user = $query->fetch();
+if (!empty($user)) {
+  if ($user['manager']) $type = 1;
 }
 
 $action = $nv_Request->get_string('action', 'post', '');
@@ -175,12 +170,11 @@ $xtpl->assign('module_name', $module_name);
 $xtpl->assign('op', $op);
 $xtpl->assign('keyword', $filter['keyword']);
 
-if (!empty($allow)) $xtpl->parse('main.manager');
+if ($type) $xtpl->parse('main.manager');
 
 $xtpl->assign('modal', priceModal());
 $xtpl->assign('category_option', priceCategoryOption($filter['category']));
 $xtpl->assign('content', priceContent($filter));
-
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 

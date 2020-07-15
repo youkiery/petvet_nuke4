@@ -1002,9 +1002,9 @@ function marketContent($filter)
   // return $xtpl->text();
 }
 
-function priceContent($filter = array('page' => 1, 'limit' => 20))
+function priceContent()
 {
-  global $db, $allow, $module_name, $op;
+  global $db, $type, $module_name, $op, $filter;
   $xtpl = new XTemplate("list.tpl", PATH2);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
   $category = priceCategoryList();
@@ -1029,7 +1029,7 @@ function priceContent($filter = array('page' => 1, 'limit' => 20))
     $xtpl->assign('category', '');
     if (!empty($category[$item['category']])) $xtpl->assign('category', $category[$item['category']]['name']);
 
-    foreach ($detailList as $key => $detail) {
+    foreach ($detailList as $detail) {
       $xtpl->assign('price', number_format($detail['price'], 0, '', ','));
       if (!empty($detail['number'])) {
         $xtpl->assign('number', $detail['number']);
@@ -1038,12 +1038,11 @@ function priceContent($filter = array('page' => 1, 'limit' => 20))
       $xtpl->parse('main.row.section');
     }
 
-    if (!empty($allow)) {
-      $xtpl->parse('main.row.m2');
-    }
+    if ($type) $xtpl->parse('main.row.m2');
     $xtpl->parse('main.row');
   }
   $xtpl->assign('nav', nav_generater('/index.php?nv=' . $module_name . '&op=' . $op, $number, $filter['page'], $filter['limit']));
+  if ($type) $xtpl->parse('main.m1');
   $xtpl->parse('main');
   return $xtpl->text();
 }
