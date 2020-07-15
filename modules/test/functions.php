@@ -1238,7 +1238,7 @@ function checkDeviceEmploy($itemid)
 
 function bloodStatistic()
 {
-  global $db, $db_config, $module_name, $nv_Request;
+  global $db, $nv_Request;
   $filter = $nv_Request->get_array('filter', 'post');
   $total = array('import' => 0, 'number' => 0, 'count' => 0, 'real' => 0);
 

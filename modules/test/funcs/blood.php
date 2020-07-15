@@ -43,7 +43,7 @@ if (!empty($action)) {
       // die($sql);
       $query = $db->query($sql);
       if ($query) {
-        $query = $db->query('update `'. $db_config['prefix'] .'_config` set config_value = ' . $data['end'] . ' where config_name = "blood_number"');
+        $query = $db->query('update `'. $db_config['prefix'] .'_config` set config_value = ' . $data['end'] . ' where config_name = "'. $module_name .'_blood_number"');
         if ($query) {
           $result['status'] = 1;
           $result['html'] = bloodList();
@@ -58,7 +58,7 @@ if (!empty($action)) {
       $sql = 'insert into `'. VAC_PREFIX .'_blood_import` (time, number, price, note, doctor) values('. $data['time'] .', '. $data['number'] .', '. $data['price'] .', "'. $data['note'] .'", '. ($user_info['userid'] ? $user_info['userid'] : 0) .')';
       $query = $db->query($sql);
       if ($query) {
-        $query = $db->query('update `'. $db_config['prefix'] .'_config` set config_value = config_value + ' . $data['number'] . ' where config_name = "blood_number"');
+        $query = $db->query('update `'. $db_config['prefix'] .'_config` set config_value = config_value + ' . $data['number'] . ' where config_name = "'. $module_name .'_blood_number"');
         if ($query) {
           $query = $db->query('select * from `'. $db_config['prefix'] .'_config` where config_name = "blood_number"');
           $row = $query->fetch();
@@ -100,7 +100,7 @@ if (!empty($action)) {
 
       if (!empty($row = $query->fetch())) {
         $sql = 'update `'. VAC_PREFIX .'_blood_import` set time = ' . totime($data['time']) . ', price = ' . $data['price'] . ', number = ' . $data['number'] .', note = "'. $data['note'] .'" where id = ' . $id;
-        $sql2 = 'update `'. $db_config['prefix'] .'_config` set config_value = config_value + ' . ($data['number'] - $row['number']) . ' where config_name = "blood_number"';
+        $sql2 = 'update `'. $db_config['prefix'] .'_config` set config_value = config_value + ' . ($data['number'] - $row['number']) . ' where config_name = "'. $module_name .'_blood_number"';
         if ($db->query($sql) && $db->query($sql2)) {
           $sql = 'select * from `'. $db_config['prefix'] .'_config` where config_name = "blood_number"';
           $query = $db->query($sql);
@@ -156,7 +156,7 @@ if (!empty($action)) {
         $result['number'] = $number - $number2;
 
         $sql = 'delete from `'. VAC_PREFIX .'_blood_import` where id = ' . $id;
-        $sql2 = 'update `'. $db_config['prefix'] .'_config` set config_value = ' . ($result['number']) . ' where config_name = "blood_number"';
+        $sql2 = 'update `'. $db_config['prefix'] .'_config` set config_value = ' . ($result['number']) . ' where config_name = "'. $module_name .'_blood_number"';
       }
       else {
         $sql = 'select * from `'. VAC_PREFIX .'_blood_row` where id = ' . $id;
@@ -165,7 +165,7 @@ if (!empty($action)) {
         $result['number'] = $number + $number2;
 
         $sql = 'delete from `'. VAC_PREFIX .'_blood_row` where id = ' . $id;
-        $sql2 = 'update `'. $db_config['prefix'] .'_config` set config_value = ' . ($result['number']) . ' where config_name = "blood_number"';
+        $sql2 = 'update `'. $db_config['prefix'] .'_config` set config_value = ' . ($result['number']) . ' where config_name = "'. $module_name .'_blood_number"';
       }
       $db->query($sql);
       $db->query($sql2);

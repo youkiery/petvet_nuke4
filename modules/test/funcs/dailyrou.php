@@ -29,6 +29,8 @@ if (!empty($user)) {
 $this_week = date("N") == 1 ? strtotime(date("Y-m-d", time())) : strtotime(date("Y-m-d", strtotime('last monday')));
 $next_week = $this_week + A_DAY * 7 - 1;
 
+$userList = getdoctorList3();
+
 $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
 	$result = array("status" => 0);
@@ -49,9 +51,8 @@ if (!empty($action)) {
       $startDate = totime($startDate);
 
       if ($startDate) {
-        $userList = doctorList2();
         $result["status"] = 1;
-        $result["html"] = wconfirm($startDate, current($userList)["userid"], $userList);
+        $result["html"] = wconfirm($startDate);
         $result["doctorId"] = current($userList)["userid"];
       }
 
@@ -95,10 +96,9 @@ if (!empty($action)) {
             }
           }
         }
-        $userList = doctorList2();
         $result["status"] = 1;
         $result["notify"] = "Đã cập nhật lịch đăng ký";
-        $result["html"] = wconfirm($startDate, current($userList)["userid"], $userList);
+        $result["html"] = wconfirm($startDate);
       }
     break;
 
@@ -115,9 +115,8 @@ if (!empty($action)) {
         if ($query->fetch()) {
           $sql = "delete from `" . VAC_PREFIX . "_row` where user_id = $doctorId and time = $date and type = $type";
           if ($db->query($sql)) {
-            $userList = doctorList2();
             $result["status"] = 1;
-            $result["html"] = wconfirm($startDate, $doctorId, $userList);
+            $result["html"] = wconfirm($startDate);
           }
         }
       }
@@ -215,7 +214,6 @@ if (!empty($action)) {
 
 // $date_option = array(1 => "Tuần này", "Tuần sau", "Tháng này", "Tháng trước", "Tháng sau", "Năm nay", "Năm trước");
 $date_option = array(1 => "Tuần này", "Tuần sau", "Tháng này", "Tháng trước", "Tháng sau");
-$userList = array();
 
 $xtpl = new XTemplate("main.tpl", PATH2);
 $xtpl->assign("data", "{}");

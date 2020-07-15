@@ -655,16 +655,14 @@ function doctorList2() {
   return $list;
 }
 
-function wconfirm($date, $doctorId, $userList) {
-  global $db, $db_config, $work;
+function wconfirm($date) {
+  global $db, $db_config, $userList;
 
   $startDate = date ('N', $date) == 1 ? strtotime(date('Y-m-d', $date)) : strtotime('last monday', $date);
   $endDate = strtotime('next monday', $date);
   $xtpl = new XTemplate("ad_schedule_list.tpl", PATH2);
-  $user = array();
 
-  $sql = "select * from `" . $db_config["prefix"] . "_users` where userid in (select user_id from `" . $db_config["prefix"] . "_rider_user` where type = 1)";
-  $query = $db->query($sql);
+
 
   $xtpl->assign("from", date("d/m/Y", $startDate));
   $xtpl->assign("to", date("d/m/Y", $endDate - 1));
@@ -677,7 +675,7 @@ function wconfirm($date, $doctorId, $userList) {
   $xtpl->assign("c8", date("d/m", $startDate + A_DAY * 6));
 
   $index = 1;
-  while ($row = $query->fetch()) {
+  foreach ($userList as $row) {
     $xtpl->assign("index", $index ++);
     $xtpl->assign("username", $row["first_name"]);
     $currentDate = $startDate;
@@ -2291,13 +2289,13 @@ function getPetById($id)
 }
 
 function checkLastBlood() {
-  global $db, $db_config;
+  global $db, $db_config, $module_name;
 
-  $query = $db->query('select * from `'. $db_config['prefix'] .'_config` where config_name = "blood_number"');
+  $query = $db->query('select * from `'. $db_config['prefix'] .'_config` where config_name = "'. $module_name .'_blood_number"');
   if (!empty($row = $query->fetch())) {
     return $row['config_value'];
   }
-  $db->query('insert into `'. $db_config['prefix'] .'_config` (lang, module, config_name, config_value) values ("sys", "site", "blood_number", "1")');
+  $db->query('insert into `'. $db_config['prefix'] .'_config` (lang, module, config_name, config_value) values ("sys", "site", "'. $module_name .'_blood_number", "1")');
   return 1;
 }
 
