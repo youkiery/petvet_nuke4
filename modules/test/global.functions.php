@@ -617,7 +617,7 @@ function getDoctorList2() {
 
 function getdoctorlist3() {
   global $db, $db_config;
-  $sql = "select a.userid, b.username, first_name, concat(b.last_name, ' ', b.first_name) as fullname from " . VAC_PREFIX . "_user a inner join `". $db_config['prefix'] ."_users` b on a.userid = b.userid";
+  $sql = "select b.userid, b.username, b.first_name, b.last_name, concat(b.last_name, ' ', b.first_name) as fullname, a.manager, a.except from " . VAC_PREFIX . "_user a inner join `". $db_config['prefix'] ."_users` b on a.userid = b.userid";
 
   $result = $db->query($sql);
   $doctor = array();
@@ -639,24 +639,6 @@ function getdoctorlist() {
     $doctor[] = $row;
   }
   return $doctor;
-}
-
-function blockSelectDoctor($doctorId, $userList) {
-  $xtpl = new XTemplate("block_select_doctor.tpl", PATH2);
-  
-  foreach ($userList as $userData) {
-    if ($doctorId == $userData["userid"]) {
-      $xtpl->assign("select", "selected");
-    }
-    else {
-      $xtpl->assign("select", "");
-    }
-    $xtpl->assign("doctor_value", $userData["userid"]);
-    $xtpl->assign("doctor_name", $userData["first_name"]);
-    $xtpl->parse("main.doctor");
-  }
-  $xtpl->parse("main");
-  return $xtpl->text();
 }
 
 function doctorList2() {

@@ -18,6 +18,17 @@ checkUserPermit(NO_OVERCLOCK);
 $date = strtotime(date('Y/m/d'));
 $itemData["type"] = 3;
 
+$type = 0;
+$sql = 'select * from `'. VAC_PREFIX .'_user` where userid = ' . $user_info['userid'];
+$query = $db->query($sql);
+$user = $query->fetch();
+if (!empty($user)) {
+  if ($user['manager']) $type = 1;
+}
+
+$this_week = date("N") == 1 ? strtotime(date("Y-m-d", time())) : strtotime(date("Y-m-d", strtotime('last monday')));
+$next_week = $this_week + A_DAY * 7 - 1;
+
 $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
 	$result = array("status" => 0);
@@ -188,7 +199,7 @@ if (!empty($action)) {
       
       while ($row = $query->fetch()) {
         $use = 0;
-        if ($row["user"] == $user_id) {
+        if ($row["user_id"] == $user_info['userid']) {
           $use = 1;
         }
         $daily[] = array("date" => date("d/m/Y", $row["time"]), "type" => $row["type"], "use" => $use);
@@ -202,42 +213,32 @@ if (!empty($action)) {
 	die();
 }
 
-$this_week = date("N") == 1 ? strtotime(date("Y-m-d", time())) : strtotime(date("Y-m-d", strtotime('last monday')));
-$next_week = $this_week + A_DAY * 7 - 1;
 // $date_option = array(1 => "Tuần này", "Tuần sau", "Tháng này", "Tháng trước", "Tháng sau", "Năm nay", "Năm trước");
 $date_option = array(1 => "Tuần này", "Tuần sau", "Tháng này", "Tháng trước", "Tháng sau");
-$user_id = 0;
-$user_name = "";
 $userList = array();
-if (!empty($user_info)) {
-  $user_id = $user_info["userid"];
-  $sql = "select * from `" . $db_config["prefix"] . "_users` where userid = $user_info[userid]";
-  $query = $db->query($sql);
-  $user = $query->fetch();
-  $user_name = $user["first_name"];
-}
 
 $xtpl = new XTemplate("main.tpl", PATH2);
 $xtpl->assign("data", "{}");
 $xtpl->assign("this_week", date("d/m/Y", $this_week));
 $xtpl->assign("date", date("Y-m-d"));
 
-$sql = "select b.* from `" . $db_config["prefix"] . "_users` a inner join `" . VAC_PREFIX . "_user` b on b.userid = $user_id and a.userid = b.userid";
-$query = $db->query($sql);
 // die($sql);
 $xtpl->assign("admin", "false");
-if ($userList = $query->fetch()) {
-  if ($userList["manager"]) {
-    $xtpl->assign("admin", "true");
-    $userList = doctorList2();
-    $xtpl->assign("doctor", blockSelectDoctor($user_id, $userList));
-    $xtpl->parse("main.tab");
-    $xtpl->parse("main.manager");
-    $xtpl->parse("main.doctor");
+if ($type) {
+  $xtpl->assign("admin", "true");
+  $list = getdoctorlist3();
+
+  foreach ($list as $doctor) {
+    $xtpl->assign("select", "");
+    if ($doctor['userid'] == $user_info["userid"]) $xtpl->assign("select", "selected");
+    $xtpl->assign("doctor_value", $doctor["userid"]);
+    $xtpl->assign("doctor_name", $doctor["first_name"]);
+    $xtpl->parse("main.doctor.row");
   }
-  else {
-    $userList = array($userList);
-  }
+
+  $xtpl->parse("main.tab");
+  $xtpl->parse("main.manager");
+  $xtpl->parse("main.doctor");
 }
 
 foreach ($date_option as $date_value => $date_name) {
@@ -252,18 +253,10 @@ $daily = array();
 
 while ($row = $query->fetch()) {
   $use = 0;
-  if ($row["user_id"] == $user_id) {
+  if ($row["user_id"] == $user_info['userid']) {
     $use = 1;
   }
   $daily[] = array("userid" => $row["user_id"], "date" => date("d/m/Y", $row["time"]), "type" => $row["type"], "use" => $use);
-}
-
-$sql = "select * from `" . $db_config["prefix"] . "_users` where userid in (select id from `" . VAC_PREFIX . "_user` where userid <> $user_info[userid])";
-
-$query = $db->query($sql);
-while($row = $query->fetch()) {
-  $xtpl->assign("doctor_value", $row["userid"]);
-  $xtpl->assign("doctor_name", $row["last_name"] . " " . $row["first_name"]);
 }
 
 $sql = "select first_name from `" . $db_config["prefix"] . "_users` where userid in (select userid from `" . VAC_PREFIX . "_user` where `except` = 1)";
@@ -282,12 +275,12 @@ $endDate = strtotime(date("Y", $time) . "-" . (intval(date("m", $time)) + 1) . "
 $xtpl->assign("startDate", date('d/m/Y', $startDate));
 $xtpl->assign("endDate", date('d/m/Y', $endDate));
 
+$xtpl->assign("modal", dailyrouModal());
 $xtpl->assign("except", json_encode($except));
 $xtpl->assign("data", json_encode($daily));
-$xtpl->assign("username", $user_name);
-$xtpl->assign("doctorId", $user_id);
+$xtpl->assign("username", $user_info['first_name']);
+$xtpl->assign("doctorId", $user_info['userid']);
 $time = time();
-$xtpl->assign("summary", adminSummary($startDate, $endDate));
 $xtpl->assign("content", scheduleList($this_week, $next_week));
 
 $xtpl->parse("main");

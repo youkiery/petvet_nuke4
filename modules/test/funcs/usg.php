@@ -17,6 +17,15 @@ $filter = array(
   'status' => $nv_Request->get_int('status', 'get', 0)
 );
 
+
+$type = 0;
+$sql = 'select * from `'. VAC_PREFIX .'_user` where userid = ' . $user_info['userid'];
+$query = $db->query($sql);
+$user = $query->fetch();
+if (!empty($user)) {
+  if ($user['manager']) $type = 1;
+}
+
 $action = $nv_Request->get_string('action', 'post', "");
 if ($action) {
   $result = array("status" => 0, "data" => array());
@@ -359,13 +368,7 @@ for ($i = 1; $i <= 4; $i++) {
     $xtpl->assign('type_button' . $i, 'btn-default');
 }
 // Hiển thị tab quản lý
-if (!empty($user_info['in_groups']) && count($user_info['in_groups'])) {
-  $sql = 'select * from `' . VAC_PREFIX . '_heal_manager` where type = 7 and groupid in (' . implode(', ', $user_info['in_groups']) . ')';
-  $query = $db->query($sql);
-  if (!empty($query->fetch())) {
-    $xtpl->parse('main.manager');
-  }
-}
+if ($type) $xtpl->parse('main.manager');
 
 $xtpl->assign('content', usgCurrentList($filter));
 

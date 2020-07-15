@@ -9,168 +9,22 @@
   .red, .green, .white, .yellow, .orange, .purple, .blue {
     border: 1px solid #fff;
   }
+  .purple {
+    background: purple;
+  }
 </style>
 
-<div id="summary" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <h2> Bản thống kê ngày nghỉ tháng </h2>
-        <br>
-        <div class="form-inline">
-          <div class="form-group">
-            <label>
-              Từ ngày
-            </label>
-            <input type="text" class="form-control" id="summary-date-from" value="{startDate}" autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label>
-              Đến ngày
-            </label>
-            <input type="text" class="form-control" id="summary-date-end" value="{endDate}" autocomplete="off">
-          </div>
-          <button class="btn btn-info" onclick="summarySubmit()">
-            Xem tổng kết
-          </button>
-        </div>
-        <div id="summary-content">
-          {summary}
-        </div>
-        <div class="text-center">
-          <button class="btn btn-danger" data-dismiss="modal">
-            Trở về
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+{modal}
 
-<div id="modal-overflow" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body" id="overflow-content">
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="regist_confirm" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <h2> Bạn có muốn đăng ký những ngày này không? </h2>
-        <div id="regist_list">
-
-        </div>
-        <div class="text-center">
-          <button class="btn btn-success" onclick="registSubmit()">
-            Đăng ký
-          </button>
-          <button class="btn btn-danger" data-dismiss="modal">
-            Hủy
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="wconfirm_alert" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <h2> Bạn có muốn Thay đổi những mục này không? </h2>
-        <div id="wconfirm_alert_content">
-
-        </div>
-        <div class="text-center">
-          <button class="btn btn-success" onclick="wconfirmSubmit()">
-            Xác nhận
-          </button>
-          <button class="btn btn-danger" data-dismiss="modal">
-            Hủy
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- <div id="confirm_work" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-body">
-        <h2> Xác nhận lịch tuần </h2>
-        <div id="confirm_work_content">
-
-        </div>
-        <div class="text-center">
-          <button class="btn btn-success" onclick="checkAdRegist()">
-            Đăng ký
-          </button>
-          <button class="btn btn-danger" data-dismiss="modal" onclick="registOff()">
-            Hủy
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-<!-- <div id="exchange_work" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <h2> Chọn người bạn muốn đổi ca? </h2>
-        <div>
-          <div id="exchange_work_head">
-
-          </div>
-          <select id="exchange_work_doctor" class="form-control">
-            BEGIN: doctor
-            <option value="{doctor_value}">{doctor_name}</option>
-            END: doctor
-          </select>
-          <div id="exchange_work_content">
-          </div>
-        </div>
-        <div class="text-center">
-          <button class="btn btn-danger" data-dismiss="modal">
-            Trở về
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-<!-- <div id="work_list" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <h2> Danh sách ngày các ca đã đăng ký? </h2>
-        <div id="work_content_list">
-
-        </div>
-        <div class="text-center">
-          <button class="btn btn-danger" data-dismiss="modal" onclick="registOff()">
-            Trở về
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-  
 <!-- BEGIN: tab -->
+<div class="form-group">
   <button rel="1" class="tab btn btn-info active">
     Người dùng
   </button>
   <button rel="2" class="tab btn">
     Quản lý
   </button>
+</div>
 <!-- END: tab -->
 <div class="row">
   <div class="col-sm-4">
@@ -183,11 +37,6 @@
     <button class="btn btn-warning" onclick="nextWeek()">
       <span class="glyphicon glyphicon-chevron-right"></span>
     </button>
-    <!-- <select class="form-control" id="date-type"> -->
-      <!-- BEGIN: date_option -->
-      <!-- <option value="{date_value}"> {date_name} </option> -->
-      <!-- END: date_option -->
-    <!-- </select> -->
   </div>
   <div class="col-sm-8">
 
@@ -213,17 +62,15 @@
     <button class="btn btn-info right" id="print" onclick="printer()">
       In
     </button>
-    <!-- <button class="btn btn-info right" onclick="toWconfirm()">
-      Xác nhận
-    </button> -->
-    <!-- <button class="btn btn-info" id="list">
-      Danh sách
-    </button> -->
   </div>
 </div>
 <!-- BEGIN: doctor -->
-<div>
-  {doctor}
+<div class="form-group">
+  <select class="form-control" id="doctor">
+    <!-- BEGIN: row -->
+    <option value="{doctor_value}" {select}>{doctor_name}</option>
+    <!-- END: row -->
+  </select>
 </div>
 <!-- END: doctor -->
 <div id="content">
@@ -816,36 +663,37 @@
     WinPrint.close();
   }
 
+  function dateToString(date) {
+    var day = date.getDate()
+    var month = date.getMonth()
+    var year = date.getFullYear()
+    if (day < 10) {
+      day = "0" + day
+    }
+    if (month < 10) {
+      month = "0" + (month + 1)
+    }
+    return day + "/" + month + "/" + year
+  }
+
   function nextWeek() {
     var dateVal = startDate.val().split("/")
     var date = new Date(dateVal[2], parseInt(dateVal[1]) - 1, dateVal[0])
-    var day = date.getDay()
-    var diff = date.getDate() - day + 1
-    date.setDate(diff + 7)
-    startDate.val(dateToString(date))
+    time = date.getTime() + 60 * 60 * 24 * 1000 * 7;
+    startDate.val(dateToString(new Date(time)))
 
-    if (manager) {
-      toWconfirm()
-    }
-    else {
-      filterData()
-    }
+    if (manager) toWconfirm()
+    else filterData()
   }
 
   function prevWeek() {
     var dateVal = startDate.val().split("/")
     var date = new Date(dateVal[2], parseInt(dateVal[1]) - 1, dateVal[0])
-    var day = date.getDay()
-    var diff = date.getDate() - day + 1
-    date.setDate(diff - 7)
-    startDate.val(dateToString(date))
+    time = date.getTime() - 60 * 60 * 24 * 1000 * 7;
+    startDate.val(dateToString(new Date(time)))
     
-    if (manager) {
-      toWconfirm()
-    }
-    else {
-      filterData()
-    }
+    if (manager) toWconfirm()
+    else filterData()
   }
 
   // initiaze

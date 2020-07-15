@@ -57,7 +57,8 @@ function userContentSuggest($keyword = '') {
   while ($row = $query->fetch()) {
     $list []= $row['userid'];
   }
-  $list_s = implode(', ', $list);
+  if (count($list)) $list_s = implode(', ', $list);
+  else $list_s = 0;
   $keyword = mb_strtolower($keyword);
 
   $sql = 'select userid, concat(last_name, " ", first_name) as fullname, username from `'. $db_config['prefix'] .'_users` where userid not in ('. $list_s .') and (LOWER(last_name) like "%'. $keyword .'%" or LOWER(first_name) like "%'. $keyword .'%" or LOWER(username) like "%'. $keyword .'%")';

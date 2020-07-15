@@ -188,7 +188,7 @@
                         </div>
                         <div class="form-group col-md-12">
                             <label>{lang.note}</label>
-                            <textarea class="form-control" id="ghichu" rows="3"></textarea>
+                            <textarea class="form-control" id="note" rows="3"></textarea>
                         </div>
                     </div>
                     <div class="form-group text-center">

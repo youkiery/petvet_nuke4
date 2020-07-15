@@ -1064,6 +1064,22 @@ function priceCategoryContent()
   return $xtpl->text();
 }
 
+function dailyrouModal()
+{
+  $time = time();
+
+  if (date('N', $time) < 23) {
+    $time = time() - A_DAY * 23;
+  }
+  $startDate = strtotime(date("Y", $time) . "-" . date("m", $time) . "-24");
+  $endDate = strtotime(date("Y", $time) . "-" . (intval(date("m", $time)) + 1) . "-23");
+
+  $xtpl = new XTemplate("modal.tpl", PATH2);
+  $xtpl->assign("summary", adminSummary($startDate, $endDate));
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function priceModal()
 {
   $xtpl = new XTemplate("modal.tpl", PATH2);

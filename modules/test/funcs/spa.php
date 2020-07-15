@@ -265,7 +265,6 @@ if (!empty($action)) {
         if ($spa_query) {
           $result["list"] = spa_list();
           $result["notify"] = $lang_module["saved"];
-          $result["doctor"] = $html;
         }
         else {
           $result["notify"] = "Dường như có lỗi xảy ra";
