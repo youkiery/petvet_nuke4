@@ -23,9 +23,9 @@ $check_image = '<img src="/assets/images/ok.png">';
 
 function usgModal($lang_module)
 {
-  global $sort_type, $filter_type, $filter_data;
+  global $filter_data;
   $xtpl = new XTemplate("modal.tpl", PATH2);
-  $doctor = getDoctorList();
+  $doctor = getDoctorList3();
   $xtpl->assign('keyword', $filter_data['keyword']);
   $xtpl->assign('filter' . $filter_data['filter'], 'selected');
   $xtpl->assign('overflow_content', overflowList());
@@ -36,7 +36,7 @@ function usgModal($lang_module)
   $xtpl->assign('expecttime', date('d/m/Y', time() + 60 * 60 * 24 * 25));
 
   $diseases = getDiseaseList();
-  foreach ($diseases as $key => $value) {
+  foreach ($diseases as $value) {
     $xtpl->assign("id", $value["id"]);
     $xtpl->assign("name", $value["name"]);
     $xtpl->parse("main.disease");
@@ -44,8 +44,8 @@ function usgModal($lang_module)
   }
 
   foreach ($doctor as $data) {
-    $xtpl->assign('doctor_value', $data['id']);
-    $xtpl->assign('doctor_name', $data['name']);
+    $xtpl->assign('doctor_value', $data['userid']);
+    $xtpl->assign('doctor_name', $data['fullname']);
     $xtpl->parse('main.doctor');
     $xtpl->parse('main.doctor2');
     $xtpl->parse('main.doctor3');
@@ -64,6 +64,8 @@ function overflowList($data = array())
   $tick = 0;
   if (empty($data['from'])) $tick += 1;
   if (empty($data['end'])) $tick += 2;
+  if (empty($data['keyword'])) $data['keyword'] = '';
+
   $msg = '';
   switch ($tick) {
     case 1:
@@ -81,12 +83,12 @@ function overflowList($data = array())
       $from = $now - 60 * 60 * 24 * 30;
       $end = $now + 60 * 60 * 24 - 1;
       $time = 'and (calltime between ' . $from . ' and ' . $end . ')';
-      $msg = 'Danh sách từ ngày ' . date('d/m/Y', $from) . ' đến ngày ' . date('d/m/Y', totime($data['end']));
+      $msg = 'Danh sách từ ngày ' . date('d/m/Y', $from) . ' đến ngày ' . date('d/m/Y', totime($end));
       break;
     case 0:
       $end = totime($data['end']) + 60 * 60 * 24 - 1;
       $time = 'and (calltime between ' . totime($data['from']) . ' and ' . $end . ')';
-      $msg = 'Danh sách từ ngày ' . date('d/m/Y', totime($data['from'])) . ' đến ngày ' . date('d/m/Y', totime($data['end']));
+      $msg = 'Danh sách từ ngày ' . date('d/m/Y', totime($data['from'])) . ' đến ngày ' . date('d/m/Y', totime($end));
       break;
   }
   $xtpl->assign('msg', $msg);

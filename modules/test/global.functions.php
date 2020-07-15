@@ -630,7 +630,7 @@ function getdoctorlist3() {
 
 function getdoctorlist() {
   global $db, $db_config;
-  $sql = "select * from " . VAC_PREFIX . "_user a inner join `". $db_config['prefix'] ."` b on a.userid = b.userid";
+  $sql = "select * from " . VAC_PREFIX . "_user a inner join `". $db_config['prefix'] ."_users` b on a.userid = b.userid";
 
   $result = $db->query($sql);
   $doctor = array();
