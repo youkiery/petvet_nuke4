@@ -70,6 +70,8 @@ define('VAC_PREFIX', $db_config['prefix'] . "_" . $module_name);
 define('NV_NEXTMONTH', 30 * 24 * 60 * 60);
 define('NV_NEXTWEEK', 7 * 24 * 60 * 60);
 define('BLOCK', NV_ROOTDIR . '/modules/' . $module_file . '/template/block/');
+$datetime = array(1 => "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "CN");
+
 $status_option = array("Bình thường", "Hơi yếu", "Yếu", "Sắp chết");
 $export = array("Lưu bệnh", "Xuất viện", "Đã chết");
 
@@ -1978,15 +1980,11 @@ function adminSummary($startDate = 0, $endDate = 0) {
 
 function scheduleList($startDate, $endDate) {
   global $db, $datetime, $work;
-  // $startDate = strtotime("2019/05/01");
-  // $endDate = strtotime("2019/06/01");
-  // $endDate = totime($endDate) + A_DAY * 200;
   $xtpl = new XTemplate("schedule_list.tpl", PATH2);
 
   $userList = userList();
   $date = $startDate;
   $rest_list = array("morning_guard" => array(), "afternoon_guard" => array(), "morning_rest" => array(), "afternoon_rest" => array());
-  $check = true;
 
   $sql = "select * from `" . VAC_PREFIX . "_row` where `time` between $startDate and $endDate order by time, type asc, user_id";
   $query = $db->query($sql);
@@ -1994,13 +1992,10 @@ function scheduleList($startDate, $endDate) {
   $count = 0;
 
   while ($count < 7) {
-    // $xtpl->assign("date", date("d/m", $date) . " (" . $datetime[date("N", $date)] . ")");
     $xtpl->assign("date", date("d/m/Y", $date));
     $xtpl->assign("day", $datetime[date("N", $date)]);
 
     if ($currentRow["time"] == $date) {
-      // var_dump($currentRow);
-      // echo "<br>";
       switch ($currentRow["type"]) {
         case '0':
           $rest_list["morning_guard"][] = $userList[$currentRow["user_id"]]["first_name"];
