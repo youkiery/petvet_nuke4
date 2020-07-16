@@ -1319,54 +1319,15 @@ function checkUserPermit($overclock = 0)
   }
 }
 
-function outdateList() {
-  global $db, $filter;
+function expireStatisticContent() {
+  global $db, $time;
 
-  $xtpl = new XTemplate("list.tpl", PATH2);
-  $check = 0;
+  $xtpl = new XTemplate("statistic.tpl", PATH2);
+  $today = time() + 60 * 60 * 24 - 1;
+  $limit = time() + $time * 60 * 60 * 24;
+  $half_limit = time() + $time / 2 * 60 * 60 * 24;
 
-  if (!empty($filter['from'])) $check += 1;
-  if (!empty($filter['to'])) $check += 2;
-  $today = time();
-  
-  if ($check > 0)  {
-    // filter by time range
-    switch ($check) {
-      case '1':
-        $xtra = ' where exp_time > ' . totime($filter['from']);
-      break;
-      case '2':
-        $xtra = ' where exp_time < ' . totime($filter['to']);
-      break;
-      case '3':
-        $xtra = ' where (exp_time between '. totime($filter['from']) .' and ' . totime($filter['to']) . ')';
-      break;
-    }
-    $filter['to'] = totime($filter['to']);
-    if ($filter['to'] < $today) $filter['to'] = $today;
-    $p1 = $today + ($filter['to'] - $today) / 2;
-  }
-  else {
-    // filter by time amount
-    if (empty($filter['time'])) $filter['time'] = 90;
-    $filter['to'] = (time() + $filter['time'] * 60 * 60 * 24);
-    $xtra = 'where exp_time < '. $filter['to'];
-    // die($xtra);
-    if ($filter['to'] < $today) $filter['to'] = $today;
-    $p1 = $today + ($filter['to'] - $today) / 2;
-  }
-
-  if (empty($filter['keyword'])) $filter['keyword'] = '';
-
-  if (strlen($filter['list'])) {
-    $list[]= 0;
-    $list = implode(', ', $list);
-    $sql = 'select a.* from `'. VAC_PREFIX .'_expire` a inner join `'. VAC_PREFIX .'_item` b on a.rid = b.id '. $xtra .' and b.name like "%'. $filter['keyword'] .'%" and a.number > 0 and cate_id in ('. $list .') order by exp_time desc';
-  }
-  else {
-    $sql = 'select a.* from `'. VAC_PREFIX .'_expire` a inner join `'. VAC_PREFIX .'_item` b on a.rid = b.id '. $xtra .' and b.name like "%'. $filter['keyword'] .'%" and a.number > 0 order by exp_time desc';
-  }
-  // die($sql);
+  $sql = 'select a.*, b.name from `'. VAC_PREFIX .'_expire` a inner join `'. VAC_PREFIX .'_item` b on a.rid = b.id where exp_time < '. $limit .' and a.number > 0 order by exp_time';
   $query = $db->query($sql);
   // var_dump($query);die();
 
@@ -1374,18 +1335,17 @@ function outdateList() {
   // echo date('d/m/Y', $p1);die();
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index++);
-    $item = getItemId($row['rid']);
     if ($row['exp_time'] < $today) {
-      $xtpl->assign('color', 'redbg');
+      $xtpl->assign('color', 'red');
     }
-    else if ($row['exp_time'] < $p1) {
-      $xtpl->assign('color', 'yellowbg');
+    else if ($row['exp_time'] < $half_limit) {
+      $xtpl->assign('color', 'yellow');
     }
     else {
       $xtpl->assign('color', '');
     }
     $xtpl->assign('id', $row['id']);
-    $xtpl->assign('name', $item['name']);
+    $xtpl->assign('name', $row['name']);
     $xtpl->assign('number', $row['number']);
     $xtpl->assign('time', date('d/m/Y', $row['exp_time']));
     $xtpl->parse('main.row');
@@ -1396,6 +1356,7 @@ function outdateList() {
 
 function expireModal() {
   $xtpl = new XTemplate("modal.tpl", PATH2);
+  $xtpl->assign('statistic', expireStatisticContent());
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -1423,7 +1384,7 @@ function getItemList() {
 }
 
 function expireContent() {
-  global $db, $filter;
+  global $db, $filter, $link;
 
   $filter['type'] = intval($filter['type']);
   $xtra = 'order by id desc';
@@ -1452,7 +1413,10 @@ function expireContent() {
     $xtpl->assign('time', date('d/m/Y', $row['exp_time']));
     $xtpl->parse('main.row');
   }
-  $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
+  $param = $filter;
+  unset($param['page']);
+  unset($param['limit']);
+  $xtpl->assign('nav', nav_generater($link .'?'. http_build_query($param), $number, $filter['page'], $filter['limit']));
   $xtpl->parse('main');
   return $xtpl->text();
 }

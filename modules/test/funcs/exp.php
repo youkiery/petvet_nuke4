@@ -11,14 +11,12 @@ if (!defined('NV_IS_MOD_QUANLY')) { die('Stop!!!'); }
 $filter = array(
   'page' => $nv_Request->get_int('page', 'get', 1),
   'limit' => $nv_Request->get_int('limit', 'get', 10),
-  'from' => $nv_Request->get_string('from', 'get', ''),
-  'to' => $nv_Request->get_string('to', 'get', ''),
-  'time' => $nv_Request->get_int('time', 'get', 90),
-  'list' => $nv_Request->get_string('list', 'get', ''),
   'keyword' => $nv_Request->get_string('keyword', 'get', ''),
   'type' => $nv_Request->get_int('type', 'get', '0'),
 );
+$link = '/'. $module_name .'/'. $op;
 
+$time = $nv_Request->get_int('time', 'post', 90);
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
@@ -154,12 +152,19 @@ if (!empty($action)) {
       $result['error'] = implode('<br>', $error);
       $result['notify'] = 'Đã thêm ' . $inserted . ' trên tổng ' . $count . ' dòng';
     break;
+    case 'statistic':
+      $result['status'] = 1;
+      $result['html'] = expireStatisticContent();
+    break;
   }
   echo json_encode($result);
   die();
 }
 $xtpl = new XTemplate("main.tpl", PATH2);
 $xtpl->assign('modal', expireModal());
+$xtpl->assign('keyword', $filter['keyword']);
+$xtpl->assign('limit', $filter['limit']);
+$xtpl->assign('type'. $filter['type'], 'selected');
 $xtpl->assign('today', date('d/m/Y'));
 $xtpl->assign('items', json_encode(expireIdList()));
 $xtpl->assign('item', getItemList());

@@ -1,11 +1,17 @@
 <!-- BEGIN: main -->
-<link rel="stylesheet" href="/modules/exp/src/style.css">
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.css">
 
-{modal}
+<style>
+  .red {
+    background: pink;
+  }
+  .yellow {
+    background: lightyellow;
+  }
+</style>
 
-<a href="/exp"> Danh sách hạn sử dụng </a>
+{modal}
 
 <div class="row">
   <div class="col-sm-8">
@@ -31,18 +37,20 @@
   <button class="btn btn-warning" onclick="statisticModal()"> Thống kê </button>
   <!-- <button class="btn btn-info" onclick="excel()"> Thêm bằng excel </button> -->
 </div>
-<label class="form-inline">
-  <input type="text" class="form-control" id="filter-keyword" placeholder="Từ khóa tìm kiếm">
-  Số dòng một trang: <input type="text" class="form-control" id="filter-limit" value="10">
-  <select class="form-control" id="filter-type">
-    <option value="0"> Thời gian thêm </option>
-    <option value="1"> Hạn sử dụng tăng dần </option>
-    <option value="2"> Hạn sử dụng giảm dần </option>
-  </select>
-  <button class="btn btn-info" onclick="goPage(1)">
-    Hiển thị
-  </button>
-</label>
+<form class="form-group">
+  <label class="form-inline">
+    <input type="text" class="form-control" name="keyword" id="filter-keyword" placeholder="Từ khóa tìm kiếm">
+    Số dòng một trang: <input type="text" class="form-control" name="limit" id="filter-limit" value="10">
+    <select class="form-control" name="type" id="filter-type">
+      <option value="0" {type0}> Thời gian thêm </option>
+      <option value="1" {type1}> Hạn sử dụng tăng dần </option>
+      <option value="2" {type2}> Hạn sử dụng giảm dần </option>
+    </select>
+    <button class="btn btn-info">
+      Hiển thị
+    </button>
+  </label>
+</form>
 
 <div id="msgshow"></div>
 
@@ -87,6 +95,12 @@
 
   function statisticModal() {
     $('#statistic-modal').modal('show')
+  }
+
+  function statistic() {
+    vhttp.checkelse('', {action: 'statistic', time: $('#statistic-time').val()}).then(data => {
+      $('#statistic-content').html(data['html'])
+    })
   }
 
   function convert(str) {

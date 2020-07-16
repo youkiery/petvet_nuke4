@@ -7,8 +7,26 @@
           Thống kê mặt hàng hết hạn
           <div type="button" class="close" data-dismiss="modal"> &times; </div> <br><br>
         </div>
+        <div class="form-group">
+          <div class="input-group">
+            <select class="form-control" id="statistic-time">
+              <option value="30"> 1 tháng </option>
+              <option value="90" selected> 3 tháng </option>
+              <option value="180"> 6 tháng </option>
+              <option value="365"> 1 năm </option>
+              <option value="730"> 2 năm </option>
+            </select>
+            <div class="input-group-btn">
+              <button class="btn btn-info" onclick="statistic()">
+                thống kê
+              </button>
+            </div>
+          </div>
+        </div>
 
-        <div id="statistic-content"></div>
+        <div id="statistic-content">
+          {statistic}
+        </div>
       </div>
     </div>
   </div>
