@@ -548,12 +548,11 @@ function xrayModal()
 
   $xtpl->assign("now", $today);
 
-  $sql = "select * from " .  VAC_PREFIX . "_doctor";
-  $result = $db->query($sql);
+  $list = getdoctorlist3();
 
-  while ($row = $result->fetch()) {
-    $xtpl->assign("doctor_value", $row["id"]);
-    $xtpl->assign("doctor_name", $row["name"]);
+  foreach ($list as $row) {
+    $xtpl->assign("doctor_value", $row["userid"]);
+    $xtpl->assign("doctor_name", $row["fullname"]);
     $xtpl->parse("main.doctor");
   }
 
@@ -1239,7 +1238,7 @@ function bloodStatistic()
   $xtpl = new XTemplate("statistic-list.tpl", BLOCK);
   $xtpl->assign('from', date('d/m/Y', $filter['from']));
   $xtpl->assign('end', date('d/m/Y', $filter['end']));
-  $doctor = getDoctorList2();
+  $doctor = getDoctorList3();
 
   $sql = 'select * from `' . VAC_PREFIX . '_blood_row` where (time between ' . $filter['from'] . ' and ' . $filter['end'] . ')';
   $query = $db->query($sql);

@@ -16,10 +16,14 @@ $filter = array(
   'limit' => $nv_Request->get_int('limit', 'get', 10)
 );
 
-if (!checkXrayPermit()) {
-  include(NV_ROOTDIR . "/includes/header.php");
-  echo nv_site_theme('Người dùng chưa đăng nhập, hoặc không được cấp quyền truy cập');
-  include(NV_ROOTDIR . "/includes/footer.php");
+checkUserPermit(NO_OVERCLOCK);
+
+$type = 0;
+$sql = 'select * from `'. VAC_PREFIX .'_user` where userid = ' . $user_info['userid'];
+$query = $db->query($sql);
+$user = $query->fetch();
+if (!empty($user)) {
+  if ($user['manager']) $type = 1;
 }
 
 if (!empty($action)) {

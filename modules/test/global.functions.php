@@ -2286,11 +2286,13 @@ function getPetById($id)
 function checkLastBlood() {
   global $db, $db_config, $module_name;
 
-  $query = $db->query('select * from `'. $db_config['prefix'] .'_config` where config_name = "'. $module_name .'_blood_number"');
+  $sql = 'select * from `'. $db_config['prefix'] .'_config` where config_name = "'. $module_name .'_blood_number"';
+  $query = $db->query($sql);
   if (!empty($row = $query->fetch())) {
     return $row['config_value'];
   }
-  $db->query('insert into `'. $db_config['prefix'] .'_config` (lang, module, config_name, config_value) values ("sys", "site", "'. $module_name .'_blood_number", "1")');
+  $sql = 'insert into `'. $db_config['prefix'] .'_config` (lang, module, config_name, config_value) values ("sys", "site", "'. $module_name .'_blood_number", "1")';
+  $db->query($sql);
   return 1;
 }
 
