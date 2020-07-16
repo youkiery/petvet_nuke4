@@ -38,6 +38,9 @@
   function insertAlert() {
     edit.hide()
     insert.show()
+    $('#problem').val('')
+    $('#solution').val('')
+    $('#result').val('')
     insertModal.modal("show")
   }
 

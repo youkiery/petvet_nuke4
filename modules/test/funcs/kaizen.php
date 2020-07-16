@@ -16,12 +16,16 @@ define('MODULE', 'kaizen');
 $page_title = 'Chiến lược Kaizen';
 $filter = array(
 	'page' => $nv_Request->get_int('page', 'get', 1),
-	'limit' => $nv_Request->get_int('limit', 'get', 10),
-	'allow' => checkPermission(MODULE, $user_info['userid'])
+	'limit' => $nv_Request->get_int('limit', 'get', 10)
 );
+checkUserPermit(NO_OVERCLOCK);
 
-if (!$filter['allow']) {
-	preventOutsiter();
+$type = 0;
+$sql = 'select * from `'. VAC_PREFIX .'_user` where userid = ' . $user_info['userid'];
+$query = $db->query($sql);
+$user = $query->fetch();
+if (!empty($user)) {
+  if ($user['manager']) $type = 1;
 }
 
 $action = $nv_Request->get_string('action', 'post/get', '');
@@ -98,7 +102,6 @@ $xtpl->assign('modal', kaizenModal());
 $xtpl->assign('content', kaizenList($users['userid']));
 $xtpl->parse('main');
 $contents = $xtpl->text('main');
-
 include ( NV_ROOTDIR . '/includes/header.php' );
 echo nv_site_theme($contents);
 include ( NV_ROOTDIR . '/includes/footer.php' );

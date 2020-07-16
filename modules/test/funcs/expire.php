@@ -15,6 +15,7 @@ $filter = array(
   'type' => $nv_Request->get_int('type', 'get', '0'),
 );
 $link = '/'. $module_name .'/'. $op;
+checkUserPermit(NO_OVERCLOCK);
 
 $time = $nv_Request->get_int('time', 'post', 90);
 $action = $nv_Request->get_string('action', 'post', '');

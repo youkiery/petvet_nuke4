@@ -448,7 +448,7 @@ function checkPermission($module, $userid)
 
 function kaizenList($userid)
 {
-  global $db, $db_config, $user_info, $filter, $module_name, $op;
+  global $db, $filter, $module_name, $op, $type;
 
   $index = 1;
   $start = $filter['limit'] * ($filter['page'] - 1);
@@ -456,11 +456,11 @@ function kaizenList($userid)
   $user = getUserList();
 
   $xtra = '';
-  if ($filter['allow'] < 2) {
+  if ($type) {
     $xtpl->assign('time_cell', 3);
-    $xtra = 'where userid = ' . $userid;
   } else {
     $xtpl->assign('time_cell', 2);
+    $xtra = 'where userid = ' . $userid;
   }
 
   $sql = 'select count(id) as count from `' . VAC_PREFIX . '_kaizen` ' . $xtra;
@@ -480,7 +480,7 @@ function kaizenList($userid)
     $xtpl->assign('problem', $row['problem']);
     $xtpl->assign('solution', $row['solution']);
     $xtpl->assign('result', $row['result']);
-    if ($filter['allow'] > 1) {
+    if ($type) {
       $xtpl->parse('main.inbox.row.manager');
       $xtpl->parse('main.inbox.row.manager2');
     }

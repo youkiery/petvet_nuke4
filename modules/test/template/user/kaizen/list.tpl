@@ -10,7 +10,7 @@
       <td class="cell-center" rowspan="3">
         {index}
       </td>
-      <td class="cell-center" rowspan="{time_cell}">
+      <td class="cell-center" rowspan="3">
         {time}
       </td>
       <td>
@@ -39,11 +39,6 @@
       </td>
     </tr>
     <tr>
-      <!-- BEGIN: manager2 -->
-      <td class="cell-center">
-        {user}
-      </td>
-      <!-- END: manager2 -->
       <td>
         kết quả
       </td>
@@ -51,6 +46,13 @@
         {result}
       </td>
     </tr>
+    <!-- BEGIN: manager2 -->
+    <tr>
+      <td class="cell-center" colspan="5">
+        {user}
+      </td>
+    </tr>
+    <!-- END: manager2 -->
   </tbody>
   <!-- END: row -->
 </table>
