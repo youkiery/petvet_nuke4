@@ -17,6 +17,7 @@ if (!empty($user)) {
   if ($user['manager']) $type = 2;
   else $type = 1;
 }
+$link = '/'. $module_name .'/'. $op;
 
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {

@@ -255,7 +255,7 @@ if (!empty($action)) {
 $xtpl = new XTemplate("main.tpl", PATH2);
 $xtpl->assign("lang", $lang_module);
 
-$list = getdoctorlist3();
+$list = getdoctorlist();
 foreach ($list as $doctor) {
   $xtpl->assign("doctor_value", $doctor["userid"]);
   $xtpl->assign("doctor_name", $doctor["fullname"]);

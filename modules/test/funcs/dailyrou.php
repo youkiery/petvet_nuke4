@@ -30,7 +30,7 @@ if (!empty($user)) {
 $this_week = date("N") == 1 ? strtotime(date("Y-m-d", time())) : strtotime(date("Y-m-d", strtotime('last monday')));
 $next_week = $this_week + A_DAY * 7 - 1;
 
-$userList = getdoctorList3(REGISTABLED);
+$userList = getdoctorlist(REGISTABLED);
 // var_dump($userList);die();
 
 $action = $nv_Request->get_string('action', 'post/get', "");
@@ -226,7 +226,7 @@ $xtpl->assign("date", date("Y-m-d"));
 $xtpl->assign("admin", "false");
 if ($type) {
   $xtpl->assign("admin", "true");
-  $list = getdoctorlist3();
+  $list = getdoctorlist();
 
   foreach ($userList as $doctor) {
     $xtpl->assign("select", "");
