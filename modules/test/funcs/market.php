@@ -9,6 +9,14 @@
 if (!defined('NV_IS_MOD_QUANLY')) die('Stop!!!');
 
 checkUserPermit(NO_OVERCLOCK);
+$type = 0;
+$sql = 'select * from `'. VAC_PREFIX .'_user` where userid = ' . $user_info['userid'];
+$query = $db->query($sql);
+$user = $query->fetch();
+if (!empty($user)) {
+  if ($user['manager']) $type = 1;
+}
+
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {
   $result = array('status' => 0);
@@ -67,7 +75,7 @@ while ($row = $query->fetch()) {
 }
 
 // lấy dữ liệu phân quyền, chỉ quản trị mới nhất 
-if (!empty($user_info) && !empty($user_info['level'])) {
+if ($type) {
     $xtpl->assign('admin', '1');
 } 
 
