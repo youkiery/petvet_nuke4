@@ -6,32 +6,41 @@
     <th> Tên hàng </th>
     <th> Số lượng </th>
     <th> Hạn sử dụng </th>
-    <th>  </th>
+    <th></th>
   </tr>
   <!-- BEGIN: row -->
-  <tr class="{color}">
+  <tr>
     <td>
       {index}
     </td>
     <td>
       <label class="checkbox-inline">
-        <input type="checkbox" class="item-checkbox" id="item-check-{id}">
+        <input type="checkbox" class="event-checkbox" id="item-check-{id}">
       </label>
     </td>
     <td>
-      {name}
+      <div class="relative">
+        <input type="text" class="form-control" id="item-{id}" value="{name}">
+        <input type="hidden" id="item-id-{id}" value="{rid}">
+        <div class="suggest" id="item-{id}-suggest"></div>
+      </div>
     </td>
     <td>
-      {number}
+      <input type="text" class="form-control" id="item-number-{id}" value="{number}">
     </td>
     <td>
-      {time}
+      <input type="text" class="form-control date" id="item-date-{id}" value="{time}">
     </td>
     <td>
-      <button class="btn btn-info" onclick="done({id})"> <span class="glyphicon glyphicon-check"></span> </button>
+      <button class="btn btn-info" onclick="update({id})">
+        <span class="glyphicon glyphicon-refresh"></span>
+      </button>
+      <button class="btn btn-danger" onclick="remove({id})">
+        <span class="glyphicon glyphicon-remove"></span>
+      </button>
     </td>
   </tr>
   <!-- END: row -->
 </table>
+{nav}
 <!-- END: main -->
-

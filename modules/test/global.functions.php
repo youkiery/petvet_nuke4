@@ -2363,3 +2363,14 @@ function checkDeviceManagerId($id = 0) {
   }
   return false;
 }
+
+function getCategoryList() {
+  global $db;
+
+  $list = array();
+  $query = $db->query('select * from `'. VAC_PREFIX .'_category` order by name');
+  while ($row = $query->fetch()) {
+    $list[] = $row;
+  }
+  return $list;
+}

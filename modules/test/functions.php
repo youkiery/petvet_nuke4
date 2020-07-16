@@ -836,39 +836,6 @@ function itemList()
   return $xtpl->text();
 }
 
-// function productList($url, $filter = array('page' => 1, 'limit' => 10, 'brand' => 1)) {
-//     global $db;
-
-//     $xtpl = new XTemplate("product-list.tpl", PATH2);
-//     $sql = 'select count(*) as count from `'. VAC_PREFIX .'brand_product` where brandid = '. $filter['brand'];
-//     $query = $db->query($sql);
-//     $number = $query->fetch()['count'];
-
-//     $sql = 'select * from `'. VAC_PREFIX .'brand_product` where brandid = '. $filter['brand'] .' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
-
-//     $query = $db->query($sql);
-//     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
-
-//     while ($row = $query->fetch()) {
-//         $sql = 'select * from `'. VAC_PREFIX .'_product` where id = '. $row['_productid'];
-//         $query = $db->query($sql);
-//         $product = $query->fetch();
-
-//         $sql = 'select * from `'. VAC_PREFIX .'_product_category` where id = '. $product['_category'];
-//         $query = $db->query($sql);
-//         $category = $query->fetch();
-
-//         $xtpl->assign('index', $index++);
-//         $xtpl->assign('_category', $category['name']);
-//         $xtpl->assign('_item', $product['name']);
-//         $xtpl->assign('number', $row['number']);
-//         $xtpl->parse('main.row');
-//     }
-//     $xtpl->assign('nav', nv_generate_page_shop($url, $number, $filter['limit'], $filter['page']));
-//     $xtpl->parse('main');
-//     return $xtpl->text();
-// }
-
 function productCategory()
 {
   global $db;
@@ -1350,4 +1317,142 @@ function checkUserPermit($overclock = 0)
     echo nv_site_theme($contents);
     include(NV_ROOTDIR . "/includes/footer.php");
   }
+}
+
+function outdateList() {
+  global $db, $filter;
+
+  $xtpl = new XTemplate("list.tpl", PATH2);
+  $check = 0;
+
+  if (!empty($filter['from'])) $check += 1;
+  if (!empty($filter['to'])) $check += 2;
+  $today = time();
+  
+  if ($check > 0)  {
+    // filter by time range
+    switch ($check) {
+      case '1':
+        $xtra = ' where exp_time > ' . totime($filter['from']);
+      break;
+      case '2':
+        $xtra = ' where exp_time < ' . totime($filter['to']);
+      break;
+      case '3':
+        $xtra = ' where (exp_time between '. totime($filter['from']) .' and ' . totime($filter['to']) . ')';
+      break;
+    }
+    $filter['to'] = totime($filter['to']);
+    if ($filter['to'] < $today) $filter['to'] = $today;
+    $p1 = $today + ($filter['to'] - $today) / 2;
+  }
+  else {
+    // filter by time amount
+    if (empty($filter['time'])) $filter['time'] = 90;
+    $filter['to'] = (time() + $filter['time'] * 60 * 60 * 24);
+    $xtra = 'where exp_time < '. $filter['to'];
+    // die($xtra);
+    if ($filter['to'] < $today) $filter['to'] = $today;
+    $p1 = $today + ($filter['to'] - $today) / 2;
+  }
+
+  if (empty($filter['keyword'])) $filter['keyword'] = '';
+
+  if (strlen($filter['list'])) {
+    $list[]= 0;
+    $list = implode(', ', $list);
+    $sql = 'select a.* from `'. VAC_PREFIX .'_expire` a inner join `'. VAC_PREFIX .'_item` b on a.rid = b.id '. $xtra .' and b.name like "%'. $filter['keyword'] .'%" and a.number > 0 and cate_id in ('. $list .') order by exp_time desc';
+  }
+  else {
+    $sql = 'select a.* from `'. VAC_PREFIX .'_expire` a inner join `'. VAC_PREFIX .'_item` b on a.rid = b.id '. $xtra .' and b.name like "%'. $filter['keyword'] .'%" and a.number > 0 order by exp_time desc';
+  }
+  // die($sql);
+  $query = $db->query($sql);
+  // var_dump($query);die();
+
+  $index = 1;
+  // echo date('d/m/Y', $p1);die();
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $item = getItemId($row['rid']);
+    if ($row['exp_time'] < $today) {
+      $xtpl->assign('color', 'redbg');
+    }
+    else if ($row['exp_time'] < $p1) {
+      $xtpl->assign('color', 'yellowbg');
+    }
+    else {
+      $xtpl->assign('color', '');
+    }
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('name', $item['name']);
+    $xtpl->assign('number', $row['number']);
+    $xtpl->assign('time', date('d/m/Y', $row['exp_time']));
+    $xtpl->parse('main.row');
+  }
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function expireModal() {
+  $xtpl = new XTemplate("modal.tpl", PATH2);
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function expireIdList() {
+  global $db;
+
+  $query = $db->query('select id from `'. VAC_PREFIX .'_expire`');
+  $list = array();
+  while ($row = $query->fetch()) {
+    $list[] = $row['id'];
+  }
+  return $list;
+}
+
+function getItemList() {
+  global $db;
+
+  $query = $db->query('select * from `'. VAC_PREFIX .'_item`');
+  $list = array();
+  while($row = $query->fetch()) {
+    $list[] = array('id' => $row['id'], 'name' => $row['name'], 'key' => convert($row['name']));
+  }
+  return json_encode($list, JSON_UNESCAPED_UNICODE);
+}
+
+function expireContent() {
+  global $db, $filter;
+
+  $filter['type'] = intval($filter['type']);
+  $xtra = 'order by id desc';
+  switch ($filter['type']) {
+    case 1:
+      $xtra = 'order by exp_time asc';
+    break;
+    case 2:
+      $xtra = 'order by exp_time desc';
+    break;
+  }
+
+  $xtpl = new XTemplate("list.tpl", PATH2);
+  $query = $db->query('select count(*) as number from `'. VAC_PREFIX .'_expire` a inner join `'. VAC_PREFIX .'_item` b on a.rid = b.id where b.name like "%'. $filter['keyword'] .'%"');
+  $number = $query->fetch()['number'];
+
+  // die('select * from `'. PREFIX .'row` '. $xtra .' desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+  $query = $db->query('select a.*, b.name from `'. VAC_PREFIX .'_expire` a inner join `'. VAC_PREFIX .'_item` b on a.rid = b.id where b.name like "%'. $filter['keyword'] .'%" '. $xtra .' limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+  $index = $filter['limit'] * ($filter['page'] - 1) + 1;
+  while ($row = $query->fetch()) {
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('rid', $row['rid']);
+    $xtpl->assign('name', $row['name']);
+    $xtpl->assign('number', $row['number']);
+    $xtpl->assign('time', date('d/m/Y', $row['exp_time']));
+    $xtpl->parse('main.row');
+  }
+  $xtpl->assign('nav', navList($number, $filter['page'], $filter['limit'], 'goPage'));
+  $xtpl->parse('main');
+  return $xtpl->text();
 }
