@@ -1,4 +1,19 @@
 <!-- BEGIN: main -->
+<div class="modal" id="statistic-modal" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="form-group">
+          Thống kê mặt hàng hết hạn
+          <div type="button" class="close" data-dismiss="modal"> &times; </div> <br><br>
+        </div>
+
+        <div id="statistic-content"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="modal-number" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">

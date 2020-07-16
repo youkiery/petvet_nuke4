@@ -30,7 +30,7 @@ if (!empty($action)) {
       $date = $nv_Request->get_string('date', 'post', '');
 
       if (!checkItemId($id)) {
-        $sql = 'insert into `'. PREFIX .'item` (name, code, number, cate_id, update_time) values("'. $name .'", "", "", '. getFirstCateid() .', '. time() .')';
+        $sql = 'insert into `'. VAC_PREFIX .'_item` (name, code, number, cate_id, update_time) values("'. $name .'", "", "", '. getFirstCateid() .', '. time() .')';
         $db->query($sql);
         $id = $db->lastInsertId();
         $result['item'] = array(
@@ -39,11 +39,11 @@ if (!empty($action)) {
           'key' => convert($name)
         );
       }
-      $query = $db->query('insert into `'. PREFIX .'row` (rid, exp_time, number, update_time) values('. $id .', "'. totime($date) .'", '. $number .', "'. time() .'")');
+      $query = $db->query('insert into `'. VAC_PREFIX .'_expire` (rid, exp_time, number, update_time) values('. $id .', "'. totime($date) .'", '. $number .', "'. time() .'")');
       if ($query) {
         $result['status'] = 1;
         $result['notify'] = 'Đã thêm';
-        $result['list'] = expIdList();
+        $result['list'] = expireIdList();
         $result['html'] = expireContent();
       }
     break;
@@ -64,8 +64,8 @@ if (!empty($action)) {
         $result['notify'] = 'Hàng hoá không tồn tại';
       }
       else {
-        // die('update `'. PREFIX .'row` set rid = "'. $rid .'", number = '. $number .', exp_time = "'. totime($date) .'", update_time = '. time() .' where id = ' . $id);
-        $query = $db->query('update `'. PREFIX .'row` set rid = "'. $rid .'", number = '. $number .', exp_time = "'. totime($date) .'", update_time = '. time() .' where id = ' . $id);
+        // die('update `'. VAC_PREFIX .'_expire` set rid = "'. $rid .'", number = '. $number .', exp_time = "'. totime($date) .'", update_time = '. time() .' where id = ' . $id);
+        $query = $db->query('update `'. VAC_PREFIX .'_expire` set rid = "'. $rid .'", number = '. $number .', exp_time = "'. totime($date) .'", update_time = '. time() .' where id = ' . $id);
         if ($query) {
           $result['status'] = 1;
           $result['notify'] = 'Đã lưu';
@@ -75,17 +75,17 @@ if (!empty($action)) {
     case 'remove':
       $id = $nv_Request->get_int('id', 'post', '');
 
-      $query = $db->query('delete from `'. PREFIX .'row` where id = ' . $id);
+      $query = $db->query('delete from `'. VAC_PREFIX .'_expire` where id = ' . $id);
       if ($query) {
         $result['status'] = 1;
         $result['notify'] = 'Đã xóa';
-        $result['list'] = expIdList();
+        $result['list'] = expireIdList();
         $result['html'] = expireContent();
       }
     break;
     case 'filter':
       $result['status'] = 1;
-      $result['list'] = expIdList();
+      $result['list'] = expireIdList();
       $result['html'] = expireContent();
     break;
     case 'get-update-number':
@@ -100,8 +100,8 @@ if (!empty($action)) {
       if (count($list)) {
         foreach ($list as $id => $number) {
           $total++;
-          // die('update `'. PREFIX .'row` set number = '. $number .' where id = ' . $id);
-          $query = $db->query('update `'. PREFIX .'row` set number = '. $number .' where id = ' . $id);
+          // die('update `'. VAC_PREFIX .'_expire` set number = '. $number .' where id = ' . $id);
+          $query = $db->query('update `'. VAC_PREFIX .'_expire` set number = '. $number .' where id = ' . $id);
           if ($query) {
             $count++;
           }
@@ -124,8 +124,8 @@ if (!empty($action)) {
         else {
           if (!checkItemName($row[0])) {
             // insert item
-            // echo 'insert into `'. PREFIX .'item` (name, update_time) values("'. $row[0] .'", "'. time() .'")<br>';
-            $query = $db->query('insert into `'. PREFIX .'item` (name, update_time) values("'. $row[0] .'", "'. time() .'")');
+            // echo 'insert into `'. VAC_PREFIX .'_item` (name, update_time) values("'. $row[0] .'", "'. time() .'")<br>';
+            $query = $db->query('insert into `'. VAC_PREFIX .'_item` (name, update_time) values("'. $row[0] .'", "'. time() .'")');
 
             if ($query) {
               $id = $db->lastInsertId();
@@ -139,8 +139,8 @@ if (!empty($action)) {
             $error[] = 'Dòng ' . $count . ': Lỗi thêm hàng hóa (' . $row[1] . ')';
           }
           else {
-            // echo 'insert into `'. PREFIX .'row` (rid, exp_time, update_time) values("'. $id .'", "'. totime($row[1]) .'", "'. time() .'")<br>';
-            $query = $db->query('insert into `'. PREFIX .'row` (rid, exp_time, number, update_time) values("'. $id .'", "'. totime($row[2]) .'", '. $row[1] .', "'. time() .'")');
+            // echo 'insert into `'. VAC_PREFIX .'_expire` (rid, exp_time, update_time) values("'. $id .'", "'. totime($row[1]) .'", "'. time() .'")<br>';
+            $query = $db->query('insert into `'. VAC_PREFIX .'_expire` (rid, exp_time, number, update_time) values("'. $id .'", "'. totime($row[2]) .'", '. $row[1] .', "'. time() .'")');
             if ($query) {
               $inserted ++;
             }

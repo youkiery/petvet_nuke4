@@ -28,7 +28,8 @@
 </div>
 <div class="form-group text-center">
   <button class="btn btn-info" onclick="insert()"> Thêm hạn sử dụng </button>
-  <button class="btn btn-info" onclick="excel()"> Thêm bằng excel </button>
+  <button class="btn btn-warning" onclick="statisticModal()"> Thống kê </button>
+  <!-- <button class="btn btn-info" onclick="excel()"> Thêm bằng excel </button> -->
 </div>
 <label class="form-inline">
   <input type="text" class="form-control" id="filter-keyword" placeholder="Từ khóa tìm kiếm">
@@ -53,8 +54,8 @@
 </button> -->
 
 <script src="/modules/core/js/vhttp.js"></script>
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jszip.js"></script>
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/xlsx.js"></script>
+<!-- <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jszip.js"></script>
+<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/xlsx.js"></script> -->
 <script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/jquery-ui/jquery-ui.min.js"></script>
 <script type="text/javascript"
   src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
@@ -83,6 +84,10 @@
     });
     installCheckAll()
   })
+
+  function statisticModal() {
+    $('#statistic-modal').modal('show')
+  }
 
   function convert(str) {
     str = str.toLowerCase().trim();
@@ -272,55 +277,55 @@
     })
   }
 
-  function excel() {
-    $("#modal-excel").modal('show')
-  }
+  // function excel() {
+  //   $("#modal-excel").modal('show')
+  // }
 
-  var ExcelToJSON = function () {
-    this.parseExcel = function (file) {
-      reset()
-      var reader = new FileReader();
+  // var ExcelToJSON = function () {
+  //   this.parseExcel = function (file) {
+  //     reset()
+  //     var reader = new FileReader();
 
-      reader.onload = function (e) {
-        var data = e.target.result;
-        var workbook = XLSX.read(data, {
-          type: 'binary'
-        });
+  //     reader.onload = function (e) {
+  //       var data = e.target.result;
+  //       var workbook = XLSX.read(data, {
+  //         type: 'binary'
+  //       });
 
-        // workbook.SheetNames.forEach(function(sheetName) {
-        // Here is your object
-        var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[workbook.SheetNames[0]]);
-        pars = JSON.stringify(XL_row_object);
+  //       // workbook.SheetNames.forEach(function(sheetName) {
+  //       // Here is your object
+  //       var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[workbook.SheetNames[0]]);
+  //       pars = JSON.stringify(XL_row_object);
 
-        if (pars.length > 10) {
-          gals = convertobj(XL_row_object)
-          posted()
-        }
-        // })
-        document.getElementById('file').value = null;
-      };
+  //       if (pars.length > 10) {
+  //         gals = convertobj(XL_row_object)
+  //         posted()
+  //       }
+  //       // })
+  //       document.getElementById('file').value = null;
+  //     };
 
-      reader.onerror = function (ex) {
-        showNotice("Tệp excel chọn bị lỗi, không thể trích xuất dữ liệu")
-        console.log(ex);
-      };
+  //     reader.onerror = function (ex) {
+  //       showNotice("Tệp excel chọn bị lỗi, không thể trích xuất dữ liệu")
+  //       console.log(ex);
+  //     };
 
-      if (file) {
-        reader.readAsBinaryString(file);
-      }
-    };
-  };
-  var js = new ExcelToJSON()
+  //     if (file) {
+  //       reader.readAsBinaryString(file);
+  //     }
+  //   };
+  // };
+  // var js = new ExcelToJSON()
 
-  function tick(e) {
-    selectFile = e.target.files[0]
-    js.parseExcel(selectFile)
-    reset()
-  }
+  // function tick(e) {
+  //   selectFile = e.target.files[0]
+  //   js.parseExcel(selectFile)
+  //   reset()
+  // }
 
-  function refresh() {
-    js.parseExcel(selectFile)
-  }
+  // function refresh() {
+  //   js.parseExcel(selectFile)
+  // }
 
   function reset() {
     $("#notice").html('')
@@ -336,19 +341,13 @@
   }
 
   function posted() {
-    $.post(
-      strHref,
-      { action: 'check', data: gals, filter: checkFilter() },
-      (response, status) => {
-        checkResult(response, status).then(data => {
-          $("#content").html(data['html'])
-          $("#notice").html(data['notify'])
-          if (data['error']) {
-            $("#error").html(data['error'])
-          }
-        }, () => { })
+    vhttp.checkelse('', { action: 'check', data: gals, filter: checkFilter() }).then(data => {
+      $("#content").html(data['html'])
+      $("#notice").html(data['notify'])
+      if (data['error']) {
+        $("#error").html(data['error'])
       }
-    )
+    })
   }
 </script>
 <!-- END: main -->

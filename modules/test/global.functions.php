@@ -2374,3 +2374,86 @@ function getCategoryList() {
   }
   return $list;
 }
+
+function checkItemName($name, $rid = 0) {
+  global $db;
+
+  if ($rid) {
+    $query = $db->query('select * from `'. VAC_PREFIX .'_item` where name = "'. $name .'" and id = ' . $rid);
+    if (!empty($query->fetch())) {
+      return 0;
+    }
+  }
+  $query = $db->query('select * from `'. VAC_PREFIX .'_item` where name = "'. $name .'"');
+  if (!empty($query->fetch())) {
+    return 1;
+  }
+  return 0;
+}
+
+function checkItemCode($name, $rid = 0) {
+  global $db;
+
+  if ($rid) {
+    $query = $db->query('select * from `'. VAC_PREFIX .'_item` where code = "'. $name .'" and id = ' . $rid);
+    if (!empty($query->fetch())) {
+      return 0;
+    }
+  }
+  $query = $db->query('select * from `'. VAC_PREFIX .'_item` where name = "'. $name .'"');
+  if (!empty($query->fetch())) {
+    return 1;
+  }
+  return 0;
+}
+
+function checkItemId($id) {
+  global $db;
+
+  $query = $db->query('select * from `'. VAC_PREFIX .'_item` where id = ' . $id);
+  if (!empty($query->fetch())) {
+    return 1;
+  }
+  return 0;
+}
+
+// check if category exist, if not, insert to table
+// return category id
+function checkCategory($catename) {
+  global $db;
+  $catename = mb_strtolower($catename);
+
+  $query = $db->query('select * from `'. VAC_PREFIX .'_category` where name = "'. $catename .'"');
+  $cate = $query->fetch();
+  $id = 0; // default id = 0
+  if (empty($cate) || empty($cate['id'])) {
+    $query = $db->query('insert into `'. VAC_PREFIX .'_category` (name) values("'. $catename .'")');
+    if ($query) {
+      $id = $db->lastInsertId();
+    }
+  } else {
+    $id = $cate['id'];
+  }
+  return $id;
+}
+
+function getFirstCateid() {
+  global $db;
+
+  $sql = 'select * from `'. VAC_PREFIX .'_item` limit 1';
+  $query = $db->query($sql);
+  if (!empty($item = $query->fetch())) return $item['id'];
+  return 0;
+}
+
+function convert($str) {
+  $str = mb_strtolower($str);
+  $str = preg_replace("/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/", 'a', $str);
+  $str = preg_replace("/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/", 'e', $str);
+  $str = preg_replace("/(ì|í|ị|ỉ|ĩ)/", 'i', $str);
+  $str = preg_replace("/(ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)/", 'o', $str);
+  $str = preg_replace("/(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ)/", 'u', $str);
+  $str = preg_replace("/(ỳ|ý|ỵ|ỷ|ỹ)/", 'y', $str);
+  $str = preg_replace("/(đ)/", 'd', $str);
+  return $str;
+}
