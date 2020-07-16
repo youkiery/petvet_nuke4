@@ -617,9 +617,11 @@ function getDoctorList2() {
   return $list;
 }
 
-function getdoctorlist3() {
+function getdoctorlist3($daily = 0) {
   global $db, $db_config;
-  $sql = "select b.userid, b.username, b.first_name, b.last_name, concat(b.last_name, ' ', b.first_name) as fullname, a.manager, a.except from " . VAC_PREFIX . "_user a inner join `". $db_config['prefix'] ."_users` b on a.userid = b.userid";
+  $xtra = '';
+  if ($daily) $xtra = 'where daily = 1';
+  $sql = "select b.userid, b.username, b.first_name, b.last_name, concat(b.last_name, ' ', b.first_name) as fullname, a.manager, a.except from " . VAC_PREFIX . "_user a inner join `". $db_config['prefix'] ."_users` b on a.userid = b.userid ". $xtra;
 
   $result = $db->query($sql);
   $doctor = array();
@@ -658,13 +660,11 @@ function doctorList2() {
 }
 
 function wconfirm($date) {
-  global $db, $db_config, $userList;
+  global $db, $userList;
 
   $startDate = date ('N', $date) == 1 ? strtotime(date('Y-m-d', $date)) : strtotime('last monday', $date);
   $endDate = strtotime('next monday', $date);
   $xtpl = new XTemplate("ad_schedule_list.tpl", PATH2);
-
-
 
   $xtpl->assign("from", date("d/m/Y", $startDate));
   $xtpl->assign("to", date("d/m/Y", $endDate - 1));
@@ -1979,7 +1979,7 @@ function adminSummary($startDate = 0, $endDate = 0) {
 }
 
 function scheduleList($startDate, $endDate) {
-  global $db, $datetime, $work;
+  global $db, $datetime;
   $xtpl = new XTemplate("schedule_list.tpl", PATH2);
 
   $userList = userList();
@@ -1992,7 +1992,7 @@ function scheduleList($startDate, $endDate) {
   $count = 0;
 
   while ($count < 7) {
-    $xtpl->assign("date", date("d/m/Y", $date));
+    $xtpl->assign("date", date("d/m", $date));
     $xtpl->assign("day", $datetime[date("N", $date)]);
 
     if ($currentRow["time"] == $date) {

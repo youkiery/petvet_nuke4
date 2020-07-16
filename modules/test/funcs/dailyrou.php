@@ -12,6 +12,7 @@ if (!defined('NV_IS_MOD_QUANLY')) {
 }
 
 define("A_DAY", 60 * 60 * 24);
+define("REGISTABLED", 1);
 $page_title = "Đăng ký lịch nghỉ/trực";
 checkUserPermit(NO_OVERCLOCK);
 
@@ -29,7 +30,8 @@ if (!empty($user)) {
 $this_week = date("N") == 1 ? strtotime(date("Y-m-d", time())) : strtotime(date("Y-m-d", strtotime('last monday')));
 $next_week = $this_week + A_DAY * 7 - 1;
 
-$userList = getdoctorList3();
+$userList = getdoctorList3(REGISTABLED);
+// var_dump($userList);die();
 
 $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
@@ -226,7 +228,7 @@ if ($type) {
   $xtpl->assign("admin", "true");
   $list = getdoctorlist3();
 
-  foreach ($list as $doctor) {
+  foreach ($userList as $doctor) {
     $xtpl->assign("select", "");
     if ($doctor['userid'] == $user_info["userid"]) $xtpl->assign("select", "selected");
     $xtpl->assign("doctor_value", $doctor["userid"]);

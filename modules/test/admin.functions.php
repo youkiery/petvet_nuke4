@@ -36,10 +36,13 @@ function userContent() {
     $xtpl->assign('fullname', $info['fullname']);
     $xtpl->assign('manager_value', intval(!$row['manager']));
     $xtpl->assign('except_value', intval(!$row['except']));
+    $xtpl->assign('daily_value', intval(!$row['daily']));
     if ($row['manager']) $xtpl->assign('btn_manager', 'btn-warning');
     else $xtpl->assign('btn_manager', 'btn-info');
     if ($row['except']) $xtpl->assign('btn_except', 'btn-warning');
     else $xtpl->assign('btn_except', 'btn-info');
+    if ($row['daily']) $xtpl->assign('btn_daily', 'btn-warning');
+    else $xtpl->assign('btn_daily', 'btn-info');
     $xtpl->parse('main.row');
   }
   $xtpl->parse('main');
