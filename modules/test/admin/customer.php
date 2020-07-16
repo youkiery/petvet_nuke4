@@ -83,12 +83,11 @@ if($action) {
   die();
 }
 
-
 $customerid = $nv_Request->get_string('customerid', 'get', "");
 if (!empty($customerid)) {
   $page_title = $lang_module["patient_title2"];
   $patients = getPatientsList2($customerid);
-  $xtpl = new XTemplate("customer2.tpl", NV_ROOTDIR . "/themes/" . $global_config['admin_theme'] . "/modules/" . $module_file);
+  $xtpl = new XTemplate("list.tpl", PATH2);
   $xtpl->assign("lang", $lang_module);
   $xtpl->assign("customer", $patients["customer"]);
   $xtpl->assign("customerid", $customerid);
@@ -110,7 +109,7 @@ if (!empty($customerid)) {
 }
 else {
   $page_title = $lang_module["customer_title"];
-  $xtpl = new XTemplate("customer.tpl", NV_ROOTDIR . "/themes/" . $global_config['admin_theme'] . "/modules/" . $module_file);
+  $xtpl = new XTemplate("main.tpl", PATH2);
   $xtpl->assign("lang", $lang_module);
   
 	$pan = $nv_Request->get_string('pan', 'get', "");
@@ -191,4 +190,3 @@ $contents = $xtpl->text("main");
 include (NV_ROOTDIR . "/includes/header.php");
 echo nv_admin_theme($contents);
 include (NV_ROOTDIR . "/includes/footer.php");
-?>
