@@ -156,6 +156,20 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = expireStatisticContent();
     break;
+    case 'done':
+      $id = $nv_Request->get_string('id', 'post', 0);
+
+      if (empty(getRowId($id))) {
+        $result['notify'] = 'Không tồn tại';
+      }
+      else {
+        if ($db->query('update `'. VAC_PREFIX .'_expire` set number = 0 where id = ' . $id)) {
+          $result['status'] = 1;
+          $result['html'] = expireStatisticContent();
+          $result['notify'] = 'Đã cập nhật';
+        }
+      }
+    break;
   }
   echo json_encode($result);
   die();

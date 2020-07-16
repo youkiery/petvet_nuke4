@@ -13,6 +13,8 @@
 
 {modal}
 
+<div id="msgshow"></div>
+
 <div class="row">
   <div class="col-sm-8">
     <div class="relative">
@@ -69,6 +71,7 @@
   src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <script>
   var global = {
+    id: 0,
     page: 1,
     item: JSON.parse('{item}'),
     items: JSON.parse('{items}'),
@@ -237,6 +240,24 @@
         }
       )
     }
+  }
+
+  function done(id) {
+    global['id'] = id
+    $("#done-modal").modal('show')
+  }
+
+  function doneSubmit() {
+    $.post(
+      '',
+      {action: 'done', id: global['id']},
+      (response, status) => {
+        checkResult(response, status).then(data => {
+          $('#statistic-content').html(data['html'])
+          $("#done-modal").modal('hide')
+        }, () => {}) 
+      }
+    )
   }
 
   function updateNumberSubmit() {

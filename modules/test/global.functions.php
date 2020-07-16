@@ -2296,6 +2296,16 @@ function checkLastBlood() {
   return 1;
 }
 
+function getRowId($id) {
+  global $db;
+
+  $query = $db->query('select * from `'. VAC_PREFIX .'_expire` where id = ' . $id);
+  if ($row = $query->fetch()) {
+    return $row;
+  }
+  return array();
+}
+
 function loadModal($file_name) {
   $xtpl = new XTemplate($file_name . '.tpl', PATH2);
   $xtpl->parse('main');
