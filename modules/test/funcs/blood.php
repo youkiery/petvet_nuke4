@@ -18,6 +18,7 @@ if (!empty($user)) {
   else $type = 1;
 }
 $link = '/'. $module_name .'/'. $op;
+// $sample = checkBloodSample();
 
 $action = $nv_Request->get_string('action', 'post', '');
 if (!empty($action)) {

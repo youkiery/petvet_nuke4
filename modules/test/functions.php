@@ -561,7 +561,7 @@ function xrayContent()
 
 function bloodModal()
 {
-  global $db, $db_config, $user_info, $remind_title;
+  global  $user_info;
   $xtpl = new XTemplate("modal.tpl", PATH2);
   $xtpl->assign('statistic_content', bloodStatistic());
 
@@ -950,7 +950,7 @@ function bloodStatistic()
 
   if (count($data)) {
     foreach ($data as $doctorid => $counter) {
-      $xtpl->assign('doctor', $doctor[$doctorid]);
+      $xtpl->assign('doctor', $doctor[$doctorid]['first_name']);
       $xtpl->assign('number', $counter['number']);
       $xtpl->assign('real', $counter['real']);
       $xtpl->assign('count', $counter['count']);

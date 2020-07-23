@@ -787,6 +787,19 @@ function checkLastBlood() {
   return 1;
 }
 
+// function checkBloodSample() {
+//   global $db, $db_config, $module_name;
+
+//   $sql = 'select * from `'. $db_config['prefix'] .'_config` where config_name = "'. $module_name .'_blood_sample"';
+//   $query = $db->query($sql);
+//   if (!empty($row = $query->fetch())) {
+//     return $row['config_value'];
+//   }
+//   $sql = 'insert into `'. $db_config['prefix'] .'_config` (lang, module, config_name, config_value) values ("sys", "site", "'. $module_name .'_blood_sample", "1")';
+//   $db->query($sql);
+//   return 1;
+// }
+
 function getRowId($id) {
   global $db;
 
