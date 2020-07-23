@@ -559,6 +559,44 @@ function xrayContent()
   return $xtpl->text();
 }
 
+
+function spaModal()
+{
+  global $lang_module, $weight_option, $spa_option;
+  $xtpl = new XTemplate("modal.tpl", PATH2);
+  $xtpl->assign("lang", $lang_module);
+
+  $list = getdoctorlist();
+  foreach ($list as $doctor) {
+    $xtpl->assign("doctor_value", $doctor["userid"]);
+    $xtpl->assign("doctor_name", $doctor["fullname"]);
+    $xtpl->parse("main.doctor");
+    $xtpl->parse("main.doctor2");
+    $xtpl->parse("main.doctor3");
+  }
+  
+  foreach ($weight_option as $key => $value) {
+    $xtpl->assign("weight_value", $key);
+    $xtpl->assign("weight_name", $value);
+    $xtpl->parse("main.weight");
+    $xtpl->parse("main.weight2");
+  }
+  
+  $xtpl2 = new XTemplate("check.tpl", PATH2);
+  $index = 1;
+  
+  foreach ($spa_option as $key => $value) {
+    $xtpl2->assign("c_index", $index);
+    $xtpl2->assign("c_content", $value);
+    $xtpl2->assign("c_id", $key);
+    $xtpl2->parse("main");
+    $index ++;
+  }
+  $xtpl->assign("insert_content", $xtpl2->text());
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
 function bloodModal()
 {
   global  $user_info;
@@ -982,10 +1020,10 @@ function checkUserPermit($overclock = 0)
   if ($user_info && $user_info["userid"]) {
     $sql = "select * from `" . VAC_PREFIX . "_user` where userid = $user_info[userid]";
     $query = $db->query($sql);
-    if (empty($query->fetch())) {
+    if (empty($permit = $query->fetch())) {
       $check = true;
       $contents = "Tài khoản không có quyền truy cập";
-    } else if ($overclock) {
+    } else if ($overclock && !$permit['manager']) {
       $today = strtotime(date('Y/m/d'));
       $time = time();
       $fromTime = $today + $vacconfigv2['hour_from'] * 60 * 60 + $vacconfigv2['minute_from'] * 60;
