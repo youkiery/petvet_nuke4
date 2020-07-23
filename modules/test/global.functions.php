@@ -51,12 +51,10 @@ function updateImagev2($image, $id, $path) {
 
   if (!empty($image)) {
     $sql = 'select * from `'. $path .'` where id = ' . $id;
-    die($sql);
     $query = $db->query($sql);
   
     if (empty($row = $query->fetch()) || $row['image'] != $image) {
       $sql = 'update `'. $path .'` set image = "'. $image .'" where id = ' . $id;
-      die($sql);
       $db->query($sql);
     }
   }
@@ -406,7 +404,7 @@ function user_vaccine($keyword = '') {
 }
 
 function spa_list() {
-  global $db, $module_info, $module_file, $lang_module, $global_config;
+  global $db, $module_file, $lang_module, $global_config;
   $xtpl = new XTemplate("list.tpl", PATH2);
   $status = array("Chưa xong", "Đã xong");
   $from = strtotime(date("Y-m-d"));
@@ -428,17 +426,20 @@ function spa_list() {
     $customer_query = $db->query($sql);
     $customer = $customer_query->fetch();
     $xtpl->assign("index", $index);
-    // var_dump($doctor);
-    // var_dump($row["doctorid"]);
-    // die();
+    $xtpl->assign("color", '');
+    $xtpl->assign("check_avai", '');
+    $xtpl->assign("pay_avai", '');
     if ($row["done"] > 0) {
       $row["done"] = date("H:i:s", $row["done"]);
+      $xtpl->assign("check_avai", 'disabled');
+      $xtpl->assign("color", 'blue');
     }
     else {
       $row["done"] = $status[0];
     }
     if ($row["payment"]) {
-      $xtpl->assign("payment", $image);
+      $xtpl->assign("pay_avai", 'disabled');
+      $xtpl->assign("color", 'green');
     }
     else {
       $xtpl->assign("payment", "");

@@ -1,248 +1,111 @@
 <!-- BEGIN: main -->
 <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
 <div class="msgshow" id="msgshow"></div>
+<style>
+  .boxed {
+    display: inline-block;
+    width: 49%;
+  }
+
+  .rows::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+
+  .green {
+    background: #dfd;
+  }
+  .blue {
+    background: #ddf;
+  }
+
+  .col-1,
+  .col-2,
+  .col-3,
+  .col-4,
+  .col-5,
+  .col-6,
+  .col-7,
+  .col-8,
+  .col-9,
+  .col-10,
+  .col-11,
+  .col-12 {
+    float: left;
+  }
+
+  .col-1 {
+    width: 8.33%;
+  }
+
+  .col-2 {
+    width: 16.66%;
+  }
+
+  .col-3 {
+    width: 25%;
+  }
+
+  .col-4 {
+    width: 33.33%;
+  }
+
+  .col-5 {
+    width: 41.66%;
+  }
+
+  .col-6 {
+    width: 50%;
+  }
+
+  .col-7 {
+    width: 58.33%;
+  }
+
+  .col-8 {
+    width: 66.66%;
+  }
+
+  .col-9 {
+    width: 75%;
+  }
+
+  .col-10 {
+    width: 83.33%;
+  }
+
+  .col-11 {
+    width: 91.66%;
+  }
+
+  .col-12 {
+    width: 100%;
+  }
+</style>
 
 <!-- <div style="width: 100%; height: 100%; top: 0px; left: 0px; position: fixed; background: black; opacity: 0.5; z-index: 2;">
 </div> -->
 
-<div class="modal fade" id="img" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body text-center">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <img class="img-responsive" id="img-src">
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="customer_modal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">{lang.spa_custom_title}</h4>
-      </div>
-      <div class="modal-body">
-        <form onsubmit="return customer_submit(event)">
-          <div class="row">
-            <div class="form-group col-md-12">
-              <label>{lang.customer}</label>
-              <input type="text" class="form-control" id="customer_name">
-            </div>
-            <div class="form-group col-md-12">
-              <label>{lang.phone}</label>
-              <input type="text" class="form-control" id="customer_phone">
-            </div>
-          </div>
-          <div class="form-group">
-            <label>{lang.address}</label>
-            <input type="text" class="form-control" id="customer_address">
-          </div>
-          <button class="btn btn-info">
-            {lang.submit}
-          </button>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-info" data-dismiss="modal">
-          {lang.cancel}
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="insert" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">{lang.spa_insert}</h4>
-      </div>
-      <div class="modal-body">
-        <form onsubmit="return insert(event)">
-          <div class="form-group">
-            <label>{lang.customer} <span class="small_icon" data-toggle="modal" data-target="#customer_modal"> +
-              </span></label>
-            <div class="relative">
-              <input class="form-control" id="customer" type="text" name="customer" autocomplete="off">
-              <div class="suggest"></div>
-            </div>
-          </div>
-          <div class="form-group row">
-            <div class="col-md-12">
-              <b>
-                {lang.customer_name}:
-              </b>
-              <span id="customer_name_info"> </span>
-            </div>
-            <div class="col-md-12">
-              <b>
-                {lang.customer_number}:
-              </b>
-              <span id="customer_phone_info"> </span>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>{lang.spa_weight}</label>
-            <select class="form-control" id="weight">
-              <!-- BEGIN: weight -->
-              <option value="{weight_value}">{weight_name}</option>
-              <!-- END: weight -->
-            </select>
-          </div>
-          <div class="row form-group">
-            Hình ảnh
-            <label class="btn btn-info" for="file">
-              <input id="file" type="file" style="display: none" onchange="onselected(this)">
-              <span class="glyphicon glyphicon-upload"></span>
-            </label>
-            <img id="blah" width="64px" height="64px">
-          </div>
-          <div class="form-group">
-            <label>{lang.spa_doctor}</label>
-            <select class="form-control" id="doctor">
-              <!-- BEGIN: doctor -->
-              <option value="{doctor_value}">{doctor_name}</option>
-              <!-- END: doctor -->
-            </select>
-          </div>
-          <div class="form-group">
-            <label>{lang.spa_doctor2}</label>
-            <select class="form-control" id="doctor2">
-              <!-- BEGIN: doctor2 -->
-              <option value="{doctor_value}">{doctor_name}</option>
-              <!-- END: doctor2 -->
-            </select>
-          </div>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>
-                  {lang.index}
-                </th>
-                <th>
-                  {lang.content}
-                </th>
-                <th>
-
-                </th>
-              </tr>
-            </thead>
-            <tbody id="insert_content">
-              {insert_content}
-            </tbody>
-          </table>
-          <div class="form-group">
-            <label>
-              {lang.note}
-            </label>
-            <input type="text" class="form-control" id="c_note">
-          </div>
-          <button class="btn btn-info">
-            {lang.submit}
-          </button>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-info" data-dismiss="modal">
-          {lang.cancel}
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="detail" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">{lang.spa_detail}</h4>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <span> {lang.doctor}: </span>
-          <span id="detail_doctor"></span>
-        </div>
-        <div class="form-group">
-          <span> {lang.spa_from}: </span>
-          <span id="detail_from"></span>
-        </div>
-        <div class="form-group">
-          <label> {lang.spa_weight} </label>
-          <select class="form-control" id="detail_weight">
-            <!-- BEGIN: weight -->
-            <option value="{weight_value}">{weight_name}</option>
-            <!-- END: weight -->
-          </select>
-        </div>
-        <div class="form-group">
-          <label> {lang.spa_doctor2} </label>
-          <select class="form-control" id="detail_doctor2">
-            <!-- BEGIN: doctor3 -->
-            <option value="{doctor_value}">{doctor_name}</option>
-            <!-- END: doctor3 -->
-          </select>
-        </div>
-        <table class="table small">
-          <thead>
-            <tr>
-              <th>
-                {lang.index}
-              </th>
-              <th>
-                {lang.content}
-              </th>
-              <th>
-
-              </th>
-            </tr>
-          </thead>
-          <tbody id="detail_content">
-
-          </tbody>
-          <tfoot>
-            <tr>
-              <td>
-                {lang.note}
-              </td>
-              <td colspan="2">
-                <input type="text" class="form-control" id="c_note2">
-              </td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-info" onclick="update()" id="btn-detail">
-          {lang.update}
-        </button>
-        <button class="btn btn-info" onclick="detail()" id="btn-detail2">
-          {lang.complete}
-        </button>
-        <button class="btn btn-info" onclick="payment()" id="btn-detail3">
-          {lang.payment}
-        </button>
-        <button class="btn btn-info" data-dismiss="modal">
-          {lang.cancel}
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
+{modal}
 
 <div id="content">
   {content}
 </div>
 
-<button class="btn btn-info" data-toggle="modal" data-target="#insert">
-  {lang.add}
+<button class="btn btn-success" onclick="insert()">
+  Thêm
 </button>
+
 <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-storage.js"></script>
+<script src="/modules/core/js/vhttp.js"></script>
+<script src="/modules/core/js/vremind-5.js"></script>
 <script>
+  var global = {
+    type: 0,
+    id: 0
+  }
   var firebaseConfig = {
     apiKey: "AIzaSyAgxaMbHnlYbUorxXuDqr7LwVUJYdL2lZo",
     authDomain: "petcoffee-a3cbc.firebaseapp.com",
@@ -269,120 +132,83 @@
   var imageType = ['jpg', 'png', 'gif']
   var list = [];
   var customer = 0;
-  var g_id = 0;
   var timer;
   var refresh = 0
   var img = $("#img")
   var imgSrc = $("#img-src")
 
-  $("#detail_content").click((e) => {
-    var row = e.target;
-    if (row.tagName !== "INPUT") {
-      row = e.target.parentElement.children[2].children[0];
-      if (row.checked) {
-        row.checked = false
+  $(document).ready(() => {
+    setInterval(() => {
+      if (!refresh) {
+        refresh = 1
+        vhttp.checkelse('', { action: 'refresh' }).then(data => {
+          $("#content").html(data["list"])
+          refresh = 0
+        })
       }
-      else {
-        row.checked = true
-      }
-    }
-  })
-  $("#customer").blur(() => {
-    setTimeout(() => {
-      $(".suggest").hide()
-    }, 200)
-  })
-  $("#customer").focus(() => {
-    $(".suggest").show()
-  })
-  $("#customer").keyup(e => {
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      $.post(
-        strHref,
-        { action: "getcustomer", key: $("#customer").val() },
-        (response, status) => {
-          var data = JSON.parse(response)
-          $(".suggest").html(data["list"])
-        }
-      )
-    }, 500);
+    }, 10000);
+    vremind.install('#customer', '#customer-suggest', (input) => {
+      return new Promise(resolve => {
+        vhttp.checkelse('', { action: 'get-customer', key: input, type: 0 }).then(data => {
+          resolve(data['list'])
+        })
+      })
+    }, 300, 300)
+    vremind.install('#phone', '#phone-suggest', (input) => {
+      return new Promise(resolve => {
+        vhttp.checkelse('', { action: 'get-customer', key: input, type: 1 }).then(data => {
+          resolve(data['list'])
+        })
+      })
+    }, 300, 300)
   })
 
-  function customer_submit(e) {
-    e.preventDefault()
-    var name = $("#customer_name").val()
-    var phone = $("#customer_phone").val()
-    var address = $("#customer_address").val()
-
-    if (!name) {
-      alert_msg("{lang.no_custom_name}");
-    }
-    else if (!phone) {
-      alert_msg("{lang.no_custom_phone}");
-    }
-    else {
-      $.post(
-        strHref,
-        { action: "custom", name: name, phone: phone, address: address },
-        (response, status) => {
-          var data = JSON.parse(response)
-          if (data["status"]) {
-            customer = data["id"]
-            $("#customer_modal").modal("toggle")
-            $("#customer_name_info").text(name)
-            $("#customer_phone_info").text(phone)
-            alert_msg(data["notify"])
-          }
-          else { alert_msg(data["notify"]) }
-        }
-      )
-    }
+  function insert() {
+    global['type'] = 0;
+    $('[name=spa]').prop('checked', false)
+    $('.insert').show()
+    $('.update').hide()
+    $('#insert-modal').modal('show')
   }
 
   function setcustom(id, name, phone) {
-    customer = id
-    $("#customer_name_info").text(name)
-    $("#customer_phone_info").text(phone)
+    $("#customer").val(name)
+    $("#phone").val(phone)
   }
 
-  function insert(e) {
-    e.preventDefault()
-    if (customer > 0) {
+  function insertSubmit(e) {
+    if (!$('#phone').val().length || !$('#customer').val().length) alert_msg("{lang.no_customer}")
+    else {
       var check = [];
-      $("#insert_content").each((index, element) => {
-        var length = element.children.length
-        for (var i = 0; i < length; i++) {
-          tr = element.children[i];
-          var input = tr.children[2].children[0]
-          var id = input.getAttribute("class")
-          var checking = input.checked
-
-          check.push({ id: id, checking: checking })
-        }
+      $("[name=spa]").each((index, item) => {
+        var id = item.getAttribute("class")
+        var checking = item.checked
+        check.push({ id: id, checking: Number(checking) })
       })
 
       uploader().then(image => {
-        $.post(
-          strHref,
-          { action: "insert", note: $("#c_note").val(), customer: customer, doctor: $("#doctor").val(), doctor2: $("#doctor2").val(), weight: $("#weight").val(), check: check, image: image },
-          (response, status) => {
-            var data = JSON.parse(response);
-            if (data["status"]) {
-              $("#content").html(data["list"])
-              $("#insert").modal("toggle")
-              alert_msg(data["notify"])
-            }
-            else {
-              alert_msg(data["notify"])
-            }
-          }
-        )
+        vhttp.checkelse('', { action: "insert", phone: $('#phone').val(), customer: $('#customer').val(), note: $("#note").val(), doctor: $("#doctor").val(), weight: $("#weight").val(), check: check, image: image }).then(data => {
+          $("#content").html(data["list"])
+          $("#insert-modal").modal("hide")
+        })
       })
     }
-    else {
-      alert_msg("{lang.no_customer}")
-    }
+  }
+  
+  function update() {
+    var check = [];
+    $("[name=spa]").each((index, item) => {
+      var id = item.getAttribute("class")
+      var checking = item.checked
+      check.push({ id: id, checking: Number(checking) })
+    })
+
+    uploader().then(image => {
+      vhttp.checkelse('', { action: "update", note: $("#note").val(), id: global['id'], check: check, image: image }).then(data => {
+        $("#content").html(data["list"])
+        $("#insert-modal").modal("hide")
+      })
+    })
   }
 
   function preview(url) {
@@ -390,131 +216,46 @@
     img.modal('show')
   }
 
-  function update() {
-    if (g_id > 0) {
-      var check = [];
-      $("#detail_content").each((index, element) => {
-        var length = element.children.length
-        for (var i = 0; i < length; i++) {
-          tr = element.children[i];
-          var input = tr.children[2].children[0]
-          var id = input.getAttribute("class")
-          var checking = input.checked
-
-          check.push({ id: id, checking: checking })
-        }
-      })
-
-      uploader().then(image => {
-        $.post(
-          strHref,
-          { action: "update", note: $("#c_note2").val(), doctor: $("#detail_doctor2").val(), weight: $("#detail_weight").val(), customer: g_id, check: check, image: image },
-          (response, status) => {
-            var data = JSON.parse(response);
-            if (data["status"]) {
-              $("#content").html(data["list"])
-              $("#detail").modal("toggle")
-              alert_msg(data["notify"])
-            }
-            else {
-              alert_msg(data["notify"])
-            }
-          }
-        )
-      })
-    }
-    else {
-      alert_msg("{lang.no_customer}")
-    }
-  }
-
-  function payment() {
-    $.post(
-      strHref,
-      { action: "payment", id: g_id },
-      (response, status) => {
-        var data = JSON.parse(response);
-        if (data["status"]) {
-          $("#content").html(data["list"])
-          $("#detail").modal("toggle")
-        }
-        alert_msg(data["notify"])
-      }
-    )
-  }
-
   function view_detail(id) {
-    $("#btn-detail").attr("disabled", "disabled")
-    $("#btn-detail2").attr("disabled", "disabled")
-    $("#btn-detail3").attr("disabled", "disabled")
-    $.post(
-      strHref,
-      { action: "get_detail", id: id },
-      (response, status) => {
-        g_id = id
-        var data = JSON.parse(response);
-        if (data["done"] == 0) {
-          $("#btn-detail").removeAttr("disabled")
-        }
-        if (data["payment"] == 0) {
-          $("#btn-detail2").removeAttr("disabled")
-          $("#btn-detail3").removeAttr("disabled")
-        }
-        $("#detail").modal("toggle")
-        $("#detail_content").html(data["list"])
-        $("#detail_doctor2").val(data["doctorid"])
-        $("#detail_weight").val(data["weight"])
-        $("#detail_doctor").text(data["doctor"])
-        $("#detail_from").text(data["from"])
-        $("#c_note2").val(data["note"])
+    vhttp.checkelse('', { action: "get_detail", id: id }).then(data => {
+      global['id'] = id
+      $("#btn-detail").attr("disabled", true)
+      if (data["done"] == 0 && data["payment"] == 0) {
+        $("#btn-detail").attr("disabled", false)
       }
-    )
-  }
-  function detail() {
-    if (g_id > 0) {
-      var check = [];
-      $("#detail_content").each((index, element) => {
-        var length = element.children.length
-        for (var i = 0; i < length; i++) {
-          tr = element.children[i];
-          var input = tr.children[2].children[0]
-          var id = input.getAttribute("class")
-          var checking = input.checked
 
-          check.push({ id: id, checking: checking })
+      for (const key in data['data']) {
+        if (data['data'].hasOwnProperty(key)) {
+          const item = data['data'][key];
+          $('.' + key).prop('checked', Number(item))
         }
-      })
+      }
 
-      $.post(
-        strHref,
-        { action: "confirm", note: $("#c_note2").val(), doctor: $("#detail_doctor2").val(), customer: g_id, check: check },
-        (response, status) => {
-          var data = JSON.parse(response);
-          $("#detail").modal("toggle")
-          $("#content").html(data["list"])
-          alert_msg(data["notify"])
-        }
-      )
-    }
-    else {
-      alert_msg("{lang.no_customer}")
-    }
+      $("#detail_doctor").text(data["doctor"])
+      $("#detail_from").text(data["from"])
+      $("#detail_weight").text(data["weight"])
+      $("#note").val(data["note"])
+
+      global['type'] = 1
+      $('.insert').hide()
+      $('.update').show()
+      $('#insert-modal').modal('show')
+    })
   }
 
-  setInterval(() => {
-    if (!refresh) {
-      refresh = 1
-      $.post(
-        strHref,
-        { action: "refresh" },
-        (response, status) => {
-          var data = JSON.parse(response);
-          $("#content").html(data["list"])
-          refresh = 0
-        }
-      )
-    }
-  }, 10000);
+  function detail(id) {
+    vhttp.checkelse('', { action: 'confirm', id: id }).then(data => {
+      $("#content").html(data["list"])
+      $('#insert-modal').modal('hide')
+    })
+  }
+
+  function payment(id) {
+    vhttp.checkelse('', { action: 'payment', id: id }).then(data => {
+      $("#content").html(data["list"])
+      $('#insert-modal').modal('hide')
+    })
+  }
 
   function onselected(input) {
     if (input.files && input.files[0]) {
