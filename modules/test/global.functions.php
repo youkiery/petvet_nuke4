@@ -573,7 +573,7 @@ function scheduleList($startDate, $endDate) {
   $count = 0;
 
   while ($count < 7) {
-    $xtpl->assign("date", date("d/m", $date));
+    $xtpl->assign("date", date("d/m/Y", $date));
     $xtpl->assign("day", $datetime[date("N", $date)]);
 
     if ($currentRow["time"] == $date) {
