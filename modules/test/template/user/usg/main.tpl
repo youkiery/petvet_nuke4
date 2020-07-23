@@ -47,6 +47,9 @@
 <div id="html_content">
 	{content}
 </div>
+
+<script src="/modules/core/js/vhttp.js"></script>
+<script src="/modules/core/js/vremind-5.js"></script>
 <script>
 	var g_id = -1
 	var g_customerid = -1
@@ -69,11 +72,27 @@
 	// 	type: {select_status},
 		id: 0,
 	// 	recall: '{recall_date}'
-	}
+  }
+  
+  $(document).ready(() => {
+    vremind.install('#customer_phone', '#customer_phone_suggest', (input) => {
+      return new Promise(resolve => {
+        vhttp.checkelse('', { action: 'customer-remind', name: input, type: 1 }).then(data => {
+          resolve(data['html'])
+        })
+      })
+    }, 500, 300)
+    $('.date').datepicker({
+      format: 'dd-mm-yyyy'
+    });
+  })
 
-	$('.date').datepicker({
-		format: 'dd-mm-yyyy'
-	});
+  function selectCustomer(id, customer, phone, pet_option) {
+    g_customer = id
+    $("#customer_name").val(customer)
+    $("#customer_phone").val(phone)
+    $("#pet_info").html(pet_option)
+  }
 
 	function insertModal() {
 		$("#insert-modal").modal('show')
@@ -154,6 +173,9 @@
 
 	function checkData() {
 		return {
+      name: $("#customer_name").val(),
+      phone: $("#customer_phone").val(),
+      address: $("#customer_address").val(),
 			customer: g_customer,
 			pet: $("#pet_info").val(),
 			usgtime: $("#ngaysieuam").val(),
@@ -162,14 +184,19 @@
 			doctor: $("#doctor").val(),
 			note: $("#note").val()
 		}
+    if (!data['name'].length) return 'Nhập tên khách hàng trước'
+    else if (!data['phone'].length) return 'Nhập tên số điện thoại trước'
+    else if (g_customer && !data['pet']) return 'Thêm thú cưng trước'
+    else if (!data['usgtime'].length) return 'Chọn ngày siêu âm trước'
+    else if (!data['expecttime'].length) return 'Chọn ngày dự sinh trước'
+    else if (!data['doctor']) return 'Chưa có bác sĩ, xin cấu hình trong admin'
 	}
 
 	// thêm siêu âm
 	// khách hàng và thú cưng bắt buộc phải chọn
 	function usgInsertSubmit() {
 		sdata = checkData()
-		if (sdata['customer'] <= 0) alert_msg('Chưa chọn khách hàng')
-		else if (sdata['pet'] <= 0) alert_msg('Chưa chọn thú cưng')
+    if (!sdata['phone']) alert_msg(vaccine)
 		else {
 			vhttp.checkelse('', { action: 'insert-usg', data: sdata }).then(data => {
 				$("#content").html(data['html'])
@@ -424,7 +451,5 @@
 			}
 		)
 	}
-
-	suggest_init()
 </script>
 <!-- END: main -->

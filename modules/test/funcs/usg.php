@@ -19,7 +19,7 @@ $filter = array(
 
 
 $type = 0;
-$sql = 'select * from `'. VAC_PREFIX .'_user` where userid = ' . $user_info['userid'];
+$sql = 'select * from `' . VAC_PREFIX . '_user` where userid = ' . $user_info['userid'];
 $query = $db->query($sql);
 $user = $query->fetch();
 if (!empty($user)) {
@@ -285,18 +285,36 @@ if ($action) {
     case 'insert-usg':
       $data = $nv_Request->get_array('data', 'post');
       // var_dump($_POST);
-      $sql = "select id from `" . VAC_PREFIX . "_pet` where id = $data[pet]";
+      $sql = "select * from `" . VAC_PREFIX . "_customer` where phone = '$data[phone]'";
       $query = $db->query($sql);
+      if (!empty($customer = $query->fetch())) {
+        $data['customer'] = $customer['id'];
+        $sql = "update `" . VAC_PREFIX . "_customer` set name = '$data[name]', address = '$data[address]' where phone = '$data[phone]'";
+        $db->query($sql);
+      } else {
+        $sql = "insert into `" . VAC_PREFIX . "_customer` (name, phone, address) values ('$data[name]', '$data[phone]', '$data[address]');";
+        $db->query($sql);
+        $data['customer'] = $db->lastInsertId();
 
-      if (!empty($query->rowCount())) {
-        $usgtime = totime($data['usgtime']);
-        $expecttime = totime($data['expecttime']);
-        $sql = "INSERT INTO `" . VAC_PREFIX . "_usg2` (petid, doctorid, usgtime, expecttime, expectnumber, vaccinetime, image, status, note, time) VALUES ($data[pet], $data[doctor], $usgtime, $expecttime, $data[expectnumber], 0, '', 0, '$data[note]', " . time() . ")";
-        if ($db->query($sql)) {
-          $result['status'] = 1;
-          $result['html'] = usgCurrentList($filter);
-        }
+        $sql = "insert into `" . VAC_PREFIX . "_pet` (name, customerid) values ('Chưa đặt tên', $data[customer]);";
+        $db->query($sql);
+        $data['pet'] = $db->lastInsertId();
       }
+
+      if (empty($data['pet'])) {
+        // thêm thú cưng mặc định
+        $sql = "insert into `" . VAC_PREFIX . "_pet` (name, customerid) values ('Chưa đặt tên', $data[customer]);";
+        $db->query($sql);
+        $data['pet'] = $db->lastInsertId();
+      }
+
+      $usgtime = totime($data['usgtime']);
+      $expecttime = totime($data['expecttime']);
+      $sql = "INSERT INTO `" . VAC_PREFIX . "_usg2` (petid, doctorid, usgtime, expecttime, expectnumber, vaccinetime, image, status, note, time) VALUES ($data[pet], $data[doctor], $usgtime, $expecttime, $data[expectnumber], 0, '', 0, '$data[note]', " . time() . ")";
+
+      $db->query($sql);
+      $result['status'] = 1;
+      $result['html'] = usgCurrentList($filter);
       break;
     case 'change-recall':
       $id = $nv_Request->get_int('id', 'post');
@@ -313,7 +331,7 @@ if ($action) {
       $number = $nv_Request->get_int('number', 'post', 0);
       $time = $nv_Request->get_string('time', 'post', 0);
 
-	  $sql = 'update `' . VAC_PREFIX . '_usg2` set number = ' . $number . ', birthtime = ' . totime($time) . ', status = 2 where id = ' . $id;
+      $sql = 'update `' . VAC_PREFIX . '_usg2` set number = ' . $number . ', birthtime = ' . totime($time) . ', status = 2 where id = ' . $id;
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = usgCurrentList($filter);
@@ -332,8 +350,8 @@ if ($action) {
       if ($row = $query->fetch()) {
         $time = totime($time);
 
-		$sql = "insert into `" . VAC_PREFIX . "_vaccine` (petid, cometime, calltime, doctorid, note, status, diseaseid, recall, ctime) values ($row[id], " . time() . ", $time, $doctor, '', 0, $disease, 0, " . time() . ");";
-		$sql2 = "update `" . VAC_PREFIX . "_usg2` set status = 3, vaccinetime = ". $time ." where id = $id";
+        $sql = "insert into `" . VAC_PREFIX . "_vaccine` (petid, cometime, calltime, doctorid, note, status, diseaseid, recall, ctime) values ($row[id], " . time() . ", $time, $doctor, '', 0, $disease, 0, " . time() . ");";
+        $sql2 = "update `" . VAC_PREFIX . "_usg2` set status = 3, vaccinetime = " . $time . " where id = $id";
         if ($db->query($sql) && $db->query($sql2)) {
           $result['status'] = 1;
           $result['html'] = usgCurrentList($filter);
@@ -343,12 +361,29 @@ if ($action) {
     case 'reject':
       $id = $nv_Request->get_int('id', 'post');
 
-	  $sql = "update `" . VAC_PREFIX . "_usg2` set status = 3 where id = " . $id;
+      $sql = "update `" . VAC_PREFIX . "_usg2` set status = 3 where id = " . $id;
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = usgCurrentList($filter);
       }
-    break;
+      break;
+    case 'customer-remind':
+      $name = $nv_Request->get_string('name', 'post', '');
+      $type = $nv_Request->get_int('type', 'post', '');
+
+      if ($type) {
+        $list = getcustomer('', $name);
+      } else {
+        $list = getcustomer($name, '');
+      }
+
+      $html = '';
+      foreach ($list as $customer) {
+        $html .= '<div class="hr"><div class="item_suggest item_suggest2" onclick="selectCustomer(' . $customer['id'] . ', \'' . $customer['name'] . '\', \'' . $customer['phone'] . '\', `' . petOption($customer['id']) . '`)">' . $customer['name'] . ' <br>' . $customer['phone'] . '</div></div><div style="clear: both;"></div>';
+      }
+      $result["status"] = 1;
+      $result["html"] = $html;
+      break;
   }
   echo json_encode($result);
   die();
@@ -376,6 +411,6 @@ $xtpl->assign("modal", usgModal($lang_module));
 $xtpl->parse("main");
 $contents = $xtpl->text("main");
 
-include (NV_ROOTDIR . "/includes/header.php");
+include(NV_ROOTDIR . "/includes/header.php");
 echo nv_site_theme($contents);
-include (NV_ROOTDIR . "/includes/footer.php");
+include(NV_ROOTDIR . "/includes/footer.php");
