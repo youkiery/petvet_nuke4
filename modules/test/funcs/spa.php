@@ -117,7 +117,7 @@ if (!empty($action)) {
       $sql = 'select * from `' . VAC_PREFIX . '_customer` where phone = "' . $phone . '"';
       $query = $db->query($sql);
       if (empty($data = $query->fetch())) {
-        $sql = 'insert into `' . VAC_PREFIX . '_customer` (name, phone) values("' . $phone . '", "' . $customer . '")';
+        $sql = 'insert into `' . VAC_PREFIX . '_customer` (name, phone) values("' . $customer . '", "' . $phone . '")';
         $db->query($sql);
         $data['id'] = $db->lastInsertId();
       } else {

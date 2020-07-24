@@ -1,10 +1,10 @@
 <!-- BEGIN: main -->
-<div class="suggest_item" onclick="setcustom({id}, '{name}', '{phone}')">
+<div class="suggest_item" onclick="setcustom('{name}', '{phone}')">
   <span class="left">
-    {name2}  
+    {name}  
   </span>
   <span class="right">
-    {phone2}
+    {phone}
   </span>
 </div>
 <!-- END: main -->

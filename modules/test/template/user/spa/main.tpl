@@ -174,7 +174,7 @@
     $('#insert-modal').modal('show')
   }
 
-  function setcustom(id, name, phone) {
+  function setcustom(name, phone) {
     $("#customer").val(name)
     $("#phone").val(phone)
   }
