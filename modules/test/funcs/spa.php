@@ -67,8 +67,6 @@ if (!empty($action)) {
         $xtpl->assign("id", $customer["id"]);
         $xtpl->assign("name", $customer["name"]);
         $xtpl->assign("phone", $customer["phone"]);
-        $xtpl->assign("name2", $customer["name"]);
-        $xtpl->assign("phone2", $customer["phone"]);
         $xtpl->parse("main");
       }
       $result["status"] = 1;

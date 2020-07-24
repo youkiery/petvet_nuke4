@@ -3,24 +3,12 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-body">
-        <b> X-Quang </b>
-        <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
+        <div class="form-group">
+          <b> Phiếu lưu bệnh </b>
+          <button type="button" class="close" data-dismiss="modal">&times;</button> <br>
+        </div>
 
         <div class="insert">
-          <div style="float: right;">
-            <div
-              style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/default/images/vaccine/contact_add_small.png')"
-              class="vac_icon" onclick="addCustomer()">
-              <img src="/themes/default/images/vaccine/trans.png" title="Thêm khách hàng">
-            </div>
-            <div
-              style="width: 32px; height: 32px; cursor: pointer; display: inline-block; background-image: url('/themes/default/images/vaccine/pet_add.png')"
-              class="vac_icon" tooltip="Thêm thú cưng" onclick="addPet()">
-              <img src="/themes/default/images/vaccine/trans.png" title="Thêm thú cưng">
-            </div>
-          </div>
-          <br>
-          <br>
           <div class="rows">
             <div class="col-4">
               {lang.customer}
@@ -35,7 +23,6 @@
                 <input class="form-control" id="customer_phone" type="number" name="phone">
                 <div id="customer_phone_suggest" class="suggest"></div>
               </div>
-
             </div>
             <div class="col-4">
               {lang.address}

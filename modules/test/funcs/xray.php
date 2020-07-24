@@ -91,6 +91,26 @@ if (!empty($action)) {
       $result["status"] = 1;
       $result["data"] = $xray;
       break;
+      case 'get-customer':
+        $key = $nv_Request->get_string("key", "post", "");
+        $type = $nv_Request->get_int("type", "post", 0);
+        $xtpl = new XTemplate("suggest.tpl", PATH2);
+  
+        $xtra = 'name like "%' . $key . '%"';
+        if ($type) $xtra = 'phone like "%' . $key . '%"';
+  
+        $sql = "select * from `" . VAC_PREFIX . "_customer` where $xtra limit 50";
+        $customer_query = $db->query($sql);
+        $result["list"] = "";
+        while ($customer = $customer_query->fetch()) {
+          $xtpl->assign("name", $customer["name"]);
+          $xtpl->assign("phone", $customer["phone"]);
+          $xtpl->assign("pet", petOption($customer['id']));
+          $xtpl->parse("main");
+        }
+        $result["status"] = 1;
+        $result["list"] = $xtpl->text();
+        break;
   }
   echo json_encode($result);
   die();

@@ -74,6 +74,7 @@
 </div>
 
 <script src="/modules/core/js/vhttp.js"></script>
+<script src="/modules/core/js/vremind-5.js"></script>
 <script src="/modules/core/js/vimage.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.0.2/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-storage.js"></script>
@@ -121,9 +122,29 @@
       changeMonth: true,
       changeYear: true
     });
+    vremind.install('#customer_name', '#customer_name_suggest', (input) => {
+      return new Promise(resolve => {
+        vhttp.checkelse('', { action: 'get-customer', key: input, type: 0 }).then(data => {
+          resolve(data['list'])
+        })
+      })
+    }, 300, 300)
+    vremind.install('#customer_phone', '#customer_phone_suggest', (input) => {
+      return new Promise(resolve => {
+        vhttp.checkelse('', { action: 'get-customer', key: input, type: 1 }).then(data => {
+          resolve(data['list'])
+        })
+      })
+    }, 300, 300)
     vimage.install('image', 960, 960, (list) => { parseImage('image') })
     $('#image-input').hide()
   })
+
+  function setcustom(name, phone, pet) {
+    $("#customer_name").val(name)
+    $("#customer_phone").val(phone)
+    $("#pet_info").html(pet)
+  }
 
   function parseImage(name) {
     html = ''
@@ -269,7 +290,7 @@
       else $('.insult').prop('disabled', false)
       clearXray()
       $("#edit-pet").text(data['data']["pet"])
-      $("#edit-customer").text(data['data']["customer"])
+      $("#edit-customer").text(data['data']["name"])
       $("#edit-phone").text(data['data']["phone"])
       $("#edit-cometime").text(data['data']["cometime"])
       $("#edit-doctor").val(data['data']["doctorid"])
@@ -283,17 +304,6 @@
     })
   }
 
-  function summary() {
-    var body = ""
-    var addition = "<p><b>{lang.totaltreat} " + d_treating.length + " </b></p>"
-    d_treating.forEach((treating, index) => {
-      body += "<tr><td style='width: 20%'>" + treating["time"] + "</td><td style='width: 50%'><b>{lang.temperate}</b>: " + treating["temperate"] + "<br><b>{lang.eye}</b>: " + treating["eye"] + "<br><b>{lang.other}</b>: " + treating["other"] + "</td><td style='width: 30%'>" + treating["treating"] + "</td></tr>"
-    })
-    var html =
-      "<table class='table table-border'><thead><tr style='height: 32px;'><th><span id='tk_otherhhang'>" + $("#customer").text() + "</span> / <span id='tk_thucung'>" + $("#petname").text() + "</span></th><th>{lang.eviden}</th><th>{lang.treating}</th></tr></thead><tbody>" + body + "</tbody><tfoot><tr><td colspan='3'>" + addition + "</td></tr></tfoot></table>"
-    $("#vac2_body").html(html)
-  }
-
   function editSubmit(type) {
     changeTreat(global['index'])
     current = global['list'][global['index']]
@@ -301,7 +311,8 @@
     checkUploadImage(current['image']).then(() => {
       vhttp.checkelse('', { action: 'edit', id: global['id'], type: type, data: current }).then(data => {
         $('#content').html(data['html'])
-        $('#insert-modal').modal('hide')
+        if (type) $('#insert-modal').modal('hide')
+        else alert_msg('Đã lưu')
       })
     })
   }
@@ -342,42 +353,5 @@
         });
     })
   }
-
-  customer_name.addEventListener("keyup", (e) => {
-    showSuggest(e.target.getAttribute("id"), true);
-  })
-
-  customer_phone.addEventListener("keyup", (e) => {
-    showSuggest(e.target.getAttribute("id"), false);
-  })
-
-  suggest_name.addEventListener("mouseenter", (e) => {
-    blur = false;
-  })
-  suggest_name.addEventListener("mouseleave", (e) => {
-    blur = true;
-  })
-  customer_name.addEventListener("focus", (e) => {
-    suggest_name.style.display = "block";
-  })
-  customer_name.addEventListener("blur", (e) => {
-    if (blur) {
-      suggest_name.style.display = "none";
-    }
-  })
-  suggest_phone.addEventListener("mouseenter", (e) => {
-    blur = false;
-  })
-  suggest_phone.addEventListener("mouseleave", (e) => {
-    blur = true;
-  })
-  customer_phone.addEventListener("focus", (e) => {
-    suggest_phone.style.display = "block";
-  })
-  customer_phone.addEventListener("blur", (e) => {
-    if (blur) {
-      suggest_phone.style.display = "none";
-    }
-  })
 </script>
 <!-- END: main -->
