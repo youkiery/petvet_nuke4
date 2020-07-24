@@ -165,6 +165,9 @@
 
   function insert() {
     global['type'] = 0;
+    $('#phone').val('')
+    $('#customer').val('')
+    $('#note').val('')
     $('[name=spa]').prop('checked', false)
     $('.insert').show()
     $('.update').hide()
