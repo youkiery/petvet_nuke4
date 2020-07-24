@@ -4,8 +4,12 @@
 <script type="text/javascript"
   src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <style>
-  .pink {
+  .green {
     background: lightgreen;
+  }
+
+  .red {
+    background: pink;
   }
 
   #image {
@@ -53,76 +57,6 @@
     top: 0;
     left: 0;
   }
-
-  .rows::after {
-    content: "";
-    clear: both;
-    display: table;
-  }
-
-  .col-1,
-  .col-2,
-  .col-3,
-  .col-4,
-  .col-5,
-  .col-6,
-  .col-7,
-  .col-8,
-  .col-9,
-  .col-10,
-  .col-11,
-  .col-12 {
-    float: left;
-    padding: 5px;
-  }
-
-  .col-1 {
-    width: 8.33%;
-  }
-
-  .col-2 {
-    width: 16.66%;
-  }
-
-  .col-3 {
-    width: 25%;
-  }
-
-  .col-4 {
-    width: 33.33%;
-  }
-
-  .col-5 {
-    width: 41.66%;
-  }
-
-  .col-6 {
-    width: 50%;
-  }
-
-  .col-7 {
-    width: 58.33%;
-  }
-
-  .col-8 {
-    width: 66.66%;
-  }
-
-  .col-9 {
-    width: 75%;
-  }
-
-  .col-10 {
-    width: 83.33%;
-  }
-
-  .col-11 {
-    width: 91.66%;
-  }
-
-  .col-12 {
-    width: 100%;
-  }
 </style>
 
 <div id="msgshow" class="msgshow"></div>
@@ -131,7 +65,7 @@
 
 <div class="form-group" style="float: right;">
   <button class="btn btn-success" onclick="insertXray()">
-    Thêm X-Quang
+    Thêm phiếu
   </button>
 </div>
 
@@ -326,8 +260,12 @@
 
   function edit(lid) {
     vhttp.checkelse('', { action: 'get-info', id: lid }).then(data => {
+      $('#image').show()
       global['id'] = lid
-      if (Number(data['data']['insult'])) $('.insult').prop('disabled', true)
+      if (Number(data['data']['insult'])) {
+        $('#image').hide()
+        $('.insult').prop('disabled', true)
+      }
       else $('.insult').prop('disabled', false)
       clearXray()
       $("#edit-pet").text(data['data']["pet"])

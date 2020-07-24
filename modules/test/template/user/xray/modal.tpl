@@ -127,6 +127,7 @@
           <div class="edit">
             <button class="insult btn btn-info" onclick="editSubmit(0)"> Lưu phiếu điều trị </button>
             <button class="insult btn btn-info" onclick="editSubmit(1)"> Điều trị xong </button>
+            <button class="insult btn btn-danger" onclick="editSubmit(2)"> Đã chết </button>
             <!-- <button class="btn btn-info" onclick="summary()"> Tổng kết </button> -->
           </div>
         </div>

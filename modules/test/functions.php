@@ -549,7 +549,8 @@ function xrayContent()
     $xtpl->assign('cometime', date('d/m/Y', $xray['cometime']));
     $xtpl->assign('condition', $status_option[$last_treat['condition']]);
     $xtpl->assign('color', '');
-    if ($xray['insult']) $xtpl->assign('color', 'pink');
+    if ($xray['insult'] == 1) $xtpl->assign('color', 'green');
+    else if ($xray['insult'] == 2) $xtpl->assign('color', 'red');
 
     $xtpl->parse('main.row');
   }
