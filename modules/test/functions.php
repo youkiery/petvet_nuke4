@@ -612,8 +612,13 @@ function bloodModal()
   $xtpl->assign('from', date('d/m/Y', $filter['from']));
   $xtpl->assign('end', date('d/m/Y', $filter['end']));
 
+  $sample = checkBloodSample();
   $last = checkLastBlood();
   $xtpl->assign('today', date('d/m/Y'));
+  $xtpl->assign('number1', $sample['number1']);
+  $xtpl->assign('number2', $sample['number2']);
+  $xtpl->assign('number3', $sample['number3']);
+  $xtpl->assign('number', $last);
   $xtpl->assign('last', $last);
   $xtpl->assign('nextlast', $last - 1);
   
@@ -633,24 +638,15 @@ function bloodModal()
 
 function bloodList()
 {
-  global $db, $nv_Request, $type, $db_config, $link;
-  $xtpl = new XTemplate("blood-list.tpl", PATH2);
-  $filter = $nv_Request->get_array('filter', 'post');
+  global $db, $type, $db_config, $link, $filter;
+  $xtpl = new XTemplate("list.tpl", PATH2);
+
   if ($type == 1) {
     $xtpl->assign('show', 'hide');
   }
 
-  if (empty($filter['page'])) {
-    $filter['page'] = 1;
-  }
-  if (empty($filter['limit'])) {
-    $filter['limit'] = 10;
-  }
-
   $xtra = '';
-  if (!empty($filter['type'])) {
-    $xtra = 'where type in (' . implode(', ', $filter['type']) . ')';
-  }
+  if ($filter['type'] > 0) $xtra = 'where type = ' . ($filter['type'] - 1);
 
   $target = array();
   $sql = 'select * from `' . VAC_PREFIX . '_remind` where name = "blood" order by id';
@@ -660,28 +656,38 @@ function bloodList()
     $target[$row['id']] = $row['value'];
   }
 
-  $query = $db->query('select count(*) as num from ((select id, time, 0 as type, number from `' . VAC_PREFIX . '_blood_row`) union (select id, time, 1 as type, number from `' . VAC_PREFIX . '_blood_import`)) a ' . $xtra);
+  $query = $db->query('select count(*) as num from ((select id, 0 as type from `' . VAC_PREFIX . '_blood_row`) union (select id, 1 as type from `' . VAC_PREFIX . '_blood_import`)) a ' . $xtra);
   $number = $query->fetch()['num'];
 
-  $query = $db->query('select * from ((select id, time, 0 as type, number, doctor, target from `' . VAC_PREFIX . '_blood_row`) union (select id, time, 1 as type, number, doctor, 0 as target from `' . VAC_PREFIX . '_blood_import`)) a ' . $xtra . ' order by time desc, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+  $query = $db->query('select * from ((select id, time, 0 as type from `' . VAC_PREFIX . '_blood_row`) union (select id, time, 1 as type from `' . VAC_PREFIX . '_blood_import`)) a ' . $xtra . ' order by time desc, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
   while ($row = $query->fetch()) {
-    $sql = 'select * from `' . $db_config['prefix'] . '_users` where userid = ' . $row['doctor'];
+    if ($row['type']) $sql = 'select * from `' . VAC_PREFIX . '_blood_import` where id = ' . $row['id'];
+    else $sql = 'select * from `' . VAC_PREFIX . '_blood_row` where id = ' . $row['id'];
+    $query2 = $db->query($sql);
+    $row2 = $query2->fetch();
+
+    $sql = 'select * from `' . $db_config['prefix'] . '_users` where userid = ' . $row2['doctor'];
     $user_query = $db->query($sql);
     $user = $user_query->fetch();
 
     $xtpl->assign('index', $index++);
-    $xtpl->assign('time', date('d-m-Y', $row['time']));
-    $xtpl->assign('target', (!empty($target[$row['target']]) ? $target[$row['target']] : ''));
-    $xtpl->assign('number', $row['number']);
+    $xtpl->assign('time', date('d-m', $row2['time']));
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('typeid', $row['type']);
     $xtpl->assign('doctor', (!empty($user['first_name']) ? $user['first_name'] : ''));
-    if ($row['type']) $xtpl->assign('type', 'Phiếu nhập');
-    else $xtpl->assign('type', 'Phiếu xét nghiệm');
-    if ($type == 2) {
-      $xtpl->parse('main.row.test');
+    if ($row['type']) {
+      $xtpl->assign('target', 'Nhập ('. $row2['number1'] .'/'. $row2['number2'] .'/'. $row2['number3'] .') giá <span class="text-red">'. number_format($row2['price'], 0, '', ',') .' VND</span>');
+      $xtpl->assign('number', '-');
+      $xtpl->assign('number1', $row2['number1']);
+      $xtpl->assign('number2', $row2['number2']);
+      $xtpl->assign('number3', $row2['number3']);
     }
+    else {
+      $xtpl->assign('target', 'Xét nghiệm: '. (!empty($target[$row2['target']]) ? $target[$row2['target']] : ''));
+      $xtpl->assign('number', $row2['number']);
+    } 
+    if ($type == 2) $xtpl->parse('main.row.test');
     $xtpl->parse('main.row');
   }
   $xtpl->assign('nav', nav_generater($link . '?', $number, $filter['page'], $filter['limit']));
@@ -966,7 +972,7 @@ function bloodStatistic()
   $xtpl = new XTemplate("statistic-list.tpl", BLOCK);
   $xtpl->assign('from', date('d/m/Y', $filter['from']));
   $xtpl->assign('end', date('d/m/Y', $filter['end']));
-  $doctor = getdoctorlist();
+  $doctor = getdoctorlist2();
 
   $sql = 'select * from `' . VAC_PREFIX . '_blood_row` where (time between ' . $filter['from'] . ' and ' . $filter['end'] . ')';
   $query = $db->query($sql);
@@ -1002,7 +1008,7 @@ function bloodStatistic()
   $sql = 'select * from `' . VAC_PREFIX . '_blood_import` where (time between ' . $filter['from'] . ' and ' . $filter['end'] . ')';
   $query = $db->query($sql);
   while ($row = $query->fetch()) {
-    $total['import'] += $row['number']; // tổng tiền nhập
+    $total['import'] += $row['price']; // tổng tiền nhập
   }
   $xtpl->assign('import', number_format($total['import'] * 1000, 0, '', ',') . ' VNĐ');
   $xtpl->assign('count', $total['count']);

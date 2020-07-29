@@ -138,7 +138,7 @@ function getCustomerList($key, $sort, $filter, $page) {
 
 function getVaccineTable($path, $lang, $key, $sort, $time) {
   // next a week
-  global $db, $db_config, $module_name, $global_config, $lang_module;
+  global $db, $module_name, $lang_module;
   $fromtime = strtotime(date("Y-m-d", NV_CURRENTTIME)) - $time;
   $endtime = $fromtime + 2 * $time;
   $link = NV_BASE_ADMINURL . "index.php?" . NV_NAME_VARIABLE . "=" . $module_name . "&" . NV_OP_VARIABLE . "=";
@@ -209,6 +209,19 @@ function getdoctorlist($daily = 0) {
   return $doctor;
 }
 
+function getdoctorlist2() {
+  global $db, $db_config;
+  $sql = "select userid, username, first_name, last_name, concat(last_name, ' ', first_name) as fullname from " . $db_config['prefix'] . "_users";
+
+  $result = $db->query($sql);
+  $doctor = array();
+
+  while ($row = $result->fetch()) {
+    $doctor[$row['userid']] = $row;
+  }
+  return $doctor;
+}
+
 function wconfirm($date) {
   global $db, $userList;
 
@@ -265,7 +278,7 @@ function wconfirm($date) {
 }
 
 function getcustomer($customer, $phone) {
-  global $db, $db_config, $module_name;
+  global $db;
   if (!empty($customer)) {
     $sql = "select * from `" . VAC_PREFIX . "_customer` where name like '%$customer%' limit 20";
   } else {
@@ -281,7 +294,7 @@ function getcustomer($customer, $phone) {
 }
 
 function getPatientsList($key, $sort, $filter, $page) {
-  global $db, $db_config, $module_name;
+  global $db;
   $patients = array();
   $patients["data"] = array();
 
@@ -312,7 +325,7 @@ function getPatientsList($key, $sort, $filter, $page) {
 }
 
 function getPatientsList2($customerid) {
-  global $db, $db_config, $module_name;
+  global $db;
   $sql = "select name as customer, phone, address from " . VAC_PREFIX . "_customer where id = $customerid";
   $result = $db->query($sql);
   $patients = $result->fetch();
@@ -323,7 +336,7 @@ function getPatientsList2($customerid) {
   while ($row = $result->fetch()) {
     $ax[] = $row;
   }
-  foreach ($ax as $key => $row) {
+  foreach ($ax as $row) {
     $petid = $row["id"];
     $sql = "SELECT v.cometime, v.calltime, dd.name as disease from " . VAC_PREFIX . "_vaccine v inner join " . VAC_PREFIX . "_pet p on  v.petid = " . $petid . " and v.petid = p.id inner join " . VAC_PREFIX . "_customer c on p.customerid = c.id inner join " . VAC_PREFIX . "_disease dd on v.diseaseid = dd.id order by v.id desc";
     $query = $db->query($sql);
@@ -349,7 +362,7 @@ function getPatientsList2($customerid) {
 }
 
 function getPatientDetail($petid) {
-  global $db, $db_config, $module_name;
+  global $db;
   $sql = "select b.name as petname, c.name as customer, c.phone from " . VAC_PREFIX . "_pet b inner join " . VAC_PREFIX . "_customer c on b.id = $petid and b.customerid = c.id";
   $result = $db->query($sql);
   $patients = $result->fetch();
@@ -366,7 +379,7 @@ function getPatientDetail($petid) {
 }
 
 function user_vaccine($keyword = '') {
-  global $nv_Request, $db, $module_config, $module_name, $module_info, $module_file, $lang_module, $vacconfigv2;
+  global $nv_Request, $db, $vacconfigv2;
   // initial
   $today = strtotime(date("Y-m-d"));
   $page = $nv_Request->get_string('page', 'get/post', "");
@@ -785,21 +798,53 @@ function checkLastBlood() {
   }
   $sql = 'insert into `'. $db_config['prefix'] .'_config` (lang, module, config_name, config_value) values ("sys", "site", "'. $module_name .'_blood_number", "1")';
   $db->query($sql);
-  return 1;
+  return 0;
 }
 
-// function checkBloodSample() {
-//   global $db, $db_config, $module_name;
+function checkBloodRemind($name) {
+  global $db;
+  $targetid = 0;
+  $sql = 'select * from `' . VAC_PREFIX . '_remind` where name = "blood" and value = "' . $name . '"';
+  $query = $db->query($sql);
+  if (!empty($row = $query->fetch())) {
+    $targetid = $row['id'];
+  } else {
+    $sql = 'insert into `' . VAC_PREFIX . '_remind` (name, value) values ("blood", "' . $name . '")';
+    if ($db->query($sql)) {
+      $targetid = $db->lastInsertId();
+    }
+  }
+  return $targetid;
+}
 
-//   $sql = 'select * from `'. $db_config['prefix'] .'_config` where config_name = "'. $module_name .'_blood_sample"';
-//   $query = $db->query($sql);
-//   if (!empty($row = $query->fetch())) {
-//     return $row['config_value'];
-//   }
-//   $sql = 'insert into `'. $db_config['prefix'] .'_config` (lang, module, config_name, config_value) values ("sys", "site", "'. $module_name .'_blood_sample", "1")';
-//   $db->query($sql);
-//   return 1;
-// }
+function updateBloodSample($data) {
+  global $db, $db_config, $module_name;
+
+  for ($i = 1; $i <= 3; $i++) { 
+    $sql = 'update `'. $db_config['prefix'] .'_config` set config_value = config_value + '. $data['number'. $i] .' where config_name = "'. $module_name .'_blood_sample_'. $i .'"';
+    $db->query($sql);
+  }
+}
+
+function checkBloodSample() {
+  global $db, $db_config, $module_name;
+
+  $data = array();
+
+  for ($i = 1; $i <= 3; $i++) { 
+    $sql = 'select * from `'. $db_config['prefix'] .'_config` where config_name = "'. $module_name .'_blood_sample_'. $i .'"';
+    $query = $db->query($sql);
+    if (!empty($row = $query->fetch())) {
+      $data['number' .$i] = $row['config_value'];
+    }
+    else {
+      $sql = 'insert into `'. $db_config['prefix'] .'_config` (lang, module, config_name, config_value) values ("sys", "site", "'. $module_name .'_blood_sample_'. $i .'", "0")';
+      $db->query($sql);
+      $data['number'. $i] = 0;
+    }
+  }
+  return $data;
+}
 
 function getRowId($id) {
   global $db;
