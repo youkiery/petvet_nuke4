@@ -178,9 +178,9 @@
 
   function pushSample() {
     $('#sample-value').val(0)
-    $('#sample-value1').val(1)
-    $('#sample-value2').val(1)
-    $('#sample-value3').val(1)
+    $('#sample-value-1').val(1)
+    $('#sample-value-2').val(1)
+    $('#sample-value-3').val(1)
     $('#sample-modal').modal('show')
   }
 
@@ -213,10 +213,11 @@
     $('#sample-number1').text(total['number1'])
     $('#sample-number2').text(total['number2'])
     $('#sample-number3').text(total['number3'])
-    $('#sample-limit').text(number)
-    $('#sample-limit1').text(total['number1'])
-    $('#sample-limit2').text(total['number2'])
-    $('#sample-limit3').text(total['number3'])
+    $('#sample-value').val(number)
+    $('#push-limit').text(number)
+    $('#push-limit1').text(total['number1'])
+    $('#push-limit2').text(total['number2'])
+    $('#push-limit3').text(total['number3'])
     $('#insert-start').val(number)
     $('#insert-end').val(number - $('#insert-number').val())
   }
