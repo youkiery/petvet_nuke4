@@ -282,7 +282,7 @@
     <div class="row form-group boxed box-6">
       <label class="col-sm-6"> Người đề nghị </label>
       <div class="col-sm-12">
-        <input type="text" class="form-control" id="form-insert-mcode" autocomplete="off">
+        <input type="text" class="form-control" id="form-insert-reformer" autocomplete="off">
       </div>
     </div>
     
@@ -2201,22 +2201,17 @@
     global_field = data
 
     sample.html('')
-
-    data.forEach((sample, sampleIndex) => {
+    if (data) data.forEach((sample, sampleIndex) => {
       var html2 = ''
       var resultX = -1
       sampleX ++
 
-      sample['mainer'].forEach((result, resultIndex) => {
+      if (sample['mainer']) sample['mainer'].forEach((result, resultIndex) => {
         var html3 = ''
         var noteX = -1
         resultX ++
-        if (!result['note']) result['note'] = [{
-          result: '',
-          note: ''
-        }]
             
-        result['note'].forEach((note, noteIndex) => {
+        if (result['note']) result['note'].forEach((note, noteIndex) => {
           noteX ++
           html3 += `
           <div class="html-result bordered">
@@ -3608,7 +3603,7 @@
     if (Object.keys(data).length) {
       $.post(
         strHref,
-        {action: 'insert', form: global_form, id: global_id, page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val(), other: getFilter(), clone: global_clone, signer: checkSigner(), data: data},
+        {action: 'insert', form: global_form, id: global_id, page: global_page, limit: filterLimit.val(), printer: filterPrinter.val(), keyword: filterKeyword.val(), other: getFilter(), clone: global_clone, signer: checkSigner(), data: JSON.stringify(data).replace(/"/g, '\'')},
         (response, status) => {
           checkResult(response, status).then(data => {
             remind = JSON.parse(data['remind'])

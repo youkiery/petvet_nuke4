@@ -126,7 +126,7 @@ function secretaryList($filter = array('page' => 1, 'keyword' => '', 'sample' =>
   }
 
   $filter['from'] = totime($filter['from']);
-  $filter['end'] = totime($filter['end'] + 60 * 60 * 24 * - 1);
+  $filter['end'] = totime($filter['end']) + 60 * 60 * 24 * - 1;
 
   $exsql = '';
   if ($filter['pay'] > 0) {
@@ -211,7 +211,7 @@ function secretaryList2($filter = array('page' => 1, 'keyword' => '', 'sample' =
   }
 
   $filter['from'] = totime($filter['from']);
-  $filter['end'] = totime($filter['end'] + 60 * 60 * 24 * - 1);
+  $filter['end'] = totime($filter['end']) + 60 * 60 * 24 * - 1;
 
   $exsql = '';
   if ($filter['pay'] > 0) {
@@ -300,7 +300,7 @@ function formList($keyword = '', $page = 1, $limit = 10, $printer = 1, $other = 
   $auto_locker = getAutolocker();
 
   $other['from'] = totime($other['from']);
-  $other['end'] = totime($other['end'] + 60 * 60 * 24 - 1);
+  $other['end'] = totime($other['end']) + 60 * 60 * 24 - 1;
 
   // $lowest = 5;
   // if (!empty($user_info['userid'])) {

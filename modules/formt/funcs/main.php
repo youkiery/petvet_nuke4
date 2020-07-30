@@ -604,7 +604,6 @@ if (!empty($action)) {
         $result['form']['resend'] = date('d/m/Y', $result['form']['resend']);
         $result['form']['ireceive'] = date('d/m/Y', $result['form']['ireceive']);
         $result['form']['iresend'] = date('d/m/Y', $result['form']['iresend']);
-        $result['form']['receivetime'] = date('d/m/Y', $result['form']['receivetime']);
         $result['form']['samplereceive'] = date('d/m/Y', $result['form']['samplereceive']);
         $result['form']['sampletime'] = date('d/m/Y', $result['form']['sampletime']);
         $result['form']['noticetime'] = date('d/m/Y', $result['form']['noticetime']);
@@ -655,7 +654,9 @@ if (!empty($action)) {
     case 'insert':
       $id = $nv_Request->get_string('id', 'get/post', '');
       $form = $nv_Request->get_string('form', 'get/post', '');
-      $data = $nv_Request->get_array('data', 'get/post', '');
+      $data = $nv_Request->get_string('data', 'get/post', '');
+      var_dump(substr($data, 3));die();
+      var_dump(json_decode($data));die();
 
       $page = $nv_Request->get_string('page', 'get/post', 1);
       $limit = $nv_Request->get_string('limit', 'get/post', 1);
