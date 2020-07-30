@@ -52,6 +52,9 @@ if (!empty($action)) {
     case 'insert-import':
       $data = $nv_Request->get_array('data', 'post');
       $data['time'] = totime($data['time']);
+      $data['number1'] = parseNumber($data['number1']);
+      $data['number2'] = parseNumber($data['number2']);
+      $data['number3'] = parseNumber($data['number3']);
 
       $data['price'] = str_replace(',', '', $data['price']);
       $sql = 'insert into `' . VAC_PREFIX . '_blood_import` (time, number1, number2, number3, price, note, doctor) values(' . $data['time'] . ', ' . $data['number1'] . ', ' . $data['number2'] . ', ' . $data['number3'] . ', ' . $data['price'] . ', "' . $data['note'] . '", ' . ($user_info['userid'] ? $user_info['userid'] : 0) . ')';
@@ -185,9 +188,9 @@ if (!empty($action)) {
       break;
     case 'push':
       $number = $nv_Request->get_int('number', 'post', 1);
-      $number1 = $nv_Request->get_int('number1', 'post', 1);
-      $number2 = $nv_Request->get_int('number2', 'post', 1);
-      $number3 = $nv_Request->get_int('number3', 'post', 1);
+      $number1 = parseNumber($nv_Request->get_string('number1', 'post', 1));
+      $number2 = parseNumber($nv_Request->get_string('number2', 'post', 1));
+      $number3 = parseNumber($nv_Request->get_string('number3', 'post', 1));
 
       updateBloodSample(array(
         'number1' => -1 * $number1,

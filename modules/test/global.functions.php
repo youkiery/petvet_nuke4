@@ -820,10 +820,45 @@ function checkBloodRemind($name) {
 function updateBloodSample($data) {
   global $db, $db_config, $module_name;
 
-  for ($i = 1; $i <= 3; $i++) { 
+  for ($i = 1; $i <= 3; $i++) {
     $sql = 'update `'. $db_config['prefix'] .'_config` set config_value = config_value + '. $data['number'. $i] .' where config_name = "'. $module_name .'_blood_sample_'. $i .'"';
     $db->query($sql);
   }
+}
+
+// source: string
+// remove all char other than number
+// return float
+function parseNumber($number) {
+  // convert , to .
+  $number = str_replace(',', '.', $number);
+  // remove leftover .
+  $first = strpos($number, '.');
+  $last = strpos($number, '.', $first + 1);
+  if ($first !== false && $first !== $last) {
+    $left = substr($number, 0, $first);
+    $right = str_replace('.', '', substr($number, $first));
+    $left = filterNumber($left);
+    $right = filterNumber($right);
+    $number = $left .'.'. $right;
+  }
+
+  return $number;
+}
+
+// source: string
+// remove all char other than number
+// return string of number
+function filterNumber($number) {
+  $length = strlen($number);
+  for ($i = 0; $i < $length; $i++) { 
+    if (!is_numeric($number[$i])) {
+      $number = str_replace($number[$i], '', $number);
+      $length = strlen($number);
+      $i --;
+    }
+  }
+  return $number;
 }
 
 function checkBloodSample() {

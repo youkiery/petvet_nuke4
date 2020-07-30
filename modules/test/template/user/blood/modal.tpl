@@ -10,23 +10,23 @@
 
         <form onsubmit="return pushSampleSubmit(event)">
           <div class="form-group">
-            <b> Hóa chất 1 </b> (Giới hạn: <span class="text-red" id="push-limit1"> {number1} </span>)
-            <input type="number" class="form-control" id="sample-value-1" value="1" min="1">
+            <b> Lyse </b> (Giới hạn: <span class="text-red" id="push-limit1"> {number1} </span>)
+            <input class="form-control" id="sample-value-1" value="1">
           </div>
   
           <div class="form-group">
-            <b> Hóa chất 2 </b> (Giới hạn: <span class="text-red" id="push-limit2"> {number2} </span>)
-            <input type="number" class="form-control" id="sample-value-2" value="1" min="1">
+            <b> Diluent </b> (Giới hạn: <span class="text-red" id="push-limit2"> {number2} </span>)
+            <input class="form-control" id="sample-value-2" value="1">
           </div>
   
           <div class="form-group">
-            <b> Hóa chất 3 </b> (Giới hạn: <span class="text-red" id="push-limit3"> {number3} </span>)
-            <input type="number" class="form-control" id="sample-value-3" value="1" min="1">
+            <b> Rinse </b> (Giới hạn: <span class="text-red" id="push-limit3"> {number3} </span>)
+            <input class="form-control" id="sample-value-3" value="1">
           </div>
 
           <div class="form-group">
             <b> Số đầu </b> (Hiện tại: <span class="text-red" id="push-limit"> {number} </span>)
-            <input type="number" class="form-control" id="sample-value" value="1" min="1">
+            <input class="form-control" id="sample-value" value="1">
           </div>
   
           <div class="text-center">
@@ -50,7 +50,7 @@
         <form onsubmit="return pullSampleSubmit(event)">
           <div class="form-group">
             Chạy bao nhiêu hóa chất?
-            <input type="number" class="form-control" id="pull-value" value="1" min="1">
+            <input class="form-control" id="pull-value" value="1">
           </div>
   
           <div class="text-center">
@@ -119,15 +119,15 @@
           </div>
           <div class="form-group rows">
             <div class="col-4">
-              Hóa chất 1
+              Lyse
               <input type="text" class="form-control" id="import-number-1" value="0">
             </div>
             <div class="col-4">
-              Hóa chất 2
+              Diluent
               <input type="text" class="form-control" id="import-number-2" value="0">
             </div>
             <div class="col-4">
-              Hóa chất 3
+              Rinse
               <input type="text" class="form-control" id="import-number-3" value="0">
             </div>
           </div>
