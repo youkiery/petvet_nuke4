@@ -38,9 +38,9 @@
 <div class="rows">
   <div class="col-4">
     <p> <b> Số mẫu trong máy: <span id="sample-number"> {number} </span> </b> </p>
-    <p> <b> Số hóa chất 1: <span id="sample-number1"> {number1} </span> </b> </p>
-    <p> <b> Số hóa chất 2: <span id="sample-number2"> {number2} </span> </b> </p>
-    <p> <b> Số hóa chất 3: <span id="sample-number3"> {number3} </span> </b> </p>
+    <p> <b> Lyse: <span id="sample-number1"> {number1}</span> (ml) </b> </p>
+    <p> <b> Diluent: <span id="sample-number2"> {number2}</span> (l) </b> </p>
+    <p> <b> Rinse: <span id="sample-number3"> {number3}</span> (l) </b> </p>
   </div>
   <div class="col-4">
     <form class="text-center form-group">

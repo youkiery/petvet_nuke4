@@ -10,22 +10,22 @@
 
         <form onsubmit="return pushSampleSubmit(event)">
           <div class="form-group">
-            <b> Lyse </b> (Giới hạn: <span class="text-red" id="push-limit1"> {number1} </span>)
+            <b> Lyse </b> (Giới hạn: <span class="text-red" id="push-limit1"> {number1}</span>ml)
             <input class="form-control" id="sample-value-1" value="1">
           </div>
   
           <div class="form-group">
-            <b> Diluent </b> (Giới hạn: <span class="text-red" id="push-limit2"> {number2} </span>)
+            <b> Diluent </b> (Giới hạn: <span class="text-red" id="push-limit2"> {number2}</span>l)
             <input class="form-control" id="sample-value-2" value="1">
           </div>
   
           <div class="form-group">
-            <b> Rinse </b> (Giới hạn: <span class="text-red" id="push-limit3"> {number3} </span>)
+            <b> Rinse </b> (Giới hạn: <span class="text-red" id="push-limit3"> {number3}</span>l)
             <input class="form-control" id="sample-value-3" value="1">
           </div>
 
           <div class="form-group">
-            <b> Số đầu </b> (Hiện tại: <span class="text-red" id="push-limit"> {number} </span>)
+            <b> Số đầu </b> (Hiện tại: <span class="text-red" id="push-limit"> {number} </span> mẫu)
             <input class="form-control" id="sample-value" value="1">
           </div>
   
@@ -119,15 +119,15 @@
           </div>
           <div class="form-group rows">
             <div class="col-4">
-              Lyse
+              Lyse (đơn vị: ml)
               <input type="text" class="form-control" id="import-number-1" value="0">
             </div>
             <div class="col-4">
-              Diluent
+              Diluent (đơn vị: l)
               <input type="text" class="form-control" id="import-number-2" value="0">
             </div>
             <div class="col-4">
-              Rinse
+              Rinse (đơn vị: l)
               <input type="text" class="form-control" id="import-number-3" value="0">
             </div>
           </div>
