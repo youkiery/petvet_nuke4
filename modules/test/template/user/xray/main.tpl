@@ -171,6 +171,9 @@
 
   function checkXray() {
     data = {
+      name: $("#customer_name").val(),
+      phone: $("#customer_phone").val(),
+      address: $("#customer_address").val(),
       pet: $('#pet_info').val(),
       cometime: $('#cometime').val(),
       temperate: $('#temperate').val(),
@@ -180,9 +183,8 @@
       doctor: $('#doctor').val(),
       condition: $('#condition').val()
     }
-    if (!data['pet']) {
-      return "Khách hàng chưa có thú cưng!"
-    }
+    if (!data['name'].length) return 'Nhập tên khách hàng trước'
+    else if (!data['phone'].length) return 'Nhập tên số điện thoại trước'
     return data
   }
 
@@ -208,9 +210,8 @@
 
   function insertXraySubmit() {
     sdata = checkXray()
-    if (!sdata['pet']) {
-      alert_msg(msg)
-    } else {
+    if (!sdata['phone']) alert_msg(sdata)
+    else {
       vhttp.checkelse('', { action: 'insert-xray', data: sdata }).then(data => {
         $('#content').html(data['html'])
         $('#insert-modal').modal('hide')
