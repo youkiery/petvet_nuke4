@@ -2206,13 +2206,12 @@
       var html2 = ''
       var resultX = -1
       sampleX ++
-
-      sample['mainer'].forEach((result, resultIndex) => {
+      if (sample['mainer']) sample['mainer'].forEach((result, resultIndex) => {
         var html3 = ''
         var noteX = -1
         resultX ++
             
-        result['note'].forEach((note, noteIndex) => {
+        if (result['note']) result['note'].forEach((note, noteIndex) => {
           noteX ++
           html3 += `
           <div class="html-result bordered">
