@@ -472,10 +472,10 @@ function f5igtosec($string_data) {
   $data = array();
   $root_data = json_decode($string_data);
   foreach ($root_data as $root) {
-    foreach ($root->{mainer} as $mainer) {
-      foreach ($mainer->{note} as $note) {
-        if (empty($data[$note->{note}])) $data[$note->{note}] = array('number' => 0, 'code' => '');
-        $data[$note->{note}]['number'] += $root->{number};
+    foreach ($root->mainer as $mainer) {
+      foreach ($mainer->note as $note) {
+        if (empty($data[$note->note])) $data[$note->note] = array('number' => 0, 'code' => '');
+        $data[$note->note]['number'] += $root->number;
       }
     }
   }
@@ -514,7 +514,7 @@ function sectodata($data) {
   // var_dump($data);die();
   $temp = array();
   foreach ($tick as $name => $row) {
-    $temp[$name] = array('number' => $row->{number}, 'code' => $row->{code});
+    $temp[$name] = array('number' => $row->number, 'code' => $row->code);
   }
 
   return array('data' => $temp, 'datetime' => $data['mcode'] . '/THTY-5 ngày ' . date('d/m/Y', $data['date']));

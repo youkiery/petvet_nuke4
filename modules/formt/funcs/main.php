@@ -654,9 +654,7 @@ if (!empty($action)) {
     case 'insert':
       $id = $nv_Request->get_string('id', 'get/post', '');
       $form = $nv_Request->get_string('form', 'get/post', '');
-      $data = $nv_Request->get_string('data', 'get/post', '');
-      var_dump(substr($data, 3));die();
-      var_dump(json_decode($data));die();
+      $data = $nv_Request->get_array('data', 'get/post', '');
 
       $page = $nv_Request->get_string('page', 'get/post', 1);
       $limit = $nv_Request->get_string('limit', 'get/post', 1);
