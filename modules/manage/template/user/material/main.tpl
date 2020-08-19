@@ -33,6 +33,18 @@
   .red {
     background: pink;
   }
+
+  .sl {
+    float: left;
+    width: calc(100% - 10px);
+  }
+  .sr {
+    float: right;
+    width: 10px;
+  }
+  .sr:hover {
+    color: red;
+  }
 </style>
 
 <div id="msgshow"></div>
@@ -258,7 +270,8 @@
             html += `
               <div class="suggest-item" onclick="pickSuggest('source', '` + item['id'] + `', '` + item['name'] + `')">
                 `+ item['name'] + `
-              </div>`
+              </div>
+              `
           }
         })
         if (!html.length) html = 'Không có kết quả'
@@ -358,13 +371,25 @@
       if (count < 30 && item['alias'].search(keyword) >= 0) {
         count++
         html += `
-          <div class="suggest-item" onclick="selectSource('`+ name + `', ` + index + `, ` + ia + `)">
+          <div style="clear: both;">
+            <div class="suggest-item sl" onclick="selectSource('`+ name + `', ` + index + `, ` + ia + `)">
             `+ item['name'] + `
+            </div>
+            <div class="sr" onclick="removeSource('`+ item['id'] +`', \'`+keyword+`\', \'`+name+`\', `+ia+`)">
+              &times;
+            </div>
           </div>`
       }
     })
     if (!html.length) return 'Không có kết quả'
     return html
+  }
+
+  function removeSource(id, keyword, name, ia) {
+    vhttp.checkelse('', {action: 'remove-source', id: id}).then(data => {
+      global['source'] = data['source']
+      $('#import-source-suggest-'+ ia).html(searchSource(keyword, name, ia))      
+    })
   }
 
   function materialModal(name, ia) {
@@ -432,6 +457,19 @@
       $('.insert').hide()
       $('.update').show()
       $('#material-modal').modal('show')
+    })
+  }
+
+  function removeItem(id) {
+    global['id'] = id
+    $('#remove-modal').modal('show')
+  }
+
+  function removeItemSubmit() {
+    vhttp.checkelse('', {action: 'remove-item', id: global['id']}).then(data => {
+      global['material'] = data['material']
+      $('#content').html(data['html'])
+      $('#remove-modal').modal('hide')
     })
   }
 

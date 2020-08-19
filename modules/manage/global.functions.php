@@ -334,10 +334,10 @@ function checkMaterialName($name, $id = 0) {
   global $db;
 
   if ($id) {
-    $query = $db->query('select * from `'. PREFIX .'material` where name = "'. $name .'" and id <>' . $id);
+    $query = $db->query('select * from `'. PREFIX .'material` where name = "'. $name .'" and active = 1 and id <>' . $id);
   }
   else {
-    $query = $db->query('select * from `'. PREFIX .'material` where name = "'. $name .'"');
+    $query = $db->query('select * from `'. PREFIX .'material` where name = "'. $name .'" and active = 1');
   }
   if ($row = $query->fetch()) return $row['id'];
   return false;
@@ -347,7 +347,7 @@ function getMaterialDataList() {
   global $db;
 
   $list = array();
-  $sql = 'select * from `'. PREFIX .'material`';
+  $sql = 'select * from `'. PREFIX .'material` where active = 1';
   $query = $db->query($sql);
   // insert link
   while ($row = $query->fetch()) {

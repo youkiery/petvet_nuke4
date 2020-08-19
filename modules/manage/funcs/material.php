@@ -381,7 +381,7 @@ if (!empty($action)) {
         $result['notify'] = 'Trùng tên vật tư';
       } else {
         // insert
-        $sql = 'update `' . PREFIX . 'material` set name = "' . $data['name'] . '", unit = "' . $data['unit'] . '", description = "' . $data['description'] . '" where id = '. $id;
+        $sql = 'update `' . PREFIX . 'material` set name = "' . $data['name'] . '", unit = "' . $data['unit'] . '", description = "' . $data['description'] . '" where id = ' . $id;
         // die($sql);
         if ($db->query($sql)) {
           $result['status'] = 1;
@@ -390,10 +390,27 @@ if (!empty($action)) {
         }
       }
       break;
+    case 'remove-item':
+      // xóa hàng hóa
+      $id = $nv_Request->get_int('id', 'post');
+
+      // deactive hàng hóa
+      $sql = 'select * from `'. PREFIX .'material` where id = '. $id;
+      $query = $db->query($sql);
+      $material = $query->fetch();
+      if (!empty($material)) {
+        $sql = 'update `'. PREFIX .'material` set active = 0 where id = '. $id;
+        $db->query($sql);
+
+        $result['html'] = materialList();
+        $result['material'] = getMaterialDataList();
+      }
+      $result['status'] = 1;
+      break;
     case 'get-item':
       $id = $nv_Request->get_int('id', 'post');
 
-      $sql = 'select * from `' . PREFIX . 'material` where id = '. $id;
+      $sql = 'select * from `' . PREFIX . 'material` where id = ' . $id;
       $query = $db->query($sql);
       $material = $query->fetch();
 
@@ -485,7 +502,7 @@ if (!empty($action)) {
         $query = $db->query($sql);
         $remain = 0;
         while ($material = $query->fetch()) $remain += $material['number'];
-  
+
         // lấy dữ liệu trong khoảng thời gian, kiểm tra tick, xuất dữ liệu
         // b1, lấy danh sách nhập, xuất
         // b2, hợp danh sách, foreach, tính tồn đầu tiên
@@ -493,21 +510,21 @@ if (!empty($action)) {
         $sql = 'select a.*, b.source, b.expire from `' . PREFIX . 'material_import_detail` a inner join `' . PREFIX . 'material_detail` b on a.detailid = b.id where b.materialid = ' . $type . ' and ' . ($data['source'] > 0 ? ' b.source = ' . $data['source'] . ' and ' : '') . ' a.date > ' . $data['date'] . ' and a.number > 0 order by date desc';
         $query = $db->query($sql);
         $import = array();
-  
+
         while ($row = $query->fetch()) {
           $remain -= $row['number'];
           $import[] = $row;
         }
-  
+
         $sql = 'select a.*, b.source, b.expire from `' . PREFIX . 'material_export_detail` a inner join `' . PREFIX . 'material_detail` b on a.detailid = b.id where b.materialid = ' . $type . ' and ' . ($data['source'] > 0 ? ' b.source = ' . $data['source'] . ' and ' : '') . ' a.date > ' . $data['date'] . ' and a.number > 0 order by date desc';
         $query = $db->query($sql);
         $export = array();
-  
+
         while ($row = $query->fetch()) {
           $remain += $row['number'];
           $export[] = $row;
         }
-  
+
         $ci = count($import) - 1;
         $ce = count($export) - 1;
         $count = $ci + $ce + 2;
@@ -521,11 +538,10 @@ if (!empty($action)) {
                 $check = false;
               }
             }
-          }
-          else {
+          } else {
             $check = false;
           }
-  
+
           if ($check) {
             $data = array(
               'type' => 'Nhập',
@@ -549,7 +565,7 @@ if (!empty($action)) {
             );
             $ce--;
           }
-  
+
           $xtpl->assign('source', $source[$data['source']]);
           $xtpl->assign('type', $data['type']);
           $xtpl->assign('date', $data['date']);
@@ -565,63 +581,63 @@ if (!empty($action)) {
       $result['status'] = 1;
       $result['html'] = $xtpl->text();;
       break;
-      case 'report_limit':
-        $data = $nv_Request->get_array('data', 'post');
+    case 'report_limit':
+      $data = $nv_Request->get_array('data', 'post');
 
-        $xtpl = new XTemplate("report-limit-list.tpl", PATH);
-        $sql = 'select * from `'. PREFIX .'material` where name like "%'. $data['keyword'] .'%" order by name';
-        $query = $db->query($sql);
-        $index = 1;
-        
-        while($item = $query->fetch()) {
-          $number = 0;
-          $sql = 'select * from `'. PREFIX .'material_detail` where materialid = '. $item['id'] .' and number > 0';
-          // die($sql);
-          $detailquery = $db->query($sql);
-          while($detail = $detailquery->fetch()) {
-            $number += $detail['number'];
-          }
-          if ($number <= $data['limit']) {
+      $xtpl = new XTemplate("report-limit-list.tpl", PATH);
+      $sql = 'select * from `' . PREFIX . 'material` where name like "%' . $data['keyword'] . '%" order by name';
+      $query = $db->query($sql);
+      $index = 1;
+
+      while ($item = $query->fetch()) {
+        $number = 0;
+        $sql = 'select * from `' . PREFIX . 'material_detail` where materialid = ' . $item['id'] . ' and number > 0';
+        // die($sql);
+        $detailquery = $db->query($sql);
+        while ($detail = $detailquery->fetch()) {
+          $number += $detail['number'];
+        }
+        if ($number <= $data['limit']) {
+          $xtpl->assign('index', $index++);
+          $xtpl->assign('name', $item['name']);
+          $xtpl->assign('number', $number);
+          $xtpl->assign('expire', '');
+          $xtpl->parse('main.row');
+        }
+      }
+      $xtpl->parse('main');
+      $result['status'] = 1;
+      $result['html'] = $xtpl->text();;
+      break;
+    case 'report_expire':
+      $data = $nv_Request->get_array('data', 'post');
+      $expire = totime($data['expire']);
+
+      $xtpl = new XTemplate("report-expire-list.tpl", PATH);
+      $sql = 'select * from `' . PREFIX . 'material` where name like "%' . $data['keyword'] . '%" order by name';
+      $query = $db->query($sql);
+      $index = 1;
+
+      $source = sourceDataList2();
+
+      while ($item = $query->fetch()) {
+        $sql = 'select * from `' . PREFIX . 'material_detail` where number > 0 and materialid = ' . $item['id'] . ' and expire < ' . $expire;
+        $detailquery = $db->query($sql);
+        $xtpl->assign('name', $item['name']);
+        while ($detail = $detailquery->fetch()) {
+          if ($detail['number'] > 0) {
             $xtpl->assign('index', $index++);
-            $xtpl->assign('name', $item['name']);
-            $xtpl->assign('number', $number);
-            $xtpl->assign('expire', '');
+            $xtpl->assign('number', $detail['number']);
+            $xtpl->assign('source', $source[$detail['source']]);
+            $xtpl->assign('expire', date('d/m/Y', $detail['expire']));
             $xtpl->parse('main.row');
           }
         }
-        $xtpl->parse('main');
-        $result['status'] = 1;
-        $result['html'] = $xtpl->text();;
-        break;
-      case 'report_expire':
-        $data = $nv_Request->get_array('data', 'post');
-        $expire = totime($data['expire']);
-
-        $xtpl = new XTemplate("report-expire-list.tpl", PATH);
-        $sql = 'select * from `'. PREFIX .'material` where name like "%'. $data['keyword'] .'%" order by name';
-        $query = $db->query($sql);
-        $index = 1;
-
-        $source = sourceDataList2();
-        
-        while($item = $query->fetch()) {
-          $sql = 'select * from `'. PREFIX .'material_detail` where number > 0 and materialid = '. $item['id'] . ' and expire < ' . $expire;
-          $detailquery = $db->query($sql);
-          $xtpl->assign('name', $item['name']);
-          while($detail = $detailquery->fetch()) {
-            if ($detail['number'] > 0) {
-              $xtpl->assign('index', $index++);
-              $xtpl->assign('number', $detail['number']);
-              $xtpl->assign('source', $source[$detail['source']]);
-              $xtpl->assign('expire', date('d/m/Y', $detail['expire']));
-              $xtpl->parse('main.row');
-            }
-          }
-        }
-        $xtpl->parse('main');
-        $result['status'] = 1;
-        $result['html'] = $xtpl->text();;
-        break;
+      }
+      $xtpl->parse('main');
+      $result['status'] = 1;
+      $result['html'] = $xtpl->text();;
+      break;
       // case 'edit-import':
       //   $data = $nv_Request->get_array('data', 'post');
 
@@ -764,6 +780,15 @@ if (!empty($action)) {
       //     $result['html'] = typeOptionList();
       //   }
       //   break;
+    case 'remove-source':
+      $id = $nv_Request->get_int('id', 'post', 0);
+
+      $sql = 'update `'. PREFIX .'material_source` set active = 0 where id = '. $id;
+      if ($db->query($sql)) {
+        $result['source'] = sourceDataList();
+      }
+      $result['status'] = 1;
+      break;
     case 'insert-source':
       $name = $nv_Request->get_string('name', 'post', '');
       $note = $nv_Request->get_string('note', 'post', '');
@@ -798,7 +823,6 @@ $xtpl->assign('material', json_encode(getMaterialDataList(), JSON_UNESCAPED_UNIC
 $xtpl->assign('source', json_encode(sourceDataList()));
 $xtpl->assign('modal', materialModal());
 $xtpl->assign('content', materialList());
-
 $xtpl->parse('main');
 $contents = $xtpl->text();
 include NV_ROOTDIR . '/includes/header.php';

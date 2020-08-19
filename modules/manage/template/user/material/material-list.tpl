@@ -23,6 +23,9 @@
         <button class="btn btn-info btn-xs" onclick="updateItem({id})">
           sửa
         </button>  
+        <button class="btn btn-danger btn-xs" onclick="removeItem({id})">
+          xóa
+        </button>  
         <!-- xóa -->
         <!-- END: manager -->
       </td>

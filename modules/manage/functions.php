@@ -143,7 +143,7 @@ function materialList() {
   $query = $db->query($sql);
   $count = $query->fetch()['count'];
 
-  $sql = 'select * from `'. PREFIX .'material` order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $sql = 'select * from `'. PREFIX .'material` where active = 1 order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
   $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
   $today = time();
@@ -158,6 +158,7 @@ function materialList() {
       // echo "$expire, ";
       $number += $detail['number'];
     }
+    // if ($row['id'] == 7) die("$number");
 
     $xtpl->assign('expire', '-');
     $xtpl->assign('color', '');
@@ -193,7 +194,7 @@ function materialModal() {
 function sourceDataList() {
   global $db;
 
-  $sql = 'select * from `'. PREFIX .'material_source` order by name';
+  $sql = 'select * from `'. PREFIX .'material_source` where active = 1 order by name';
   $query = $db->query($sql);
   $list = array();
 
@@ -210,7 +211,7 @@ function sourceDataList() {
 function sourceDataList2() {
   global $db;
 
-  $sql = 'select * from `'. PREFIX .'material_source` order by name';
+  $sql = 'select * from `'. PREFIX .'material_source` where active = 1 order by name';
   $query = $db->query($sql);
   $list = array();
 
