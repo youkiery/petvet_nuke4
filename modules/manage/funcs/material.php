@@ -508,6 +508,8 @@ if (!empty($action)) {
         // b2, hợp danh sách, foreach, tính tồn đầu tiên
         // b3, kiểm tra tick, xuất dữ liệu
         $sql = 'select a.*, b.source, b.expire from `' . PREFIX . 'material_import_detail` a inner join `' . PREFIX . 'material_detail` b on a.detailid = b.id where b.materialid = ' . $type . ' and ' . ($data['source'] > 0 ? ' b.source = ' . $data['source'] . ' and ' : '') . ' a.date > ' . $data['date'] . ' and a.number > 0 order by date desc';
+        // if ($type == 9) die($sql);
+        // die($sql);
         $query = $db->query($sql);
         $import = array();
 
@@ -543,7 +545,7 @@ if (!empty($action)) {
           }
 
           if ($check) {
-            $data = array(
+            $piece = array(
               'type' => 'Nhập',
               'source' => $import[$ci]['source'],
               'date' => date('d/m/Y', $import[$ci]['date']),
@@ -554,7 +556,7 @@ if (!empty($action)) {
             );
             $ci--;
           } else {
-            $data = array(
+            $piece = array(
               'type' => 'Xuất',
               'source' => $export[$ce]['source'],
               'date' => date('d/m/Y', $export[$ce]['date']),
@@ -565,16 +567,20 @@ if (!empty($action)) {
             );
             $ce--;
           }
+          // echo json_encode($data);
 
-          $xtpl->assign('source', $source[$data['source']]);
-          $xtpl->assign('type', $data['type']);
-          $xtpl->assign('date', $data['date']);
-          $xtpl->assign('number', $data['number']);
-          $xtpl->assign('remain', $data['remain']);
-          $xtpl->assign('expire', $data['expire']);
-          $xtpl->assign('note', $data['note']);
+          if (!empty($source[$data['source']])) $source = $source[$data['source']];
+          else $source = '';
+          $xtpl->assign('source', $source);
+          $xtpl->assign('type', $piece['type']);
+          $xtpl->assign('date', $piece['date']);
+          $xtpl->assign('number', $piece['number']);
+          $xtpl->assign('remain', $piece['remain']);
+          $xtpl->assign('expire', $piece['expire']);
+          $xtpl->assign('note', $piece['note']);
           $xtpl->parse('main.row');
         }
+        // die();
         $xtpl->parse('main');
       }
       // die();

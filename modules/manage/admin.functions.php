@@ -490,6 +490,11 @@ function materialPermitList()
       'type' => '0',
       'name' => 'quản lý',
       'btn' => 'btn-warning'
+    ),
+    array(
+      'type' => '0',
+      'name' => 'quản lý',
+      'btn' => 'btn-warning'
     )
   );
   while ($row = $query->fetch()) {
