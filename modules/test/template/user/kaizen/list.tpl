@@ -8,9 +8,6 @@
   <tbody class="item-border">
     <tr>
       <td class="cell-center" rowspan="3">
-        {index}
-      </td>
-      <td class="cell-center" rowspan="3">
         {time}
       </td>
       <td>
@@ -21,10 +18,10 @@
       </td>
       <!-- BEGIN: manager -->
       <td class="cell-center" rowspan="3">
-        <button class="edit btn btn-info btn-sm" rel="{id}" onclick="editAlert(event, {id})">
+        <button class="edit btn btn-info btn-xs" rel="{id}" onclick="editAlert(event, {id})">
           <span class="glyphicon glyphicon-edit"></span>
         </button>
-        <button class="btn btn-danger btn-sm" onclick="removeAlert({id})">
+        <button class="btn btn-danger btn-xs" onclick="removeAlert({id})">
           <span class="glyphicon glyphicon-remove"></span>
         </button>
       </td>
