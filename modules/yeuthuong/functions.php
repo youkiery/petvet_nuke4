@@ -21,6 +21,7 @@ require_once NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 define('PREFIX', $db_config['prefix'] . '_' . $module_name . '_');
 define('PATH', NV_ROOTDIR . "/modules/". $module_file ."/template");
 define('PATH2', NV_ROOTDIR . "/modules/". $module_file ."/template/user/". $op);
+$status_data = array(0 => 'xác nhận', 'chưa xác nhận');
 
 global $global_array_cat;
 $global_array_cat = array();
@@ -268,33 +269,34 @@ function homeModal() {
 }
 
 function happyContent() {
-    global $filter, $db;
+  global $filter, $db, $status_data;
 
-    $xtpl = new XTemplate("list.tpl", PATH2);
-  
-    $query = $db->query("select count(*) as count from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%' or species like '%$filter[keyword]%') and status = " . $filter['status']);
-    $number = $query->fetch()['count'];
-  
-    $sql = "select * from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%' or species like '%$filter[keyword]%') and status = " . $filter['status'] . " order by id desc limit $filter[limit] offset " . ($filter['page'] - 1) * $filter['limit'];
-    $query = $db->query($sql);
-    $query = $db->query($sql);
-    $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+  $xtpl = new XTemplate("list.tpl", PATH2);
 
-    while ($row = $query->fetch()) {
-      $images = explode(',', $row['image']);
-      $xtpl->assign('index', $index ++);
-      $xtpl->assign('id', $row['id']);
-      $xtpl->assign('fullname', $row['fullname']);
-      $xtpl->assign('name', $row['name']);
-      $xtpl->assign('mobile', $row['mobile']);
-      $xtpl->assign('address', $row['address']);
-      $xtpl->assign('species', $row['species']);
-      $xtpl->assign('image', $images[0]);
-      $xtpl->parse('main.row');
-    }
-    $xtpl->assign('nav', nav_generater('/register/list?status=' . $filter['status'] . '&keyword=' . $filter['keyword'], $number, $filter['page'], $filter['limit']));
-    $xtpl->parse('main');
-    return $xtpl->text();
+  $query = $db->query("select count(*) as count from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') and status = " . $filter['status']);
+  $number = $query->fetch()['count'];
+
+  $sql = "select * from `". UPREFIX ."_happy` where (fullname like '%$filter[keyword]%' or name like '%$filter[keyword]%' or mobile like '%$filter[keyword]%') and status = " . $filter['status'] . " order by id desc limit $filter[limit] offset " . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
+
+  $xtpl->assign('type', intval(!$filter['status']));
+  $xtpl->assign('done', $status_data[$filter['status']]);
+  if ($filter['status']) $xtpl->assign('done_btn', 'btn-warning');
+  else $xtpl->assign('done_btn', 'btn-info');
+  while ($row = $query->fetch()) {
+    $image = explode(',', $row['image']);
+    $xtpl->assign('id', $row['id']);
+    $xtpl->assign('time', ($row['time'] ? date('d/m H:i', $row['time']) : 'N/A'));
+    $xtpl->assign('fullname', $row['fullname']);
+    $xtpl->assign('image', $image[0]);
+    $xtpl->assign('species', $row['species']);
+    $xtpl->assign('mobile', $row['mobile']);
+    $xtpl->assign('address', $row['address']);
+    $xtpl->parse('main.row');
+  }
+  $xtpl->assign('nav', nav_generater('/admin/index.php?language=vi&nv=register&op=happy&status=' . $filter['status'], $number, $filter['page'], $filter['limit']));
+  $xtpl->parse('main');
+  return $xtpl->text();
 }
 
 function happyPreview($id) {

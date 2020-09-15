@@ -44,8 +44,8 @@
     image: []
   }
 
-  function done(id) {
-    vhttp.checkelse('', { action: 'done', id: id }).then(data => {
+  function done(id, type) {
+    vhttp.checkelse('', { action: 'done', id: id, type: type }).then(data => {
       $("#content").html(data['html'])
     })
   }
@@ -68,6 +68,18 @@
       $("#edit-species").val(data['data']['species'])
       $("#edit-note").val(data['data']['note'])
       $("#edit-modal").modal('show')
+    })
+  }
+
+  function remove(id) {
+    global['id'] = id
+    $("#remove-modal").modal('show')
+  }
+
+  function removeSubmit(id) {
+    vhttp.checkelse('', { action: 'remove', id: global['id'] }).then(data => {
+      $("#content").html(data['html'])
+      $("#remove-modal").modal('hide')
     })
   }
 
@@ -100,7 +112,7 @@
     list.forEach((item, index) => {
       html += `
       <div class="thumb">
-        <img src="`+ item + `">
+        <img class="img-responsive" src="`+ item + `">
       </div>`
     })
     $("#image-list").html(html)

@@ -46,10 +46,20 @@ if (!empty($action)) {
         $result['html'] = happyContent();
       }
     break;  
-    case 'done':
+    case 'remove':
       $id = $nv_Request->get_int('id', 'post', 0);
 
-      $sql = 'update `'. UPREFIX .'_happy` set status = 1 where id = ' . $id;
+      $sql = 'delete from `'. UPREFIX .'_happy` where id = ' . $id;
+      if ($db->query($sql)) {
+        $result['status'] = 1;
+        $result['html'] = happyContent();
+      }
+    break;  
+    case 'done':
+      $id = $nv_Request->get_int('id', 'post', 0);
+      $type = $nv_Request->get_int('type', 'post', 0);
+
+      $sql = 'update `'. UPREFIX .'_happy` set status = '. $type .' where id = ' . $id;
       if ($db->query($sql)) {
         $result['status'] = 1;
         $result['html'] = happyContent();

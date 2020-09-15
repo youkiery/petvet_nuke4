@@ -16,7 +16,7 @@ if (!empty($action)) {
       $data = $nv_Request->get_array('data', 'post');
       $list = $nv_Request->get_array('list', 'post');
 
-      $sql = "insert into `". UPREFIX ."_happy` (fullname, name, species, mobile, address, image) values('$data[fullname]', '$data[name]', '$data[species]', '$data[mobile]', '$data[address]', '". implode(',', $list) ."')";
+      $sql = "insert into `". UPREFIX ."_happy` (fullname, name, species, mobile, address, image, time) values('$data[fullname]', '$data[name]', '$data[species]', '$data[mobile]', '$data[address]', '". implode(',', $list) ."', ". time() .")";
       
       if ($db->query($sql)) {
         $result['status'] = 1;

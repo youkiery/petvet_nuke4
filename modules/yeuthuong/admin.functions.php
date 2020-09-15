@@ -898,7 +898,7 @@ function courtRegistList($filter) {
 
   $sql = 'select * from `'. PREFIX .'regist` '. (count($xtra) ? 'where ' . implode(' and ', $xtra) : '') .' limit '. $filter['limit'] .' offset ' . $filter['limit'] * ($filter['page'] - 1);
   $query = $db->query($sql);
-  $numer = 0;
+  $number = 0;
   while ($row = $query->fetch()) {
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
