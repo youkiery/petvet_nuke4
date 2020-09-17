@@ -23,6 +23,17 @@ if (empty($user)) {
   include NV_ROOTDIR . '/includes/footer.php';
 }
 
+$manager = 0;
+if (!empty($user_info['admin_id'])) $manager = 1;
+else {
+  foreach ($user as $key => $role) {
+    if ($role > 1) {
+      $manager = 1;
+      break;
+    }
+  }
+}
+
 $filter = array(
   'start' => $nv_Request->get_int('start', 'get', 0),
   'end' => $nv_Request->get_int('end', 'get', 0),
@@ -36,6 +47,17 @@ foreach ($filter['user'] as $userid) {
   if ($userid) $list []= $userid;
 }
 $filter['user'] = $list;
+
+$selected_list = array();
+$useridlist = array();
+foreach ($filter['user'] as $key => $value) {
+  if ($value) {
+    $user = getUserById($employ[$value]['id']);
+    $useridlist []= $employ[$value]['id'];
+    $selected_list []= $user['first_name'];
+  }
+  $selected_data[$value] = $value;
+}
 
 $filter['url'] = '/' . $module_name . '/';
 
@@ -63,6 +85,19 @@ if (!empty($action)) {
         if ($db->query($sql)) {
           $result['status'] = 1;
         }
+      }
+    break;
+    case 'update-process':
+      $data = $nv_Request->get_array("data", "post", "");
+
+      $xtra = '';
+      if ($data['calltime']) {
+        $xtra = ', calltime = ' . $data['calltime'];
+      }
+      $sql = "update `" . PREFIX . "_row` set process = $data[process], note = '$data[note]', last_time = ". time() .", edit_user =  ". $user_info['userid'] ."$xtra where id = $data[id]";
+      if ($db->query($sql)) {
+        $result["html"] = mainContent();
+        $result["status"] = 1;
       }
     break;
     case 'edit':
@@ -200,27 +235,6 @@ if (!empty($action)) {
         }
       }
       break;
-
-    case 'change_process':
-      $id = $nv_Request->get_string("id", "get/post", "");
-      $process = $nv_Request->get_string("process", "get/post", "");
-      $note = $nv_Request->get_string("note", "get/post", "");
-
-      if (!empty($id) && !empty($process)) {
-        $sql = "select * from `" . WORK_PREFIX . "_row` where id = $id";
-        $query = $db->query($sql);
-        $work = $query->fetch();
-        if (!empty($work)) {
-          $sql = "update `" . WORK_PREFIX . "_row` set process = $process, note = '$note' where id = $id";
-          if ($db->query($sql)) {
-            $departid = $nv_Request->get_string("departid", "get/post", "");
-            $result["list"] = user_work_list($departid);
-            $result["status"] = 1;
-            $result["notify"] = $lang_module["saved"];
-          }
-        }
-      }
-      break;
   }
   echo json_encode($result);
   die();
@@ -272,18 +286,9 @@ $xtpl->assign("lang", $lang_module);
 // $xtpl->assign("page", 1);
 // $xtpl->assign("limit", 10);
 
-foreach ($user as $key => $role) {
-  if ($role > 1) {
-    $xtpl->parse('main.manager');
-    break;
-  }
-}
-
 $selected_data = array();
-foreach ($filter['user'] as $key => $value) {
-  $selected_data[$value] = $value;
-}
-
+$list = array();
+$xtpl->assign('selected', implode(', ', $selected_list));
 $xtpl->assign('modal', mainModal());
 $xtpl->assign('content', mainContent());
 $xtpl->assign('role', json_encode($user));
@@ -291,9 +296,11 @@ $xtpl->assign('employ', json_encode($employ));
 $xtpl->assign('user', json_encode($userlist));
 $xtpl->assign('filter', json_encode($selected_data));
 $xtpl->assign('depart', json_encode($depart));
+
+if ($manager) $xtpl->parse('main.manager');
+
 $xtpl->parse("main");
 $contents = $xtpl->text();
-
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_site_theme($contents);
 include NV_ROOTDIR . '/includes/footer.php';

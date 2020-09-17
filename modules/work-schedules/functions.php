@@ -7,7 +7,6 @@
  * @License GNU/GPL version 2 or any later version
  * @Createdate Sat, 11 Jun 2016 23:45:51 GMT
  */
-
 if (!defined('NV_SYSTEM')) die('Stop!!!');
 define('NV_MOD_WORK_SCHEDULES', true);
 define("PATH", NV_ROOTDIR . '/modules/' . $module_file .'/template/user/'. $op);
@@ -42,21 +41,15 @@ require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 // }
 
 function mainModal() {
-  global $lang_module, $filter;
+  global $lang_module, $filter, $manager;
   $xtpl = new XTemplate('modal.tpl', PATH);
   if (empty($filter['start'])) $start = time();
   else $start = $filter['start'];
   if (empty($filter['end'])) $end = time() + 60 * 60 * 24 * 7;
   else $end = $filter['end'];
-  $list = array();
-  foreach ($filter['user'] as $value) {
-    if ($value) {
-      $user = getUserById($value);
-      $list []= $user['first_name'];
-    }
-  }
 
-  $xtpl->assign('selected', implode(', ', $list));
+  if ($manager) $xtpl->parse('main.manager');
+
   $xtpl->assign('starttime', date('d/m/Y', $start));
   $xtpl->assign('endtime', date('d/m/Y', $end));
   $xtpl->assign('lang', $lang_module);
@@ -65,51 +58,62 @@ function mainModal() {
 }
 
 function mainContent() {
-  global $db, $filter;
+  global $db, $useridlist, $filter, $manager, $user_info;
   $xtpl = new XTemplate('list.tpl', PATH);
 
   $xtra = array();
-  $timecheck = 0;
-  if ($filter['start']) $timecheck += 1;
-  if ($filter['end']) $timecheck += 2;
 
-  switch ($timecheck) {
-    case 0: 
-      // không chứa thời gian
-    break;
-    case 1: 
-      // chỉ có ngày bắt đầu
-      $xtra []= '(last_time >= '. $filter['start'] .')';
-    break;
-    case 2: 
-      // chỉ có ngày kết thúc
-      $xtra []= '(last_time <= '. $filter['end'] .')';
-    break;
-    case 3: 
-      // có cả 2 thờigian
-      $xtra []= '(last_time between '. $filter['start'] .' and '. $filter['end'] .')';
-    break;
+  if ($manager) {
+    $timecheck = 0;
+    if ($filter['start']) $timecheck += 1;
+    if ($filter['end']) $timecheck += 2;
+  
+    switch ($timecheck) {
+      case 0: 
+        // không chứa thời gian
+      break;
+      case 1: 
+        // chỉ có ngày bắt đầu
+        $xtra []= '(last_time >= '. $filter['start'] .')';
+      break;
+      case 2: 
+        // chỉ có ngày kết thúc
+        $xtra []= '(last_time <= '. $filter['end'] .')';
+      break;
+      case 3: 
+        // có cả 2 thờigian
+        $xtra []= '(last_time between '. $filter['start'] .' and '. $filter['end'] .')';
+      break;
+    }
+  
+    if (count($filter['user'])) $xtra []= 'userid in ('. implode(',', $useridlist) .')';
+    if (count($xtra)) $xtra = ' where ' . implode(' and ', $xtra);
+    else $xtra = '';
   }
-
-  if (count($filter['user'])) $xtra []= 'userid in ('. implode(',', $filter['user']) .')';
-  if (!empty($xtra)) $xtra = ' where ' . implode(' and ', $xtra);
+  else {
+    $xtra = ' where userid = ' . $user_info['userid'];
+  }
 
   $sql = 'select count(*) as count from `'. PREFIX .'_row`' . $xtra;
   $query = $db->query($sql);
   $number = $query->fetch()['count'];
 
-  $sql = 'select * from `'. PREFIX .'_row` '. $xtra .' order by last_time desc limit ' . $filter['limit'] . ' offset '. $filter['limit'] * ($filter['page'] - 1);
+  $sql = 'select * from `'. PREFIX .'_row` '. $xtra .'  order by process asc, calltime desc limit ' . $filter['limit'] . ' offset '. $filter['limit'] * ($filter['page'] - 1);
   $query = $db->query($sql);
   $today = time();
   while ($row = $query->fetch()) {
     $user = getUserById($row['userid']);
     $xtpl->assign('color', '');
     if ($row['process'] === 100) $xtpl->assign('color', 'green');
-    else if ($today < $row['last_time']) $xtpl->assign('color', 'red');
+    else if ($today > $row['calltime']) $xtpl->assign('color', 'red');
+    $xtpl->assign('start', date('d/m/Y', $row['cometime']));
+    $xtpl->assign('end', date('d/m/Y', $row['calltime']));
     $xtpl->assign('content', $row['content']);
+    $xtpl->assign('id', $row['id']);
     $xtpl->assign('user', $user['first_name']);
+    $xtpl->assign('calltime', date('d/m/Y', $row['calltime']));
     $xtpl->assign('process', $row['process']);
-    $xtpl->assign('note', $row['note']);
+    $xtpl->assign('note', (strlen($row['note']) ? '- '. $row['note'] : ''));
     $xtpl->parse('main.row');
   }
   $xtpl->assign('nav', nav_generater($filter['url'], $number, $filter['page'], $filter['limit']));

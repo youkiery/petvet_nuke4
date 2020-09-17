@@ -188,6 +188,124 @@ h3.dayweek-head{
   vertical-align: inherit !important;
 }
 
+.rows::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.col-1,
+.col-2,
+.col-3,
+.col-4,
+.col-5,
+.col-6,
+.col-7,
+.col-8,
+.col-9,
+.col-10,
+.col-11,
+.col-12 {
+  float: left;
+}
+
+.col-1 {
+  width: 8.33%;
+}
+
+.col-2 {
+  width: 16.66%;
+}
+
+.col-3 {
+  width: 25%;
+}
+
+.col-4 {
+  width: 33.33%;
+}
+
+.col-5 {
+  width: 41.66%;
+}
+
+.col-6 {
+  width: 50%;
+}
+
+.col-7 {
+  width: 58.33%;
+}
+
+.col-8 {
+  width: 66.66%;
+}
+
+.col-9 {
+  width: 75%;
+}
+
+.col-10 {
+  width: 83.33%;
+}
+
+.col-11 {
+  width: 91.66%;
+}
+
+.col-12 {
+  width: 100%;
+}
+
+#loading {
+  display: none;
+}
+
+.black-wag {
+  background: gray;
+  position: fixed;
+  z-index: 1051;
+  top: 0;
+  left: 0;
+  opacity: .2;
+  width: -webkit-fill-available;
+  height: -webkit-fill-available;
+}
+
+.loading {
+  position: fixed;
+  top: calc(50% - 75px);
+  left: calc(50% - 75px);
+  z-index: 1052;
+}
+
+.relative {
+  position: relative;
+}
+
+.suggest-item {
+  height: 30px;
+  line-height: 30px;
+  padding: 5px;
+  border-bottom: 1px solid #ddd;
+}
+
+.suggest {
+  z-index: 100;
+  background: white;
+  display:none;
+  position: absolute;
+  overflow-y:scroll;
+  max-height: 300px;
+  width: -webkit-fill-available;
+  width: 100%;
+}
+
+.suggest div:hover {
+	background: #afa;
+	cursor: pointer;
+}
+
 
 /* RESPONSIVE */
 @media only screen and (max-width: 767px) {

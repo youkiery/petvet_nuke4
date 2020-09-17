@@ -13,10 +13,10 @@
   }
 
   .red {
-    background: pink;
+    background: lightpink;
   }
 
-  .input-group-btn > button {
+  .input-group-btn>button {
     height: 32px !important;
   }
 
@@ -36,23 +36,67 @@
 
 {modal}
 
+<!-- BEGIN: manager -->
 <div class="form-group">
-  <div style="float: left;">
-    <button class="btn btn-info" onclick="filterModal()">
-      Lọc công việc
+  <div style="float: left; width: 50%;">
+    <div class="form-group rows">
+      <div class="col-6">
+        <label> Từ </label>
+        <div class="input-group">
+          <input type="text" class="form-control date" id="filter-starttime" value="{starttime}" autocomplete="off">
+          <div class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <label> Đến </label>
+        <div class="input-group">
+          <input type="text" class="form-control date" id="filter-endtime" value="{endtime}" autocomplete="off">
+          <div class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="relative">
+        <div class="input-group">
+          <input type="text" class="form-control" id="filter-user" placeholder="Chọn danh sách nhân viên">
+          <div class="input-group-btn">
+            <button class="btn btn-danger" onclick="clearFilterUser()">
+              <span class="glyphicon glyphicon-remove"></span>
+            </button>
+          </div>
+        </div>
+        <input type="hidden" id="filter-user-val">
+        <div class="suggest" id="filter-user-suggest"> </div>
+      </div>
+
+      <div id="filter-user-text"> {selected} </div>
+    </div>
+
+    <button class="btn btn-info btn-block" onclick="filterSubmit()">
+      Lọc danh sách
     </button>
   </div>
-  
+
   <div style="float: right;">
-    <!-- BEGIN: manager -->
-    <button class="btn btn-info" onclick="insertModal()">
-      Thêm công việc
-    </button>
-    <!-- END: manager -->
+    <div class="form-group">
+      <button class="btn btn-info" onclick="insertModal()">
+        Thêm công việc
+      </button>
+    </div>
+    <!-- <div class="form-group">
+      <button class="btn btn-info" onclick="employModal()">
+        Quản lý nhân viên
+      </button>
+    </div> -->
   </div>
   <div style="clear: both;"></div>
 </div>
-
+<!-- END: manager -->
 
 <div id="content">
   {content}
@@ -63,25 +107,10 @@
   src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/language/jquery.ui.datepicker-{NV_LANG_INTERFACE}.js"></script>
 <script src="/modules/core/js/vhttp.js"></script>
 <script src="/modules/core/js/vnumber-2.js"></script>
-<script src="/modules/core/js/vremind-7.js"></script>
+<script src="/modules/core/js/vremind-8.js"></script>
 <script>
-  // var dbdata = JSON.parse('{data}')
-  // var today = '{today}'
-  // var userid = -1
-  // var g_id = -1
-  // var g_departid = 0
-  // var x_depart = '{g_depart}'
-  // var current = 0
-  // var typing
-  // var complete = $(".complete")
-  // var count = $("#count")
-  // var content = $("#content")
-  // var nav = $("#nav")
-  // var completeStatus = 0
-  // var page = {page}
-  // var limit = {limit}
-
   var global = {
+    id: 0,
     role: JSON.parse('{role}'),
     employ: JSON.parse('{employ}'),
     user: JSON.parse('{user}'),
@@ -90,6 +119,7 @@
   }
 
   $(document).ready(() => {
+    if (!Object.keys(global['filter']).length) global['filter'] = {}
     // install user select
     vremind.install('#insert-user', '#insert-user-suggest', (input) => {
       return new Promise((resolve) => {
@@ -153,6 +183,7 @@
     });
     // install process parsing
     vnumber.install('insert-process', 0, 100)
+    vnumber.install('report-process', 0, 100)
   })
 
   function selectEmploy(label, id, name) {
@@ -164,7 +195,6 @@
     list = []
     for (const key in global['filter']) {
       if (global['filter'].hasOwnProperty(key)) {
-        const item = global['filter'][key];
         list.push(key)
       }
     }
@@ -181,14 +211,14 @@
         return 0
       }
       else xtra.push('start=' + data['starttime'])
-    } 
+    }
     if ($('#filter-endtime').val().length) {
       if (!data['endtime']) {
         alert_msg('Định dạng ngày DD/MM/YYYY')
         return 0
       }
       else xtra.push('end=' + data['endtime'])
-    } 
+    }
     window.location.replace('/' + nv_module_name + '/?' + xtra.join('&'))
   }
 
@@ -202,7 +232,7 @@
     list = []
     for (const key in global['filter']) {
       if (global['filter'].hasOwnProperty(key)) {
-        list.push(global['employ'][key]['name'])        
+        list.push(global['employ'][key]['name'])
       }
     }
     $('#filter-user-text').text(list.join(', '))
@@ -214,8 +244,39 @@
     $('#filter-user-text').text('')
   }
 
-  function filterModal() {
-    $('#filter-modal').modal('show')
+  function updateProcess(id, process, note, calltime) {
+    global['id'] = id
+    $('#report-process').val(process)
+    $('#report-note').val(note)
+    $('#report-calltime').val(calltime)
+    $('#report-modal').modal('show')
+  }
+
+  function updateProcessSubmit() {
+    freeze()
+    calltime = $('#report-calltime').val()
+    if (calltime.length && !checkDate(calltime)) alert_msg('Nhập hạn chót hợp lệ DD/MM/YYYY')
+    else vhttp.check('', {
+      action: 'update-process',
+      data: {
+        'id': global['id'],
+        'process': $('#report-process').val(),
+        'note': $('#report-note').val(),
+        'calltime': checkDate(calltime)
+      }
+    }).then(data => {
+      // thông báo
+      console.log(data);
+      alert_msg('Đã cập nhật công việc')
+      // cập nhật 
+      $('#content').html(data['html'])
+      $('#report-modal').modal('hide')
+      defreeze()
+    }, (data) => {
+      // Lỗi
+      console.log(data);
+      defreeze()
+    })
   }
 
   function insertModal() {

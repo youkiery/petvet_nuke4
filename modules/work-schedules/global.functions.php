@@ -7,7 +7,6 @@
  * @License GNU/GPL version 2 or any later version
  * @Createdate Sat, 11 Jun 2016 23:45:51 GMT
  */
-
 if (!defined('NV_MAINFILE')) {
   die('Stop!!!');
 }

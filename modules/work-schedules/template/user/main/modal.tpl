@@ -45,11 +45,21 @@
           <div class="rows">
             <div class="form-group col-6">
               <label> Ngày bắt đầu </label>
-              <input type="text" class="form-control date" id="insert-starttime" value="{starttime}" autocomplete="off">
+              <div class="input-group">
+                <input type="text" class="form-control date" id="insert-starttime" value="{starttime}" autocomplete="off">
+                <div class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </div>    
+              </div>
             </div>
             <div class="form-group col-6">
               <label> Hạn chót </label>
-              <input type="text" class="form-control date" id="insert-endtime" value="{endtime}" autocomplete="off">
+              <div class="input-group">
+                <input type="text" class="form-control date" id="insert-endtime" value="{endtime}" autocomplete="off">
+                <div class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </div>    
+              </div>
             </div>
           </div>
           <div class="form-group">
@@ -97,52 +107,48 @@
   </div>
 </div>
 
-<div id="filter-modal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+<div id="report-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-body">
         <div class="form-group">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-        <br>
 
-        <div class="form-group rows">
-          <div class="col-6">
-            <label> Từ </label>
-            <input type="text" class="form-control date" id="filter-starttime" value="{starttime}" autocomplete="off">
-          </div>
-          <div class="col-6">
-            <label> Đến </label>
-            <input type="text" class="form-control date" id="filter-endtime" value="{endtime}" autocomplete="off">
+        <div class="form-group">
+          <label> Tiến độ </label>
+          <div class="input-group">
+            <input type="number" class="form-control" id="report-process">
+            <div class="input-group-addon">
+              %
+            </div>
           </div>
         </div>
 
         <div class="form-group">
-          <div class="relative">
-            <div class="input-group">
-              <input type="text" class="form-control" id="filter-user" placeholder="Chọn danh sách nhân viên">
-              <div class="input-group-btn">
-                <button class="btn btn-danger" onclick="clearFilterUser()">
-                  <span class="glyphicon glyphicon-remove"></span>
-                </button>
-              </div>
-            </div>
-            <input type="hidden" id="filter-user-val">
-            <div class="suggest" id="filter-user-suggest"> </div>
-          </div>
-
-          <div id="filter-user-text"> {selected} </div>
+          <label> Ghi chú </label>
+          <input type="text" class="form-control" id="report-note" value="0">
         </div>
 
-        <button class="btn btn-info btn-block" onclick="filterSubmit()">
-          Lọc danh sách
+        <!-- BEGIN: manager -->
+        <div class="form-group">
+          <label> Hạn chót </label>
+          <div class="input-group">
+            <input type="text" class="form-control date" id="report-calltime">
+            <div class="input-group-addon">
+              <span class="glyphicon glyphicon-calendar"></span>
+            </div>
+          </div>
+        </div>
+        <!-- END: manager -->
+
+        <button class="btn btn-info btn-block" onclick="updateProcessSubmit()">
+          Cập nhật
         </button>
       </div>
     </div>
   </div>
 </div>
-
-
 
 <div id="edit" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -190,39 +196,6 @@
           </div>
           <button class="btn btn-info">
             {lang.work_update}
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="change_confirm" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form onsubmit="return change_confirm_submit(event)">
-          <div class="form-group">
-            <label> {lang.confirm} </label>
-            <select class="form-control" id="confirm_value">
-
-            </select>
-          </div>
-          <div class="form-group">
-            <label> {lang.review} </label>
-            <select class="form-control" id="confirm_review">
-
-            </select>
-          </div>
-          <div class="form-group">
-            <label> {lang.note} </label>
-            <input type="text" class="form-control" id="confirm_note">
-          </div>
-          <button class="btn btn-info">
-            {lang.update}
           </button>
         </form>
       </div>
