@@ -825,7 +825,7 @@ function checkUserPermit($userid)
 function getWorkEmploy()
 {
   global $db, $db_config;
-  $sql = 'select userid from `'. PREFIX .'_employ` group by userid';
+  $sql = 'select userid, role from `'. PREFIX .'_employ` group by userid order by role desc';
   $query = $db->query($sql);
   $list = array();
   while ($employ = $query->fetch()) {
@@ -835,7 +835,8 @@ function getWorkEmploy()
     $list[] = array(
       'id' => $employ['userid'],
       'name' => $user_data['first_name'],
-      'alias' => simplize($user_data['first_name'])
+      'alias' => simplize($user_data['first_name']),
+      'role' => $employ['role']
     );
   }
   return $list;
@@ -878,7 +879,7 @@ function getUserList() {
 function getUserById($userid) {
   global $db, $db_config;
 
-  $sql = 'select userid, first_name from `'. $db_config['prefix'] .'_users` where userid = ' . $userid;
+  $sql = 'select userid, username, first_name from `'. $db_config['prefix'] .'_users` where userid = ' . $userid;
   $query = $db->query($sql);
   return $query->fetch();
 }

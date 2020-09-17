@@ -26,6 +26,10 @@
       <td> 
         <button class="btn btn-info btn-xs" onclick="updateProcess({id}, {process}, '{note}', '{calltime}')">
           tiến độ
+        </button> 
+        <div style="margin-top: 1px;"></div>
+        <button class="btn btn-info btn-xs" onclick="finishWork({id})">
+          hoàn thành
         </button>  
       </td>
     </tr>

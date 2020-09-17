@@ -46,10 +46,11 @@
             <div class="form-group col-6">
               <label> Ngày bắt đầu </label>
               <div class="input-group">
-                <input type="text" class="form-control date" id="insert-starttime" value="{starttime}" autocomplete="off">
+                <input type="text" class="form-control date" id="insert-starttime" value="{starttime}"
+                  autocomplete="off">
                 <div class="input-group-addon">
                   <span class="glyphicon glyphicon-calendar"></span>
-                </div>    
+                </div>
               </div>
             </div>
             <div class="form-group col-6">
@@ -58,7 +59,7 @@
                 <input type="text" class="form-control date" id="insert-endtime" value="{endtime}" autocomplete="off">
                 <div class="input-group-addon">
                   <span class="glyphicon glyphicon-calendar"></span>
-                </div>    
+                </div>
               </div>
             </div>
           </div>
@@ -95,7 +96,7 @@
 
         <div class="form-group">
           <div class="relative">
-            <input class="form-control" id="user-name" type="text" placeholder="Nhập họ tên hoặc tài khoản nhân viên">
+            <input class="form-control" id="user-name" type="text" placeholder="Nhập họ tên hoặc tài khoản nhân viên" autocomplete="off">
             <div class="suggest" id="user-name-suggest"> </div>
           </div>
         </div>
@@ -150,79 +151,24 @@
   </div>
 </div>
 
-<div id="edit" class="modal fade" role="dialog">
+<div id="manager-modal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">{lang.work_edit}</h4>
-      </div>
       <div class="modal-body">
-        <form onsubmit="return edit_submit(event)">
-          <div class="form-group">
-            <label> {lang.work_name} </label>
-            <input class="form-control" type="text" id="edit_name">
-          </div>
-          <div class="form-group">
-            <label> {lang.work_depart} </label>
-            <select class="form-control" id="edit_depart">
+        <div class="form-group">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
 
-            </select>
+        <div class="form-group">
+          <div class="relative">
+            <input class="form-control" id="manager-name" type="text" placeholder="Nhập họ tên hoặc tài khoản nhân viên" autocomplete="off">
+            <div class="suggest" id="manager-name-suggest"> </div>
           </div>
-          <div class="form-group">
-            <label> {lang.user} </label>
-            <div class="relative">
-              <input type="text" class="form-control user-suggest" id="edit_user" autocomplete="off">
-              <div class="user-suggest-list" style="display: none;">
-                {suggest}
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label> {lang.work_starttime} </label>
-            <input type="text" class="form-control" id="edit_starttime" value="{startDate}" autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label> {lang.work_endtime} </label>
-            <input type="text" class="form-control" id="edit_endtime" value="{endDate}" autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label> {lang.work_process} </label>
-            <input class="form-control" type="text" id="edit_process" value="0%">
-          </div>
-          <div class="form-group">
-            <label> {lang.note} </label>
-            <input class="form-control" type="text" id="edit_note">
-          </div>
-          <button class="btn btn-info">
-            {lang.work_update}
-          </button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+        </div>
 
-<div id="process_change" class="modal fade" role="dialog">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <form onsubmit="return change_process_submit(event)">
-          <div class="form-group">
-            <label> {lang.process} </label>
-            <input class="form-control" type="text" id="edit_process2">
-          </div>
-          <div class="form-group">
-            <label> {lang.note} </label>
-            <input class="form-control" type="text" id="edit_note2">
-          </div>
-          <button class="btn btn-info">
-            {lang.update}
-          </button>
-        </form>
+        <div id="manager-content">
+          {manager_content}
+        </div>
       </div>
     </div>
   </div>

@@ -288,6 +288,7 @@ h3.dayweek-head{
   line-height: 30px;
   padding: 5px;
   border-bottom: 1px solid #ddd;
+  overflow: hidden;
 }
 
 .suggest {

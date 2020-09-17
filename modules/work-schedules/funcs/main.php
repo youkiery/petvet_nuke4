@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @Project WORK SCHEDULES 4.X
  * @Author PHAN TAN DUNG (phantandung92@gmail.com)
@@ -16,12 +15,6 @@ $user = checkUserPermit($user_info['userid']);
 $employ = getWorkEmploy();
 $depart = getWorkDepart();
 $userlist = getUserList();
-if (empty($user)) {
-  $contents = 'Người dùng chưa được phân quyền';
-  include NV_ROOTDIR . '/includes/header.php';
-  echo nv_site_theme($contents);
-  include NV_ROOTDIR . '/includes/footer.php';
-}
 
 $manager = 0;
 if (!empty($user_info['admin_id'])) $manager = 1;
@@ -32,6 +25,14 @@ else {
       break;
     }
   }
+}
+
+if ($manager) {}
+else if (empty($user)) {
+  $contents = 'Người dùng chưa được phân quyền';
+  include NV_ROOTDIR . '/includes/header.php';
+  echo nv_site_theme($contents);
+  include NV_ROOTDIR . '/includes/footer.php';
 }
 
 $filter = array(
@@ -75,6 +76,7 @@ if (!empty($action)) {
       break;
     case 'insert-user':
       $id = $nv_Request->get_int('id', 'post', 0);
+      $manager = $nv_Request->get_int('id', 'post', 0);
 
       $sql = 'select * from `'. PREFIX .'_employ` where userid = ' . $id;
       $query = $db->query($sql);
@@ -83,12 +85,13 @@ if (!empty($action)) {
       if (empty($user)) {
         $sql = 'insert into `'. PREFIX .'_employ` (userid, depart, role) values ('. $id .', 0, 1)';
         if ($db->query($sql)) {
+          if ($manager) $result['html'] = managerContent();
           $result['status'] = 1;
         }
       }
     break;
     case 'update-process':
-      $data = $nv_Request->get_array("data", "post", "");
+      $data = $nv_Request->get_array("data", "post");
 
       $xtra = '';
       if ($data['calltime']) {
@@ -100,141 +103,36 @@ if (!empty($action)) {
         $result["status"] = 1;
       }
     break;
-    case 'edit':
-      $id = $nv_Request->get_string("id", "get/post", "");
-      $content = $nv_Request->get_string("content", "get/post", "");
-      $starttime = $nv_Request->get_string("starttime", "get/post", "");
-      $endtime = $nv_Request->get_string("endtime", "get/post", "");
-      $userid = $nv_Request->get_string("userid", "get/post", "");
-      $depart = $nv_Request->get_string("depart", "get/post", "");
-      $process = $nv_Request->get_string("process", "get/post", "");
-      $note = $nv_Request->get_string("note", "get/post", "");
+    case 'finish-work':
+      $id = $nv_Request->get_int("id", "post", 0);
 
-      if (!(empty($id) || empty($content) || empty($starttime) || empty($endtime) || empty($userid) || empty($depart))) {
-        if (empty($process)) {
-          $process = 0;
-        }
-        $starttime = totime($starttime);
-        $endtime = totime($endtime);
-
-        $sql = "update `" . WORK_PREFIX . "_row` set cometime = $starttime, calltime = $endtime, last_time = " . time() . ", userid = $userid, depart = $depart, content = '$content', process = $process, note = '$note' where id = $id";
-        $query = $db->query($sql);
-        if ($query) {
-          $departid = $nv_Request->get_string("departid", "get/post", "");
-          $result["list"] = callList($departid);
-          $result["status"] = 1;
-          $result["notify"] = $lang_module["g_saved"];
-        }
+      $sql = "update `" . PREFIX . "_row` set process = 100, last_time = ". time() .", edit_user =  ". $user_info['userid'] ." where id = $id";
+      if ($db->query($sql)) {
+        $result["html"] = mainContent();
+        $result["status"] = 1;
       }
-      break;
+    break;
+    case 'set-permission':
+      $userid = $nv_Request->get_int("userid", "post", 0);
+      $role = $nv_Request->get_int("role", "post", 0);
 
-    case 'get_work':
-      $id = $nv_Request->get_string("id", "get/post", "");
-      if (!empty($id)) {
-        $sql = "select a.*, b.username, b.first_name, b.last_name from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid inner join `" . WORK_PREFIX . "_depart` where a.id = $id";
-        $query = $db->query($sql);
-        $work = $query->fetch();
-        if (!empty($work)) {
-          $sql = "select * from `" . WORK_PREFIX . "_depart`";
-          $query = $db->query($sql);
-          $depart_o = "";
-          while ($depart = $query->fetch()) {
-            $select = "";
-            if ($depart["id"] == $work["depart"]) {
-              $select = "selected";
-            }
-            $depart_o .= "<option value='" . $depart["id"] . "' " . $select . ">" . $depart["name"] . "</option>";
-          }
-
-          $result["status"] = 1;
-          $result["content"] = $work["content"];
-          $result["starttime"] = date("d/m/Y", $work["cometime"]);
-          $result["endtime"] = date("d/m/Y", $work["calltime"]);
-          $result["depart"] = $depart_o;
-          $result["user"] = $work["last_name"] . " " . $work["first_name"];
-          $result["userid"] = $work["userid"];
-          $result["username"] = $work["username"];
-          $result["process"] = $work["process"];
-          $result["note"] = $work["note"];
-          $result["userid"] = $work["userid"];
-        }
+      $sql = "update `" . PREFIX . "_employ` set role = $role where userid = $userid";
+      if ($db->query($sql)) {
+        $result["html"] = managerContent();
+        $result["status"] = 1;
       }
-      break;
+    break;
+    case 'remove-employ':
+      $userid = $nv_Request->get_int("userid", "post", 0);
 
-    case 'change_confirm':
-      $id = $nv_Request->get_string("id", "get/post", "");
-
-      if (!empty($id)) {
-        $sql = "select * from `" . WORK_PREFIX . "_row` where id = $id";
-        $query = $db->query($sql);
-        $work = $query->fetch();
-
-        if (!empty($work)) {
-          $result["status"] = 1;
-          $confirm = "";
-          foreach ($lang_module["confirm_option"] as $key => $value) {
-            $select = "";
-            if ($key == $work["confirm"]) {
-              $select = "selected";
-            }
-            $confirm .= "<option value='$key' $select>$value</option>";
-          }
-          $review = "";
-          foreach ($lang_module["review_option"] as $key => $value) {
-            $select = "";
-            if ($key == $work["review"]) {
-              $select = "selected";
-            }
-            $review .= "<option value='$key' $select>$value</option>";
-          }
-          $result["confirm"] = $confirm;
-          $result["review"] = $review;
-          $result["note"] = $work["note"];
-          $result["notify"] = "";
-        }
+      $sql = "delete from `" . PREFIX . "_employ` where userid = $userid";
+      if ($db->query($sql)) {
+        $result["employ"] = json_encode($employ);
+        $result["user"] = json_encode($userlist);
+        $result["html"] = managerContent();
+        $result["status"] = 1;
       }
-      break;
-
-    case 'confirm':
-      $id = $nv_Request->get_string("id", "get/post", "");
-      $confirm = $nv_Request->get_int("confirm", "get/post", 0);
-      $review = $nv_Request->get_int("review", "get/post", 0);
-      $note = $nv_Request->get_int("note", "get/post", 0);
-
-      if (!empty($id)) {
-        $sql = "update `" . WORK_PREFIX . "_row` set confirm = $confirm, review = $review, note = '$note' where id = $id";
-        $query = $db->query($sql);
-
-        if ($query) {
-          $departid = $nv_Request->get_int("departid", "get/post", 0);
-          $result["status"] = 1;
-          $result["notify"] = $lang_module["saved"];
-          $result["list"] = callList($departid);
-        }
-      }
-      break;
-
-    case 'change_data':
-      $departid = $nv_Request->get_string("departid", "get/post", "");
-      $list = callList($departid);
-      $result["list"] = $list;
-      $result["status"] = 1;
-      $result["notify"] = "";
-      break;
-
-    case 'get_process':
-      $id = $nv_Request->get_string("id", "get/post", "");
-      if (!empty($id)) {
-        $sql = "select * from `" . WORK_PREFIX . "_row` where id = $id";
-        $query = $db->query($sql);
-        $work = $query->fetch();
-        if (!empty($work)) {
-          $result["status"] = 1;
-          $result["process"] = $work["process"];
-          $result["note"] = $work["note"];
-        }
-      }
-      break;
+    break;
   }
   echo json_encode($result);
   die();
@@ -243,48 +141,8 @@ if (!empty($action)) {
 $xtpl = new XTemplate('main.tpl', PATH);
 $xtpl->assign("lang", $lang_module);
 
-//   $query = $db->query($sql);
-//   while ($depart = $query->fetch()) {
-//     $xtpl->assign("depart_value", $depart["id"]);
-//     $xtpl->assign("depart_name", $depart["name"]);
-//     $xtpl->parse("main.depart_option");
-//     $xtpl->parse("main.depart_option2");
-//   }
-//   $xtpl->parse("main.manager");
-// }
-
-// $sql = 'select * from `'.WORK_PREFIX.'_employ` where userid = '.$user_info['userid'];
-// $query = $db->query($sql);
-
-// $data = array();
-// $x = 0;
-// $suggest = '';
-// while ($row = $query->fetch()) {
-//   $data[$row['depart']] = employDepart($user_info['userid'], $row["depart"]);
-//   if (!$x) {
-//     $x = $row['depart'];
-//     foreach ($data[$x] as $employData) {
-//       $suggest .= '<div class="user-suggest-item" onclick="set_user('. $employData['userid'] .', \''. $employData['name']. '\')"> '. $employData['name'] .' </div>';
-//     }
-//     // die(var_dump($suggest));
-//   }
-// }
-// // die("$x");
-// $list = user_work_list($user_info['userid'], 0);
-
-// $xtpl->assign("g_depart", $x);
-// $xtpl->assign("data", json_encode($data));
-// $xtpl->assign("suggest", $suggest);
-// $xtpl->assign("startDate", date("d/m/Y", time()));
-// $xtpl->assign("endDate", date("d/m/Y", time() + 60 * 60 * 24));
-// $xtpl->assign("cometime", date("d/m/Y", strtotime(date("Y-m-d")) - 60 * 60 * 24 * 15));
-// $xtpl->assign("calltime", date("d/m/Y", strtotime(date("Y-m-d")) + 60 * 60 * 24 * 15));
-// $xtpl->assign("depart_list", user_main_list());
-// $xtpl->assign("content", $list['html']);
-// $xtpl->assign("count", $list['count']);
-// $xtpl->assign("nav", $list['nav']);
-// $xtpl->assign("page", 1);
-// $xtpl->assign("limit", 10);
+if (!empty($filter['start'])) $xtpl->assign('starttime', date('d/m/Y', $filter['start']));
+if (!empty($filter['end'])) $xtpl->assign('endtime', date('d/m/Y', $filter['start']));
 
 $selected_data = array();
 $list = array();

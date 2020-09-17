@@ -50,6 +50,7 @@ function mainModal() {
 
   if ($manager) $xtpl->parse('main.manager');
 
+  $xtpl->assign('manager_content', managerContent());
   $xtpl->assign('starttime', date('d/m/Y', $start));
   $xtpl->assign('endtime', date('d/m/Y', $end));
   $xtpl->assign('lang', $lang_module);
@@ -98,7 +99,7 @@ function mainContent() {
   $query = $db->query($sql);
   $number = $query->fetch()['count'];
 
-  $sql = 'select * from `'. PREFIX .'_row` '. $xtra .'  order by process asc, calltime desc limit ' . $filter['limit'] . ' offset '. $filter['limit'] * ($filter['page'] - 1);
+  $sql = 'select * from `'. PREFIX .'_row` '. $xtra .'  order by process asc, last_time desc limit ' . $filter['limit'] . ' offset '. $filter['limit'] * ($filter['page'] - 1);
   $query = $db->query($sql);
   $today = time();
   while ($row = $query->fetch()) {
@@ -118,6 +119,26 @@ function mainContent() {
   }
   $xtpl->assign('nav', nav_generater($filter['url'], $number, $filter['page'], $filter['limit']));
 
+  $xtpl->parse('main');
+  return $xtpl->text();
+}
+
+function managerContent() {
+  global $db;
+  $xtpl = new XTemplate('manager-list.tpl', PATH);
+  $rev = array(1 => 2, 1);
+  $employ = getWorkEmploy();
+
+  foreach ($employ as $employdata) {
+    $userdata = getUserById($employdata['id']);
+    $xtpl->assign('userid', $employdata['id']);
+    $xtpl->assign('name', $employdata['name']);
+    $xtpl->assign('username', $userdata['username']);
+    $xtpl->assign('rev_role', $rev[$employdata['role']]);
+    if ($employdata['role'] > 1) $xtpl->assign('btn_manager', 'btn-info');
+    else $xtpl->assign('btn_manager', 'btn-default');
+    $xtpl->parse('main.row');
+  }
   $xtpl->parse('main');
   return $xtpl->text();
 }
