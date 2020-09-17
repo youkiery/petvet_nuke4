@@ -48,6 +48,7 @@ var vremind = {
     $(document).on('blur', inputSelector, () => {
       clearInterval(hover)
       hover = setInterval(() => {
+        check = 1
         if (track) {
           if (suggest.is(':hover') || input.is(':hover')) {
             check = 0
