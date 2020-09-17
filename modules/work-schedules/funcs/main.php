@@ -8,246 +8,291 @@
  * @Createdate Sat, 11 Jun 2016 23:45:51 GMT
  */
 
-if (!defined('NV_MOD_WORK_SCHEDULES'))
-    die('Stop!!!');
-
-$page_title = $module_info['site_title'];
-$key_words = $module_info['keywords'];
-
-if (isset($array_op[2])) {
-    header('Location: ' . nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $array_op[0], true));
-    die();
+if (!defined('NV_MOD_WORK_SCHEDULES')) {
+  die('Stop!!!');
+}
+$action = $nv_Request->get_string("action", "get/post", "");
+$user = checkUserPermit($user_info['userid']);
+$employ = getWorkEmploy();
+$depart = getWorkDepart();
+$userlist = getUserList();
+if (empty($user)) {
+  $contents = 'Người dùng chưa được phân quyền';
+  include NV_ROOTDIR . '/includes/header.php';
+  echo nv_site_theme($contents);
+  include NV_ROOTDIR . '/includes/footer.php';
 }
 
-$is_print = false;
-$is_download = false;
-$real_week = nv_get_week_from_time(NV_CURRENTTIME);
-$week = $real_week[0];
-$year = $real_week[1];
-
-$link = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name;
-
-if (isset($array_op[0])) {
-    if ($array_op[0] == 'print') {
-        $is_print = true;
-    } elseif ($array_op[0] == 'download') {
-        $is_download = true;
-    } elseif ($module_config[$module_name]['show_type'] == 'week') {
-        $valid = false;
-        $link .= '&amp;' . NV_OP_VARIABLE . '=';
-
-        if (preg_match("/^" . preg_quote(change_alias($lang_module['week'])) . "\-([0-9]{1,2})$/", $array_op[0], $m)) {
-            $m[1] = intval($m[1]);
-            $num_week = nv_get_max_week_of_year($year);
-
-            if ($m[1] > 0 and $m[1] < $num_week) {
-                $valid = true;
-                $week = $m[1];
-                $link .= change_alias($lang_module['week']) . '-' . $week;
-
-                $page_title = $lang_module['pagetitle'] . ' ' . $week;
-            }
-        } elseif (preg_match("/^" . preg_quote(change_alias($lang_module['week'])) . "\-([0-9]{1,2})\-([0-9]{4})$/", $array_op[0], $m)) {
-            $m[1] = intval($m[1]);
-            $m[2] = intval($m[2]);
-            $num_week = nv_get_max_week_of_year($m[2]);
-            
-            if ($m[1] > 0 and $m[1] <= $num_week and $m[2] > 1699 and $m[2] < 2101) {
-                $valid = true;
-                $week = $m[1];
-                $year = $m[2];
-                $link .= change_alias($lang_module['week']) . '-' . $week . '-' . $year;
-
-                $page_title = $lang_module['pagetitle'] . ' ' . $week . ' ' . $lang_module['year'] . ' ' . $year;
-            }
-        }
-
-        if ($valid !== true) {
-            header('Location: ' . nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name, true));
-            die();
-        }
-    } else {
-        header('Location: ' . nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name, true));
-        die();
-    }
-}
-
-if (isset($array_op[1])) {
-    if ($array_op[1] == 'print') {
-        $is_print = true;
-    } elseif ($array_op[1] == 'download') {
-        $is_download = true;
-    } else {
-        header('Location: ' . nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $array_op[0], true));
-        die();
-    }
-}
-
-$links = array(
-    'print' => $link . '/print',
-    'download' => $link . '/download',
+$filter = array(
+  'start' => $nv_Request->get_int('start', 'get', 0),
+  'end' => $nv_Request->get_int('end', 'get', 0),
+  'user' => $nv_Request->get_string('user', 'get'),
+  'page' => $nv_Request->get_int('page', 'get', 1),
+  'limit' => $nv_Request->get_int('limit', 'get', 10)
 );
+$filter['user'] = explode(',', $filter['user']);
+$list = array();
+foreach ($filter['user'] as $userid) {
+  if ($userid) $list []= $userid;
+}
+$filter['user'] = $list;
 
-$array = array();
-$time_per_week = 86400 * 7;
-$time_start_year = mktime(0, 0, 0, 1, 1, $year);
-$time_first_week = $time_start_year - (86400 * (date('N', $time_start_year) - 1));
+$filter['url'] = '/' . $module_name . '/';
 
-$week_begin = $time_first_week + ($week - 1) * $time_per_week;
-$week_next = $week_begin + $time_per_week;
+if (!empty($action)) {
+  $result = array("status" => 0);
+  switch ($action) {
+    case 'insert':
+      $data = $nv_Request->get_array("data", "post", "");
 
-// if ($module_config[$module_name]['show_type'] == 'week') {
-//     // Lịch công tác theo tuần
-//     $sql = 'SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_rows WHERE e_time >= ' . $week_begin . ' AND e_time < ' . $week_next . ' AND status = 1 ORDER BY e_time ASC';
-//     $result = $db->query($sql);
-// } else {
-//     // Tất cả lịch công tác
-//     $sql = 'SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_rows WHERE status = 1 ORDER BY e_time DESC LIMIT 200';
-//     $result = $db->query($sql);
+      $sql = "insert into `" . PREFIX . "_row` (cometime, calltime, last_time, post_user, edit_user, userid, depart, customer, content, process, confirm, review, note) values ($data[starttime], $data[endtime], " . time() . ", ". $user_info['userid'] .", ". $user_info['userid'] .", $data[userid], 0, 0, '$data[work]', $data[process], 0, 0, '$data[note]')";
+      if ($db->query($sql)) {
+        $result["status"] = 1;
+        $result["html"] = mainContent();
+      }
+      break;
+    case 'insert-user':
+      $id = $nv_Request->get_int('id', 'post', 0);
+
+      $sql = 'select * from `'. PREFIX .'_employ` where userid = ' . $id;
+      $query = $db->query($sql);
+      $user = $query->fetch();
+
+      if (empty($user)) {
+        $sql = 'insert into `'. PREFIX .'_employ` (userid, depart, role) values ('. $id .', 0, 1)';
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+        }
+      }
+    break;
+    case 'edit':
+      $id = $nv_Request->get_string("id", "get/post", "");
+      $content = $nv_Request->get_string("content", "get/post", "");
+      $starttime = $nv_Request->get_string("starttime", "get/post", "");
+      $endtime = $nv_Request->get_string("endtime", "get/post", "");
+      $userid = $nv_Request->get_string("userid", "get/post", "");
+      $depart = $nv_Request->get_string("depart", "get/post", "");
+      $process = $nv_Request->get_string("process", "get/post", "");
+      $note = $nv_Request->get_string("note", "get/post", "");
+
+      if (!(empty($id) || empty($content) || empty($starttime) || empty($endtime) || empty($userid) || empty($depart))) {
+        if (empty($process)) {
+          $process = 0;
+        }
+        $starttime = totime($starttime);
+        $endtime = totime($endtime);
+
+        $sql = "update `" . WORK_PREFIX . "_row` set cometime = $starttime, calltime = $endtime, last_time = " . time() . ", userid = $userid, depart = $depart, content = '$content', process = $process, note = '$note' where id = $id";
+        $query = $db->query($sql);
+        if ($query) {
+          $departid = $nv_Request->get_string("departid", "get/post", "");
+          $result["list"] = callList($departid);
+          $result["status"] = 1;
+          $result["notify"] = $lang_module["g_saved"];
+        }
+      }
+      break;
+
+    case 'get_work':
+      $id = $nv_Request->get_string("id", "get/post", "");
+      if (!empty($id)) {
+        $sql = "select a.*, b.username, b.first_name, b.last_name from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid inner join `" . WORK_PREFIX . "_depart` where a.id = $id";
+        $query = $db->query($sql);
+        $work = $query->fetch();
+        if (!empty($work)) {
+          $sql = "select * from `" . WORK_PREFIX . "_depart`";
+          $query = $db->query($sql);
+          $depart_o = "";
+          while ($depart = $query->fetch()) {
+            $select = "";
+            if ($depart["id"] == $work["depart"]) {
+              $select = "selected";
+            }
+            $depart_o .= "<option value='" . $depart["id"] . "' " . $select . ">" . $depart["name"] . "</option>";
+          }
+
+          $result["status"] = 1;
+          $result["content"] = $work["content"];
+          $result["starttime"] = date("d/m/Y", $work["cometime"]);
+          $result["endtime"] = date("d/m/Y", $work["calltime"]);
+          $result["depart"] = $depart_o;
+          $result["user"] = $work["last_name"] . " " . $work["first_name"];
+          $result["userid"] = $work["userid"];
+          $result["username"] = $work["username"];
+          $result["process"] = $work["process"];
+          $result["note"] = $work["note"];
+          $result["userid"] = $work["userid"];
+        }
+      }
+      break;
+
+    case 'change_confirm':
+      $id = $nv_Request->get_string("id", "get/post", "");
+
+      if (!empty($id)) {
+        $sql = "select * from `" . WORK_PREFIX . "_row` where id = $id";
+        $query = $db->query($sql);
+        $work = $query->fetch();
+
+        if (!empty($work)) {
+          $result["status"] = 1;
+          $confirm = "";
+          foreach ($lang_module["confirm_option"] as $key => $value) {
+            $select = "";
+            if ($key == $work["confirm"]) {
+              $select = "selected";
+            }
+            $confirm .= "<option value='$key' $select>$value</option>";
+          }
+          $review = "";
+          foreach ($lang_module["review_option"] as $key => $value) {
+            $select = "";
+            if ($key == $work["review"]) {
+              $select = "selected";
+            }
+            $review .= "<option value='$key' $select>$value</option>";
+          }
+          $result["confirm"] = $confirm;
+          $result["review"] = $review;
+          $result["note"] = $work["note"];
+          $result["notify"] = "";
+        }
+      }
+      break;
+
+    case 'confirm':
+      $id = $nv_Request->get_string("id", "get/post", "");
+      $confirm = $nv_Request->get_int("confirm", "get/post", 0);
+      $review = $nv_Request->get_int("review", "get/post", 0);
+      $note = $nv_Request->get_int("note", "get/post", 0);
+
+      if (!empty($id)) {
+        $sql = "update `" . WORK_PREFIX . "_row` set confirm = $confirm, review = $review, note = '$note' where id = $id";
+        $query = $db->query($sql);
+
+        if ($query) {
+          $departid = $nv_Request->get_int("departid", "get/post", 0);
+          $result["status"] = 1;
+          $result["notify"] = $lang_module["saved"];
+          $result["list"] = callList($departid);
+        }
+      }
+      break;
+
+    case 'change_data':
+      $departid = $nv_Request->get_string("departid", "get/post", "");
+      $list = callList($departid);
+      $result["list"] = $list;
+      $result["status"] = 1;
+      $result["notify"] = "";
+      break;
+
+    case 'get_process':
+      $id = $nv_Request->get_string("id", "get/post", "");
+      if (!empty($id)) {
+        $sql = "select * from `" . WORK_PREFIX . "_row` where id = $id";
+        $query = $db->query($sql);
+        $work = $query->fetch();
+        if (!empty($work)) {
+          $result["status"] = 1;
+          $result["process"] = $work["process"];
+          $result["note"] = $work["note"];
+        }
+      }
+      break;
+
+    case 'change_process':
+      $id = $nv_Request->get_string("id", "get/post", "");
+      $process = $nv_Request->get_string("process", "get/post", "");
+      $note = $nv_Request->get_string("note", "get/post", "");
+
+      if (!empty($id) && !empty($process)) {
+        $sql = "select * from `" . WORK_PREFIX . "_row` where id = $id";
+        $query = $db->query($sql);
+        $work = $query->fetch();
+        if (!empty($work)) {
+          $sql = "update `" . WORK_PREFIX . "_row` set process = $process, note = '$note' where id = $id";
+          if ($db->query($sql)) {
+            $departid = $nv_Request->get_string("departid", "get/post", "");
+            $result["list"] = user_work_list($departid);
+            $result["status"] = 1;
+            $result["notify"] = $lang_module["saved"];
+          }
+        }
+      }
+      break;
+  }
+  echo json_encode($result);
+  die();
+}
+
+$xtpl = new XTemplate('main.tpl', PATH);
+$xtpl->assign("lang", $lang_module);
+
+//   $query = $db->query($sql);
+//   while ($depart = $query->fetch()) {
+//     $xtpl->assign("depart_value", $depart["id"]);
+//     $xtpl->assign("depart_name", $depart["name"]);
+//     $xtpl->parse("main.depart_option");
+//     $xtpl->parse("main.depart_option2");
+//   }
+//   $xtpl->parse("main.manager");
 // }
 
-$sql = 'SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . '_rows WHERE status = 1 ORDER BY id DESC LIMIT 200';
-$result = $db->query($sql);
+// $sql = 'select * from `'.WORK_PREFIX.'_employ` where userid = '.$user_info['userid'];
+// $query = $db->query($sql);
 
-while ($row = $result->fetch()) {
-    $row['url_edit'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=add/edit-' . $row['id'];
+// $data = array();
+// $x = 0;
+// $suggest = '';
+// while ($row = $query->fetch()) {
+//   $data[$row['depart']] = employDepart($user_info['userid'], $row["depart"]);
+//   if (!$x) {
+//     $x = $row['depart'];
+//     foreach ($data[$x] as $employData) {
+//       $suggest .= '<div class="user-suggest-item" onclick="set_user('. $employData['userid'] .', \''. $employData['name']. '\')"> '. $employData['name'] .' </div>';
+//     }
+//     // die(var_dump($suggest));
+//   }
+// }
+// // die("$x");
+// $list = user_work_list($user_info['userid'], 0);
 
-    $real_week = nv_get_week_from_time($row['e_time']);
-    $array[$real_week[0]][] = $row;
+// $xtpl->assign("g_depart", $x);
+// $xtpl->assign("data", json_encode($data));
+// $xtpl->assign("suggest", $suggest);
+// $xtpl->assign("startDate", date("d/m/Y", time()));
+// $xtpl->assign("endDate", date("d/m/Y", time() + 60 * 60 * 24));
+// $xtpl->assign("cometime", date("d/m/Y", strtotime(date("Y-m-d")) - 60 * 60 * 24 * 15));
+// $xtpl->assign("calltime", date("d/m/Y", strtotime(date("Y-m-d")) + 60 * 60 * 24 * 15));
+// $xtpl->assign("depart_list", user_main_list());
+// $xtpl->assign("content", $list['html']);
+// $xtpl->assign("count", $list['count']);
+// $xtpl->assign("nav", $list['nav']);
+// $xtpl->assign("page", 1);
+// $xtpl->assign("limit", 10);
+
+foreach ($user as $key => $role) {
+  if ($role > 1) {
+    $xtpl->parse('main.manager');
+    break;
+  }
 }
 
-if ($module_config[$module_name]['show_type'] != 'week') {
-    foreach ($array as $_week => $_weekData) {
-        krsort($array[$_week]);
-    }
+$selected_data = array();
+foreach ($filter['user'] as $key => $value) {
+  $selected_data[$value] = $value;
 }
 
-if ($is_download) {
-    if (!empty($array)) {
-        // Include the main TCPDF library (search for installation path).
-        require_once (NV_ROOTDIR . '/modules/' . $module_file . '/tcpdf/tcpdf.php');
-
-        // create new PDF document
-        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-
-        // set document information
-        $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor('Nicola Asuni');
-        $pdf->SetTitle('TCPDF Example 001');
-        $pdf->SetSubject('TCPDF Tutorial');
-        $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
-
-        // set default header data
-        $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE . ' 001', PDF_HEADER_STRING, array(
-            0,
-            64,
-            255), array(
-            0,
-            64,
-            128));
-        $pdf->setFooterData(array(
-            0,
-            64,
-            0), array(
-            0,
-            64,
-            128));
-
-        // set header and footer fonts
-        $pdf->setHeaderFont(array(
-            PDF_FONT_NAME_MAIN,
-            '',
-            PDF_FONT_SIZE_MAIN));
-        $pdf->setFooterFont(array(
-            PDF_FONT_NAME_DATA,
-            '',
-            PDF_FONT_SIZE_DATA));
-
-        // set default monospaced font
-        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-
-        // set margins
-        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-
-        // set auto page breaks
-        $pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
-
-        // set image scale factor
-        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-
-        // set some language-dependent strings (optional)
-        if (@file_exists(dirname(__file__) . '/lang/eng.php')) {
-            require_once (dirname(__file__) . '/lang/eng.php');
-            $pdf->setLanguageArray($l);
-        }
-
-        // ---------------------------------------------------------
-
-        // set default font subsetting mode
-        $pdf->setFontSubsetting(true);
-
-        // Set font
-        // dejavusans is a UTF-8 Unicode font, if you only need to
-        // print standard ASCII chars, you can use core fonts like
-        // helvetica or times to reduce file size.
-        $pdf->SetFont('dejavusans', '', 14, '', true);
-
-        // Add a page
-        // This method has several options, check the source code documentation for more information.
-        $pdf->AddPage();
-
-        // set text shadow effect
-        $pdf->setTextShadow(array(
-            'enabled' => true,
-            'depth_w' => 0.2,
-            'depth_h' => 0.2,
-            'color' => array(
-                196,
-                196,
-                196),
-            'opacity' => 1,
-            'blend_mode' => 'Normal'));
-
-        // Set some content to print
-        $html = '
-        <h1>Welcome to <a href="http://www.tcpdf.org" style="text-decoration:none;background-color:#CC0000;color:black;">&nbsp;<span style="color:black;">TC</span><span style="color:white;">PDF</span>&nbsp;</a>!</h1>
-        <i>This is the first example of TCPDF library.</i>
-        <p>This text is printed using the <i>writeHTMLCell()</i> method but you can also use: <i>Multicell(), writeHTML(), Write(), Cell() and Text()</i>.</p>
-        <p>Please check the source code documentation and other examples for further information.</p>
-        <p style="color:#CC0000;">TO IMPROVE AND EXPAND TCPDF I NEED YOUR SUPPORT, PLEASE <a href="http://sourceforge.net/donate/index.php?group_id=128076">MAKE A DONATION!</a></p>';
-
-        // Print text using writeHTMLCell()
-        $pdf->writeHTMLCell(0, 0, '', '', $html, 0, 1, 0, true, '', true);
-
-        // ---------------------------------------------------------
-
-        // Close and output PDF document
-        // This method has several options, check the source code documentation for more information.
-        $pdf->Output('example_001.pdf', 'D');
-    } else {
-        header('Location: ' . nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name, true));
-        die();
-    }
-}
-
-if ($is_print) {
-    if (!empty($array)) {
-        die('PRINT');
-    } else {
-        header('Location: ' . nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name, true));
-        die();
-    }
-}
-
-$numqueues = 0;
-if (defined('NV_IS_MANAGER_ADMIN')) {
-    $sql = 'SELECT COUNT(*) numqueue FROM ' . NV_PREFIXLANG . '_' . $module_data . '_rows WHERE status = 2 OR status = 3';
-    $numqueues = $db->query($sql)->fetchColumn();
-}
-
-$contents = nv_main_theme($array, $year, $week, $links, $numqueues, $module_config[$module_name], $array_field_config);
+$xtpl->assign('modal', mainModal());
+$xtpl->assign('content', mainContent());
+$xtpl->assign('role', json_encode($user));
+$xtpl->assign('employ', json_encode($employ));
+$xtpl->assign('user', json_encode($userlist));
+$xtpl->assign('filter', json_encode($selected_data));
+$xtpl->assign('depart', json_encode($depart));
+$xtpl->parse("main");
+$contents = $xtpl->text();
 
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_site_theme($contents);

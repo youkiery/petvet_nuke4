@@ -11,10 +11,13 @@
 if (!defined('NV_MAINFILE')) {
   die('Stop!!!');
 }
-define("WORK_PREFIX", $db_config["prefix"] . "_" . str_replace("-", "_", $module_name));
+define("MODULE_NAME", str_replace("-", "_", $module_name));
+define("WORK_PREFIX", $db_config["prefix"] . "_" . MODULE_NAME);
+define("PREFIX", $db_config["prefix"] . "_" . MODULE_NAME);
+
 $today = strtotime(date("y-m-d"));
 $day = date('w');
-$this_week = strtotime('-'.$day.' days');
+$this_week = strtotime('-' . $day . ' days');
 $this_month = strtotime(date("Y-m-1"));
 $this_year = strtotime(date("Y-1-1"));
 $image = "<img src='/themes/" . $global_config["module_theme"] . "/images/" . $module_file . "/xn.gif' />";
@@ -83,7 +86,8 @@ $time_option = array(
   )
 );
 
-function depart_data() {
+function depart_data()
+{
   global $db;
 
   $sql = "select * from `" . WORK_PREFIX . "_depart`";
@@ -96,7 +100,8 @@ function depart_data() {
   return $list;
 }
 
-function user_manager_list() {
+function user_manager_list()
+{
   global $db, $global_config, $module_file, $module_name, $lang_module, $user_info, $db_config, $nv_Request, $user_info, $result;
   $departid = $nv_Request->get_string("departid", "post/get", "");
   $completeStatus = $nv_Request->get_string("completeStatus", "post/get", "");
@@ -121,27 +126,24 @@ function user_manager_list() {
 
   if (!$completeStatus) {
     $complete_sql = "a.process < 100";
-  }
-  else {
+  } else {
     $complete_sql = "a.process >= 100";
   }
 
   if (empty($departid)) {
     $depart_sql = "a.userid = " . $user["userid"] . " and";
-  }
-  else {
+  } else {
     if ($departid == "end") {
-      $depart_sql = "";      
-    }
-    else {
-      $depart_sql = "a.depart = $departid and";      
+      $depart_sql = "";
+    } else {
+      $depart_sql = "a.depart = $departid and";
     }
   }
   $sql = "select a.*, b.last_name, b.first_name from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid and $depart_sql " . filter_by_time() . " and $complete_sql order by id desc";
   $query = $db->query($sql);
   $count = 0;
   while ($work = $query->fetch()) {
-    $count ++;
+    $count++;
     // var_dump($work);
     $xtpl->assign("index", $index);
     $xtpl->assign("id", $work["id"]);
@@ -165,8 +167,7 @@ function user_manager_list() {
       if ($work["review"] >= 0) {
         $color = "green";
         $operator = "+";
-      }
-      else {
+      } else {
         $color = "red";
       }
       $xtpl->assign("confirm", $image);
@@ -174,14 +175,13 @@ function user_manager_list() {
       $xtpl->assign("review", $operator . $work["review"]);
     }
     $xtpl->parse("main.loop");
-    $index ++;
+    $index++;
   }
   // die();
-  
+
   if (empty($result)) {
     $result["count"] = 0;
-  }
-  else {
+  } else {
     $result["count"] = $count;
   }
 
@@ -189,7 +189,8 @@ function user_manager_list() {
   return $xtpl->text();
 }
 
-function user_work_list($userid = 0, $depart = 0) {
+function user_work_list($userid = 0, $depart = 0)
+{
   global $db, $global_config, $module_file, $module_name, $lang_module, $user_info, $db_config, $user_info, $result, $nv_Request, $image;
   $xtpl = new XTemplate('user-list.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
   $index = 1;
@@ -201,7 +202,7 @@ function user_work_list($userid = 0, $depart = 0) {
   $page = $nv_Request->get_int("page", "get/post", 0);
   $limit = $nv_Request->get_int("limit", "get/post", 0);
   if (empty($page) || $page < 0) {
-    $page = 1;    
+    $page = 1;
   }
   if (empty($limit) || $limit < 0) {
     $limit = 10;
@@ -232,7 +233,7 @@ function user_work_list($userid = 0, $depart = 0) {
   }
 
   if (empty($extra_sql)) {
-    $extra_sql = 'depart in (select depart from `'.WORK_PREFIX.'_employ` where userid = '.$user_info['userid'].' and role = 2)';
+    $extra_sql = 'depart in (select depart from `' . WORK_PREFIX . '_employ` where userid = ' . $user_info['userid'] . ' and role = 2)';
   }
 
   $sql = "select * from `" . WORK_PREFIX . "_depart`";
@@ -245,8 +246,7 @@ function user_work_list($userid = 0, $depart = 0) {
 
   if (!$completeStatus) {
     $complete_sql = "process < 100";
-  }
-  else {
+  } else {
     $complete_sql = "process >= 100";
   }
 
@@ -256,12 +256,12 @@ function user_work_list($userid = 0, $depart = 0) {
     $count = $count_query->fetch();
     $sql = "select * from `" . WORK_PREFIX . "_row` where " . $extra_sql . " and " . filter_by_time() . " and $complete_sql order by id desc limit " . $limit . ' offset ' . ($limit * ($page - 1));
     $query = $db->query($sql);
-    while($work = $query->fetch()) {
+    while ($work = $query->fetch()) {
       $sql = "select * from `" . $db_config['prefix'] . "_users` where userid = $work[userid]";
       $user_query = $db->query($sql);
       $user = $user_query->fetch();
 
-      $count ++;
+      $count++;
       $xtpl->assign("index", $index);
       $xtpl->assign("id", $work["id"]);
       $xtpl->assign("work_name", $work["content"]);
@@ -283,8 +283,7 @@ function user_work_list($userid = 0, $depart = 0) {
         if ($work["review"] >= 0) {
           $color = "green";
           $operator = "+";
-        }
-        else {
+        } else {
           $color = "red";
         }
         $xtpl->assign("confirm", $image);
@@ -299,15 +298,16 @@ function user_work_list($userid = 0, $depart = 0) {
         $xtpl->parse("main.loop.manager");
       }
       $xtpl->parse("main.loop");
-      $index ++;
+      $index++;
     }
   }
 
   $xtpl->parse("main");
   return array('count' => $count['count'], 'nav' => navList($count['count'], $page, $limit), 'html' => $xtpl->text());
 }
-  
-function work_manager_list() {
+
+function work_manager_list()
+{
   global $db, $global_config, $module_file, $module_name, $lang_module, $user_info, $db_config, $user_info, $result, $nv_Request;
   $xtpl = new XTemplate('user_work_manage-list.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
   $index = 1;
@@ -323,7 +323,7 @@ function work_manager_list() {
     $user = $query->fetch();
 
     $depart_sql = "select depart from `" . WORK_PREFIX . "_employ` where userid = $user_info[userid]";
-    
+
     if (!empty($user) && ($user["is_leader"] || $user["group_id"] == 1)) {
       $admin = true;
       $depart_sql = "select id from `" . WORK_PREFIX . "_depart`";
@@ -339,16 +339,15 @@ function work_manager_list() {
   // var_dump($depart);die();
   if (!$completeStatus) {
     $complete_sql = "process < 100";
-  }
-  else {
+  } else {
     $complete_sql = "process >= 100";
   }
 
   if (!empty($user_info)) {
     $sql = "select a.*, b.last_name, b.first_name from `" . WORK_PREFIX . "_row` a inner join `" . $db_config["prefix"] . "_users` b on a.userid = b.userid where a.depart in ($depart_sql) and " . filter_by_time() . "and $complete_sql order by id desc";
     $query = $db->query($sql);
-    while($work = $query->fetch()) {
-      $count ++;
+    while ($work = $query->fetch()) {
+      $count++;
       $xtpl->assign("index", $index);
       $xtpl->assign("id", $work["id"]);
       $xtpl->assign("work_name", $work["content"]);
@@ -366,7 +365,7 @@ function work_manager_list() {
         $xtpl->parse("main.loop.manager");
       }
       $xtpl->parse("main.loop");
-      $index ++;
+      $index++;
     }
   }
 
@@ -374,8 +373,9 @@ function work_manager_list() {
   $xtpl->parse("main");
   return $xtpl->text();
 }
-  
-function depart_list() {
+
+function depart_list()
+{
   global $db, $global_config, $module_file, $module_name, $lang_module;
   // initial
   $xtpl = new XTemplate('depart-list.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
@@ -393,13 +393,14 @@ function depart_list() {
     $xtpl->assign("name", $depart["name"]);
     $xtpl->assign("link", $base_url . "&id=" . $depart["id"]);
     $xtpl->parse('main');
-    $index ++;
+    $index++;
   }
 
   return $xtpl->text();
 }
 
-function depart_employ_list() {
+function depart_employ_list()
+{
   global $db, $nv_Request, $global_config, $module_file, $module_name, $lang_module, $db_config, $role;
   // initial
   $xtpl = new XTemplate('depart-employ-list.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
@@ -421,13 +422,14 @@ function depart_employ_list() {
     $xtpl->assign("name", $employ["last_name"] . " " . $employ["first_name"]);
     $xtpl->assign("role", $role[$employ["role"]]);
     $xtpl->parse('main');
-    $index ++;
+    $index++;
   }
 
   return $xtpl->text();
 }
 
-function search_depart($list) {
+function search_depart($list)
+{
   global $db, $global_config, $module_file, $module_name, $lang_module;
   // initial
   $xtpl = new XTemplate('depart-employ-search.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
@@ -441,12 +443,13 @@ function search_depart($list) {
     $xtpl->assign("username", $depart["username"]);
     $xtpl->assign("name", $depart["last_name"] . " " . $depart["first_name"]);
     $xtpl->parse("main");
-    $index ++;
+    $index++;
   }
   return $xtpl->text();
 }
 
-function get_depart_list() {
+function get_depart_list()
+{
   global $db;
   $sql = "select * from `" . WORK_PREFIX . "_depart`";
   $depart_query = $db->query($sql);
@@ -457,12 +460,13 @@ function get_depart_list() {
   return $list;
 }
 
-function employ_list() {
+function employ_list()
+{
   global $db, $lang_module, $global_config, $module_file, $db_config;
   $xtpl = new XTemplate('employ-list.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
   $index = 1;
   $xtpl->assign("lang", $lang_module);
-    
+
   $sql = "select * from `" .  WORK_PREFIX . "_depart`";
   $query = $db->query($sql);
   $depart_list = array();
@@ -483,8 +487,7 @@ function employ_list() {
     while ($depart_employ = $employ_query->fetch()) {
       if ($depart_employ["role"] == 2) {
         $depart[] = "[" . $depart_list[$depart_employ["depart"]] . "]";
-      }
-      else {
+      } else {
         $depart[] = $depart_list[$depart_employ["depart"]];
       }
     }
@@ -494,12 +497,13 @@ function employ_list() {
     $xtpl->assign("name", $user["last_name"] . " " . $user["first_name"]);
     $xtpl->assign("roles", implode(", ", $depart));
     $xtpl->parse("main");
-    $index ++;
+    $index++;
   }
   return $xtpl->text();
 }
 
-function user_main_list() {
+function user_main_list()
+{
   global $db, $global_config, $module_file, $lang_module, $nv_Request, $sort_option, $db_config, $user_info;
   $xtpl = new XTemplate('user_main-list.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
   $xtpl->assign("lang", $lang_module);
@@ -508,12 +512,11 @@ function user_main_list() {
     $sql = "select * from `" . $db_config["prefix"] . "_users_groups_users` where userid = $user_info[userid]";
     $query = $db->query($sql);
     $user = $query->fetch();
-  
+
     if (!empty($user) && ($user["is_leader"] || $user["group_id"] == 1)) {
       $xtpl->parse("main.manager");
       $sql = "select * from `" . WORK_PREFIX . "_depart` order by name";
-    }
-    else {
+    } else {
       $sql = "select count(*) as count from `" . WORK_PREFIX . "_employ` where userid = $user_info[userid] and role = 2";
       $query = $db->query($sql);
       if ($row = $query->fetch()) {
@@ -535,7 +538,8 @@ function user_main_list() {
   return $xtpl->text();
 }
 
-function work_list() {
+function work_list()
+{
   global $db, $global_config, $module_file, $lang_module, $nv_Request, $sort_option, $db_config;
   $xtpl = new XTemplate('work-list.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
   $index = 1;
@@ -559,32 +563,30 @@ function work_list() {
   if (!empty($work_from)) {
     $timer += 1;
   }
-  
+
   if (!empty($work_end)) {
     $time += 2;
   }
   switch ($time) {
     case '1':
       $where[] = "cometime > $work_from";
-    break;
+      break;
     case '2':
       $where[] = "cometime < $work_end";
-    break;
+      break;
     case '3':
       $where[] = "(cometime between $work_from and $work_end)";
-    break;
+      break;
   }
 
   if (count($where) > 0) {
     $where = "where " . implode(", ", $where);
-  }
-  else {
+  } else {
     $where = "";
   }
   if (!empty($sort_option[$sort]["value"])) {
     $sort = "order by " . $sort_option[$sort]["value"];
-  }
-  else {
+  } else {
     $sort = "";
   }
 
@@ -606,13 +608,14 @@ function work_list() {
     $xtpl->assign("work_process", $work["process"]);
 
     $xtpl->parse('main');
-    $index ++;
+    $index++;
   }
 
   return array('count' => $count['count'], 'nav' => navList($count['count'], $page, $limit), 'html' => $xtpl->text());
 }
 
-function customer_list() {
+function customer_list()
+{
   global $db, $global_config, $module_file, $lang_module;
   $xtpl = new XTemplate('customer-list.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
   $index = 1;
@@ -626,7 +629,7 @@ function customer_list() {
     $xtpl->assign("name", $custom["name"]);
     $xtpl->assign("index", $custom["address"]);
     $xtpl->parse('main');
-    $index ++;
+    $index++;
   }
 
   return $xtpl->text();
@@ -637,11 +640,11 @@ $global_array_show_type = array('week', 'all');
 if ($module_config[$module_name]['auto_delete'] and (empty($module_config[$module_name]['cron_next_check']) or $module_config[$module_name]['cron_next_check'] <= NV_CURRENTTIME)) {
   // Xóa lịch
   $db->query('DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_rows WHERE e_time<' . (NV_CURRENTTIME - $module_config[$module_name]['auto_delete_time']));
-  
+
   // Cập nhật CRON
   $config_name = 'cron_next_check';
   $config_value = NV_CURRENTTIME + $module_config[$module_name]['cron_interval'];
-  
+
   try {
     $sql = 'UPDATE ' . NV_CONFIG_GLOBALTABLE . ' SET config_value=:config_value 
     WHERE lang=' . $db->quote(NV_LANG_DATA) . ' AND module=' . $db->quote($module_name) . ' AND config_name=:config_name';
@@ -652,7 +655,7 @@ if ($module_config[$module_name]['auto_delete'] and (empty($module_config[$modul
   } catch (PDOException $e) {
     trigger_error("Error set work-schedules config CRONS!!!", 256);
   }
-  
+
   $nv_Cache->delMod('settings');
   $nv_Cache->delMod($module_name);
   unset($config_name, $config_value);
@@ -669,18 +672,18 @@ function nv_get_week_from_time($time)
   $week = 1;
   $year = date('Y', $time);
   $real_week = array($week, $year);
-  
+
   $time_per_week = 86400 * 7;
   $time_start_year = mktime(0, 0, 0, 1, 1, $year);
   $time_first_week = $time_start_year - (86400 * (date('N', $time_start_year) - 1));
-  
+
   $addYear = true;
   $num_week_loop = nv_get_max_week_of_year($year) - 1;
-  
+
   for ($i = 0; $i <= $num_week_loop; $i++) {
     $week_begin = $time_first_week + $i * $time_per_week;
     $week_next = $week_begin + $time_per_week;
-  
+
     if ($week_begin <= $time and $week_next > $time) {
       $real_week[0] = $i + 1;
       $addYear = false;
@@ -690,7 +693,7 @@ function nv_get_week_from_time($time)
   if ($addYear) {
     $real_week[1] = $real_week[1] + 1;
   }
-  
+
   return $real_week;
 }
 
@@ -705,7 +708,7 @@ function nv_get_max_week_of_year($year)
   $time_per_week = 86400 * 7;
   $time_start_year = mktime(0, 0, 0, 1, 1, $year);
   $time_first_week = $time_start_year - (86400 * (date('N', $time_start_year) - 1));
-  
+
   if (date('Y', $time_first_week + ($time_per_week * 53) - 1) == $year) {
     return 53;
   } else {
@@ -725,15 +728,16 @@ function nv_get_display_field_value($field, $value)
   if (empty($field) or empty($value)) {
     return '';
   }
-  
+
   if ($field['field_type'] == 'date') {
     $value = nv_date('d/m/Y', intval($value));
   }
-  
+
   return $value;
 }
 
-function fetchall($query) {
+function fetchall($query)
+{
   global $db;
   $list = array();
   while ($row = $query->fetch()) {
@@ -742,33 +746,32 @@ function fetchall($query) {
   return $list;
 }
 
-function totime($time) {
+function totime($time)
+{
   if (preg_match("/^([0-9]{1,2})\/([0-9]{1,2})\/([0-9]{4})$/", $time, $m)) {
     $time = mktime(0, 0, 0, $m[2], $m[1], $m[3]);
-  }
-  else {
+  } else {
     $time = time();
   }
   return $time;
 }
 
-function filter_by_time() {
+function filter_by_time()
+{
   global $nv_Request, $result;
-  
+
   $cometime = $nv_Request->get_string("cometime", "get/post", "");
   $calltime = $nv_Request->get_string("calltime", "get/post", "");
 
   if (empty($cometime)) {
     $cometime = strtotime(date("Y-m-d")) - 60 * 60 * 24 * 15;
-  }
-  else {
+  } else {
     $cometime = totime($cometime);
   }
 
   if (empty($calltime)) {
-    $calltime = strtotime(date("Y-m-d")) + 60 * 60 * 24 * 15; 
-  }
-  else {
+    $calltime = strtotime(date("Y-m-d")) + 60 * 60 * 24 * 15;
+  } else {
     $calltime = totime($calltime);
   }
 
@@ -780,10 +783,11 @@ function filter_by_time() {
   return $sql;
 }
 
-function employDepart($userId, $departId) {
+function employDepart($userId, $departId)
+{
   global $db, $db_config;
 
-  $sql = 'select userid, first_name, last_name from `' . $db_config["prefix"] . '_users` where userid in (select userid from `' . WORK_PREFIX . '_employ` where depart = ' . $departId . ' and userid in (select userid from `' . WORK_PREFIX . '_employ` where role = 1 and depart in (select depart from `' . WORK_PREFIX . '_employ` where userid = '.$userId.' and role = 2)) or userid = '.$userId.' group by userid) order by last_name';
+  $sql = 'select userid, first_name, last_name from `' . $db_config["prefix"] . '_users` where userid in (select userid from `' . WORK_PREFIX . '_employ` where depart = ' . $departId . ' and userid in (select userid from `' . WORK_PREFIX . '_employ` where role = 1 and depart in (select depart from `' . WORK_PREFIX . '_employ` where userid = ' . $userId . ' and role = 2)) or userid = ' . $userId . ' group by userid) order by last_name';
   $query = $db->query($sql);
 
   $user = array();
@@ -794,18 +798,114 @@ function employDepart($userId, $departId) {
   return $user;
 }
 
-function callList($departid) {
+function callList($departid)
+{
   global $user_info;
   if ($departid > 0) {
     $list = user_work_list(0, $departid);
-  }
-  else {
+  } else {
     if ($departid == "end") {
       $list = user_work_list(0, 0);
-    }
-    else {
+    } else {
       $list = user_work_list($user_info['userid'], 0);
     }
   }
   return $list;
+}
+
+function checkUserPermit($userid)
+{
+  global $db;
+  $data = array();
+  $sql = 'select * from `' . PREFIX . '_employ` where userid = ' . $userid;
+  $query = $db->query($sql);
+  while ($row = $query->fetch()) $data[$row['depart']] = $row['role'];
+  return $data;
+}
+
+function getWorkEmploy()
+{
+  global $db, $db_config;
+  $sql = 'select userid from `'. PREFIX .'_employ` group by userid';
+  $query = $db->query($sql);
+  $list = array();
+  while ($employ = $query->fetch()) {
+    $sql = 'select first_name from `'. $db_config['prefix'] .'_users` where userid = '. $employ['userid'];
+    $user_query = $db->query($sql);
+    $user_data = $user_query->fetch();
+    $list[] = array(
+      'id' => $employ['userid'],
+      'name' => $user_data['first_name'],
+      'alias' => simplize($user_data['first_name'])
+    );
+  }
+  return $list;
+}
+
+function getWorkDepart()
+{
+  global $db;
+  $sql = 'select * from `'. PREFIX .'_depart`';
+  $query = $db->query($sql);
+
+  $list = array();
+  while($row = $query->fetch()) {
+    $list[] = array(
+      'id' => $row['id'],
+      'name' => $row['name'],
+      'alias' => simplize($row['name'])
+    );
+  }
+  return $list;
+}
+
+function getUserList() {
+  global $db, $db_config;
+  
+  $list = array();
+  $sql = 'select userid, username, first_name from `'. $db_config['prefix'] .'_users` where userid not in (select userid from `'. PREFIX .'_employ`)';
+  $query = $db->query($sql);
+  while ($row = $query->fetch()) {
+    $list[] = array(
+      'id' => $row['userid'],
+      'username' => simplize($row['username']),
+      'name' => $row['first_name'],
+      'alias' => simplize($row['first_name'])
+    );
+  }
+  return $list;
+}
+
+function getUserById($userid) {
+  global $db, $db_config;
+
+  $sql = 'select userid, first_name from `'. $db_config['prefix'] .'_users` where userid = ' . $userid;
+  $query = $db->query($sql);
+  return $query->fetch();
+}
+
+function simplize($str) {
+  $str = mb_strtolower($str);
+  $str = preg_replace("/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/", 'a', $str);
+  $str = preg_replace("/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/", 'e', $str);
+  $str = preg_replace("/(ì|í|ị|ỉ|ĩ)/", 'i', $str);
+  $str = preg_replace("/(ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)/", 'o', $str);
+  $str = preg_replace("/(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ)/", 'u', $str);
+  $str = preg_replace("/(ỳ|ý|ỵ|ỷ|ỹ)/", 'y', $str);
+  $str = preg_replace("/(đ)/", 'd', $str);
+  return $str;
+}
+
+function nav_generater($url, $number, $page, $limit) {
+  $html = '';
+  $total = floor($number / $limit) + ($number % $limit ? 1 : 0);
+  for ($i = 1; $i <= $total; $i++) {
+    $xtra = '';
+    if ($page == $i) $xtra = 'class="active"';
+    $html .= '<li '. $xtra .'> <a href="'. $url .'?page='. $i .'&limit='. $limit .'">' . $i . '</a></li>';
+  }
+  return '
+  <ul class="pagination">
+    '. $html .'
+  </ul>';
 }
