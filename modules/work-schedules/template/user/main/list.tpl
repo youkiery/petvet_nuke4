@@ -5,6 +5,11 @@
     <tr>
       <td colspan="4"> {content} </td>
     </tr>
+    <!-- BEGIN: note -->
+    <tr>
+      <td colspan="4"> {note} </td>
+    </tr>
+    <!-- END: note -->
     <tr>
       <td> {end} </td>
       <td> {user} </td>

@@ -88,12 +88,14 @@ function mainContent() {
     }
   
     if (count($filter['user'])) $xtra []= 'userid in ('. implode(',', $useridlist) .')';
-    if (count($xtra)) $xtra = ' where ' . implode(' and ', $xtra);
     else $xtra = '';
   }
   else {
-    $xtra = ' where userid = ' . $user_info['userid'];
+    $xtra []= 'userid = ' . $user_info['userid'];
   }
+
+  if ($filter['done']) $xtra []= 'process < 100';
+  if (count($xtra)) $xtra = ' where ' . implode(' and ', $xtra);
 
   $sql = 'select count(*) as count from `'. PREFIX .'_row`' . $xtra;
   $query = $db->query($sql);
@@ -114,7 +116,8 @@ function mainContent() {
     $xtpl->assign('user', $user['first_name']);
     $xtpl->assign('calltime', date('d/m/Y', $row['calltime']));
     $xtpl->assign('process', $row['process']);
-    $xtpl->assign('note', (strlen($row['note']) ? '- '. $row['note'] : ''));
+    $xtpl->assign('note', $row['note']);
+    if (!empty($row['note'])) $xtpl->parse('main.row.note');
     $xtpl->parse('main.row');
   }
   $xtpl->assign('nav', nav_generater($filter['url'], $number, $filter['page'], $filter['limit']));

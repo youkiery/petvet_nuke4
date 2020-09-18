@@ -13,11 +13,11 @@
   }
 
   .green {
-    background: lightgreen;
+    border-left: 5px solid green;
   }
 
   .red {
-    background: lightpink;
+    border-left: 5px solid red;
   }
 
   .input-group-btn>button {
@@ -123,6 +123,13 @@
   <div style="clear: both;"></div>
 </div>
 <!-- END: manager -->
+
+<div class="form-group">
+  <label>
+    <input id="filter-done" type="checkbox" style="margin-bottom: 4px; margin-top: 0px;" onclick="filterSubmit()" {done}>
+    Ẩn công việc đã hoàn thành
+  </label>
+</div>
 
 <div id="content">
   {content}
@@ -361,25 +368,27 @@
     data = {
       starttime: checkDate($('#filter-starttime').val()),
       endtime: checkDate($('#filter-endtime').val()),
-      list: list
+      list: list,
+      done: $('#filter-done').prop('checked')
     }
     xtra = []
     if (data['list'].length) xtra.push('user=' + data['list'].join(','))
-    if ($('#filter-starttime').val().length) {
+    if (data['starttime'] && data['starttime'].length) {
       if (!data['starttime']) {
         alert_msg('Định dạng ngày DD/MM/YYYY')
         return 0
       }
       else xtra.push('start=' + data['starttime'])
     }
-    if ($('#filter-endtime').val().length) {
+    if (data['endtime'] && data['endtime'].val().length) {
       if (!data['endtime']) {
         alert_msg('Định dạng ngày DD/MM/YYYY')
         return 0
       }
       else xtra.push('end=' + data['endtime'])
     }
-    window.location.replace('/' + nv_module_name + '/?' + xtra.join('&'))
+    if (data['done']) xtra.push('done=1')
+    window.location.replace('/' + nv_module_name + '?' + xtra.join('&'))
   }
 
   function reloadFilterUser() {
@@ -415,7 +424,7 @@
   function updateProcessSubmit() {
     freeze()
     calltime = $('#report-calltime').val()
-    if (calltime.length && !checkDate(calltime)) alert_msg('Nhập hạn chót hợp lệ DD/MM/YYYY')
+    if (calltime && calltime.length && !checkDate(calltime)) alert_msg('Nhập hạn chót hợp lệ DD/MM/YYYY')
     else vhttp.check('', {
       action: 'update-process',
       data: {

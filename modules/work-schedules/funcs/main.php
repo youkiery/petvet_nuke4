@@ -38,6 +38,7 @@ else if (empty($user)) {
 $filter = array(
   'start' => $nv_Request->get_int('start', 'get', 0),
   'end' => $nv_Request->get_int('end', 'get', 0),
+  'done' => $nv_Request->get_int('done', 'get', 0),
   'user' => $nv_Request->get_string('user', 'get'),
   'page' => $nv_Request->get_int('page', 'get', 1),
   'limit' => $nv_Request->get_int('limit', 'get', 10)
@@ -143,6 +144,7 @@ $xtpl->assign("lang", $lang_module);
 
 if (!empty($filter['start'])) $xtpl->assign('starttime', date('d/m/Y', $filter['start']));
 if (!empty($filter['end'])) $xtpl->assign('endtime', date('d/m/Y', $filter['start']));
+if (!empty($filter['done'])) $xtpl->assign('done', 'checked');
 
 $selected_data = array();
 $list = array();
