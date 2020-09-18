@@ -186,10 +186,14 @@ if (!empty($action)) {
       $result["json"] = json_encode($daily);
     break;
     case 'filter_data':
-      $startDate = $nv_Request->get_string("startDate", "get/post", "");
+      $startDate = $nv_Request->get_string("startDate", "post", "");
+      $time = totime($startDate);
 
-      $startDate = strtotime(date("Y-m-d", totime($startDate)));
+      $startDate = date("N", $time) == 1 ? strtotime(date("Y-m-d", $time)) : strtotime(date("Y-m-d", strtotime('last monday', $time)));
       $endDate = $startDate + A_DAY * 7 - 1;
+
+      // $startDate = strtotime(date("Y-m-d", totime($startDate)));
+      // $endDate = $startDate + A_DAY * 7 - 1;
 
       $result["html"] = scheduleList($startDate, $endDate);
       $result["status"] = 1;
