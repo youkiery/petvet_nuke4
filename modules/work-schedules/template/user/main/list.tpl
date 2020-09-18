@@ -1,40 +1,26 @@
 <!-- BEGIN: main -->
 <table class="table table-bordered">
-  <thead>
+  <!-- BEGIN: row -->
+  <tbody class="black-bottom {color}">
     <tr>
-      <th> Thời gian </th>
-      <th style="width: 50%"> Nội dung công việc </th>
-      <th style="width: 25%"> Nhân viên </th>
-      <th style="width: 10%"> Tiến độ </th>
-      <th>  </th>
+      <td colspan="4"> {content} </td>
     </tr>
-  </thead>
-  <tbody style="font-size: 0.9em;">
-    <!-- BEGIN: row -->
-    <tr class="{color}">
-      <td>
-        <div> {start} </div>
-        <div> đến </div>
-        <div> {end} </div>
-      </td>
-      <td>
-        <div> {content} </div>
-        <div> {note} </div>
-      </td>
+    <tr>
+      <td> {end} </td>
       <td> {user} </td>
       <td> {process}% </td>
       <td> 
         <button class="btn btn-info btn-xs" onclick="updateProcess({id}, {process}, '{note}', '{calltime}')">
-          tiến độ
+          <!-- <span class="glyphicon glyphicon-percent"> </span> -->
+          %
         </button> 
-        <div style="margin-top: 1px;"></div>
         <button class="btn btn-info btn-xs" onclick="finishWork({id})">
-          hoàn thành
+          <span class="glyphicon glyphicon-ok"> </span>
         </button>  
       </td>
     </tr>
-    <!-- END: row -->
   </tbody>
+  <!-- END: row -->
 </table>
 {nav}
 <!-- END: main -->

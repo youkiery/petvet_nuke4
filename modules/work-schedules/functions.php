@@ -99,7 +99,7 @@ function mainContent() {
   $query = $db->query($sql);
   $number = $query->fetch()['count'];
 
-  $sql = 'select * from `'. PREFIX .'_row` '. $xtra .'  order by process asc, last_time desc limit ' . $filter['limit'] . ' offset '. $filter['limit'] * ($filter['page'] - 1);
+  $sql = 'select * from `'. PREFIX .'_row` '. $xtra .'  order by calltime desc limit ' . $filter['limit'] . ' offset '. $filter['limit'] * ($filter['page'] - 1);
   $query = $db->query($sql);
   $today = time();
   while ($row = $query->fetch()) {

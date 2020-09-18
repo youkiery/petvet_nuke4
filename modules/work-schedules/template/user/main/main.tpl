@@ -8,6 +8,10 @@
 </div>
 
 <style>
+  .black-bottom {
+    border-bottom: 2px solid darkslategray;
+  }
+
   .green {
     background: lightgreen;
   }
