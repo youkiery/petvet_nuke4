@@ -88,7 +88,6 @@ function mainContent() {
     }
   
     if (count($filter['user'])) $xtra []= 'userid in ('. implode(',', $useridlist) .')';
-    else $xtra = '';
   }
   else {
     $xtra []= 'userid = ' . $user_info['userid'];
@@ -96,6 +95,7 @@ function mainContent() {
 
   if ($filter['done']) $xtra []= 'process < 100';
   if (count($xtra)) $xtra = ' where ' . implode(' and ', $xtra);
+  else $xtra = '';
 
   $sql = 'select count(*) as count from `'. PREFIX .'_row`' . $xtra;
   $query = $db->query($sql);
