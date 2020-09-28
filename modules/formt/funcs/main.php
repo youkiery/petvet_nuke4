@@ -600,6 +600,80 @@ if (!empty($action)) {
         $result['notify'] = 'Có lỗi xảy ra';
       }
       else {
+        if ($result['form']['printer'] > 1) {
+          $ig = json_decode($result['form']['ig']);
+          if ($ig->stamp) {
+            $result['form']['ig'] = $ig->data;
+          }
+          else {
+            // convert normal to new type
+            /*
+              [
+                code: string,
+                mainer: [
+                  {
+                    main: string,
+                    method: string,
+                    note: [
+                      {
+                        note: string,
+                        result: string
+                      }
+                    ]
+                  }
+                ],
+                number: string,
+                status: string,
+                type: string
+              ]
+  
+              [
+                number: string, 
+                status: string,
+                list: [
+                  string
+                ]
+              ]
+            */
+  
+            $data = array();
+            foreach ($ig as $main_key => $main) {
+              $temp = array();
+              foreach ($main->mainer as $mainer_key => $mainer) {
+                $temp2 = array();
+                foreach ($mainer->note as $note_key => $note) {
+                  $temp2[$note_key] = $note->result;
+                }
+                $temp[$mainer_key] = $temp2;
+              }
+              $data[$main_key] = array(
+                'number' => $ig[$main_key]->number,
+                'status' => $main->status,
+                'list' => $temp
+              );
+            }
+  
+            $result['form']['ig'] = $data;
+  
+            // $data = array();
+            // // b2.2 translate sample code
+            // $code = formTranslateCode($result['form']['samplecode']);
+            // echo json_encode($ig);die();
+  
+            // foreach ($exam as $synatic_key => $synatic) {
+            //   $temp = array(
+            //     'code' => $code[$synatic_key],
+            //     'number' => $ig->data[$synatic_key]['number'],
+            //   );
+            //   $method = $synatic->method;
+            //   $symbol = $synatic->symbol;
+            //   foreach ($synatic->exam as $exam_key => $exam_type) {
+  
+            //   }
+            // }
+          }
+        }
+
         $result['form']['receive'] = date('d/m/Y', $result['form']['receive']);
         $result['form']['resend'] = date('d/m/Y', $result['form']['resend']);
         $result['form']['ireceive'] = date('d/m/Y', $result['form']['ireceive']);
@@ -732,18 +806,8 @@ if (!empty($action)) {
               }
             }
   
-            foreach ($data['ig'] as $sample) {
-              foreach ($sample['mainer'] as $mainer) {
-                checkRemindv2($mainer['main'], 'symbol');
-                checkRemindv2($mainer['method'], 'method');
-                foreach ($mainer['note'] as $examNote) {
-                  checkRemindv2($examNote['note'], 'exam');
-                }
-              }
-            }
-  
             $exam = json_encode($data['exam'], JSON_UNESCAPED_UNICODE);
-            $ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
+            $ig = json_encode(array('stamp' => 1, 'data' => $data['ig']), JSON_UNESCAPED_UNICODE);
             $signer = json_encode($signer, JSON_UNESCAPED_UNICODE);
   
             $sql = 'insert into `'. PREFIX .'_row` (code, sender, receive, resend, stateIndex, stateValue, receiver, ireceive, iresend, form, number, exam, sample, sampleCode, typeIndex, typeValue, time, xnote, numberword, xcode, isenderunit, ireceiverunit, xreceiver, xresender, xsender, xreceive, xresend, xsend, ig, examdate, examdate2, result, note, page2, xexam, vnote, page3, receiveHour, receiveMinute, sampleReceive, address, sampleReceiver, status, sampleCode5, xphone, ireceiveremploy, fax, page4, xaddress, examsample, noticetime, target, receiveDis, receiveLeader, sampleplace, owner, ownermail, ownerphone, mcode, signer, printer, xsign) values("'. $data['code'] .'", "'. $data['sender'] .'", ' . totime($data['receive']) . ', ' . totime($data['resend']) . ', '. $data['state']['index'] .', "'. $data['state']['value'] . '", "' . $data['receiver'] . '", '. totime($data['ireceive']) . ',  '. totime($data['ireceive']) . ', "'. implode(', ', $data['form']) .'", ' . $data['number'] .', \'' . $exam . '\', "'. $data['sample'] .'", "'. $data['samplecode'] .'", '. $data['type']['index'] .', "'. $data['type']['value'] .'", '. time() . ', "'. $data['xnote'] .'", "'. $data['numberword'] .'", "'. implode(',', $data['xcode']) .'", "'. $data['isenderunit'] .'", "'. $data['ireceiverunit'] .'", "'. $data['xreceiver'] .'", "'. $data['xresender'] .'", "'. $data['xsender'] .'", '. $xreceive .', "'. $xresend .'", '. $xsend .', \''. $ig .'\', '. $examdate .', '. $examdate2 .', "'. $data['result'] .'", "'.$note.'", "'. $data['page2'] .'", "'. $data['xexam'] .'", "'. $vnote .'", "'. $data['page3'] .'", '.$data['receivehour'].', '.$data['receiveminute'].', "'.$sampleReceive.'", "'.$data['address'].'", "'.$data['samplereceiver'].'", "'. $data['status']['index'] .'", "'. $data['samplecode5'] .'", "'. $data['xphone'] .'", "'. $data['ireceiveremploy'] .'", "'. $data['fax'] .'", "'. $data['page4'] .'", "'.$data['xaddress'].'", "'. $data['examsample'] .'", '. $resend .', "'. $data['target'].'", "'. $data['receivedis'] .'", "'. $data['receiveleader'] .'", "'. $data['sampleplace'] .'", "'. $data['owner'] .'", "'. $data['ownermail'] .'", "'. $data['ownerphone'] .'", "'. $data['mcode'] .'", \''. $signer .'\', 5, '. $data['xsign'] .')';
@@ -816,17 +880,7 @@ if (!empty($action)) {
                 if (!empty($_POST['data']) && !empty($_POST['data']['note'])) {
                   $note = $_POST['data']['note'];
                 }
-  
-                foreach ($data['ig'] as $sample) {
-                  foreach ($sample['mainer'] as $mainer) {
-                    checkRemindv2($mainer['main'], 'symbol');
-                    checkRemindv2($mainer['method'], 'method');
-                    foreach ($mainer['note'] as $examNote) {
-                      checkRemindv2($examNote['note'], 'exam');
-                    }
-                  }
-                }
-  
+    
                 checkRemindv2($data['isenderunit'], 'isender-unit');
                 checkRemindv2($data['ireceiverunit'], 'ireceiver-unit');
                 checkRemindv2($data['xreceiver'], 'xreceiver');
@@ -841,7 +895,7 @@ if (!empty($action)) {
                 $examdate = totime($data['examdate']);
                 $examdate2 = totime($data['examdate2']);
   
-                $ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
+                $ig = json_encode(array('stamp' => 1, 'data' => $data['ig']), JSON_UNESCAPED_UNICODE);
                 $signer = json_encode($signer, JSON_UNESCAPED_UNICODE);
   
                 $sql = 'update `'. PREFIX .'_row` set xcode = "'. implode(',', $data['xcode']) .'", isenderunit = "'. $data['isenderunit'] .'", ireceiverunit = "'. $data['ireceiverunit'] .'", xreceiver = "'. $data['xreceiver'] .'", xresender = "'. $data['xresender'] .'", xsender = "'. $data['xsender'] .'", iresend = '. $iresend .', xreceive = '. $xreceive .', xresend = "'. $xresend .'", xsend = '. $xsend .', ig = \''. $ig .'\', examdate = '. $examdate .', examdate2 = '. $examdate2 .', result = "'. $data['result'] .'", note = "'.$note.'", page2 = "'. $data['page2'] .'", signer = \''. $signer .'\' where id = ' . $id;
@@ -865,21 +919,12 @@ if (!empty($action)) {
                 if (!empty($_POST['data']) && !empty($_POST['data']['vnote'])) {
                   $vnote = $_POST['data']['vnote'];
                 }        
-                $ig = json_encode($data['ig'], JSON_UNESCAPED_UNICODE);
+                $ig = json_encode(array('stamp' => 1, 'data' => $data['ig']), JSON_UNESCAPED_UNICODE);
                 $signer = json_encode($signer, JSON_UNESCAPED_UNICODE);
 
                 checkRemindv2($data['xresender'], 'xresender');
                 checkRemindv2($data['xexam'] , 'xexam');
                 checkRemindv2($data['page3'], 'page3');
-                foreach ($data['ig'] as $sample) {
-                  foreach ($sample['mainer'] as $mainer) {
-                    checkRemindv2($mainer['main'], 'symbol');
-                    checkRemindv2($mainer['method'], 'method');
-                    foreach ($mainer['note'] as $examNote) {
-                      checkRemindv2($examNote['note'], 'exam');
-                    }
-                  }
-                }
   
                 $sql = 'update `'. PREFIX .'_row` set  xcode = "'. implode(',', $data['xcode']) .'", ig = \''. $ig .'\', xresender = "'. $data['xresender'] .'", xexam = "'. $data['xexam'] .'", vnote = "'. $vnote .'", page3 = "'. $data['page3'] .'", signer = \''. $signer .'\' where id = ' . $id;
                 if ($db->query($sql)) {

@@ -834,53 +834,53 @@
       </div>
     </div>
     <!-- BEGIN: p1 -->
-    <button class="btn btn-info saved float-button" id="saved-2-1" style="top: {top}px; right: 10px;" onclick="printer(1)">
+    <button class="btn btn-info saved float-button" id="saved-2-1" style="top: 10px; right: 10px;" onclick="printer(1)">
       <span class="glyphicon glyphicon-print"></span>
     </button>
-    <button class="btn btn-warning saved float-button" id="saved-1-1" style="top: {top}px; right: 50px;" onclick="parseBox(1)">
+    <button class="btn btn-warning saved float-button" id="saved-1-1" style="top: 10px; right: 50px;" onclick="parseBox(1)">
       Mẫu 1
     </button>
     <!-- END: p1 -->
     
     <!-- BEGIN: p2 -->
-    <button class="btn btn-info saved float-button" id="saved-2-2" style="top: {top}px; right: 10px;" onclick="printer(2)">
+    <button class="btn btn-info saved float-button" id="saved-2-2" style="top: 45px; right: 10px;" onclick="printer(2)">
       <span class="glyphicon glyphicon-print"></span>
     </button>
-    <button class="btn btn-warning saved float-button" id="saved-1-2" style="top: {top}px; right: 50px;" onclick="parseBox(2)">
+    <button class="btn btn-warning saved float-button" id="saved-1-2" style="top: 45px; right: 50px;" onclick="parseBox(2)">
       Mẫu 2
     </button>
     <!-- END: p2 -->
 
     <!-- BEGIN: p3 -->
-    <button class="btn btn-info saved float-button" id="saved-2-3" style="top: {top}px; right: 10px;" onclick="printer(3)">
+    <button class="btn btn-info saved float-button" id="saved-2-3" style="top: 80px; right: 10px;" onclick="printer(3)">
       <span class="glyphicon glyphicon-print"></span>
     </button>
-    <button class="btn btn-warning saved float-button" id="saved-1-3" style="top: {top}px; right: 50px;" onclick="parseBox(3)">
+    <button class="btn btn-warning saved float-button" id="saved-1-3" style="top: 80px; right: 50px;" onclick="parseBox(3)">
       Mẫu 3
     </button>
     <!-- END: p3 -->
 
     <!-- BEGIN: p4 -->
-    <button class="btn btn-info saved float-button" id="saved-2-4" style="top: {top}px; right: 10px;" onclick="printer(4)">
+    <button class="btn btn-info saved float-button" id="saved-2-4" style="top: 115px; right: 10px;" onclick="printer(4)">
       <span class="glyphicon glyphicon-print"></span>
     </button>
-    <button class="btn btn-warning saved float-button" id="saved-1-4" style="top: {top}px; right: 50px;" onclick="parseBox(4)">
+    <button class="btn btn-warning saved float-button" id="saved-1-4" style="top: 115px; right: 50px;" onclick="parseBox(4)">
       Mẫu 4
     </button>
     <!-- END: p4 -->
 
     <!-- BEGIN: p5 -->
-    <button class="btn btn-info saved float-button" id="saved-2-5" style="top: {top}px; right: 10px;" onclick="printer(5)">
+    <button class="btn btn-info saved float-button" id="saved-2-5" style="top: 140px; right: 10px;" onclick="printer(5)">
       <span class="glyphicon glyphicon-print"></span>
     </button>
-    <button class="btn btn-warning saved float-button" id="saved-1-5" style="top: {top}px; right: 50px;" onclick="parseBox(5)">
+    <button class="btn btn-warning saved float-button" id="saved-1-5" style="top: 140px; right: 50px;" onclick="parseBox(5)">
       Mẫu 5
     </button>
     <!-- END: p5 -->
 
-    <button class="btn btn-success float-button" style="top: {top}px; right: 50px;" onclick="insertSubmit()"> Lưu </button>
+    <button class="btn btn-success float-button" style="top: 175px; right: 50px;" onclick="insertSubmit()"> Lưu </button>
 
-    <button class="btn btn-info saved-0 float-button" style="top: {top}px; right: 10px;" onclick="newForm()">
+    <button class="btn btn-info saved-0 float-button" style="top: 175px; right: 10px;" onclick="newForm()">
       <span class="glyphicon glyphicon-file"></span>
     </button>
   </div>
@@ -1674,6 +1674,11 @@
     installRemindv2('0', 'receive-leader');
     installSelect()
     // installExamRemind()
+    global_field = [{
+      number: 1,
+      status: 0,
+      list: ['']
+    }]
     parseField(global_field)
     parseExam(global_exam)        
     parseBox(1)
@@ -2086,67 +2091,33 @@
     var samplecode = checkSamplecode(formInsertSampleCode.val(), formInsertNumber.val())['list']
     // console.log(samplecode);
     
-    var data = {
-      type: getCheckbox('type', formInsertTypeOther),
-      sample: formInsertSample.val(),
-      samplecode: checkSamplecode(formInsertSampleCode.val(), formInsertNumber.val())['list'],
-      exam: getExam()
+    exam = getExam()
+    temp = []
+    type = getCheckbox('type', formInsertTypeOther)
+
+    if (exam) exam.forEach((test_data, test_index) => {
+      temp2 = []
+      if (test_data['exam']) test_data['exam'].forEach((exam_data, exam_index) => {
+        temp2.push('')
+      })
+      temp.push(temp2)
+    })
+
+    dump_data = {
+      number: 1,
+      status: 1,
+      list: temp
     }
 
-    var type = (data['type']['index'] == 5 ? data['type']['value'] : trim($("#type-" + data['type']['index']).text()))
-    var sampleCount = data['samplecode'].length
-    var maintemp = []
-    global_field = []
-    for (let i = 0; i < sampleCount; i++) {
-      var temp = []
-      global_field.push({
-        main: ''
-      })
+    temp = []
 
-      data['exam'].forEach(main => {
-        var temp2 = []
-        main['exam'].forEach(exam => {
-          temp2.push({
-            result: '',
-            note: exam
-          })
-        })
-        temp.push({
-          main: main['symbol'],
-          method: main['method'],
-          note: temp2
-        })
-      })
+    samplecode.forEach((sample_data, sample_index) => {
+      temp[sample_index] = dump_data
+    })
 
-      // splited = splitCode(data['samplecode'][i])
-      // if (splited.length > 1) {
-      //   from = Number(trim(splited[0]))
-      //   end = Number(trim(splited[1]))
-      //   for (let j = from; j <= end; j++) {
-      //     maintemp.push({
-      //       code: j,
-      //       number: 1,
-      //       status: 0,
-      //       type: type,
-      //       mainer: temp
-      //     })
-      //   }
-      // }
-      // else {
-        maintemp.push({
-          code: data['samplecode'][i],
-          number: 1,
-          status: 0,
-          type: type,
-          mainer: temp
-        })
-      // }
-
-    }
-    global_field = maintemp
+    global_field = temp
     // console.log(global_field);
-    
-    parseField(global_field)
+    parseField2(global_field, samplecode, exam, (type[index] === 5 ? type['value'] : $('#typed-'+ type[index])).text())    
   }
 
   function splitCode(code) {
@@ -2215,18 +2186,12 @@
           noteX ++
           html3 += `
           <div class="html-result bordered">
-            <button class="close right" data-dismiss="modal" onclick="removeField('`+ sampleIndex +`,`+ resultIndex +`,`+ noteIndex +`')">&times;</button>
-            <div class="row form-group">
+            <p> <b> Ghi chú: </b> `+ note['note'] +`</p>
+            <div class="row">
               <label class="col-sm-6"> Kết quả </label>
               <div class="col-sm-12 relative">
-                <input type="text" value="`+ note['result'] +`" class="form-control ig ig-result-`+ sampleIndex +`-`+ resultIndex +`-`+ noteIndex +`" id="result-`+ sampleIndex +`-`+ resultIndex +`-`+ noteIndex +`" autocomplete="off">
+                <input type="text" value="`+ note['result'] +`" class="form-control ig ig-result-`+ sampleIndex +`-`+ resultIndex +`" id="result-`+ sampleIndex +`-`+ resultIndex +`-`+ noteIndex +`" autocomplete="off">
                 <div class="suggest" id="result-suggest-`+ sampleIndex +`-`+ resultIndex +`-`+ noteIndex +`"></div>
-              </div>
-            </div>
-            <div class="row form-group">
-              <label class="col-sm-6"> Ghi chú </label>
-              <div class="col-sm-12">
-                <input type="text" value="`+ note['note'] +`" class="form-control ig ig-note-`+ sampleIndex +`-`+ resultIndex +`-`+ noteIndex +`" autocomplete="off">
               </div>
             </div>
           </div>`
@@ -2237,29 +2202,10 @@
         })
 
         html2 += `
-        <div class="html-main bordered">
-          <button class="close right" data-dismiss="modal" onclick="removeField('`+ sampleIndex +`,`+ resultIndex +`')">&times;</button>
-          <div class="row form-group">
-            <label class="col-sm-6"> Chỉ tiêu </label>
-            <div class="col-sm-12">
-              <div class="relative">
-                <input type="text" value="`+ result['main'] +`" class="form-control ig ig-main-`+ sampleIndex +`-`+ resultIndex +`" id="main-s`+ sampleIndex +`" autocomplete="off">
-                <div class="suggest" id="main-suggest-s`+ sampleIndex +`"></div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="row form-group">
-            <label class="col-sm-6"> Phương pháp </label>
-            <div class="col-sm-12">
-              <div class="relative">
-                <input type="text" value="`+ result['method'] +`" class="form-control ig ig-method-`+ sampleIndex +`-`+ resultIndex +`" id="method-s`+ sampleIndex +`" autocomplete="off">
-                <div class="suggest" id="method-suggest-s`+ sampleIndex +`"></div>
-              </div>
-            </div>
-          </div>
+        <div class="html-main bordered igmn-`+ sampleIndex +`" rel="`+ resultIndex +`">
+          <p> <b> Chỉ tiêu: </b> `+ result['main'] +` </p>
+          <p> <b> Phương pháp: </b> `+ result['method'] +` </p>
           `+ html3 +`
-          <button class="btn btn-info" onclick="addField('`+ sampleX +`,`+ resultX +`,`+ noteX +`')"> <span class="glyphicon glyphicon-plus"></span> </button>
         </div>`
         installer.push({
           name: "s" + sampleIndex,
@@ -2276,39 +2222,28 @@
         <span class="marker"> Mẫu `+(sampleIndex + 1)+` </span>
         <span style="float: right;"> <button class="btn btn-info" onclick="toggleButton('#toggle-`+sampleIndex+`')"> <span class="glyphicon glyphicon-eye-open"></span> </button> </span>
         <br>
-        <div id="toggle-`+sampleIndex+`">
+        <div class="igm" rel="`+sampleIndex+`" id="toggle-`+sampleIndex+`">
           <button class="close right" data-dismiss="modal" onclick="removeField('`+ sampleIndex +`')">&times;</button>
-          <div class="row form-group">
-            <label class="col-sm-6"> Kí hiệu mẫu </label>
-            <div class="col-sm-12">
-              <input type="text" name="samplecode[]" value="`+ sample['code'] +`" class="form-control ig ig-code-`+ sampleIndex +`" autocomplete="off">
-            </div>
-          </div>
-          <div class="row form-group">
-            <label class="col-sm-6"> Loại mẫu </label>
-            <div class="col-sm-12">
-              <input type="text" name="type[]" value="`+ sample['type'] +`" class="form-control ig ig-type-`+ sampleIndex +`" autocomplete="off">
-            </div>
-          </div>
+          <p> <b> Kí hiệu mẫu: </b> `+ sample['code'] +` </p>
+          <p> <b> Loại mẫu: </b> `+ sample['type'] +` </p>
           
-          <div class="row form-group">
+          <div class="row">
             <label class="col-sm-6"> Số lượng mẫu </label>
             <div class="col-sm-12">
-              <input type="text" name="number[]" value="`+ sample['number'] +`" class="form-control ig ig-number-`+ sampleIndex +`" autocomplete="off">
+              <input type="text" name="number[]" value="`+ sample['number'] +`" class="form-control ig" id="ig-number-`+ sampleIndex +`" autocomplete="off">
             </div>
           </div>
           
-          <div class="row form-group">
+          <div class="row">
             <label class="col-sm-6"> Tình trạng mẫu </label>
-              <input type="radio" name="samplestatus-`+ sampleIndex +`" `+ (Number(sample['status']) ? '' : 'checked' ) +` class="form-control ig ig-status0-`+ sampleIndex +`"> Đạt<br>
-              <input type="radio" name="samplestatus" `+ (Number(sample['status']) ? 'checked' : '' ) +` class="form-control ig ig-status1-`+ sampleIndex +`"> Không đạt
+              <input type="radio" name="samplestatus-`+ sampleIndex +`" `+ (Number(sample['status']) ? '' : 'checked' ) +` class="form-control ig ig-status0-`+ sampleIndex +`" value="1"> Đạt<br>
+              <input type="radio" name="samplestatus-`+ sampleIndex +`" `+ (Number(sample['status']) ? 'checked' : '' ) +` class="form-control ig ig-status1-`+ sampleIndex +`" value="0"> Không đạt
           </div>
           `+ html2 +`
-          <button class="btn btn-info" onclick="addField('`+ sampleX +`,`+ resultX +`')"><span class="glyphicon glyphicon-plus"></span></button>
         </div>
       </div>`
     })
-    html = `<button class="btn btn-info" onclick="synchField()"><span class="glyphicon glyphicon-refresh"></span></button> <a href="#fdown" class="btn btn-info"> <span class="glyphicon glyphicon-arrow-down"> </span></a><span id="fup"> `+ html +`<button class="btn btn-info" onclick="addField('`+ sampleX +`')"><span class="glyphicon glyphicon-plus"></span></button> <a href="#fup" class="btn btn-info"> <span class="glyphicon glyphicon-arrow-up"> </span></a><span id="fdown"></span>`
+    html = `<button class="btn btn-info" onclick="synchField()"><span class="glyphicon glyphicon-refresh"></span></button> <a href="#fdown" class="btn btn-info"> <span class="glyphicon glyphicon-arrow-down"> </span></a><span id="fup"> `+ html +`<a href="#fup" class="btn btn-info"> <span class="glyphicon glyphicon-arrow-up"> </span></a><span id="fdown"></span>`
     sample.html(html)
     installer.forEach(item => {
       installRemindv2(item['name'], item['type'])
@@ -2715,6 +2650,131 @@
     return html
   }
 
+  //
+
+  function getIgField2() {
+    var data = []
+    $('.igm').each((index, item) => {
+      igmID = item.getAttribute('rel')
+      data[igmID] = {
+        number: $('#ig-number-' + igmID).val(),
+        status: $('[name=samplestatus-'+ igmID +']:checked').val(),
+        list: []
+      }
+      $('.igmn-'+ igmID).each((index, item2) => {
+        igmnID = item2.getAttribute('rel')
+        data[igmID]['list'][igmnID] = []
+        $('.ig-result-'+ igmID + '-' + igmnID).each((index, item3) => {
+          data[igmID]['list'][igmnID].push(item3.value)
+        })
+      })
+    })
+    return data
+  }
+
+  function parseField2(data, code, exam, sample_type) {
+    var html = ''
+    var installer = []
+    var sampleX = -1
+    global_field = data
+
+    temp = []
+
+    if (exam) exam.forEach((test_data, test_index) => {
+      temp2 = []
+      if (test_data['exam']) test_data['exam'].forEach((exam_data, exam_index) => {
+        temp2.push('')
+      })
+      temp.push(temp2)
+    })
+
+    dump_data = {
+      number: 1,
+      status: 1,
+      list: temp
+    }
+
+    sample.html('')
+    if (code) code.forEach((code_data, code_index) => {
+      if (!data[code_index]) {
+        data[code_index] = dump_data
+      }
+      html2 = ''
+      if (exam) exam.forEach((test_data, test_index) => {
+        method = test_data['method']
+        symbol = test_data['symbol']
+        html3 = ''
+
+        if (test_data['exam']) test_data['exam'].forEach((exam_data, exam_index) => {
+          try {
+            // console.log(data[code_index], test_index, exam_index);
+            result = data[code_index]['list'][test_index][exam_index]
+          }
+          catch (e) {
+            result = ''
+          }
+            html3 += `
+            <div class="html-result bordered">
+              <p> <b> Ghi chú: </b> `+ exam_data +`</p>
+              <div class="row">
+                <label class="col-sm-6"> Kết quả </label>
+                <div class="col-sm-12 relative">
+                  <input type="text" value="`+ result +`" class="form-control ig ig-result-`+ code_index +`-`+ test_index +`" id="result-`+ code_index +`-`+ test_index +`-`+ exam_index +`" autocomplete="off">
+                  <div class="suggest" id="result-suggest-`+ code_index +`-`+ test_index +`-`+ exam_index +`"></div>
+                </div>
+              </div>
+            </div>`
+            installer.push({
+              name: code_index +`-`+ test_index +`-`+ exam_index,
+              type: 'result'
+            })
+        })
+
+        html2 += `
+          <div class="html-main bordered igmn-`+ code_index +`" rel="`+ test_index +`">
+            <p> <b> Chỉ tiêu: </b> `+ symbol +` </p>
+            <p> <b> Phương pháp: </b> `+ method +` </p>
+            `+ html3 +`
+          </div>`
+      })
+      try {
+        number = data[code_index]['number']
+      }
+      catch (e) {
+        number = 1
+      }
+      html += `    
+      <div class="bordered">
+        <span class="marker"> Mẫu `+(code_index + 1)+` </span>
+        <span style="float: right;"> <button class="btn btn-info" onclick="toggleButton('#toggle-`+code_index+`')"> <span class="glyphicon glyphicon-eye-open"></span> </button> </span>
+        <br>
+        <div class="igm" rel="`+code_index+`" id="toggle-`+code_index+`">
+          <p> <b> Kí hiệu mẫu: </b> `+ code_data +` </p>
+          <p> <b> Loại mẫu: </b> `+ sample_type +` </p>
+          
+          <div class="row">
+            <label class="col-sm-6"> Số lượng mẫu </label>
+            <div class="col-sm-12">
+              <input type="text" name="number[]" value="`+ number +`" class="form-control ig" id="ig-number-`+ code_index+`" autocomplete="off">
+            </div>
+          </div>
+          
+          <div class="row">
+            <label class="col-sm-6"> Tình trạng mẫu </label>
+              <input type="radio" name="samplestatus-`+ code_index +`" `+ (Number(data[code_index]['status']) ? '' : 'checked' ) +` class="form-control ig ig-status0-`+ code_index+`" value="1"> Đạt<br>
+              <input type="radio" name="samplestatus-`+ code_index+`" `+ (Number(data[code_index]['status']) ? 'checked' : '' ) +` class="form-control ig ig-status1-`+ code_index+`" value="0"> Không đạt
+          </div>
+          `+ html2 +`
+        </div>
+      </div>`
+    })
+
+    html = `<button class="btn btn-info" onclick="synchField()"><span class="glyphicon glyphicon-refresh"></span></button> <a href="#fdown" class="btn btn-info"> <span class="glyphicon glyphicon-arrow-down"> </span></a><span id="fup"> `+ html +`<a href="#fup" class="btn btn-info"> <span class="glyphicon glyphicon-arrow-up"> </span></a><span id="fdown"></span>`
+    sample.html(html)
+    installer.forEach(item => {
+      installRemindv2(item['name'], item['type'])
+    })
+  }
 
   function getIgField() {
     var list = []
@@ -2784,78 +2844,78 @@
     return data
   }
 
-  function addField(indexString) {
-    var indexType = indexString.split(',')
-    var indexCount = indexType.length
+  // function addField(indexString) {
+  //   var indexType = indexString.split(',')
+  //   var indexCount = indexType.length
 
-    switch (indexCount) {
-      case 1:
-        global_field.splice(Number(indexType[0]) + 1, 0, {
-          code: '',
-          type: '',
-          number: 1,
-          status: 0,
-          mainer: [
-            {
-              main: '',
-              method: '',
-              note: [
-                {
-                  result: '',
-                  note: ''
-                }
-              ]
-            }
-          ]
-        })
-      break;
-      case 2:
-        global_field[indexType[0]]['mainer'].splice(Number(indexType[1]) + 1, 0, {
-          main: '',
-          method: '',
-          number: 1,
-          note: [
-            {
-              result: '',
-              note: ''
-            }
-          ]
-        })
-      break;
-      case 3:
-        global_field[indexType[0]]['mainer'][indexType[1]]['note'].splice(Number(indexType[2]) + 1, 0, {
-          result: '',
-          note: ''
-        })     
-      break;
-    }
-    parseField(global_field)
-  }
+  //   switch (indexCount) {
+  //     case 1:
+  //       global_field.splice(Number(indexType[0]) + 1, 0, {
+  //         code: '',
+  //         type: '',
+  //         number: 1,
+  //         status: 0,
+  //         mainer: [
+  //           {
+  //             main: '',
+  //             method: '',
+  //             note: [
+  //               {
+  //                 result: '',
+  //                 note: ''
+  //               }
+  //             ]
+  //           }
+  //         ]
+  //       })
+  //     break;
+  //     case 2:
+  //       global_field[indexType[0]]['mainer'].splice(Number(indexType[1]) + 1, 0, {
+  //         main: '',
+  //         method: '',
+  //         number: 1,
+  //         note: [
+  //           {
+  //             result: '',
+  //             note: ''
+  //           }
+  //         ]
+  //       })
+  //     break;
+  //     case 3:
+  //       global_field[indexType[0]]['mainer'][indexType[1]]['note'].splice(Number(indexType[2]) + 1, 0, {
+  //         result: '',
+  //         note: ''
+  //       })     
+  //     break;
+  //   }
+  //   parseField(global_field)
+  // }
 
-  function removeField(indexString) {
-    var indexType = indexString.split(',')
-    var indexCount = indexType.length
-    switch (indexCount) {
-      case 1:
+  // function removeField(indexString) {
+  //   var indexType = indexString.split(',')
+  //   var indexCount = indexType.length
+  //   switch (indexCount) {
+  //     case 1:
         
-        global_field = global_field.filter((item, index) => {
-          return index != indexType[0]
-        })
-      break;
-      case 2:
-        global_field[indexType[0]]['mainer'] = global_field[indexType[0]]['mainer'].filter((item, index) => {
-          return index != indexType[1]
-        })        
-      break;
-      case 3:
-        global_field[indexType[0]]['mainer'][indexType[1]]['note'] = global_field[indexType[0]]['mainer'][indexType[1]]['note'].filter((item, index) => {
-          return index != indexType[2]
-        })
-      break;
-    }
+  //       global_field = global_field.filter((item, index) => {
+  //         return index != indexType[0]
+  //       })
+  //     break;
+  //     case 2:
+  //       global_field[indexType[0]]['mainer'] = global_field[indexType[0]]['mainer'].filter((item, index) => {
+  //         return index != indexType[1]
+  //       })        
+  //     break;
+  //     case 3:
+  //       global_field[indexType[0]]['mainer'][indexType[1]]['note'] = global_field[indexType[0]]['mainer'][indexType[1]]['note'].filter((item, index) => {
+  //         return index != indexType[2]
+  //       })
+  //     break;
+  //   }
     
-    parseField(global_field)
-  }
+  //   parseField(global_field)
+  // }
 
   function selectRemind(name, selectValue) {
     globalTarget[name]['input'].val(selectValue)
@@ -3012,22 +3072,9 @@
     formInsertVnote.val(`(*)- Các chỉ tiêu được công nhận TCVN ISO/IEC 17025:2007.
     - Các chỉ tiêu được chứng nhận đăng ký hoạt động thử nghiệm.`)
     global_field = [{
-      code: '',
-      type: '',
       number: 1,
       status: 0,
-      mainer: [
-        {
-          main: '',
-          method: '',
-          note: [
-            {
-              result: '',
-              note: ''
-            }
-          ]
-        }
-      ]
+      list: ['']
     }]
     $(".status").prop('checked', false)
     $(".status-0").prop('checked', true)
@@ -3270,7 +3317,7 @@
         xresend: formInsertXresend.val(),
         note: formInsertCnote.val(),
         page2: formInsertPage2.val(),
-        ig: getIgField(),
+        ig: getIgField2(),
         vnote: formInsertVnote.val(),
         xexam: formInsertXexam.val(),
         page3: formInsertPage3.val(),
@@ -3347,7 +3394,7 @@
             xresend: formInsertXresend.val(),
             note: formInsertCnote.val(),
             page2: formInsertPage2.val(),
-            ig: getIgField(),
+            ig: getIgField2(),
             signer: checkSigner()
           }
         }
@@ -3361,7 +3408,7 @@
             xexam: formInsertXexam.val(),
             xresender: formInsertXresender.val(),
             page3: formInsertPage3.val(),
-            ig: getIgField(),
+            ig: getIgField2(),
             signer: checkSigner()
           }
         }
@@ -3528,7 +3575,7 @@
       formInsertXcode3.val(xcode[2])
       formInsertIsenderUnit.val(data['form']['isenderunit'])
       formInsertIreceiverUnit.val(data['form']['ireceiverunit'])
-      parseField(JSON.parse(data['form']['ig']))
+      parseField2(data['form']['ig'], checkSamplecode(data['form']['samplecode'], data['form']['number'])['list'], JSON.parse(data['form']['exam']), trim( data['form']['type']['index'] === 5 ? data['form']['type']['value'] : $('#type-'+ data['form']['type']['index']).text() ))
       formInsertExamDate.val(data['form']['examdate'])
       $("#form-insert-exam-date-2").val(data['form']['examdate2'])
       formInsertIresend.val(data['form']['iresend'])

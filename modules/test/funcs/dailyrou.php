@@ -230,7 +230,7 @@ $xtpl->assign("date", date("Y-m-d"));
 $xtpl->assign("admin", "false");
 if ($type) {
   $xtpl->assign("admin", "true");
-  $list = getdoctorlist();
+  $list = getdoctorlist(REGISTABLED);
 
   foreach ($userList as $doctor) {
     $xtpl->assign("select", "");
