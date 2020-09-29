@@ -14,6 +14,18 @@ if (!empty($_GET['action'])) {
     if (file_exists(NV_ROOTDIR . '/ionic/' . $action . '.php')) {
         try {
             include_once(NV_ROOTDIR . '/ionic/global_function.php');
+            if ($action !== 'login') {
+                if (empty($_GET['userid'])) throw new Exception('no user');
+                else {
+                    $userid = $_GET['userid'];
+                    $user = checkUserId($userid);
+                    if (empty($user)) throw new Exception('no user exist');
+                }
+            }
+            $result = array(
+                'status' => 0,
+                'messenger' => ''
+            );
             include_once(NV_ROOTDIR . '/ionic/' . $action . '.php');
         }
         catch (Exception $e) {
