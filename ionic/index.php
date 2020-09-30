@@ -26,6 +26,7 @@ if (!empty($_GET['action'])) {
                 'status' => 0,
                 'messenger' => ''
             );
+            date_default_timezone_set('asia/ho_chi_minh');
             include_once(NV_ROOTDIR . '/ionic/' . $action . '.php');
         }
         catch (Exception $e) {

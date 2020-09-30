@@ -43,6 +43,16 @@ while ($row = $query->fetch_assoc()) {
     $list []= $row;
 }
 $result['employ'] = $list;
+
+$list = array();
+$sql = 'select a.userid, b.username as username, concat(last_name, " ", first_name) as name from `pet_test_user` a inner join `pet_users` b on a.userid = b.userid and a.except = 1';
+$query = $mysqli->query($sql);
+
+while ($row = $query->fetch_assoc()) {
+    $list []= $row;
+}
+$result['except'] = $list;
+
 $result['today'] = date('d/m/Y');
 $result['status'] = 1;
 

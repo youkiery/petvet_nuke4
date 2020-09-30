@@ -21,7 +21,7 @@ else {
     else {
         $result['status'] = 1;
         $result['userid'] = $user_info['userid'];
-        $result['name'] = $user_info['last_name'] . ' ' . $user_info['first_name'];
+        $result['name'] = (!empty($user['last_name']) ? $user['last_name'] . ' ': '') . $user['first_name'];
         $result['role'] = checkUserRole($user_info['userid']);
         $result['messenger'] = 'login successfully';
     }
