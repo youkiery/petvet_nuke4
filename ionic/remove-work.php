@@ -1,7 +1,7 @@
 <?php 
 
 if (empty($_GET['id']) || empty(checkWorkId($_GET['id']))) $result['messenger'] = 'no work exist';
-else if (empty(checkUserRole($userid))) $result['messenger'] = 'no permission allow';
+else if (!checkUserRole($userid)) $result['messenger'] = 'no permission allow';
 else {
     $id = $_GET['id'];
     $sql = 'delete from `pet_petwork_row` where id = '. $id;

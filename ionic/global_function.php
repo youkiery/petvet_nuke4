@@ -13,11 +13,11 @@ function checkUserId($userid) {
 function checkUserRole($userid) {
     global $mysqli;
     if (!empty(checkUserId($userid))) {
-        $sql = 'select * from `pet_petwork_employ` where userid = '. $userid;
+        $sql = 'select * from `pet_test_user` where userid = '. $userid;
         $query = $mysqli->query($sql);
     
         $user = $query->fetch_assoc();
-        if ($user['role'] > 1) return true;
+        if ($user['manager']) return true;
     }
     return false;
 }

@@ -1,16 +1,15 @@
 <?php 
 
-if (empty($_GET['id']) || empty(checkWorkId($_GET['id']))) $result['messenger'] = 'no work exist';
-else if (empty(checkUserRole($userid))) $result['messenger'] = 'no permission allow';
+if (!checkUserRole($userid)) $result['messenger'] = 'no permission allow';
 else {
-    $id = $_GET['id'];
     $content = $_GET['content'];
-    $process = $_GET['process'];
-    $note = $_GET['note'];
-    $sql = 'insert into `pet_petwork_row`';
+    $cometime = $_GET['cometime'];
+    $calltime = $_GET['calltime'];
+    $sql = 'insert into `pet_petwork_row` (cometime, calltime, last_time, post_user, edit_user, userid, depart, customer, content, process, confirm, review, note) value("'. totime($cometime) .'", "'. totime($calltime) .'", '. time() .', '. $userid .', '. $userid .', '. $userid .', 0, 0, "'. $content .'", 0, 0, "", "")';
     if ($mysqli->query($sql)) {
         $result['status'] = 1;
-        $result['messenger'] = 'removed work';
+        $result['id'] = $mysqli->insert_id;
+        $result['messenger'] = 'inserted work';
     }
 }
 
