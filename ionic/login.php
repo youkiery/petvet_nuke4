@@ -20,10 +20,12 @@ else {
     else if (!$crypt->validate_password($password, $user_info['password'])) $result['messenger'] = 'incorrect password';
     else {
         $result['status'] = 1;
+        $result['messenger'] = 'login successfully';
         $result['userid'] = $user_info['userid'];
+        $result['username'] = $username;
+        $result['password'] = $password;
         $result['name'] = (!empty($user_info['last_name']) ? $user_info['last_name'] . ' ': '') . $user_info['first_name'];
         $result['role'] = checkUserRole($user_info['userid']);
-        $result['messenger'] = 'login successfully';
     }
 }
 

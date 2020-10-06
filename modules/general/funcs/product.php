@@ -12,7 +12,8 @@ $filter = array(
   'page' => $nv_Request->get_int('page', 'get', 1),
   'limit' => $nv_Request->get_int('limit', 'get', 20),
   'keyword' => $nv_Request->get_string('keyword', 'get', ''),
-  'tag' => $nv_Request->get_string('tag', 'get', '')
+  'tag' => $nv_Request->get_string('tag', 'get', ''),
+  'sub' => $nv_Request->get_string('sub', 'get', '')
 );
 $http = array(
   'keyword' => $filter['keyword'],
@@ -20,6 +21,18 @@ $http = array(
 );
 
 $url = '/index.php?nv=' . $module_name . '&op=' . $op .'&' . http_build_query($http);
+
+if (!empty($filter['sub'])) {
+  $xtpl = new XTemplate("sub-". $filter['sub'] .".tpl", PATH);
+  $xtpl->assign('nv', $module_name);
+  $xtpl->assign('op', $op);
+
+  $xtpl->parse('main');
+  $contents = $xtpl->text();
+  include NV_ROOTDIR . '/includes/header.php';
+  echo nv_site_theme($contents);
+  include NV_ROOTDIR . '/includes/footer.php';
+}
 
 // $x = array("SHOP", "SHOP>>Balo, giỏ xách", "SHOP>>Bình xịt", "SHOP>>Cát vệ sinh", "SHOP>>Dầu tắm", "SHOP>>Đồ chơi", "SHOP>>Đồ chơi - vật dụng", "SHOP>>Giỏ-nệm-ổ", "SHOP>>Khay vệ sinh", "SHOP>>Nhà, chuồng", "SHOP>>Thức ăn", "SHOP>>Thuốc bán", "SHOP>>Thuốc bán>>thuốc sát trung", "SHOP>>Tô - chén", "SHOP>>Vòng-cổ-khớp", "SHOP>>Xích-dắt-yếm");
 // foreach ($x as $a) {

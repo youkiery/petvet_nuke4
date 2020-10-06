@@ -24,22 +24,68 @@
     display: table;
   }
 
-  .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12 {
+  .col-1,
+  .col-2,
+  .col-3,
+  .col-4,
+  .col-5,
+  .col-6,
+  .col-7,
+  .col-8,
+  .col-9,
+  .col-10,
+  .col-11,
+  .col-12 {
     float: left;
   }
 
-  .col-1 {width: 8.33%;}
-  .col-2 {width: 16.66%;}
-  .col-3 {width: 25%;}
-  .col-4 {width: 33.33%;}
-  .col-5 {width: 41.66%;}
-  .col-6 {width: 50%;}
-  .col-7 {width: 58.33%;}
-  .col-8 {width: 66.66%;}
-  .col-9 {width: 75%;}
-  .col-10 {width: 83.33%;}
-  .col-11 {width: 91.66%;}
-  .col-12 {width: 100%;}
+  .col-1 {
+    width: 8.33%;
+  }
+
+  .col-2 {
+    width: 16.66%;
+  }
+
+  .col-3 {
+    width: 25%;
+  }
+
+  .col-4 {
+    width: 33.33%;
+  }
+
+  .col-5 {
+    width: 41.66%;
+  }
+
+  .col-6 {
+    width: 50%;
+  }
+
+  .col-7 {
+    width: 58.33%;
+  }
+
+  .col-8 {
+    width: 66.66%;
+  }
+
+  .col-9 {
+    width: 75%;
+  }
+
+  .col-10 {
+    width: 83.33%;
+  }
+
+  .col-11 {
+    width: 91.66%;
+  }
+
+  .col-12 {
+    width: 100%;
+  }
 
   .upload {
     background: #eee;
@@ -60,22 +106,31 @@
 
 {modal}
 
-<div class="rows form-group">
-  <form>
+<div class="form-group">
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="/{nv}/product"> Quản lý sản phẩm </a></li>
+    <li><a href="/{nv}/product?sub=tag"> Quản lý tag </a></li>
+    <li><a href="/{nv}/product?sub=expire"> Quản lý hạn sử dụng </a></li>
+    <li><a href="/{nv}/product?sub=location"> Tìm kiếm vị trí </a></li>
+  </ul>
+</div>
+
+<div class="form-group">
+  <form class="form-inline">
     <input type="hidden" name="nv" value="{nv}">
     <input type="hidden" name="op" value="{op}">
-    <div class="col-3">
+    <div class="form-group">
       <input type="text" class="form-control" name="keyword" value="{keyword}"
         placeholder="Tìm kiếm theo tên hàng, mã hàng,...">
     </div>
-    <div class="col-2">
+    <div class="form-group">
       <div class="relative">
         <input type="text" class="form-control" id="tag" name="tag" value="{tag}"
           placeholder="VD: dây dắt, vòng cổ, xích inox, cổ xanh đỏ đen,...">
         <div class="suggest" id="tag-suggest"> </div>
       </div>
     </div>
-    <div class="col-2">
+    <div class="form-group">
       <select class="form-control" name="limit">
         <option value="10" {check10}> 10 </option>
         <option value="20" {check20}> 20 </option>
@@ -83,19 +138,17 @@
         <option value="100" {check100}> 100 </option>
         <option value="200" {check200}> 200 </option>
       </select>
-    </div>
-    <div class="col-2">
       <button class="btn btn-info">
         <span class="glyphicon glyphicon-search"></span>
       </button>
     </div>
   </form>
-  <div class="col-3" style="text-align: right;">
+</div>
+<!-- <div class="col-3" style="text-align: right;">
     <button class="btn btn-success" onclick="insertItem()">
       Thêm hàng hóa
     </button>
-  </div>
-</div>
+  </div> -->
 
 <div class="form-group rows">
   <div class="relative col-4">
@@ -205,7 +258,7 @@
 
   function insertProduct() {
     if (!$("#product-insert-input-val").val()) alert_msg('Chọn mặt hàng trước khi thêm')
-    else  vhttp.checkelse('', { action: 'insert-product', keyword: $("#product-insert-input").val(), id: $("#product-insert-input-val").val(), low: $("#product-insert-low").val() }).then(data => {
+    else vhttp.checkelse('', { action: 'insert-product', keyword: $("#product-insert-input").val(), id: $("#product-insert-input-val").val(), low: $("#product-insert-low").val() }).then(data => {
       $("#product-insert-input").val('')
       $("#product-insert-input-val").val('0')
       $('#content').html(data['html'])
