@@ -49,10 +49,11 @@
   {content}
 </div>
 
+<script src="/modules/core/js/vremind-8.js"></script>
+<script src="/modules/core/js/vhttp.js"></script>
 <script>
-  var dbdata = JSON.parse('{data}')
-  var customer = dbdata["customer"] ? dbdata["customer"].length : 0
-  var remind = dbdata["remind"] ? dbdata["remind"].length : 0
+  // var customer = dbdata["customer"] ? dbdata["customer"].length : 0
+  // var remind = dbdata["remind"] ? dbdata["remind"].length : 0
   var type = $("#type")
   var startDate = $("#start-date")
   var endDate = $("#end-date")
@@ -104,20 +105,42 @@
     currency: 'VND'
   })
 
-
   type.change(() => {    
     filterData()
   })
 
-  $("#collect-customer, #collect-destination").focus((e) => {
-    e.currentTarget.parentElement.children[1].style["display"] = "block"
+  $(document).ready(() => {
+    vremind.install('#collect-customer', '#collect-customer-suggest', (input) => {
+      return new Promise((resolve) => {
+        vhttp.checkelse('', {
+          action: 'get-customer',
+          keyword: input
+        }).then(data => {
+          resolve(data['html'])
+        })
+      })
+    }, 200, 200)
+    vremind.install('#collect-destination', '#collect-destination-suggest', (input) => {
+      return new Promise((resolve) => {
+        vhttp.checkelse('', {
+          action: 'get-destination',
+          keyword: input
+        }).then(data => {
+          resolve(data['html'])
+        })
+      })
+    }, 200, 200)
   })
 
-  $("#collect-customer, #collect-destination").blur(() => {
-    setTimeout(() => {
-      suggest.hide()
-    }, 200);
-  })
+  // $("#collect-customer, #collect-destination").focus((e) => {
+  //   e.currentTarget.parentElement.children[1].style["display"] = "block"
+  // })
+
+  // $("#collect-customer, #collect-destination").blur(() => {
+  //   setTimeout(() => {
+  //     suggest.hide()
+  //   }, 200);
+  // })
 
   payMoney.keyup(() => {
     var value = Number((payMoney.val()).replace(/\,/g, ""));
@@ -228,76 +251,76 @@
     }
   })
 
-  collectCustomer.keyup(() => {
-    clearTimeout(customerTimeout)
+  // collectCustomer.keyup(() => {
+  //   clearTimeout(customerTimeout)
 
-    customerTimeout = setTimeout(() => {
-      var keyword = collectCustomer.val()
-      var list = []
-      var type = "name"
+  //   customerTimeout = setTimeout(() => {
+  //     var keyword = collectCustomer.val()
+  //     var list = []
+  //     var type = "name"
 
-      if (Number(keyword)) {
-        type = "phone";
-      }
+  //     if (Number(keyword)) {
+  //       type = "phone";
+  //     }
 
-      for (const customerId in dbdata["customer"]) {
-        if (dbdata["customer"].hasOwnProperty(customerId)) {
-          const customerData = dbdata["customer"][customerId];
+  //     for (const customerId in dbdata["customer"]) {
+  //       if (dbdata["customer"].hasOwnProperty(customerId)) {
+  //         const customerData = dbdata["customer"][customerId];
           
-          if (customerData[type].search(keyword) >= 0) {
-            list.push(customerData)
-            if (list.length >= 20) {
-              break;
-            }
-          }
-        }
-      }
+  //         if (customerData[type].search(keyword) >= 0) {
+  //           list.push(customerData)
+  //           if (list.length >= 20) {
+  //             break;
+  //           }
+  //         }
+  //       }
+  //     }
       
-      html = "";
-      if (list.length) {
-        list.forEach((customerData) => {
-          html += "<div class='suggest-item' onclick='selectCustomer(" + customerData["id"] + ", \"" + type + "\")'><i>" + customerData["name"] + "</i><br><b>" + customerData["phone"] + "</b></div>";
-        })
-      }
-      else {
-        html = "<div class='suggest-item'>Không tìm thấy khách hàng nào</div>"
-      }
-      collectCustomerSuggest.html(html)
-    }, 500);
-  })
+  //     html = "";
+  //     if (list.length) {
+  //       list.forEach((customerData) => {
+  //         html += "<div class='suggest-item' onclick='selectCustomer(" + customerData["id"] + ", \"" + type + "\")'><i>" + customerData["name"] + "</i><br><b>" + customerData["phone"] + "</b></div>";
+  //       })
+  //     }
+  //     else {
+  //       html = "<div class='suggest-item'>Không tìm thấy khách hàng nào</div>"
+  //     }
+  //     collectCustomerSuggest.html(html)
+  //   }, 500);
+  // })
 
-  collectDestination.keyup(() => {
-    clearTimeout(destinationTimeout)
+  // collectDestination.keyup(() => {
+  //   clearTimeout(destinationTimeout)
 
-    destinationTimeout = setTimeout(() => {
-      var keyword = collectDestination.val()
-      var list = []
+  //   destinationTimeout = setTimeout(() => {
+  //     var keyword = collectDestination.val()
+  //     var list = []
 
-      for (const destinationId in dbdata["remind"]) {
-        if (dbdata["remind"].hasOwnProperty(destinationId)) {
-          const destinationData = dbdata["remind"][destinationId];
+  //     for (const destinationId in dbdata["remind"]) {
+  //       if (dbdata["remind"].hasOwnProperty(destinationId)) {
+  //         const destinationData = dbdata["remind"][destinationId];
           
-          if (destinationData["value"].search(keyword) >= 0) {
-            list.push(destinationData)
-            if (list.length >= 20) {
-              break;
-            }
-          }
-        }
-      }
+  //         if (destinationData["value"].search(keyword) >= 0) {
+  //           list.push(destinationData)
+  //           if (list.length >= 20) {
+  //             break;
+  //           }
+  //         }
+  //       }
+  //     }
       
-      html = "";
-      if (list.length) {
-        list.forEach((destinationData) => {
-          html += "<div class='suggest-item' onclick='selectDestination(" + destinationData["id"] + ")'><b>" + destinationData["value"] + "</b></div>";
-        })
-      }
-      else {
-        html = "<div class='suggest-item'>Không có gợi ý</div>"
-      }
-      collectDestinationSuggest.html(html)
-    }, 500);
-  })
+  //     html = "";
+  //     if (list.length) {
+  //       list.forEach((destinationData) => {
+  //         html += "<div class='suggest-item' onclick='selectDestination(" + destinationData["id"] + ")'><b>" + destinationData["value"] + "</b></div>";
+  //       })
+  //     }
+  //     else {
+  //       html = "<div class='suggest-item'>Không có gợi ý</div>"
+  //     }
+  //     collectDestinationSuggest.html(html)
+  //   }, 500);
+  // })
 
   $("#start-date, #end-date").datepicker({
 		format: 'dd/mm/yyyy',
@@ -407,17 +430,15 @@
     riderDetail.modal('show')
   }
 
-  function selectCustomer(id, type) {
+  function selectCustomer(id, name, phone) {
     customerId = id
-    collectCustomer.val(dbdata["customer"][id][type])
-    collectCustomerInfo.text(": " + dbdata["customer"][id]["name"] + " (" + dbdata["customer"][id]["phone"] + ")")
-    suggest.hide()
+    collectCustomer.val(name)
+    collectCustomerInfo.text(": " + name + " (" + phone + ")")
   }
 
-  function selectDestination(id) {
+  function selectDestination(id, name) {
     destinationId = id
-    collectDestination.val(dbdata["remind"][id]["value"])
-    suggest.hide()
+    collectDestination.val(name)
   }
 
   function filterData() {

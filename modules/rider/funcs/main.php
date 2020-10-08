@@ -17,6 +17,34 @@ $action = $nv_Request->get_string('action', 'post/get', "");
 if (!empty($action)) {
 	$result = array("status" => 0);
 	switch ($action) {
+    case 'get-customer':
+      $keyword = $nv_Request->get_string('keyword', 'post', '');
+
+      $sql = 'select * from `pet_test_customer` where name like "%'. $keyword .'%" order by name limit 20';
+      $query = $db->query($sql);
+
+      $html = '';
+      while ($row = $query->fetch()) {
+        $html .= '<div class="suggest-item" onclick="selectCustomer('. $row['id'] .', \''. $row['name'] .'\', \''. $row['phone'] .'\')">'. $row['name'] .' <br> '. $row['phone'] .' </div>';
+      }
+
+      $result['status'] = 1;
+      $result['html'] = $html;
+    break;
+    case 'get-destination':
+      $keyword = $nv_Request->get_string('keyword', 'post', '');
+
+      $sql = 'select * from `pet_rider_remind` where `key` like "%'. $keyword .'%" order by `key` limit 20';
+      $query = $db->query($sql);
+
+      $html = '';
+      while ($row = $query->fetch()) {
+        $html .= '<div class="suggest-item" onclick="selectDestination('. $row['id'] .', \''. $row['key'] .'\')">'. $row['key'] .'</div>';
+      }
+
+      $result['status'] = 1;
+      $result['html'] = $html;
+    break;
     case 'remove':
       $startDate = $nv_Request->get_string("startDate", "get/post", "");
       $endDate = $nv_Request->get_string("endDate", "get/post", "");
@@ -134,27 +162,6 @@ if (!$clock) {
 }
 
 $xtpl->assign("clock", $clock["value"] . '.0');
-
-$sql = "select * from `pet_test_customer`";
-$query = $db->query($sql);
-$customer = array();
-
-while ($row = $query->fetch()) {
-  $row["name"] = str_replace("'", "\'", $row["name"]);
-  $customer[$row["id"]] = array("id" => $row["id"], "name" => $row["name"], "phone" => $row["phone"]);
-}
-
-$sql = "select * from `" . PREFIX . "_remind`";
-$query = $db->query($sql);
-$remind = array();
-
-while ($row = $query->fetch()) {
-  $remind[$row["id"]] = array("id" => $row["id"], "value" => $row["key"]);
-}
-
-$data = json_encode(array("customer" => $customer, "remind" => $remind));
-
-$xtpl->assign("data", $data);
 
 $sql = "select userid, username, first_name, last_name from `" . $db_config["prefix"] . "_users`";
 $query = $db->query($sql);
