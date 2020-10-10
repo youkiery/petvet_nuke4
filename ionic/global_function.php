@@ -39,11 +39,14 @@ function totime($time) {
   return $time;
 }
 
-function getUserList() {
+function getUserList($daily = false) {
   global $mysqli;
 
   $list = array();
-  $sql = 'select * from `pet_test_user` where daily = 1';
+  $xtra = '';
+  if ($daily) $xtra = 'where daily = 1';
+
+  $sql = 'select * from `pet_test_user`' . $xtra;
   $query = $mysqli->query($sql);
 
   while($row = $query->fetch_assoc()) {
