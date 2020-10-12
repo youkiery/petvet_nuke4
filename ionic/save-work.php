@@ -8,7 +8,7 @@ else {
     $xtra = '';
     if (checkUserRole($userid)) {
         $content = $_GET['content'];
-        $xtra = ', content = "' $content . '"';
+        $xtra = ', content = "'. $content . '"';
     }
     $sql = 'update `pet_petwork_row` set process = '. $process .' and note = "'. $note .'" '. $xtra .' where id = '. $id;
     if ($mysqli->query($sql)) {

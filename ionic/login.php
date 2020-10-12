@@ -22,7 +22,7 @@ else {
       $role = checkUserRole($user_info['userid']);
       if ($role) {
         $list = array();
-        $sql = 'select a.userid, b.username as username, concat(last_name, " ", first_name) as name from `pet_petwork_employ` a inner join `pet_users` b on a.userid = b.userid';
+        $sql = 'select a.userid, b.username as username, concat(last_name, " ", first_name) as name from `pet_petwork_row` a inner join `pet_users` b on a.userid = b.userid group by userid';
         $query = $mysqli->query($sql);
 
         while ($row = $query->fetch_assoc()) {
