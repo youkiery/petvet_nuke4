@@ -2,16 +2,23 @@
 
 if (!checkUserRole($userid)) $result['messenger'] = 'no permission allow';
 else {
-    $content = $_GET['content'];
+  require_once(NV_ROOTDIR . '/ionic/work.php');
+  $work = new Work('petwork');
+
+  $content = $_GET['content'];
     $cometime = totime($_GET['cometime']);
     $calltime = totime($_GET['calltime']);
     $employ = $_GET['employ'];
     $sql = 'insert into `pet_petwork_row` (cometime, calltime, last_time, post_user, edit_user, userid, depart, customer, content, process, confirm, review, note) value("'. $cometime .'", "'. $calltime .'", '. time() .', '. $userid .', '. $userid .', '. $employ .', 0, 0, "'. $content .'", 0, 0, "", "")';
 
     if ($mysqli->query($sql)) {
+      $id = $mysqli->insert_id;
+      $sql = 'insert into `pet_petwork_notify` (userid, action, workid, time) values('. $userid .', 1, '. $id .', '. time() .')';
+      $mysqli->query($sql);
+
       $result['status'] = 1;
       $result['messenger'] = 'inserted work';
-      $id = $mysqli->insert_id;
+      $result['unread'] = $work->getUserNotifyUnread();
       $userinfo = checkUserId($employ);
       $result['data'] = array(
         'id' => $id,
