@@ -1,99 +1,116 @@
 <!-- BEGIN: main -->
-<link rel="stylesheet" href="/modules/core/css/style.css">
-
+<style>
+  #msgshow {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    background: white;
+    padding: 10px;
+    z-index: 100;
+    border: 1px solid gray;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    display: none;
+    z-index: 10000;
+  }
+</style>
 <div id="msgshow"></div>
 
 {modal}
 
-<div class="form-group rows">
-  <div class="col-4"> </div>
-  <div class="col-4 relative">
-    <!-- BEGIN: child -->
-    <input type="text" class="form-control" id="keyword">
-    <div class="suggest" id="keyword-suggest"></div>
-    <!-- END: child -->
+<!-- BEGIN: user -->
+<div class="form-group">
+  <div style="float: right;">
+    <button class="btn btn-success" onclick="insertUser()">
+      Thêm nhân viên
+    </button>
   </div>
-  <div class="col-4 input-group">
-    <input type="text" class="form-control" id="title" placeholder="Tiêu đề menu">
-    <div class="input-group-btn">
-      <button class="btn btn-success" onclick="{func}">
-        Thêm menu
-      </button>
-    </div>
-  </div>
+  <div style="clear: both;"></div>
 </div>
 
-<div id="content">
-  {content}
+<div id="user-content">
+  {user_content}
+</div>
+<!-- END: user -->
+
+<!-- BEGIN: branch -->
+<div class="form-group">
+  <div style="float: right;">
+    <button class="btn btn-success" onclick="insertBranch()">
+      Thêm chi nhánh
+    </button>
+  </div>
+  <div style="clear: both;"></div>
 </div>
 
-<script src="/modules/core/js/vremind-5.js"></script>
+
+<div id="branch-content">
+  {branch_content}
+</div>
+<!-- END: branch -->
+
 <script src="/modules/core/js/vhttp.js"></script>
-<script src="/modules/together/src/script.js"></script>
 <script>
-  global = {
-    id: Number('{id}'),
-    data: JSON.parse('{data}'),
-    name: ''
+  function insertBranch() {
+    $('#branch-modal').modal('show')
   }
 
-  $(document).ready(() => {
-    if (global['id']) {
-      vremind.install('#keyword', '#keyword-suggest', (input) => {
-        return new Promise((resolve) => {
-          input = convert(input)
-          html = ''
-          global['data'].forEach(item => {
-            str = convert(item)
-
-            if (str.search(input) >= 0) {
-              html += `
-                <div class="suggest-item" onclick="selectItem('`+ item + `')">
-                  `+ item + `
-                </div>
-              `
-            }
-          })
-          resolve(html)
-        })
-      }, 300, 300)
-    }
-  })
-
-  function insertRoot() {
-    if (!(title = $("#title").val()).length) alert_msg('Điền tên menu trước khi thêm')
-    else {
-      vhttp.checkelse('', { action: 'insert-root', title: $("#title").val() }).then(data => {
-        $("#title").val('')
-        $("#content").html(data['html'])
-      })
-    }
+  function insertUser() {
+    $('#user-modal').modal('show')
   }
 
-  function remove(id) {
-    vhttp.checkelse('', { action: 'remove', rid: id }).then(data => {
-      global['data'] = JSON.parse(data['data'])
-      $("#content").html(data['html'])
+  function insertBranchSubmit() {
+    name = $('#branch-name').val()
+    if (!name.length) alert_msg('Chưa nhập tên chi nhánh')
+    else vhttp.checkelse('', {
+      action: 'insert-branch',
+      name: name
+    }).then(data => {
+      if (data['msg']) alert_msg('msg')
+      if (data['html']) $('#branch-content').html(data['html'])
+      $('#branch-modal').modal('hide')
     })
   }
 
-  function insertChild(id) {
-    if (global['data'].indexOf(global['name']) < 0) alert_msg('Chưa chọn menu con')
-    else if (!(title = $("#title").val()).length) alert_msg('Điền tên menu trước khi thêm')
-    else {
-      vhttp.checkelse('', { action: 'insert-child', title: $("#title").val(), name: global['name'] }).then(data => {
-        global['name'] = ''
-        global['data'] = JSON.parse(data['data'])
-        $("#keyword").val('')
-        $("#title").val('')
-        $("#content").html(data['html'])
-      })
-    }
+  function removeBranchSubmit($id) {
+    vhttp.checkelse('', {
+      action: 'remove-branch',
+      id: id
+    }).then(data => {
+      if (data['msg']) alert_msg('msg')
+      if (data['html']) $('#branch-content').html(data['html'])
+    })
   }
 
-  function selectItem(name) {
-    global['name'] = name
-    $("#keyword").val(name)
+  function insertUserSubmit($userid) {
+    vhttp.checkelse('', {
+      action: 'insert-user',
+      userid: userid
+    }).then(data => {
+      if (data['msg']) alert_msg('msg')
+      if (data['content']) $('#user-content').html(data['content'])
+      if (data['list']) $('#user-modal-list').html(data['list'])
+      $('#user-modal').modal('hide')
+    })
+  }
+
+  function filterUser() {
+    
+  }
+
+  function removeUserSubmit($userid) {
+    vhttp.checkelse('', {
+      action: 'remove-user',
+      userid: userid
+    }).then(data => {
+      if (data['msg']) alert_msg('msg')
+      if (data['content']) $('#user-content').html(data['content'])
+    })
+  }
+
+  function alert_msg(msg) {
+    $('#msgshow').html(msg); 
+    $('#msgshow').show('slide').delay(2000).hide('slow'); 
   }
 </script>
 <!-- END: main -->
