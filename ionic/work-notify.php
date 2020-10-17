@@ -6,9 +6,7 @@ $work = new Work('petwork');
 
 $result['status'] = 1;
 $result['notify'] = $work->getUserNotify();
-$result['time'] = time();
-
-$work->setTime($result['time']);
+$work->setTime(time());
 
 echo json_encode($result);
 die();

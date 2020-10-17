@@ -11,6 +11,8 @@ else {
   if ($mysqli->query($sql)) {
     $sql = 'insert into `pet_petwork_notify` (userid, action, workid, time) values('. $userid .', 4, '. $id .', '. time() .')';
     $mysqli->query($sql);
+    $work->setLastUpdate();
+
     $result['status'] = 1;
     $result['unread'] = $work->getUserNotifyUnread();
     $result['messenger'] = 'removed work';

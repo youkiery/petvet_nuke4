@@ -15,6 +15,7 @@ else {
       $id = $mysqli->insert_id;
       $sql = 'insert into `pet_petwork_notify` (userid, action, workid, time) values('. $userid .', 1, '. $id .', '. time() .')';
       $mysqli->query($sql);
+      $work->setLastUpdate();
 
       $result['status'] = 1;
       $result['messenger'] = 'inserted work';

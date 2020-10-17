@@ -14,7 +14,7 @@ if (!empty($_GET['action'])) {
     if (file_exists(NV_ROOTDIR . '/ionic/' . $action . '.php')) {
         try {
             include_once(NV_ROOTDIR . '/ionic/global_function.php');
-            if ($action !== 'login') {
+            if ($action !== 'login' && $action !== 'version') {
                 if (empty($_GET['userid'])) throw new Exception('no user');
                 else {
                     $userid = $_GET['userid'];

@@ -105,6 +105,7 @@ class Work {
     $work = $this->getWorkById($data['workid']);
 
     return array(
+      'id' => $data['workid'],
       'content' => $name . ' ' . $action_trans[$data['action']] . ' ' . $work['content'],
       'time' => date('d/m/Y H:i', $data['time'])
     );
@@ -123,6 +124,31 @@ class Work {
 
     $sql = 'update `pet_'. $this->table .'_notify_read` set time = '. $time .' where userid = ' . $userid;
     $mysqli->query($sql);
+  }
+
+  function setLastUpdate() {
+    global $mysqli;
+
+    $sql = 'update `pet_config` set config_value = "'. time() .'" where config_name = "pet_lastupdate"';
+    $mysqli->query($sql);
+  }
+
+  function checkLastUpdate($time) {
+    global $mysqli, $userid;
+
+    $config = $this->getLastUpdate();
+
+    if ($config > $time) return true;
+    return false;
+  }
+
+  function getLastUpdate() {
+    global $mysqli;
+    $sql = 'select * from `pet_config` where config_name = "pet_lastupdate"';
+    $query = $mysqli->query($sql);
+    $config = $query->fetch_assoc();
+
+    return intval($config['config_value']);
   }
 
   function getUserNotifyUnread() {
