@@ -22,6 +22,11 @@ function checkUserRole($userid) {
     return false;
 }
 
+function parseGetData($dataname) {
+  global $_GET;
+  return (!empty($_GET[$dataname]) ? $_GET[$dataname] : '');
+}
+
 function checkWorkId($workid) {
     global $mysqli;
     $sql = 'select * from `pet_petwork_row` where id = '. $workid;

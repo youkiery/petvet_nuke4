@@ -19,6 +19,5 @@ if ($work->checkLastUpdate($time)) {
   $work->setTime($result['time']);
 }
 
-
 echo json_encode($result);
 die();

@@ -156,7 +156,7 @@ class Work {
 
     $time = $this->getUserNotifyTime();
 
-    $sql = 'select * from `pet_'. $this->table .'_notify` where time > ' . $time;
+    $sql = 'select a.id from `pet_'. $this->table .'_notify` a inner join `pet_'. $this->table .'_row` b on a.workid = b.id where time > ' . $time . ' and (a.userid = '. $userid .' or b.userid = '. $userid .')';
     $query = $mysqli->query($sql);
 
     return $query->num_rows;
