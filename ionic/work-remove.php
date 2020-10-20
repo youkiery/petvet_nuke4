@@ -9,12 +9,14 @@ else {
   $id = $_GET['id'];
   $sql = 'update `pet_petwork_row` set active = 0 where id = '. $id;
   if ($mysqli->query($sql)) {
-    $sql = 'insert into `pet_petwork_notify` (userid, action, workid, time) values('. $userid .', 4, '. $id .', '. time() .')';
+    $time = time();
+    $sql = 'insert into `pet_petwork_notify` (userid, action, workid, time) values('. $userid .', 4, '. $id .', '. $time .')';
     $mysqli->query($sql);
-    $work->setLastUpdate();
+    $work->setLastUpdate($time);
+    $work->insertNotify(REMOVE_NOTIFY, $id, $time);
 
     $result['status'] = 1;
-    $result['unread'] = $work->getUserNotifyUnread();
+    $result['unread'] = $work->getNotifyUnread();
     $result['messenger'] = 'removed work';
   }
 }

@@ -30,14 +30,14 @@ class Module {
   }
 
   function setLastRead($time) {
-    if ($read = $this->checkLastRead()) $sql = 'udate `pet_'. $this->table .'_notify_read` (userid, module, time) values ('. $this->userid .', "'. $this->module .'", '. $time .')';
+    if ($read = $this->checkLastRead()) $sql = 'update `pet_'. $this->table .'_notify_read` set time = '. $time .' where userid = '. $this->userid . ' and module = "'. $this->module .'"';
     else $sql = 'insert into `pet_'. $this->table .'_notify_read` (userid, module, time) values ('. $this->userid .',  "'. $this->module .'", '. $time .')';
     $this->db->query($sql);
   }
 
   function checkLastRead() {
-    $sql = 'select * from `pet_'. $this->table .'_notify_read` where userid = '. $this->userid;
-    $query = $this->db->query($sql);
+    $sql = 'select * from `pet_'. $this->table .'_notify_read` where module = "'. $this->module .'" and userid = '. $this->userid;
+    $query = $this->db->query($sql); 
     if (!empty($query->num_rows)) {
       $read = $query->fetch_assoc();
       return $read['time'];

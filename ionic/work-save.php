@@ -12,15 +12,16 @@ else {
   $xtra = '';
   $sql = 'update `pet_petwork_row` set process = '. $process .', note = "'. $note .'", calltime = "'. totime($calltime) .'" '. $xtra .' where id = '. $id;
   if ($mysqli->query($sql)) {
-    if ($process < 100)  $sql = 'insert into `pet_petwork_notify` (userid, action, workid, time) values('. $userid .', 2, '. $id .', '. time() .')';
-      else $sql = 'insert into `pet_petwork_notify` (userid, action, workid, time) values('. $userid .', 3, '. $id .', '. time() .')';
-      $mysqli->query($sql);
-      $work->setLastUpdate();
-
-      $result['status'] = 1;
-      $result['unread'] = $work->getUserNotifyUnread();
-      $result['messenger'] = 'updated work';
-    }
+    $time = time();
+    if ($process < 100)  $sql = 'insert into `pet_petwork_notify` (userid, action, workid, time) values('. $userid .', 2, '. $id .', '. $time .')';
+    else $sql = 'insert into `pet_petwork_notify` (userid, action, workid, time) values('. $userid .', 3, '. $id .', '. $time .')';
+    $work->insertNotify(EDIT_NOTIFY, $id, $time);
+    $mysqli->query($sql);
+    $work->setLastUpdate($time);
+    $result['status'] = 1;
+    $result['unread'] = $work->getNotifyUnread();
+    $result['messenger'] = 'updated work';
+  }
 }
 
 echo json_encode($result);

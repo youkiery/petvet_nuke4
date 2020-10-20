@@ -13,13 +13,14 @@ else {
 
     if ($mysqli->query($sql)) {
       $id = $mysqli->insert_id;
-      $sql = 'insert into `pet_petwork_notify` (userid, action, workid, time) values('. $userid .', 1, '. $id .', '. time() .')';
+      $time = time();
+      $sql = 'insert into `pet_petwork_notify` (userid, action, workid, time) values('. $userid .', 1, '. $id .', '. $time .')';
       $mysqli->query($sql);
-      $work->setLastUpdate();
+      $work->setLastUpdate($time);
 
       $result['status'] = 1;
       $result['messenger'] = 'inserted work';
-      $result['unread'] = $work->getUserNotifyUnread();
+      $result['unread'] = $work->getNotifyUnread();
       $userinfo = checkUserId($employ);
       $result['data'] = array(
         'id' => $id,

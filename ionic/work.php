@@ -1,9 +1,8 @@
 <?php
-class Work {
-  public $table;
-
+class Work extends Module {
   function __construct($table) {
-    $this->table = $table;
+    parent::__construct();
+    $this->module = 'work';
   }
 
   function getWork($filter) {
@@ -119,46 +118,14 @@ class Work {
     return $query->fetch_assoc();
   }
 
-  function setTime($time) {
-    global $mysqli, $userid;
+  // function getUserNotifyUnread() {
+  //   global $mysqli, $userid;
 
-    $sql = 'update `pet_'. $this->table .'_notify_read` set time = '. $time .' where userid = ' . $userid;
-    $mysqli->query($sql);
-  }
+  //   $time = $this->getUserNotifyTime();
 
-  function setLastUpdate() {
-    global $mysqli;
+  //   $sql = 'select a.id from `pet_'. $this->table .'_notify` a inner join `pet_'. $this->table .'_row` b on a.workid = b.id where time > ' . $time . ' and (a.userid = '. $userid .' or b.userid = '. $userid .')';
+  //   $query = $mysqli->query($sql);
 
-    $sql = 'update `pet_config` set config_value = "'. time() .'" where config_name = "pet_lastupdate"';
-    $mysqli->query($sql);
-  }
-
-  function checkLastUpdate($time) {
-    global $mysqli, $userid;
-
-    $config = $this->getLastUpdate();
-
-    if ($config > $time) return true;
-    return false;
-  }
-
-  function getLastUpdate() {
-    global $mysqli;
-    $sql = 'select * from `pet_config` where config_name = "pet_lastupdate"';
-    $query = $mysqli->query($sql);
-    $config = $query->fetch_assoc();
-
-    return intval($config['config_value']);
-  }
-
-  function getUserNotifyUnread() {
-    global $mysqli, $userid;
-
-    $time = $this->getUserNotifyTime();
-
-    $sql = 'select a.id from `pet_'. $this->table .'_notify` a inner join `pet_'. $this->table .'_row` b on a.workid = b.id where time > ' . $time . ' and (a.userid = '. $userid .' or b.userid = '. $userid .')';
-    $query = $mysqli->query($sql);
-
-    return $query->num_rows;
-  }
+  //   return $query->num_rows;
+  // }
 }

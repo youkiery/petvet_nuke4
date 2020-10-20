@@ -12,7 +12,7 @@ $work = new Work('petwork');
 
 $result['list'] = $work->getWork($filter);
 $result['time'] = $work->getLastUpdate();
-$result['unread'] = $work->getUserNotifyUnread();
+$result['unread'] = $work->getNotifyUnread();
 $result['status'] = 1;
 
 echo json_encode($result);

@@ -1,5 +1,7 @@
 <?php
 include_once(NV_ROOTDIR . '/ionic/Encryption.php');
+require_once(NV_ROOTDIR . '/ionic/kaizen.php');
+require_once(NV_ROOTDIR . '/ionic/work.php');
 
 $result = array(
     'status' => 0,
@@ -40,13 +42,22 @@ else {
         $result['except'] = $list;
         $result['today'] = date('d/m/Y');
       }
-        $result['status'] = 1;
-        $result['messenger'] = 'login successfully';
-        $result['userid'] = $user_info['userid'];
-        $result['username'] = $username;
-        $result['password'] = $password;
-        $result['name'] = (!empty($user_info['last_name']) ? $user_info['last_name'] . ' ': '') . $user_info['first_name'];
-        $result['role'] = $role;
+      $userid = $user_info['userid'];
+      $kaizen = new Kaizen('test');
+      $work = new work('test');
+      
+      $workUnread = $work->getNotifyUnread();
+      $kaizenUnread = $kaizen->getNotifyUnread();
+      $result['work'] = $workUnread;
+      $result['kaizen'] = $kaizenUnread;
+      $result['notify'] = $workUnread + $kaizenUnread;
+      $result['status'] = 1;
+      $result['messenger'] = 'login successfully';
+      $result['userid'] = $user_info['userid'];
+      $result['username'] = $username;
+      $result['password'] = $password;
+      $result['name'] = (!empty($user_info['last_name']) ? $user_info['last_name'] . ' ': '') . $user_info['first_name'];
+      $result['role'] = $role;
     }
 }
 

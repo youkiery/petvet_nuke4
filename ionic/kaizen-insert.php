@@ -15,6 +15,8 @@ $kaizen = new Kaizen('test');
 
 $result['time'] = time();
 $kaizen->insertData($data, $result['time']);
+$work->setLastUpdate($result['time']);
+$work->insertNotify(INSERT_NOTIFY, $id, $result['time']);
 
 $result['status'] = 1;
 $result['list'] = $kaizen->getKaizenList();

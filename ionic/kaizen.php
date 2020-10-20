@@ -29,7 +29,7 @@ class Kaizen extends Module {
     $sql = 'select * from `pet_'. $this->table .'_notify` where module = "kaizen" and userid = '. $this->userid . ' order by time desc';
     $query = $this->db->query($sql);
     $list = array();
-    $action_trans = array(1 => 'Thêm giải phảp', 'Cập nhật giải pháp', '???', 'Xóa giải phải');
+    $action_trans = array(1 => 'Thêm giải phảp', 'Cập nhật giải pháp', '???', 'Xóa giải phảp');
     
     while ($row = $query->fetch_assoc()) {
       $user = checkUserId($row['userid']);

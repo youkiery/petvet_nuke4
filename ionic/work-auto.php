@@ -14,9 +14,8 @@ $filter = array(
 $result['status'] = 1;
 if ($work->checkLastUpdate($time)) {
   $result['data'] = $work->getWork($filter);
-  $result['unread'] = $work->getUserNotifyUnread();
+  $result['unread'] = $work->getNotifyUnread();
   $result['time'] = $work->getLastUpdate();
-  $work->setTime($result['time']);
 }
 
 echo json_encode($result);
