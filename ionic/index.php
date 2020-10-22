@@ -1,8 +1,14 @@
 <?php
+// $servername = 'localhost';
+// $username = 'root';
+// $password = '';
+// $database = 'petcoffee';
+// $sitekey = 'e3e052c73ae5aa678141d0b3084b9da4';
+
 $servername = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'petcoffee';
+$username = 'petcoffe_mobile';
+$password = 'Ykpl.2412';
+$database = 'petcoffe_mobile';
 $sitekey = 'e3e052c73ae5aa678141d0b3084b9da4';
 
 define('INSERT_NOTIFY', 1);

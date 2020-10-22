@@ -2,7 +2,7 @@
 
 
 require_once(NV_ROOTDIR . '/ionic/work.php');
-$work = new Work('petwork');
+$work = new Work();
 
 $result['status'] = 1;
 $result['notify'] = $work->getUserNotify();

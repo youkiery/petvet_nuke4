@@ -3,12 +3,15 @@ class Module {
   public $db;
   public $table;
   public $module;
+  public $prefix;
   public $userid;
+  public $role;
 
   function __construct() {
     global $mysqli, $userid;
     $this->db = $mysqli;
     $this->userid = $userid;
+    $this->role = checkUserRole($this->userid);
     $this->table = $this->getUserBranch();
   }
 
@@ -30,7 +33,9 @@ class Module {
   }
 
   function setLastRead($time) {
-    if ($read = $this->checkLastRead()) $sql = 'update `pet_'. $this->table .'_notify_read` set time = '. $time .' where userid = '. $this->userid . ' and module = "'. $this->module .'"';
+    $read = $this->checkLastRead();
+    
+    if ($read) $sql = 'update `pet_'. $this->table .'_notify_read` set time = '. $time .' where userid = '. $this->userid . ' and module = "'. $this->module .'"';
     else $sql = 'insert into `pet_'. $this->table .'_notify_read` (userid, module, time) values ('. $this->userid .',  "'. $this->module .'", '. $time .')';
     $this->db->query($sql);
   }
@@ -38,8 +43,8 @@ class Module {
   function checkLastRead() {
     $sql = 'select * from `pet_'. $this->table .'_notify_read` where module = "'. $this->module .'" and userid = '. $this->userid;
     $query = $this->db->query($sql); 
-    if (!empty($query->num_rows)) {
-      $read = $query->fetch_assoc();
+    $read = $query->fetch_assoc();
+    if (!empty($read)) {
       return $read['time'];
     }
     return 0;
@@ -67,8 +72,13 @@ class Module {
     $sql = 'select * from `pet_'. $this->table .'_notify_last` where module = "'. $this->module .'"';
     $query = $this->db->query($sql);
     $config = $query->fetch_assoc();
+    if (empty($config)) {
+      $sql = 'insert into `pet_'. $this->table .'_notify_last` (module, time) values ("'. $this->module .'", 0)';
+      $this->db->query($sql);
+      $config = array('time' => 0);
+    }
 
-    return intval($config['config_value']);
+    return intval($config['time']);
   }
 
   function getNotifyTime() {
@@ -76,7 +86,7 @@ class Module {
     $query = $this->db->query($sql);
 
     if (empty($row = $query->fetch_assoc())) {
-      $sql = 'insert into `pet_'. $this->table .'_notify_read` (userid, module, time) values ('. $this->userid .', "'. $this->module .'", 0)';
+      $sql = 'insert into `pet_'. $this->table .'_notify_read` (userid, module, time) values ('. $this->userid .', "'. $this->module .'", 1)';
       $this->db->query($sql);
       $row = array(
         'time' => 0
@@ -88,7 +98,9 @@ class Module {
   function getNotifyUnread() {
     $time = $this->getNotifyTime();
 
-    $sql = 'select a.id from `pet_'. $this->table .'_notify` a inner join `pet_'. $this->table .'_'. $this->module .'` b on a.workid = b.id where a.module = "'. $this->module .'" and a.time > ' . $time . ' and (a.userid = '. $this->userid .' or b.userid = '. $this->userid .')';
+    $xtra = '';
+    if (!$this->role) $xtra = 'and userid = '. $this->userid;
+    $sql = 'select id from `pet_'. $this->table .'_notify` where module = "'. $this->module .'" and time > ' . $time . ' ' . $xtra;
     $query = $this->db->query($sql);
 
     return $query->num_rows;

@@ -1,7 +1,7 @@
 <?php 
 
 require_once(NV_ROOTDIR . '/ionic/work.php');
-$work = new Work('petwork');
+$work = new Work();
 
 $time = $_GET['time'];
 $filter = array(

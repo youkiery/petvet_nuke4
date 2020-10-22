@@ -1,26 +1,34 @@
 <?php 
 
-if (empty($_GET['id']) || empty(checkWorkId($_GET['id']))) $result['messenger'] = 'no work exist';
+if (empty($_GET['id'])) $result['messenger'] = 'no work exist';
 else {
   require_once(NV_ROOTDIR . '/ionic/work.php');
-  $work = new Work('petwork');
+  $work = new Work();
 
-  $id = $_GET['id'];
-  $process = intval($_GET['process']);
-  $note = $_GET['note'];
-  $calltime = $_GET['calltime'];
-  $xtra = '';
-  $sql = 'update `pet_petwork_row` set process = '. $process .', note = "'. $note .'", calltime = "'. totime($calltime) .'" '. $xtra .' where id = '. $id;
-  if ($mysqli->query($sql)) {
+  $data = array(
+    'id' => parseGetData('id'),
+    'content' => parseGetData('content'),
+    'process' => parseGetData('process', 0),
+    'calltime' => totime(parseGetData('calltime')),
+    'note' => parseGetData('note')
+  );
+
+  $filter = array(
+    'startdate' => ( !empty($_GET['startdate']) ? $_GET['startdate'] : '' ),
+    'enddate' => ( !empty($_GET['enddate']) ? $_GET['enddate'] : '' ),
+    'keyword' => ( !empty($_GET['keyword']) ? $_GET['keyword'] : '' ),
+    'user' => ( !empty($_GET['user']) ? $_GET['user'] : '' )
+  );
+
+  if (!$work->checkWorkId($data['id'])) $result['messenger'] = 'no work exist';
+  else {
     $time = time();
-    if ($process < 100)  $sql = 'insert into `pet_petwork_notify` (userid, action, workid, time) values('. $userid .', 2, '. $id .', '. $time .')';
-    else $sql = 'insert into `pet_petwork_notify` (userid, action, workid, time) values('. $userid .', 3, '. $id .', '. $time .')';
-    $work->insertNotify(EDIT_NOTIFY, $id, $time);
-    $mysqli->query($sql);
-    $work->setLastUpdate($time);
+    $work->updateWork($data, $time);
     $result['status'] = 1;
-    $result['unread'] = $work->getNotifyUnread();
     $result['messenger'] = 'updated work';
+    $result['time'] = $time;
+    $result['unread'] = $work->getNotifyUnread();
+    $result['data'] = $work->getWork($filter);
   }
 }
 

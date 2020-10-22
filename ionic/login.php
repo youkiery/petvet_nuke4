@@ -41,6 +41,7 @@ else {
         }
         $result['except'] = $list;
         $result['today'] = date('d/m/Y');
+        $result['nextweek'] = date('d/m/Y', time() + 60 * 60 * 24 * 7);
       }
       $userid = $user_info['userid'];
       $kaizen = new Kaizen('test');

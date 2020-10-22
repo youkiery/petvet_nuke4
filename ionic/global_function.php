@@ -22,18 +22,9 @@ function checkUserRole($userid) {
     return false;
 }
 
-function parseGetData($dataname) {
+function parseGetData($dataname, $default = '') {
   global $_GET;
-  return (!empty($_GET[$dataname]) ? $_GET[$dataname] : '');
-}
-
-function checkWorkId($workid) {
-    global $mysqli;
-    $sql = 'select * from `pet_petwork_row` where id = '. $workid;
-    $query = $mysqli->query($sql);
-
-    if (!empty($query->fetch_assoc())) return true;
-    return false;
+  return (!empty($_GET[$dataname]) ? $_GET[$dataname] : $default);
 }
 
 function totime($time) {

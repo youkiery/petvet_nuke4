@@ -13,8 +13,11 @@ class Kaizen extends Module {
     $query = $this->db->query($sql);
 
     while ($row = $query->fetch_assoc()) {
+      $user = checkUserId($row['userid']);
+      $name = (!empty($user['last_name']) ? $user['last_name'] . ' ': '') . $user['first_name'];
       $data = array(
         'id' => $row['id'],
+        'name' => $name,
         'problem' => $row['problem'],
         'solution' => $row['solution'],
         'result' => $row['result'],

@@ -1,8 +1,9 @@
 <?php
 class Work extends Module {
-  function __construct($table) {
+  function __construct() {
     parent::__construct();
     $this->module = 'work';
+    $this->prefix = 'pet_' . $this->table .'_'. $this->module;
   }
 
   function getWork($filter) {
@@ -42,7 +43,7 @@ class Work extends Module {
     if (count($xtra)) $xtra = ' and '. implode(' and ', $xtra);
     else $xtra = '';
 
-    $sql = 'select id, userid, cometime, calltime, process, content, note from `pet_petwork_row` where active = 1 '. $xtra . ' order by calltime';
+    $sql = 'select id, userid, cometime, calltime, process, content, note from `'. $this->prefix .'` where active = 1 '. $xtra . ' order by calltime';
     $query = $mysqli->query($sql);
     $user = array();
 
@@ -83,6 +84,7 @@ class Work extends Module {
     global $mysqli, $userid;
 
     $sql = 'select * from `pet_'. $this->table .'_notify_read` where userid = ' . $userid;
+    die($sql);
     $query = $mysqli->query($sql);
 
     if (empty($row = $query->fetch_assoc())) {
@@ -113,19 +115,43 @@ class Work extends Module {
   function getWorkById($workid) {
     global $mysqli;
 
-    $sql = 'select * from `pet_'. $this->table .'_row` where id = ' . $workid;
+    $sql = 'select * from `'. $this->prefix .'` where id = ' . $workid;
     $query = $mysqli->query($sql);
     return $query->fetch_assoc();
   }
 
-  // function getUserNotifyUnread() {
-  //   global $mysqli, $userid;
+  function checkWorkId($workid) {
+    $sql = 'select * from `'. $this->prefix .'` where id = '. $workid;
+    $query = $this->db->query($sql);
 
-  //   $time = $this->getUserNotifyTime();
+    if (!empty($query->fetch_assoc())) return true;
+    return false;
+  }
 
-  //   $sql = 'select a.id from `pet_'. $this->table .'_notify` a inner join `pet_'. $this->table .'_row` b on a.workid = b.id where time > ' . $time . ' and (a.userid = '. $userid .' or b.userid = '. $userid .')';
-  //   $query = $mysqli->query($sql);
+  function insertWork($data, $time) {
+    $sql = 'insert into `'. $this->prefix .'` (cometime, calltime, last_time, post_user, edit_user, userid, depart, customer, content, process, confirm, review, note) value("'. $data['cometime'] .'", "'. $data['calltime'] .'", '. $time .', '. $this->userid .', '. $this->userid .', '. $data['employ'] .', 0, 0, "'. $data['content'] .'", 0, 0, "", "")';
 
-  //   return $query->num_rows;
-  // }
+    if ($this->db->query($sql)) {
+      $id = $this->db->insert_id;
+      $this->insertNotify(INSERT_NOTIFY, $id, $time);
+      $this->setLastUpdate($time);
+    }
+  }
+
+  function updateWork($data, $time) {
+    $xtra = '';
+    $sql = 'update `'. $this->prefix .'` set process = '. $data['process'] .', note = "'. $data['note'] .'", calltime = "'. $data['calltime'] .'" '. $xtra .' where id = '. $data['id'];
+    if ($this->db->query($sql)) {
+      $this->insertNotify(EDIT_NOTIFY, $data['id'], $time);
+      $this->setLastUpdate($time);
+    }
+  }
+
+  function removeWork($data, $time) {
+    $sql = 'update `'. $this->prefix .'` set active = 0 where id = '. $data['id'];
+    if ($this->db->query($sql)) {
+      $this->setLastUpdate($time);
+      $this->insertNotify(REMOVE_NOTIFY, $data['id'], $time);
+    }
+  }
 }

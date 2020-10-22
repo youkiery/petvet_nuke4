@@ -1,23 +1,31 @@
 <?php 
 
-if (empty($_GET['id']) || empty(checkWorkId($_GET['id']))) $result['messenger'] = 'no work exist';
+if (empty($_GET['id'])) $result['messenger'] = 'no work exist';
 else if (!checkUserRole($userid)) $result['messenger'] = 'no permission allow';
 else {
   require_once(NV_ROOTDIR . '/ionic/work.php');
-  $work = new Work('petwork');
+  $work = new Work();
 
-  $id = $_GET['id'];
-  $sql = 'update `pet_petwork_row` set active = 0 where id = '. $id;
-  if ($mysqli->query($sql)) {
+  $data = array(
+    'id' => parseGetData('id')
+  );
+
+  $filter = array(
+    'startdate' => ( !empty($_GET['startdate']) ? $_GET['startdate'] : '' ),
+    'enddate' => ( !empty($_GET['enddate']) ? $_GET['enddate'] : '' ),
+    'keyword' => ( !empty($_GET['keyword']) ? $_GET['keyword'] : '' ),
+    'user' => ( !empty($_GET['user']) ? $_GET['user'] : '' )
+  );
+
+  if (!$work->checkWorkId($data['id'])) $result['messenger'] = 'no work exist';
+  else {
     $time = time();
-    $sql = 'insert into `pet_petwork_notify` (userid, action, workid, time) values('. $userid .', 4, '. $id .', '. $time .')';
-    $mysqli->query($sql);
-    $work->setLastUpdate($time);
-    $work->insertNotify(REMOVE_NOTIFY, $id, $time);
-
+    $work->removeWork($data, $time);
     $result['status'] = 1;
-    $result['unread'] = $work->getNotifyUnread();
     $result['messenger'] = 'removed work';
+    $result['time'] = $time;
+    $result['unread'] = $work->getNotifyUnread();
+    $result['data'] = $work->getWork($filter);
   }
 }
 
