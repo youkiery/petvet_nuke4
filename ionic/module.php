@@ -11,7 +11,6 @@ class Module {
     global $mysqli, $userid;
     $this->db = $mysqli;
     $this->userid = $userid;
-    $this->role = checkUserRole($this->userid);
     $this->table = $this->getUserBranch();
   }
 
@@ -104,5 +103,14 @@ class Module {
     $query = $this->db->query($sql);
 
     return $query->num_rows;
+  }
+
+  function getRole() {
+    $sql = 'select * from `pet_'. $this->table .'_permission` where module = "'. $this->module .'" and userid = '. $this->userid;
+    $query = $this->db->query($sql);
+
+    $user = $query->fetch_assoc();
+    if (!empty($user) && $user['type']) return 1;
+    return 0;
   }
 }

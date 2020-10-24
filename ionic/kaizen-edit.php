@@ -1,7 +1,10 @@
 <?php 
 
 $filter = array(
-  'keyword' => ( !empty($_GET['keyword']) ? $_GET['keyword'] : '' )
+  'starttime' => parseGetData('starttime'),
+  'endtime' => parseGetData('endtime'),
+  'keyword' => parseGetData('keyword'),
+  'sort' => parseGetData('sort')
 );
 
 $data = array(

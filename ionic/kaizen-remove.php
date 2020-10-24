@@ -11,7 +11,11 @@ $data = array(
 require_once(NV_ROOTDIR . '/ionic/kaizen.php');
 $kaizen = new Kaizen('test');
 
-$result['status'] = 1;
-$result['time'] = $kaizen->removeData($data);
-$result['list'] = $kaizen->getKaizenList();
-$result['unread'] = $kaizen->getNotifyUnread();
+if (!$kaizen->role) $result['messenger'] = 'Chưa cấp quyền truy cập';
+else {
+  $result['status'] = 1;
+  $result['time'] = $kaizen->removeData($data);
+  $result['list'] = $kaizen->getKaizenList();
+  $result['unread'] = $kaizen->getNotifyUnread();
+}
+

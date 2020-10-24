@@ -1,10 +1,9 @@
 <?php 
 
-if (!checkUserRole($userid)) $result['messenger'] = 'no permission allow';
+require_once(NV_ROOTDIR . '/ionic/work.php');
+$work = new Work();
+if (!$work->role) $result['messenger'] = 'Chưa cấp quyền truy cập';
 else {
-  require_once(NV_ROOTDIR . '/ionic/work.php');
-  $work = new Work();
-
   $data = array(
     'content' => parseGetData('content'),
     'cometime' => totime(parseGetData('cometime')),
@@ -22,7 +21,7 @@ else {
   $time = time();
   $work->insertWork($data, $time);
   $result['status'] = 1;
-  $result['messenger'] = 'inserted work';
+  $result['messenger'] = 'Đã thêm công việc';
   $result['time'] = $time;
   $result['unread'] = $work->getNotifyUnread();
   $result['data'] = $work->getWork($filter);

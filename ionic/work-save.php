@@ -1,6 +1,6 @@
 <?php 
 
-if (empty($_GET['id'])) $result['messenger'] = 'no work exist';
+if (empty($_GET['id'])) $result['messenger'] = 'Công việc không tồn tại';
 else {
   require_once(NV_ROOTDIR . '/ionic/work.php');
   $work = new Work();
@@ -20,12 +20,12 @@ else {
     'user' => ( !empty($_GET['user']) ? $_GET['user'] : '' )
   );
 
-  if (!$work->checkWorkId($data['id'])) $result['messenger'] = 'no work exist';
+  if (!$work->checkWorkId($data['id'])) $result['messenger'] = 'Công việc không tồn tại';
   else {
     $time = time();
     $work->updateWork($data, $time);
     $result['status'] = 1;
-    $result['messenger'] = 'updated work';
+    $result['messenger'] = 'Đã cập nhật công việc';
     $result['time'] = $time;
     $result['unread'] = $work->getNotifyUnread();
     $result['data'] = $work->getWork($filter);

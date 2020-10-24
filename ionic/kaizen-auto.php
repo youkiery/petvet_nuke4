@@ -1,8 +1,11 @@
 <?php 
 
 $filter = array(
-  'time' => ( !empty($_GET['time']) ? $_GET['time'] : '' ),
-  'keyword' => ( !empty($_GET['keyword']) ? $_GET['keyword'] : '' )
+  'time' => parseGetData('time'),
+  'starttime' => parseGetData('starttime'),
+  'endtime' => parseGetData('endtime'),
+  'keyword' => parseGetData('keyword'),
+  'sort' => parseGetData('sort')
 );
 $filter['time'] = intval($filter['time']);
 

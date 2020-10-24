@@ -3,13 +3,42 @@ class Kaizen extends Module {
   function __construct() {
     parent::__construct();
     $this->module = 'kaizen';
+    $this->prefix = 'pet_' . $this->table .'_'. $this->module;
+    $this->role = $this->getRole();
   }
 
   function getKaizenList() {
-    $xtra = '';
-    if (!checkUserRole($this->userid)) $xtra = 'and userid = ' . $this->userid;
+    global $filter; 
+    $xtra = array();
+
+    $tick = 0;
+    if (!empty($filter['starttime'])) {
+      $filter['starttime'] = totime($filter['starttime']);
+      $tick += 1;
+    }
+    if (!empty($filter['endtime'])) {
+      $filter['endtime'] = totime($filter['endtime']) + 60 * 60 * 24 - 1;
+      $tick += 2;
+    }
+
+    switch ($tick) {
+      case 1:
+        $xtra []= '(edit_time >= '. $filter['starttime'] .')';
+      break;
+      case 2:
+        $xtra []= '(edit_time <= '. $filter['endtime'] .')';
+      break;
+      case 3:
+        $xtra []= '(edit_time between '. $filter['starttime'] .' and '. $filter['endtime'] .')';
+      break;
+    }
+
+    if (!empty($filter['keyword'])) $xtra []= '(result like "%'. $filter['keyword'] .'%") or (solution like "%'. $filter['keyword'] .'%") or (problem like "%'. $filter['keyword'] .'%")';
+    if (!$this->role) $xtra []= 'userid = ' . $this->userid;
+    if (count($xtra)) $xtra = ' and ' . implode(' and ', $xtra);
+    else $xtra = '';
     $list = array();
-    $sql = 'select * from `pet_'. $this->table .'_kaizen` where active = 1 ' . $xtra . ' order by id desc';
+    $sql = 'select * from `pet_'. $this->table .'_kaizen` where active = 1 ' . $xtra . ' order by edit_time ' . $filter['sort'];
     $query = $this->db->query($sql);
 
     while ($row = $query->fetch_assoc()) {
@@ -18,6 +47,7 @@ class Kaizen extends Module {
       $data = array(
         'id' => $row['id'],
         'name' => $name,
+        'done' => intval($row['done']),
         'problem' => $row['problem'],
         'solution' => $row['solution'],
         'result' => $row['result'],
@@ -32,7 +62,7 @@ class Kaizen extends Module {
     $sql = 'select * from `pet_'. $this->table .'_notify` where module = "kaizen" and userid = '. $this->userid . ' order by time desc';
     $query = $this->db->query($sql);
     $list = array();
-    $action_trans = array(1 => 'Thêm giải phảp', 'Cập nhật giải pháp', '???', 'Xóa giải phảp');
+    $action_trans = array(1 => 'Thêm giải phảp', 'Cập nhật giải pháp', 'Hoàn thành giải pháp', 'Xóa giải phảp');
     
     while ($row = $query->fetch_assoc()) {
       $user = checkUserId($row['userid']);
@@ -59,7 +89,7 @@ class Kaizen extends Module {
 
     $sql = 'insert into `pet_'. $this->table .'_kaizen` (userid, problem, solution, result, post_time, edit_time) values('. $this->userid .', "'. $data['problem'] .'", "'. $data['solution'] .'", "'. $data['result'] .'", '. time() .', '. time() .')';
     if ($this->db->query($sql)) {
-      $this->insertNotify(INSERT_NOTIFY, $this->db->insert_id);
+      $this->insertNotify(INSERT_NOTIFY, $this->db->insert_id, $time);
     }
   }
 
@@ -78,6 +108,15 @@ class Kaizen extends Module {
     $sql = 'update `pet_'. $this->table .'_kaizen` set active = 0 where id = '. $data['id'];
     if ($this->db->query($sql)) {
       $this->insertNotify(REMOVE_NOTIFY, $data['id'], $time);
+    }
+    return $time;
+  }
+
+  function checkData($id, $type) {
+    $time = time();
+    $sql = 'update `pet_'. $this->table .'_kaizen` set done = '. $type .' where id = '. $id;
+    if ($this->db->query($sql)) {
+      $this->insertNotify(COMPLETE_NOTIFY, $id, $time);
     }
     return $time;
   }

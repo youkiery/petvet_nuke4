@@ -50,4 +50,4 @@ if (!empty($_GET['action'])) {
     }
 }
 
-echo json_encode(array('status' => 0, 'messenge' => 'no action allow'));
+echo json_encode(array('status' => 0, 'messenge' => 'Lỗi chức năng'));

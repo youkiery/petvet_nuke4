@@ -4,14 +4,13 @@ class Work extends Module {
     parent::__construct();
     $this->module = 'work';
     $this->prefix = 'pet_' . $this->table .'_'. $this->module;
+    $this->role = $this->getRole();
   }
 
   function getWork($filter) {
-    global $mysqli, $userid;
-
     $list = array();
     $xtra = array();
-    $role = checkUserRole($userid);
+    $time = time();
 
     $tick = 0;
     if (!empty($filter['startdate'])) {
@@ -36,15 +35,15 @@ class Work extends Module {
     }
 
     if (!empty($filter['keyword'])) $xtra []= 'content like "%'. $filter['keyword'] .'%"';
-    if ($role) {
+    if ($this->role) {
       if (!empty($filter['user'])) $xtra []= 'userid in ('. $filter['user'] .')';
     }
-    else $xtra []= 'userid = '. $userid;
+    else $xtra []= 'userid = '. $this->userid;
     if (count($xtra)) $xtra = ' and '. implode(' and ', $xtra);
     else $xtra = '';
 
     $sql = 'select id, userid, cometime, calltime, process, content, note from `'. $this->prefix .'` where active = 1 '. $xtra . ' order by calltime';
-    $query = $mysqli->query($sql);
+    $query = $this->db->query($sql);
     $user = array();
 
     while ($row = $query->fetch_assoc()) {
@@ -53,6 +52,7 @@ class Work extends Module {
         $user[$row['userid']] = (!empty($userinfo['last_name']) ? $userinfo['last_name'] . ' ': '') . $userinfo['first_name'];
       }
       $row['name'] = $user[$row['userid']];
+      $row['color'] = ($row['calltime'] < $time ? 'red' : '');
       $row['cometime'] = date('d/m/Y', $row['cometime']);
       $row['calltime'] = date('d/m/Y', $row['calltime']);
       $list []= $row;
@@ -61,18 +61,15 @@ class Work extends Module {
   }
 
   function getUserNotify($page = 1) {
-    global $mysqli, $userid;
-
     $list = array();
-    $role = checkUserRole($userid);
     // lấy danh sách thông báo
     $xtra = '';
-    if (!$role) {
+    if (!$this->role) {
       // nhân viên, lấy thông báo bản thân
-      $xtra = 'where userid = ' . $userid;
+      $xtra = 'where userid = ' . $this->userid;
     }
     $sql = 'select * from `pet_'. $this->table .'_notify` ' . $xtra . ' order by time desc';
-    $query = $mysqli->query($sql);
+    $query = $this->db->query($sql);
 
     while ($row = $query->fetch_assoc()) {
       $list []= $this->parseWorkNotify($row);
@@ -81,15 +78,12 @@ class Work extends Module {
   }
 
   function getUserNotifyTime() {
-    global $mysqli, $userid;
-
-    $sql = 'select * from `pet_'. $this->table .'_notify_read` where userid = ' . $userid;
-    die($sql);
-    $query = $mysqli->query($sql);
+    $sql = 'select * from `pet_'. $this->table .'_notify_read` where userid = ' . $this->userid;
+    $query = $this->db->query($sql);
 
     if (empty($row = $query->fetch_assoc())) {
-      $sql = 'insert into `pet_'. $this->table .'_notify_read` (userid, time) values ('. $userid .', 0)';
-      $mysqli->query($sql);
+      $sql = 'insert into `pet_'. $this->table .'_notify_read` (userid, time) values ('. $this->userid .', 0)';
+      $this->db->query($sql);
       $row = array(
         'time' => 0
       );
@@ -99,8 +93,7 @@ class Work extends Module {
 
   // userid, action, workid, time
   function parseWorkNotify($data) {
-    global $db;
-    $action_trans = array(1 => 'nhận công việc', 'cập nhật tiến độ', 'hoàn thành', 'hủy công việc');
+    $action_trans = array(1 => 'thêm công việc', 'cập nhật tiến độ', 'hoàn thành', 'hủy công việc');
     $user = checkUserId($data['userid']);
     $name = (!empty($user['last_name']) ? $user['last_name'] . ' ': '') . $user['first_name'];
     $work = $this->getWorkById($data['workid']);
@@ -113,10 +106,8 @@ class Work extends Module {
   }
 
   function getWorkById($workid) {
-    global $mysqli;
-
     $sql = 'select * from `'. $this->prefix .'` where id = ' . $workid;
-    $query = $mysqli->query($sql);
+    $query = $this->db->query($sql);
     return $query->fetch_assoc();
   }
 

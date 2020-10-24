@@ -5,9 +5,8 @@ $filter = array(
 );
 
 $data = array(
-  'problem' => parseGetData('problem'),
-  'solution' => parseGetData('solution'),
-  'result' => parseGetData('result')
+  'id' => parseGetData('id'),
+  'type' => parseGetData('type', 0)
 );
 
 $filter = array(
@@ -20,9 +19,7 @@ $filter = array(
 require_once(NV_ROOTDIR . '/ionic/kaizen.php');
 $kaizen = new Kaizen('test');
 
-$result['time'] = time();
-$kaizen->insertData($data, $result['time']);
-
 $result['status'] = 1;
+$result['time'] = $kaizen->checkData($data['id'], $data['type']);
 $result['list'] = $kaizen->getKaizenList();
 $result['unread'] = $kaizen->getNotifyUnread();
