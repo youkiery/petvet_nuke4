@@ -22,12 +22,13 @@ else {
     else if (!$crypt->validate_password($password, $user_info['password'])) $result['messenger'] = 'Sai mật khẩu';
     else {
       $list = array();
-      $sql = 'select a.userid, b.username as username, concat(last_name, " ", first_name) as name from `pet_petwork_row` a inner join `pet_users` b on a.userid = b.userid group by userid';
+      $sql = 'select a.userid, b.username as username, concat(last_name, " ", first_name) as name from `pet_test_user` a inner join `pet_users` b on a.userid = b.userid group by userid';
       $query = $mysqli->query($sql);
       while ($row = $query->fetch_assoc()) {
           $list []= $row;
       }
       $result['employ'] = $list;
+
       $list = array();
       $sql = 'select a.userid, b.username as username, concat(last_name, " ", first_name) as name from `pet_test_user` a inner join `pet_users` b on a.userid = b.userid and a.except = 1';
       $query = $mysqli->query($sql);
@@ -35,6 +36,15 @@ else {
           $list []= $row;
       }
       $result['except'] = $list;
+
+      $list = array();
+      $sql = 'select a.userid, b.username as username, concat(last_name, " ", first_name) as name from `pet_test_user` a inner join `pet_users` b on a.userid = b.userid and a.daily = 1';
+      $query = $mysqli->query($sql);
+      while ($row = $query->fetch_assoc()) {
+          $list []= $row;
+      }
+      $result['daily'] = $list;
+
       $result['today'] = date('d/m/Y');
       $result['nextweek'] = date('d/m/Y', time() + 60 * 60 * 24 * 7);
 
