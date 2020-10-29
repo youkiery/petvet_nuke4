@@ -21,6 +21,8 @@ else {
     if (empty($user_info)) $result['messenger'] = 'Người dùng không tồn tại';
     else if (!$crypt->validate_password($password, $user_info['password'])) $result['messenger'] = 'Sai mật khẩu';
     else {
+      $userList = getUserList();
+
       $list = array();
       $sql = 'select a.userid, b.username as username, concat(last_name, " ", first_name) as name from `pet_test_user` a inner join `pet_users` b on a.userid = b.userid group by userid';
       $query = $mysqli->query($sql);
@@ -33,7 +35,7 @@ else {
       $sql = 'select a.userid, b.username as username, concat(last_name, " ", first_name) as name from `pet_test_user` a inner join `pet_users` b on a.userid = b.userid and a.except = 1';
       $query = $mysqli->query($sql);
       while ($row = $query->fetch_assoc()) {
-          $list []= $row;
+          $list []= $userList[$row['userid']];
       }
       $result['except'] = $list;
 

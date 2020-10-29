@@ -53,6 +53,7 @@ class Work extends Module {
       }
       $row['name'] = $user[$row['userid']];
       $row['color'] = ($row['calltime'] < $time ? 'red' : '');
+      $row['day'] = date('N', $row['calltime']);
       $row['cometime'] = date('d/m/Y', $row['cometime']);
       $row['calltime'] = date('d/m/Y', $row['calltime']);
       $list []= $row;
