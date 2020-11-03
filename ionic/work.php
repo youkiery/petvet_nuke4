@@ -7,7 +7,7 @@ class Work extends Module {
     $this->role = $this->getRole();
   }
 
-  function getWork($filter) {
+  function getWork($filter, $status = 0) {
     $list = array();
     $xtra = array();
     $time = time();
@@ -33,6 +33,16 @@ class Work extends Module {
         $xtra []= '(calltime between '. $filter['startdate'] .' and '. $filter['enddate'] .')';
       break;
     }
+    
+    switch ($status) {
+      case 1:
+        $xtra []= '(process < 100)';
+      break;
+      case 2:
+        $xtra []= 'process > 99';
+      break;
+
+    }
 
     if (!empty($filter['keyword'])) $xtra []= 'content like "%'. $filter['keyword'] .'%"';
     if ($this->role) {
@@ -42,7 +52,7 @@ class Work extends Module {
     if (count($xtra)) $xtra = ' and '. implode(' and ', $xtra);
     else $xtra = '';
 
-    $sql = 'select id, userid, cometime, calltime, process, content, note from `'. $this->prefix .'` where active = 1 '. $xtra . ' order by calltime';
+    $sql = 'select id, userid, cometime, calltime, process, content, note, image from `'. $this->prefix .'` where active = 1 '. $xtra . ' order by calltime';
     $query = $this->db->query($sql);
     $user = array();
 
@@ -56,6 +66,7 @@ class Work extends Module {
       $row['day'] = date('N', $row['calltime']);
       $row['cometime'] = date('d/m/Y', $row['cometime']);
       $row['calltime'] = date('d/m/Y', $row['calltime']);
+      $row['image'] = explode(',', $row['image']);
       $list []= $row;
     }
     return $list;
@@ -132,7 +143,19 @@ class Work extends Module {
 
   function updateWork($data, $time) {
     $xtra = '';
-    $sql = 'update `'. $this->prefix .'` set process = '. $data['process'] .', note = "'. $data['note'] .'", calltime = "'. $data['calltime'] .'" '. $xtra .' where id = '. $data['id'];
+    if ($this->role) $xtra .= ', calltime = ' . $data['calltime'] . ', content = "' . $data['content'] . '"';
+
+    $sql = 'update `'. $this->prefix .'` set process = '. $data['process'] .', note = "'. $data['note'] .'", image = "'. $data['image'] .'" '. $xtra .' where id = '. $data['id'];
+    if ($this->db->query($sql)) {
+      if ($data['process'] == 100) $this->insertNotify(COMPLETE_NOTIFY, $data['id'], $time);
+      else $this->insertNotify(EDIT_NOTIFY, $data['id'], $time);
+      $this->setLastUpdate($time);
+    }
+  }
+
+  function doneWork($data, $time) {
+    $xtra = '';
+    $sql = 'update `'. $this->prefix .'` set process = 100 where id = '. $data['id'];
     if ($this->db->query($sql)) {
       $this->insertNotify(EDIT_NOTIFY, $data['id'], $time);
       $this->setLastUpdate($time);

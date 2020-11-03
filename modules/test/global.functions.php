@@ -807,11 +807,14 @@ function checkBloodRemind($name) {
   $sql = 'select * from `' . VAC_PREFIX . '_remind` where name = "blood" and value = "' . $name . '"';
   $query = $db->query($sql);
   if (!empty($row = $query->fetch())) {
+    echo '1';
     $targetid = $row['id'];
   } else {
+    echo '2';
     $sql = 'insert into `' . VAC_PREFIX . '_remind` (name, value) values ("blood", "' . $name . '")';
     if ($db->query($sql)) {
-      $targetid = $db->lastInsertId();
+    echo '3';
+    $targetid = $db->lastInsertId();
     }
   }
   return $targetid;
@@ -1048,4 +1051,18 @@ function convert($str) {
   $str = preg_replace("/(ỳ|ý|ỵ|ỷ|ỹ)/", 'y', $str);
   $str = preg_replace("/(đ)/", 'd', $str);
   return $str;
+}
+
+function nav_generater($url, $number, $page, $limit) {
+  $html = '';
+  $total = floor($number / $limit) + ($number % $limit ? 1 : 0);
+  for ($i = 1; $i <= $total; $i++) {
+    if ($page == $i) {
+      $html .= '<a class="btn btn-default">' . $i . '</a>';
+    } 
+    else {
+      $html .= '<a class="btn btn-info" href="'. $url .'&page='. $i .'&limit='. $limit .'">' . $i . '</a>';
+    }
+  }
+  return $html;
 }

@@ -12,10 +12,10 @@ $filter = array(
   'keyword' => '',
   'userid' => '',
 );
-
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\TablePosition;
 // Creating the new document...
+
 $phpWord = new \PhpOffice\PhpWord\PhpWord();
 
 $section= $phpWord->addSection(array('orientation' => 'landscape', 'marginLeft' => 600, 'marginRight' => 600,
@@ -48,7 +48,7 @@ $table->addCell(2000, $fancyTableCellStyle)->addText("Thứ 6", $header_style, $
 $table->addCell(2000, $fancyTableCellStyle)->addText("Thứ 7", $header_style, $header_option);
 $table->addCell(2000, $fancyTableCellStyle)->addText("Chủ nhật", $header_style, $header_option);
 
-$list = $work->getWork($filter);
+$list = $work->getWork($filter, 1); // only completed
 $data = array();
 foreach ($list as $row) {
   if (empty($data[$row['userid']])) $data[$row['userid']] = array('name' => $row['name'], 'data' => array(1 => array(), array(), array(), array(), array(), array(), array()));
@@ -90,11 +90,18 @@ $name = 'work-'. time();
 $doc = '/ionic/files/'. $name .'.docx';
 $preview = '/ionic/files/'. $name .'.html';
 
+$objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'HTML');
+$objWriter->save(NV_ROOTDIR . $preview);
+
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
 $objWriter->save(NV_ROOTDIR . $doc);
 
-$objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'HTML');
-$objWriter->save(NV_ROOTDIR . $preview);
+// $objWriter->save(NV_ROOTDIR . $preview);
+// $fp = fopen(NV_ROOTDIR . $preview,"wb");
+// fwrite($fp,'');
+// $phpWord->save(NV_ROOTDIR . $preview, 'HTML');
+
+// die('d');
 
 $result['status'] = 1;
 $result['name'] = $name;

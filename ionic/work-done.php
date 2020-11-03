@@ -1,21 +1,13 @@
 <?php 
 
+require_once(NV_ROOTDIR . '/ionic/work.php');
+$work = new Work();
 if (empty($_GET['id'])) $result['messenger'] = 'Công việc không tồn tại';
+else if (!$work->role) $result['messenger'] = 'Chưa cấp quyền truy cập';
 else {
-  require_once(NV_ROOTDIR . '/ionic/work.php');
-  $work = new Work();
-
   $data = array(
-    'id' => parseGetData('id'),
-    'content' => parseGetData('content'),
-    'process' => parseGetData('process', 0),
-    'calltime' => totime(parseGetData('calltime')),
-    'image' => parseGetData('image'),
-    'token' => parseGetData('token'),
-    'note' => parseGetData('note')
+    'id' => parseGetData('id')
   );
-  $data['image'] = str_replace('[amp]', '&', $data['image']);
-  $data['image'] = str_replace('[/]', '%2F', $data['image']);
 
   $filter = array(
     'startdate' => ( !empty($_GET['startdate']) ? $_GET['startdate'] : '' ),
@@ -27,9 +19,9 @@ else {
   if (!$work->checkWorkId($data['id'])) $result['messenger'] = 'Công việc không tồn tại';
   else {
     $time = time();
-    $work->updateWork($data, $time);
+    $work->doneWork($data, $time);
     $result['status'] = 1;
-    $result['messenger'] = 'Đã cập nhật công việc';
+    $result['messenger'] = 'Đã hoàn thành công việc';
     $result['time'] = $time;
     $result['unread'] = $work->getNotifyUnread();
     $result['data'] = $work->getWork($filter);

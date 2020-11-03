@@ -39,9 +39,9 @@ if (!empty($action)) {
       $end = $sample_number - $data['number'];
 
       $sql = 'insert into `' . VAC_PREFIX . '_blood_row` (time, number, start, end, doctor, target) values(' . $data['time'] . ', ' . $data['number'] . ', ' . $sample_number . ', ' . $end . ', ' . $data['doctor'] . ', ' . $targetid . ')';
-      // die($sql);
       if ($db->query($sql)) {
-        $query = $db->query('update `' . $db_config['prefix'] . '_config` set config_value = ' . $end . ' where config_name = "' . $module_name . '_blood_number"');
+        $sql = 'update `' . $db_config['prefix'] . '_config` set config_value = ' . $end . ' where config_name = "' . $module_name . '_blood_number"';
+        $query = $db->query($sql);
 
         $result['status'] = 1;
         $result['html'] = bloodList();
@@ -261,8 +261,8 @@ $xtpl->assign('number', $sample_number);
 $xtpl->assign('number1', $sample_total['number1']);
 $xtpl->assign('number2', $sample_total['number2']);
 $xtpl->assign('number3', $sample_total['number3']);
-
 $xtpl->assign('content', bloodList());
+// die("c");
 $xtpl->parse('main');
 $contents = $xtpl->text();
 include NV_ROOTDIR . '/includes/header.php';

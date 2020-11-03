@@ -656,10 +656,12 @@ function bloodList()
     $target[$row['id']] = $row['value'];
   }
 
-  $query = $db->query('select count(*) as num from ((select id, 0 as type from `' . VAC_PREFIX . '_blood_row`) union (select id, 1 as type from `' . VAC_PREFIX . '_blood_import`)) a ' . $xtra);
+  $sql = 'select count(*) as num from ((select id, 0 as type from `' . VAC_PREFIX . '_blood_row`) union (select id, 1 as type from `' . VAC_PREFIX . '_blood_import`)) a ' . $xtra;
+  $query = $db->query($sql);
   $number = $query->fetch()['num'];
-
-  $query = $db->query('select * from ((select id, time, 0 as type from `' . VAC_PREFIX . '_blood_row`) union (select id, time, 1 as type from `' . VAC_PREFIX . '_blood_import`)) a ' . $xtra . ' order by time desc, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit']);
+  
+  $sql = 'select * from ((select id, time, 0 as type from `' . VAC_PREFIX . '_blood_row`) union (select id, time, 1 as type from `' . VAC_PREFIX . '_blood_import`)) a ' . $xtra . ' order by time desc, id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+  $query = $db->query($sql);
   $index = ($filter['page'] - 1) * $filter['limit'] + 1;
   while ($row = $query->fetch()) {
     if ($row['type']) $sql = 'select * from `' . VAC_PREFIX . '_blood_import` where id = ' . $row['id'];
