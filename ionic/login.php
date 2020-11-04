@@ -2,6 +2,7 @@
 include_once(NV_ROOTDIR . '/ionic/Encryption.php');
 require_once(NV_ROOTDIR . '/ionic/kaizen.php');
 require_once(NV_ROOTDIR . '/ionic/work.php');
+require_once(NV_ROOTDIR . '/ionic/schedule.php');
 
 $result = array(
     'status' => 0,
@@ -53,11 +54,13 @@ else {
       $userid = $user_info['userid'];
       $work = new work('test');
       $kaizen = new Kaizen('test');
+      $schedule = new Schedule();
       
       $workUnread = $work->getNotifyUnread();
       $kaizenUnread = $kaizen->getNotifyUnread();
       $result['workrole'] = $work->getRole();
       $result['kaizenrole'] = $kaizen->getRole();
+      $result['schedulerole'] = $schedule->role;
       $result['work'] = $workUnread;
       $result['kaizen'] = $kaizenUnread;
       $result['notify'] = $workUnread + $kaizenUnread;

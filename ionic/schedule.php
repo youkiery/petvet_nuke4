@@ -13,7 +13,7 @@ class Schedule extends Module {
     $starttime = date("N", $filter['time']) == 1 ? strtotime(date("Y-m-d", $filter['time'])) : strtotime(date("Y-m-d", strtotime('last monday', $filter['time'])));
     $endtime = $starttime + 60 * 60 * 24 * 7 - 1;
     $reversal = array(
-      1 => 1, 2, 3, 4, 5, 6, 0
+      1 => 0, 1, 2, 3, 4, 5, 6
     );
 
     $data = array();
@@ -37,6 +37,7 @@ class Schedule extends Module {
       $day = date('N', $row['time']);
       $name = $userList[$row['user_id']];
       if ($row['type']) $data[$reversal[$day]]['data'][$row['type']] []= $name;
+      // echo json_encode($data);die();
     }
 
     return $data;
@@ -54,13 +55,13 @@ class Schedule extends Module {
     $end = $start + 60 * 60 * 24 - 1;
 
     $sql = 'select * from `'. $this->prefix .'` where user_id = '. $userid . ' and (time between '. $start .' and '. $end .') and type = '. $type;
-    die($sql);
     $query = $this->db->query($sql);
     $row = $query->fetch_assoc();
+    // echo $action . '<br>';
     if ($action) {
       if ($row) $sql = 'delete from `'. $this->prefix .'` where id = ' . $row['id'];
     }
-    else if (!$row) $sql = 'insert into `'. $this->prefix .'` (user_id, type, time, reg_time) values('. $userid .', )';
+    else if (!$row) $sql = 'insert into `'. $this->prefix .'` (user_id, type, time, reg_time) values('. $userid .', '. $type .', '. $time .', '. time() .')';
     if ($sql) $this->db->query($sql);
   }
 }
