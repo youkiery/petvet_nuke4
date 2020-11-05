@@ -25,4 +25,5 @@ $kaizen->insertData($data, $result['time']);
 
 $result['status'] = 1;
 $result['list'] = $kaizen->getKaizenList();
+$result['messenger'] = 'Đã thêm giải pháp';
 $result['unread'] = $kaizen->getNotifyUnread();

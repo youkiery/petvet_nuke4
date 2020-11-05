@@ -17,27 +17,53 @@ class Schedule extends Module {
     );
 
     $data = array();
-    for ($i = 0; $i < 7; $i++) { 
-      $data []= array(
-        'data' => array(
-          1 => array(),
-          array(),
-          array()
-        ), 
-        'time' => date('d/m', $starttime + 60 * 60 * 24 * $i)
-      );
+
+    if ($this->role) {
+      $list = getUserList(true);
+      foreach ($list as $id => $name) {
+        $aday = 60 * 60 * 24;
+        $sheet = array(
+          0 => array(1 => date('d/m', $starttime), 'green', 'green'),
+          array(1 => date('d/m', $starttime + $aday), 'green', 'green'),
+          array(1 => date('d/m', $starttime + $aday * 2), 'green', 'green'),
+          array(1 => date('d/m', $starttime + $aday * 3), 'green', 'green'),
+          array(1 => date('d/m', $starttime + $aday * 4), 'green', 'green'),
+          array(1 => date('d/m', $starttime + $aday * 5), 'green', 'green'),
+          array(1 => date('d/m', $starttime + $aday * 6), 'green', 'green'),
+        );
+        $sql = 'select id, user_id, type, time from `'. $this->prefix .'` where (type = 2 or type = 3) and (time between '. $starttime .' and '. $endtime .') and user_id = ' . $id;
+        $query = $this->db->query($sql);
+        while ($row = $query->fetch_assoc()) {
+          $day = date('N', $row['time']);
+          $sheet[$reversal[$day]][$row['type']] = 'blue';
+        }
+        
+        $data []= array('id' => $id, 'name' => $name, 'day' => $sheet);
+      }
     }
-
-    $sql = 'select id, user_id, type, time from `'. $this->prefix .'` where (time between '. $starttime .' and '. $endtime .')';
-    $query = $this->db->query($sql);
-    $row = array();
-    $userList = getUserList();
-
-    while ($row = $query->fetch_assoc()) {
-      $day = date('N', $row['time']);
-      $name = $userList[$row['user_id']];
-      if ($row['type']) $data[$reversal[$day]]['data'][$row['type']] []= $name;
-      // echo json_encode($data);die();
+    else {
+      for ($i = 0; $i < 7; $i++) { 
+        $data []= array(
+          'data' => array(
+            1 => array(),
+            array(),
+            array()
+          ), 
+          'time' => date('d/m', $starttime + 60 * 60 * 24 * $i)
+        );
+      }
+  
+      $sql = 'select id, user_id, type, time from `'. $this->prefix .'` where (time between '. $starttime .' and '. $endtime .')';
+      $query = $this->db->query($sql);
+      $row = array();
+      $userList = getUserList();
+  
+      while ($row = $query->fetch_assoc()) {
+        $day = date('N', $row['time']);
+        $name = $userList[$row['user_id']];
+        if ($row['type']) $data[$reversal[$day]]['data'][$row['type']] []= $name;
+        // echo json_encode($data);die();
+      }
     }
 
     return $data;
@@ -51,7 +77,7 @@ class Schedule extends Module {
   }
 
   function insert($userid, $time, $type, $action) {
-    $start = strtotime(date('Y/m/d', $time));
+    $start = $time;
     $end = $start + 60 * 60 * 24 - 1;
 
     $sql = 'select * from `'. $this->prefix .'` where user_id = '. $userid . ' and (time between '. $start .' and '. $end .') and type = '. $type;

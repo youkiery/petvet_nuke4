@@ -8,6 +8,13 @@ $data = array(
   'id' => parseGetData('id'),
 );
 
+$filter = array(
+  'starttime' => parseGetData('starttime'),
+  'endtime' => parseGetData('endtime'),
+  'keyword' => parseGetData('keyword'),
+  'sort' => parseGetData('sort')
+);
+
 require_once(NV_ROOTDIR . '/ionic/kaizen.php');
 $kaizen = new Kaizen('test');
 
@@ -15,6 +22,7 @@ if (!$kaizen->role) $result['messenger'] = 'Chưa cấp quyền truy cập';
 else {
   $result['status'] = 1;
   $result['time'] = $kaizen->removeData($data);
+  $result['messenger'] = 'Đã xóa giải pháp';
   $result['list'] = $kaizen->getKaizenList();
   $result['unread'] = $kaizen->getNotifyUnread();
 }

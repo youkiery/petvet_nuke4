@@ -12,12 +12,10 @@ $filter = array(
   'time' => parseGetData('time') / 1000
 );
 
-// echo json_encode($list);die();
-
 foreach ($list as $value) {
   // a => day, b => type
-  $time = $filter['time'] + 60 * 60 * 24 * ($value->a - date('N', $filter['time']) + 1);
-  $schedule->insert($userid, $time, $value->b, $value->c);
+  $time = $filter['time'] + 60 * 60 * 24 * ($value->day - date('N', $filter['time']) + 1);
+  $schedule->insert($value->userid, $time, $value->type, $value->color);
 }
 
 $result['status'] = 1;
