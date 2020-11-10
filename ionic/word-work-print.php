@@ -3,8 +3,13 @@ require_once 'bootstrap.php';
 require_once(NV_ROOTDIR . '/ionic/work.php');
 $work = new Work();
 
-$startdate = strtotime('last monday');
+$time = parseGetData('time');
+if (empty($time)) $time = time();
+else $time = totime($time);
+$day = date('N', $time);
+$startdate = ($day == '1' ? strtotime(date('Y/m/d', $time)) : strtotime('last monday'));
 $enddate = $startdate + 60 * 60 * 24 * 7 - 1;
+// echo date('d/m/Y', $startdate);die();
 
 $filter = array(
   'startdate' => date('d/m/Y', $startdate),
@@ -48,7 +53,24 @@ $table->addCell(2000, $fancyTableCellStyle)->addText("Thứ 6", $header_style, $
 $table->addCell(2000, $fancyTableCellStyle)->addText("Thứ 7", $header_style, $header_option);
 $table->addCell(2000, $fancyTableCellStyle)->addText("Chủ nhật", $header_style, $header_option);
 
-$list = $work->getWork($filter, 1); // only completed
+$list = $work->getWork($filter); // only completed
+$sql = 'select id, userid, cometime, calltime, process, content, note, image from `'. $work->prefix .'` where active = 1 and process < 100 and calltime < '. $startdate;
+$query = $work->db->query($sql);
+while ($row = $query->fetch_assoc()) {
+  if (empty($user[$row['userid']])) {
+    $userinfo = checkUserId($row['userid']);
+    $user[$row['userid']] = (!empty($userinfo['last_name']) ? $userinfo['last_name'] . ' ': '') . $userinfo['first_name'];
+  }
+  $row['name'] = $user[$row['userid']];
+  $row['color'] = ($row['calltime'] < $time ? 'red' : '');
+  $row['day'] = date('N', $row['calltime']);
+  $row['cometime'] = date('d/m/Y', $row['cometime']);
+  $row['calltime'] = date('d/m/Y', $row['calltime']);
+  $row['overtime'] = true;
+  $row['image'] = explode(',', $row['image']);
+  $list []= $row;
+}
+
 $data = array();
 foreach ($list as $row) {
   if (empty($data[$row['userid']])) $data[$row['userid']] = array('name' => $row['name'], 'data' => array(1 => array(), array(), array(), array(), array(), array(), array()));
@@ -67,7 +89,11 @@ foreach ($data as $user) {
     foreach ($day as $row) {
       if ($firstLine) $firstLine = false;
       else $cell->addTextBreak();
-      $cell->addText(($index ++) . '. ' .$row['content']);
+      // kiểm tra quá hạn chưa
+      $xtra = '';
+      if ($row['process'] == 100) $xtra = ' (R)';
+      else if (!empty($row['overtime'])) $xtra = ' (QH)';
+      $cell->addText(($index ++) . '. ' .$row['content'] . $xtra);
     }
   }
 }

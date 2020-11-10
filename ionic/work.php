@@ -41,7 +41,6 @@ class Work extends Module {
       case 2:
         $xtra []= 'process > 99';
       break;
-
     }
 
     if (!empty($filter['keyword'])) $xtra []= 'content like "%'. $filter['keyword'] .'%"';
