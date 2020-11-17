@@ -10,16 +10,20 @@ function checkUserId($userid) {
     return false;
 }
 
+function cmp($source, $target) {
+  return strcmp($target['calltime'], $source['calltime']);
+}
+
 function checkUserRole($userid) {
-    global $mysqli;
-    if (!empty(checkUserId($userid))) {
-        $sql = 'select * from `pet_test_user` where userid = '. $userid;
-        $query = $mysqli->query($sql);
-    
-        $user = $query->fetch_assoc();
-        if ($user['manager']) return true;
-    }
-    return false;
+  global $mysqli;
+  if (!empty(checkUserId($userid))) {
+      $sql = 'select * from `pet_test_user` where userid = '. $userid;
+      $query = $mysqli->query($sql);
+  
+      $user = $query->fetch_assoc();
+      if ($user['manager']) return true;
+  }
+  return false;
 }
 
 function parseGetData($dataname, $default = '') {

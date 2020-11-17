@@ -7,7 +7,7 @@ $time = parseGetData('time');
 if (empty($time)) $time = time();
 else $time = totime($time);
 $day = date('N', $time);
-$startdate = ($day == '1' ? strtotime(date('Y/m/d', $time)) : strtotime('last monday'));
+$startdate = ($day == '1' ? strtotime(date('Y/m/d', $time)) : strtotime('last monday', $time));
 $enddate = $startdate + 60 * 60 * 24 * 7 - 1;
 // echo date('d/m/Y', $startdate);die();
 
@@ -52,8 +52,10 @@ $table->addCell(2000, $fancyTableCellStyle)->addText("Thứ 5", $header_style, $
 $table->addCell(2000, $fancyTableCellStyle)->addText("Thứ 6", $header_style, $header_option);
 $table->addCell(2000, $fancyTableCellStyle)->addText("Thứ 7", $header_style, $header_option);
 $table->addCell(2000, $fancyTableCellStyle)->addText("Chủ nhật", $header_style, $header_option);
+$table->addCell(2000, $fancyTableCellStyle)->addText("Tuần trước", $header_style, $header_option);
 
-$list = $work->getWork($filter); // only completed
+$list = $work->getWork($filter); // get all
+$overdate = array();
 $sql = 'select id, userid, cometime, calltime, process, content, note, image from `'. $work->prefix .'` where active = 1 and process < 100 and calltime < '. $startdate;
 $query = $work->db->query($sql);
 while ($row = $query->fetch_assoc()) {
@@ -68,14 +70,21 @@ while ($row = $query->fetch_assoc()) {
   $row['calltime'] = date('d/m/Y', $row['calltime']);
   $row['overtime'] = true;
   $row['image'] = explode(',', $row['image']);
-  $list []= $row;
+  $overdate []= $row;
 }
 
 $data = array();
 foreach ($list as $row) {
-  if (empty($data[$row['userid']])) $data[$row['userid']] = array('name' => $row['name'], 'data' => array(1 => array(), array(), array(), array(), array(), array(), array()));
+  if (empty($data[$row['userid']])) $data[$row['userid']] = array('name' => $row['name'], 'data' => array(1 => array(), array(), array(), array(), array(), array(), array(), array()));
   $data[$row['userid']]['data'][$row['day']] []= $row;
 }
+
+foreach ($overdate as $row) {
+  if (empty($data[$row['userid']])) $data[$row['userid']] = array('name' => $row['name'], 'data' => array(1 => array(), array(), array(), array(), array(), array(), array(), array()));
+  $data[$row['userid']]['data'][8] []= $row;
+}
+
+// echo json_encode($data);die();
 
 foreach ($data as $user) {
   $table->addRow();
@@ -87,8 +96,8 @@ foreach ($data as $user) {
     $cell = $table->addCell(2000, $fancyTableCellStyle);
     // if (count($day)) {var_dump($day);die();}
     foreach ($day as $row) {
-      if ($firstLine) $firstLine = false;
-      else $cell->addTextBreak();
+      // if ($firstLine) $firstLine = false;
+      // else $cell->addTextBreak();
       // kiểm tra quá hạn chưa
       $xtra = '';
       if ($row['process'] == 100) $xtra = ' (R)';

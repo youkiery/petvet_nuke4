@@ -1033,6 +1033,7 @@ if (!empty($action)) {
   die();
 }
 
+
 $xtpl = new XTemplate("main.tpl", PATH);
 $xtpl->assign('module_name', $module_name);
 
@@ -1284,5 +1285,5 @@ $xtpl->parse("main");
 $contents = $xtpl->text();
 include ( NV_ROOTDIR . "/includes/header.php" );
 echo nv_site_theme($contents);
+die('a');
 include ( NV_ROOTDIR . "/includes/footer.php" );
-
