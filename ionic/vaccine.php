@@ -13,7 +13,7 @@ class Vaccine extends Module {
     $disease = $this->getDiseaseList();
 
     $time = time();
-    $limit = $time - 60 * 60 * 24 * 14;
+    $limit = $time + 60 * 60 * 24 * 14;
 
     $sql = 'select * from `'. $this->prefix .'` where calltime < '. $limit .' and status = '. $filter['status'] .' order by calltime limit 20';
     $query = $this->db->query($sql);
@@ -53,6 +53,20 @@ class Vaccine extends Module {
 
     while ($row = $query->fetch_assoc()) {
       $list[$row['id']] = $row['name'];
+    }
+    return $list;
+  }
+
+  function diseaseList() {
+    $list = array();
+    $sql = 'select * from `pet_'. $this->table .'_disease`';
+    $query = $this->db->query($sql);
+
+    while ($row = $query->fetch_assoc()) {
+      $list []= array(
+        'id' => $row['id'],
+        'name' => $row['name']
+      );
     }
     return $list;
   }

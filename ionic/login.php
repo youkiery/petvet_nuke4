@@ -3,6 +3,7 @@ include_once(NV_ROOTDIR . '/ionic/Encryption.php');
 require_once(NV_ROOTDIR . '/ionic/kaizen.php');
 require_once(NV_ROOTDIR . '/ionic/work.php');
 require_once(NV_ROOTDIR . '/ionic/schedule.php');
+require_once(NV_ROOTDIR . '/ionic/vaccine.php');
 
 $result = array(
     'status' => 0,
@@ -55,9 +56,11 @@ else {
       $work = new work('test');
       $kaizen = new Kaizen('test');
       $schedule = new Schedule();
+      $vaccine = new Vaccine();
       
       $workUnread = $work->getNotifyUnread();
       $kaizenUnread = $kaizen->getNotifyUnread();
+      $result['disease'] = $vaccine->diseaseList();
       $result['workrole'] = $work->getRole();
       $result['kaizenrole'] = $kaizen->getRole();
       $result['schedulerole'] = $schedule->role;

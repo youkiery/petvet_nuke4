@@ -4,19 +4,28 @@ require_once(NV_ROOTDIR . '/ionic/vaccine.php');
 $vaccine = new Vaccine();
 
 $filter = array(
-  'type' => parseGetData('type', ''),
   'value' => parseGetData('value', '')
 );
 
 $data = array();
 
-$sql = 'select * from `pet_'. $vaccine->table .'_customer` where '. $filter['type'] .' like "%'. $filter['value'] .'%" limit 20';
+$sql = 'select * from `pet_'. $vaccine->table .'_customer` where name like "%'. $filter['value'] .'%" or phone like "%'. $filter['value'] .'%" limit 20';
 $query = $vaccine->db->query($sql);
 
 while ($row = $query->fetch_assoc()) {
+  $sql = 'select * from `pet_'. $vaccine->table .'_pet` where customerid = ' . $row['id'];
+  $query2 = $vaccine->db->query($sql);
+  $list = array();
+  while ($row2 = $query2->fetch_assoc()) {
+    $list []= array(
+      'id' => $row2['id'],
+      'name' => $row2['name'],
+    );
+  }
   $data []= array(
     'name' => $row['name'],
-    'phone' => $row['phone']
+    'phone' => $row['phone'],
+    'pet' => json_encode($list)
   );
 }
 
