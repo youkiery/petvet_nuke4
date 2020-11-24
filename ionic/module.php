@@ -113,4 +113,27 @@ class Module {
     if (!empty($user) && $user['type']) return 1;
     return 0;
   }
+
+  function checkOvertime() {
+    // lấy config module theo userid
+    $time = time();
+    $sql = 'select * from `pet_'. $this->table .'_config_time` where userid = '. $this->userid .' and module = "'. $this->module .'"';
+    $query = $this->db->query($sql);
+    $userconfig = $query->fetch_assoc();
+
+    if (!empty($userconfig)) {
+      if ($time < $userconfig['start'] || $time > $userconfig['end']) return 1;
+      return 0;
+    }
+    else {
+      // lấy config module theo vai trò
+      $sql = 'select * from `pet_'. $this->table .'_config_module` where module = "'. $this->module .'" order by role desc';
+      $query = $this->db->query($sql);
+      $moduleconfig = $query->fetch_assoc();
+      if ($time < $moduleconfig['start'] || $time > $moduleconfig['end']) return 1;
+      return 0;
+    }
+    // không có config
+    return 0;
+  }
 }
