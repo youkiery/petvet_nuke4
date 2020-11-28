@@ -28,7 +28,36 @@ function checkUserById($id) {
 }
 
 function modal() {
+  global $db, $id, $module;
   $xtpl = new XTemplate("modal.tpl", PATH);
+
+  $index = 1;
+  foreach ($module as $key => $name) {
+    $sql = 'select * from `pet_setting_config_module` where branchid = "'. $id .'" and module="'. $key .'"';
+    $query = $db->query($sql);
+    $config = $query->fetch();
+
+    $start = '0-0';
+    $end = '0-0';
+    if (!empty($config)) {
+      $start = $config['start'];
+      $end = $config['end'];
+    }
+    $start = explode('-', $start);
+    $end = explode('-', $end);
+    if (count($start) < 2) $start = array('', '');
+    if (count($end) < 2) $end = array('', '');
+
+    $xtpl->assign('index', $index++);
+    $xtpl->assign('id', $key);
+    $xtpl->assign('start0', $start[0]);
+    $xtpl->assign('start1', $start[1]);
+    $xtpl->assign('end0', $end[0]);
+    $xtpl->assign('end1', $end[1]);
+    $xtpl->assign('module', $name);
+    $xtpl->parse('main.module');
+  }
+
   $xtpl->parse('main');
   return $xtpl->text();
 }
@@ -44,6 +73,7 @@ function mainBranchContent() {
     $xtpl->assign('index', $index++);
     $xtpl->assign('id', $row['id']);
     $xtpl->assign('name', $row['name']);
+    $xtpl->assign('prefix', $row['prefix']);
     $xtpl->parse('main.row');
   }
   $xtpl->parse('main');
@@ -59,16 +89,33 @@ function mainUserContent($id) {
   $index = 1;
   while ($row = $query->fetch()) {
     if (!empty($user = checkUserById($row['userid']))) {
+      // var_dump($user);die();
       $xtpl->assign('index', $index ++);
       $xtpl->assign('id', $row['userid']);
-      $xtpl->assign('username', $row['username']);
-      $xtpl->assign('fullname', (!empty($row['last_name']) ? $row['last_name'] . ' ': '') . $row['first_name']);
+      $xtpl->assign('username', $user['username']);
+      $xtpl->assign('fullname', (!empty($user['last_name']) ? $user['last_name'] . ' ': '') . $user['first_name']);
 
       $xtpl->parse('main.row');
     }
   }
   $xtpl->parse('main');
   return $xtpl->text();
+}
+
+function mainUserSuggest() {
+  global $keyword, $db;
+
+  $sql = 'select userid, username, first_name, last_name from `pet_users` where userid not in (select userid from `pet_setting_user`) limit 20';
+  $query = $db->query($sql);
+  $html = '';
+  while ($row = $query->fetch()) {
+    $html .= '
+      <div class="suggest_item" onclick="insertUserSubmit('. $row['userid'] .')">
+        '. $row['last_name'] .' '. $row['first_name'] .'
+      </div>
+    ';
+  }
+  return $html;
 }
 
 function mainUserModal($keyword) {
