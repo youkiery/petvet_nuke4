@@ -4,9 +4,12 @@ require_once(NV_ROOTDIR . '/ionic/spa.php');
 $spa = new Spa();
 
 $data = array(
+  'id' => parseGetData('id', 0),
   'customer' => parseGetData('customer', ''),
   'phone' => parseGetData('phone', ''),
   'note' => parseGetData('note', ''),
+  'image' => parseGetData('image', ''),
+  'type' => parseGetData('type', ''),
 );
 
 $result['status'] = 1;
@@ -28,6 +31,12 @@ else {
   $mysqli->query($sql);
 }
 
-$sql = 'insert into `'. $spa->prefix .'` (doctorid, doctor, customerid, note, time, done, payment, image) values('. $userid .', '. $userid .', '. $row['id'] .', "'. $data['note'] .'", '. $time .', 0, 0, "")';
+if ($data['id']) {
+  $sql = 'update `'. $spa->prefix .'` set customerid = '. $row['id'] .', note = "'. $data['note'] .'", image = "'. $data['image'] .'", type = "'. $data['type'] .'" where id = ' . $data['id'];
+  $result['msg'] = $sql;
+}
+else {
+  $sql = 'insert into `'. $spa->prefix .'` (doctorid, doctor, customerid, note, time, done, payment, image, type) values('. $userid .', '. $userid .', '. $row['id'] .', "'. $data['note'] .'", '. $time .', 0, 0, "'. $data['image'] .'", "'. $data['type'] .'")';
+}
 $mysqli->query($sql);
 $spa->setLastUpdate($time);

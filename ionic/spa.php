@@ -13,12 +13,15 @@ class Spa extends Module {
     
     $time = strtotime(date('Y/m/d', $time));
     $end = $time + 60 * 60 * 24 - 1;
-    $sql = 'select id, customerid, note, done from `'. $this->prefix .'` where time between '. $time .' and '. $end;
+    $sql = 'select id, customerid, note, type, done from `'. $this->prefix .'` where time between '. $time .' and '. $end;
     // die($sql);
     $query = $this->db->query($sql);
 
+    $type = $this->getTypeObject();
+
     while ($row = $query->fetch_assoc()) {
       // echo $row['done'] . '<br>';
+      $row['type'] = $this->parseType($row['type'], $type);
       $customer = $this->getCustonerId($row['customerid']);
       $row['name'] = $customer['name'];
       $row['phone'] = $customer['phone'];
@@ -27,6 +30,44 @@ class Spa extends Module {
       $list []= $row;
     } 
 
+    return $list;
+  }
+
+  function parseType($string, $type) {
+    $type_array = explode(',', $string);
+    if (count($type_array)) {
+      foreach ($type_array as $key => $value) {
+        if ($value && !empty($type[$value])) $type_array[$key] = $type[$value];
+        else unset($type_array[$key]);
+      }
+      $string = implode(', ', $type_array);
+    }
+    return $string;
+  }
+
+  function getTypeList() {
+    $list = array();
+    $sql = 'select * from `'. $this->prefix .'_type`';
+    $query = $this->db->query($sql);
+
+    while ($row = $query->fetch_assoc()) {
+      $list []= array(
+        'id' => $row['id'],
+        'name' => $row['name'],
+        'value' => 0
+      );
+    }
+    return $list;
+  }
+
+  function getTypeObject() {
+    $list = array();
+    $sql = 'select * from `'. $this->prefix .'_type`';
+    $query = $this->db->query($sql);
+
+    while ($row = $query->fetch_assoc()) {
+      $list [$row['id']]= $row['name'];
+    }
     return $list;
   }
 

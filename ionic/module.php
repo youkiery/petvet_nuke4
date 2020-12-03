@@ -11,24 +11,32 @@ class Module {
     global $mysqli, $userid;
     $this->db = $mysqli;
     $this->userid = $userid;
+    $this->branchid = 0;
     $this->table = $this->getUserBranch();
   }
 
   function getUserBranch() {
     try {
-      $sql = 'select * from `pet_branch_user` where userid = ' . $this->userid;
+      $sql = 'select * from `pet_setting_user` where userid = ' . $this->userid;
       $query = $this->db->query($sql);
       $user = $query->fetch_assoc();
 
       if (!empty($user)) {
-        $sql = 'select * from `pet_branch` where id = '. $user['branchid'];
+        $sql = 'select * from `pet_setting_branch` where id = '. $user['branch'];
         $query = $this->db->query($sql);
         $branch = $query->fetch_assoc();
+        $this->branchid = $branch['id'];
         return $branch['prefix'];
       }
+      throw new ErrorException('user without branch');
     }
-    catch(Exception $e) { }
-    return 'test';
+    catch(Exception $e) { 
+      echo json_encode(array(
+        'status' => 0,
+        'messenger' => 'Nhân viên chưa được phân quyền'
+      ));
+      die();
+    }
   }
 
   function setLastRead($time) {
@@ -106,6 +114,27 @@ class Module {
   }
 
   function getRole() {
+    global $action;
+    // kiểm tra thời gian sử dụng chức năng, trừ lúc login
+    if ($action !== 'login') {
+      $sql = 'select * from `pet_setting_config_module` where branchid = ' . $this->branchid . ' and module = "'. $this->module .'"';
+      $query = $this->db->query($sql);
+      $config = $query->fetch_assoc();
+      $time = time();
+      $start = explode('-', $config['start']);
+      $end = explode('-', $config['end']);
+      $start = strtotime($start[0] . ':' . $start[1]);
+      $end = strtotime($end[0] . ':' . $end[1]);
+  
+      if ($start !== $end && ($time < $start || $time > $end)) {
+        echo json_encode(array(
+          'overtime' => 1,
+        ));
+        die();
+      }
+    }
+
+    // kiểm tra quyền sử dụng
     $sql = 'select * from `pet_'. $this->table .'_permission` where module = "'. $this->module .'" and userid = '. $this->userid;
     $query = $this->db->query($sql);
 

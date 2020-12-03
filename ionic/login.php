@@ -4,6 +4,7 @@ require_once(NV_ROOTDIR . '/ionic/kaizen.php');
 require_once(NV_ROOTDIR . '/ionic/work.php');
 require_once(NV_ROOTDIR . '/ionic/schedule.php');
 require_once(NV_ROOTDIR . '/ionic/vaccine.php');
+require_once(NV_ROOTDIR . '/ionic/spa.php');
 
 $result = array(
     'status' => 0,
@@ -53,13 +54,15 @@ else {
       $result['nextweek'] = date('d/m/Y', time() + 60 * 60 * 24 * 7);
 
       $userid = $user_info['userid'];
-      $work = new work('test');
-      $kaizen = new Kaizen('test');
+      $work = new work();
+      $kaizen = new Kaizen();
       $schedule = new Schedule();
       $vaccine = new Vaccine();
-      
+      $spa = new Spa();
+
       $workUnread = $work->getNotifyUnread();
       $kaizenUnread = $kaizen->getNotifyUnread();
+      $result['type'] = $spa->getTypeList();
       $result['disease'] = $vaccine->diseaseList();
       $result['workrole'] = $work->getRole();
       $result['kaizenrole'] = $kaizen->getRole();
