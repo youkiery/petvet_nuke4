@@ -120,6 +120,18 @@ class Module {
       $sql = 'select * from `pet_setting_config_module` where branchid = ' . $this->branchid . ' and module = "'. $this->module .'"';
       $query = $this->db->query($sql);
       $config = $query->fetch_assoc();
+
+      if (empty($config)) {
+        $sql = 'insert into `pet_setting_config_module` (branchid, module, start, end) values ("'. $this->branchid .'", "'. $this->module .'", 0, 0)';
+        $this->db->query($sql);
+        $config = array(
+          'branchid' => $this->branchid,
+          'module' => $this->module,
+          'start' => '0-0',
+          'end' => '0-0'
+        );
+      }
+
       $time = time();
       $start = explode('-', $config['start']);
       $end = explode('-', $config['end']);
