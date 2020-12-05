@@ -12,31 +12,9 @@ class Module {
     $this->db = $mysqli;
     $this->userid = $userid;
     $this->branchid = 0;
-    $this->table = $this->getUserBranch();
-  }
-
-  function getUserBranch() {
-    try {
-      $sql = 'select * from `pet_setting_user` where userid = ' . $this->userid;
-      $query = $this->db->query($sql);
-      $user = $query->fetch_assoc();
-
-      if (!empty($user)) {
-        $sql = 'select * from `pet_setting_branch` where id = '. $user['branch'];
-        $query = $this->db->query($sql);
-        $branch = $query->fetch_assoc();
-        $this->branchid = $branch['id'];
-        return $branch['prefix'];
-      }
-      throw new ErrorException('user without branch');
-    }
-    catch(Exception $e) { 
-      echo json_encode(array(
-        'status' => 0,
-        'messenger' => 'Nhân viên chưa được phân quyền'
-      ));
-      die();
-    }
+    $branch = getUserBranch();
+    $this->branchid = $branch['id'];
+    $this->table = $branch['prefix'];
   }
 
   function setLastRead($time) {

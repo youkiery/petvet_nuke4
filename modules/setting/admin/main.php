@@ -71,7 +71,7 @@ if (!empty($action)) {
 
       $result['status'] = 1;
       if (!empty($query->fetch())) $sql = 'update `pet_setting_user` set branch = ' . $id . ' where userid = '. $userid;
-      else $sql = 'insert into `pet_setting_user` (userid, branch, manager, except) values ('. $userid .', '. $id .', 0, 0)';
+      else $sql = 'insert into `pet_setting_user` (userid, branch, manager, `except`) values ('. $userid .', '. $id .', 0, 0)';
       
       if ($db->query($sql)) {
         $result['status'] = 1;

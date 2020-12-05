@@ -26,6 +26,33 @@ function checkUserRole($userid) {
   return false;
 }
 
+function getUserBranch() {
+  global $userid, $mysqli;
+  try {
+    $sql = 'select * from `pet_setting_user` where userid = ' . $userid;
+    $query = $mysqli->query($sql);
+    $user = $query->fetch_assoc();
+
+    if (!empty($user)) {
+      $sql = 'select * from `pet_setting_branch` where id = '. $user['branch'];
+      $query = $mysqli->query($sql);
+      $branch = $query->fetch_assoc();
+      return array(
+        'id' => $branch['id'],
+        'prefix' => $branch['prefix']
+      );
+    }
+    throw new ErrorException('user without branch');
+  }
+  catch(Exception $e) { 
+    echo json_encode(array(
+      'status' => 0,
+      'messenger' => 'Nhân viên chưa được phân quyền'
+    ));
+    die();
+  }
+}
+
 function parseGetData($dataname, $default = '') {
   global $_GET;
   return (!empty($_GET[$dataname]) ? $_GET[$dataname] : $default);

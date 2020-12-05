@@ -8,7 +8,7 @@ $filter = array(
 );
 
 require_once(NV_ROOTDIR . '/ionic/work.php');
-$work = new Work('petwork');
+$work = new Work();
 
 $result['list'] = $work->getWork($filter);
 $result['time'] = $work->getLastUpdate();

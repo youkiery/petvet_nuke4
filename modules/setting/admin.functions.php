@@ -105,7 +105,7 @@ function mainUserContent($id) {
 function mainUserSuggest() {
   global $keyword, $db;
 
-  $sql = 'select userid, username, first_name, last_name from `pet_users` where userid not in (select userid from `pet_setting_user`) limit 20';
+  $sql = 'select userid, username, first_name, last_name from `pet_users` where userid not in (select userid from `pet_setting_user`) and (username like "%'. $keyword .'%" or first_name like "%'. $keyword .'%" or last_name like "%'. $keyword .'%")  limit 20';
   $query = $db->query($sql);
   $html = '';
   while ($row = $query->fetch()) {
