@@ -155,4 +155,19 @@ class Module {
     // không có config
     return 0;
   }
+
+  function getUserList($daily = false) {
+    $list = array();
+    $xtra = '';
+    if ($daily) $xtra = 'where daily = 1';
+  
+    $sql = 'select * from `pet_'. $this->table .'_user`' . $xtra;
+    $query = $this->db->query($sql);
+  
+    while($row = $query->fetch_assoc()) {
+      $user = checkUserId($row['userid']);
+      $list[$row['userid']] = (!empty($user['last_name']) ? $user['last_name'] . ' ': '') . $user['first_name'];
+    }
+    return $list;
+  }
 }

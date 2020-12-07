@@ -19,7 +19,7 @@ class Schedule extends Module {
     $data = array();
 
     if ($this->role) {
-      $list = getUserList(true);
+      $list = $this->getUserList(true);
       foreach ($list as $id => $name) {
         $aday = 60 * 60 * 24;
         $sheet = array(
@@ -56,7 +56,7 @@ class Schedule extends Module {
       $sql = 'select id, user_id, type, time from `'. $this->prefix .'` where (time between '. $starttime .' and '. $endtime .')';
       $query = $this->db->query($sql);
       $row = array();
-      $userList = getUserList();
+      $userList = $this->getUserList();
   
       while ($row = $query->fetch_assoc()) {
         $day = date('N', $row['time']);

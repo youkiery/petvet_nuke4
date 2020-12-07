@@ -65,20 +65,3 @@ function totime($time) {
   else return false;
   return $time;
 }
-
-function getUserList($daily = false) {
-  global $mysqli;
-
-  $list = array();
-  $xtra = '';
-  if ($daily) $xtra = 'where daily = 1';
-
-  $sql = 'select * from `pet_test_user`' . $xtra;
-  $query = $mysqli->query($sql);
-
-  while($row = $query->fetch_assoc()) {
-    $user = checkUserId($row['userid']);
-    $list[$row['userid']] = (!empty($user['last_name']) ? $user['last_name'] . ' ': '') . $user['first_name'];
-  }
-  return $list;
-}

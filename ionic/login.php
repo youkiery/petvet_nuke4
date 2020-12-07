@@ -24,7 +24,13 @@ else {
     if (empty($user_info)) $result['messenger'] = 'Người dùng không tồn tại';
     else if (!$crypt->validate_password($password, $user_info['password'])) $result['messenger'] = 'Sai mật khẩu';
     else {
-      $userList = getUserList();
+      $userid = $user_info['userid'];
+      $work = new work();
+      $kaizen = new Kaizen();
+      $schedule = new Schedule();
+      $vaccine = new Vaccine();
+      $spa = new Spa();
+      $userList = $spa->getUserList();
 
       $list = array();
       $sql = 'select a.userid, b.username as username, concat(last_name, " ", first_name) as name from `pet_test_user` a inner join `pet_users` b on a.userid = b.userid group by userid';
@@ -52,13 +58,6 @@ else {
 
       $result['today'] = date('d/m/Y');
       $result['nextweek'] = date('d/m/Y', time() + 60 * 60 * 24 * 7);
-
-      $userid = $user_info['userid'];
-      $work = new work();
-      $kaizen = new Kaizen();
-      $schedule = new Schedule();
-      $vaccine = new Vaccine();
-      $spa = new Spa();
 
       $workUnread = $work->getNotifyUnread();
       $kaizenUnread = $kaizen->getNotifyUnread();
