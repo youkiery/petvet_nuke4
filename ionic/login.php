@@ -5,6 +5,7 @@ require_once(NV_ROOTDIR . '/ionic/work.php');
 require_once(NV_ROOTDIR . '/ionic/schedule.php');
 require_once(NV_ROOTDIR . '/ionic/vaccine.php');
 require_once(NV_ROOTDIR . '/ionic/spa.php');
+require_once(NV_ROOTDIR . '/ionic/ride.php');
 
 $result = array(
     'status' => 0,
@@ -30,6 +31,7 @@ else {
       $schedule = new Schedule();
       $vaccine = new Vaccine();
       $spa = new Spa();
+      $ride = new Ride();
       $userList = $spa->getUserList();
 
       $list = array();
@@ -61,6 +63,7 @@ else {
 
       $workUnread = $work->getNotifyUnread();
       $kaizenUnread = $kaizen->getNotifyUnread();
+      $result['clock'] = $ride->getClock();
       $result['type'] = $spa->getTypeList();
       $result['disease'] = $vaccine->diseaseList();
       $result['workrole'] = $work->getRole();

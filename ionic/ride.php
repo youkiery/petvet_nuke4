@@ -15,12 +15,13 @@ class Ride extends Module {
     $time = $filter['time'];
     $from = $time - 60 * 60 * 24 * 15;
     $end = $time + 60 * 60 * 24 * 15;
-    $sql = 'select * from `'. $this->prefix .'` where time between '. $from .' and '. $end .' order by time desc';
+    $sql = 'select * from `'. $this->prefix .'` where type = "'. $filter['type'] .'" and (time between '. $from .' and '. $end .') order by time desc';
     $query = $this->db->query($sql);
     $list = array();
 
     while ($row = $query->fetch_assoc()) {
-      $list = $this->func[$filter['type']]($row);
+      $func = $this->func[$filter['type']];
+      $list []= $this->$func($row);
     }
     return $list;
   }
@@ -33,23 +34,45 @@ class Ride extends Module {
   }
 
   function parseCollect($data) {
+    $user = $this->getUserById($data['doctor_id']);
     return array(
-      'driverid' => $data['driverid'],
-      'doctorid' => $data['doctorid'],
+      'id' => $data['id'],
+      'name' => $user['first_name'],
       'clock_from' => $data['clock_from'],
       'clock_to' => $data['clock_to'],
+      'long' => $data['clock_to'] - $data['clock_from'],
       'destination' => $data['destination'],
+      'amount' => $data['amount'],
       'note' => $data['note'],
-      'time' => $data['time'],
+      'time' => date('d/m/Y', $data['time']),
     );
   }
 
   function parsePay($data) {
+    $user = $this->getUserById($data['driver_id']);
     return array(
-      'driverid' => $data['driverid'],
+      'id' => $data['id'],
+      'name' => $user['first_name'],
       'amount' => $data['amount'],
       'note' => $data['note'],
-      'time' => $data['time'],
+      'time' => date('d/m/Y', $data['time']),
     );
+  }
+
+  function setClock($number) {
+    $sql = 'update `pet_config` config_value = "'. $number .'" where config_name = "'. $this->prefix .'"';
+    $this->db->query($sql);
+  }
+
+  function getClock() {
+    $sql = 'select * from `pet_config` where config_name = "'. $this->prefix .'"';
+    $query = $this->db->query($sql);
+    
+    if (empty($row = $query->fetch_assoc())) {
+      $sql = 'insert into `pet_config` (lang, module, config_name, config_value) values("sys", "site", "'. $this->prefix .'", "0")';
+      $this->db->query($sql);
+      $row['config_value'] = 0;
+    }
+    return str_replace(',', '.', $row['config_value']);
   }
 }

@@ -100,7 +100,7 @@ class Module {
       $config = $query->fetch_assoc();
 
       if (empty($config)) {
-        $sql = 'insert into `pet_setting_config_module` (branchid, module, start, end) values ("'. $this->branchid .'", "'. $this->module .'", 0, 0)';
+        $sql = 'insert into `pet_setting_config_module` (branchid, module, start, end) values ("'. $this->branchid .'", "'. $this->module .'", "0-0", "0-0")';
         $this->db->query($sql);
         $config = array(
           'branchid' => $this->branchid,
@@ -154,6 +154,13 @@ class Module {
     }
     // không có config
     return 0;
+  }
+
+  function getUserById($id) {
+    global $mysqli;
+    $sql = 'select * from `pet_users` where userid = '. $id;
+    $query = $mysqli->query($sql);
+    return $query->fetch_assoc();
   }
 
   function getUserList($daily = false) {
