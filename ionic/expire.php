@@ -13,7 +13,7 @@ class Expire extends Module {
     $start = $time - $filter['ftime'];
     $end = $time + $filter['ftime'];
     $half = $time + $filter['ftime'] / 2;
-    $sql = 'select a.*, b.name from `'. $this->prefix .'` a inner join `pet_'. $this->table .'_catalog` b on a.rid = b.id where (a.exp_time between '. $start .' and '. $end . ') and b.name like "%'. $filter['fname'] .'%" order by exp_time';
+    $sql = 'select a.*, b.name from `'. $this->prefix .'` a inner join `pet_'. $this->table .'_item` b on a.rid = b.id where (a.exp_time between '. $start .' and '. $end . ') and b.name like "%'. $filter['fname'] .'%" order by exp_time';
     $query = $this->db->query($sql);
 
     $list = array();

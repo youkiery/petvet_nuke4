@@ -262,6 +262,25 @@ if (!empty($action)) {
       $result['html'] = $xtpl->text();
       $result['status'] = 1;
     break;
+    case 'get-remind':
+      $name = $nv_Request->get_string('name', 'post');
+      $type = $nv_Request->get_string('type', 'post');
+      $key = $nv_Request->get_string('key', 'post');
+
+      $sql = 'select * from `'. PREFIX .'_remindv2` where type = "'. $type .'" and name like "%'. $key .'%" and visible = 1 order by rate desc limit 20';
+      $query = $db->query($sql);
+
+      $html = '';
+      while ($row = $query->fetch()) {
+        $html .= '
+          <div class="suggest_item" onclick="selectRemindv2(\''. $name . '\', \'' . $type . '\', \'' . $row['name'] . '\')">
+            <p class="right-click">'. $row['name'] . '</p>
+            <button class="close right" data-dismiss="modal" onclick="removeRemindv2(\'' . $name . '\', \'' . $type . '\', '. $row['id'] .')">&times;</button></div>
+        ';
+      }
+      $result['html'] = $html;
+      $result['status'] = 1;
+    break;
     case 'print-x':
       $list = $nv_Request->get_array('list', 'post');
 
@@ -1266,6 +1285,12 @@ switch ($permission) {
 $day = date('w');
 $week_start = date('d/m/Y', strtotime('-'.$day.' days'));
 $week_end = date('d/m/Y', strtotime('+'.(6-$day).' days'));
+
+for ($i = 1; $i <= 5; $i ++) { 
+  $xtpl2 = new XTemplate('form'. $i .'.xtpl', NV_ROOTDIR . '/modules/'. $module_file . '/template/user');
+  $xtpl2->parse('main');
+  $xtpl->assign("form". $i, $xtpl2->text());
+}
 
 $xtpl->assign("excelf", $week_start);
 $xtpl->assign("excelt", $week_end);
