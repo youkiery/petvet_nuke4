@@ -19,7 +19,7 @@ class Blood extends Module {
       $target[$row['id']] = $row['value'];
     }
   
-    $sql = 'select * from ((select id, time, 0 as type from `' . $this->prefix . '_row`) union (select id, time, 1 as type from `' . $this->prefix . '_import`)) a order by time desc, id desc limit 10';
+    $sql = 'select * from ((select id, time, 0 as type from `' . $this->prefix . '_row`) union (select id, time, 1 as type from `' . $this->prefix . '_import`)) a order by time desc, id desc limit 20';
     $query =$this->db->query($sql);
     while ($row = $query->fetch_assoc()) {
       if ($row['type']) $sql = 'select * from `' . $this->prefix . '_import` where id = ' . $row['id'];
@@ -59,5 +59,49 @@ class Blood extends Module {
     $sql = 'select * from `pet_'. $this->table .'_catalog` where id = ' . $id;
     $query = $this->db->query($sql);
     return $query->fetch_assoc();
+  }
+
+  function check_last_blood() {
+    $sql = 'select * from `pet_config` where config_name = "'. $this->table .'_blood_number"';
+    $query = $this->db->query($sql);
+    if (!empty($row = $query->fetch_assoc())) {
+      return $row['config_value'];
+    }
+    $sql = 'insert into `pet_config` (lang, module, config_name, config_value) values ("sys", "site", "'. $this->table .'_blood_number", "1")';
+    $this->db->query($sql);
+    return 0;
+  }
+
+  function check_blood_sample() {
+    $sql = 'select * from `pet_config` where config_name like "'. $this->table .'_blood_sample%" order by config_name';
+    $query = $this->db->query($sql);
+    $number = array();
+    $index = 1;
+    while ($row = $query->fetch_assoc()) {
+      $number[$index ++] = $row['config_value'];
+    }
+    return $number;
+  }
+
+  function update_blood_sample($data) {
+    for ($i = 1; $i <= 3; $i++) {
+      $sql = 'update `pet_config` set config_value = config_value + '. $data['number'. $i] .' where config_name = "'. $this->table .'_blood_sample_'. $i .'"';
+      $this->db->query($sql);
+    }
+  }
+
+  function check_blood_remind($name) {
+    $targetid = 0;
+    $sql = 'select * from `pet_' . $this->table . '_remind` where name = "blood" and value = "' . $name . '"';
+    $query = $this->db->query($sql);
+    if (!empty($row = $query->fetch_assoc())) {
+      $targetid = $row['id'];
+    } else {
+      $sql = 'insert into `pet_' . $this->table . '_remind` (name, value) values ("blood", "' . $name . '")';
+      if ($this->db->query($sql)) {
+        $targetid = $this->db->insert_id;
+      }
+    }
+    return $targetid;
   }
 }

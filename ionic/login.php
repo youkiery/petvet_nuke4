@@ -6,6 +6,7 @@ require_once(NV_ROOTDIR . '/ionic/schedule.php');
 require_once(NV_ROOTDIR . '/ionic/vaccine.php');
 require_once(NV_ROOTDIR . '/ionic/spa.php');
 require_once(NV_ROOTDIR . '/ionic/ride.php');
+require_once(NV_ROOTDIR . '/ionic/blood.php');
 
 $result = array(
     'status' => 0,
@@ -32,6 +33,7 @@ else {
       $vaccine = new Vaccine();
       $spa = new Spa();
       $ride = new Ride();
+      $blood = new Blood();
       $userList = $spa->getUserList();
 
       $list = array();
@@ -72,6 +74,8 @@ else {
       $result['work'] = $workUnread;
       $result['kaizen'] = $kaizenUnread;
       $result['notify'] = $workUnread + $kaizenUnread;
+      $result['number'] = $blood->check_blood_sample();
+      $result['total'] = $blood->check_last_blood();
       $result['status'] = 1;
       $result['messenger'] = 'Đăng nhập thành công';
       $result['userid'] = $user_info['userid'];
