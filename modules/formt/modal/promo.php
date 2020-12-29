@@ -46,8 +46,6 @@ class Promo {
     $time = time();
     foreach ($employ_list as $employid => $employ) {
       $promo = $this->get_last_promo($employid);
-      if ($time > $promo['next_time']) $xtpl->assign('color', 'red');
-      else $xtpl->assign('color', '');
       $xtpl->assign('index', $index++);
       $xtpl->assign('id', $promo['id']);
       $xtpl->assign('employid', $employid);
@@ -56,6 +54,9 @@ class Promo {
       $xtpl->assign('next_promo', $this->parse_time($promo['next_time']));
       $xtpl->assign('note', $promo['note']);
       $xtpl->assign('file', $promo['file']);
+      if ($time > $promo['next_time']) $xtpl->assign('color', 'red');
+      else $xtpl->assign('color', '');
+      if (strlen($promo['file'])) $xtpl->parse('main.row.file');
       $xtpl->parse('main.row');
     }
     $xtpl->parse('main');
@@ -74,6 +75,7 @@ class Promo {
       $xtpl->assign('next_promo', $this->parse_time($promo['next_time']));
       $xtpl->assign('note', $promo['note']);
       $xtpl->assign('file', $promo['file']);
+      if (strlen($promo['file'])) $xtpl->parse('main.row.file');
       $xtpl->parse('main.row');
     }
     $xtpl->parse('main');

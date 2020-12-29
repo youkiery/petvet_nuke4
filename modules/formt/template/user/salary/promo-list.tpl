@@ -19,7 +19,13 @@
       <td> {last_promo} </td>
       <td> {next_promo} </td>
       <td> {ghichu} </td>
-      <td> {file} </td>
+      <td> 
+        <!-- BEGIN: file -->
+        <a href="{file}" target="_blank"> 
+          <span class="glyphicon glyphicon-download-alt"></span>  
+        </a>
+        <!-- END: file -->
+      </td>
       <td> 
         <button class="btn btn-info btn-xs" onclick="historyModal({employid})">
           xem

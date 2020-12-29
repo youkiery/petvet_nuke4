@@ -52,6 +52,7 @@ class Salary {
       $xtpl->assign('formal', $salary['formal']);
       $xtpl->assign('note', $salary['note']);
       $xtpl->assign('file', $salary['file']);
+      if (strlen($salary['file'])) $xtpl->parse('main.row.file');
       $xtpl->parse('main.row');
     }
     $xtpl->parse('main');
@@ -88,6 +89,9 @@ class Salary {
       $xtpl->assign('formal', $salary['formal']);
       $xtpl->assign('note', $salary['note']);
       $xtpl->assign('file', $salary['file']);
+      if ($time > $salary['next_time']) $xtpl->assign('color', 'red');
+      else $xtpl->assign('color', '');
+      if (strlen($salary['file'])) $xtpl->parse('main.row.file');
       $xtpl->parse('main.row');
     }
     $xtpl->parse('main');

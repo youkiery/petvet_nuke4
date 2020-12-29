@@ -19,7 +19,13 @@
       <td> {next_salary} </td>
       <td> {formal} </td>
       <td> {ghichu} </td>
-      <td> {file} </td>
+      <td> 
+        <!-- BEGIN: file   -->
+        <a href="{file}" target="_blank"> 
+          <span class="glyphicon glyphicon-download-alt"></span>  
+        </a>
+        <!-- END: file   -->
+      </td>
       <!-- <td> 
         <button class="btn btn-info btn-xs" onclick="promoUpModal({employid})">
           bổ nhiệm

@@ -49,7 +49,7 @@
 
         <form onsubmit="return promoUp(event)">
           <div class="form-group">
-            <label> Ngày nâng lương </label>
+            <label> Ngày bổ nhiệm </label>
             <div class="input-group">
               <input type="text" class="form-control date" id="promo-up-time" value="{time}">
               <div class="input-group-addon"></div>
