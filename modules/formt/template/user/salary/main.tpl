@@ -18,9 +18,18 @@
 {modal}
 
 <div class="form-group">
-  <button class="btn btn-success" onclick="employInsertModal()">
-    <span class="glyphicon glyphicon-plus"></span> Thêm nhân viên 
-  </button>
+  <div class="row">
+    <form class="col-sm-12" onsubmit="return employInsert(event)">
+      <div class="input-group">
+        <input type="text" class="form-control" id="employ-insert-name" placeholder="Nhập tên nhân viên">
+        <div class="input-group-btn">
+          <button class="btn btn-success">
+            <span class="glyphicon glyphicon-plus"></span> thêm nhân viên
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
 
 <ul class="nav nav-tabs">
@@ -45,10 +54,6 @@
       changeYear: true
     });
   })
-
-  function employInsertModal() {
-    $('#employ-insert-modal').modal('show')
-  }
 
   function employInsert(e) {
     e.preventDefault()

@@ -29,6 +29,9 @@
         <button class="btn btn-info btn-xs" onclick="salaryUpModal({employid})">
           nâng lương
         </button>  
+        <button class="btn btn-danger btn-xs" onclick="employRemoveModal({employid})">
+          xóa
+        </button>  
       </td>
     </tr>
   </tbody>

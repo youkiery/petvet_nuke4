@@ -27,6 +27,9 @@
         <button class="btn btn-info btn-xs" onclick="promoUpModal({employid})">
           bổ nhiệm
         </button>  
+        <button class="btn btn-danger btn-xs" onclick="employRemoveModal({employid})">
+          xóa
+        </button>  
       </td>
     </tr>
   </tbody>
