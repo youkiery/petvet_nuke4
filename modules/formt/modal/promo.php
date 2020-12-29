@@ -25,7 +25,7 @@ class Promo {
     $time = totime($data['time']);
     $next_time = $time + 60 * 60 * 24 * 365.25 * 5; // sau 5 nam bao lai
 
-    $sql = 'insert into `'. $this->prefix .'` (employid, note, time, next_time, file) values('. $data['employid'] .', "'. $data['note'] .'", '. $time .', '. $next_time .', "")';
+    $sql = 'insert into `'. $this->prefix .'` (employid, note, time, next_time, file) values('. $data['employid'] .', "'. $data['note'] .'", '. $time .', '. $next_time .', "'. $data['file'] .'")';
 
     if ($this->db->query($sql)) return 1;
     return 0;
@@ -39,12 +39,15 @@ class Promo {
   }
 
   public function promo_content() {
-    $xtpl = new XTemplate("list.tpl", PATH2);
+    $xtpl = new XTemplate("promo-list.tpl", PATH2);
 
     $employ_list = $this->employ->get_list();
     $index = 1;
+    $time = time();
     foreach ($employ_list as $employid => $employ) {
       $promo = $this->get_last_promo($employid);
+      if ($time > $promo['next_time']) $xtpl->assign('color', 'red');
+      else $xtpl->assign('color', '');
       $xtpl->assign('index', $index++);
       $xtpl->assign('id', $promo['id']);
       $xtpl->assign('employid', $employid);
@@ -59,19 +62,33 @@ class Promo {
     return $xtpl->text();
   }
 
-  public function employ_content() {
-    $xtpl = new XTemplate("employ-content.tpl", PATH2);
+  public function history($employid) {
+    $xtpl = new XTemplate("promo-history.tpl", PATH2);
 
-    $employ_list = $this->employ->get_list();
+    $list = $this->promo_employ($employid);
     $index = 1;
-    foreach ($employ_list as $employid => $employ) {
+    foreach ($list as $promo) {
       $xtpl->assign('index', $index++);
-      $xtpl->assign('id', $employid);
-      $xtpl->assign('name', $employ);
+      $xtpl->assign('id', $promo['id']);
+      $xtpl->assign('last_promo', $this->parse_time($promo['time']));
+      $xtpl->assign('next_promo', $this->parse_time($promo['next_time']));
+      $xtpl->assign('note', $promo['note']);
+      $xtpl->assign('file', $promo['file']);
       $xtpl->parse('main.row');
     }
     $xtpl->parse('main');
     return $xtpl->text();
+  }
+
+  public function promo_employ($employid) {
+    $sql = 'select * from `'. $this->prefix .'` where employid = '. $employid .' order by id desc';
+    $query = $this->db->query($sql);
+
+    $list = array();
+    while ($promo = $query->fetch()) {
+      $list []= $promo;
+    }
+    return $list;
   }
 
   public function get_last_promo($employid) {
@@ -85,14 +102,5 @@ class Promo {
   public function parse_time($time) {
     if (intval($time) > 0) return date('d/m/Y', $time);
     return 'Chưa bổ nhiệm';
-  }
-
-  public function modal() {
-    $xtpl = new XTemplate("modal.tpl", PATH2);
-
-    $xtpl->assign('time', date('d/m/Y'));
-    $xtpl->assign('employ_insert_content', $this->employ_content());
-    $xtpl->parse('main');
-    return $xtpl->text();
   }
 }

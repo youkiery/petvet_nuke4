@@ -43,7 +43,7 @@ if (!empty($action)) {
       }
     break;
     case 'employ-remove':
-      $id = $nv_Request->get_int('id', 'post/get', "0");
+      $employid = $nv_Request->get_int('employid', 'post/get', "0");
       
       if ($salary->employ->remove($id)) {
         $salary->remove($id);
@@ -61,6 +61,21 @@ if (!empty($action)) {
         $result->html = $salary->salary_content();
       }
     break;
+    case 'promo-up':
+      $data = $nv_Request->get_array('data', 'post/get');
+
+      if ($promo->insert($data)) {
+        $result->status = 1;
+        $result->html = $promo->promo_content();
+      }
+    break;
+    case 'history':
+      $employid = $nv_Request->get_int('employid', 'post/get', "0");
+
+      $result->status = 1;
+      if ($type === 'promo') $result->html = $promo->history($employid);
+      else $result->html = $salary->history($employid);
+    break;
 	}
 
 	echo json_encode($result);
@@ -68,18 +83,29 @@ if (!empty($action)) {
 }
 
 $xtpl = new XTemplate("main.tpl", PATH2);
-
-if ($type = 'promo') {
+if ($type === 'promo') {
   $xtpl->assign('active_promo', 'class="active"');
+  $xtpl->assign('link_salary', '/' . $module_name .'/salary');
+  $xtpl->assign('link_promo', '#');
+  $xtpl->assign('content', $promo->promo_content());
 }
-$xtpl->assign('active_promo', 'class="active"'); 
+else {
+  $xtpl->assign('active_salary', 'class="active"'); 
+  $xtpl->assign('link_salary', '#');
+  $xtpl->assign('link_promo', '/' . $module_name .'/salary?type=promo');
+  $xtpl->assign('content', $salary->salary_content());
+}
 
-$xtpl->assign('modal', $salary->modal());
-$xtpl->assign('content', $salary->salary_content());
+$xtpl2 = new XTemplate("modal.tpl", PATH2);
+
+$xtpl2->assign('time', date('d/m/Y'));
+$xtpl2->assign('employ_insert_content', $salary->employ_content());
+$xtpl2->parse('main');
+
+$xtpl->assign('modal', $xtpl2->text());
 $xtpl->parse('main');
 $contents = $xtpl->text();
 
 include ( NV_ROOTDIR . "/includes/header.php" );
 echo nv_site_theme($contents);
 include ( NV_ROOTDIR . "/includes/footer.php" );
-

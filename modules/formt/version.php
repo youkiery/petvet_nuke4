@@ -13,8 +13,8 @@ if (!defined('NV_ADMIN') or !defined('NV_MAINFILE')) {
 
 $module_version = array(
     'name' => 'Phiếu văn bản',
-    'modfuncs' => 'main, mainer, test, lp1, salary, promo',
-    'submenu' => 'main, mainer, test, lp1, salary, promo',
+    'modfuncs' => 'main, mainer, test, lp1, salary',
+    'submenu' => 'main, mainer, test, lp1, salary',
     'is_sysmod' => 1,
     'virtual' => 1,
     'version' => '4.3.04',

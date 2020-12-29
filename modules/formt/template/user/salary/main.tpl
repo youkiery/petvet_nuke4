@@ -9,6 +9,10 @@
     text-align: center;
     vertical-align: inherit !important;
   }
+
+  .red {
+    background: pink;
+  }
 </style>
 
 {modal}
@@ -20,24 +24,9 @@
 </div>
 
 <ul class="nav nav-tabs">
-  <li {active_salary}><a data-toggle="tab" href="#salary"> Nâng lương </a></li>
-  <li {active_promo}><a data-toggle="tab" href="#promo"> Bổ nhiệm </a></li>
+  <li {active_salary}><a href="{link_salary}"> Nâng lương </a></li>
+  <li {active_promo}><a href="{link_promo}"> Bổ nhiệm </a></li>
 </ul>
-
-<div class="tab-content">
-  <div id="home" class="tab-pane fade in active">
-    <h3>HOME</h3>
-    <p>Some content.</p>
-  </div>
-  <div id="menu1" class="tab-pane fade">
-    <h3>Menu 1</h3>
-    <p>Some content in menu 1.</p>
-  </div>
-  <div id="menu2" class="tab-pane fade">
-    <h3>Menu 2</h3>
-    <p>Some content in menu 2.</p>
-  </div>
-</div>
 
 <div id="content">
   {content}
@@ -74,10 +63,10 @@
     return false
   }
 
-  function employRemove(id) {
+  function employRemove(employid) {
     vhttp.checkelse('', {
       action: 'employ-remove',
-      id: id
+      employid: employid
     }).then(response => {
       $('#content').html(response.html)
       $('#employ-insert-content').html(response.html2)
@@ -97,6 +86,7 @@
         employid: global.id,
         time: $('#salary-up-time').val(),
         formal: $('#salary-up-formal').val(),
+        file: $('#salary-up-file').val(),
         note: $('#salary-up-note').val(),
       }
     }).then(response => {
@@ -104,6 +94,38 @@
       $('#salary-up-modal').modal('hide')
     })
     return 0
+  }
+  
+  function promoUpModal(employid) {
+    global.id = employid
+    $('#promo-up-modal').modal('show')
+  }
+
+  function promoUp(e) {
+    e.preventDefault()
+    vhttp.checkelse('', {
+      action: 'promo-up',
+      data: {
+        employid: global.id,
+        time: $('#promo-up-time').val(),
+        file: $('#promo-up-file').val(),
+        note: $('#promo-up-note').val(),
+      }
+    }).then(response => {
+      $('#content').html(response.html)
+      $('#promo-up-modal').modal('hide')
+    })
+    return 0
+  }
+
+  function historyModal(employid) {
+    vhttp.checkelse('', {
+      action: 'history',
+      employid: employid
+    }).then(response => {
+      $('#history-content').html(response.html)
+      $('#history-modal').modal('show')
+    })
   }
 </script>
 <!-- END: main -->
