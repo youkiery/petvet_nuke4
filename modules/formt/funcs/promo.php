@@ -19,7 +19,6 @@ $salary = new Salary();
 $page_title = "Lương và bổ nhiệm lại";
 
 $action = $nv_Request->get_string('action', 'post/get', "");
-$type = $nv_Request->get_string('type', 'post/get', "");
 if (!empty($action)) {
 	switch ($action) {
     case 'employ-insert':
@@ -38,27 +37,27 @@ if (!empty($action)) {
           'time' => date('Y/m/d')
         ));
         $result->status = 1;
-        $result->html = $salary->salary_content();
-        $result->html2 = $salary->employ_content();
+        $result->html = $promo->promo_content();
+        $result->html2 = $promo->employ_content();
       }
     break;
     case 'employ-remove':
       $id = $nv_Request->get_int('id', 'post/get', "0");
       
-      if ($salary->employ->remove($id)) {
+      if ($promo->employ->remove($id)) {
         $salary->remove($id);
         $promo->remove($id);
         $result->status = 1;
-        $result->html = $salary->salary_content();
-        $result->html2 = $salary->employ_content();
+        $result->html = $promo->promo_content();
+        $result->html2 = $promo->employ_content();
       }
       break;
-    case 'salary-up':
+    case 'promo-up':
       $data = $nv_Request->get_array('data', 'post/get');
 
-      if ($salary->insert($data)) {
+      if ($promo->insert($data)) {
         $result->status = 1;
-        $result->html = $salary->salary_content();
+        $result->html = $promo->promo_content();
       }
     break;
 	}
@@ -69,13 +68,8 @@ if (!empty($action)) {
 
 $xtpl = new XTemplate("main.tpl", PATH2);
 
-if ($type = 'promo') {
-  $xtpl->assign('active_promo', 'class="active"');
-}
-$xtpl->assign('active_promo', 'class="active"'); 
-
-$xtpl->assign('modal', $salary->modal());
-$xtpl->assign('content', $salary->salary_content());
+$xtpl->assign('modal', $promo->modal());
+$xtpl->assign('content', $promo->promo_content());
 $xtpl->parse('main');
 $contents = $xtpl->text();
 

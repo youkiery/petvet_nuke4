@@ -14,6 +14,7 @@ if (!defined('NV_SYSTEM')) {
 define('NV_IS_FORM', true); 
 define("PATH", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_name);
 define("PATH2", NV_ROOTDIR . "/modules/" . $module_file . '/template/user/' . $op);
+define("MODAL_PATH", NV_ROOTDIR . "/modules/" . $module_file . '/modal/');
 
 require NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php';
 
