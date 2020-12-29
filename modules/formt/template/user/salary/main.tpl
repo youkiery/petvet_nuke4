@@ -63,13 +63,19 @@
     return false
   }
 
-  function employRemove(employid) {
+  function employRemoveModal(employid) {
+    global.id = employid
+    $('#employ-remove-modal').modal('show')
+  }
+
+  function employRemove() {
     vhttp.checkelse('', {
       action: 'employ-remove',
-      employid: employid
+      employid: global.id
     }).then(response => {
       $('#content').html(response.html)
       $('#employ-insert-content').html(response.html2)
+      $('#employ-remove-modal').modal('hide')
     })
   }
 

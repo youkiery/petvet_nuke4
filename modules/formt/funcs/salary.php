@@ -45,9 +45,9 @@ if (!empty($action)) {
     case 'employ-remove':
       $employid = $nv_Request->get_int('employid', 'post/get', "0");
       
-      if ($salary->employ->remove($id)) {
-        $salary->remove($id);
-        $promo->remove($id);
+      if ($salary->employ->remove($employid)) {
+        $salary->remove($employid);
+        $promo->remove($employid);
         $result->status = 1;
         $result->html = $salary->salary_content();
         $result->html2 = $salary->employ_content();

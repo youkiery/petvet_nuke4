@@ -117,5 +117,23 @@
   </div>
 </div>
 
+<div class="modal" id="employ-remove-modal" role="dialog">
+  <div class="modal-dialog modal-fade modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="form-group">
+          Cảnh báo
+          <div class="close" role="button" data-dismiss="modal"> &times; </div>
+        </div>
 
+        <div class="text-center">
+          <p> Xóa nhân viên đồng thời sẽ xóa toàn bộ dữ liệu liên quan </p>
+          <button class="btn btn-danger" onclick="employRemove()">
+            Xác nhận
+          </button>
+        </div>
+      </div> 
+    </div>
+  </div>
+</div>
 <!-- END: main -->

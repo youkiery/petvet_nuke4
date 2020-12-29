@@ -13,7 +13,7 @@
       <td> {index} </td>
       <td> {name} </td>
       <td>  
-        <button class="btn btn-danger btn-xs" onclick="employRemove({id})">
+        <button class="btn btn-danger btn-xs" onclick="employRemoveModal({id})">
           xóa
         </button>
       </td>
