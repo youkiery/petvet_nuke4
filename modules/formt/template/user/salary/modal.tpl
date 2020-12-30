@@ -69,7 +69,10 @@
         <form onsubmit="return promoUp(event)">
           <div class="form-group">
             <label> Họ và tên </label>
-            <input type="text" class="form-control" id="promo-up-name" required>
+            <div class="relative">
+              <input type="text" class="form-control" id="promo-up-name" required>
+              <div class="suggest" id="promo-up-name-suggest"> </div>
+            </div>
           </div>
           <div class="rows">
             <div class="form-group col-6">

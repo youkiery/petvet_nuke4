@@ -24,7 +24,7 @@ class Remind {
   public function get_list($type) {
     $list = array();
 
-    $sql = 'select * from `'. $this->prefix .'` ' . (strlen($type) ? ' where type = "'. $type .'"' : '');
+    $sql = 'select * from `'. $this->prefix .'` ' . (strlen($type) ? ' where type = "'. $type .'"' : '') . ' order by rate, name desc';
     $query = $this->db->query($sql);
 
     while ($remind = $query->fetch()) {

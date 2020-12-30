@@ -83,6 +83,7 @@ class Salary {
     $sql = 'select * from `'. $this->prefix .'` where employ like "%'. $filter['name'] .'%" and note like "%'. $filter['note'] .'%" order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
     $query = $this->db->query($sql);
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+    $time = time();
 
     while ($salary = $query->fetch()) {
       $xtpl->assign('index', $index++);
