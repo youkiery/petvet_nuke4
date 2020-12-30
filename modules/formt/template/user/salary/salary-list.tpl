@@ -1,4 +1,10 @@
 <!-- BEGIN: main -->
+<div class="form-group">
+  <button class="btn btn-success" onclick="salaryUpModal()">
+    <span class="glyphicon glyphicon-plus"></span> Nâng lương
+  </button>
+</div>
+
 <table class="table table-bordered table-hover">
   <thead>
     <tr>
@@ -16,11 +22,11 @@
   <tbody>
     <tr rel="{id}" class="{color}">
       <td> {index} </td>
-      <td> {name} </td>
+      <td> {employ} </td>
       <td> {last_salary} </td>
       <td> {next_salary} </td>
       <td> {formal} </td>
-      <td> {ghichu} </td>
+      <td> {note} </td>
       <td> 
         <!-- BEGIN: file -->
         <a href="{file}" target="_blank"> 
@@ -29,7 +35,7 @@
         <!-- END: file -->
       </td>
       <td> 
-        <button class="btn btn-info btn-xs" onclick="historyModal({employid})">
+        <!-- <button class="btn btn-info btn-xs" onclick="historyModal({employid})">
           xem
         </button>  
         <button class="btn btn-info btn-xs" onclick="salaryUpModal({employid})">
@@ -38,9 +44,10 @@
         <button class="btn btn-danger btn-xs" onclick="employRemoveModal({employid})">
           xóa
         </button>  
-      </td>
+      </td> -->
     </tr>
   </tbody>
   <!-- END: row -->
 </table>
+{nav}
 <!-- END: main -->

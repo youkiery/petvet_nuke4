@@ -10,11 +10,17 @@
 if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
-
 require_once(MODAL_PATH . '/promo.php');
 require_once(MODAL_PATH . '/salary.php');
 $promo = new Promo();
 $salary = new Salary();
+
+$filter = array(
+  'name' => $nv_Request->get_string('name', 'get', ''),
+  'note' => $nv_Request->get_string('note', 'get', ''),
+  'page' => $nv_Request->get_string('page', 'get', '1'),
+  'limit' => $nv_Request->get_string('limit', 'get', '10'),
+);
 
 $page_title = "Lương và bổ nhiệm lại";
 
@@ -22,42 +28,44 @@ $action = $nv_Request->get_string('action', 'post/get', "");
 $type = $nv_Request->get_string('type', 'post/get', "");
 if (!empty($action)) {
 	switch ($action) {
-    case 'employ-insert':
-      $name = $nv_Request->get_string('name', 'post/get', "");
+    // case 'employ-insert':
+    //   $name = $nv_Request->get_string('name', 'post/get', "");
       
-      if ($employid = $salary->employ->insert($name)) {
-        $salary->insert(array(
-          'employid' => $employid,
-          'formal' => '',
-          'note' => '',
-          'time' => date('Y/m/d')
-        ));
-        $promo->insert(array(
-          'employid' => $employid,
-          'note' => '',
-          'time' => date('Y/m/d')
-        ));
-        $result->status = 1;
-        $result->html = $salary->salary_content();
-        $result->html2 = $salary->employ_content();
-      }
-    break;
-    case 'employ-remove':
-      $employid = $nv_Request->get_int('employid', 'post/get', "0");
+    //   if ($employid = $salary->employ->insert($name)) {
+    //     $salary->insert(array(
+    //       'employid' => $employid,
+    //       'formal' => '',
+    //       'note' => '',
+    //       'time' => date('Y/m/d')
+    //     ));
+    //     $promo->insert(array(
+    //       'employid' => $employid,
+    //       'note' => '',
+    //       'time' => date('Y/m/d')
+    //     ));
+    //     $result->status = 1;
+    //     $result->html = $salary->salary_content();
+    //     $result->html2 = $salary->employ_content();
+    //   }
+    // break;
+    // case 'employ-remove':
+    //   $employid = $nv_Request->get_int('employid', 'post/get', "0");
       
-      if ($salary->employ->remove($employid)) {
-        $salary->remove($employid);
-        $promo->remove($employid);
-        $result->status = 1;
-        $result->html = $salary->salary_content();
-        $result->html2 = $salary->employ_content();
-      }
-      break;
+    //   if ($salary->employ->remove($employid)) {
+    //     $salary->remove($employid);
+    //     $promo->remove($employid);
+    //     $result->status = 1;
+    //     $result->html = $salary->salary_content();
+    //     $result->html2 = $salary->employ_content();
+    //   }
+    //   break;
     case 'salary-up':
       $data = $nv_Request->get_array('data', 'post/get');
 
       if ($salary->insert($data)) {
         $result->status = 1;
+        $result->employ = $salary->remind->get_list('employ');;
+        $result->formal = $salary->remind->get_list('formal');;
         $result->html = $salary->salary_content();
       }
     break;
@@ -66,16 +74,17 @@ if (!empty($action)) {
 
       if ($promo->insert($data)) {
         $result->status = 1;
+        $result->employ = $salary->remind->get_list('employ');
         $result->html = $promo->promo_content();
       }
     break;
-    case 'history':
-      $employid = $nv_Request->get_int('employid', 'post/get', "0");
+    // case 'history':
+    //   $employid = $nv_Request->get_int('employid', 'post/get', "0");
 
-      $result->status = 1;
-      if ($type === 'promo') $result->html = $promo->history($employid);
-      else $result->html = $salary->history($employid);
-    break;
+    //   $result->status = 1;
+    //   if ($type === 'promo') $result->html = $promo->history($employid);
+    //   else $result->html = $salary->history($employid);
+    // break;
 	}
 
 	echo json_encode($result);
@@ -83,11 +92,16 @@ if (!empty($action)) {
 }
 
 $xtpl = new XTemplate("main.tpl", PATH2);
+
+$xtpl->assign('name', $filter['name']);
+$xtpl->assign('note', $filter['note']);
+
 if ($type === 'promo') {
   $xtpl->assign('active_promo', 'class="active"');
   $xtpl->assign('link_salary', '/' . $module_name .'/salary');
   $xtpl->assign('link_promo', '#');
   $xtpl->assign('content', $promo->promo_content());
+  $xtpl->parse('main.promo');
 }
 else {
   $xtpl->assign('active_salary', 'class="active"'); 
@@ -97,11 +111,14 @@ else {
 }
 
 $xtpl2 = new XTemplate("modal.tpl", PATH2);
-
-$xtpl2->assign('time', date('d/m/Y'));
-$xtpl2->assign('employ_insert_content', $salary->employ_content());
+$time = time();
+$xtpl2->assign('time', date('d/m/Y', $time));
+$xtpl2->assign('next_salary_time', date('d/m/Y', $time + 60 * 60 * 24 * 365.25 * 3));
+$xtpl2->assign('next_promo_time', date('d/m/Y', $time + 60 * 60 * 24 * 365.25 * 5));
 $xtpl2->parse('main');
 
+$xtpl->assign('employ', implode('|', $salary->remind->get_list('employ')));
+$xtpl->assign('formal', implode('|', $salary->remind->get_list('formal')));
 $xtpl->assign('modal', $xtpl2->text());
 $xtpl->parse('main');
 $contents = $xtpl->text();
@@ -109,3 +126,20 @@ $contents = $xtpl->text();
 include ( NV_ROOTDIR . "/includes/header.php" );
 echo nv_site_theme($contents);
 include ( NV_ROOTDIR . "/includes/footer.php" );
+
+function navi_generater($number, $page, $limit) {
+  global $module_name, $op, $type, $filter;
+  $link .= "/$module_name/$op/?name=$filter[name]&note=$filter[note]";
+  if ($type == 'promo')  $link = $link . '&type=promo';
+
+  $total_pages = ceil($number / $limit);
+  $html = '';
+
+  for ($i = 1; $i <= $total_pages; $i++) { 
+    if ($i == $page) $html .= '<li class="active"><a href="'. $link .'&page='. $i .'"> '. $i .' </a></li>';
+    else $html .= '<li><a href="'. $link .'&page='. $i .'"> '. $i .' </a></li>';
+  }
+  return '<ul class="pagination">
+    '. $html .'
+  </ul>';
+}

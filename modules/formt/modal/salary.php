@@ -1,18 +1,18 @@
 <?php
-include_once(MODAL_PATH . '/employ.php');
+include_once(MODAL_PATH . '/remind.php');
 class Salary {
-  public $employ;
+  public $remind;
   public $prefix;
   public $db;
   public function __construct() {
     global $db;
 
     $this->db = $db;
-    $this->employ = new Employ();
+    $this->remind = new Remind();
     $this->prefix = PREFIX .'_salary';
     $this->default = array(
       'id' => 0,
-      'employid' => 0,
+      'employ' => '',
       'last_salary' => 0,
       'next_salary' => 0,
       'formal' => '',
@@ -24,66 +24,70 @@ class Salary {
   // id, employid, formal, note, time, file, next_time
   function insert($data) {
     $time = totime($data['time']);
-    $next_time = $time + 60 * 60 * 24 * 365.25 * 3; // sau 3 nam bao lai
+    $next_time = totime($data['next_time']);
+    $this->remind->check($data['name'], 'employ');
+    $this->remind->check($data['formal'], 'formal');
 
-    $sql = 'insert into `'. $this->prefix .'` (employid, formal, note, time, next_time, file) values('. $data['employid'] .', "'. $data['formal'] .'", "'. $data['note'] .'", '. $time .', '. $next_time .', "'. $data['file'] .'")';
-
-    if ($this->db->query($sql)) return 1;
-    return 0;
-  }
-
-  function remove($employid) {
-    $sql = 'delete from `'. $this->prefix .'` where employid = '. $employid;
+    $sql = 'insert into `'. $this->prefix .'` (employ, formal, note, time, next_time, file) values("'. $data['name'] .'", "'. $data['formal'] .'", "'. $data['note'] .'", '. $time .', '. $next_time .', "'. $data['file'] .'")';
 
     if ($this->db->query($sql)) return 1;
     return 0;
   }
 
-  public function history($employid) {
-    $xtpl = new XTemplate("salary-history.tpl", PATH2);
+  // function remove($employid) {
+  //   $sql = 'delete from `'. $this->prefix .'` where employid = '. $employid;
 
-    $list = $this->salary_employ($employid);
-    $index = 1;
-    foreach ($list as $salary) {
-      $xtpl->assign('index', $index++);
-      $xtpl->assign('id', $salary['id']);
-      $xtpl->assign('last_salary', $this->parse_time($salary['time']));
-      $xtpl->assign('next_salary', $this->parse_time($salary['next_time']));
-      $xtpl->assign('formal', $salary['formal']);
-      $xtpl->assign('note', $salary['note']);
-      $xtpl->assign('file', $salary['file']);
-      if (strlen($salary['file'])) $xtpl->parse('main.row.file');
-      $xtpl->parse('main.row');
-    }
-    $xtpl->parse('main');
-    return $xtpl->text();
-  }
+  //   if ($this->db->query($sql)) return 1;
+  //   return 0;
+  // }
 
-  public function salary_employ($employid) {
-    $sql = 'select * from `'. $this->prefix .'` where employid = '. $employid .' order by id desc';
-    $query = $this->db->query($sql);
+  // public function history($employid) {
+  //   $xtpl = new XTemplate("salary-history.tpl", PATH2);
 
-    $list = array();
-    while ($salary = $query->fetch()) {
-      $list []= $salary;
-    }
-    return $list;
-  }
+  //   $list = $this->salary_employ($employid);
+  //   $index = 1;
+  //   foreach ($list as $salary) {
+  //     $xtpl->assign('index', $index++);
+  //     $xtpl->assign('id', $salary['id']);
+  //     $xtpl->assign('last_salary', $this->parse_time($salary['time']));
+  //     $xtpl->assign('next_salary', $this->parse_time($salary['next_time']));
+  //     $xtpl->assign('formal', $salary['formal']);
+  //     $xtpl->assign('note', $salary['note']);
+  //     $xtpl->assign('file', $salary['file']);
+  //     if (strlen($salary['file'])) $xtpl->parse('main.row.file');
+  //     $xtpl->parse('main.row');
+  //   }
+  //   $xtpl->parse('main');
+  //   return $xtpl->text();
+  // }
+
+  // public function salary_employ($employid) {
+  //   $sql = 'select * from `'. $this->prefix .'` where employid = '. $employid .' order by id desc';
+  //   $query = $this->db->query($sql);
+
+  //   $list = array();
+  //   while ($salary = $query->fetch()) {
+  //     $list []= $salary;
+  //   }
+  //   return $list;
+  // }
 
   public function salary_content() {
-    $xtpl = new XTemplate("list.tpl", PATH2);
+    global $filter;
+    $xtpl = new XTemplate("salary-list.tpl", PATH2);
 
-    $employ_list = $this->employ->get_list();
-    $index = 1;
-    $time = time();
-    foreach ($employ_list as $employid => $employ) {
-      $salary = $this->get_last_salary($employid);
-      if ($time > $salary['next_time']) $xtpl->assign('color', 'red');
-      else $xtpl->assign('color', '');
+    $sql = 'select count(id) as number from `'. $this->prefix .'` where employ like "%'. $filter['name'] .'%" and note like "%'. $filter['note'] .'%"';
+    $query = $this->db->query($sql);
+    $number = $query->fetch()['number'];
+
+    $sql = 'select * from `'. $this->prefix .'` where employ like "%'. $filter['name'] .'%" and note like "%'. $filter['note'] .'%" order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+    $query = $this->db->query($sql);
+    $index = ($filter['page'] - 1) * $filter['limit'] + 1;
+
+    while ($salary = $query->fetch()) {
       $xtpl->assign('index', $index++);
       $xtpl->assign('id', $salary['id']);
-      $xtpl->assign('employid', $employid);
-      $xtpl->assign('name', $employ);
+      $xtpl->assign('employ', $salary['employ']);
       $xtpl->assign('last_salary', $this->parse_time($salary['time']));
       $xtpl->assign('next_salary', $this->parse_time($salary['next_time']));
       $xtpl->assign('formal', $salary['formal']);
@@ -98,28 +102,29 @@ class Salary {
     return $xtpl->text();
   }
 
-  public function employ_content() {
-    $xtpl = new XTemplate("employ-content.tpl", PATH2);
+  // public function employ_content() {
+  //   $xtpl = new XTemplate("employ-content.tpl", PATH2);
 
-    $employ_list = $this->employ->get_list();
-    $index = 1;
-    foreach ($employ_list as $employid => $employ) {
-      $xtpl->assign('index', $index++);
-      $xtpl->assign('id', $employid);
-      $xtpl->assign('name', $employ);
-      $xtpl->parse('main.row');
-    }
-    $xtpl->parse('main');
-    return $xtpl->text();
-  }
+  //   $employ_list = $this->employ->get_list();
+  //   $index = 1;
+  //   foreach ($employ_list as $employid => $employ) {
+  //     $xtpl->assign('index', $index++);
+  //     $xtpl->assign('id', $employid);
+  //     $xtpl->assign('name', $employ);
+  //     $xtpl->parse('main.row');
+  //   }
+  //   $xtpl->assign('nav', navi_generater($number, $filter['page'], $filter['limit']));
+  //   $xtpl->parse('main');
+  //   return $xtpl->text();
+  // }
 
-  public function get_last_salary($employid) {
-    $sql = 'select * from `'. $this->prefix .'` where employid = '. $employid .' order by id desc';
-    $query = $this->db->query($sql);
-    $salary = $query->fetch();
-    if (empty($salary)) return $this->default;
-    return $salary;
-  }
+  // public function get_last_salary($employid) {
+  //   $sql = 'select * from `'. $this->prefix .'` where employid = '. $employid .' order by id desc';
+  //   $query = $this->db->query($sql);
+  //   $salary = $query->fetch();
+  //   if (empty($salary)) return $this->default;
+  //   return $salary;
+  // }
 
   public function parse_time($time) {
     if (intval($time) > 0) return date('d/m/Y', $time);

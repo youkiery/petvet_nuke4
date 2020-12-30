@@ -10,15 +10,34 @@
 
         <form onsubmit="return salaryUp(event)">
           <div class="form-group">
-            <label> Ngày nâng lương </label>
-            <div class="input-group">
-              <input type="text" class="form-control date" id="salary-up-time" value="{time}">
-              <div class="input-group-addon"></div>
+            <label> Họ và tên </label>
+            <div class="relative">
+              <input type="text" class="form-control" id="salary-up-name" required>
+              <div class="suggest" id="salary-up-name-suggest"></div>
+            </div>
+          </div>
+          <div class="rows">
+            <div class="form-group col-6">
+              <label> Ngày nâng lương </label>
+              <div class="input-group">
+                <input type="text" class="form-control date" id="salary-up-time" value="{time}">
+                <div class="input-group-addon"></div>
+              </div>
+            </div>
+            <div class="form-group col-6">
+              <label> Ngày nâng lương kế </label>
+              <div class="input-group">
+                <input type="text" class="form-control date" id="salary-up-next-time" value="{next_salary_time}">
+                <div class="input-group-addon"></div>
+              </div>
             </div>
           </div>
           <div class="form-group">
             <label> Hình thức khen thưởng </label>
-            <input type="text" class="form-control" id="salary-up-formal">
+            <div class="relative">
+              <input type="text" class="form-control" id="salary-up-formal">
+              <div class="suggest" id="salary-up-formal-suggest"></div>
+            </div>
           </div>
           <div class="form-group">
             <label> File </label>
@@ -49,10 +68,23 @@
 
         <form onsubmit="return promoUp(event)">
           <div class="form-group">
-            <label> Ngày bổ nhiệm </label>
-            <div class="input-group">
-              <input type="text" class="form-control date" id="promo-up-time" value="{time}">
-              <div class="input-group-addon"></div>
+            <label> Họ và tên </label>
+            <input type="text" class="form-control" id="promo-up-name" required>
+          </div>
+          <div class="rows">
+            <div class="form-group col-6">
+              <label> Ngày bổ nhiệm </label>
+              <div class="input-group">
+                <input type="text" class="form-control date" id="promo-up-time" value="{time}">
+                <div class="input-group-addon"></div>
+              </div>
+            </div>
+            <div class="form-group col-6">
+              <label> Ngày bổ nhiệm kế </label>
+              <div class="input-group">
+                <input type="text" class="form-control date" id="promo-up-next-time" value="{next_promo_time}">
+                <div class="input-group-addon"></div>
+              </div>
             </div>
           </div>
           <div class="form-group">
@@ -73,7 +105,7 @@
   </div>
 </div>
 
-<div class="modal" id="history-modal" role="dialog">
+<!-- <div class="modal" id="history-modal" role="dialog">
   <div class="modal-dialog modal-fade modal-lg">
     <div class="modal-content">
       <div class="modal-body">
@@ -86,9 +118,9 @@
       </div> 
     </div>
   </div>
-</div>
+</div> -->
 
-<div class="modal" id="employ-remove-modal" role="dialog">
+<!-- <div class="modal" id="employ-remove-modal" role="dialog">
   <div class="modal-dialog modal-fade modal-sm">
     <div class="modal-content">
       <div class="modal-body">
@@ -106,5 +138,5 @@
       </div> 
     </div>
   </div>
-</div>
+</div> -->
 <!-- END: main -->
