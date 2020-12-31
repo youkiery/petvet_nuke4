@@ -10,6 +10,7 @@
 if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
+$user_list = array('1', '5');
 require_once(MODAL_PATH . '/promo.php');
 require_once(MODAL_PATH . '/salary.php');
 $promo = new Promo();
@@ -26,11 +27,130 @@ $const = array(
   'Bậc 9' => 4.98
 );
 
+// $list = array(
+//   array("Nguyễn Cảnh Tự", "01/12/2011", "01/12/2014", "03 năm"),
+//   array("Võ Quốc Cường", "01/01/2010", "01/01/2013", "03 năm"),
+//   array("Lê Chí Kiên", "01/06/2010", "01/06/2013", "03 năm"),
+//   array("Nguyễn Văn Quyền", "01/04/2012", "01/04/2015", "03 năm"),
+//   array("Nguyễn Ngọc Xuân", "01/01/2010", "01/01/2013", "03 năm"),
+//   array("Đinh Công Doãn", "01/04/2010", "01/04/2013", "03 năm"),
+//   array("Nguyễn Thị Ngọc Anh", "01/08/2010", "01/08/2013", "03 năm"),
+//   array("Nguyễn Thị Xuân Anh", "01/05/2011", "01/05/2014", "03 năm"),
+//   array("Nguyễn Thị Hà", "01/08/2011", "01/08/2014", "03 năm"),
+//   array("Trần Đình Hùng", "01/05/2012", "01/05/2014", "02 năm"),
+//   array("Đặng Mạnh Hùng", "01/08/2012", "01/08/2015", "03 năm"),
+//   array("Võ Nguyên Thạch Anh", "01/08/2012", "01/08/2015", "03 năm"),
+//   array("Nguyễn Thị Nội", "01/03/2012", "01/03/2014", "02 năm"),
+//   array("Trần Thanh Xuân", "01/12/2013", "01/12/2016", "03 năm"),
+//   array("Nguyễn Cảnh Tự", "01/12/2013", "01/12/2016", "03 năm"),
+//   array("Võ Quốc Cường", "01/01/2013", "01/01/2016", "03 năm"),
+//   array("Lê Chí Kiên", "01/06/2013", "01/06/2016", "03 năm"),
+//   array("Nguyễn Văn Quyền", "01/07/2014", "01/07/2017", "03 năm"),
+//   array("Nguyễn Ngọc Xuân", "01/01/2013", "01/01/2016", "03 năm"),
+//   array("Đinh Công Doãn", "01/04/2013", "01/04/2016", "03 năm"),
+//   array("Nguyễn Thị Ngọc Anh", "01/08/2013", "01/08/2016", "03 năm"),
+//   array("Nguyễn Thị Xuân Anh", "01/05/2014", "01/05/2017", "03 năm"),
+//   array("Nguyễn Thị Hà", "01/02/2014", "01/02/2017", "03 năm"),
+//   array("Trần Đình Hùng", "01/05/2014", "01/05/2016", "02 năm"),
+//   array("Đặng Mạnh Hùng", "01/8/2013", "01/8/2013", "03 năm"),
+//   array("Võ Nguyên Thạch Anh", "01/8/2013", "01/8/2013", "03 năm"),
+//   array("Nguyễn Thị Nội", "01/03/2014", "01/03/2016", "02 năm"),
+//   array("Trần Thanh Xuân", "01/12/2013", "01/12/2016", ""),
+//   array("Nguyễn Cảnh Tự", "01/12/2013", "01/12/2016", "03 năm"),
+//   array("Võ Quốc Cường", "01/01/2013", "01/01/2016", "03 năm"),
+//   array("Lê Chí Kiên", "01/06/2013", "01/06/2016", "03 năm"),
+//   array("Nguyễn Văn Quyền", "01/07/2014", "01/07/2017", "03 năm"),
+//   array("Nguyễn Ngọc Xuân", "01/01/2013", "01/01/2016", "03 năm"),
+//   array("Đinh Công Doãn", "01/04/2013", "01/04/2016", "03 năm"),
+//   array("Nguyễn Thị Ngọc Anh", "01/08/2013", "01/08/2016", "03 năm"),
+//   array("Nguyễn Thị Xuân Anh", "01/05/2014", "01/05/2017", "03 năm"),
+//   array("Nguyễn Thị Hà", "01/02/2014", "01/02/2017", "03 năm"),
+//   array("Trần Đình Hùng", "01/05/2014", "01/05/2016", "02 năm"),
+//   array("Đặng Mạnh Hùng", "01/8/2013", "01/8/2013", "03 năm"),
+//   array("Võ Nguyên Thạch Anh", "01/8/2013", "01/8/2013", "03 năm"),
+//   array("Nguyễn Thị Nội", "01/03/2014", "01/03/2016", "02 năm"),
+//   array("Trần Thanh Xuân", "01/12/2016", "01/12/2019", "03 năm"),
+//   array("Nguyễn Cảnh Tự", "01/12/2016", "01/12/2019", "03 năm"),
+//   array("Võ Quốc Cường", "01/01/2016", "01/01/2019", "03 năm"),
+//   array("Lê Chí Kiên", "01/06/2016", "01/06/2019", "03 năm"),
+//   array("Nguyễn Văn Quyền", "01/07/2017", "01/07/2020", "03 năm"),
+//   array("Nguyễn Ngọc Xuân", "01/01/2016", "01/01/2019", "03 năm"),
+//   array("Đinh Công Doãn", "01/04/2016", "01/04/2019", "03 năm"),
+//   array("Nguyễn Thị Ngọc Anh", "01/08/2016", "01/08/2019", "03 năm"),
+//   array("Nguyễn Thị Xuân Anh", "01/05/2017", "01/05/2020", "03 năm"),
+//   array("Nguyễn Thị Hà", "01/02/2017", "01/02/2020", "03 năm"),
+//   array("Trần Đình Hùng", "01/05/2016", "01/05/2018", "02 năm"),
+//   array("Đặng Mạnh Hùng", "01/8/2016", "01/8/2019", "03 năm"),
+//   array("Võ Nguyên Thạch Anh", "01/8/2016", "01/8/20139", "03 năm"),
+//   array("Nguyễn Thị Nội", "01/03/2016", "01/03/2018", "02 năm"),
+//   array("Trần Thanh Xuân", "01/12/2016", "01/12/2019", "03 năm"),
+//   array("Võ Quốc Cường", "01/01/2016", "01/01/2019", "03 năm"),
+//   array("Lê Chí Kiên", "01/06/2016", "01/06/2019", "03 năm"),
+//   array("Nguyễn Văn Quyền", "01/07/2017", "01/07/2020", "03 năm"),
+//   array("Nguyễn Ngọc Xuân", "01/01/2016", "01/01/2019", "03 năm"),
+//   array("Đinh Công Doãn", "01/04/2016", "01/04/2019", "03 năm"),
+//   array("Nguyễn Thị Ngọc Anh", "01/08/2016", "01/08/2019", "03 năm"),
+//   array("Nguyễn Thị Xuân Anh", "01/05/2017", "01/05/2020", "03 năm"),
+//   array("Nguyễn Thị Hà", "01/02/2017", "01/02/2020", "03 năm"),
+//   array("Trần Đình Hùng", "01/05/2016", "01/11/2021", "02 năm"),
+//   array("Đặng Mạnh Hùng", "01/8/2016", "01/8/2019", "03 năm"),
+//   array("Võ Nguyên Thạch Anh", "01/8/2016", "01/8/2019", "03 năm"),
+//   array("Nguyễn Thị Nội", "01/03/2016", "01/03/2018", "02 năm"),
+//   array("Trần Thanh Xuân", "01/12/2016", "01/12/2019", "03 năm"),
+//   array("Võ Quốc Cường", "01/01/2019", "01/01/2022", "03 năm"),
+//   array("Lê Chí Kiên", "01/06/2019", "01/06/2022", "03 năm"),
+//   array("Nguyễn Văn Quyền", "01/07/2017", "01/07/2020", "03 năm"),
+//   array("Nguyễn Ngọc Xuân", "01/01/2019", "01/01/2022", "03 năm"),
+//   array("Đinh Công Doãn", "01/04/2019", "01/04/2022", "03 năm"),
+//   array("Nguyễn Thị Ngọc Anh", "01/08/2018", "01/08/2021", "03 năm"),
+//   array("Nguyễn Thị Xuân Anh", "01/05/2017", "01/05/2020", "03 năm"),
+//   array("Nguyễn Thị Hà", "01/02/2017", "01/02/2020", "03 năm"),
+//   array("Trần Đình Hùng", "01/11/2019", "01/11/2021", "02 năm"),
+//   array("Đặng Mạnh Hùng", "01/08/2019", "01/08/2022", "03 năm"),
+//   array("Võ Nguyên Thạch Anh", "01/8/2018", "01/8/2021", "03 năm"),
+//   array("Nguyễn Thị Nội", "01/09/2019", "01/09/2021", "02 năm"),
+//   array("Trần Thanh Xuân", "01/12/2019", "01/12/2022", "03 năm"),
+//   array("Võ Quốc Cường", "01/01/2019", "01/01/2022", "03 năm"),
+//   array("Lê Chí Kiên", "01/06/2018", "01/09/2020", "Trước hạn 9T"),
+//   array("Nguyễn Văn Quyền", "01/07/2017", "01/07/2020", "03 năm"),
+//   array("Nguyễn Ngọc Xuân", "01/01/2019", "01/01/2022", "03 năm"),
+//   array("Đinh Công Doãn", "01/04/2018", "01/04/2021", "03 năm"),
+//   array("Nguyễn Thị Ngọc Anh", "01/08/2018", "01/08/2021", "03 năm"),
+//   array("Nguyễn Thị Xuân Anh", "01/05/2017", "01/05/2020", "03 năm"),
+//   array("Nguyễn Thị Hà", "01/02/2019", "01/02/2022", "03 năm"),
+//   array("Trần Đình Hùng", "01/11/2019", "01/11/2021", "02 năm"),
+//   array("Đặng Mạnh Hùng", "01/08/2019", "01/08/2022", "03 năm"),
+//   array("Võ Nguyên Thạch Anh", "01/08/2018", "01/08/2021", "03 năm"),
+//   array("Nguyễn Thị Nội", "01/09/2019", "01/09/2021", "02 năm"),
+//   array("Trần Thanh Xuân", "01/12/2019", "01/12/2022", "03 năm"),
+//   array("Võ Quốc Cường", "01/01/2019", "01/01/2022", "03 năm"),
+//   array("Lê Chí Kiên", "01/06/2020", "01/09/2023", "03 năm"),
+//   array("Nguyễn Văn Quyền", "01/07/2020", "01/07/2021", "01 năm"),
+//   array("Nguyễn Ngọc Xuân", "01/01/2019", "01/01/2022", "03 năm"),
+//   array("Đinh Công Doãn", "01/04/2018", "01/04/2021", "03 năm"),
+//   array("Nguyễn Thị Ngọc Anh", "01/08/2018", "01/08/2021", "03 năm"),
+//   array("Nguyễn Thị Xuân Anh", "01/05/2020", "01/05/2023", "03 năm"),
+//   array("Nguyễn Thị Hà", "01/02/2019", "01/02/2022", "03 năm"),
+//   array("Trần Đình Hùng", "01/11/2019", "01/11/2021", "02 năm trước hạn"),
+//   array("Đặng Mạnh Hùng", "01/08/2019", "01/08/2022", "03 năm"),
+//   array("Võ Nguyên Thạch Anh", "01/08/2018", "01/08/2021", "03 năm"),
+//   array("Nguyễn Thị Nội", "01/09/2019", "01/09/2021", "02 năm"),
+//   array("Trần Thanh Xuân", "01/12/2019", "01/12/2022", "03 năm")
+// );
+
+// foreach ($list as $item) {
+//   $time = totime($item['1']);
+//   $nexttime = totime($item['2']);
+//   $sql = "insert into `pet_form_salary` (`employ`, `time`, `next_time`, `note`, `file`, `formal`, `level`) values('$item[0]', $time, $nexttime, '$item[3]', '', '', '');";
+//   echo $sql . '<br>';
+// }
+// die();
+
 $filter = array(
   'name' => $nv_Request->get_string('name', 'get', ''),
   'note' => $nv_Request->get_string('note', 'get', ''),
   'page' => $nv_Request->get_string('page', 'get', '1'),
-  'limit' => $nv_Request->get_string('limit', 'get', '10'),
+  'limit' => $nv_Request->get_string('limit', 'get', '15'),
   'timestart' => $nv_Request->get_string('timestart', 'get', ''),
   'timeend' => $nv_Request->get_string('timeend', 'get', ''),
   'nexttimestart' => $nv_Request->get_string('nexttimestart', 'get', ''),
@@ -99,7 +219,7 @@ if (!empty($action)) {
 
       if ($type == 'promo') {
         $promo->remove($id);
-        $result->html = $promo->salary_content();
+        $result->html = $promo->promo_content();
       }
       else {
         $salary->remove($id);

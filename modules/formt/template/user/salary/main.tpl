@@ -282,6 +282,11 @@
     $('#remove-modal').modal('show')
   }
 
+  function promoRemoveModal(id) {
+    global.id = id
+    $('#remove-modal').modal('show')
+  }
+
   function remove() {
     vhttp.checkelse('', {
       action: 'remove',

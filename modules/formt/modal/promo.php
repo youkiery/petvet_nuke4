@@ -40,7 +40,7 @@ class Promo {
   }
 
   public function promo_content() {
-    global $filter, $user_info;
+    global $filter, $user_info, $user_list;
     $xtpl = new XTemplate("promo-list.tpl", PATH2);
 
     $xtra = array('employ like "%'. $filter['name'] .'%"');
@@ -90,7 +90,7 @@ class Promo {
     $query = $this->db->query($sql);
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
     $time = time();
-    if (in_array('1', $user_info['in_groups'])) $check = true;
+    if (in_array($user_info['userid'], $user_list)) $check = true;
     else $check = false;
 
     while ($promo = $query->fetch()) {

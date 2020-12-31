@@ -74,7 +74,7 @@ class Salary {
   // }
 
   public function salary_content() {
-    global $filter, $user_info, $const;
+    global $filter, $user_info, $user_list, $const;
     $xtpl = new XTemplate("salary-list.tpl", PATH2);
 
     $xtra = array('employ like "%'. $filter['name'] .'%"');
@@ -124,7 +124,7 @@ class Salary {
     $query = $this->db->query($sql);
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
     $time = time();
-    if (in_array('1', $user_info['in_groups'])) $check = true;
+    if (in_array($user_info['userid'], $user_list)) $check = true;
     else $check = false;
 
     while ($salary = $query->fetch()) {
@@ -145,6 +145,7 @@ class Salary {
       if ($check) $xtpl->parse('main.row.manager');
       $xtpl->parse('main.row');
     }
+    $xtpl->assign('nav', navi_generater($number, $filter['page'], $filter['limit']));
     $xtpl->parse('main');
     return $xtpl->text();
   }
