@@ -14,12 +14,27 @@ require_once(MODAL_PATH . '/promo.php');
 require_once(MODAL_PATH . '/salary.php');
 $promo = new Promo();
 $salary = new Salary();
+$const = array(
+  'Bậc 1' => 2.34,
+  'Bậc 2' => 2.67,
+  'Bậc 3' => 3.00,
+  'Bậc 4' => 3.33,
+  'Bậc 5' => 3.66,
+  'Bậc 6' => 3.99,
+  'Bậc 7' => 4.32,
+  'Bậc 8' => 4.65,
+  'Bậc 9' => 4.98
+);
 
 $filter = array(
   'name' => $nv_Request->get_string('name', 'get', ''),
   'note' => $nv_Request->get_string('note', 'get', ''),
   'page' => $nv_Request->get_string('page', 'get', '1'),
   'limit' => $nv_Request->get_string('limit', 'get', '10'),
+  'timestart' => $nv_Request->get_string('timestart', 'get', ''),
+  'timeend' => $nv_Request->get_string('timeend', 'get', ''),
+  'nexttimestart' => $nv_Request->get_string('nexttimestart', 'get', ''),
+  'nexttimeend' => $nv_Request->get_string('nexttimeend', 'get', ''),
 );
 
 $page_title = "Lương và bổ nhiệm lại";
@@ -78,6 +93,19 @@ if (!empty($action)) {
         $result->html = $promo->promo_content();
       }
     break;
+    case 'remove':
+      $id = $nv_Request->get_string('id', 'post/get');
+      $result->status = 1;
+
+      if ($type == 'promo') {
+        $promo->remove($id);
+        $result->html = $promo->salary_content();
+      }
+      else {
+        $salary->remove($id);
+        $result->html = $salary->salary_content();
+      }
+      break;
     // case 'history':
     //   $employid = $nv_Request->get_int('employid', 'post/get', "0");
 
@@ -95,6 +123,10 @@ $xtpl = new XTemplate("main.tpl", PATH2);
 
 $xtpl->assign('name', $filter['name']);
 $xtpl->assign('note', $filter['note']);
+$xtpl->assign('timestart', $filter['timestart']);
+$xtpl->assign('timeend', $filter['timeend']);
+$xtpl->assign('nexttimestart', $filter['nexttimestart']);
+$xtpl->assign('nexttimeend', $filter['nexttimeend']);
 
 if ($type === 'promo') {
   $xtpl->assign('active_promo', 'class="active"');
@@ -112,11 +144,17 @@ else {
 
 $xtpl2 = new XTemplate("modal.tpl", PATH2);
 $time = time();
+foreach ($const as $name => $value) {
+  $xtpl2->assign('name', $name);
+  $xtpl2->assign('value', $value);
+  $xtpl2->parse('main.const');
+}
 $xtpl2->assign('time', date('d/m/Y', $time));
 $xtpl2->assign('next_salary_time', date('d/m/Y', $time + 60 * 60 * 24 * 365.25 * 3));
 $xtpl2->assign('next_promo_time', date('d/m/Y', $time + 60 * 60 * 24 * 365.25 * 5));
 $xtpl2->parse('main');
 
+$xtpl->assign('const', implode('|', $const));
 $xtpl->assign('employ', implode('|', $salary->remind->get_list('employ')));
 $xtpl->assign('formal', implode('|', $salary->remind->get_list('formal')));
 $xtpl->assign('modal', $xtpl2->text());
@@ -142,4 +180,11 @@ function navi_generater($number, $page, $limit) {
   return '<ul class="pagination">
     '. $html .'
   </ul>';
+}
+
+function getLevel($const_level) {
+  global $const;
+  foreach ($const as $key => $value) {
+    if ($value == $const_level) return $key;
+  }
 }

@@ -10,8 +10,10 @@
     <tr>
       <th class="cell-center"> STT </th>
       <th class="cell-center"> Họ và tên </th>
-      <th class="cell-center"> Thời gian nâng lương lần cuối </th>
-      <th class="cell-center"> Thời gian nâng lương kế tiếp </th>
+      <th class="cell-center"> Nâng lương lần cuối </th>
+      <th class="cell-center"> Nâng lương kế tiếp </th>
+      <th class="cell-center"> Bậc lương </th>
+      <th class="cell-center"> Hệ số </th>
       <th class="cell-center"> Hình thức khen thưởng </th>
       <th class="cell-center"> Ghi chú </th>
       <th class="cell-center"> File đính kèm </th>
@@ -25,6 +27,8 @@
       <td> {employ} </td>
       <td> {last_salary} </td>
       <td> {next_salary} </td>
+      <td> {level} </td>
+      <td> {level_const} </td>
       <td> {formal} </td>
       <td> {note} </td>
       <td> 
@@ -40,11 +44,13 @@
         </button>  
         <button class="btn btn-info btn-xs" onclick="salaryUpModal({employid})">
           nâng lương
-        </button>  
-        <button class="btn btn-danger btn-xs" onclick="employRemoveModal({employid})">
+        </button>   -->
+        <!-- BEGIN: manager -->
+        <button class="btn btn-danger btn-xs" onclick="salaryRemoveModal({id})">
           xóa
         </button>  
-      </td> -->
+        <!-- END: manager -->
+      </td>
     </tr>
   </tbody>
   <!-- END: row -->

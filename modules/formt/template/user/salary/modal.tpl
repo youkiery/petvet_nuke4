@@ -32,6 +32,20 @@
               </div>
             </div>
           </div>
+          <div class="rows">
+            <div class="form-group col-6">
+              <label> Bậc lương </label>
+              <select class="form-control" id="salary-up-level">
+                <!-- BEGIN: const -->
+                <option value="{value}"> {name} </option>
+                <!-- END: const -->
+              </select>
+            </div>
+            <div class="form-group col-6">
+              <label> Hệ số lương </label>
+              <p id="salary-up-level-const" style="margin: 0px; color: red;">  </p>
+            </div>
+          </div>
           <div class="form-group">
             <label> Hình thức khen thưởng </label>
             <div class="relative">
@@ -40,8 +54,10 @@
             </div>
           </div>
           <div class="form-group">
-            <label> File </label>
-            <input type="text" class="form-control" id="salary-up-file">
+            <label> 
+              File
+              <input type="file" id="salary-up-file" onchange="pickFile()" >
+            </label>
           </div>
           <div class="form-group">
             <label> Ghi chú </label>
@@ -123,7 +139,7 @@
   </div>
 </div> -->
 
-<!-- <div class="modal" id="employ-remove-modal" role="dialog">
+<div class="modal" id="remove-modal" role="dialog">
   <div class="modal-dialog modal-fade modal-sm">
     <div class="modal-content">
       <div class="modal-body">
@@ -134,12 +150,12 @@
 
         <div class="text-center">
           <p> Xóa nhân viên đồng thời sẽ xóa toàn bộ dữ liệu liên quan </p>
-          <button class="btn btn-danger" onclick="employRemove()">
+          <button class="btn btn-danger" onclick="remove()">
             Xác nhận
           </button>
         </div>
       </div> 
     </div>
   </div>
-</div> -->
+</div>
 <!-- END: main -->

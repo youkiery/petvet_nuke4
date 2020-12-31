@@ -38,10 +38,12 @@
         </button>  
         <button class="btn btn-info btn-xs" onclick="promoUpModal({employid})">
           bổ nhiệm
-        </button>  
-        <button class="btn btn-danger btn-xs" onclick="employRemoveModal({employid})">
-          xóa
         </button>   -->
+        <!-- BEGIN: manager -->
+        <button class="btn btn-danger btn-xs" onclick="promoRemoveModal({id})">
+          xóa
+        </button>  
+        <!-- END: manager -->
       </td>
     </tr>
   </tbody>

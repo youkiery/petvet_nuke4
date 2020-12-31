@@ -13,6 +13,7 @@ class Salary {
     $this->default = array(
       'id' => 0,
       'employ' => '',
+      'level' => 0,
       'last_salary' => 0,
       'next_salary' => 0,
       'formal' => '',
@@ -28,18 +29,18 @@ class Salary {
     $this->remind->check($data['name'], 'employ');
     $this->remind->check($data['formal'], 'formal');
 
-    $sql = 'insert into `'. $this->prefix .'` (employ, formal, note, time, next_time, file) values("'. $data['name'] .'", "'. $data['formal'] .'", "'. $data['note'] .'", '. $time .', '. $next_time .', "'. $data['file'] .'")';
+    $sql = 'insert into `'. $this->prefix .'` (employ, formal, note, level, time, next_time, file) values("'. $data['name'] .'", "'. $data['formal'] .'", "'. $data['note'] .'", "'. $data['level'] .'", '. $time .', '. $next_time .', "'. $data['file'] .'")';
 
     if ($this->db->query($sql)) return 1;
     return 0;
   }
 
-  // function remove($employid) {
-  //   $sql = 'delete from `'. $this->prefix .'` where employid = '. $employid;
+  function remove($id) {
+    $sql = 'delete from `'. $this->prefix .'` where id = '. $id;
 
-  //   if ($this->db->query($sql)) return 1;
-  //   return 0;
-  // }
+    if ($this->db->query($sql)) return 1;
+    return 0;
+  }
 
   // public function history($employid) {
   //   $xtpl = new XTemplate("salary-history.tpl", PATH2);
@@ -73,30 +74,75 @@ class Salary {
   // }
 
   public function salary_content() {
-    global $filter;
+    global $filter, $user_info, $const;
     $xtpl = new XTemplate("salary-list.tpl", PATH2);
 
-    $sql = 'select count(id) as number from `'. $this->prefix .'` where employ like "%'. $filter['name'] .'%" and note like "%'. $filter['note'] .'%"';
+    $xtra = array('employ like "%'. $filter['name'] .'%"');
+    $tick = 0;
+    if ($filter['timestart']) $tick += 1;
+    if ($filter['timeend']) $tick += 2;
+    switch ($tick) {
+      case 1:
+        $filter['timestart'] = totime($filter['timestart']);
+        $xtra []= 'time > '. $filter['timestart'];
+        break;
+      case 2:
+        $filter['timeend'] = totime($filter['timeend']);
+        $xtra []= 'time < '. $filter['timeend'];
+        break;
+      case 3:
+        $filter['timestart'] = totime($filter['timestart']);
+        $filter['timeend'] = totime($filter['timeend']);
+        $xtra []= '(time between '. $filter['timestart'] . ' and '. $filter['timeend'] .')';
+        break;
+    }
+
+    $tick = 0;
+    if ($filter['nexttimestart']) $tick += 1;
+    if ($filter['nexttimeend']) $tick += 2;
+    switch ($tick) {
+      case 1:
+        $filter['nexttimestart'] = totime($filter['nexttimestart']);
+        $xtra []= 'next_time > '. $filter['nexttimestart'];
+        break;
+      case 2:
+        $filter['nexttimeend'] = totime($filter['nexttimeend']);
+        $xtra []= 'next_time < '. $filter['nexttimeend'];
+        break;
+      case 3:
+        $filter['nexttimestart'] = totime($filter['nexttimestart']);
+        $filter['nexttimeend'] = totime($filter['nexttimeend']);
+        $xtra []= '(next_time between '. $filter['nexttimestart'] . ' and '. $filter['nexttimeend'] .')';
+        break;
+    }
+
+    $sql = 'select count(id) as number from `'. $this->prefix .'` where ' . implode(' and ', $xtra);
     $query = $this->db->query($sql);
     $number = $query->fetch()['number'];
 
-    $sql = 'select * from `'. $this->prefix .'` where employ like "%'. $filter['name'] .'%" and note like "%'. $filter['note'] .'%" order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
+    $sql = 'select * from `'. $this->prefix .'` where ' . implode(' and ', $xtra) .' order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
     $query = $this->db->query($sql);
     $index = ($filter['page'] - 1) * $filter['limit'] + 1;
     $time = time();
+    if (in_array('1', $user_info['in_groups'])) $check = true;
+    else $check = false;
 
     while ($salary = $query->fetch()) {
+      $check_time = strtotime(date('Y/1/1', $salary['next_time']));
       $xtpl->assign('index', $index++);
       $xtpl->assign('id', $salary['id']);
       $xtpl->assign('employ', $salary['employ']);
       $xtpl->assign('last_salary', $this->parse_time($salary['time']));
       $xtpl->assign('next_salary', $this->parse_time($salary['next_time']));
+      $xtpl->assign('level_const', $salary['level']);
+      $xtpl->assign('level', getLevel($salary['level']));
       $xtpl->assign('formal', $salary['formal']);
       $xtpl->assign('note', $salary['note']);
       $xtpl->assign('file', $salary['file']);
-      if ($time > $salary['next_time']) $xtpl->assign('color', 'red');
+      if ($time > $check_time) $xtpl->assign('color', 'red');
       else $xtpl->assign('color', '');
       if (strlen($salary['file'])) $xtpl->parse('main.row.file');
+      if ($check) $xtpl->parse('main.row.manager');
       $xtpl->parse('main.row');
     }
     $xtpl->parse('main');
