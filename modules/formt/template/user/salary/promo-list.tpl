@@ -8,18 +8,18 @@
 <table class="table table-bordered table-hover">
   <thead>
     <tr>
-      <th class="cell-center"> STT </th>
+      <th class="cell-center small"> STT </th>
       <th class="cell-center"> Họ và tên </th>
       <th class="cell-center"> Ngày bổ nhiệm </th>
       <th class="cell-center"> Ngày bổ nhiệm lại </th>
       <th class="cell-center"> Ghi chú </th>
-      <th class="cell-center"> File đính kèm </th>
+      <th class="cell-center"> File </th>
       <th>  </th>
     </tr>
   </thead>
-  <!-- BEGIN: row -->
   <tbody>
-    <tr rel="{id}" class="{color}">
+  <!-- BEGIN: row -->
+    <tr id="row-{id}" class="{color}">
       <td> {index} </td>
       <td> {employ} </td>
       <td> {last_promo} </td>
@@ -33,21 +33,21 @@
         <!-- END: file -->
       </td>
       <td> 
-        <!-- <button class="btn btn-info btn-xs" onclick="historyModal({employid})">
-          xem
-        </button>  
-        <button class="btn btn-info btn-xs" onclick="promoUpModal({employid})">
-          bổ nhiệm
-        </button>   -->
         <!-- BEGIN: manager -->
+        <!-- <button class="btn btn-info btn-xs" onclick="detail({id})">
+          <span class="glyphicon glyphicon-eye-open"></span>
+        </button>   -->
+        <button class="btn btn-info btn-xs" onclick="promoEditModal({id})">
+          <span class="glyphicon glyphicon-edit"></span>
+        </button>  
         <button class="btn btn-danger btn-xs" onclick="promoRemoveModal({id})">
           xóa
         </button>  
         <!-- END: manager -->
       </td>
     </tr>
+    <!-- END: row -->
   </tbody>
-  <!-- END: row -->
 </table>
 {nav}
 <!-- END: main -->

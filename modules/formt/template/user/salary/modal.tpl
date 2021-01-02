@@ -64,7 +64,7 @@
             <textarea class="form-control" id="salary-up-note" rows="4"></textarea>
           </div>
 
-          <button class="btn btn-info btn-block">
+          <button class="btn btn-info btn-block insert">
             Nâng lương
           </button>
         </form>
@@ -107,8 +107,10 @@
             </div>
           </div>
           <div class="form-group">
-            <label> File </label>
-            <input type="text" class="form-control" id="promo-up-file">
+            <label> 
+              File
+              <input type="file" id="promo-up-file" onchange="pickFile()" >
+            </label>
           </div>
           <div class="form-group">
             <label> Ghi chú </label>

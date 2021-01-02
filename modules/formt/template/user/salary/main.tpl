@@ -60,9 +60,28 @@
   .hidden {
     display: none;
   }
+
+  tbody,
+  .small {
+    font-size: 0.9em;
+  }
+
+  .alert {
+    position: fixed;
+    max-width: 50%;
+    min-width: 300px;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+  }
 </style>
 
 {modal}
+
+<div class="alert alert-info alert-dismissible" id="alert" style="display: none;">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <span id="alert-text"></span>
+</div>
 
 <form method="get">
   <!-- BEGIN: promo -->
@@ -95,13 +114,15 @@
   <div class="form-group rows">
     <div class="col-6">
       <div class="input-group">
-        <input type="text" class="form-control date" name="nexttimestart" id="filter-salary-next-time-start" value="{nexttimestart}">
+        <input type="text" class="form-control date" name="nexttimestart" id="filter-salary-next-time-start"
+          value="{nexttimestart}">
         <div class="input-group-addon"> </div>
       </div>
     </div>
     <div class="col-6">
       <div class="input-group">
-        <input type="text" class="form-control date" name="nexttimeend" id="filter-salary-next-time-end" value="{nexttimeend}">
+        <input type="text" class="form-control date" name="nexttimeend" id="filter-salary-next-time-end"
+          value="{nexttimeend}">
         <div class="input-group-addon"> </div>
       </div>
     </div>
@@ -130,6 +151,7 @@
 <script>
   var global = {
     id: 0,
+    action: 'edit',
     filemodal: '',
     file: '',
     formal: '{formal}'.split('|'),
@@ -149,6 +171,9 @@
   firebase.initializeApp(firebaseConfig);
   var storage = firebase.storage();
   var storageRef = storage.ref();
+
+  var interval = null
+
 
   $(document).ready(() => {
     $('.date').datepicker({
@@ -243,19 +268,69 @@
   //   })
   // }
 
+  function salaryEditModal(id) {
+    global.id = id
+    global.action = 'edit'
+    global.filemodal = 'salary'
+    var child = $('#row-' + id)[0].children
+    if (child[5].innerText) level = child[5].innerText
+    else {
+      level = $('#salary-up-level')[0].children[0].value
+    }
+
+    $('#salary-up-name').val(child[1].innerText)
+    $('#salary-up-time').val(child[2].innerText)
+    $('#salary-up-next-time').val(child[3].innerText)
+    $('#salary-up-level').val(level)
+    $('#salary-up-formal').val(child[6].innerText)
+    $('#salary-up-note').val(child[7].innerText)
+
+    $('#salary-up-level-const').html($('#salary-up-level').val())
+    var file = child[8].children
+    if (file.length) global.file = file[0].getAttribute('href')
+    else global.file = ''
+    $('#salary-up-modal').modal('show')
+  }
+
+  function promoEditModal(id) {
+    global.id = id
+    global.action = 'edit'
+    global.filemodal = 'promo'
+    var child = $('#row-' + id)[0].children
+
+    $('#promo-up-name').val(child[1].innerText)
+    $('#promo-up-time').val(child[2].innerText)
+    $('#promo-up-next-time').val(child[3].innerText)
+    $('#promo-up-note').val(child[4].innerText)
+
+    var file = child[5].children
+    if (file.length) global.file = file[0].getAttribute('href')
+    else global.file = ''
+    console.log(global.file);
+    $('#promo-up-modal').modal('show')
+  }
+
   function salaryUpModal() {
+    global.action = 'insert'
+    global.id = 0
     global.file = ''
     global.filemodal = 'salary'
+    $('#salary-up-name').val('')
+    $('#salary-up-formal').val('')
+    $('#salary-up-file').val('')
+    $('#salary-up-note').val('')
     $('#salary-up-modal').modal('show')
   }
 
   function salaryUp(e) {
     e.preventDefault()
+    if (global.action == 'insert') action = 'salary-up'
+    else action = 'salary-up-edit'
     upload().then(url => {
-      console.log(url);
       vhttp.checkelse('', {
-        action: 'salary-up',
+        action: action,
         data: {
+          id: global.id,
           name: $('#salary-up-name').val(),
           time: $('#salary-up-time').val(),
           level: $('#salary-up-level').val(),
@@ -272,6 +347,13 @@
         $('#salary-up-formal').val('')
         $('#salary-up-file').val('')
         $('#salary-up-note').val('')
+        if (action == 'insert') {
+          alert('Đã thêm bản ghi nâng lương')
+        }
+        else {
+          alert('Đã cập nhật bản ghi nâng lương')
+          $('#salary-up-modal').modal('hide')
+        }
       })
     })
     return 0
@@ -294,32 +376,49 @@
     }).then(response => {
       $('#content').html(response.html)
       $('#remove-modal').modal('hide')
+      alert('Đã xóa bản ghi')
     })
   }
 
   function promoUpModal() {
+    global.action = 'insert'
+    global.id = 0
     global.file = ''
     global.filemodal = 'promo'
+    $('#promo-up-name').val(''),
+    $('#promo-up-file').val('')
+    $('#promo-up-note').val('')
     $('#promo-up-modal').modal('show')
   }
 
   function promoUp(e) {
     e.preventDefault()
-    vhttp.checkelse('', {
-      action: 'promo-up',
-      data: {
-        name: $('#promo-up-name').val(),
-        time: $('#promo-up-time').val(),
-        next_time: $('#promo-up-next-time').val(),
-        file: $('#promo-up-file').val(),
-        note: $('#promo-up-note').val(),
-      }
-    }).then(response => {
-      global.employ = response.employ
-      $('#content').html(response.html)
-      $('#promo-up-name').val(''),
+    if (global.action == 'insert') action = 'promo-up'
+    else action = 'promo-up-edit'
+    upload().then(url => {
+      vhttp.checkelse('', {
+        action: action,
+        data: {
+          name: $('#promo-up-name').val(),
+          time: $('#promo-up-time').val(),
+          next_time: $('#promo-up-next-time').val(),
+          file: $('#promo-up-file').val(),
+          note: $('#promo-up-note').val(),
+        }
+      }).then(response => {
+        global.employ = response.employ
+        $('#content').html(response.html)
+        $('#promo-up-name').val(''),
         $('#promo-up-file').val('')
-      $('#promo-up-note').val('')
+        $('#promo-up-note').val('')
+        if (action == 'insert') {
+          alert('Đã thêm bản ghi bổ nhiệm')
+        }
+        else {
+          alert('Đã cập nhật bản ghi bổ nhiệm')
+          $('#promo-up-modal').modal('hide')
+        }
+      })
     })
     return 0
   }
@@ -334,12 +433,23 @@
   //   })
   // }
 
+  function alert(text) {
+    $('#alert').fadeOut().delay(100)
+    $('#alert').show()
+    $("#alert-text").text(text)
+    clearInterval(interval)
+    interval = setInterval(() => {
+      $('#alert').hide()
+    }, 3000);
+  }
+
   function pickFile() {
     global.file = $('#' + global.filemodal + '-up-file').prop('files')[0]
   }
 
   function upload() {
     return new Promise((resolve) => {
+      console.log(global.file);
       if (!(global.file && global.file.name)) resolve(global.file)
       fullname = global.file.name
       pos = fullname.lastIndexOf('.')

@@ -32,6 +32,18 @@ class Promo {
     return 0;
   }
 
+  function update($data) {
+    $time = totime($data['time']);
+    $next_time = totime($data['next_time']);
+    $this->remind->check($data['name'], 'employ');
+    $this->remind->check($data['formal'], 'formal');
+
+    $sql = 'update `'. $this->prefix .'` set employ = "'. $data['name'] .'", note = "'. $data['note'] .'", time = "'. $time .'", next_time = "'. $next_time .'", file = "'. $data['file'] .'" where id = '. $data['id'];
+
+    if ($this->db->query($sql)) return 1;
+    return 0;
+  }
+
   function remove($id) {
     $sql = 'delete from `'. $this->prefix .'` where id = '. $id;
 
