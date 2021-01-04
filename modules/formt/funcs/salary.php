@@ -95,6 +95,16 @@ if (!empty($action)) {
         $result->html = $salary->salary_content();
       }
     break;
+    case 'promo-up-edit':
+      $data = $nv_Request->get_array('data', 'post/get');
+
+      if ($promo->update($data)) {
+        $result->status = 1;
+        $result->employ = $promo->remind->get_list('employ');;
+        $result->formal = $promo->remind->get_list('formal');;
+        $result->html = $promo->promo_content();
+      }
+    break;
     case 'promo-up':
       $data = $nv_Request->get_array('data', 'post/get');
 

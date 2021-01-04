@@ -399,6 +399,7 @@
       vhttp.checkelse('', {
         action: action,
         data: {
+          id: global.id,
           name: $('#promo-up-name').val(),
           time: $('#promo-up-time').val(),
           next_time: $('#promo-up-next-time').val(),
