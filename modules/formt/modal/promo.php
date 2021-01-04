@@ -98,23 +98,39 @@ class Promo {
     $query = $this->db->query($sql);
     $number = $query->fetch()['number'];
 
-    $sql = 'select * from `'. $this->prefix .'` where ' . implode(' and ', $xtra) .' order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
-    $query = $this->db->query($sql);
-    $index = ($filter['page'] - 1) * $filter['limit'] + 1;
     $time = time();
+    $list = array();
+    $first_day_of_year = strtotime(date('Y/1/1', $time));
+    $last_day_of_year = strtotime(date('Y', $time) + 1 . '/1/1') - 1;
+
+    $sql = 'select id from `'. $this->prefix .'` where ' . implode(' and ', $xtra) .' and (next_time between '. $first_day_of_year .' and '. $last_day_of_year .')  order by next_time';
+    $query = $this->db->query($sql);
+    while ($row = $query->fetch()) {
+      $list []= $row['id'];
+    }
+
+    $sql = 'select id from `'. $this->prefix .'` where ' . implode(' and ', $xtra) .' and (next_time not between '. $first_day_of_year .' and '. $last_day_of_year .')  order by next_time desc';
+    $query = $this->db->query($sql);
+    while ($row = $query->fetch()) {
+      $list []= $row['id'];
+    }
+
+    $index = ($filter['page'] - 1) * $filter['limit'];
+    $last_index = ($index + $filter['limit'] > $number ? $number : $index + $filter['limit']);
     if (in_array($user_info['userid'], $user_list)) $check = true;
     else $check = false;
 
-    while ($promo = $query->fetch()) {
-      $check_time = strtotime(date('Y/1/1', $promo['next_time']));
-      $xtpl->assign('index', $index++);
+    for ($i = $index; $i < $last_index; $i++) { 
+      $id = $list[$i];
+      $promo = $this->get_promo_id($id);
+      $xtpl->assign('index', $i + 1);
       $xtpl->assign('id', $promo['id']);
       $xtpl->assign('employ', $promo['employ']);
       $xtpl->assign('last_promo', $this->parse_time($promo['time']));
       $xtpl->assign('next_promo', $this->parse_time($promo['next_time']));
       $xtpl->assign('note', $promo['note']);
       $xtpl->assign('file', $promo['file']);
-      if ($time > $check_time) $xtpl->assign('color', 'red');
+      if (!($promo['next_time'] < $first_day_of_year || $promo['next_time'] > $last_day_of_year)) $xtpl->assign('color', 'red');
       else $xtpl->assign('color', '');
       if (strlen($promo['file'])) $xtpl->parse('main.row.file');
       if ($check) $xtpl->parse('main.row.manager');
@@ -123,6 +139,14 @@ class Promo {
     $xtpl->assign('nav', navi_generater($number, $filter['page'], $filter['limit']));
     $xtpl->parse('main');
     return $xtpl->text();
+  }
+
+  public function get_promo_id($id) {
+    $sql = 'select * from `'. $this->prefix .'` where id = '. $id;
+    $query = $this->db->query($sql);
+    $salary = $query->fetch();
+    if (empty($salary)) return $this->default;
+    return $salary;
   }
 
   // public function history($employid) {
@@ -153,14 +177,6 @@ class Promo {
   //     $list []= $promo;
   //   }
   //   return $list;
-  // }
-
-  // public function get_last_promo($employid) {
-  //   $sql = 'select * from `'. $this->prefix .'` where employid = '. $employid .' order by id desc';
-  //   $query = $this->db->query($sql);
-  //   $promo = $query->fetch();
-  //   if (empty($promo)) return $this->default;
-  //   return $promo;
   // }
 
   public function parse_time($time) {

@@ -132,16 +132,32 @@ class Salary {
     $query = $this->db->query($sql);
     $number = $query->fetch()['number'];
 
-    $sql = 'select * from `'. $this->prefix .'` where ' . implode(' and ', $xtra) .' order by id desc limit ' . $filter['limit'] . ' offset ' . ($filter['page'] - 1) * $filter['limit'];
-    $query = $this->db->query($sql);
-    $index = ($filter['page'] - 1) * $filter['limit'] + 1;
     $time = time();
+    $list = array();
+    $first_day_of_year = strtotime(date('Y/1/1', $time));
+    $last_day_of_year = strtotime(date('Y', $time) + 1 . '/1/1') - 1;
+
+    $sql = 'select id from `'. $this->prefix .'` where ' . implode(' and ', $xtra) .' and (next_time between '. $first_day_of_year .' and '. $last_day_of_year .')  order by next_time';
+    $query = $this->db->query($sql);
+    while ($row = $query->fetch()) {
+      $list []= $row['id'];
+    }
+
+    $sql = 'select id from `'. $this->prefix .'` where ' . implode(' and ', $xtra) .' and (next_time not between '. $first_day_of_year .' and '. $last_day_of_year .')  order by next_time desc';
+    $query = $this->db->query($sql);
+    while ($row = $query->fetch()) {
+      $list []= $row['id'];
+    }
+
+    $index = ($filter['page'] - 1) * $filter['limit'];
+    $last_index = ($index + $filter['limit'] > $number ? $number : $index + $filter['limit']);
     if (in_array($user_info['userid'], $user_list)) $check = true;
     else $check = false;
 
-    while ($salary = $query->fetch()) {
-      $check_time = strtotime(date('Y/1/1', $salary['next_time']));
-      $xtpl->assign('index', $index++);
+    for ($i = $index; $i < $last_index; $i++) { 
+      $id = $list[$i];
+      $salary = $this->get_salary_id($id);
+      $xtpl->assign('index', $i + 1);
       $xtpl->assign('id', $salary['id']);
       $xtpl->assign('employ', $salary['employ']);
       $xtpl->assign('last_salary', $this->parse_time($salary['time']));
@@ -151,7 +167,7 @@ class Salary {
       $xtpl->assign('formal', $salary['formal']);
       $xtpl->assign('note', $salary['note']);
       $xtpl->assign('file', $salary['file']);
-      if ($time > $check_time) $xtpl->assign('color', 'red');
+      if (!($salary['next_time'] < $first_day_of_year || $salary['next_time'] > $last_day_of_year)) $xtpl->assign('color', 'red');
       else $xtpl->assign('color', '');
       if (strlen($salary['file'])) $xtpl->parse('main.row.file');
       if ($check) $xtpl->parse('main.row.manager');
@@ -160,6 +176,14 @@ class Salary {
     $xtpl->assign('nav', navi_generater($number, $filter['page'], $filter['limit']));
     $xtpl->parse('main');
     return $xtpl->text();
+  }
+
+  public function get_salary_id($id) {
+    $sql = 'select * from `'. $this->prefix .'` where id = '. $id;
+    $query = $this->db->query($sql);
+    $salary = $query->fetch();
+    if (empty($salary)) return $this->default;
+    return $salary;
   }
 
   // public function employ_content() {
@@ -176,14 +200,6 @@ class Salary {
   //   $xtpl->assign('nav', navi_generater($number, $filter['page'], $filter['limit']));
   //   $xtpl->parse('main');
   //   return $xtpl->text();
-  // }
-
-  // public function get_last_salary($employid) {
-  //   $sql = 'select * from `'. $this->prefix .'` where employid = '. $employid .' order by id desc';
-  //   $query = $this->db->query($sql);
-  //   $salary = $query->fetch();
-  //   if (empty($salary)) return $this->default;
-  //   return $salary;
   // }
 
   public function parse_time($time) {
