@@ -403,7 +403,7 @@
           name: $('#promo-up-name').val(),
           time: $('#promo-up-time').val(),
           next_time: $('#promo-up-next-time').val(),
-          file: $('#promo-up-file').val(),
+          file: url,
           note: $('#promo-up-note').val(),
         }
       }).then(response => {
