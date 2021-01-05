@@ -10,7 +10,14 @@
 if (!defined('NV_IS_FORM')) {
 	die('Stop!!!');
 }
-$user_list = array('1', '5');
+$user_list = array();
+$sql = 'select userid from `pet_user_allow` where salary = 1';
+$query = $db->query($sql);
+
+while ($row = $query->fetch()) {
+  $user_list []= $row['userid'];
+}
+
 require_once(MODAL_PATH . '/promo.php');
 require_once(MODAL_PATH . '/salary.php');
 $promo = new Promo();

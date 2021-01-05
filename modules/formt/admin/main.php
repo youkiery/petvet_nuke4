@@ -120,7 +120,21 @@ if (!empty($action)) {
 					$result['html'] = employerList($key);
         }
         // die($sql);
-			}
+      }
+      break;
+		case 'salary':
+			$userid = $nv_Request->get_string('userid', 'get/post', 0);
+			$type = $nv_Request->get_int('type', 'get/post', 0);
+			$key = $nv_Request->get_string('key', 'get/post', '');
+
+			// if (in_array('1', $admin_info['in_groups'])) {
+        $sql = 'update `'. $db_config['prefix'] .'_user_allow` set salary = ' . intval(!$type) . ' where userid = ' . $userid;
+        if ($db->query($sql)) {
+          $result['status'] = 1;
+					$result['html'] = employerList($key);
+        }
+        // die($sql);
+			// }
 		break;
 	}
 

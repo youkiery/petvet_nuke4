@@ -45,6 +45,15 @@ function employerList($key = '') {
     if ($row['type'] > 0) {
       $xtpl->parse('main.row.down');
     }
+    $xtpl->assign('salary', $row['salary']);
+    if ($row['salary']) {
+      $xtpl->assign('salary_color', 'btn-warning');
+      $xtpl->assign('salary_text', 'Sửa lương');
+    }
+    else {
+      $xtpl->assign('salary_color', 'btn-info');
+      $xtpl->assign('salary_text', 'Xem lương');
+    }
     $xtpl->parse('main.row');
   }
   $xtpl->parse('main');
