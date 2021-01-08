@@ -34,6 +34,17 @@ class Module {
     }
     return 0;
   }
+
+  function employ_list() {
+    $list = array();
+    $sql = 'select a.userid, b.username as username, concat(last_name, " ", first_name) as name from `pet_'. $this->table .'_user` a inner join `pet_users` b on a.userid = b.userid group by userid';
+
+    $query = $this->db->query($sql);
+    while ($row = $query->fetch_assoc()) {
+      $list[$row['userid']] = $row['name'];
+    }
+    return $list;
+  }
   
   function insertNotify($action, $targetid, $time) {
     $sql = 'insert into `pet_'. $this->table .'_notify` (userid, action, workid, module, time) values ('. $this->userid .', '. $action .', '. $targetid .', "'. $this->module .'", '. $time .')';

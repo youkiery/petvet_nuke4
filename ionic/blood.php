@@ -104,4 +104,47 @@ class Blood extends Module {
     }
     return $targetid;
   }
+
+  
+  function statistic($from, $end) {
+    $total = array(
+      'from' => date('d/m/Y', $from),
+      'end' => date('d/m/Y', $end),
+      'number' => 0,
+      'sample' => 0,
+      'total' => 0,
+      'list' => array()
+    );
+
+    $doctor = $this->employ_list();
+    $sql = 'select * from `' . $this->prefix . '_row` where (time between ' . $from . ' and ' . $end . ')';
+    $query = $this->db->query($sql);
+    $data = array();
+    while ($row = $query->fetch_assoc()) {
+      if (empty($data[$row['doctor']])) {
+        $data[$row['doctor']] = array(
+          'name' => $doctor[$row['doctor']],
+          'number' => 0,
+          'sample' => 0,
+        );
+      }
+      $total['number']++;
+      $total['sample'] += $row['number'];
+      $total['chemist'] += ($row['start'] - $row['end']);
+      $data[$row['doctor']]['number']++;
+      $data[$row['doctor']]['sample'] += $row['number'];
+    }
+
+    $sql = 'select * from `' . $this->prefix . '_import` where (time between ' . $from . ' and ' . $end . ')';
+    $query = $this->db->query($sql);
+    $sum = 0;
+    while ($row = $query->fetch_assoc()) {
+      $sum += $row['price']; // tổng tiền nhập
+    }
+    foreach ($data as $row) {
+      $total['list'] []= $row;
+    }
+    $total['total'] = number_format($sum * 1000, 0, '', ',') . ' VNĐ';
+    return $total;
+  }
 }

@@ -35,6 +35,7 @@ class Vaccine extends Module {
         $data []= array(
           'id' => $row['id'],
           'petname' => $pet['name'],
+          'name' => $customer['name'],
           'number' => $customer['phone'],
           'vaccine' => $disease[$row['diseaseid']],
           'calltime' => $row['calltime'],

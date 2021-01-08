@@ -807,13 +807,10 @@ function checkBloodRemind($name) {
   $sql = 'select * from `' . VAC_PREFIX . '_remind` where name = "blood" and value = "' . $name . '"';
   $query = $db->query($sql);
   if (!empty($row = $query->fetch())) {
-    echo '1';
     $targetid = $row['id'];
   } else {
-    echo '2';
     $sql = 'insert into `' . VAC_PREFIX . '_remind` (name, value) values ("blood", "' . $name . '")';
     if ($db->query($sql)) {
-    echo '3';
     $targetid = $db->lastInsertId();
     }
   }
