@@ -25,7 +25,7 @@ class Vaccine extends Module {
       $list []= $row;
     }
 
-    usort($list, "cmp");
+    usort($list, "cmp2");
 
     // tên thú cưng, sđt, vaccine, ngày tái chủng, ghi chú, trạng thại
     foreach ($list as $row) {

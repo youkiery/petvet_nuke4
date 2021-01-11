@@ -15,7 +15,7 @@ $data['cometime'] = totime($data['cometime']);
 $data['calltime'] = totime($data['calltime']);
 
 $filter = array(
-  'status' => parseGetData('status', 0)
+  'status' => parseGetData('status', 0),
 );
 
 // thay đổi thông tin khách

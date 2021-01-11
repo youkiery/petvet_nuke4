@@ -14,6 +14,10 @@ function cmp($source, $target) {
   return strcmp($target['expecttime'], $source['expecttime']);
 }
 
+function cmp2($source, $target) {
+  return strcmp($target['calltime'], $source['calltime']);
+}
+
 function checkUserRole($userid) {
   global $mysqli;
   if (!empty(checkUserId($userid))) {
