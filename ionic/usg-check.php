@@ -1,7 +1,7 @@
 <?php 
 
-require_once(NV_ROOTDIR . '/ionic/vaccine.php');
-$vaccine = new Vaccine();
+require_once(NV_ROOTDIR . '/ionic/usg.php');
+$usg = new Usg();
 
 $reversal = array(
   '0' => '1',
@@ -10,14 +10,15 @@ $reversal = array(
 $id = parseGetData('id', 0);
 
 $filter = array(
-  'status' => parseGetData('status', 0)
+  'status' => parseGetData('status', 0),
+  'keyword' => parseGetData('keyword', '')
 );
 
-$sql = 'update `'. $vaccine->prefix .'` set status = ' . $reversal[$filter['status']] . ' where id = ' . $id;
+$sql = 'update `'. $usg->prefix .'` set status = ' . $reversal[$filter['status']] . ' where id = ' . $id;
 $mysqli->query($sql);
 
 $result['status'] = 1;
-$result['data'] = $vaccine->getList($filter);
+$result['data'] = $usg->getList($filter);
 
 echo json_encode($result);
 die();

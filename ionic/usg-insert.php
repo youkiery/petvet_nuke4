@@ -55,7 +55,7 @@ if (empty($pet)) {
 //   $mysqli->query($sql);
 // }
 
-$sql = "INSERT INTO `" . VAC_PREFIX . "_usg2` (petid, doctorid, usgtime, expecttime, expectnumber, vaccinetime, image, status, note, time) VALUES ($data[pet], $userid, $data[cometime], $data[calltime], $data[number], 0, '', 0, '$data[note]', " . time() . ")";
+$sql = "INSERT INTO `" . $usg->prefix . "_usg2` (petid, doctorid, usgtime, expecttime, expectnumber, vaccinetime, image, status, note, time) VALUES ($data[pet], $userid, $data[cometime], $data[calltime], $data[number], 0, '', 0, '$data[note]', " . time() . ")";
 $mysqli->query($sql);
 
 $result['status'] = 1;

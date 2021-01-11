@@ -11,7 +11,7 @@ function checkUserId($userid) {
 }
 
 function cmp($source, $target) {
-  return strcmp($target['calltime'], $source['calltime']);
+  return strcmp($target['expecttime'], $source['expecttime']);
 }
 
 function checkUserRole($userid) {

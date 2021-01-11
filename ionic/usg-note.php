@@ -9,7 +9,8 @@ $data = array(
 );
 
 $filter = array(
-  'status' => parseGetData('status', 0)
+  'status' => parseGetData('status', 0),
+  'keyword' => parseGetData('keyword', '')
 );
 
 $sql = 'update `'. $usg->prefix .'` set note = "'. $data['text'] .'" where id = '. $data['id'];
