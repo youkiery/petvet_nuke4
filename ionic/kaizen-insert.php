@@ -14,6 +14,7 @@ $filter = array(
   'starttime' => parseGetData('starttime'),
   'endtime' => parseGetData('endtime'),
   'keyword' => parseGetData('keyword'),
+  'page' => parseGetData('page', 1),
   'sort' => parseGetData('sort')
 );
 

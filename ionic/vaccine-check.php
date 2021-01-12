@@ -10,7 +10,7 @@ $reversal = array(
 $id = parseGetData('id', 0);
 
 $filter = array(
-  'status' => parseGetData('status', 0),
+  'status' => parseGetData('status', 0)
 );
 
 $sql = 'update `'. $vaccine->prefix .'` set status = ' . $reversal[$filter['status']] . ' where id = ' . $id;

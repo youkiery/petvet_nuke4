@@ -1,6 +1,5 @@
 <?php 
 
-
 require_once(NV_ROOTDIR . '/ionic/work.php');
 $work = new Work();
 

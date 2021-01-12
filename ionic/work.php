@@ -51,7 +51,7 @@ class Work extends Module {
     if (count($xtra)) $xtra = ' and '. implode(' and ', $xtra);
     else $xtra = '';
 
-    $sql = 'select id, userid, cometime, calltime, process, content, note, image from `'. $this->prefix .'` where active = 1 '. $xtra . ' order by calltime';
+    $sql = 'select id, userid, cometime, calltime, process, content, note, image from `'. $this->prefix .'` where active = 1 '. $xtra . ' order by calltime limit 10 offset '. ($filter['page'] - 1) * 10;
     $query = $this->db->query($sql);
     $user = array();
 
