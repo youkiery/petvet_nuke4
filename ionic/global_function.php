@@ -59,7 +59,7 @@ function getUserBranch() {
 
 function parseGetData($dataname, $default = '') {
   global $_GET;
-  return (isset($_GET[$dataname]) && $_GET[$dataname] == '' ? $_GET[$dataname] : $default);
+  return (isset($_GET[$dataname]) && $_GET[$dataname] != '' ? $_GET[$dataname] : $default);
 }
 
 function totime($time) {

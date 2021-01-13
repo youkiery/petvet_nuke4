@@ -7,7 +7,7 @@ class Work extends Module {
     $this->role = $this->getRole();
   }
 
-  function getWork($filter, $status = 0) {
+  function getWork($filter) {
     $list = array();
     $xtra = array();
     $time = time();
@@ -33,15 +33,9 @@ class Work extends Module {
         $xtra []= '(calltime between '. $filter['startdate'] .' and '. $filter['enddate'] .')';
       break;
     }
-    
-    switch ($status) {
-      case 1:
-        $xtra []= '(process < 100)';
-      break;
-      case 2:
-        $xtra []= 'process > 99';
-      break;
-    }
+   
+    if ($filter['status'] == 'undone') $xtra []= '(process < 100)';
+    else $xtra []= 'process > 99';
 
     if (!empty($filter['keyword'])) $xtra []= 'content like "%'. $filter['keyword'] .'%"';
     if ($this->role) {
@@ -52,6 +46,7 @@ class Work extends Module {
     else $xtra = '';
 
     $sql = 'select id, userid, cometime, calltime, process, content, note, image from `'. $this->prefix .'` where active = 1 '. $xtra . ' order by calltime limit 10 offset '. ($filter['page'] - 1) * 10;
+
     $query = $this->db->query($sql);
     $user = array();
 

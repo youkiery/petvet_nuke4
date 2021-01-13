@@ -9,7 +9,8 @@ $filter = array(
   'enddate' => ( !empty($_GET['enddate']) ? $_GET['enddate'] : '' ),
   'keyword' => ( !empty($_GET['keyword']) ? $_GET['keyword'] : '' ),
   'user' => ( !empty($_GET['user']) ? $_GET['user'] : '' ),
-  'page' => parseGetData('page', 1)
+  'page' => parseGetData('page', 1),
+  'status' => parseGetData('status', 'undone')
 );
 
 $result['status'] = 1;
