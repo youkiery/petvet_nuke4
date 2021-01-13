@@ -1,7 +1,12 @@
 <?php 
 class Kaizen extends Module {
+  public $type;
   function __construct() {
     parent::__construct();
+    $this->type = array(
+      'undone' => 0,
+      'done' => 1,
+    );
     $this->module = 'kaizen';
     $this->prefix = 'pet_' . $this->table .'_'. $this->module;
     $this->role = $this->getRole();
@@ -38,7 +43,7 @@ class Kaizen extends Module {
     if (count($xtra)) $xtra = ' and ' . implode(' and ', $xtra);
     else $xtra = '';
     $list = array();
-    $sql = 'select * from `pet_'. $this->table .'_kaizen` where active = 1 ' . $xtra . ' order by edit_time ' . $filter['sort'];
+    $sql = 'select * from `pet_'. $this->table .'_kaizen` where active = 1 ' . $xtra . ' and done = '. $this->type[$filter['type']] .' order by edit_time ' . $filter['sort'] . ' limit 10 offset '. ($filter['page'] - 1) * 10;
     $query = $this->db->query($sql);
 
     while ($row = $query->fetch_assoc()) {

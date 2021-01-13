@@ -13,6 +13,7 @@ $filter = array(
   'endtime' => parseGetData('endtime'),
   'keyword' => parseGetData('keyword'),
   'page' => parseGetData('page', 1),
+  'type' => parseGetData('type', 0),
   'sort' => parseGetData('sort')
 );
 
