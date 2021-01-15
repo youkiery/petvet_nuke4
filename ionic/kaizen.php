@@ -97,7 +97,7 @@ class Kaizen extends Module {
     if (!$this->role) $xtra []= 'userid = ' . $this->userid;
     if (count($xtra)) $xtra = ' and ' . implode(' and ', $xtra);
     else $xtra = '';
-    $list = array();
+    // $list = array();
     
     $sql = 'select * from `pet_'. $this->table .'_kaizen` where active = 1 ' . $xtra . ' and done = 1 order by edit_time ' . $filter['sort'] . ' limit '. $filter['page'] * 10;
     $query = $this->db->query($sql);

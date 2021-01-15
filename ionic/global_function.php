@@ -30,20 +30,17 @@ function checkUserRole($userid) {
   return false;
 }
 
-function getUserBranch() {
+function getUserBranch($branch) {
   global $userid, $mysqli;
   try {
-    $sql = 'select * from `pet_setting_user` where userid = ' . $userid;
+    $sql = 'select b.* from `pet_setting_user` a inner join `pet_setting_branch` b on a.branch = b.id where b.prefix = "'. $branch .'" and a.userid = ' . $userid;
     $query = $mysqli->query($sql);
     $user = $query->fetch_assoc();
 
     if (!empty($user)) {
-      $sql = 'select * from `pet_setting_branch` where id = '. $user['branch'];
-      $query = $mysqli->query($sql);
-      $branch = $query->fetch_assoc();
       return array(
-        'id' => $branch['id'],
-        'prefix' => $branch['prefix']
+        'id' => $user['id'],
+        'prefix' => $user['prefix']
       );
     }
     throw new ErrorException('user without branch');
@@ -51,7 +48,7 @@ function getUserBranch() {
   catch(Exception $e) { 
     echo json_encode(array(
       'status' => 0,
-      'messenger' => 'Nhân viên chưa được phân quyền'
+      'no_branch' => 1
     ));
     die();
   }

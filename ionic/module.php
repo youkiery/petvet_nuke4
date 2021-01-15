@@ -9,10 +9,12 @@ class Module {
 
   function __construct() {
     global $mysqli, $userid;
+
     $this->db = $mysqli;
     $this->userid = $userid;
     $this->branchid = 0;
-    $branch = getUserBranch();
+    $branch = parseGetData('branch', '');
+    $branch = getUserBranch($branch);
     $this->branchid = $branch['id'];
     $this->table = $branch['prefix'];
   }

@@ -10,7 +10,7 @@ $filter = array(
   'keyword' => ( !empty($_GET['keyword']) ? $_GET['keyword'] : '' ),
   'user' => ( !empty($_GET['user']) ? $_GET['user'] : '' ),
   'page' => parseGetData('page', 1),
-  'status' => parseGetData('status', 'undone')
+  'status' => parseGetData('status', 0)
 );
 
 $result['status'] = 1;
