@@ -285,7 +285,7 @@
     vhttp.checkelse('', {
       action: 'insert-user',
       userid: userid,
-      keyword: $('user-name-suggest').val()
+      keyword: $('#user-name').val()
     }).then(data => {
       if (data['msg']) alert_msg('msg')
       if (data['content']) $('#user-content').html(data['content'])
@@ -308,7 +308,7 @@
     vhttp.checkelse('', {
       action: 'remove-user',
       userid: userid,
-      keyword: $('user-name-suggest').val()
+      keyword: $('#user-name').val()
     }).then(data => {
       if (data['msg']) alert_msg('msg')
       if (data['content']) $('#user-content').html(data['content'])
