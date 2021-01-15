@@ -5,7 +5,7 @@ $filter = array(
   'endtime' => parseGetData('endtime'),
   'keyword' => parseGetData('keyword'),
   'page' => parseGetData('page', 1),
-  'type' => parseGetData('type', 'undone'),
+  'type' => parseGetData('type', 0),
   'sort' => parseGetData('sort')
 );
 
@@ -17,9 +17,9 @@ $data = array(
 );
 
 require_once(NV_ROOTDIR . '/ionic/kaizen.php');
-$kaizen = new Kaizen('test');
+$kaizen = new Kaizen();
 
 $result['status'] = 1;
 $result['time'] = $kaizen->updateData($data);
-$result['list'] = $kaizen->getKaizenList();
+$result['list'] = $kaizen->initList();
 $result['unread'] = $kaizen->getNotifyUnread();

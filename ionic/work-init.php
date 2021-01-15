@@ -48,7 +48,7 @@ else $xtra []= 'userid = '. $work->userid;
 if (count($xtra)) $xtra = ' and '. implode(' and ', $xtra);
 else $xtra = '';
 
-$sql = 'select id, userid, cometime, calltime, process, content, note, image from `'. $work->prefix .'` where process < 100 and active = 1 '. $xtra .' order by calltime limit 10';
+$sql = 'select id, userid, cometime, calltime, process, content, note, image from `'. $work->prefix .'` where process < 100 and active = 1 '. $xtra .' order by calltime limit '. $filter['page'] * 10;
 $query = $work->db->query($sql);
 $user = array();
 
@@ -66,7 +66,7 @@ while ($row = $query->fetch_assoc()) {
   $list['undone'] []= $row;
 }
 
-$sql = 'select id, userid, cometime, calltime, process, content, note, image from `'. $work->prefix .'` where process > 99 and active = 1 '. $xtra .' order by calltime limit 10';
+$sql = 'select id, userid, cometime, calltime, process, content, note, image from `'. $work->prefix .'` where process > 99 and active = 1 '. $xtra .' order by calltime limit '. $filter['page'] * 10;
 $query = $work->db->query($sql);
 $user = array();
 

@@ -38,12 +38,12 @@ class Kaizen extends Module {
       break;
     }
 
-    if (!empty($filter['keyword'])) $xtra []= '(result like "%'. $filter['keyword'] .'%") or (solution like "%'. $filter['keyword'] .'%") or (problem like "%'. $filter['keyword'] .'%")';
+    if (!empty($filter['keyword'])) $xtra []= '((result like "%'. $filter['keyword'] .'%") or (solution like "%'. $filter['keyword'] .'%") or (problem like "%'. $filter['keyword'] .'%"))';
     if (!$this->role) $xtra []= 'userid = ' . $this->userid;
     if (count($xtra)) $xtra = ' and ' . implode(' and ', $xtra);
     else $xtra = '';
     $list = array();
-    $sql = 'select * from `pet_'. $this->table .'_kaizen` where active = 1 ' . $xtra . ' and done = '. $this->type[$filter['type']] .' order by edit_time ' . $filter['sort'] . ' limit 10 offset '. ($filter['page'] - 1) * 10;
+    $sql = 'select * from `pet_'. $this->table .'_kaizen` where active = 1 ' . $xtra . ' and done = '. $filter['type'] .' order by edit_time ' . $filter['sort'] . ' limit 10 offset '. ($filter['page'] - 1) * 10;
     $query = $this->db->query($sql);
 
     while ($row = $query->fetch_assoc()) {
@@ -61,6 +61,80 @@ class Kaizen extends Module {
       $list []= $data;
     }
     return $list;
+  }
+
+  function initList() {
+    global $filter;
+
+    $list = array(
+      'done' => array(),
+      'undone' => array(),
+    );
+    $xtra = array();
+    $tick = 0;
+    if (!empty($filter['starttime'])) {
+      $filter['starttime'] = totime($filter['starttime']);
+      $tick += 1;
+    }
+    if (!empty($filter['endtime'])) {
+      $filter['endtime'] = totime($filter['endtime']) + 60 * 60 * 24 - 1;
+      $tick += 2;
+    }
+    
+    switch ($tick) {
+      case 1:
+        $xtra []= '(edit_time >= '. $filter['starttime'] .')';
+      break;
+      case 2:
+        $xtra []= '(edit_time <= '. $filter['endtime'] .')';
+      break;
+      case 3:
+        $xtra []= '(edit_time between '. $filter['starttime'] .' and '. $filter['endtime'] .')';
+      break;
+    }
+    
+    if (!empty($filter['keyword'])) $xtra []= '((result like "%'. $filter['keyword'] .'%") or (solution like "%'. $filter['keyword'] .'%") or (problem like "%'. $filter['keyword'] .'%"))';
+    if (!$this->role) $xtra []= 'userid = ' . $this->userid;
+    if (count($xtra)) $xtra = ' and ' . implode(' and ', $xtra);
+    else $xtra = '';
+    $list = array();
+    
+    $sql = 'select * from `pet_'. $this->table .'_kaizen` where active = 1 ' . $xtra . ' and done = 1 order by edit_time ' . $filter['sort'] . ' limit '. $filter['page'] * 10;
+    $query = $this->db->query($sql);
+    
+    while ($row = $query->fetch_assoc()) {
+      $user = checkUserId($row['userid']);
+      $name = (!empty($user['last_name']) ? $user['last_name'] . ' ': '') . $user['first_name'];
+      $data = array(
+        'id' => $row['id'],
+        'name' => $name,
+        'done' => intval($row['done']),
+        'problem' => $row['problem'],
+        'solution' => $row['solution'],
+        'result' => $row['result'],
+        'time' => date('d/m/Y', $row['edit_time'])
+      );
+      $list['done'] []= $data;
+    }
+    
+    $sql = 'select * from `pet_'. $this->table .'_kaizen` where active = 1 ' . $xtra . ' and done = 0 order by edit_time ' . $filter['sort'] . ' limit '. $filter['page'] * 10;
+    $query = $this->db->query($sql);
+    
+    while ($row = $query->fetch_assoc()) {
+      $user = checkUserId($row['userid']);
+      $name = (!empty($user['last_name']) ? $user['last_name'] . ' ': '') . $user['first_name'];
+      $data = array(
+        'id' => $row['id'],
+        'name' => $name,
+        'done' => intval($row['done']),
+        'problem' => $row['problem'],
+        'solution' => $row['solution'],
+        'result' => $row['result'],
+        'time' => date('d/m/Y', $row['edit_time'])
+      );
+      $list['undone'] []= $data;
+    }
+    return $list;    
   }
 
   function getKaizenNotify() {

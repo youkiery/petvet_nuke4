@@ -22,6 +22,7 @@ class Module {
     
     if ($read) $sql = 'update `pet_'. $this->table .'_notify_read` set time = '. $time .' where userid = '. $this->userid . ' and module = "'. $this->module .'"';
     else $sql = 'insert into `pet_'. $this->table .'_notify_read` (userid, module, time) values ('. $this->userid .',  "'. $this->module .'", '. $time .')';
+    // die($sql);
     $this->db->query($sql);
   }
 
@@ -78,14 +79,14 @@ class Module {
   }
 
   function getNotifyTime() {
-    $sql = 'select * from `pet_'. $this->table .'_notify_read` where userid = ' . $this->userid;
+    $sql = 'select * from `pet_'. $this->table .'_notify_read` where module = "'. $this->module .'" and userid = ' . $this->userid;
     $query = $this->db->query($sql);
 
     if (empty($row = $query->fetch_assoc())) {
       $sql = 'insert into `pet_'. $this->table .'_notify_read` (userid, module, time) values ('. $this->userid .', "'. $this->module .'", 1)';
       $this->db->query($sql);
       $row = array(
-        'time' => 0
+        'time' => 1
       );
     }
     return $row['time'];
@@ -97,6 +98,7 @@ class Module {
     $xtra = '';
     if (!$this->role) $xtra = 'and userid = '. $this->userid;
     $sql = 'select id from `pet_'. $this->table .'_notify` where module = "'. $this->module .'" and time > ' . $time . ' ' . $xtra;
+    // die($sql);
     $query = $this->db->query($sql);
 
     return $query->num_rows;
