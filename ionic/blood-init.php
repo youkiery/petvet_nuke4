@@ -8,4 +8,4 @@ $filter = array(
 );
 
 $result['status'] = 1;
-$result['list'] = $blood->getList();
+$result['list'] = $blood->initList();
