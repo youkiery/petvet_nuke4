@@ -89,7 +89,7 @@ class Blood extends Module {
       $len = count($data) - 1;
 
       if ($row['type']) {
-        $data[$len]['target'] = 'Nhập ('. $row2['number1'] .'/'. $row2['number2'] .'/'. $row2['number3'] .') giá <span class="text-red">'. number_format($row2['price'], 0, '', ',') .' VND</span>';
+        $data[$len]['target'] = 'Nhập ('. $row2['number1'] .'/'. $row2['number2'] .'/'. $row2['number3'] .') Giá: '. number_format($row2['price'], 0, '', ',') .' VND';
         $data[$len]['number'] = '-';
         $data[$len]['number1'] = $row2['number1'];
         $data[$len]['number2'] = $row2['number2'];
