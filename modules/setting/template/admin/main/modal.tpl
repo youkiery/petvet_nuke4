@@ -1,4 +1,25 @@
 <!-- BEGIN: main -->
+<div class="modal" id="user-remove-modal" role="dialog">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="form-group">
+          <b> Xóa nhân viên </b>
+          <div type="button" class="close" data-dismiss="modal"> &times; </div>
+        </div>
+
+        <div class="text-center">
+          <p> Nhân viên bị xóa khỏi chi nhánh sẽ không truy cập được chức năng </p>
+          <button class="btn btn-danger" id="remove-btn" onclick="removeUserSubmit()">
+            Xác nhận
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="overtime-modal" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -32,7 +53,7 @@
   </div>
 </div>
 
-<div class="modal" id="config-modal" role="dialog">
+<div class="modal" id="config-module-modal" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-body">

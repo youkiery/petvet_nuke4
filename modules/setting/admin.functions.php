@@ -82,6 +82,10 @@ function mainBranchContent() {
 
 function mainUserContent($id) {
   global $db;
+  $reversal = array(
+    '0' => 'btn-info',
+    '1' => 'btn-warning'
+  );
 
   $xtpl = new XTemplate("user-list.tpl", PATH);
   $sql = 'select * from `pet_setting_user` where branch = '. $id;
@@ -89,11 +93,18 @@ function mainUserContent($id) {
   $index = 1;
   while ($row = $query->fetch()) {
     if (!empty($user = checkUserById($row['userid']))) {
-      // var_dump($user);die();
       $xtpl->assign('index', $index ++);
       $xtpl->assign('id', $row['userid']);
       $xtpl->assign('username', $user['username']);
       $xtpl->assign('fullname', (!empty($user['last_name']) ? $user['last_name'] . ' ': '') . $user['first_name']);
+      $xtpl->assign('manager_value', intval(!$row['manager']));
+      $xtpl->assign('except_value', intval(!$row['except']));
+      $xtpl->assign('daily_value', intval(!$row['daily']));
+      $xtpl->assign('kaizen_value', intval(!$row['kaizen']));
+      $xtpl->assign('btn_manager', $reversal[$row['manager']]);
+      $xtpl->assign('btn_except', $reversal[$row['except']]);
+      $xtpl->assign('btn_daily', $reversal[$row['daily']]);
+      $xtpl->assign('btn_kaizen', $reversal[$row['kaizen']]);
 
       $xtpl->parse('main.row');
     }

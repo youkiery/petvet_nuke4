@@ -115,6 +115,10 @@
 
 <!-- BEGIN: user -->
 <div class="form-group">
+  <a href="/admin/index.php?nv={module_name}"> Cấu hình </a> &gt; {branch}
+</div>
+
+<div class="form-group">
   <div class="rows">
     <div class="col-6 relative">
       <input type="text" class="form-control" id="user-name" placeholder="Nhập họ và tên hoặc tên tài khoản">
@@ -122,7 +126,7 @@
     </div>
     <div class="col-6">
       <div style="float: right;">
-        <button class="btn btn-info" onclick="userConfig()">
+        <button class="btn btn-info" onclick="moduleConfig()">
           Cấu hình chi nhánh
         </button>
       </div>
@@ -159,6 +163,9 @@
 <script src="/modules/core/js/vhttp.js"></script>
 <script src="/modules/core/js/vremind-8.js"></script>
 <script>
+  global = {
+    id: 0
+  }
   var moduleStatus = 0
   var configid = 0
 
@@ -175,9 +182,19 @@
     }, 300, 300)
   })
 
-  function userConfig(id = 0) {
-    configid = id
-    $('#config-modal').modal('show')
+  function moduleConfig() {
+    $('#config-module-modal').modal('show')
+  }
+
+  function change(id, type, value) {
+    vhttp.checkelse('', {
+      action: 'change',
+      userid: id,
+      type: type, 
+      value: value
+    }).then(data => {
+      $('#user-content').html(data['html'])
+    })
   }
 
   function insertUser() {
@@ -235,7 +252,7 @@
       data: list
     }).then((response) => {
       alert_msg('Đã lưu cấu hình')
-      $('#config-modal').modal('hide')
+      $('#config-module-modal').modal('hide')
     })
   }
 
@@ -304,14 +321,22 @@
     $('#overtime-modal').modal('show')
   }
 
-  function removeUserSubmit(userid) {
+  function removeUser(userid) {
+    global.id = userid
+    $('#user-remove-modal').modal('show')
+    $('#remove-btn').focus()
+    
+  }
+
+  function removeUserSubmit() {
     vhttp.checkelse('', {
       action: 'remove-user',
-      userid: userid,
+      userid: global.id,
       keyword: $('#user-name').val()
     }).then(data => {
       if (data['msg']) alert_msg('msg')
       if (data['content']) $('#user-content').html(data['content'])
+      $('#user-remove-modal').modal('hide')
     })
   }
 

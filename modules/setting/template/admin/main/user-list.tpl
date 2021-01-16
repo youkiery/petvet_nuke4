@@ -15,10 +15,19 @@
       <td> {username} </td>
       <td> {fullname} </td>
       <td>  
-        <!-- <button class="btn btn-info btn-xs" onclick="userConfig({id})">
-          cấu hình
-        </button> -->
-        <button class="btn btn-danger btn-xs" onclick="removeUserSubmit({id})">
+        <button class="btn btn-xs {btn_manager}" onclick="change({id}, 'manager', '{manager_value}')">
+          quản lý
+        </button>  
+        <button class="btn btn-xs {btn_except}" onclick="change({id}, 'except', '{except_value}')">
+          kế toán
+        </button>  
+        <button class="btn btn-xs {btn_daily}" onclick="change({id}, 'daily', '{daily_value}')">
+          đăng ký lịch
+        </button>  
+        <button class="btn btn-xs {btn_kaizen}" onclick="change({id}, 'kaizen', '{kaizen_value}')">
+          kaizen
+        </button>  
+        <button class="btn btn-danger btn-xs" onclick="removeUser({id})">
           xóa
         </button>
       </td>

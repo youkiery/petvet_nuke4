@@ -16,7 +16,7 @@
         <input type="text" class="form-control" id="name-{id}" value="{name}">  
       </td>
       <td> 
-        <input type="text" class="form-control" id="prefix-{id}" value="{prefix}">  
+        <input type="text" class="form-control" id="prefix-{id}" value="{prefix}" readonly>  
       </td>
       <td>
         <a class="btn btn-info btn-xs" href="/admin/index.php?nv=setting&id={id}">
