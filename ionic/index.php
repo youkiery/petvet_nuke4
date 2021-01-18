@@ -18,12 +18,15 @@ define('REMOVE_NOTIFY', 4);
 $mysqli = new mysqli($servername, $username, $password, $database);
 if ($mysqli->connect_errno) die('error: '. $mysqli -> connect_error);
 $mysqli->set_charset('utf8');
-if (!empty($_GET['action'])) {
+if (isset($_GET['action']) && !empty($_GET['action']) && isset($_GET['branch']) && !empty($_GET['branch'])) {
     $action = $_GET['action'];
-    if (file_exists(NV_ROOTDIR . '/ionic/' . $action . '.php')) {
+    $branch = $_GET['branch'];
+    define('ROOTDIR', NV_ROOTDIR . '/ionic/'. $branch);
+    include_once(ROOTDIR . '/global_function.php');
+    include_once(ROOTDIR . '/module.php');
+    
+    if (file_exists(ROOTDIR . '/' . $action . '.php')) {
         try {
-            include_once(NV_ROOTDIR . '/ionic/global_function.php');
-            include_once(NV_ROOTDIR . '/ionic/module.php');
             if ($action !== 'login' && $action !== 'version') {
                 if (empty($_GET['userid'])) throw new Exception('no user');
                 else {
@@ -37,7 +40,7 @@ if (!empty($_GET['action'])) {
                 'messenger' => ''
             );
             date_default_timezone_set('asia/ho_chi_minh');
-            include_once(NV_ROOTDIR . '/ionic/' . $action . '.php');
+            include_once(ROOTDIR .'/' . $action . '.php');
             echo json_encode($result);
             die();
         }
