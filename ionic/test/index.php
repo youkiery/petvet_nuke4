@@ -18,13 +18,12 @@ define('REMOVE_NOTIFY', 4);
 $mysqli = new mysqli($servername, $username, $password, $database);
 if ($mysqli->connect_errno) die('error: '. $mysqli -> connect_error);
 $mysqli->set_charset('utf8');
-if (isset($_GET['action']) && !empty($_GET['action']) && isset($_GET['branch']) && !empty($_GET['branch'])) {
+if (isset($_GET['action']) && !empty($_GET['action'])) {
     $action = $_GET['action'];
-    $branch = $_GET['branch'];
     define('ROOTDIR', NV_ROOTDIR . '/ionic/'. $branch);
     include_once(ROOTDIR . '/global_function.php');
     include_once(ROOTDIR . '/module.php');
-    
+
     if (file_exists(ROOTDIR . '/' . $action . '.php')) {
         try {
             if ($action !== 'login' && $action !== 'version') {
@@ -52,3 +51,4 @@ if (isset($_GET['action']) && !empty($_GET['action']) && isset($_GET['branch']) 
 }
 
 echo json_encode(array('status' => 0, 'messenge' => 'Lỗi chức năng'));
+exit();

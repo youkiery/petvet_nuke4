@@ -16,6 +16,8 @@ $filter = array(
   'enddate' => date('d/m/Y', $enddate),
   'keyword' => '',
   'userid' => '',
+  'page' => parseGetData('page', 1),
+  'status' => parseGetData('status', 0)
 );
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\TablePosition;
@@ -122,8 +124,8 @@ foreach ($data as $user) {
 // $table->addCell(2000);
 
 $name = 'work-'. time();
-$doc = '/ionic/files/'. $name .'.docx';
-$preview = '/ionic/files/'. $name .'.html';
+$doc = '/files/'. $name .'.docx';
+$preview = '/files/'. $name .'.html';
 
 $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'HTML');
 $objWriter->save(ROOTDIR . $preview);
@@ -140,5 +142,5 @@ $objWriter->save(ROOTDIR . $doc);
 
 $result['status'] = 1;
 $result['name'] = $name;
-$result['doc'] = 'http://' . $_SERVER['SERVER_NAME'] . $doc;
-$result['preview'] = 'http://' . $_SERVER['SERVER_NAME'] . $preview;
+$result['doc'] = 'http://' . $_SERVER['SERVER_NAME'] . '/ionic/'. $branch .'/'. $doc;
+$result['preview'] = 'http://' . $_SERVER['SERVER_NAME'] . '/ionic/'. $branch .'/'. $preview;
