@@ -16,4 +16,4 @@ $kaizen = new Kaizen();
 
 $result['status'] = 1;
 $result['list'] = $kaizen->initList();
-$result['unread'] = $kaizen->getNotifyUnread();
+$result['unread'] = $kaizen->getNotifyUnread(); 

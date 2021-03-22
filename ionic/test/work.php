@@ -45,7 +45,7 @@ class Work extends Module {
     if (count($xtra)) $xtra = ' and '. implode(' and ', $xtra);
     else $xtra = '';
 
-    $sql = 'select id, userid, cometime, calltime, process, content, note, image from `'. $this->prefix .'` where active = 1 '. $xtra . ' order by calltime limit 10 offset '. ($filter['page'] - 1) * 10;
+    $sql = 'select id, userid, cometime, calltime, process, content, note, image from `'. $this->prefix .'` where active = 1 '. $xtra . ' order by calltime desc limit 10 offset '. ($filter['page'] - 1) * 10;
 
     $query = $this->db->query($sql);
     $user = array();
@@ -104,7 +104,7 @@ class Work extends Module {
     if (count($xtra)) $xtra = ' and '. implode(' and ', $xtra);
     else $xtra = '';
     
-    $sql = 'select id, userid, cometime, calltime, process, content, note, image from `'. $this->prefix .'` where process < 100 and active = 1 '. $xtra .' order by calltime limit '. $filter['page'] * 10;
+    $sql = 'select id, userid, cometime, calltime, process, content, note, image from `'. $this->prefix .'` where process < 100 and active = 1 '. $xtra .' order by calltime desc limit '. $filter['page'] * 10;
     $query = $this->db->query($sql);
     $user = array();
     
@@ -122,7 +122,7 @@ class Work extends Module {
       $list['undone'] []= $row;
     }
     
-    $sql = 'select id, userid, cometime, calltime, process, content, note, image from `'. $this->prefix .'` where process > 99 and active = 1 '. $xtra .' order by calltime limit '. $filter['page'] * 10;
+    $sql = 'select id, userid, cometime, calltime, process, content, note, image from `'. $this->prefix .'` where process > 99 and active = 1 '. $xtra .' order by calltime desc limit '. $filter['page'] * 10;
     $query = $this->db->query($sql);
     $user = array();
     
