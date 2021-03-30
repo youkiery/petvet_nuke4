@@ -10,15 +10,39 @@
 
 if (!defined('NV_IS_TX')) die('Stop!!!');
 
-// $xtpl = new XTemplate("main.tpl", PATH);
-// $xtpl->assign('module_name', $module_name);
-// $xtpl->assign('modal', $customer->modal());
-// $xtpl->assign('content', $customer->content());
+$filter = array(
+  'page' => $nv_Request->get_string('page', 'get', 1),
+  'limit' => $nv_Request->get_string('limit', 'get', 1),
+  'keyword' => $nv_Request->get_string('keyword', 'get', ''),
+  'catid' => $nv_Request->get_string('catid', 'get', '0')
+);
 
-// $xtpl->parse("main");
-// $contents = $xtpl->text("main");
+$action = $nv_Request->get_string('action', 'post', '');
+if (!empty($action)) {
+  $result = array('status' => 0);
+  switch ($action) {
+    case 'get-update':
+      $id = $nv_Request->$nv_Request->get_string('id', 'post', 0);
 
-$contents = '';
+      $data = $product->getById($id);
+
+      $result['status'] = 1;
+      $result['data'] = array(
+        'code' => $data['code'],
+        'name' => $data['name'],
+        'limitup' => $data['limitup'],
+        'limitdown' => $data['limitdown'],
+        'image' => $data['image']
+      );
+      break;
+  }
+}
+
+$xtpl = new XTemplate("/product/main.tpl", VIEW);
+$xtpl->assign('content', $product->content($filter));
+
+$xtpl->parse("main");
+$contents = $xtpl->text("main");
 
 include ( NV_ROOTDIR . "/includes/header.php" );
 echo nv_site_theme($contents);

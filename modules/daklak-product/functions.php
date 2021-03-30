@@ -14,3 +14,10 @@ if (!defined('NV_SYSTEM')) {
 
 define('NV_IS_TX', true);
 define('NV_IS_MOD_USER', true);
+define('VIEW', NV_ROOTDIR . '/modules/daklak-view/');
+define('MODEL', NV_ROOTDIR . '/modules/daklak-model/');
+
+include_once(MODEL . '/core.php');
+include_once(MODEL . '/product.php');
+
+$product = new Product();
