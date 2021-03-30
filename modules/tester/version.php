@@ -11,8 +11,8 @@ if (!defined('NV_MAINFILE'))
 
 $module_version = array(
     'name' => 'tester',
-    'modfuncs' => 'main',
-    'submenu' => 'main',
+    'modfuncs' => 'main, staff',
+    'submenu' => 'main, staff',
     'is_sysmod' => 0,
     'virtual' => 1,
     'version' => '4.3.01',

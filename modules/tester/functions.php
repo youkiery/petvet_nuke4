@@ -9,4 +9,3 @@
 if (!defined('NV_SYSTEM')) die('Stop!!!');
 define('NV_IS_MOD_CONGVAN', true);
 include_once(NV_ROOTDIR . '/modules/' . $module_file . '/global.functions.php');
-

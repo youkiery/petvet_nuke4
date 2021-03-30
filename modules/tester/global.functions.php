@@ -7,3 +7,7 @@
  */
 
 if (!defined('NV_MAINFILE')) { die('Stop!!!'); }
+
+define('PATH', NV_ROOTDIR . '/modules/tester/view');
+include_once(NV_ROOTDIR . '/modules/tester/model/core.php');
+include_once(NV_ROOTDIR . '/modules/tester/model/staff.php');

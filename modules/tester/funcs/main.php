@@ -8,6 +8,9 @@
 
 if (!defined('NV_IS_MOD_CONGVAN')) die('Stop!!!');
 
+$staff = new Staff();
+$contents = $staff->viewStaffContent();
+
 include NV_ROOTDIR . '/includes/header.php';
 echo nv_site_theme($contents);
 include NV_ROOTDIR . '/includes/footer.php';
