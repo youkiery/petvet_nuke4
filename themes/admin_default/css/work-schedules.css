@@ -1,0 +1,66 @@
+﻿.user-suggest {
+  position: relative
+}
+.user-suggest-list {
+  position: absolute;
+  width: 90%;
+  z-index: 100;
+}
+.user-suggest-item {
+  background: white;
+  border-bottom: 1px groove gray;
+  height: 32px;
+  line-height: 32px;
+}
+.user-suggest-item:hover {
+  background: lightgreen
+}
+
+.display-inline-block {
+    display: inline-block!important;
+}
+.fa-required{
+    display: block;
+}
+.fa-required em{
+    font-size: 75%;
+}
+.list-none{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.help-block-no{
+    margin-bottom: 0!important;
+}
+.form-label{
+    text-align: right;
+}
+.form-label-input-text{
+    padding-top: 15px!important;
+}
+#ui-datepicker-div {
+  z-index: 10000 !important;
+}
+#alert_msg {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  background: white;
+  padding: 10px;
+  z-index: 100;
+  border: 1px solid gray;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  display: none;
+  z-index: 10000;
+}
+#ui-datepicker-div {
+  z-index: 10000 !important;
+}
+.modal-title {
+  font-weight: bold;
+  text-align: center;
+  font-size: 1.5em;
+}
+
